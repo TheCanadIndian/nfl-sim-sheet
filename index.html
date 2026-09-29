@@ -9,6 +9,7 @@
   --bg:#F1F4F0; --surface:#FBFCFA; --sunk:#E6EBE6; --ink:#15201A; --muted:#55645B;
   --faint:#D6DED8; --accent:#1D7650; --band:rgba(29,118,80,.30); --whisker:#83958B;
   --away:#46627C; --tip-bg:#15201A; --tip-ink:#F1F4F0; --good:#1D7650; --bad:#B0502A;
+  --c-qb:#8A8F86; --c-rb:#1D7650; --c-wr:#46627C; --c-te:#B7832F;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
 }
@@ -18,6 +19,7 @@
     --bg:#0D1411; --surface:#141E19; --sunk:#1B2721; --ink:#E3EBE6; --muted:#94A49B;
     --faint:#27352E; --accent:#55C38D; --band:rgba(85,195,141,.30); --whisker:#6F8278;
     --away:#8EAAC4; --tip-bg:#E3EBE6; --tip-ink:#0D1411; --good:#55C38D; --bad:#E8906A;
+    --c-qb:#A3ABA5; --c-rb:#55C38D; --c-wr:#8EAAC4; --c-te:#E0B45E;
   }
 }
 :root[data-theme="dark"]{
@@ -25,6 +27,7 @@
   --bg:#0D1411; --surface:#141E19; --sunk:#1B2721; --ink:#E3EBE6; --muted:#94A49B;
   --faint:#27352E; --accent:#55C38D; --band:rgba(85,195,141,.30); --whisker:#6F8278;
   --away:#8EAAC4; --tip-bg:#E3EBE6; --tip-ink:#0D1411; --good:#55C38D; --bad:#E8906A;
+    --c-qb:#A3ABA5; --c-rb:#55C38D; --c-wr:#8EAAC4; --c-te:#E0B45E;
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
@@ -142,6 +145,10 @@ input[type=search]{min-width:200px}
 .sitenav a{color:var(--muted);text-decoration:none;font-weight:500}
 .sitenav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .sitenav a[aria-current="page"]{color:var(--ink)}
+.mix{display:flex;height:12px;gap:2px;min-width:150px}
+.mix i{display:block;border-radius:2px}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.rzsec{display:grid;gap:14px}
 footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
@@ -198,18 +205,18 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">Updated Monday Sep 28, 7:13 PM</div>
+    <div class="eyebrow">Updated Monday Sep 28, 10:59 PM</div>
     <h1>Game projections, in plain numbers</h1>
     <p class="sub">Every game simulated thousands of times from play-by-play data. For each player you get the
       most likely result, a realistic range, and the chance to score, plus the fair odds that chance is worth.</p>
   </header>
   <div class="cards">
     <section class="card"><div class="ch"><span class="sport">NFL</span><a href="nfl/index.html">Open →</a></div>
-        <p class="lead">Week 3 · 1 game still to play
-          · first kickoff Mon Sep 28 · 8:15 PM ET</p>
+        <p class="lead">Week 4 · 16 games still to play
+          · first kickoff Thu Oct 01 · 8:15 PM ET</p>
         <h3>Most likely to score a TD</h3>
-        <ol class="list"><li><span>D&#x27;Andre Swift <small>CHI vs PHI</small></span><b>37%</b><em>+170</em></li><li><span>Saquon Barkley <small>PHI vs CHI</small></span><b>32%</b><em>+212</em></li><li><span>Tank Bigsby <small>PHI vs CHI</small></span><b>27%</b><em>+270</em></li><li><span>DeVonta Smith <small>PHI vs CHI</small></span><b>24%</b><em>+317</em></li><li><span>Kyle Monangai <small>CHI vs PHI</small></span><b>21%</b><em>+376</em></li><li><span>Jalen Hurts <small>PHI vs CHI</small></span><b>20%</b><em>+400</em></li></ol>
-        <p class="acc">Week 4 projections are already up. <a href="nfl/weeks/2026_wk04.html">See the Week 4 preview →</a></p>
+        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>73%</b><em>-270</em></li><li><span>Derrick Henry <small>BAL vs TEN</small></span><b>66%</b><em>-194</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-170</em></li><li><span>Kenneth Walker III <small>KC vs LV</small></span><b>62%</b><em>-163</em></li><li><span>Jonathan Taylor <small>IND vs WAS</small></span><b>62%</b><em>-163</em></li><li><span>Chase Brown <small>CIN vs JAX</small></span><b>58%</b><em>-138</em></li></ol>
+        
         <div class="btns"><a class="btn" href="nfl/index.html">All games</a><a class="btn ghost" href="nfl/index.html#board">Player board</a><a class="btn ghost" href="nfl/index.html#fair">Price a line</a><a class="btn ghost" href="nfl/index.html#dvp">Defense vs position</a></div><p class="acc">So far in 2026: <b>80%</b> of results landed inside the
               projected 8-in-10 range (target 80%), and <b>152</b> players scored a TD against
               <b>153</b> expected. <a href="nfl/results.html">See every week graded →</a></p></section>
