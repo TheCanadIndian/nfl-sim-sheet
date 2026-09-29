@@ -31,7 +31,7 @@
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
-.wrap{max-width:1240px;margin:0 auto;display:grid;gap:22px}
+.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
@@ -45,8 +45,8 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .small{font-size:13px}
 
 /* games view */
-.games{display:grid;grid-template-columns:272px minmax(0,1fr);gap:22px;align-items:start}
-.rail{display:grid;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+.games{display:grid;grid-template-columns:228px minmax(0,1fr);gap:20px;align-items:start}
+.rail{display:grid;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px)}
 .game-btn{display:grid;gap:4px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:9px 12px;cursor:pointer}
 .game-btn:hover{background:var(--sunk)}
 .game-btn[aria-current="true"]{background:var(--surface);border-color:var(--faint)}
@@ -96,16 +96,16 @@ table.t{width:100%;border-collapse:collapse;font-size:14px}
 .t td.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
 .t .grp td{border-bottom:0;padding-top:16px;text-align:left;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.04em}
 .t td.big{font-weight:600}
-.t th.sc{width:42%;min-width:170px}
+.t th.sc{width:32%;min-width:130px}
 .pos{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px}
-.strip{position:relative;height:20px;min-width:160px;cursor:default}
+.strip{position:relative;height:20px;min-width:130px;cursor:default}
 .strip .g{position:absolute;top:0;bottom:0;width:1px;background:var(--faint)}
 .strip .w{position:absolute;top:9px;height:2px;background:var(--whisker)}
 .strip .b{position:absolute;top:4px;height:12px;background:var(--band);border-radius:2px}
 .strip .m{position:absolute;top:2px;width:2px;height:16px;background:var(--ink);transform:translateX(-1px)}
-.axis{position:relative;height:14px;min-width:160px;font-size:11px;letter-spacing:0;text-transform:none}
+.axis{position:relative;height:14px;min-width:130px;font-size:11px;letter-spacing:0;text-transform:none}
 .axis span{position:absolute;bottom:0}
-.pbar{position:relative;height:10px;min-width:140px;background:var(--sunk);border-radius:2px}
+.pbar{position:relative;height:10px;min-width:100px;background:var(--sunk);border-radius:2px}
 .pbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
 .dv{position:relative;height:12px;min-width:150px;background:var(--sunk);border-radius:2px}
 .dv i{position:absolute;top:0;bottom:0;border-radius:2px}
@@ -149,13 +149,15 @@ input[type=search]{min-width:200px}
 .mix i{display:block;border-radius:2px}
 .swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 .mm.tagn{color:var(--muted);cursor:help}
-.t td .chips{min-width:330px;max-width:460px;white-space:normal;justify-content:flex-start}
+.t td .chips{min-width:240px;max-width:360px;white-space:normal;justify-content:flex-start}
+.t td,.t th{padding-inline:6px}
 .rzline{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;margin-left:12px;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;color:var(--muted)}
 .rzline .mm{margin:0}
 footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
 @media (max-width:980px){.two{grid-template-columns:1fr}}
+@media (max-width:1100px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px}}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
   .rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
@@ -166,7 +168,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 @media (prefers-reduced-motion:no-preference){.game-btn,.tabs button,.seg button{transition:background .15s,color .15s}}
 
 .topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--faint);margin-inline:-20px;padding-inline:20px;margin-bottom:6px}
-.topbar .in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:6px 18px;padding-block:10px;overflow-x:auto;white-space:nowrap}
+.topbar .in{max-width:1560px;margin:0 auto;display:flex;align-items:center;gap:6px 18px;padding-block:10px;overflow-x:auto;white-space:nowrap}
 .topbar .brand{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;margin-right:6px}
 .topbar .grp{display:flex;align-items:center;gap:4px}
 .topbar .grp b{font-size:11px;letter-spacing:.09em;color:var(--muted);font-weight:600;margin-right:2px}
@@ -208,7 +210,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">Updated Monday Sep 28, 11:01 PM</div>
+    <div class="eyebrow">Updated Monday Sep 28, 11:05 PM</div>
     <h1>Game projections, in plain numbers</h1>
     <p class="sub">Every game simulated thousands of times from play-by-play data. For each player you get the
       most likely result, a realistic range, and the chance to score, plus the fair odds that chance is worth.</p>
@@ -218,7 +220,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
         <p class="lead">Week 4 · 16 games still to play
           · first kickoff Thu Oct 01 · 8:15 PM ET</p>
         <h3>Most likely to score a TD</h3>
-        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>74%</b><em>-285</em></li><li><span>Derrick Henry <small>BAL vs TEN</small></span><b>66%</b><em>-194</em></li><li><span>Jonathan Taylor <small>IND vs WAS</small></span><b>63%</b><em>-170</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-170</em></li><li><span>Kenneth Walker III <small>KC vs LV</small></span><b>62%</b><em>-163</em></li><li><span>Chase Brown <small>CIN vs JAX</small></span><b>58%</b><em>-138</em></li></ol>
+        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>74%</b><em>-285</em></li><li><span>Derrick Henry <small>BAL vs TEN</small></span><b>67%</b><em>-203</em></li><li><span>Jonathan Taylor <small>IND vs WAS</small></span><b>63%</b><em>-170</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-170</em></li><li><span>Kenneth Walker III <small>KC vs LV</small></span><b>62%</b><em>-163</em></li><li><span>Chase Brown <small>CIN vs JAX</small></span><b>57%</b><em>-133</em></li></ol>
         
         <div class="btns"><a class="btn" href="nfl/index.html">All games</a><a class="btn ghost" href="nfl/index.html#board">Player board</a><a class="btn ghost" href="nfl/index.html#fair">Price a line</a><a class="btn ghost" href="nfl/index.html#dvp">Defense vs position</a></div><p class="acc">So far in 2026: <b>80%</b> of results landed inside the
               projected 8-in-10 range (target 80%), and <b>152</b> players scored a TD against
@@ -227,7 +229,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
         <p class="lead">Tuesday, September 29
           · 5 games</p>
         <h3>Most likely to score a goal</h3>
-        <ol class="list"><li><span>Connor McDavid <small>EDM vs VAN · PP1</small></span><b>44%</b><em>+128</em></li><li><span>Leon Draisaitl <small>EDM vs VAN · PP1</small></span><b>43%</b><em>+132</em></li><li><span>Zach Hyman <small>EDM vs VAN · PP1</small></span><b>41%</b><em>+145</em></li><li><span>Cole Caufield <small>MTL vs TOR · PP1</small></span><b>40%</b><em>+148</em></li><li><span>Auston Matthews <small>TOR vs MTL · PP1</small></span><b>40%</b><em>+153</em></li><li><span>William Nylander <small>TOR vs MTL · PP1</small></span><b>37%</b><em>+171</em></li><li><span>David Pastrnak <small>BOS vs NYR · PP1</small></span><b>36%</b><em>+179</em></li><li><span>Nick Suzuki <small>MTL vs TOR · PP1</small></span><b>36%</b><em>+180</em></li></ol>
+        <ol class="list"><li><span>Connor McDavid <small>EDM vs VAN · PP1</small></span><b>44%</b><em>+128</em></li><li><span>Leon Draisaitl <small>EDM vs VAN · PP1</small></span><b>43%</b><em>+132</em></li><li><span>Zach Hyman <small>EDM vs VAN · PP1</small></span><b>41%</b><em>+145</em></li><li><span>Cole Caufield <small>MTL vs TOR · PP1</small></span><b>40%</b><em>+148</em></li><li><span>Auston Matthews <small>TOR vs MTL · PP1</small></span><b>40%</b><em>+153</em></li><li><span>William Nylander <small>TOR vs MTL · PP1</small></span><b>37%</b><em>+171</em></li><li><span>David Pastrnak <small>BOS vs NYR · PP1</small></span><b>37%</b><em>+172</em></li><li><span>Nick Suzuki <small>MTL vs TOR · PP1</small></span><b>36%</b><em>+180</em></li></ol>
         <div class="btns"><a class="btn" href="nhl/index.html">Full goal sheet</a><a class="btn ghost" href="nhl/index.html#board">All players ranked</a></div></section>
   </div>
   <section class="card guide" id="guide">
