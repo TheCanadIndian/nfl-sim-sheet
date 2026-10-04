@@ -64,6 +64,14 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
 .at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
 .winbar{display:grid;gap:6px}
+.ag{font-size:12px;font-weight:600;white-space:nowrap}
+.ag.up,.ag.up2{color:var(--good)} .ag.dn,.ag.dn2{color:var(--bad)} .ag.ok{color:var(--muted);font-weight:500}
+tr.agover td{background:color-mix(in srgb,var(--good) 11%,transparent)}
+tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.pos-d{color:var(--good)} .neg-d{color:var(--bad)}
+.agbar{position:relative;height:10px;min-width:120px;background:var(--sunk);border-radius:2px}
+.agbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.agbar b{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--ink)}
 .ftd{display:grid;gap:2px;border-top:1px solid var(--faint);padding-top:12px}
 .ftd-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
 .ftd-r{display:grid;grid-template-columns:minmax(0,1fr) 90px 46px 52px 36px;gap:10px;align-items:center;font-size:14px;padding:3px 0}
@@ -218,7 +226,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">Updated Sunday Oct 4, 7:41 PM</div>
+    <div class="eyebrow">Updated Sunday Oct 4, 7:42 PM</div>
     <h1>Game projections, in plain numbers</h1>
     <p class="sub">Every game simulated thousands of times from play-by-play data. For each player you get the
       most likely result, a realistic range, and the chance to score, plus the fair odds that chance is worth.</p>
@@ -228,7 +236,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
         <p class="lead">Week 4 · 2 games still to play
           · first kickoff Sun Oct 04 · 8:20 PM ET</p>
         <h3>Most likely to score a TD</h3>
-        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>74%</b><em>-292</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-172</em></li><li><span>Amon-Ra St. Brown <small>DET vs CAR</small></span><b>54%</b><em>-116</em></li><li><span>Chuba Hubbard <small>CAR vs DET</small></span><b>47%</b><em>+114</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>38%</b><em>+162</em></li><li><span>Chris Olave <small>NO vs ATL</small></span><b>35%</b><em>+187</em></li></ol>
+        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>74%</b><em>-288</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-170</em></li><li><span>Amon-Ra St. Brown <small>DET vs CAR</small></span><b>54%</b><em>-116</em></li><li><span>Chuba Hubbard <small>CAR vs DET</small></span><b>47%</b><em>+111</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>38%</b><em>+160</em></li><li><span>Chris Olave <small>NO vs ATL</small></span><b>37%</b><em>+172</em></li></ol>
         
         <div class="btns"><a class="btn" href="nfl/index.html">All games</a><a class="btn ghost" href="nfl/index.html#board">Player board</a><a class="btn ghost" href="nfl/index.html#fair">Price a line</a><a class="btn ghost" href="nfl/index.html#dvp">Defense vs position</a></div><p class="acc">So far in 2026: <b>80%</b> of results landed inside the
               projected 8-in-10 range (target 80%), and <b>191</b> players scored a TD against
