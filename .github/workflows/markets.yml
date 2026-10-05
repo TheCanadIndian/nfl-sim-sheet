@@ -1,0 +1,50 @@
+# Live market prices for the model pages. Every 15 minutes: re-quote Kalshi and Polymarket for any
+# sport with a game in the next 12 hours (exits in seconds otherwise) and publish
+# markets/live_<sport>.json, which the NFL / NHL / NBA pages poll. Needs no databases: it reads the
+# saved projections in engine/. Polymarket books are also fetched live by the browser.
+name: markets
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: markets
+  cancel-in-progress: false
+
+jobs:
+  quote:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SIM_SITE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      TZ: America/New_York
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: engine/requirements.txt
+      - run: pip install -q -r engine/requirements.txt
+      - id: q
+        working-directory: engine
+        run: |
+          set +e; python markets.py live; rc=$?; set -e
+          [ $rc -eq 10 ] && echo "skip=true" >> "$GITHUB_OUTPUT" || { [ $rc -eq 0 ] || exit $rc; }
+      - if: steps.q.outputs.skip != 'true'
+        run: |
+          git config user.name "sim-sheet-bot"
+          git config user.email "sim-sheet-bot@users.noreply.github.com"
+          git add -A markets engine/markets
+          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+          git commit -q -m "Auto: market prices $(date -u +'%Y-%m-%d %H:%M') UTC"
+          for i in 1 2 3 4 5; do git pull -q --rebase -X theirs && git push -q && break; sleep $((i * 5)); done
+          gh workflow run deploy.yml

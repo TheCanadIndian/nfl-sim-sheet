@@ -302,7 +302,7 @@ def main():
                 gstats=dict(now=gstats(fut_goalies.get((g.game_id, t)), cur_season),
                             last=gstats(fut_goalies.get((g.game_id, t)), prev),
                             rating=round(float(gq_now.get((g.game_id, g.home if t == g.away else g.away), 1.0)), 3)),
-                players=[dict(name=r.name, pos=r.pos, p=round(float(r.p_goal), 4), fair=int(r.fair),
+                players=[dict(id=int(r.player_id), name=r.name, pos=r.pos, p=round(float(r.p_goal), 4), fair=int(r.fair),
                               pf=round(float(r.p_first), 4), fair_first=int(r.fair_first), why=r.why,
                               lam=round(float(r.lam), 3), toi=round(float(r.e_np_toi + r.e_pp_toi) / 60, 1),
                               pp=r.pp_role, line=r.line, new=bool(r.games_prior < 1),
@@ -531,12 +531,12 @@ function pdline(opp){
 }
 document.getElementById('sub').textContent = `${D.games.length} games · ${D.date} · built ${D.generated}`;
 const bar = (p, max) => `<div class="pbar" role="img" aria-label="${pct(p)}"><i style="width:${Math.min(p/max,1)*100}%"></i></div>`;
-function side(s, opp){
-  const max = .5;
+function side(s, opp, gid){
+  const max = .5, mk = window.MKT && MKT.has();
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
     ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
-    <div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th></tr></thead><tbody>
-    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td></tr>`).join('')}
+    <div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
+    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     </tbody></table></div></div>`;
 }
 function picksKey(){
@@ -554,7 +554,7 @@ function mlBlock(g){
 }
 function games(){
   return picksKey() + D.games.map(g => `<section class="panel gcard"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
-    ${mlBlock(g)}<div class="sides">${side(g.away, g.home)}${side(g.home, g.away)}</div></section>`).join('');
+    ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
 function board(){
   const rows = D.games.flatMap(g => [[g.away, g.home], [g.home, g.away]].flatMap(([s, o]) => s.players.map(p => ({...p, orig: p, team: s.team, opp: o.team}))))

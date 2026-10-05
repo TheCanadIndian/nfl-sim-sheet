@@ -4,6 +4,8 @@ Prediction-market prices and liquidity (Kalshi and Polymarket public data) match
 projections, saved so the market can be graded against our models.
 
     python markets.py nfl | nhl | nba        # current slate for that sport
+    python markets.py live                   # quick re-quote of every sport with a game in the next 12 h
+                                             # (cloud, every 15 min; exit code 10 = nothing to do)
 
 Kalshi: game winner, total, anytime / first scorers, player yards / receptions / points /
 rebounds / assists / threes. Polymarket: game markets only (moneyline, spreads, totals).
@@ -12,8 +14,9 @@ For each matched market:
            liquidity / volume (Polymarket, dollars)
   ours:    our chance for the same outcome (both NFL/NBA models where available)
   edge:    our chance minus the price you'd pay, after the taker fee, for YES and NO
-  book:    for high-variance markets (scorer props, YES <= 25 cents) and flagged edges:
-           dollars within 1/3/5 cents of the best ask and bid, totals, top levels
+  book:    every matched market: dollars within 1/3/5 cents of the best ask and bid, totals,
+           top levels; no_3c = dollars to buy NO (the under side) within 3 cents
+Also writes <site>/markets/live_<sport>.json, which the model pages read for live prices.
 Only games that haven't started are refreshed, so each game keeps its last PREGAME price
 (markets trade during games too). markets/<sport>_<date>.json; graded by grade_markets.py.
 """
@@ -36,6 +39,7 @@ import requests
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "markets")
+SITE = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")
 KAL = "https://api.elections.kalshi.com/trade-api/v2"
 GAMMA = "https://gamma-api.polymarket.com"
 CLOB = "https://clob.polymarket.com"
@@ -109,6 +113,7 @@ def summarize_book(bids, asks):
     return dict(best_ask=ba, best_bid=bb, spread=None if ba is None or bb is None else round(ba - bb, 4),
                 ask_1c=within(asks, ba, .01, True), ask_3c=within(asks, ba, .03, True), ask_5c=within(asks, ba, .05, True),
                 bid_1c=within(bids, bb, .01, False), bid_3c=within(bids, bb, .03, False),
+                no_3c=round(sum((1 - p) * q for p, q in bids if bb is not None and p >= bb - .03 - 1e-9), 2),   # cost of buying NO
                 ask_total=round(sum(p * q for p, q in asks), 2), bid_total=round(sum(p * q for p, q in bids), 2),
                 asks=[[p, round(q)] for p, q in asks[:5]], bids=[[p, round(q)] for p, q in bids[:5]])
 
@@ -148,8 +153,12 @@ def ours_nfl(stem=None):
         if not stems:
             return None
         stem = stems[-1][:-len("_players.csv")]
-    con = sqlite3.connect(os.path.join(HERE, "nfl.db"))
-    sched = pd.read_sql("SELECT game_id, gameday, gametime, home_team, away_team FROM games", con).set_index("game_id")
+    dbp = os.path.join(HERE, "nfl.db")
+    if os.path.exists(dbp):
+        con = sqlite3.connect(dbp)
+        sched = pd.read_sql("SELECT game_id, gameday, gametime, home_team, away_team FROM games", con).set_index("game_id")
+    else:                                                  # quick cloud re-quote: kickoffs from the published page
+        sched = nfl_sched_from_page()
     models = {}
     d = os.path.dirname(stem)
     bstem = (os.path.join(os.path.dirname(d), "blind", "weeks", os.path.basename(stem)) if os.path.basename(d) == "weeks"
@@ -165,6 +174,14 @@ def ours_nfl(stem=None):
             start = pd.Timestamp(f"{r.gameday} {r.gametime or '13:00'}", tz="America/New_York")
             games.append(dict(id=gid, date=str(r.gameday)[:10], home=r.home_team, away=r.away_team, start=start))
     return dict(models=models, games=games)
+
+
+def nfl_sched_from_page():
+    pg = os.path.join(SITE, "nfl", "index.html")
+    m = re.search(r'<script type="application/json" id="data">(.*?)</script>', open(pg, encoding="utf-8").read(), re.S) if os.path.exists(pg) else None
+    games = json.loads(m.group(1).replace(r"<\/", "</"))["games"] if m else []
+    return pd.DataFrame([dict(game_id=g["id"], gameday=g["sort"][:10], gametime=g["sort"][11:16], home_team=g["home"], away_team=g["away"])
+                         for g in games], columns=["game_id", "gameday", "gametime", "home_team", "away_team"]).set_index("game_id")
 
 
 def ours_nhl(path=None):
@@ -436,8 +453,8 @@ def run(sport):
     krows, kn = kalshi_rows(sport, O, upcoming)
     prows, pn = poly_rows(sport, O, upcoming)
     rows = krows + prows
-    flag = [r for r in rows if r["longshot"] or max(r.get("edge_yes", -1), r.get("edge_no", -1)) >= .03]
-    with ThreadPoolExecutor(max_workers=3) as ex:
+    flag = rows                                             # every market: the pages show both sides' liquidity
+    with ThreadPoolExecutor(max_workers=4) as ex:
         books = ex.map(lambda r: kalshi_book(r["ticker"]) if r["source"] == "kalshi" else poly_book(r["ticker"]), flag)
         for r, b in zip(flag, books):
             r["book"] = b
@@ -456,6 +473,64 @@ def run(sport):
     e3 = sum(1 for r in rows if max(r.get("edge_yes", -1), r.get("edge_no", -1)) >= .03)
     print(f"{sport}: Kalshi {kn} open / {len(krows)} matched, Polymarket {pn} / {len(prows)} matched, "
           f"{len(upcoming)} games not started, {e3} with a 3%+ edge -> {path}")
+    write_live(sport)
+
+
+def weak_kinds(sport):
+    """Market types where the market price has beaten our model on settled games (shown as 'market ahead')."""
+    gp = os.path.join(OUT, "grades.json")
+    if not os.path.exists(gp):
+        return []
+    return sorted({g["kind"] for g in json.load(open(gp)).get("groups", [])
+                   if g["sport"] == sport and g["kind"] != "all" and g["n"] >= 30 and g["model_ll"] > g["market_ll"] + .005})
+
+
+def write_live(sport):
+    """Compact copy of the latest pregame snapshot for the model pages: <site>/markets/live_<sport>.json."""
+    fs = [f for f in sorted(glob.glob(os.path.join(OUT, f"{sport}_????-??-??.json")))
+          if not str(json.load(open(f)).get("fetched", "")).startswith("backfill")]
+    if not fs or not os.path.isdir(SITE):
+        return
+    snap = json.load(open(fs[-1]))
+    rows = []
+    for r in snap.get("markets", []):
+        b = r.get("book") or {}
+        if b.get("empty"):
+            by = bn = 0
+        else:
+            by = b.get("ask_3c", (r.get("ask_size") or 0) * (r.get("yes_ask") or 0) if r.get("ask_size") is not None else None)
+            bn = b.get("no_3c", (r.get("bid_size") or 0) * (1 - (r.get("yes_bid") or 0)) if r.get("bid_size") is not None else None)
+        name = (r.get("title") or "").split(":")[0].strip() if r.get("pid") is not None else None
+        rows.append(dict(s=r["source"], t=r["ticker"], g=r["game"], k=r["kind"], l=r.get("line"), ti=r.get("title"), o=r.get("outcome"),
+                         pid=r.get("pid"), n=name, yb=r.get("yes_bid"), ya=r.get("yes_ask"), p=r["ours"],
+                         by=None if by is None else round(by), bn=None if bn is None else round(bn), start=r.get("start")))
+    os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
+    f = snap.get("fetched")
+    try:
+        f = dt.datetime.fromisoformat(f).astimezone().isoformat(timespec="minutes")    # naive local time -> with offset
+    except (TypeError, ValueError):
+        pass
+    json.dump(dict(sport=sport, fetched=f, weak=weak_kinds(sport), rows=rows),
+              open(os.path.join(SITE, "markets", f"live_{sport}.json"), "w"), separators=(",", ":"), default=str)
+
+
+def live(hours=12):
+    """Re-quote each sport that has a game starting within `hours`; 0 if anything ran, 10 if not."""
+    ran = False
+    now = pd.Timestamp.now(tz="UTC")
+    for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba)):
+        try:
+            O = f()
+        except Exception as e:                             # one sport's missing files must not stop the others
+            print(f"{sport}: skipped ({type(e).__name__}: {e})")
+            continue
+        soon = [g for g in (O or {}).get("games", []) if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=hours)]
+        if soon:
+            run(sport)
+            ran = True
+        else:
+            print(f"{sport}: no game in the next {hours} h")
+    return 0 if ran else 10
 
 
 def pregame_quote(series, ticker, start):
@@ -516,6 +591,8 @@ if __name__ == "__main__":
     if sys.argv[1:2] == ["backfill"]:
         sp = sys.argv[2]
         backfill(sp, kinds={"win", "total", "anytime_td", "first_td"} if sp == "nfl" else None)
+    elif sys.argv[1:2] == ["live"]:
+        sys.exit(live())
     else:
         for s in (sys.argv[1:] or ["nfl", "nhl", "nba"]):
             run(s)
