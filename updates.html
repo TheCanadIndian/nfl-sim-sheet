@@ -289,6 +289,28 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 .toc a:hover{border-color:var(--accent)}
 .plan{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}
 .mk-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.mk-q{background:var(--surface);color:var(--ink);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;min-width:0;flex:1 1 180px;max-width:280px}
+.mt{display:grid;gap:12px}
+.mt-game{padding:0;gap:0}
+.mt-game>summary{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:baseline;gap:4px 14px;padding:14px 18px;cursor:pointer;list-style:none}
+.mt-game>summary::before,.mt-sub>summary::before{content:"▸";color:var(--muted);margin-right:8px}
+.mt-game[open]>summary::before,.mt-sub[open]>summary::before{content:"▾"}
+.mt-game[open]>summary{border-bottom:1px solid var(--faint)}
+.mt-g b{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:.03em}
+.mt-g small{color:var(--muted);margin-left:10px;font-size:13px}
+.mt-meta{margin-left:auto;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mt-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:14px 18px 4px}
+.mt-sub{border-top:1px solid var(--faint)}
+.mt-sub>summary{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:4px 14px;padding:9px 18px;cursor:pointer;list-style:none}
+.mt-sub>summary:hover{background:var(--sunk)}
+.mt-p b{font-weight:600}
+.mt-p small{color:var(--muted);font-size:12.5px;margin-left:8px}
+.mt-rows{padding:0 18px 10px 34px;container-type:inline-size}
+.mt-rows .mkx-r:first-child{border-top:0}
+.mt-chip{font-weight:700;font-size:12.5px}
+.mt-game summary::-webkit-details-marker,.mt-sub summary::-webkit-details-marker{display:none}
+@media (max-width:760px){ .mt-rows{padding:0 10px 10px 14px} .mt-game>summary,.mt-sub>summary{padding-inline:12px} .mt-label{padding-inline:12px} .mk-q{max-width:none} }
+
 .mk-thin{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;border:1px solid var(--sel);color:var(--sel);font-size:11px;font-weight:600;line-height:16px}
 .mk-score{padding-top:14px;padding-bottom:14px}
 .mk-score summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;list-style:none}
