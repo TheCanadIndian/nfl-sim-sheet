@@ -1,0 +1,38 @@
+# NBA on GitHub's servers (works with the PC off). Independent of the other sports: own
+# schedule, own queue, own data cache. Times are UTC = Eastern daylight time + 4h.
+name: nba
+
+on:
+  schedule:
+    - cron: "0 14 * * *"     # 10:00 ET  grade last night, project today
+    - cron: "0 17 * * *"     # 13:00 ET  injury report update
+    - cron: "0 21 * * *"     # 17:00 ET  injury report update
+    - cron: "30 22 * * *"    # 18:30 ET  final update before the 7:00 games
+    - cron: "0 1 * * *"      # 21:00 ET  late (West Coast) games
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: nba
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SIM_SITE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      TZ: America/New_York
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/run-sport
+        with:
+          mode: nba
+          cache-name: nba-db
+          cache-paths: engine/nba/nba.db
+          seed: nba.db.gz

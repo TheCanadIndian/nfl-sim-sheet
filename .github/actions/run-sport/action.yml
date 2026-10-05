@@ -53,6 +53,7 @@ runs:
       run: |
         case "${{ inputs.seed }}" in
           nfl.db.gz) [ -f nfl.db ] || { gh release download data-seed -p nfl.db.gz -D . && gunzip -f nfl.db.gz; } || echo "no seed; will rebuild" ;;
+          nba.db.gz) [ -f nba/nba.db ] || { gh release download data-seed -p nba.db.gz -D nba && gunzip -f nba/nba.db.gz; } || echo "no seed; will rebuild" ;;
           nhl.tar.gz) [ -f hockey/nhl.db ] || { gh release download data-seed -p nhl.tar.gz -D . && tar -xzf nhl.tar.gz && rm nhl.tar.gz; } || echo "no seed; will rebuild" ;;
         esac
 

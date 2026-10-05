@@ -92,6 +92,18 @@ def nhl(auto=False):
     return True
 
 
+def season_nba():
+    now = dt.date.today()
+    return now.year + 1 if now.month >= 8 else now.year
+
+
+def nba():
+    sh(PY, "nba/fetch.py", "--seasons", str(season_nba()))
+    sh(PY, "nba/project.py")
+    sh(PY, "nba/results.py")
+    return True
+
+
 def learn(sport):
     sh(PY, "learn.py", sport)
     if sport == "nfl":
@@ -106,7 +118,7 @@ def learn(sport):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["nfl", "nhl", "learn"])
+    ap.add_argument("mode", choices=["nfl", "nhl", "nba", "learn"])
     ap.add_argument("--news", action="store_true")
     ap.add_argument("--auto", action="store_true")
     ap.add_argument("--sport", choices=["nfl", "nhl"], default="nfl")
@@ -117,6 +129,8 @@ def main():
         nfl(a.news)
     elif a.mode == "nhl":
         did = nhl(a.auto)
+    elif a.mode == "nba":
+        did = nba()
     else:
         learn(a.sport)
     if did:
