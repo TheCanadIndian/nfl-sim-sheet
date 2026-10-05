@@ -501,7 +501,7 @@ def write_live(sport):
             by = b.get("ask_3c", (r.get("ask_size") or 0) * (r.get("yes_ask") or 0) if r.get("ask_size") is not None else None)
             bn = b.get("no_3c", (r.get("bid_size") or 0) * (1 - (r.get("yes_bid") or 0)) if r.get("bid_size") is not None else None)
         name = (r.get("title") or "").split(":")[0].strip() if r.get("pid") is not None else None
-        rows.append(dict(s=r["source"], t=r["ticker"], g=r["game"], k=r["kind"], l=r.get("line"), ti=r.get("title"), o=r.get("outcome"),
+        rows.append(dict(s=r["source"], t=r["ticker"], g=r["game"], a=r.get("away"), h=r.get("home"), ls=bool(r.get("longshot")), k=r["kind"], l=r.get("line"), ti=r.get("title"), o=r.get("outcome"),
                          pid=r.get("pid"), n=name, yb=r.get("yes_bid"), ya=r.get("yes_ask"), p=r["ours"],
                          by=None if by is None else round(by), bn=None if bn is None else round(bn), start=r.get("start")))
     os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)

@@ -109,8 +109,15 @@
   const forPlayer = (gid, pid, name) => forGame(gid).filter(r => r.n && ((pid != null && r.pid != null && same(r.pid, pid)) || norm(r.n) === norm(name)));
   const order = (a, b) => a.k.localeCompare(b.k) || (a.l ?? 0) - (b.l ?? 0) || a.s.localeCompare(b.s);
 
+  function best(r, model){ const [yl, nl] = sides(r), e = edges(r, ours(r, model)); return (e.y ?? -9) >= (e.n ?? -9) ? {v: e.y, lab: yl, side: 'yes'} : {v: e.n, lab: nl, side: 'no'}; }
   window.MKT = {
     has: () => !!(D && D.rows.length),
+    loaded: () => !!D,
+    rows: () => (D ? D.rows : []),
+    fetched: () => (D ? D.fetched : null),
+    weak: k => !!(D && D.weak && D.weak.includes(k)),
+    row: (r, model, focus) => row(r, model, focus, false),
+    best, thin: isThin, spread: spr, usd, shade, label: k => KLAB[k] || k,
     player(gid, pid, name, focusKinds, model, slider){
       const rows = forPlayer(gid, pid, name).sort(order); if (!rows.length) return '';
       const f = new Set(focusKinds || []);
@@ -152,7 +159,8 @@
 
   function load(){
     fetch(base + 'markets/live_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
-      if (!d || d.fetched === stamp) return;
+      if (!d){ if (!D){ D = {rows: [], fetched: null}; rerender(); } return; }     // no file yet: say so instead of 'loading'
+      if (d.fetched === stamp) return;
       stamp = d.fetched; D = d; rerender();
     }).catch(() => {});
   }
