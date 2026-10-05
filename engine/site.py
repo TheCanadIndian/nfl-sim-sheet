@@ -243,6 +243,61 @@ PAGE_CSS = report.BASE_CSS + BAR_CSS + """
 .toc a{padding:6px 12px;border:1px solid var(--faint);border-radius:999px;text-decoration:none;color:var(--ink);font-size:14px}
 .toc a:hover{border-color:var(--accent)}
 .plan{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}
+.mk-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.mk-score{padding-top:14px;padding-bottom:14px}
+.mk-score summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;list-style:none}
+.mk-score summary::before{content:"▸";color:var(--muted)} .mk-score[open] summary::before{content:"▾"}
+.mk-score summary b{font-family:var(--display);font-size:19px;font-weight:600}
+.mk-score[open] summary{margin-bottom:10px}
+.mk-edge.weak b,.mk-edge.weak small{color:var(--muted)}
+.mk-warn{color:var(--r1)!important;font-weight:600;letter-spacing:0!important;font-size:10.5px!important}
+.mk-sort{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.mk-sort select{background:var(--surface);color:var(--ink);border:1px solid var(--faint);border-radius:6px;padding:5px 8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--faint);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.tile .v{font-family:var(--display);font-weight:700;font-size:30px;line-height:1}
+.tile .s{font-size:12.5px;color:var(--muted)}
+.mk-head,.mk-row{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(150px,1.4fr) 92px 120px;gap:14px;align-items:center}
+.mk-head{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:0 10px 6px;border-bottom:1px solid var(--faint)}
+.mk-head span:nth-child(n+3){text-align:right}
+.mk-row{padding:10px;border-bottom:1px solid var(--faint);cursor:pointer;border-radius:6px}
+.mk-row:hover,.mk-row.open{background:var(--sunk)}
+.mk-name{display:grid;gap:2px;min-width:0}
+.mk-name b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-name small{color:var(--muted);font-size:12.5px}
+.mk-cmp{display:grid;gap:4px}
+.mk-nums{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.mk-nums b{color:var(--ink);font-weight:600}
+.mk-vs{position:relative;height:8px;border-radius:4px;background:var(--sunk);overflow:visible}
+.mk-row:hover .mk-vs,.mk-row.open .mk-vs{background:var(--surface)}
+.mk-vs i{position:absolute;left:0;top:0;bottom:0;background:var(--whisker);border-radius:4px}
+.mk-vs b{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--sel);border-radius:2px}
+.mk-edge{text-align:right;display:grid}
+.mk-edge b{font-family:var(--display);font-size:22px;line-height:1}
+.mk-edge small{font-size:11px;font-weight:700;letter-spacing:.06em}
+.mk-money{text-align:right;display:grid}
+.mk-money small{color:var(--muted);font-size:11.5px}
+.mk-liq{font-weight:600;font-size:15px}
+.mk-liq.deep{color:var(--ink)} .mk-liq.ok{color:var(--muted)} .mk-liq.thin{color:var(--r1)}
+.mk-game{font-family:var(--display);font-size:18px;font-weight:600;letter-spacing:.03em;padding:14px 10px 4px}
+.mk-det{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px 18px;padding:10px 12px 16px;background:var(--sunk);border-radius:0 0 8px 8px;margin-top:-4px}
+.mk-kv{display:grid;gap:1px}
+.mk-kv span{font-size:12px;color:var(--muted)}
+.mk-kv b{font-weight:600}
+.mk-book{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.mk-lv{display:grid;grid-template-columns:50px 1fr 70px;gap:8px;font-size:13px;padding:2px 0}
+.mk-lv span:last-child{text-align:right}
+.mk-help{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 24px;margin:0}
+.mk-help dt{font-weight:600} .mk-help dd{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+@media (max-width:760px){
+  .mk-head{display:none}
+  .mk-row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name edge" "cmp money";gap:8px 12px}
+  .mk-name{grid-area:name} .mk-edge{grid-area:edge} .mk-cmp{grid-area:cmp} .mk-money{grid-area:money}
+  .mk-name b{white-space:normal}
+  .tiles{grid-template-columns:1fr 1fr}
+  .tile .v{font-size:24px}
+}
+
 .g1{color:var(--g1)} .g2{color:var(--g2)} .g3{color:var(--g3)} .r1{color:var(--r1)} .r2{color:var(--r2)} .r3{color:var(--r3)}
 tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
 .seg{display:flex;flex-wrap:wrap;gap:4px}
@@ -482,63 +537,138 @@ def updates():
 
 
 def markets_page():
-    """Kalshi prices and liquidity next to our chances (markets/<sport>_<date>.json from markets.py)."""
+    """Prediction markets vs our chances: summary, scorecard, and one readable row per market
+    (details on tap). Data: markets/<sport>_<date>.json (markets.py), markets/grades.json."""
     data = {}
     for sport in ("nfl", "nhl", "nba"):
-        fs = sorted(glob.glob(os.path.join(HERE, "markets", f"{sport}_*.json")))
-        if fs:
-            d = json.load(open(fs[-1]))
-            d["date"] = os.path.basename(fs[-1])[len(sport) + 1:-5]
-            data[sport] = d
-    payload = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
+        fs = [f for f in sorted(glob.glob(os.path.join(HERE, "markets", f"{sport}_*.json")))]
+        live = None
+        for f in fs[::-1]:
+            d = json.load(open(f))
+            if not str(d.get("fetched", "")).startswith("backfill"):
+                live = d
+                live["date"] = os.path.basename(f)[len(sport) + 1:-5]
+                break
+        if live:
+            data[sport] = live
+    gp = os.path.join(HERE, "markets", "grades.json")
+    grades = json.load(open(gp)) if os.path.exists(gp) else {}
+    payload = json.dumps(dict(m=data, g=grades), separators=(",", ":"), default=str).replace("</", "<\\/")
     body = """
   <header class="hero"><div class="eyebrow" id="msub"></div><h1>Markets</h1>
-    <p class="sub">Kalshi prediction-market prices next to our chances, with how much money is actually there.
-      High-variance markets (first and anytime scorers, long-shot ladder rungs) are shown first.</p></header>
-  <section class="card" style="gap:14px">
-    <div class="phead"><div class="seg" role="group" id="msport"></div><div class="seg" role="group" id="mfilter"></div></div>
-    <div id="mtable"></div>
-    <p class="note" style="margin:0">Volume and open interest are in contracts ($1 each at settlement). <b>Buy $ (1¢ / 3¢)</b>: dollars you could spend buying YES within 1 or 3 cents of the best price.
-      <b>Sell $ (3¢)</b>: resting buy orders you could sell into, so how easily you could get out before the game. <b>Spread</b>: ask minus bid.
-      <b>Edge</b>: our chance minus the price after Kalshi's taker fee (green = we like YES, red-tinted rows = we like NO). Deep, active markets that disagree
-      with us a lot usually know something (injury, role change), so treat big edges there as a prompt to check the news. Prices refresh with each update; the last
-      pregame price is kept for grading.</p>
+    <p class="sub">What prediction markets (Kalshi, Polymarket) charge for an outcome, next to our chance of it, and how much money is
+      really there. Longshots (first and anytime scorers, ladder tails) come first.</p></header>
+  <div class="mk-bar">
+    <div class="seg" role="group" aria-label="Sport" id="msport"></div>
+    <div class="seg" role="group" aria-label="Show" id="mshow"></div>
+    <div class="seg" role="group" aria-label="Source" id="msrc"></div>
+    <label class="mk-sort">Sort <select id="msort"><option value="edge">Biggest edge</option><option value="liq">Most money to buy</option><option value="game">By game</option></select></label>
+  </div>
+  <div class="tiles" id="mtiles"></div>
+  <details class="card mk-score" id="scorebox"><summary id="scoresum"></summary><div id="score"></div></details>
+  <section class="card" style="gap:10px"><div id="mlist"></div></section>
+  <section class="card" style="gap:8px">
+    <h2 style="font-size:20px">How to read this</h2>
+    <dl class="mk-help">
+      <div><dt>Ours vs price</dt><dd>The bar shows our chance (blue tick) against what the market charges (gray fill). If our tick is past the fill, we think YES is cheap.</dd></div>
+      <div><dt>Edge</dt><dd>Our chance minus the price you'd pay, after Kalshi's fee. Green = we lean that side; brighter = bigger. Shown for whichever side (YES or NO) we like.</dd></div>
+      <div><dt>Money at this price</dt><dd>Dollars you could spend within 3 cents of the best price. Under $100 is thin; $1,000+ is a real market. "Exit" is what you could sell back before the game.</dd></div>
+      <div><dt>Big edges in busy markets</dt><dd>When a deep, actively traded market disagrees with us by a lot, it usually knows something (injury, role change). Check the news first.</dd></div>
+    </dl>
   </section>
 <script type="application/json" id="mdata">__MD__</script>
 <script>
-const MD = JSON.parse(document.getElementById('mdata').textContent);
+const ALL = JSON.parse(document.getElementById('mdata').textContent), MD = ALL.m, GR = ALL.g || {};
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const pct = p => p == null ? '–' : (p < .1 ? (Math.round(p*1000)/10).toFixed(1) : Math.round(p*100)) + '%';
+const pct = p => p == null ? '–' : (p < .1 && p > 0 ? (Math.round(p*1000)/10).toFixed(1) : Math.round(p*100)) + '%';
 const cents = p => p == null ? '–' : Math.round(p*100) + '¢';
 const usd = v => v == null ? '–' : v >= 1000 ? '$' + (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
 const num = v => v == null ? '–' : v >= 1000 ? (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : String(Math.round(v));
-const shadeE = e => e == null ? '' : e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : e <= -.08 ? 'r3' : e <= -.05 ? 'r2' : e <= -.02 ? 'r1' : '';
-const KIND = {win:'Moneyline', total:'Total', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
+const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
+const KIND = {win:'Winner', total:'Total', spread:'Spread', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
 const sports = Object.keys(MD);
-const st = {sport: sports.includes(location.hash.slice(1)) ? location.hash.slice(1) : sports[0], f: 'long', sort: 'edge'};
-function render(){
-  document.getElementById('msport').innerHTML = sports.map(s => `<button data-sp="${s}" aria-pressed="${s === st.sport}">${s.toUpperCase()}</button>`).join('');
-  document.getElementById('mfilter').innerHTML = [['long','High-variance'],['all','All matched'],['edge','3%+ edge']].map(([k,l]) => `<button data-f="${k}" aria-pressed="${k === st.f}">${l}</button>`).join('')
-    + [['edge','Sort: edge'],['liq','Sort: liquidity'],['vol','Sort: volume']].map(([k,l]) => `<button data-s="${k}" aria-pressed="${k === st.sort}">${l}</button>`).join('');
-  const D = MD[st.sport];
-  if (!D){ document.getElementById('mtable').innerHTML = '<p class="muted">No market data yet.</p>'; return; }
-  document.getElementById('msub').textContent = `${st.sport.toUpperCase()} · slate ${D.date} · prices fetched ${D.fetched.replace('T', ' ')}`;
-  let rows = D.markets.map(m => ({...m, be: Math.max(m.edge_yes ?? -9, m.edge_no ?? -9), side: (m.edge_yes ?? -9) >= (m.edge_no ?? -9) ? 'YES' : 'NO'}));
-  if (st.f === 'long') rows = rows.filter(m => m.longshot);
-  if (st.f === 'edge') rows = rows.filter(m => m.be >= .03);
-  const liq = m => (m.book && m.book.ask_3c) || (m.ask_size || 0) * (m.yes_ask || 0);
-  rows.sort((a,b) => st.sort === 'liq' ? liq(b) - liq(a) : st.sort === 'vol' ? (b.vol || 0) - (a.vol || 0) : b.be - a.be);
-  const ours = o => Object.entries(o).map(([k,v]) => `${pct(v)}${Object.keys(o).length > 1 ? `<small class="muted"> ${k === 'vegas' ? 'V' : k === 'blind' ? 'B' : ''}</small>` : ''}`).join(' / ');
-  document.getElementById('mtable').innerHTML = rows.length ? `<div class="tw"><table class="t"><thead><tr><th class="l">Market</th><th class="l">Type</th><th>Ours</th><th>Bid / Ask</th><th>Spread</th><th>Buy $ ≤1¢</th><th>Buy $ ≤3¢</th><th>Sell $ ≤3¢</th><th>Volume (ct)</th><th>Open int. (ct)</th><th>Edge</th></tr></thead><tbody>
-    ${rows.slice(0, 300).map(m => { const b = m.book || {}; return `<tr class="${m.be >= .02 && m.side === 'NO' ? 'bg-r1' : ''}"><td class="l name" style="white-space:normal;min-width:230px">${esc(m.title)}<small style="display:block;color:var(--muted)">${esc(m.away)} @ ${esc(m.home)}${m.line != null && m.kind !== 'win' ? ' · line ' + m.line : ''}</small></td><td class="l"><span class="pos">${KIND[m.kind] || esc(m.kind)}</span></td>
-      <td>${ours(m.ours)}</td><td>${cents(m.yes_bid)} / <b>${cents(m.yes_ask)}</b></td><td>${b.spread != null ? cents(b.spread) : (m.yes_ask != null && m.yes_bid != null ? cents(m.yes_ask - m.yes_bid) : '–')}</td>
-      <td>${usd(b.ask_1c)}</td><td class="big">${usd(b.ask_3c ?? (m.ask_size || 0) * (m.yes_ask || 0))}</td><td>${usd(b.bid_3c)}</td><td>${num(m.vol)}</td><td>${num(m.oi)}</td>
-      <td class="${shadeE(m.be)}"><b>${m.be > -9 ? (m.be >= 0 ? '+' : '−') + Math.abs(Math.round(m.be * 1000) / 10).toFixed(1) + '%' : '–'}</b>${m.be > -9 ? `<small style="display:block;color:var(--muted)">${m.side}</small>` : ''}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="muted">Nothing matches this filter.</p>';
+let st = {sport: sports.includes(location.hash.slice(1)) ? location.hash.slice(1) : sports[0], show: 'long', src: 'all', sort: 'edge', open: null};
+try { const s = JSON.parse(localStorage.getItem('mk-view') || '{}'); Object.assign(st, {show: s.show || st.show, src: s.src || st.src, sort: s.sort || st.sort}); } catch (e) {}
+const money = m => (m.book && !m.book.empty) ? m.book.ask_3c : (m.ask_size != null && m.yes_ask != null ? m.ask_size * m.yes_ask : (m.liq ?? null));
+const exitm = m => (m.book && !m.book.empty) ? m.book.bid_3c : null;
+function best(m){ const y = m.edge_yes ?? -9, n = m.edge_no ?? -9; return y >= n ? {e: y, side: 'YES'} : {e: n, side: 'NO'}; }
+function bar(p, price){
+  const x = v => Math.max(0, Math.min(100, v * 100));
+  return `<div class="mk-vs" role="img" aria-label="ours ${pct(p)}, price ${cents(price)}"><i style="width:${x(price ?? 0)}%"></i><b style="left:${x(p ?? 0)}%"></b></div>`;
 }
-document.addEventListener('click', e => { const t = e.target.closest('button'); if (!t) return;
-  if (t.dataset.sp){ st.sport = t.dataset.sp; history.replaceState(null, '', '#' + st.sport); render(); }
-  else if (t.dataset.f){ st.f = t.dataset.f; render(); } else if (t.dataset.s){ st.sort = t.dataset.s; render(); } });
-window.addEventListener('hashchange', () => { if (sports.includes(location.hash.slice(1))) { st.sport = location.hash.slice(1); render(); } });
+function liqTag(v){ if (v == null) return '<span class="muted">–</span>'; const c = v >= 1000 ? 'deep' : v >= 100 ? 'ok' : 'thin'; return `<span class="mk-liq ${c}">${usd(v)}</span>`; }
+function detail(m){
+  const b = m.book && !m.book.empty ? m.book : null;
+  const lv = (arr, lab) => arr && arr.length ? `<div><span class="eyebrow">${lab}</span>${arr.map(([p, q]) => `<div class="mk-lv"><span>${cents(p)}</span><span>${num(q)} ${m.units === 'dollars' ? 'shares' : 'contracts'}</span><span class="muted">${usd(p*q)}</span></div>`).join('')}</div>` : '';
+  return `<div class="mk-det">
+    <div class="mk-kv"><span>Bid / ask (YES)</span><b>${cents(m.yes_bid)} / ${cents(m.yes_ask)}</b></div>
+    <div class="mk-kv"><span>Our chance</span><b>${Object.entries(m.ours).map(([k,v]) => `${pct(v)}${k === 'vegas' ? ' (With Vegas)' : k === 'blind' ? ' (Market-blind)' : ''}`).join(' · ')}</b></div>
+    <div class="mk-kv"><span>Edge YES / NO</span><b>${m.edge_yes != null ? (m.edge_yes*100).toFixed(1) + '%' : '–'} / ${m.edge_no != null ? (m.edge_no*100).toFixed(1) + '%' : '–'}</b></div>
+    ${b ? `<div class="mk-kv"><span>Buy within 1¢ / 3¢ / 5¢</span><b>${usd(b.ask_1c)} / ${usd(b.ask_3c)} / ${usd(b.ask_5c)}</b></div><div class="mk-kv"><span>Exit (sell) within 1¢ / 3¢</span><b>${usd(b.bid_1c)} / ${usd(b.bid_3c)}</b></div>` : ''}
+    <div class="mk-kv"><span>${m.units === 'dollars' ? 'Volume / liquidity' : 'Traded / open interest (contracts)'}</span><b>${m.units === 'dollars' ? usd(m.vol) + ' / ' + usd(m.liq) : num(m.vol) + ' / ' + num(m.oi)}</b></div>
+    <div class="mk-kv"><span>Source</span><b>${m.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</b></div>
+    ${b ? `<div class="mk-book">${lv(b.asks, 'Cheapest offers to buy YES')}${lv(b.bids, 'Best bids (your exit)')}</div>` : ''}</div>`;
+}
+function track(m){ const G = (GR.groups || []).filter(x => x.sport === st.sport && x.kind === m.kind); return G.find(x => x.source === m.source) || G[0]; }
+function weak(m){ const g = track(m); return g && g.n >= 30 && g.model_ll > g.market_ll + .005; }
+function row(m){
+  const b = best(m), p = m.ours.vegas ?? m.ours.model, open = st.open === m.ticker, w = weak(m);
+  return `<div class="mk-row${open ? ' open' : ''}" data-t="${esc(m.ticker)}" tabindex="0" role="button" aria-expanded="${open}">
+    <div class="mk-name"><b>${esc(m.title)}</b><small>${esc(m.away)} @ ${esc(m.home)} · ${KIND[m.kind] || esc(m.kind)} · ${m.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</small></div>
+    <div class="mk-cmp"><div class="mk-nums"><span>Ours <b>${pct(p)}</b></span><span>Price <b>${cents(m.yes_ask)}</b></span></div>${bar(p, m.yes_ask)}</div>
+    <div class="mk-edge ${b.e > -9 && !w ? shade(b.e) : ''}${w && b.e >= .02 ? ' weak' : ''}">${b.e >= .02 ? `<b>+${(b.e*100).toFixed(1)}%</b><small>${b.side}</small>${w ? '<small class="mk-warn" title="On settled games of this type the market price has been more accurate than our model, so treat this edge with caution">market ahead</small>' : ''}` : '<span class="muted">no edge</span>'}</div>
+    <div class="mk-money">${liqTag(money(m))}<small>exit ${exitm(m) == null ? '–' : usd(exitm(m))}</small></div>
+  </div>${open ? detail(m) : ''}`;
+}
+function scorecard(){
+  const g = (GR.groups || []).filter(x => x.sport === st.sport);
+  const el = document.getElementById('score'), sm = document.getElementById('scoresum');
+  if (!g.length){ sm.innerHTML = `<b>Scorecard: model vs market</b><span class="muted">nothing settled yet for ${st.sport.toUpperCase()}</span>`; el.innerHTML = `<p class="muted" style="margin:0">Each game is graded on its last pregame price once it's final.</p>`; return; }
+  const a = g.filter(x => x.kind === 'all'), N = a.reduce((t, x) => t + x.n, 0), B = a.reduce((t, x) => t + x.bets, 0), W = a.reduce((t, x) => t + x.bets_won, 0);
+  const beat = g.filter(x => x.kind !== 'all' && x.n >= 30), ours = beat.filter(x => x.model_ll < x.market_ll - .002).map(x => KIND[x.kind] || x.kind), theirs = beat.filter(x => x.market_ll < x.model_ll - .002).map(x => KIND[x.kind] || x.kind);
+  sm.innerHTML = `<b>Scorecard: model vs market</b><span class="muted">${N.toLocaleString()} settled · ${theirs.length ? 'market better on ' + [...new Set(theirs)].join(', ') : 'no market type where the market is clearly better'}${ours.length ? ' · model better on ' + [...new Set(ours)].join(', ') : ''} · edge bets ${W}/${B} won</span>`;
+  const rows = g.filter(x => x.kind !== 'all').sort((a, b) => b.n - a.n);
+  const tot = g.filter(x => x.kind === 'all');
+  const who = x => x.model_ll < x.market_ll - .002 ? '<span class="g2">Model</span>' : x.market_ll < x.model_ll - .002 ? '<span class="r2">Market</span>' : '<span class="muted">Tie</span>';
+  const roi = x => x.bets ? `${x.bets_won}/${x.bets} won · <b class="${x.roi > 0 ? 'g2' : 'r2'}">${x.roi > 0 ? '+' : ''}${Math.round(x.roi*100)}%</b>` : '<span class="muted">no bets</span>';
+  el.innerHTML = `<p class="muted" style="margin:0">Settled games only, priced at the last pregame snapshot. "Closer" = lower prediction error (log-loss). Bets = buying the side with a 3%+ edge, $ result per $1 staked. Small samples swing a lot.</p>
+    <div class="tw"><table class="t"><thead><tr><th class="l">Market</th><th class="l">Source</th><th>Settled</th><th class="l">Closer to the result</th><th class="l">3%+ edge bets</th></tr></thead><tbody>
+    ${tot.concat(rows).map(x => `<tr${x.kind === 'all' ? ' style="font-weight:600"' : ''}><td class="l">${x.kind === 'all' ? 'All markets' : (KIND[x.kind] || x.kind)}</td><td class="l">${x.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</td><td>${x.n}</td><td class="l">${who(x)} <small class="muted">${x.model_ll.toFixed(3)} vs ${x.market_ll.toFixed(3)}</small></td><td class="l">${roi(x)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function render(){
+  const seg = (id, key, opts) => { document.getElementById(id).innerHTML = opts.map(([k, l]) => `<button data-k="${key}" data-v="${k}" aria-pressed="${st[key] === k}">${l}</button>`).join(''); };
+  seg('msport', 'sport', sports.map(s => [s, s.toUpperCase()]));
+  seg('mshow', 'show', [['long', 'Longshots'], ['edge', 'Edges 3%+'], ['all', 'Everything']]);
+  seg('msrc', 'src', [['all', 'Both'], ['kalshi', 'Kalshi'], ['polymarket', 'Polymarket']]);
+  document.getElementById('msort').value = st.sort;
+  try { localStorage.setItem('mk-view', JSON.stringify({show: st.show, src: st.src, sort: st.sort})); } catch (e) {}
+  const D = MD[st.sport];
+  if (!D){ document.getElementById('mlist').innerHTML = '<p class="muted">No market data yet.</p>'; return; }
+  document.getElementById('msub').textContent = `${st.sport.toUpperCase()} · slate ${D.date} · prices updated ${String(D.fetched).replace('T', ' ')}`;
+  let rows = D.markets.filter(m => st.src === 'all' || m.source === st.src);
+  const all = rows;
+  if (st.show === 'long') rows = rows.filter(m => m.longshot);
+  if (st.show === 'edge') rows = rows.filter(m => best(m).e >= .03);
+  rows.sort((a, b) => st.sort === 'liq' ? (money(b) || 0) - (money(a) || 0) : st.sort === 'game' ? (a.away + a.home).localeCompare(b.away + b.home) || best(b).e - best(a).e : best(b).e - best(a).e);
+  const ls = all.filter(m => m.longshot), med = a => { const v = a.filter(x => x != null).sort((x, y) => x - y); return v.length ? v[Math.floor(v.length / 2)] : null; };
+  const t = (v, l, s) => `<div class="tile"><span class="eyebrow">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
+  document.getElementById('mtiles').innerHTML = t(all.length, 'Markets matched', 'to our projections') + t(all.filter(m => best(m).e >= .03).length, 'With a 3%+ edge', 'either side, after fees')
+    + t(usd(med(ls.map(money))), 'Longshot money', 'typical $ within 3¢ of the price') + (() => { const x = med(ls.map(exitm)); return t(usd(x), 'Longshot exit', x != null && x < 25 ? 'almost no buyers: plan to hold to the end' : 'typical $ you could sell back'); })();
+  let html = '', last = null;
+  for (const m of rows.slice(0, 250)){
+    const gk = m.away + ' @ ' + m.home;
+    if (st.sort === 'game' && gk !== last){ html += `<div class="mk-game">${esc(gk)}</div>`; last = gk; }
+    html += row(m);
+  }
+  document.getElementById('mlist').innerHTML = rows.length ? `<div class="mk-head"><span>Market</span><span>Ours vs price</span><span>Edge</span><span>Money at this price</span></div>${html}` : '<p class="muted">Nothing matches these filters.</p>';
+  scorecard();
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('button[data-k]'); if (b){ st[b.dataset.k] = b.dataset.v; st.open = null; if (b.dataset.k === 'sport') history.replaceState(null, '', '#' + b.dataset.v); render(); return; }
+  const r = e.target.closest('.mk-row'); if (r){ st.open = st.open === r.dataset.t ? null : r.dataset.t; render(); }
+});
+document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mk-row')){ e.preventDefault(); e.target.click(); } });
+document.getElementById('msort').addEventListener('change', e => { st.sort = e.target.value; render(); });
 render();
 </script>""".replace("__MD__", payload)
     write_page("markets.html", "Markets · Sim Sheet", "markets", body, depth=0)
