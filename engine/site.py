@@ -44,9 +44,11 @@ SPORTS = [
          pages=[("sheet", "Tonight", "nhl/index.html", "Goal chances, lineups, goalies and moneylines for the next slate"),
                 ("results", "Results", "nhl/results.html", "Every night graded: scorers, first goals, moneylines"),
                 ("updates", "Model updates", "updates.html#nhl", "What the model learned and changed, week by week")]),
-    dict(key="nba", name="NBA", status="soon", eta="Launching in October 2026",
-         blurb="Points, rebounds, assists and threes for every player, plus moneylines and totals.",
-         pages=[("preview", "Preview", "nba/index.html", "What's coming")]),
+    dict(key="nba", name="NBA", status="live",
+         blurb="Minutes, points, rebounds, assists and threes for every player, with and without Vegas lines.",
+         pages=[("slate", "Next slate", "nba/index.html", "Every player's projection for the next slate, both models"),
+                ("results", "Results", "nba/results.html", "Every night graded against the box scores, both models"),
+                ("updates", "Model updates", "updates.html#nba", "What the model learned and changed")]),
     dict(key="mlb", name="MLB", status="soon", eta="Launching for spring training 2027",
          blurb="Hits, home runs, strikeouts and pitcher lines, plus moneylines and run totals.",
          pages=[("preview", "Preview", "mlb/index.html", "What's coming")]),
@@ -172,7 +174,8 @@ def inject(src, dst, depth, active, model=None, other=None):
 # source page isn't on disk; read the already-published copy instead.
 PUBLISHED = {os.path.join("projections", "index.html"): os.path.join("nfl", "index.html"),
              os.path.join("projections", "results.html"): os.path.join("nfl", "results.html"),
-             os.path.join("hockey", "projections", "index.html"): os.path.join("nhl", "index.html")}
+             os.path.join("hockey", "projections", "index.html"): os.path.join("nhl", "index.html"),
+             os.path.join("nba", "projections", "index.html"): os.path.join("nba", "index.html")}
 
 
 def page_data(path):
@@ -312,7 +315,20 @@ def nhl_card():
         <ol class="list">{''.join(f'<li><span>{html.escape(n)} <small>{t} vs {o}{" · " + pp if pp else ""}</small></span><b>{p*100:.0f}%</b><em>{american(p)}</em></li>' for p, n, t, o, pp in rows)}</ol>"""
 
 
-HOME_CARDS = {"nfl": nfl_card, "nhl": nhl_card}
+def nba_card():
+    nba = page_data(os.path.join(HERE, "nba", "projections", "index.html"))
+    if not nba:
+        return "<p class='muted'>No NBA slate yet.</p>"
+    rows = sorted(((p["s"]["vegas"]["pts"][3], p["n"], p["t"], p["o"]) for p in nba["players"] if p["s"].get("vegas", {}).get("pts")),
+                  reverse=True)[:5]
+    day = dt.date.fromisoformat(nba["date"]).strftime("%A, %B %d").replace(" 0", " ")
+    return f"""
+        <p class="lead">{html.escape(day)} · {len(nba['games'])} game{'s' if len(nba['games']) != 1 else ''}</p>
+        <h3>Top projected scorers (median points)</h3>
+        <ol class="list">{''.join(f'<li><span>{html.escape(n)} <small>{t} vs {o}</small></span><b>{v:.0f}</b><em>pts</em></li>' for v, n, t, o in rows)}</ol>"""
+
+
+HOME_CARDS = {"nfl": nfl_card, "nhl": nhl_card, "nba": nba_card}
 
 
 def home():
@@ -350,7 +366,7 @@ def guide():
   <header class="hero"><h1>How to read Sim Sheet</h1>
     <p class="sub">Two minutes, start to finish. Every number on the site comes from simulating each game thousands of
       times; these are the words you'll see and what they mean.</p>
-    <nav class="toc" aria-label="Sections"><a href="#basics">The basics</a><a href="#odds">Odds and value</a><a href="#nfl">NFL terms</a><a href="#nhl">NHL terms</a><a href="#trust">How accurate is it?</a></nav>
+    <nav class="toc" aria-label="Sections"><a href="#basics">The basics</a><a href="#odds">Odds and value</a><a href="#nfl">NFL terms</a><a href="#nhl">NHL terms</a><a href="#nba">NBA terms</a><a href="#trust">How accurate is it?</a></nav>
   </header>
   <div class="guide">
   <section id="basics"><h2>The basics</h2><dl>
@@ -384,6 +400,13 @@ def guide():
     <div><dt>SV%, GSAA, GSAx</dt><dd>Save percentage; goals saved above an average save percentage; goals saved above expected given shot quality. Positive = better goalie.</dd></div>
     <div><dt>Defense vs position</dt><dd>Expected goals each team allows to centers, wingers and defensemen, vs league average.</dd></div>
     <div><dt>H2H G-A-P</dt><dd>Goals-assists-points against tonight's opponent since 2022–23. Shown for interest; it doesn't predict much.</dd></div>
+  </dl></section>
+  <section id="nba"><h2>NBA terms</h2><dl>
+    <div><dt>MIN, PTS, REB, AST, 3PM, PRA</dt><dd>Minutes, points, rebounds, assists, threes made, and points + rebounds + assists. Each cell shows the median with the 8-in-10 range under it.</dd></div>
+    <div><dt>Out / Q / DTD</dt><dd>From the official injury report and current rosters (which follow trades). Out players are removed and their minutes shared among teammates by role; Q (questionable) and DTD (day-to-day) players are projected to play.</dd></div>
+    <div><dt>▲ min / ▼ min</dt><dd>Minutes trending up or down: his last few games vs his longer average.</dd></div>
+    <div><dt>Cell colors</dt><dd>The opponent's defense against the player's position (guards, forwards, centers) for that stat: green gives up more, red less.</dd></div>
+    <div><dt>new</dt><dd>No NBA games yet (rookies, two-way players): projected as a small bench role until real games come in.</dd></div>
   </dl></section>
   <section id="trust"><h2>How accurate is it?</h2>
     <p style="margin:0;line-height:1.6">Every model is tested on past seasons it never saw before going live, and every slate is graded afterwards on the
@@ -445,6 +468,7 @@ def updates():
   </dl></section>
   {section("nfl", "NFL")}
   {section("nhl", "NHL")}
+  {section("nba", "NBA")}
   </div>"""
     write_page("updates.html", "Model updates · Sim Sheet", "updates", body, depth=0)
 
@@ -503,6 +527,10 @@ def main():
     for f in glob.glob(os.path.join(H, "*.html")):
         inject(f, os.path.join(SITE, "nhl", os.path.basename(f)), 1,
                "nhl:results" if os.path.basename(f) == "results.html" else "nhl:sheet")
+    N = os.path.join(HERE, "nba", "projections")
+    for f in glob.glob(os.path.join(N, "*.html")):
+        inject(f, os.path.join(SITE, "nba", os.path.basename(f)), 1,
+               "nba:results" if os.path.basename(f) == "results.html" else "nba:slate")
     for s in SPORTS:
         if s["status"] == "soon":
             preview(s, PLANS.get(s["key"], []))
