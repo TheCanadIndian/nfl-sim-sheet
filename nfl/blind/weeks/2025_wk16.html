@@ -206,10 +206,16 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   .mlc b{font-size:17px}
   h1{font-size:32px}
 }
+
+.mtoggle{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:13.5px;color:var(--muted)}
+.mtoggle .seg{display:inline-flex;gap:0;background:var(--sunk);border-radius:8px;padding:3px}
+.mtoggle .seg a{padding:5px 13px;border-radius:6px;text-decoration:none;color:var(--muted);font-weight:600;font-size:13.5px}
+.mtoggle .seg a[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mtoggle .why{max-width:70ch}
 </style>
 
-<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="../../../index.html">Sim Sheet</a><a class="sp" href="../../../nfl/index.html" aria-current="true">NFL</a><a class="sp" href="../../../nhl/index.html">NHL</a><a class="sp" href="../../../nba/index.html">NBA<span class="soon">soon</span></a><a class="sp" href="../../../mlb/index.html">MLB<span class="soon">soon</span></a><span class="grow"></span><a class="help" href="../../../guide.html">How to read</a></div><div class="row r2"><a class="lnk" href="../../../nfl/index.html" title="Projections for every game this week">This week</a><a class="lnk" href="../../../nfl/results.html" title="Past weeks graded against the real box scores">Results</a><a class="lnk" href="../../../nfl/blind/index.html" title="The same simulation without Vegas lines: an independent second opinion" aria-current="page">Market-blind</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="../../../guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
-<div class="wrap">
+<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="../../../index.html">Sim Sheet</a><a class="sp" href="../../../nfl/index.html" aria-current="true">NFL</a><a class="sp" href="../../../nhl/index.html">NHL</a><a class="sp" href="../../../nba/index.html">NBA<span class="soon">soon</span></a><a class="sp" href="../../../mlb/index.html">MLB<span class="soon">soon</span></a><span class="grow"></span><a class="help" href="../../../guide.html">How to read</a></div><div class="row r2"><a class="lnk" href="../../../nfl/index.html" title="Projections for every game this week">This week</a><a class="lnk" href="../../../nfl/results.html" title="Past weeks graded against the real box scores" aria-current="page">Results</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="../../../guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
+<div class="wrap"><div class="mtoggle"><span>Model</span><span class="seg" role="group" aria-label="Model"><a href="../../weeks/2025_wk16.html" data-keephash>With Vegas</a><a href="2025_wk16.html" aria-current="true" data-keephash>Market-blind</a></span><span class="why">Never sees betting lines: an independent second opinion. Switch to With Vegas and open Model agreement to compare the two.</span></div><script>document.addEventListener('click', function(e){ var a = e.target.closest('a[data-keephash]'); if (a && location.hash && !a.hasAttribute('aria-current')) { e.preventDefault(); location.href = a.getAttribute('href') + location.hash; } });</script>
   <nav class="sitenav" id="sitenav" aria-label="Site"></nav>
   <header>
     <div>
