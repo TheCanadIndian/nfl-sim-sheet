@@ -79,6 +79,7 @@ def nfl(news=False):
     sh(PY, "results.py")
     sh(PY, "markets.py", "nfl")
     sh(PY, "grade_markets.py", "nfl")
+    sh(PY, "patterns.py")                    # prop patterns: tracked record
 
 
 def nhl(auto=False):

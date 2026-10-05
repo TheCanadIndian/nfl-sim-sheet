@@ -597,6 +597,7 @@ MARKETS_BODY = """
   </div>
   <div class="tiles" id="mtiles"></div>
   <details class="card mk-score" id="scorebox"><summary id="scoresum"></summary><div id="score"></div></details>
+  <details class="card mk-score" id="patbox" hidden><summary id="patsum"></summary><div id="pat"></div></details>
   <div id="mtree" class="mt"></div>
   <section class="card" style="gap:8px">
     <h2 style="font-size:20px">How to read this</h2>
@@ -646,6 +647,17 @@ function scorecard(){
     <div class="tw"><table class="t"><thead><tr><th class="l">Market</th><th class="l">Source</th><th>Settled</th><th class="l">Closer to the result</th><th class="l">3%+ edge bets</th></tr></thead><tbody>
     ${rows.map(x => `<tr${x.kind === 'all' ? ' style="font-weight:600"' : ''}><td class="l">${x.kind === 'all' ? 'All markets' : (KIND[x.kind] || x.kind)}</td><td class="l">${x.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</td><td>${x.n}</td><td class="l">${who(x)} <small class="muted">${x.model_ll.toFixed(3)} vs ${x.market_ll.toFixed(3)}</small></td><td class="l">${roi(x)}</td></tr>`).join('')}</tbody></table></div>`;
 }
+function patterns(){
+  const PT = window.MKT && MKT.patterns(), box = document.getElementById('patbox'); if (!PT){ box.hidden = true; return; }
+  box.hidden = false;
+  const L = Object.values(PT), tn = L.reduce((t, p) => t + (p.tracking.n || 0), 0);
+  const pc = v => v == null ? '–' : Math.round(v * 100) + '%';
+  const cell = r => r && r.n ? `${pc(r.hit)} <span class="muted">vs ${pc(r.priced)}</span> <b class="${r.hit - r.priced >= .01 ? 'g2' : r.hit - r.priced <= -.01 ? 'r2' : ''}">${r.hit - r.priced >= 0 ? '+' : '−'}${Math.abs(Math.round((r.hit - r.priced) * 1000) / 10)}</b> <small class="muted">(${r.player_games})</small>` : '<span class="muted">nothing settled yet</span>';
+  document.getElementById('patsum').innerHTML = `<b>Prop pattern tracker</b><span class="muted">${L.length} patterns from props that hit in weeks 1-3 · ${tn ? tn.toLocaleString() + ' tracked props settled since' : 'tracking starts with'} ${new Date(L[0].since + 'T12:00:00').toLocaleDateString([], {month: 'short', day: 'numeric'})}</span>`;
+  document.getElementById('pat').innerHTML = `<p class="muted" style="margin:0">Hit rate vs the price's implied chance, with the gap in points and the number of player-games. A lead only matters if the "since" column keeps beating its price. Tagged players show a ◆ chip here and on the game page (Market-blind view).</p>
+    <div class="tw"><table class="t"><thead><tr><th class="l">Pattern</th><th class="l">Found (weeks 1-3)</th><th class="l">Since tracking</th></tr></thead><tbody>
+    ${L.map(p => `<tr><td class="l"><span class="mkx-pat ${p.sign > 0 ? 'up' : 'down'}">◆ ${esc(p.short)}${p.sign > 0 ? '' : ' ▼'}</span> ${esc(p.label)}</td><td class="l">${cell(p.found)}</td><td class="l">${cell(p.tracking)}</td></tr>`).join('')}</tbody></table></div>`;
+}
 function render(){
   const seg = (id, key, opts) => { document.getElementById(id).innerHTML = opts.map(([k, l]) => `<button data-sk="${key}" data-v="${k}" aria-pressed="${st[key] === k}">${l}</button>`).join(''); };
   seg('mshow', 'show', [['all', 'Everything'], ['edge', 'Edges 3%+'], ['long', 'Longshots']]);
@@ -654,6 +666,7 @@ function render(){
   document.getElementById('msort').value = st.sort;
   try { const {q, ...keepSt} = st; localStorage.setItem('mk-tree', JSON.stringify(keepSt)); } catch (e) {}
   scorecard();
+  patterns();
   const tree = document.getElementById('mtree');
   if (!window.MKT || !MKT.loaded()){ tree.innerHTML = '<p class="muted">Loading live prices…</p>'; return; }
   if (!MKT.fetched()){ tree.innerHTML = '<section class="card"><p class="muted" style="margin:0">No market prices yet for this slate. They appear about 12 hours before the first game.</p></section>'; return; }
@@ -672,6 +685,7 @@ function render(){
   if (first && G.length){ open.add('g|' + G[0].g); open.add('gl|' + G[0].g); first = false; }
   if (st.q) for (const g of G){ open.add('g|' + g.g); for (const n of Object.keys(g.players)) if (n.toLowerCase().includes(st.q.toLowerCase())) open.add('p|' + g.g + '|' + n); }
   const order = (a, b) => a.k.localeCompare(b.k) || (a.l ?? 0) - (b.l ?? 0) || a.s.localeCompare(b.s);
+  const KO = {win: 0, total: 1, spread: 2}, gorder = (a, b) => KO[a.k] - KO[b.k] || Math.abs((a.ya ?? .5) - .5) - Math.abs((b.ya ?? .5) - .5);   // winner, then lines nearest 50/50
   const top = list => list.slice().sort((a, b) => bestV(b) - bestV(a))[0];
   tree.innerHTML = G.length ? G.map(g => {
     const list = g.game.concat(...Object.values(g.players)), nE = list.filter(r => bestV(r) >= .03).length, b = top(list);
@@ -680,9 +694,9 @@ function render(){
     const sum = `<span class="mt-g"><b>${esc(g.a)} @ ${esc(g.h)}</b><small>${esc(when(g.start))}</small></span><span class="mt-meta">${list.length} markets · ${nE} with 3%+ edge${b ? ' · best ' + chip(b) : ''}</span>`;
     return det('g|' + g.g, sum, () =>
       (g.game.length ? det('gl|' + g.g, `<span class="mt-p"><b>Game lines</b><small>winner · total · spread</small></span><span class="mt-meta">${g.game.length} lines · ${chip(top(g.game))}</span>`,
-        () => `<div class="mt-rows">${g.game.slice().sort(order).map(r => MKT.row(r, 'vegas')).join('')}</div>`, 'mt-sub') : '')
+        () => `<div class="mt-rows">${g.game.slice().sort(gorder).map(r => MKT.row(r, 'vegas')).join('')}</div>`, 'mt-sub') : '')
       + (ps.length ? `<div class="mt-label">Players</div>` + ps.map(p => det('p|' + g.g + '|' + p.n,
-        `<span class="mt-p"><b>${esc(p.n)}</b><small>${p.l.length} line${p.l.length > 1 ? 's' : ''} · ${[...new Set(p.l.map(r => KIND[r.k] || r.k))].join(', ')}</small></span><span class="mt-meta"><span title="Dollars you could spend backing this player (YES) within 3¢ of the best price, all lines">${MKT.usd(p.m)} to back</span> · ${chip(p.b)}${p.l.some(MKT.thin) ? '<span class="mk-thin">thin</span>' : ''}</span>`,
+        `<span class="mt-p"><b>${esc(p.n)}</b>${MKT.patChips(g.g, null, p.n)}<small>${p.l.length} line${p.l.length > 1 ? 's' : ''} · ${[...new Set(p.l.map(r => KIND[r.k] || r.k))].join(', ')}</small></span><span class="mt-meta"><span title="Dollars you could spend backing this player (YES) within 3¢ of the best price, all lines">${MKT.usd(p.m)} to back</span> · ${chip(p.b)}${p.l.some(MKT.thin) ? '<span class="mk-thin">thin</span>' : ''}</span>`,
         () => `<div class="mt-rows">${p.l.slice().sort(order).map(r => MKT.row(r, 'vegas')).join('')}</div>`, 'mt-sub')).join('') : ''), 'card mt-game');
   }).join('') : '<section class="card"><p class="muted" style="margin:0">Nothing matches these filters.</p></section>';
 }

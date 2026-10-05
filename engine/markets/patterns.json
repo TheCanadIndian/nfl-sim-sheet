@@ -1,0 +1,163 @@
+{
+ "patterns": {
+  "high_total": {
+   "short": "high total",
+   "sign": 1,
+   "label": "Overs in a high-total game (48+)",
+   "desc": "Yardage and catch overs when the Vegas game total is 48 or more.",
+   "found": {
+    "n": 2044,
+    "player_games": 117,
+    "hit": 0.3635,
+    "priced": 0.3221
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "dog_wr1": {
+   "short": "dog WR1",
+   "sign": 1,
+   "label": "Underdog's #1 receiver, receiving yards overs",
+   "desc": "The underdog team's top projected receiver (a WR): receiving-yard overs.",
+   "found": {
+    "n": 460,
+    "player_games": 42,
+    "hit": 0.4022,
+    "priced": 0.3297
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "dog_qb": {
+   "short": "dog QB",
+   "sign": 1,
+   "label": "Underdog QB passing yards overs",
+   "desc": "Passing-yard overs for the underdog's quarterback (trailing teams throw more).",
+   "found": {
+    "n": 389,
+    "player_games": 46,
+    "hit": 0.4319,
+    "priced": 0.3878
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "te_td": {
+   "short": "TE TD",
+   "sign": 1,
+   "label": "Tight end anytime TD",
+   "desc": "Anytime-TD YES on tight ends.",
+   "found": {
+    "n": 175,
+    "player_games": 175,
+    "hit": 0.2286,
+    "priced": 0.1625
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "low_rung": {
+   "short": "low rung",
+   "sign": 1,
+   "label": "Lowest rung of the ladder",
+   "desc": "The easiest line on a player's yardage or catch ladder.",
+   "found": {
+    "n": 1414,
+    "player_games": 664,
+    "hit": 0.7129,
+    "priced": 0.6893
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "cheap_over": {
+   "short": "cheap over",
+   "sign": 1,
+   "label": "Cheap overs (10-25\u00a2)",
+   "desc": "Yardage and catch overs priced 10-25\u00a2; they tended to climb before kickoff, so buy early.",
+   "found": {
+    "n": 2425,
+    "player_games": 659,
+    "hit": 0.1761,
+    "priced": 0.1655
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "low_total": {
+   "short": "low total",
+   "sign": -1,
+   "label": "Overs in a low-total game (42.5 or less)",
+   "desc": "Yardage and catch overs when the Vegas game total is 42.5 or less hit LESS often than priced.",
+   "found": {
+    "n": 3386,
+    "player_games": 221,
+    "hit": 0.2868,
+    "priced": 0.3059
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  },
+  "rb_td": {
+   "short": "RB TD",
+   "sign": -1,
+   "label": "Running back anytime TD",
+   "desc": "Anytime-TD YES on running backs scored LESS often than priced, most of all on underdogs.",
+   "found": {
+    "n": 226,
+    "player_games": 226,
+    "hit": 0.2301,
+    "priced": 0.2825
+   },
+   "tracking": {
+    "n": 0,
+    "player_games": 0,
+    "hit": null,
+    "priced": null
+   },
+   "since": "2026-10-05"
+  }
+ },
+ "timing": {
+  "anytime_td": "Buy TDs late (after inactives): TD prices slip ~0.5\u00a2 into kickoff.",
+  "first_td": "Buy late, after inactives.",
+  "win": "Moneylines can be taken early in the week.",
+  "total": "No timing edge found on totals.",
+  "props": "Buy late (after inactives), when spreads are tightest; cheap overs (10-25\u00a2) are the exception: they climb ~2\u00a2 from 2 days out."
+ }
+}
