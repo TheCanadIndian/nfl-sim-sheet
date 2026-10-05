@@ -346,3 +346,22 @@ or `/mlb/` page is a preview built from `PLANS`.
   shown at `/updates.html`. Delete an entry in `model_params.json` to revert it.
 - First dry runs (2026-10-05) adopted nothing: best NFL candidate (catch-rate shrinkage 40 → 30)
   improved both windows by only 0.03–0.04%; best NHL ones by < 0.00004.
+
+## Running in the cloud (2026-10-05)
+Everything runs on GitHub Actions in the site repo (TheCanadIndian/nfl-sim-sheet), so the PC
+can be off. Layout: the repo root is the published site; `engine/` holds the code and the
+state that must persist (frozen pregame projections, grades, overrides, learned settings,
+logs). Large rebuildable data (nfl.db, hockey/nhl.db, hockey/raw) lives in the Actions cache,
+seeded once from the `data-seed` release; if the cache is ever evicted it's reseeded/rebuilt.
+- Workflows, one per sport (independent schedules, queues and caches): `nfl.yml` (the old Task
+  Scheduler times + Sun 19:15 SNF; Tue 10:00 self-tuning), `nhl.yml` (30-min check; Tue 10:30
+  self-tuning), `deploy.yml` (publishes the latest site; triggered by each sport's run and by
+  pushes from the PC). Shared steps: `.github/actions/run-sport`. Times are UTC for Eastern
+  daylight time; bump the hours by 1 after Nov 1 if exact ET timing matters.
+- `run.py` is the cross-platform runner (`nfl [--news]`, `nhl [--auto]`, `learn --sport X`).
+- News checks run in the cloud only if an `ANTHROPIC_API_KEY` repo secret is added; otherwise
+  those runs are plain updates.
+- Working on the PC: `python sync_engine.py pull` (get the cloud's latest state) before editing,
+  `python sync_engine.py push` to send code changes up. Remove the local Task Scheduler tasks
+  (`install_schedule.ps1 -Remove`) so the PC and the cloud don't both publish.
+- Run by hand: GitHub → Actions → nfl / nhl → Run workflow (pick a mode).
