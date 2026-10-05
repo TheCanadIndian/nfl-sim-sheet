@@ -365,3 +365,14 @@ seeded once from the `data-seed` release; if the cache is ever evicted it's rese
   `python sync_engine.py push` to send code changes up. Remove the local Task Scheduler tasks
   (`install_schedule.ps1 -Remove`) so the PC and the cloud don't both publish.
 - Run by hand: GitHub → Actions → nfl / nhl → Run workflow (pick a mode).
+
+## Prediction markets (2026-10-05)
+`markets.py <sport>` pulls Kalshi's public market data (no account) for every market we also
+project (moneyline, total, anytime/first TD and goal scorers, player yards/receptions,
+NBA points/rebounds/assists/threes), matches it to our projections by game (event ticker) and
+player name, and records bid/ask, sizes, volume, open interest and our edge after the taker fee
+(~7% x p x (1-p)). High-variance markets (scorer markets, YES at 25 cents or less) get the full
+order book: dollars within 1/3/5 cents of the best ask and bid, totals, top levels. Runs after
+each sport's update in the cloud; snapshots in markets/<sport>_<date>.json (state); shown at
+/markets.html. Big edges in deep, active markets usually mean news the model doesn't have.
+Next: grade model vs market on the last pregame snapshot.
