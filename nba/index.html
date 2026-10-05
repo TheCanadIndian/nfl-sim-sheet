@@ -353,7 +353,8 @@ function slider(p, g){
   const s = p.s[m][st];
   return `<div class="slider" data-sk="${esc(p.k)}"><div class="sl-top"><div class="seg">${stats.map(x => `<button data-ostat="${x}" aria-pressed="${x===st}">${LAB[x]}</button>`).join('')}</div><span class="muted small">Median <b>${f1(s[MED])}</b> · 8 in 10 games ${f1(s[P10])}–${f1(s[P90])} · ${m === 'vegas' ? 'With Vegas' : 'Market-blind'}</span></div>
     <div class="sl-row"><label for="sl-in">Line</label><button class="sl-step" data-ostep="-1">−</button><input id="sl-in" type="range" min="${lo}" max="${hi}" step="1" value="${L}"><button class="sl-step" data-ostep="1">+</button><b class="sl-val" id="sl-val">${L}</b></div>
-    <div id="sl-res">${readout(d, L)}</div></div>`;
+    <div id="sl-res">${readout(d, L)}</div>
+    ${window.MKT ? MKT.player(g, p.id, p.n, [st], m, true) : ''}</div>`;
 }
 function readout(d, L){
   const r = probs(d, L), np = Math.max(r.over + r.under, 1e-9), ov = r.over/np, un = r.under/np, so = shadeP(ov), su = shadeP(un);
@@ -377,7 +378,8 @@ function gameView(){
   const head = `<section class="panel"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}</h2>${sw}<span class="muted small">${esc(g.start)}${g.has_line ? ` · ${esc(g.home)} ${g.spread > 0 ? '+' : ''}${g.spread} · O/U ${g.total}` : ''}</span></div>
     ${!g.has_line && mode(g.id) === 'vegas' ? '<p class="noline" style="margin:0">No betting line posted yet: With Vegas uses the market-blind team forecast until it is.</p>' : ''}
     <div class="score"><div class="side away"><span class="code">${esc(g.away)}</span><span class="pts">${f1(M.away_pts)}</span><span class="muted small">win ${pct(1 - hw)}</span></div><span class="at">@</span><div class="side home"><span class="code">${esc(g.home)}</span><span class="pts">${f1(M.home_pts)}</span><span class="muted small">win ${pct(hw)}</span></div></div>
-    <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div></section>`;
+    <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div>
+    ${window.MKT ? MKT.game(g.id, mode(g.id)) : ''}</section>`;
   const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small">Median, with 8-in-10 range below. Color = matchup vs this defense. Tap a name to slide a line.</span></div>${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;
 }
@@ -427,4 +429,4 @@ render();
   b.hidden = false;
   b.querySelector('button').addEventListener('click', function(){ b.remove(); try { localStorage.setItem('simsheet-newbie', 'done'); } catch (e) {} });
 })();
-</script>
+</script><script src="../mkt.js" data-sport="nba"></script>
