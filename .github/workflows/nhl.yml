@@ -28,6 +28,7 @@ jobs:
     env:
       SIM_SITE: ${{ github.workspace }}
       PYTHONIOENCODING: utf-8
+      TZ: America/New_York
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
