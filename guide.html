@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Sim Sheet</title>
+<title>How to read · Sim Sheet</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
@@ -270,38 +270,54 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 .plan{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}
 @media (max-width:600px){.hero h1{font-size:30px}.cards{grid-template-columns:1fr}.card{padding:16px}.list li{grid-template-columns:1fr auto 54px;gap:8px}.wrap,.hero,.card,.steps li{min-width:0}}
 </style>
-<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA<span class="soon">soon</span></a><a class="sp" href="mlb/index.html">MLB<span class="soon">soon</span></a><span class="grow"></span><a class="help" href="guide.html">How to read</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
+<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA<span class="soon">soon</span></a><a class="sp" href="mlb/index.html">MLB<span class="soon">soon</span></a><span class="grow"></span><a class="help" href="guide.html" aria-current="page">How to read</a></div></nav>
 <div class="wrap">
-  <header class="hero">
-    <div class="eyebrow">Updated Monday Oct 5, 12:37 AM</div>
-    <h1>Player projections, simulated</h1>
-    <p class="sub">Every game is simulated thousands of times from play-by-play data. For each player you get the
-      most likely result, a realistic range, the chance to score, and the fair odds that chance is worth.</p>
+  <header class="hero"><h1>How to read Sim Sheet</h1>
+    <p class="sub">Two minutes, start to finish. Every number on the site comes from simulating each game thousands of
+      times; these are the words you'll see and what they mean.</p>
+    <nav class="toc" aria-label="Sections"><a href="#basics">The basics</a><a href="#odds">Odds and value</a><a href="#nfl">NFL terms</a><a href="#nhl">NHL terms</a><a href="#trust">How accurate is it?</a></nav>
   </header>
-  <ol class="steps">
-    <li><b>Pick a sport</b><span>Use the tabs at the top. Each sport has the next slate and a Results page.</span></li>
-    <li><b>Open a game</b><span>See each player's median (the coin-flip number), the range of likely outcomes, and the chance to score.</span></li>
-    <li><b>Compare with your book</b><span>If a sportsbook pays more than our fair odds, that side is value by the model. <a href="guide.html">How to read the numbers →</a></span></li>
-  </ol>
-  <div class="sechead"><h2>Live now</h2></div>
-  <div class="cards"><section class="card"><div class="ch"><span class="sport">NFL</span><span class="badge live">Live</span></div>
-        <p class="lead">Every player&#x27;s box score simulated 10,000 times: yards, catches, touchdowns, first TD scorer.</p>
-        <p class="lead">Week 4 · 2 games still to play
-          · next kickoff Sun Oct 04 · 8:20 PM ET</p>
-        <h3>Most likely to score a TD</h3>
-        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>74%</b><em>-291</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>64%</b><em>-174</em></li><li><span>Amon-Ra St. Brown <small>DET vs CAR</small></span><b>54%</b><em>-117</em></li><li><span>Chuba Hubbard <small>CAR vs DET</small></span><b>48%</b><em>+111</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>39%</b><em>+156</em></li></ol>
-        <p class="acc">Track record 2026: <b>80%</b> of results inside the 8-in-10 range (target 80%) · <b>191</b> TD scorers vs <b>186</b> expected. <a href="nfl/results.html">Every week graded →</a></p><ul class="pages"><li><a href="nfl/index.html"><b>This week</b><span>Projections for every game this week</span></a></li><li><a href="nfl/results.html"><b>Results</b><span>Past weeks graded against the real box scores</span></a></li><li><a href="nfl/blind/index.html"><b>Market-blind</b><span>The same simulation without Vegas lines: an independent second opinion</span></a></li></ul></section><section class="card"><div class="ch"><span class="sport">NHL</span><span class="badge live">Live</span></div>
-        <p class="lead">Anytime and first goal scorers, moneylines, puck lines and totals for every game.</p>
-        <p class="lead">Sunday, October 4 · 5 games</p>
-        <h3>Most likely to score a goal</h3>
-        <ol class="list"><li><span>Kyle Connor <small>WPG vs DET · PP1</small></span><b>40%</b><em>+150</em></li><li><span>Alex DeBrincat <small>DET vs WPG · PP1</small></span><b>38%</b><em>+160</em></li><li><span>Cutter Gauthier <small>ANA vs FLA · PP1</small></span><b>38%</b><em>+166</em></li><li><span>Sam Reinhart <small>FLA vs ANA · PP1</small></span><b>37%</b><em>+169</em></li><li><span>Mark Stone <small>VGK vs VAN · PP1</small></span><b>36%</b><em>+178</em></li></ol><ul class="pages"><li><a href="nhl/index.html"><b>Tonight</b><span>Goal chances, lineups, goalies and moneylines for the next slate</span></a></li><li><a href="nhl/results.html"><b>Results</b><span>Every night graded: scorers, first goals, moneylines</span></a></li></ul></section></div>
-  <div class="sechead"><h2>Coming next</h2></div>
-  <div class="cards"><section class="card soon"><div class="ch"><span class="sport">NBA</span><span class="badge">Launching in October 2026</span></div>
-        <p class="lead">Points, rebounds, assists and threes for every player, plus moneylines and totals.</p><a href="nba/index.html" style="color:var(--accent);font-weight:600;text-decoration:none">What's planned →</a></section><section class="card soon"><div class="ch"><span class="sport">MLB</span><span class="badge">Launching for spring training 2027</span></div>
-        <p class="lead">Hits, home runs, strikeouts and pitcher lines, plus moneylines and run totals.</p><a href="mlb/index.html" style="color:var(--accent);font-weight:600;text-decoration:none">What's planned →</a></section></div></div><script>
+  <div class="guide">
+  <section id="basics"><h2>The basics</h2><dl>
+    <div><dt>Median</dt><dd>The middle outcome: half the simulated games land above it, half below. "Median 64 receiving yards" means over or under 63.5 is about a coin flip.</dd></div>
+    <div><dt>Range bar (8 in 10 games)</dt><dd>The thin line spans where 8 of every 10 simulated games landed; the darker band is the middle half. Short bar: steady player. Long bar: boom or bust.</dd></div>
+    <div><dt>Chance to score</dt><dd>How often the player scored in the simulations. 40% means about 2 games in 5.</dd></div>
+    <div><dt>Projected score / win chance</dt><dd>Average points or goals per team across the simulations, and how often each side won.</dd></div>
+    <div><dt>★ and highlights</dt><dd>Stars and tinted rows mark the strongest options on a page (for example tonight's top goal scorers). Hover or tap them for the reasons.</dd></div>
+    <div><dt>Results pages</dt><dd>Every past game is graded against the real box score, so you can check how often the ranges held before trusting them.</dd></div>
+  </dl></section>
+  <section id="odds"><h2>Odds and value</h2><dl>
+    <div><dt>Fair odds</dt><dd>What a chance is worth with no bookmaker margin. 50% = −100 / +100, 33% = +200, 20% = +400.</dd></div>
+    <div><dt>Finding value</dt><dd>If a book pays more than the fair odds (book +150 when fair is +120), the model thinks that side is good value. If the book's price is shorter, it isn't.</dd></div>
+    <div><dt>Price a line (NFL)</dt><dd>On the NFL page open <a href="nfl/index.html#fair">Fair odds</a>, pick a player and stat, type the book's line, and get fair over/under odds.</dd></div>
+    <div><dt>Keep it in proportion</dt><dd>Even the best picks hit well under half the time for scorer props. The fair odds tell you whether the price is right, not whether it will happen.</dd></div>
+  </dl></section>
+  <section id="nfl"><h2>NFL terms</h2><dl>
+    <div><dt>Anytime / first TD</dt><dd>Chance to score at least one touchdown, and to score the game's first touchdown.</dd></div>
+    <div><dt>Market-blind</dt><dd>A second model that never sees the Vegas spread or total. When it disagrees with the main model, the result tends to land in between.</dd></div>
+    <div><dt>Model agreement tab</dt><dd>The two models side by side for each player, with a calibrated chance to beat the main median. Green = blind model more bullish, red = more bearish. Leans, not locks: the best are around 53–55%.</dd></div>
+    <div><dt>Defense vs position</dt><dd>How many fantasy points each defense allows to QBs, RBs, WRs (slot and outside) and TEs, ranked this season and blended with recent history.</dd></div>
+    <div><dt>Matchups ▲ ▼ and red-zone tags</dt><dd>Flags for unusually easy or tough matchups. They explain a projection; it already includes them, so don't add them on top.</dd></div>
+    <div><dt>WR1 / TE1 / RB1</dt><dd>Depth-chart roles from the team's current chart.</dd></div>
+  </dl></section>
+  <section id="nhl"><h2>NHL terms</h2><dl>
+    <div><dt>P(goal) / 1st goal</dt><dd>Chance to score at least one goal (regulation or OT, not shootouts), and to score the game's first goal.</dd></div>
+    <div><dt>Lines and PP units</dt><dd>L1–L4 forward lines, D1–D3 defense pairs, PP1/PP2 power-play units. Each team shows its lineup source: official game roster, reported lines, or an ice-time estimate.</dd></div>
+    <div><dt>Moneyline, puck line, total</dt><dd>Chance each team wins (OT and shootout included), wins by 2+ (−1.5), and the chance the game goes over 5.5 or 6.5 goals.</dd></div>
+    <div><dt>SV%, GSAA, GSAx</dt><dd>Save percentage; goals saved above an average save percentage; goals saved above expected given shot quality. Positive = better goalie.</dd></div>
+    <div><dt>Defense vs position</dt><dd>Expected goals each team allows to centers, wingers and defensemen, vs league average.</dd></div>
+    <div><dt>H2H G-A-P</dt><dd>Goals-assists-points against tonight's opponent since 2022–23. Shown for interest; it doesn't predict much.</dd></div>
+  </dl></section>
+  <section id="trust"><h2>How accurate is it?</h2>
+    <p style="margin:0;line-height:1.6">Every model is tested on past seasons it never saw before going live, and every slate is graded afterwards on the
+      Results pages. A well-calibrated model puts about 8 in 10 results inside its 8-in-10 range, and players given a 30%
+      chance score about 30% of the time. That's the standard we hold each sport to. Data: nflverse play-by-play, the NHL's
+      public API, Open-Meteo weather. These are estimates, not guarantees.</p>
+  </section>
+  </div></div><script>
 (function(){ var b = document.getElementById('newbie'); if (!b) return;
   try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
   b.hidden = false;
   b.querySelector('button').addEventListener('click', function(){ b.remove(); try { localStorage.setItem('simsheet-newbie', 'done'); } catch (e) {} });
 })();
-</script><script>if (location.hash === '#guide') location.replace('guide.html');</script>
+</script>
