@@ -493,6 +493,23 @@ def write_live(sport):
         return
     snap = json.load(open(fs[-1]))
     rows = []
+    tagger = None
+    if sport == "nfl":                                     # prop patterns (patterns.py): same rules as the grader
+        try:
+            import patterns as PT
+            low, ctxs = PT.ladders(snap.get("markets", [])), {}
+
+            def tagger(r):
+                stem = PT.week_tables(r["game"])
+                if stem is None:
+                    return []
+                if stem not in ctxs:
+                    ctxs[stem] = PT.context(pd.read_csv(stem + "_players.csv"), pd.read_csv(stem + "_teams.csv"))
+                yb, ya = r.get("yes_bid"), r.get("yes_ask")
+                mid = (yb + ya) / 2 if yb and ya else ya
+                return PT.tag_nfl(r["kind"], r.get("line"), mid, r.get("pid"), r["game"], ctxs[stem], low.get((r["game"], str(r.get("pid")), r["kind"])))
+        except Exception as e:
+            print("patterns skipped:", type(e).__name__, e)
     for r in snap.get("markets", []):
         b = r.get("book") or {}
         if b.get("empty"):
@@ -504,13 +521,19 @@ def write_live(sport):
         rows.append(dict(s=r["source"], t=r["ticker"], g=r["game"], a=r.get("away"), h=r.get("home"), ls=bool(r.get("longshot")), k=r["kind"], l=r.get("line"), ti=r.get("title"), o=r.get("outcome"),
                          pid=r.get("pid"), n=name, yb=r.get("yes_bid"), ya=r.get("yes_ask"), p=r["ours"],
                          by=None if by is None else round(by), bn=None if bn is None else round(bn), start=r.get("start")))
+        if tagger:
+            pats = tagger(r)
+            if pats:
+                rows[-1]["pat"] = pats
     os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
     f = snap.get("fetched")
     try:
         f = dt.datetime.fromisoformat(f).astimezone().isoformat(timespec="minutes")    # naive local time -> with offset
     except (TypeError, ValueError):
         pass
-    json.dump(dict(sport=sport, fetched=f, weak=weak_kinds(sport), rows=rows),
+    pp = os.path.join(OUT, "patterns.json")
+    extra = json.load(open(pp)) if sport == "nfl" and os.path.exists(pp) else {}
+    json.dump(dict(sport=sport, fetched=f, weak=weak_kinds(sport), rows=rows, **extra),
               open(os.path.join(SITE, "markets", f"live_{sport}.json"), "w"), separators=(",", ":"), default=str)
 
 

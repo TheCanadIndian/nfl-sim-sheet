@@ -43,6 +43,13 @@
 .mkx-set{margin-left:6px;font-size:11px;padding:1px 7px;border-radius:9px;border:1px solid var(--faint);background:none;color:var(--muted);cursor:pointer}
 .mkx-set:hover{color:var(--ink);border-color:var(--sel)}
 .mkx details summary{cursor:pointer;color:var(--muted);font-size:12.5px;padding-top:4px}
+.mkx-pat{display:inline-block;margin-left:5px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help}
+.mkx-pat.up{color:var(--g2);border:1px solid color-mix(in srgb,var(--g2) 55%,transparent)}
+.mkx-pat.down{color:var(--r1);border:1px solid color-mix(in srgb,var(--r1) 55%,transparent)}
+.mkx-pb{display:grid;gap:6px;padding:8px 10px;margin:2px 0 4px;border-radius:6px;background:var(--sunk)}
+.mkx-pr{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;font-size:13px}
+.mkx-pr small{color:var(--muted);font-size:11.5px}
+.mkx-tip{font-size:12.5px;color:var(--muted)}
 .mkx-c{display:grid;gap:1px;line-height:1.2;white-space:nowrap}
 .mkx-c small{color:var(--muted);font-size:11px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
@@ -94,7 +101,7 @@
     const by = r.by ?? null, bn = r.bn ?? null, tot = (by || 0) + (bn || 0);
     const setBtn = slider && r.l != null && !['win', 'spread', 'anytime_td', 'first_td', 'first_goal'].includes(r.k) ? `<button class="mkx-set" data-mline="${r.l}" title="Move the slider to this line">use line</button>` : '';
     return `<div class="mkx-r${focus ? ' on' : ''}">
-      <div class="mkx-l"><span class="mkx-src" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket (live)'}">${r.s === 'kalshi' ? 'K' : 'P'}</span><b>${esc(yl)}</b> <small>${esc(KLAB[r.k] || r.k)}</small>${isThin(r) ? `<span class="mkx-thin" title="Bid/ask gap ${Math.round(spr(r) * 100)}¢: a less-traded market">thin ${Math.round(spr(r) * 100)}¢</span>` : ''}${setBtn}</div>
+      <div class="mkx-l"><span class="mkx-src" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket (live)'}">${r.s === 'kalshi' ? 'K' : 'P'}</span><b>${esc(yl)}</b> <small>${esc(KLAB[r.k] || r.k)}</small>${isThin(r) ? `<span class="mkx-thin" title="Bid/ask gap ${Math.round(spr(r) * 100)}¢: a less-traded market">thin ${Math.round(spr(r) * 100)}¢</span>` : ''}${(r.pat || []).map(id => pchip(id)).join('')}${setBtn}</div>
       <div class="mkx-p">Price <b>${cents(r.ya)}</b> · ours <b>${pc(p)}</b>${best.v != null && best.v >= .02 ? ` · <span class="e ${weak ? '' : shade(best.v)}">+${(best.v * 100).toFixed(1)}% ${esc(best.lab)}</span>${weak ? ' <span class="mkx-warn" title="On settled games of this type the market has been more accurate than our model">market ahead</span>' : ''}` : ' · <small>no edge</small>'}</div>
       <div class="mkx-liq" title="Dollars you could spend within 3¢ of the best price on each side"><span>${esc(yl.length > 14 ? 'Yes' : yl)} <b>${usd(by)}</b></span><div class="mkx-bar">${tot > 0 ? `<i style="width:${by / tot * 100}%"></i><i style="width:${bn / tot * 100}%"></i>` : ''}</div><span><b>${usd(bn)}</b> ${esc(nl.length > 14 ? 'No' : nl)}</span></div>
     </div>`;
@@ -109,7 +116,35 @@
   const forPlayer = (gid, pid, name) => forGame(gid).filter(r => r.n && ((pid != null && r.pid != null && same(r.pid, pid)) || norm(r.n) === norm(name)));
   const order = (a, b) => a.k.localeCompare(b.k) || (a.l ?? 0) - (b.l ?? 0) || a.s.localeCompare(b.s);
 
+  // prop patterns (patterns.py): traits that props which hit had in common, with a tracked record
+  const PSIGN = id => (D && D.patterns && D.patterns[id] ? D.patterns[id].sign : 1);
+  const pct0 = v => v == null ? '–' : Math.round(v * 100) + '%';
+  function precord(P){
+    const f = P.found || {}, t = P.tracking || {};
+    const since = P.since ? new Date(P.since + 'T12:00:00').toLocaleDateString([], {month: 'short', day: 'numeric'}) : '';
+    return `found in weeks 1-3: hit ${pct0(f.hit)} vs ${pct0(f.priced)} priced (${f.player_games || 0} player-games)` +
+      ` · since ${since}: ${t.n ? `hit ${pct0(t.hit)} vs ${pct0(t.priced)} (${t.player_games})` : 'nothing settled yet'}`;
+  }
+  function pchip(id, extra){
+    const P = D && D.patterns && D.patterns[id]; if (!P) return '';
+    return `<span class="mkx-pat ${P.sign > 0 ? 'up' : 'down'}" title="${esc(P.label)}: ${esc(P.desc)} ${esc(precord(P))}${extra ? ' · ' + esc(extra) : ''}">◆ ${esc(P.short)}${P.sign > 0 ? '' : ' ▼'}</span>`;
+  }
+  function playerPats(gid, pid, name){
+    const by = {};
+    for (const r of forPlayer(gid, pid, name)) for (const id of (r.pat || [])) (by[id] = by[id] || []).push(r);
+    return by;
+  }
   function best(r, model){ const [yl, nl] = sides(r), e = edges(r, ours(r, model)); return (e.y ?? -9) >= (e.n ?? -9) ? {v: e.y, lab: yl, side: 'yes'} : {v: e.n, lab: nl, side: 'no'}; }
+  function patBlock(gid, pid, name, focusKinds){
+    const by = playerPats(gid, pid, name), ids = Object.keys(by);
+    const T = (D && D.timing) || {}, f = (focusKinds || [])[0];
+    const tip = f ? (T[f] || (['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(f) ? T.props : '')) : '';
+    if (!ids.length && !tip) return '';
+    const line = id => { const P = D.patterns[id], rs = by[id], lines = rs.map(r => (r.k === 'anytime_td' ? 'TD' : (KLAB[r.k] || r.k) + ' ' + Math.ceil(r.l))).slice(0, 4);
+      return `<div class="mkx-pr">${pchip(id)}<span><b>${esc(P.label)}</b> <small>${esc(lines.join(', '))}${rs.length > 4 ? ' …' : ''}</small><br><small>${esc(precord(P))}</small></span></div>`; };
+    return `<div class="mkx-pb"><div class="mkx-h"><span class="t">Patterns in props that hit</span><small>${P_NOTE}</small></div>${ids.map(line).join('')}${tip ? `<div class="mkx-tip">⏱ ${esc(tip)}</div>` : ''}</div>`;
+  }
+  const P_NOTE = 'early leads from 3 weeks: the "since" record shows whether they keep hitting';
   window.MKT = {
     has: () => !!(D && D.rows.length),
     loaded: () => !!D,
@@ -117,8 +152,10 @@
     fetched: () => (D ? D.fetched : null),
     weak: k => !!(D && D.weak && D.weak.includes(k)),
     row: (r, model, focus) => row(r, model, focus, false),
-    best, thin: isThin, spread: spr, usd, shade, label: k => KLAB[k] || k,
-    player(gid, pid, name, focusKinds, model, slider){
+    best, thin: isThin,
+    patChips(gid, pid, name){ if (!D || !D.patterns) return ''; return Object.keys(playerPats(gid, pid, name)).map(id => pchip(id)).join(''); },
+    patterns: () => (D && D.patterns) || null, precord, spread: spr, usd, shade, label: k => KLAB[k] || k,
+    player(gid, pid, name, focusKinds, model, slider, showPat){
       const rows = forPlayer(gid, pid, name).sort(order); if (!rows.length) return '';
       const f = new Set(focusKinds || []);
       // ladders get long (13 rush-yard rungs): show the rungs priced nearest 50/50, three for the stat
@@ -128,7 +165,8 @@
         (top.filter(x => x.k === r.k).length < (f.has(r.k) ? 3 : 1) ? top : rest).push(r);
       const fo = (a, b) => (f.has(b.k) - f.has(a.k)) || order(a, b);
       top.sort(fo); rest.sort(fo);
-      return `<div class="mkx">${head('Prediction markets for ' + name)}${top.map(r => row(r, model, f.has(r.k), slider)).join('')}${rest.length ? `${det('p|' + gid + '|' + name)}<summary>All ${rows.length} lines for this player</summary>${rest.map(r => row(r, model, f.has(r.k), slider)).join('')}</details>` : ''}</div>`;
+      const pats = showPat ? patBlock(gid, pid, name, focusKinds) : '';
+      return `<div class="mkx">${head('Prediction markets for ' + name)}${pats}${top.map(r => row(r, model, f.has(r.k), slider)).join('')}${rest.length ? `${det('p|' + gid + '|' + name)}<summary>All ${rows.length} lines for this player</summary>${rest.map(r => row(r, model, f.has(r.k), slider)).join('')}</details>` : ''}</div>`;
     },
     game(gid, model){
       const rows = forGame(gid).filter(r => ['win', 'total', 'spread'].includes(r.k)).sort(order); if (!rows.length) return '';
