@@ -38,19 +38,19 @@ SPORTS = [
          blurb="Every player's box score simulated 10,000 times: yards, catches, touchdowns, first TD scorer.",
          pages=[("week", "This week", "nfl/index.html", "Projections for every game this week"),
                 ("results", "Results", "nfl/results.html", "Past weeks graded against the real box scores"),
-                ("markets", "Markets", "markets.html#nfl", "Kalshi prices and liquidity next to our chances, longshots first"),
+                ("markets", "Markets", "nfl/markets.html", "Live Kalshi and Polymarket prices by game and player, with money on each side"),
                 ("updates", "Model updates", "updates.html#nfl", "What the model learned and changed, week by week")]),
     dict(key="nhl", name="NHL", status="live",
          blurb="Anytime and first goal scorers, moneylines, puck lines and totals for every game.",
          pages=[("sheet", "Tonight", "nhl/index.html", "Goal chances, lineups, goalies and moneylines for the next slate"),
                 ("results", "Results", "nhl/results.html", "Every night graded: scorers, first goals, moneylines"),
-                ("markets", "Markets", "markets.html#nhl", "Kalshi prices and liquidity next to our chances, longshots first"),
+                ("markets", "Markets", "nhl/markets.html", "Live Kalshi and Polymarket prices by game and player, with money on each side"),
                 ("updates", "Model updates", "updates.html#nhl", "What the model learned and changed, week by week")]),
     dict(key="nba", name="NBA", status="live",
          blurb="Minutes, points, rebounds, assists and threes for every player, with and without Vegas lines.",
          pages=[("slate", "Next slate", "nba/index.html", "Every player's projection for the next slate, both models"),
                 ("results", "Results", "nba/results.html", "Every night graded against the box scores, both models"),
-                ("markets", "Markets", "markets.html#nba", "Kalshi prices and liquidity next to our chances, longshots first"),
+                ("markets", "Markets", "nba/markets.html", "Live Kalshi and Polymarket prices by game and player, with money on each side"),
                 ("updates", "Model updates", "updates.html#nba", "What the model learned and changed")]),
     dict(key="mlb", name="MLB", status="soon", eta="Launching for spring training 2027",
          blurb="Hits, home runs, strikeouts and pitcher lines, plus moneylines and run totals.",
@@ -247,6 +247,28 @@ PAGE_CSS = report.BASE_CSS + BAR_CSS + """
 .toc a:hover{border-color:var(--accent)}
 .plan{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}
 .mk-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.mk-q{background:var(--surface);color:var(--ink);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;min-width:0;flex:1 1 180px;max-width:280px}
+.mt{display:grid;gap:12px}
+.mt-game{padding:0;gap:0}
+.mt-game>summary{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:baseline;gap:4px 14px;padding:14px 18px;cursor:pointer;list-style:none}
+.mt-game>summary::before,.mt-sub>summary::before{content:"▸";color:var(--muted);margin-right:8px}
+.mt-game[open]>summary::before,.mt-sub[open]>summary::before{content:"▾"}
+.mt-game[open]>summary{border-bottom:1px solid var(--faint)}
+.mt-g b{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:.03em}
+.mt-g small{color:var(--muted);margin-left:10px;font-size:13px}
+.mt-meta{margin-left:auto;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mt-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:14px 18px 4px}
+.mt-sub{border-top:1px solid var(--faint)}
+.mt-sub>summary{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:4px 14px;padding:9px 18px;cursor:pointer;list-style:none}
+.mt-sub>summary:hover{background:var(--sunk)}
+.mt-p b{font-weight:600}
+.mt-p small{color:var(--muted);font-size:12.5px;margin-left:8px}
+.mt-rows{padding:0 18px 10px 34px;container-type:inline-size}
+.mt-rows .mkx-r:first-child{border-top:0}
+.mt-chip{font-weight:700;font-size:12.5px}
+.mt-game summary::-webkit-details-marker,.mt-sub summary::-webkit-details-marker{display:none}
+@media (max-width:760px){ .mt-rows{padding:0 10px 10px 14px} .mt-game>summary,.mt-sub>summary{padding-inline:12px} .mt-label{padding-inline:12px} .mk-q{max-width:none} }
+
 .mk-thin{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;border:1px solid var(--sel);color:var(--sel);font-size:11px;font-weight:600;line-height:16px}
 .mk-score{padding-top:14px;padding-bottom:14px}
 .mk-score summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;list-style:none}
@@ -541,148 +563,135 @@ def updates():
 
 
 def markets_page():
-    """Prediction markets vs our chances: summary, scorecard, and one readable row per market
-    (details on tap). Data: markets/<sport>_<date>.json (markets.py), markets/grades.json."""
-    data = {}
-    for sport in ("nfl", "nhl", "nba"):
-        fs = [f for f in sorted(glob.glob(os.path.join(HERE, "markets", f"{sport}_*.json")))]
-        live = None
-        for f in fs[::-1]:
-            d = json.load(open(f))
-            if not str(d.get("fetched", "")).startswith("backfill"):
-                live = d
-                live["date"] = os.path.basename(f)[len(sport) + 1:-5]
-                break
-        if live:
-            data[sport] = live
+    """<sport>/markets.html: live prediction-market prices nested sport > game > player, using the same
+    rows as the model pages (mkt.js reads markets/live_<sport>.json and polls it). markets.html at the
+    root now forwards to the right sport."""
     gp = os.path.join(HERE, "markets", "grades.json")
     grades = json.load(open(gp)) if os.path.exists(gp) else {}
-    payload = json.dumps(dict(m=data, g=grades), separators=(",", ":"), default=str).replace("</", "<\\/")
-    body = """
-  <header class="hero"><div class="eyebrow" id="msub"></div><h1>Markets</h1>
-    <p class="sub">What prediction markets (Kalshi, Polymarket) charge for an outcome, next to our chance of it, and how much money is
-      really there. Longshots (first and anytime scorers, ladder tails) come first.</p></header>
+    for s in SPORTS:
+        if s["status"] != "live":
+            continue
+        sport = s["key"]
+        g = [x for x in grades.get("groups", []) if x["sport"] == sport]
+        payload = json.dumps(dict(sport=sport, groups=g), separators=(",", ":")).replace("</", "<\\/")
+        body = MARKETS_BODY.replace("__SPORT__", s["name"]).replace("__GR__", payload)
+        write_page(f"{sport}/markets.html", f"{s['name']} markets · Sim Sheet", f"{sport}:markets",
+                   body + f'<script src="../mkt.js" data-sport="{sport}"></script>', depth=1)
+    path = os.path.join(SITE, "markets.html")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write('<meta charset="utf-8"><title>Markets</title><script>var s = location.hash.slice(1);'
+                'location.replace((["nfl","nhl","nba"].indexOf(s) >= 0 ? s : "nfl") + "/markets.html");</script>'
+                '<a href="nfl/markets.html">Markets</a>')
+
+
+MARKETS_BODY = """
+  <header class="hero"><div class="eyebrow" id="msub">Loading live prices…</div><h1>__SPORT__ markets</h1>
+    <p class="sub">Every Kalshi and Polymarket price we can match, game by game and player by player, next to our chance
+      and how much money is on each side. Prices update while this page is open.</p></header>
   <div class="mk-bar">
-    <div class="seg" role="group" aria-label="Sport" id="msport"></div>
     <div class="seg" role="group" aria-label="Show" id="mshow"></div>
     <div class="seg" role="group" aria-label="Source" id="msrc"></div>
     <div class="seg" role="group" aria-label="Spread" id="mspr"></div>
-    <label class="mk-sort">Sort <select id="msort"><option value="edge">Biggest edge</option><option value="liq">Most money to buy</option><option value="game">By game</option></select></label>
+    <label class="mk-sort">Players by <select id="msort"><option value="edge">Biggest edge</option><option value="liq">Most money</option><option value="name">Name</option></select></label>
+    <input class="mk-q" id="mq" type="search" placeholder="Find a player or team" aria-label="Find a player or team">
   </div>
   <div class="tiles" id="mtiles"></div>
   <details class="card mk-score" id="scorebox"><summary id="scoresum"></summary><div id="score"></div></details>
-  <section class="card" style="gap:10px"><div id="mlist"></div></section>
+  <div id="mtree" class="mt"></div>
   <section class="card" style="gap:8px">
     <h2 style="font-size:20px">How to read this</h2>
     <dl class="mk-help">
-      <div><dt>Ours vs price</dt><dd>The bar shows our chance (blue tick) against what the market charges (gray fill). If our tick is past the fill, we think YES is cheap.</dd></div>
-      <div><dt>Edge</dt><dd>Our chance minus the price you'd pay, after Kalshi's fee. Green = we lean that side; brighter = bigger. Shown for whichever side (YES or NO) we like.</dd></div>
-      <div><dt>Money at this price</dt><dd>Dollars you could spend within 3 cents of the best price. Under $100 is thin; $1,000+ is a real market. "Exit" is what you could sell back before the game.</dd></div>
-      <div><dt>Thin vs tight</dt><dd>The spread is the gap between the best buy and sell price. <b>Tight</b> (1¢) markets are actively traded and have usually priced in what we know. <b>Thin</b> (2¢+) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in tight ones.</dd></div>
-      <div><dt>Big edges in busy markets</dt><dd>When a deep, actively traded market disagrees with us by a lot, it usually knows something (injury, role change). Check the news first.</dd></div>
+      <div><dt>Games, then players</dt><dd>Each game opens to its game lines (winner, total, spread) and every player with a market. Tap a player to see all their lines. The chip on each player is their best edge.</dd></div>
+      <div><dt>Edge</dt><dd>Our chance minus the price you'd pay, after Kalshi's fee, on whichever side we like. Green = we lean that side; brighter = bigger. "Market ahead" = the market has been more accurate than us on that type so far.</dd></div>
+      <div><dt>Money on each side</dt><dd>The bar splits the dollars you could spend within 3¢ of the best price: blue = YES / over, gray = NO / under. Under $100 is thin; $1,000+ is a real market.</dd></div>
+      <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="mdata">__MD__</script>
+<script type="application/json" id="grdata">__GR__</script>
 <script>
-const ALL = JSON.parse(document.getElementById('mdata').textContent), MD = ALL.m, GR = ALL.g || {};
+const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const pct = p => p == null ? '–' : (p < .1 && p > 0 ? (Math.round(p*1000)/10).toFixed(1) : Math.round(p*100)) + '%';
-const cents = p => p == null ? '–' : Math.round(p*100) + '¢';
-const usd = v => v == null ? '–' : v >= 1000 ? '$' + (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
-const num = v => v == null ? '–' : v >= 1000 ? (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : String(Math.round(v));
-const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
 const KIND = {win:'Winner', total:'Total', spread:'Spread', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
-const sports = Object.keys(MD);
-let st = {sport: sports.includes(location.hash.slice(1)) ? location.hash.slice(1) : sports[0], show: 'long', src: 'all', spr: 'all', sort: 'edge', open: null};
-try { const s = JSON.parse(localStorage.getItem('mk-view') || '{}'); Object.assign(st, {show: s.show || st.show, src: s.src || st.src, spr: s.spr || st.spr, sort: s.sort || st.sort}); } catch (e) {}
-const money = m => (m.book && !m.book.empty) ? m.book.ask_3c : (m.ask_size != null && m.yes_ask != null ? m.ask_size * m.yes_ask : (m.liq ?? null));
-const exitm = m => (m.book && !m.book.empty) ? m.book.bid_3c : null;
-const spr = m => (m.yes_ask != null && m.yes_bid != null && m.yes_bid > 0) ? m.yes_ask - m.yes_bid : null;
-const thin = m => { const x = spr(m); return x != null && x >= .015; };
-function best(m){ const y = m.edge_yes ?? -9, n = m.edge_no ?? -9; return y >= n ? {e: y, side: 'YES'} : {e: n, side: 'NO'}; }
-function bar(p, price){
-  const x = v => Math.max(0, Math.min(100, v * 100));
-  return `<div class="mk-vs" role="img" aria-label="ours ${pct(p)}, price ${cents(price)}"><i style="width:${x(price ?? 0)}%"></i><b style="left:${x(p ?? 0)}%"></b></div>`;
+const GAMEK = new Set(['win', 'total', 'spread']);
+let st = {show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
+try { Object.assign(st, JSON.parse(localStorage.getItem('mk-tree') || '{}'), {q: ''}); } catch (e) {}
+const money = r => (r.by || 0) + (r.bn || 0);
+const bestV = r => { const b = MKT.best(r, 'vegas'); return b.v ?? -9; };
+const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}); };
+function chip(r){
+  const b = MKT.best(r, 'vegas'); if (b.v == null || b.v < .02) return '<span class="mt-chip muted">no edge</span>';
+  const w = MKT.weak(r.k);
+  return `<span class="mt-chip ${w ? 'muted' : MKT.shade(b.v)}" title="${esc(b.lab)} · ${esc(KIND[r.k] || r.k)}${w ? ' · market has been more accurate on this type' : ''}">+${(b.v * 100).toFixed(1)}% ${esc(b.lab)}</span>`;
 }
-function liqTag(v){ if (v == null) return '<span class="muted">–</span>'; const c = v >= 1000 ? 'deep' : v >= 100 ? 'ok' : 'thin'; return `<span class="mk-liq ${c}">${usd(v)}</span>`; }
-function detail(m){
-  const b = m.book && !m.book.empty ? m.book : null;
-  const lv = (arr, lab) => arr && arr.length ? `<div><span class="eyebrow">${lab}</span>${arr.map(([p, q]) => `<div class="mk-lv"><span>${cents(p)}</span><span>${num(q)} ${m.units === 'dollars' ? 'shares' : 'contracts'}</span><span class="muted">${usd(p*q)}</span></div>`).join('')}</div>` : '';
-  return `<div class="mk-det">
-    <div class="mk-kv"><span>Bid / ask (YES)</span><b>${cents(m.yes_bid)} / ${cents(m.yes_ask)}${spr(m) != null ? ` · ${Math.round(spr(m)*100)}¢ spread (${thin(m) ? 'thin' : 'tight'})` : ''}</b></div>
-    <div class="mk-kv"><span>Our chance</span><b>${Object.entries(m.ours).map(([k,v]) => `${pct(v)}${k === 'vegas' ? ' (With Vegas)' : k === 'blind' ? ' (Market-blind)' : ''}`).join(' · ')}</b></div>
-    <div class="mk-kv"><span>Edge YES / NO</span><b>${m.edge_yes != null ? (m.edge_yes*100).toFixed(1) + '%' : '–'} / ${m.edge_no != null ? (m.edge_no*100).toFixed(1) + '%' : '–'}</b></div>
-    ${b ? `<div class="mk-kv"><span>Buy within 1¢ / 3¢ / 5¢</span><b>${usd(b.ask_1c)} / ${usd(b.ask_3c)} / ${usd(b.ask_5c)}</b></div><div class="mk-kv"><span>Exit (sell) within 1¢ / 3¢</span><b>${usd(b.bid_1c)} / ${usd(b.bid_3c)}</b></div>` : ''}
-    <div class="mk-kv"><span>${m.units === 'dollars' ? 'Volume / liquidity' : 'Traded / open interest (contracts)'}</span><b>${m.units === 'dollars' ? usd(m.vol) + ' / ' + usd(m.liq) : num(m.vol) + ' / ' + num(m.oi)}</b></div>
-    <div class="mk-kv"><span>Source</span><b>${m.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</b></div>
-    ${b ? `<div class="mk-book">${lv(b.asks, 'Cheapest offers to buy YES')}${lv(b.bids, 'Best bids (your exit)')}</div>` : ''}</div>`;
+function keep(r){
+  if (st.src !== 'all' && r.s !== st.src) return false;
+  if (st.spr === 'thin' && !MKT.thin(r)) return false;
+  if (st.spr === 'tight' && (MKT.spread(r) == null || MKT.thin(r))) return false;
+  if (st.show === 'long' && !r.ls) return false;
+  if (st.show === 'edge' && bestV(r) < .03) return false;
+  if (st.q){ const q = st.q.toLowerCase(); if (![r.n, r.a, r.h, r.ti].some(x => String(x || '').toLowerCase().includes(q))) return false; }
+  return true;
 }
-function track(m){ const G = (GR.groups || []).filter(x => x.sport === st.sport && x.kind === m.kind); return G.find(x => x.source === m.source) || G[0]; }
-function weak(m){ const g = track(m); return g && g.n >= 30 && g.model_ll > g.market_ll + .005; }
-function row(m){
-  const b = best(m), p = m.ours.vegas ?? m.ours.model, open = st.open === m.ticker, w = weak(m);
-  return `<div class="mk-row${open ? ' open' : ''}" data-t="${esc(m.ticker)}" tabindex="0" role="button" aria-expanded="${open}">
-    <div class="mk-name"><b>${esc(m.title)}</b><small>${esc(m.away)} @ ${esc(m.home)} · ${KIND[m.kind] || esc(m.kind)} · ${m.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}${thin(m) ? ` <span class="mk-thin" title="Bid/ask gap of ${Math.round(spr(m)*100)}¢: a less-traded market">thin ${Math.round(spr(m)*100)}¢</span>` : ''}</small></div>
-    <div class="mk-cmp"><div class="mk-nums"><span>Ours <b>${pct(p)}</b></span><span>Price <b>${cents(m.yes_ask)}</b></span></div>${bar(p, m.yes_ask)}</div>
-    <div class="mk-edge ${b.e > -9 && !w ? shade(b.e) : ''}${w && b.e >= .02 ? ' weak' : ''}">${b.e >= .02 ? `<b>+${(b.e*100).toFixed(1)}%</b><small>${b.side}</small>${w ? '<small class="mk-warn" title="On settled games of this type the market price has been more accurate than our model, so treat this edge with caution">market ahead</small>' : ''}` : '<span class="muted">no edge</span>'}</div>
-    <div class="mk-money">${liqTag(money(m))}<small>exit ${exitm(m) == null ? '–' : usd(exitm(m))}</small></div>
-  </div>${open ? detail(m) : ''}`;
-}
+const det = (key, summary, inner, cls) => `<details class="${cls}" data-k="${esc(key)}"${open.has(key) ? ' open' : ''}><summary>${summary}</summary>${open.has(key) ? inner() : ''}</details>`;
 function scorecard(){
-  const g = (GR.groups || []).filter(x => x.sport === st.sport);
-  const el = document.getElementById('score'), sm = document.getElementById('scoresum');
-  if (!g.length){ sm.innerHTML = `<b>Scorecard: model vs market</b><span class="muted">nothing settled yet for ${st.sport.toUpperCase()}</span>`; el.innerHTML = `<p class="muted" style="margin:0">Each game is graded on its last pregame price once it's final.</p>`; return; }
+  const g = GR.groups || [], el = document.getElementById('score'), sm = document.getElementById('scoresum');
+  if (!g.length){ sm.innerHTML = '<b>Scorecard: model vs market</b><span class="muted">nothing settled yet</span>'; el.innerHTML = '<p class="muted" style="margin:0">Each game is graded on its last pregame price once it is final.</p>'; return; }
   const a = g.filter(x => x.kind === 'all'), N = a.reduce((t, x) => t + x.n, 0), B = a.reduce((t, x) => t + x.bets, 0), W = a.reduce((t, x) => t + x.bets_won, 0);
-  const beat = g.filter(x => x.kind !== 'all' && x.n >= 30), ours = beat.filter(x => x.model_ll < x.market_ll - .002).map(x => KIND[x.kind] || x.kind), theirs = beat.filter(x => x.market_ll < x.model_ll - .002).map(x => KIND[x.kind] || x.kind);
-  sm.innerHTML = `<b>Scorecard: model vs market</b><span class="muted">${N.toLocaleString()} settled · ${theirs.length ? 'market better on ' + [...new Set(theirs)].join(', ') : 'no market type where the market is clearly better'}${ours.length ? ' · model better on ' + [...new Set(ours)].join(', ') : ''} · edge bets ${W}/${B} won</span>`;
-  const rows = g.filter(x => x.kind !== 'all').sort((a, b) => b.n - a.n);
-  const tot = g.filter(x => x.kind === 'all');
+  const big = g.filter(x => x.kind !== 'all' && x.n >= 30), theirs = [...new Set(big.filter(x => x.market_ll < x.model_ll - .002).map(x => KIND[x.kind] || x.kind))], ours = [...new Set(big.filter(x => x.model_ll < x.market_ll - .002).map(x => KIND[x.kind] || x.kind))];
+  sm.innerHTML = `<b>Scorecard: model vs market</b><span class="muted">${N.toLocaleString()} settled · ${theirs.length ? 'market better on ' + theirs.join(', ') : 'no type where the market is clearly better'}${ours.length ? ' · model better on ' + ours.join(', ') : ''} · edge bets ${W}/${B} won</span>`;
   const who = x => x.model_ll < x.market_ll - .002 ? '<span class="g2">Model</span>' : x.market_ll < x.model_ll - .002 ? '<span class="r2">Market</span>' : '<span class="muted">Tie</span>';
-  const roi = x => x.bets ? `${x.bets_won}/${x.bets} won · <b class="${x.roi > 0 ? 'g2' : 'r2'}">${x.roi > 0 ? '+' : ''}${Math.round(x.roi*100)}%</b>` : '<span class="muted">no bets</span>';
-  el.innerHTML = `<p class="muted" style="margin:0">Settled games only, priced at the last pregame snapshot. "Closer" = lower prediction error (log-loss). Bets = buying the side with a 3%+ edge, $ result per $1 staked. Small samples swing a lot.</p>
+  const roi = x => x.bets ? `${x.bets_won}/${x.bets} won · <b class="${x.roi > 0 ? 'g2' : 'r2'}">${x.roi > 0 ? '+' : ''}${Math.round(x.roi * 100)}%</b>` : '<span class="muted">no bets</span>';
+  const rows = a.concat(g.filter(x => x.kind !== 'all').sort((p, q) => q.n - p.n));
+  el.innerHTML = `<p class="muted" style="margin:0">Settled games only, priced at the last pregame snapshot. "Closer" = lower prediction error (log-loss). Bets = buying the side with a 3%+ edge; result per $1 staked. Small samples swing a lot.</p>
     <div class="tw"><table class="t"><thead><tr><th class="l">Market</th><th class="l">Source</th><th>Settled</th><th class="l">Closer to the result</th><th class="l">3%+ edge bets</th></tr></thead><tbody>
-    ${tot.concat(rows).map(x => `<tr${x.kind === 'all' ? ' style="font-weight:600"' : ''}><td class="l">${x.kind === 'all' ? 'All markets' : (KIND[x.kind] || x.kind)}</td><td class="l">${x.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</td><td>${x.n}</td><td class="l">${who(x)} <small class="muted">${x.model_ll.toFixed(3)} vs ${x.market_ll.toFixed(3)}</small></td><td class="l">${roi(x)}</td></tr>`).join('')}</tbody></table></div>`;
+    ${rows.map(x => `<tr${x.kind === 'all' ? ' style="font-weight:600"' : ''}><td class="l">${x.kind === 'all' ? 'All markets' : (KIND[x.kind] || x.kind)}</td><td class="l">${x.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</td><td>${x.n}</td><td class="l">${who(x)} <small class="muted">${x.model_ll.toFixed(3)} vs ${x.market_ll.toFixed(3)}</small></td><td class="l">${roi(x)}</td></tr>`).join('')}</tbody></table></div>`;
 }
 function render(){
-  const seg = (id, key, opts) => { document.getElementById(id).innerHTML = opts.map(([k, l]) => `<button data-k="${key}" data-v="${k}" aria-pressed="${st[key] === k}">${l}</button>`).join(''); };
-  seg('msport', 'sport', sports.map(s => [s, s.toUpperCase()]));
-  seg('mshow', 'show', [['long', 'Longshots'], ['edge', 'Edges 3%+'], ['all', 'Everything']]);
+  const seg = (id, key, opts) => { document.getElementById(id).innerHTML = opts.map(([k, l]) => `<button data-sk="${key}" data-v="${k}" aria-pressed="${st[key] === k}">${l}</button>`).join(''); };
+  seg('mshow', 'show', [['all', 'Everything'], ['edge', 'Edges 3%+'], ['long', 'Longshots']]);
   seg('msrc', 'src', [['all', 'Both'], ['kalshi', 'Kalshi'], ['polymarket', 'Polymarket']]);
   seg('mspr', 'spr', [['all', 'Any spread'], ['thin', 'Thin 2¢+'], ['tight', 'Tight 1¢']]);
   document.getElementById('msort').value = st.sort;
-  try { localStorage.setItem('mk-view', JSON.stringify({show: st.show, src: st.src, spr: st.spr, sort: st.sort})); } catch (e) {}
-  const D = MD[st.sport];
-  if (!D){ document.getElementById('mlist').innerHTML = '<p class="muted">No market data yet.</p>'; return; }
-  document.getElementById('msub').textContent = `${st.sport.toUpperCase()} · slate ${D.date} · prices updated ${String(D.fetched).replace('T', ' ')}`;
-  let rows = D.markets.filter(m => st.src === 'all' || m.source === st.src);
-  const all = rows;
-  if (st.show === 'long') rows = rows.filter(m => m.longshot);
-  if (st.show === 'edge') rows = rows.filter(m => best(m).e >= .03);
-  if (st.spr === 'thin') rows = rows.filter(thin);
-  if (st.spr === 'tight') rows = rows.filter(m => spr(m) != null && !thin(m));
-  rows.sort((a, b) => st.sort === 'liq' ? (money(b) || 0) - (money(a) || 0) : st.sort === 'game' ? (a.away + a.home).localeCompare(b.away + b.home) || best(b).e - best(a).e : best(b).e - best(a).e);
-  const ls = all.filter(m => m.longshot), med = a => { const v = a.filter(x => x != null).sort((x, y) => x - y); return v.length ? v[Math.floor(v.length / 2)] : null; };
-  const t = (v, l, s) => `<div class="tile"><span class="eyebrow">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
-  document.getElementById('mtiles').innerHTML = t(all.length, 'Markets matched', 'to our projections') + t(all.filter(m => best(m).e >= .03).length, 'With a 3%+ edge', 'either side, after fees')
-    + t(usd(med(ls.map(money))), 'Longshot money', 'typical $ within 3¢ of the price') + (() => { const x = med(ls.map(exitm)); return t(usd(x), 'Longshot exit', x != null && x < 25 ? 'almost no buyers: plan to hold to the end' : 'typical $ you could sell back'); })();
-  let html = '', last = null;
-  for (const m of rows.slice(0, 250)){
-    const gk = m.away + ' @ ' + m.home;
-    if (st.sort === 'game' && gk !== last){ html += `<div class="mk-game">${esc(gk)}</div>`; last = gk; }
-    html += row(m);
-  }
-  document.getElementById('mlist').innerHTML = rows.length ? `<div class="mk-head"><span>Market</span><span>Ours vs price</span><span>Edge</span><span>Money at this price</span></div>${html}` : '<p class="muted">Nothing matches these filters.</p>';
+  try { const {q, ...keepSt} = st; localStorage.setItem('mk-tree', JSON.stringify(keepSt)); } catch (e) {}
   scorecard();
+  const tree = document.getElementById('mtree');
+  if (!window.MKT || !MKT.loaded()){ tree.innerHTML = '<p class="muted">Loading live prices…</p>'; return; }
+  if (!MKT.fetched()){ tree.innerHTML = '<section class="card"><p class="muted" style="margin:0">No market prices yet for this slate. They appear about 12 hours before the first game.</p></section>'; return; }
+  const fd = new Date(MKT.fetched());
+  document.getElementById('msub').textContent = `Kalshi prices as of ${isNaN(fd) ? MKT.fetched() : fd.toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'})} · Polymarket live`;
+  const all = MKT.rows(), rows = all.filter(keep);
+  const t = (v, l, s) => `<div class="tile"><span class="eyebrow">${l}</span><span class="v">${v}</span><span class="s">${s}</span></div>`;
+  const med = a => { const v = a.filter(x => x != null).sort((x, y) => x - y); return v.length ? v[Math.floor(v.length / 2)] : null; };
+  const ls = all.filter(r => r.ls);
+  document.getElementById('mtiles').innerHTML = t(all.length, 'Markets matched', 'to our projections') + t(all.filter(r => bestV(r) >= .03).length, 'With a 3%+ edge', 'either side, after fees')
+    + t(MKT.usd(med(ls.map(r => r.by))), 'Longshot money (yes)', 'typical $ within 3¢ of the price') + t(MKT.usd(med(ls.map(r => r.bn))), 'Longshot money (no)', 'typical $ to take the other side');
+  // sport > game > (game lines, players) > player lines
+  const games = {};
+  for (const r of rows) (games[r.g] = games[r.g] || {g: r.g, a: r.a, h: r.h, start: r.start, game: [], players: {}}, r.n ? ((games[r.g].players[r.n] = games[r.g].players[r.n] || []).push(r)) : games[r.g].game.push(r));
+  const G = Object.values(games).sort((x, y) => String(x.start || '').localeCompare(String(y.start || '')) || String(x.g).localeCompare(String(y.g)));
+  if (first && G.length){ open.add('g|' + G[0].g); open.add('gl|' + G[0].g); first = false; }
+  if (st.q) for (const g of G){ open.add('g|' + g.g); for (const n of Object.keys(g.players)) if (n.toLowerCase().includes(st.q.toLowerCase())) open.add('p|' + g.g + '|' + n); }
+  const order = (a, b) => a.k.localeCompare(b.k) || (a.l ?? 0) - (b.l ?? 0) || a.s.localeCompare(b.s);
+  const top = list => list.slice().sort((a, b) => bestV(b) - bestV(a))[0];
+  tree.innerHTML = G.length ? G.map(g => {
+    const list = g.game.concat(...Object.values(g.players)), nE = list.filter(r => bestV(r) >= .03).length, b = top(list);
+    const ps = Object.entries(g.players).map(([n, l]) => ({n, l, b: top(l), m: l.reduce((t, r) => t + (r.by || 0), 0)}))
+      .sort((x, y) => st.sort === 'name' ? x.n.localeCompare(y.n) : st.sort === 'liq' ? y.m - x.m : bestV(y.b) - bestV(x.b));
+    const sum = `<span class="mt-g"><b>${esc(g.a)} @ ${esc(g.h)}</b><small>${esc(when(g.start))}</small></span><span class="mt-meta">${list.length} markets · ${nE} with 3%+ edge${b ? ' · best ' + chip(b) : ''}</span>`;
+    return det('g|' + g.g, sum, () =>
+      (g.game.length ? det('gl|' + g.g, `<span class="mt-p"><b>Game lines</b><small>winner · total · spread</small></span><span class="mt-meta">${g.game.length} lines · ${chip(top(g.game))}</span>`,
+        () => `<div class="mt-rows">${g.game.slice().sort(order).map(r => MKT.row(r, 'vegas')).join('')}</div>`, 'mt-sub') : '')
+      + (ps.length ? `<div class="mt-label">Players</div>` + ps.map(p => det('p|' + g.g + '|' + p.n,
+        `<span class="mt-p"><b>${esc(p.n)}</b><small>${p.l.length} line${p.l.length > 1 ? 's' : ''} · ${[...new Set(p.l.map(r => KIND[r.k] || r.k))].join(', ')}</small></span><span class="mt-meta"><span title="Dollars you could spend backing this player (YES) within 3¢ of the best price, all lines">${MKT.usd(p.m)} to back</span> · ${chip(p.b)}${p.l.some(MKT.thin) ? '<span class="mk-thin">thin</span>' : ''}</span>`,
+        () => `<div class="mt-rows">${p.l.slice().sort(order).map(r => MKT.row(r, 'vegas')).join('')}</div>`, 'mt-sub')).join('') : ''), 'card mt-game');
+  }).join('') : '<section class="card"><p class="muted" style="margin:0">Nothing matches these filters.</p></section>';
 }
-document.addEventListener('click', e => {
-  const b = e.target.closest('button[data-k]'); if (b){ st[b.dataset.k] = b.dataset.v; st.open = null; if (b.dataset.k === 'sport') history.replaceState(null, '', '#' + b.dataset.v); render(); return; }
-  const r = e.target.closest('.mk-row'); if (r){ st.open = st.open === r.dataset.t ? null : r.dataset.t; render(); }
-});
-document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('mk-row')){ e.preventDefault(); e.target.click(); } });
+document.addEventListener('toggle', e => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; const was = open.has(k); e.target.open ? open.add(k) : open.delete(k); if (e.target.open && !was) render(); }, true);
+document.addEventListener('click', e => { const b = e.target.closest('button[data-sk]'); if (b){ st[b.dataset.sk] = b.dataset.v; render(); } });
 document.getElementById('msort').addEventListener('change', e => { st.sort = e.target.value; render(); });
+document.getElementById('mq').addEventListener('input', e => { st.q = e.target.value.trim(); render(); });
 render();
-</script>""".replace("__MD__", payload)
-    write_page("markets.html", "Markets · Sim Sheet", "markets", body, depth=0)
+</script>"""
 
 
 def preview(s, plan):
