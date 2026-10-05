@@ -34,6 +34,7 @@ Outputs (projections/):
 import argparse
 import json
 import os
+import re
 import shutil
 import sys
 
@@ -97,6 +98,45 @@ def resolve(o, names):
     return hit.player_id.iloc[0]
 
 
+ESPN_TEAM = {"WSH": "WAS", "LAR": "LA"}            # ESPN abbreviation -> nflverse
+
+
+def _norm(n):
+    n = re.sub(r"[^a-z ]", "", str(n).lower().replace("-", " "))
+    return re.sub(r"\s+(jr|sr|ii|iii|iv|v)$", "", n).strip()
+
+
+def espn_out(todo):
+    """Game-day Out / Doubtful from ESPN for these games: {(team, normalized name): status}. The weekly
+    practice report never shows game-day decisions (a Questionable player ruled out at inactives), so
+    this catches them. Network trouble just returns {} (the report and overrides still apply)."""
+    import requests
+    out, H = {}, {"User-Agent": "Mozilla/5.0"}
+    want = {(g.away_team, g.home_team) for g in todo.itertuples()}
+    for day in sorted({str(d)[:10].replace("-", "") for d in todo.gameday}):
+        try:
+            sb = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+                              params={"dates": day}, headers=H, timeout=20).json()
+        except Exception:
+            continue
+        for e in sb.get("events", []):
+            cs = {c["homeAway"]: ESPN_TEAM.get(c["team"]["abbreviation"], c["team"]["abbreviation"])
+                  for c in e.get("competitions", [{}])[0].get("competitors", [])}
+            if (cs.get("away"), cs.get("home")) not in want:
+                continue
+            try:
+                summ = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary",
+                                    params={"event": e["id"]}, headers=H, timeout=20).json()
+            except Exception:
+                continue
+            for t in summ.get("injuries", []):
+                team = ESPN_TEAM.get(t.get("team", {}).get("abbreviation"), t.get("team", {}).get("abbreviation"))
+                for i in t.get("injuries", []):
+                    if i.get("status") in ("Out", "Doubtful"):
+                        out[(team, _norm(i.get("athlete", {}).get("displayName")))] = i["status"]
+    return out
+
+
 def future_actives(con, todo, season, week, overrides):
     """Who plays for each team: recent snaps + current depth chart, on the active
     roster, minus injury-report Out/Doubtful, plus manual overrides."""
@@ -114,8 +154,15 @@ def future_actives(con, todo, season, week, overrides):
     depth = depth[depth.pos_rank <= depth.pos_abb.map(DEPTH_MAX_RANK)]
     inj = pd.read_sql(f"""SELECT team, gsis_id AS player_id, full_name, report_status FROM injuries
                           WHERE season={season} AND week={week}""", con)
-    out_inj = inj[inj.report_status.isin(["Out", "Doubtful"])]
     names = roster[["player_id", "team", "full_name"]].dropna()
+    game_day = espn_out(todo)                             # late scratches the practice report misses
+    if game_day:
+        late = names.assign(k=list(zip(names.team, names.full_name.map(_norm))))
+        late = late[late.k.isin(game_day.keys())]
+        late = late[~late.player_id.isin(inj[inj.report_status.isin(["Out", "Doubtful"])].player_id)]
+        inj = pd.concat([inj, pd.DataFrame(dict(team=late.team, player_id=late.player_id, full_name=late.full_name,
+                                                report_status=[game_day[k] + " (ESPN game day)" for k in late.k]))])
+    out_inj = inj[inj.report_status.astype(str).str.match(r"(Out|Doubtful)")]
 
     rows, qbs, notes = [], {}, []
     for g in todo.itertuples():
