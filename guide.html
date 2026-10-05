@@ -64,6 +64,9 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
 .at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
 .winbar{display:grid;gap:6px}
+.gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
+.gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
+.gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .ag{font-size:12px;font-weight:600;white-space:nowrap}
 .ag.up,.ag.up2{color:var(--good)} .ag.dn,.ag.dn2{color:var(--bad)} .ag.ok{color:var(--muted);font-weight:500}
 tr.agover td{background:color-mix(in srgb,var(--good) 11%,transparent)}
@@ -294,7 +297,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   </dl></section>
   <section id="nfl"><h2>NFL terms</h2><dl>
     <div><dt>Anytime / first TD</dt><dd>Chance to score at least one touchdown, and to score the game's first touchdown.</dd></div>
-    <div><dt>Market-blind</dt><dd>A second model that never sees the Vegas spread or total; switch to it with the Model toggle at the top of any NFL week. When it disagrees with the main model, the result tends to land in between.</dd></div>
+    <div><dt>Market-blind</dt><dd>A second model that never sees the Vegas spread or total; switch any NFL game to it with the With Vegas / Market-blind switch in the game's header. When it disagrees with the main model, the result tends to land in between.</dd></div>
     <div><dt>Model agreement tab</dt><dd>The two models side by side for each player, with a calibrated chance to beat the main median. Green = blind model more bullish, red = more bearish. Leans, not locks: the best are around 53–55%.</dd></div>
     <div><dt>Defense vs position</dt><dd>How many fantasy points each defense allows to QBs, RBs, WRs (slot and outside) and TEs, ranked this season and blended with recent history.</dd></div>
     <div><dt>Matchups ▲ ▼ and red-zone tags</dt><dd>Flags for unusually easy or tough matchups. They explain a projection; it already includes them, so don't add them on top.</dd></div>

@@ -64,6 +64,9 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
 .at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
 .winbar{display:grid;gap:6px}
+.gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
+.gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
+.gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .ag{font-size:12px;font-weight:600;white-space:nowrap}
 .ag.up,.ag.up2{color:var(--good)} .ag.dn,.ag.dn2{color:var(--bad)} .ag.ok{color:var(--muted);font-weight:500}
 tr.agover td{background:color-mix(in srgb,var(--good) 11%,transparent)}
@@ -273,7 +276,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 <nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA<span class="soon">soon</span></a><a class="sp" href="mlb/index.html">MLB<span class="soon">soon</span></a><span class="grow"></span><a class="help" href="guide.html">How to read</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">Updated Monday Oct 5, 12:43 AM</div>
+    <div class="eyebrow">Updated Monday Oct 5, 12:48 AM</div>
     <h1>Player projections, simulated</h1>
     <p class="sub">Every game is simulated thousands of times from play-by-play data. For each player you get the
       most likely result, a realistic range, the chance to score, and the fair odds that chance is worth.</p>
@@ -286,10 +289,10 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <div class="sechead"><h2>Live now</h2></div>
   <div class="cards"><section class="card"><div class="ch"><span class="sport">NFL</span><span class="badge live">Live</span></div>
         <p class="lead">Every player&#x27;s box score simulated 10,000 times: yards, catches, touchdowns, first TD scorer.</p>
-        <p class="lead">Week 4 · 2 games still to play
-          · next kickoff Sun Oct 04 · 8:20 PM ET</p>
+        <p class="lead">Week 4 · 1 game still to play
+          · next kickoff Mon Oct 05 · 8:15 PM ET</p>
         <h3>Most likely to score a TD</h3>
-        <ol class="list"><li><span>Jahmyr Gibbs <small>DET vs CAR</small></span><b>74%</b><em>-291</em></li><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>64%</b><em>-174</em></li><li><span>Amon-Ra St. Brown <small>DET vs CAR</small></span><b>54%</b><em>-117</em></li><li><span>Chuba Hubbard <small>CAR vs DET</small></span><b>48%</b><em>+111</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>39%</b><em>+156</em></li></ol>
+        <ol class="list"><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-172</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>38%</b><em>+166</em></li><li><span>Chris Olave <small>NO vs ATL</small></span><b>35%</b><em>+187</em></li><li><span>Noah Fant <small>NO vs ATL</small></span><b>31%</b><em>+221</em></li><li><span>Drake London <small>ATL vs NO</small></span><b>29%</b><em>+242</em></li></ol>
         <p class="acc">Track record 2026: <b>80%</b> of results inside the 8-in-10 range (target 80%) · <b>191</b> TD scorers vs <b>186</b> expected. <a href="nfl/results.html">Every week graded →</a></p><ul class="pages"><li><a href="nfl/index.html"><b>This week</b><span>Projections for every game this week</span></a></li><li><a href="nfl/results.html"><b>Results</b><span>Past weeks graded against the real box scores</span></a></li></ul></section><section class="card"><div class="ch"><span class="sport">NHL</span><span class="badge live">Live</span></div>
         <p class="lead">Anytime and first goal scorers, moneylines, puck lines and totals for every game.</p>
         <p class="lead">Sunday, October 4 · 5 games</p>
