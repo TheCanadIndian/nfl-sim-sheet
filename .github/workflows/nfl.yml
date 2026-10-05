@@ -1,0 +1,58 @@
+# NFL on GitHub's servers (works with the PC off). Independent of the other sports: own
+# schedule, own queue, own data cache. Times are UTC = Eastern *Daylight* time + 4h; after
+# Nov 1, 2026 (standard time) runs land an hour earlier in ET unless the hours are bumped by 1.
+name: nfl
+
+on:
+  schedule:
+    - cron: "0 13 * * 2"     # Tue 09:00 ET  results
+    - cron: "0 14 * * 2"     # Tue 10:00 ET  self-tuning
+    - cron: "0 22 * * 3"     # Wed 18:00 ET  injury report
+    - cron: "30 20 * * 4"    # Thu 16:30 ET  news check before TNF
+    - cron: "0 22 * * 4"     # Thu 18:00 ET  injury report
+    - cron: "0 22 * * 5"     # Fri 18:00 ET  injury report
+    - cron: "30 14 * * 0"    # Sun 10:30 ET  news check, early games
+    - cron: "45 15 * * 0"    # Sun 11:45 ET  early inactives
+    - cron: "15 19 * * 0"    # Sun 15:15 ET  late inactives
+    - cron: "15 23 * * 0"    # Sun 19:15 ET  SNF inactives
+    - cron: "30 21 * * 1"    # Mon 17:30 ET  news check before MNF
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "nfl | nfl --news | learn --sport nfl"
+        default: "nfl"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: nfl
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      SIM_SITE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: mode
+        run: |
+          case "${{ github.event.schedule }}" in
+            "0 14 * * 2") m="learn --sport nfl" ;;
+            "30 20 * * 4"|"30 14 * * 0"|"30 21 * * 1") m="nfl --news" ;;
+            "") m="${{ inputs.mode }}" ;;
+            *) m="nfl" ;;
+          esac
+          echo "mode=$m" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/run-sport
+        with:
+          mode: ${{ steps.mode.outputs.mode }}
+          cache-name: nfl-db
+          cache-paths: engine/nfl.db
+          seed: nfl.db.gz
