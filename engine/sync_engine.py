@@ -22,7 +22,7 @@ REPO = os.path.join(HERE, "site")
 ENGINE = os.path.join(REPO, "engine")
 GIT = shutil.which("git") or r"C:\Program Files\Git\cmd\git.exe"
 
-CODE = ["*.py", "*.ps1", "README.md", "requirements.txt", "*.example.csv", "boxscore/*.py",
+CODE = ["*.py", "*.js", "*.ps1", "README.md", "requirements.txt", "*.example.csv", "boxscore/*.py",
         "hockey/*.py", "hockey/README.md", "scheduled/*", "nba/*.py", "nba/README.md"]
 STATE = ["model_params.json", "learning_log.json", "overrides/*.csv", "hockey/overrides.csv",
          "hockey/.last_run.json", "projections/*", "projections/weeks/*", "projections/blind/*",

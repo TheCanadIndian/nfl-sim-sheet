@@ -597,6 +597,7 @@ function gameDetail(){
         <div class="winbar"><div class="bar" role="img" aria-label="Win probability ${esc(g.away)} ${pct(A.win_prob)}, ${esc(g.home)} ${pct(H.win_prob)}"><i style="flex:${A.win_prob};background:var(--away)"></i><i style="flex:${H.win_prob};background:var(--accent)"></i></div>
           <div class="lbl"><span>${esc(g.away)} ${pct(A.win_prob)}</span><span class="muted">projected points and win chance</span><span>${esc(g.home)} ${pct(H.win_prob)}</span></div></div>
         ${firstTdBlock(g)}
+        ${window.MKT ? MKT.game(g.id, isBlind(g) ? 'blind' : 'vegas') : ''}
         ${isBlind(g) ? '<p class="note" style="margin:0">Market-blind: this game simulated without the Vegas spread or total (its own points forecast). Vegas lines shown for comparison.</p>' : ''}
       </div>
       <div><div class="boxhead"><span>${esc(g.away)}</span><span class="eyebrow">Team box (averages)</span><span>${esc(g.home)}</span></div>
@@ -609,7 +610,7 @@ function gameDetail(){
       ${state.group === 'td' ? `<span class="key">Chance of scoring at least one rushing or receiving TD${D.rz ? ` · red-zone tags from <span class="seg" role="group" aria-label="Seasons" style="display:inline-flex">${['season','two'].map(k => `<button data-rzscope="${k}" aria-pressed="${k===state.rzscope}">${k === 'season' ? D.rz.labels.season + ' only' : D.rz.labels.two}</button>`).join('')}</span>` : ''}</span>` : '<span class="key"><span><i class="kw"></i>8 in 10 games</span><span><i class="kb"></i>middle half</span><span><i class="km"></i>median</span></span>'}
     </div>
     ${playerTable(g)}
-    <p class="muted small" style="margin:0">Tap a player's name to slide the line and see the over/under chance and fair odds.</p>
+    <p class="muted small" style="margin:0">Tap a player's name to slide the line and see the over/under chance, fair odds and live market prices.</p>
   </section>
   ${matchupPanel(g)}`;
 }
@@ -882,6 +883,7 @@ function sliderReadout(p, stat, L){
     <div class="sl-side under"><span>Under ${L}</span><b class="${su}">${pct(r.under)}</b><em>${american(un)}</em></div></div>
     ${r.push >= .005 ? `<p class="muted small" style="margin:0">Exactly ${L}: ${pct(r.push)} (a push; odds exclude it)</p>` : ''}`;
 }
+const MK_KIND = {rec_yds: ['rec_yds'], rush_yds: ['rush_yds'], pass_yds: ['pass_yds'], rec: ['rec'], tds: ['anytime_td', 'first_td']};
 function sliderPanel(p){
   const stats = fairStats(p); if (!stats.length) return '<p class="muted small">No distribution saved for this player.</p>';
   let st = state.ostat && stats.includes(state.ostat) ? state.ostat : stats[0];
@@ -896,7 +898,8 @@ function sliderPanel(p){
     <div class="sl-row"><label for="sl-in">Line</label><button class="sl-step" data-ostep="-1" aria-label="Lower the line">−</button>
       <input id="sl-in" type="range" min="${rg.lo}" max="${rg.hi}" step="${rg.step}" value="${L}" aria-label="Line">
       <button class="sl-step" data-ostep="1" aria-label="Raise the line">+</button><b class="sl-val" id="sl-val">${L}</b></div>
-    <div id="sl-res">${sliderReadout(p, st, L)}</div></div>`;
+    <div id="sl-res">${sliderReadout(p, st, L)}</div>
+    ${window.MKT ? MKT.player(p.g, p.id, p.n, MK_KIND[st] || [], state.gm[p.g] === 'blind' ? 'blind' : 'vegas', true) : ''}</div>`;
 }
 const playerByKey = k => (D.alt && D.alt.players.find(x => x.k === k && state.gm[x.g] === 'blind')) || byKey[k];
 

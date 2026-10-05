@@ -168,6 +168,9 @@ def inject(src, dst, depth, active, model=None, other=None):
     tog = model_toggle(model, os.path.basename(dst), other) if model else ""
     s = s.replace('<div class="wrap">', bar(depth, active) + '\n<div class="wrap">' + tog, 1)
     s = s + NEWBIE_JS
+    sport = os.path.basename(os.path.dirname(dst))
+    if os.path.basename(dst) == "index.html" and os.path.dirname(os.path.dirname(dst)) == SITE and sport in ("nfl", "nhl", "nba"):
+        s += f'<script src="../mkt.js" data-sport="{sport}"></script>'     # live market prices on the current slate
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     with open(dst, "w", encoding="utf-8") as f:
         f.write(s)
@@ -714,6 +717,13 @@ def redirect(dst, target):
 
 def main():
     os.makedirs(SITE, exist_ok=True)
+    shutil.copy2(os.path.join(HERE, "mkt.js"), os.path.join(SITE, "mkt.js"))
+    try:
+        import markets
+        for sp in ("nfl", "nhl", "nba"):
+            markets.write_live(sp)
+    except Exception as e:                                   # pages still work without market prices
+        print("live market files skipped:", type(e).__name__, e)
     P = os.path.join(HERE, "projections")
     if os.path.exists(os.path.join(P, "index.html")):
         inject(os.path.join(P, "index.html"), os.path.join(SITE, "nfl", "index.html"), 1, "nfl:week")
