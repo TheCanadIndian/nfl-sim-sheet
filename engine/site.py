@@ -38,16 +38,19 @@ SPORTS = [
          blurb="Every player's box score simulated 10,000 times: yards, catches, touchdowns, first TD scorer.",
          pages=[("week", "This week", "nfl/index.html", "Projections for every game this week"),
                 ("results", "Results", "nfl/results.html", "Past weeks graded against the real box scores"),
+                ("markets", "Markets", "markets.html#nfl", "Kalshi prices and liquidity next to our chances, longshots first"),
                 ("updates", "Model updates", "updates.html#nfl", "What the model learned and changed, week by week")]),
     dict(key="nhl", name="NHL", status="live",
          blurb="Anytime and first goal scorers, moneylines, puck lines and totals for every game.",
          pages=[("sheet", "Tonight", "nhl/index.html", "Goal chances, lineups, goalies and moneylines for the next slate"),
                 ("results", "Results", "nhl/results.html", "Every night graded: scorers, first goals, moneylines"),
+                ("markets", "Markets", "markets.html#nhl", "Kalshi prices and liquidity next to our chances, longshots first"),
                 ("updates", "Model updates", "updates.html#nhl", "What the model learned and changed, week by week")]),
     dict(key="nba", name="NBA", status="live",
          blurb="Minutes, points, rebounds, assists and threes for every player, with and without Vegas lines.",
          pages=[("slate", "Next slate", "nba/index.html", "Every player's projection for the next slate, both models"),
                 ("results", "Results", "nba/results.html", "Every night graded against the box scores, both models"),
+                ("markets", "Markets", "markets.html#nba", "Kalshi prices and liquidity next to our chances, longshots first"),
                 ("updates", "Model updates", "updates.html#nba", "What the model learned and changed")]),
     dict(key="mlb", name="MLB", status="soon", eta="Launching for spring training 2027",
          blurb="Hits, home runs, strikeouts and pitcher lines, plus moneylines and run totals.",
@@ -240,6 +243,11 @@ PAGE_CSS = report.BASE_CSS + BAR_CSS + """
 .toc a{padding:6px 12px;border:1px solid var(--faint);border-radius:999px;text-decoration:none;color:var(--ink);font-size:14px}
 .toc a:hover{border-color:var(--accent)}
 .plan{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}
+.g1{color:var(--g1)} .g2{color:var(--g2)} .g3{color:var(--g3)} .r1{color:var(--r1)} .r2{color:var(--r2)} .r3{color:var(--r3)}
+tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 @media (max-width:600px){.hero h1{font-size:30px}.cards{grid-template-columns:1fr}.card{padding:16px}.list li{grid-template-columns:1fr auto 54px;gap:8px}.wrap,.hero,.card,.steps li{min-width:0}}
 """
 
@@ -473,6 +481,69 @@ def updates():
     write_page("updates.html", "Model updates · Sim Sheet", "updates", body, depth=0)
 
 
+def markets_page():
+    """Kalshi prices and liquidity next to our chances (markets/<sport>_<date>.json from markets.py)."""
+    data = {}
+    for sport in ("nfl", "nhl", "nba"):
+        fs = sorted(glob.glob(os.path.join(HERE, "markets", f"{sport}_*.json")))
+        if fs:
+            d = json.load(open(fs[-1]))
+            d["date"] = os.path.basename(fs[-1])[len(sport) + 1:-5]
+            data[sport] = d
+    payload = json.dumps(data, separators=(",", ":")).replace("</", "<\\/")
+    body = """
+  <header class="hero"><div class="eyebrow" id="msub"></div><h1>Markets</h1>
+    <p class="sub">Kalshi prediction-market prices next to our chances, with how much money is actually there.
+      High-variance markets (first and anytime scorers, long-shot ladder rungs) are shown first.</p></header>
+  <section class="card" style="gap:14px">
+    <div class="phead"><div class="seg" role="group" id="msport"></div><div class="seg" role="group" id="mfilter"></div></div>
+    <div id="mtable"></div>
+    <p class="note" style="margin:0">Volume and open interest are in contracts ($1 each at settlement). <b>Buy $ (1¢ / 3¢)</b>: dollars you could spend buying YES within 1 or 3 cents of the best price.
+      <b>Sell $ (3¢)</b>: resting buy orders you could sell into, so how easily you could get out before the game. <b>Spread</b>: ask minus bid.
+      <b>Edge</b>: our chance minus the price after Kalshi's taker fee (green = we like YES, red-tinted rows = we like NO). Deep, active markets that disagree
+      with us a lot usually know something (injury, role change), so treat big edges there as a prompt to check the news. Prices refresh with each update; the last
+      pregame price is kept for grading.</p>
+  </section>
+<script type="application/json" id="mdata">__MD__</script>
+<script>
+const MD = JSON.parse(document.getElementById('mdata').textContent);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct = p => p == null ? '–' : (p < .1 ? (Math.round(p*1000)/10).toFixed(1) : Math.round(p*100)) + '%';
+const cents = p => p == null ? '–' : Math.round(p*100) + '¢';
+const usd = v => v == null ? '–' : v >= 1000 ? '$' + (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
+const num = v => v == null ? '–' : v >= 1000 ? (v/1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : String(Math.round(v));
+const shadeE = e => e == null ? '' : e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : e <= -.08 ? 'r3' : e <= -.05 ? 'r2' : e <= -.02 ? 'r1' : '';
+const KIND = {win:'Moneyline', total:'Total', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
+const sports = Object.keys(MD);
+const st = {sport: sports.includes(location.hash.slice(1)) ? location.hash.slice(1) : sports[0], f: 'long', sort: 'edge'};
+function render(){
+  document.getElementById('msport').innerHTML = sports.map(s => `<button data-sp="${s}" aria-pressed="${s === st.sport}">${s.toUpperCase()}</button>`).join('');
+  document.getElementById('mfilter').innerHTML = [['long','High-variance'],['all','All matched'],['edge','3%+ edge']].map(([k,l]) => `<button data-f="${k}" aria-pressed="${k === st.f}">${l}</button>`).join('')
+    + [['edge','Sort: edge'],['liq','Sort: liquidity'],['vol','Sort: volume']].map(([k,l]) => `<button data-s="${k}" aria-pressed="${k === st.sort}">${l}</button>`).join('');
+  const D = MD[st.sport];
+  if (!D){ document.getElementById('mtable').innerHTML = '<p class="muted">No market data yet.</p>'; return; }
+  document.getElementById('msub').textContent = `${st.sport.toUpperCase()} · slate ${D.date} · prices fetched ${D.fetched.replace('T', ' ')}`;
+  let rows = D.markets.map(m => ({...m, be: Math.max(m.edge_yes ?? -9, m.edge_no ?? -9), side: (m.edge_yes ?? -9) >= (m.edge_no ?? -9) ? 'YES' : 'NO'}));
+  if (st.f === 'long') rows = rows.filter(m => m.longshot);
+  if (st.f === 'edge') rows = rows.filter(m => m.be >= .03);
+  const liq = m => (m.book && m.book.ask_3c) || (m.ask_size || 0) * (m.yes_ask || 0);
+  rows.sort((a,b) => st.sort === 'liq' ? liq(b) - liq(a) : st.sort === 'vol' ? (b.vol || 0) - (a.vol || 0) : b.be - a.be);
+  const ours = o => Object.entries(o).map(([k,v]) => `${pct(v)}${Object.keys(o).length > 1 ? `<small class="muted"> ${k === 'vegas' ? 'V' : k === 'blind' ? 'B' : ''}</small>` : ''}`).join(' / ');
+  document.getElementById('mtable').innerHTML = rows.length ? `<div class="tw"><table class="t"><thead><tr><th class="l">Market</th><th class="l">Type</th><th>Ours</th><th>Bid / Ask</th><th>Spread</th><th>Buy $ ≤1¢</th><th>Buy $ ≤3¢</th><th>Sell $ ≤3¢</th><th>Volume (ct)</th><th>Open int. (ct)</th><th>Edge</th></tr></thead><tbody>
+    ${rows.slice(0, 300).map(m => { const b = m.book || {}; return `<tr class="${m.be >= .02 && m.side === 'NO' ? 'bg-r1' : ''}"><td class="l name" style="white-space:normal;min-width:230px">${esc(m.title)}<small style="display:block;color:var(--muted)">${esc(m.away)} @ ${esc(m.home)}${m.line != null && m.kind !== 'win' ? ' · line ' + m.line : ''}</small></td><td class="l"><span class="pos">${KIND[m.kind] || esc(m.kind)}</span></td>
+      <td>${ours(m.ours)}</td><td>${cents(m.yes_bid)} / <b>${cents(m.yes_ask)}</b></td><td>${b.spread != null ? cents(b.spread) : (m.yes_ask != null && m.yes_bid != null ? cents(m.yes_ask - m.yes_bid) : '–')}</td>
+      <td>${usd(b.ask_1c)}</td><td class="big">${usd(b.ask_3c ?? (m.ask_size || 0) * (m.yes_ask || 0))}</td><td>${usd(b.bid_3c)}</td><td>${num(m.vol)}</td><td>${num(m.oi)}</td>
+      <td class="${shadeE(m.be)}"><b>${m.be > -9 ? (m.be >= 0 ? '+' : '−') + Math.abs(Math.round(m.be * 1000) / 10).toFixed(1) + '%' : '–'}</b>${m.be > -9 ? `<small style="display:block;color:var(--muted)">${m.side}</small>` : ''}</td></tr>`; }).join('')}</tbody></table></div>` : '<p class="muted">Nothing matches this filter.</p>';
+}
+document.addEventListener('click', e => { const t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.sp){ st.sport = t.dataset.sp; history.replaceState(null, '', '#' + st.sport); render(); }
+  else if (t.dataset.f){ st.f = t.dataset.f; render(); } else if (t.dataset.s){ st.sort = t.dataset.s; render(); } });
+window.addEventListener('hashchange', () => { if (sports.includes(location.hash.slice(1))) { st.sport = location.hash.slice(1); render(); } });
+render();
+</script>""".replace("__MD__", payload)
+    write_page("markets.html", "Markets · Sim Sheet", "markets", body, depth=0)
+
+
 def preview(s, plan):
     items = "".join(f"<li>{html.escape(x)}</li>" for x in plan)
     body = f"""
@@ -537,6 +608,7 @@ def main():
     home()
     guide()
     updates()
+    markets_page()
 
     # Old addresses from before the reorganisation
     redirect(os.path.join(SITE, "results.html"), "nfl/results.html")
