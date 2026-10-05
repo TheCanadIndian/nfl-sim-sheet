@@ -6,7 +6,7 @@ name: markets
 
 on:
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: "4,19,34,49 * * * *"   # every 15 min, off the busy :00/:15 marks
   workflow_dispatch:
 
 permissions:
