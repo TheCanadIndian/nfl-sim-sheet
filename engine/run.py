@@ -78,6 +78,7 @@ def nfl(news=False):
     sh(PY, "backfill_missing.py", "--blind")
     sh(PY, "results.py")
     sh(PY, "markets.py", "nfl")
+    sh(PY, "grade_markets.py", "nfl")
 
 
 def nhl(auto=False):
@@ -90,6 +91,7 @@ def nhl(auto=False):
     sh(PY, "hockey/linecheck.py")
     sh(PY, "hockey/results.py")
     sh(PY, "markets.py", "nhl")
+    sh(PY, "grade_markets.py", "nhl")
     sh(PY, "hockey/should_run.py", "--mark")
     return True
 
@@ -104,6 +106,7 @@ def nba():
     sh(PY, "nba/project.py")
     sh(PY, "nba/results.py")
     sh(PY, "markets.py", "nba")
+    sh(PY, "grade_markets.py", "nba")
     return True
 
 
