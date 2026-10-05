@@ -5,7 +5,7 @@ name: nhl
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # quick check
+    - cron: "11,41 * * * *"    # quick check every 30 min (off-peak minutes)
     - cron: "30 14 * * 2"    # Tue 10:30 ET  self-tuning
   workflow_dispatch:
     inputs:
