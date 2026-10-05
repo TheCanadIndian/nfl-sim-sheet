@@ -1,0 +1,49 @@
+# NHL on GitHub's servers (works with the PC off). Independent of the other sports: own
+# schedule, own queue, own data cache. The 30-minute check exits in seconds unless a game is
+# within ~75 minutes, lines are 4+ hours old on a game day, or last night needs grading.
+name: nhl
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # quick check
+    - cron: "30 14 * * 2"    # Tue 10:30 ET  self-tuning
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "nhl | nhl --auto | learn --sport nhl"
+        default: "nhl"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: nhl
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      SIM_SITE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: mode
+        run: |
+          case "${{ github.event.schedule }}" in
+            "30 14 * * 2") m="learn --sport nhl" ;;
+            "") m="${{ inputs.mode }}" ;;
+            *) m="nhl --auto" ;;
+          esac
+          echo "mode=$m" >> "$GITHUB_OUTPUT"
+      - uses: ./.github/actions/run-sport
+        with:
+          mode: ${{ steps.mode.outputs.mode }}
+          cache-name: nhl-db
+          cache-paths: |
+            engine/hockey/nhl.db
+            engine/hockey/raw
+          seed: nhl.tar.gz

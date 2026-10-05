@@ -1,0 +1,11 @@
+# rebuildable data lives in the GitHub Actions cache, not the repo
+*.db
+hockey/raw/
+data_cache/
+logs/
+__pycache__/
+site/
+projections/**/*.html
+projections/*.html
+hockey/projections/*.html
+nba/projections/*.html

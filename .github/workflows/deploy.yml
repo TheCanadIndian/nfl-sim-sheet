@@ -1,0 +1,30 @@
+# Publish the site when changes are pushed from the PC (the pipeline workflow deploys its own runs).
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p /tmp/pages
+          rsync -a --exclude engine --exclude .github --exclude .git ./ /tmp/pages/
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: /tmp/pages
+      - uses: actions/deploy-pages@v4

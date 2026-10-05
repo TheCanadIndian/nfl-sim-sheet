@@ -1,0 +1,83 @@
+# Shared steps for one sport's run: set up Python, restore that sport's data cache, run, save
+# the cache, commit only if something changed (retrying on top of other sports' pushes), and
+# ask the deploy workflow to publish the latest combined site.
+name: run-sport
+description: Run one sport's pipeline and publish
+inputs:
+  mode:
+    description: "arguments for run.py, e.g. 'nfl --news', 'nhl --auto', 'learn --sport nhl'"
+    required: true
+  cache-name:
+    description: "nfl-db | nhl-db | nba-db"
+    required: true
+  cache-paths:
+    description: "files/folders under engine/ to keep between runs"
+    required: true
+  seed:
+    description: "release asset to unpack on a cold cache (nfl.db.gz | nhl.tar.gz | '')"
+    default: ""
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+        cache: pip
+        cache-dependency-path: engine/requirements.txt
+    - shell: bash
+      working-directory: engine
+      run: pip install -q -r requirements.txt
+
+    - name: Quick check (NHL; no data needed)
+      id: gate
+      shell: bash
+      working-directory: engine
+      run: |
+        skip=false
+        if [ "${{ inputs.mode }}" = "nhl --auto" ]; then
+          set +e; python hockey/should_run.py; [ $? -eq 10 ] && skip=true; set -e
+        fi
+        echo "skip=$skip" >> "$GITHUB_OUTPUT"
+
+    - uses: actions/cache/restore@v4
+      if: steps.gate.outputs.skip != 'true'
+      with:
+        path: ${{ inputs.cache-paths }}
+        key: ${{ inputs.cache-name }}-${{ github.run_id }}
+        restore-keys: ${{ inputs.cache-name }}-
+
+    - name: Seed data on a cold cache
+      if: steps.gate.outputs.skip != 'true' && inputs.seed != ''
+      shell: bash
+      working-directory: engine
+      run: |
+        case "${{ inputs.seed }}" in
+          nfl.db.gz) [ -f nfl.db ] || { gh release download data-seed -p nfl.db.gz -D . && gunzip -f nfl.db.gz; } || echo "no seed; will rebuild" ;;
+          nhl.tar.gz) [ -f hockey/nhl.db ] || { gh release download data-seed -p nhl.tar.gz -D . && tar -xzf nhl.tar.gz && rm nhl.tar.gz; } || echo "no seed; will rebuild" ;;
+        esac
+
+    - name: Run
+      if: steps.gate.outputs.skip != 'true'
+      shell: bash
+      working-directory: engine
+      run: python run.py ${{ inputs.mode }}
+
+    - uses: actions/cache/save@v4
+      if: steps.gate.outputs.skip != 'true'
+      with:
+        path: ${{ inputs.cache-paths }}
+        key: ${{ inputs.cache-name }}-${{ github.run_id }}
+
+    - name: Commit and publish
+      if: steps.gate.outputs.skip != 'true'
+      shell: bash
+      run: |
+        git config user.name "sim-sheet-bot"
+        git config user.email "sim-sheet-bot@users.noreply.github.com"
+        git add -A
+        if git diff --cached --quiet; then echo "no changes"; exit 0; fi
+        git commit -q -m "Auto: ${{ inputs.mode }} $(date -u +'%Y-%m-%d %H:%M') UTC"
+        # another sport may have pushed meanwhile: replay on top (shared pages like the home page
+        # keep this run's freshly rebuilt version)
+        for i in 1 2 3 4 5; do git pull -q --rebase -X theirs && git push -q && break; sleep $((i * 5)); done
+        gh workflow run deploy.yml
