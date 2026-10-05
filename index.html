@@ -6,28 +6,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#F1F4F0; --surface:#FBFCFA; --sunk:#E6EBE6; --ink:#15201A; --muted:#55645B;
-  --faint:#D6DED8; --accent:#1D7650; --band:rgba(29,118,80,.30); --whisker:#83958B;
-  --away:#46627C; --tip-bg:#15201A; --tip-ink:#F1F4F0; --good:#1D7650; --bad:#B0502A;
-  --c-qb:#8A8F86; --c-rb:#1D7650; --c-wr:#46627C; --c-te:#B7832F;
+  color-scheme:dark;
+  --bg:#0A0F12; --surface:#111A1F; --sunk:#18242B; --ink:#EAF1F4; --muted:#95A6B0;
+  --faint:#22313A; --accent:#36D399; --band:rgba(54,211,153,.26); --whisker:#6D808B;
+  --away:#6CB4FF; --tip-bg:#EAF1F4; --tip-ink:#0A0F12; --good:#36D399; --bad:#FF7A6B; --sel:#6CB4FF;
+  --c-qb:#B4BCC2; --c-rb:#36D399; --c-wr:#6CB4FF; --c-te:#F2C14E;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#0D1411; --surface:#141E19; --sunk:#1B2721; --ink:#E3EBE6; --muted:#94A49B;
-    --faint:#27352E; --accent:#55C38D; --band:rgba(85,195,141,.30); --whisker:#6F8278;
-    --away:#8EAAC4; --tip-bg:#E3EBE6; --tip-ink:#0D1411; --good:#55C38D; --bad:#E8906A;
-    --c-qb:#A3ABA5; --c-rb:#55C38D; --c-wr:#8EAAC4; --c-te:#E0B45E;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#0D1411; --surface:#141E19; --sunk:#1B2721; --ink:#E3EBE6; --muted:#94A49B;
-  --faint:#27352E; --accent:#55C38D; --band:rgba(85,195,141,.30); --whisker:#6F8278;
-  --away:#8EAAC4; --tip-bg:#E3EBE6; --tip-ink:#0D1411; --good:#55C38D; --bad:#E8906A;
-    --c-qb:#A3ABA5; --c-rb:#55C38D; --c-wr:#8EAAC4; --c-te:#E0B45E;
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
@@ -64,6 +49,27 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
 .at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
 .winbar{display:grid;gap:6px}
+.plink .caret{display:inline-block;width:12px;color:var(--muted);font-size:11px}
+.plink.open{color:var(--sel)}
+tr.opened td{background:color-mix(in srgb,var(--sel) 8%,transparent)}
+tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 14px 16px;white-space:normal}
+.slider{display:grid;gap:12px;max-width:860px}
+.sl-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.sl-row{display:flex;align-items:center;gap:10px}
+.sl-row label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sl-row input[type=range]{flex:1;accent-color:var(--sel);height:28px;min-width:120px}
+.sl-step{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px}
+.sl-val{font-family:var(--display);font-size:26px;min-width:64px;text-align:right}
+.sl-out{display:grid;grid-template-columns:auto minmax(80px,1fr) auto;gap:14px;align-items:center}
+.sl-side{display:grid;gap:0}
+.sl-side span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.sl-side b{font-family:var(--display);font-size:34px;line-height:1}
+.sl-side em{font-style:normal;color:var(--muted);font-size:14px}
+.sl-side.over b{color:var(--good)} .sl-side.under{text-align:right} .sl-side.under b{color:var(--bad)}
+.sl-meter{height:12px;border-radius:6px;background:color-mix(in srgb,var(--bad) 55%,transparent);overflow:hidden}
+.sl-meter i{display:block;height:100%;background:var(--good)}
+.lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
+.lean.up{color:var(--good)} .lean.dn{color:var(--bad)}
 .gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
 .gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
 .gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
@@ -276,7 +282,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 <nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA<span class="soon">soon</span></a><a class="sp" href="mlb/index.html">MLB<span class="soon">soon</span></a><span class="grow"></span><a class="help" href="guide.html">How to read</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">Updated Monday Oct 5, 12:48 AM</div>
+    <div class="eyebrow">Updated Monday Oct 5, 12:54 AM</div>
     <h1>Player projections, simulated</h1>
     <p class="sub">Every game is simulated thousands of times from play-by-play data. For each player you get the
       most likely result, a realistic range, the chance to score, and the fair odds that chance is worth.</p>
@@ -284,7 +290,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <ol class="steps">
     <li><b>Pick a sport</b><span>Use the tabs at the top. Each sport has the next slate and a Results page.</span></li>
     <li><b>Open a game</b><span>See each player's median (the coin-flip number), the range of likely outcomes, and the chance to score.</span></li>
-    <li><b>Compare with your book</b><span>If a sportsbook pays more than our fair odds, that side is value by the model. <a href="guide.html">How to read the numbers →</a></span></li>
+    <li><b>Compare with your book</b><span>Tap a player to slide any line and see the over/under chance and fair odds. If a sportsbook pays more than our fair odds, that side is value by the model. <a href="guide.html">How to read the numbers →</a></span></li>
   </ol>
   <div class="sechead"><h2>Live now</h2></div>
   <div class="cards"><section class="card"><div class="ch"><span class="sport">NFL</span><span class="badge live">Live</span></div>
@@ -292,7 +298,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
         <p class="lead">Week 4 · 1 game still to play
           · next kickoff Mon Oct 05 · 8:15 PM ET</p>
         <h3>Most likely to score a TD</h3>
-        <ol class="list"><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-172</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>38%</b><em>+166</em></li><li><span>Chris Olave <small>NO vs ATL</small></span><b>35%</b><em>+187</em></li><li><span>Noah Fant <small>NO vs ATL</small></span><b>31%</b><em>+221</em></li><li><span>Drake London <small>ATL vs NO</small></span><b>29%</b><em>+242</em></li></ol>
+        <ol class="list"><li><span>Bijan Robinson <small>ATL vs NO</small></span><b>63%</b><em>-172</em></li><li><span>Juwan Johnson <small>NO vs ATL</small></span><b>39%</b><em>+156</em></li><li><span>Chris Olave <small>NO vs ATL</small></span><b>36%</b><em>+177</em></li><li><span>Noah Fant <small>NO vs ATL</small></span><b>32%</b><em>+217</em></li><li><span>Drake London <small>ATL vs NO</small></span><b>28%</b><em>+253</em></li></ol>
         <p class="acc">Track record 2026: <b>80%</b> of results inside the 8-in-10 range (target 80%) · <b>191</b> TD scorers vs <b>186</b> expected. <a href="nfl/results.html">Every week graded →</a></p><ul class="pages"><li><a href="nfl/index.html"><b>This week</b><span>Projections for every game this week</span></a></li><li><a href="nfl/results.html"><b>Results</b><span>Past weeks graded against the real box scores</span></a></li></ul></section><section class="card"><div class="ch"><span class="sport">NHL</span><span class="badge live">Live</span></div>
         <p class="lead">Anytime and first goal scorers, moneylines, puck lines and totals for every game.</p>
         <p class="lead">Sunday, October 4 · 5 games</p>

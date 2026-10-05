@@ -6,28 +6,13 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 :root{
-  --bg:#F1F4F0; --surface:#FBFCFA; --sunk:#E6EBE6; --ink:#15201A; --muted:#55645B;
-  --faint:#D6DED8; --accent:#1D7650; --band:rgba(29,118,80,.30); --whisker:#83958B;
-  --away:#46627C; --tip-bg:#15201A; --tip-ink:#F1F4F0; --good:#1D7650; --bad:#B0502A;
-  --c-qb:#8A8F86; --c-rb:#1D7650; --c-wr:#46627C; --c-te:#B7832F;
+  color-scheme:dark;
+  --bg:#0A0F12; --surface:#111A1F; --sunk:#18242B; --ink:#EAF1F4; --muted:#95A6B0;
+  --faint:#22313A; --accent:#36D399; --band:rgba(54,211,153,.26); --whisker:#6D808B;
+  --away:#6CB4FF; --tip-bg:#EAF1F4; --tip-ink:#0A0F12; --good:#36D399; --bad:#FF7A6B; --sel:#6CB4FF;
+  --c-qb:#B4BCC2; --c-rb:#36D399; --c-wr:#6CB4FF; --c-te:#F2C14E;
   --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
   --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    color-scheme:dark;
-    --bg:#0D1411; --surface:#141E19; --sunk:#1B2721; --ink:#E3EBE6; --muted:#94A49B;
-    --faint:#27352E; --accent:#55C38D; --band:rgba(85,195,141,.30); --whisker:#6F8278;
-    --away:#8EAAC4; --tip-bg:#E3EBE6; --tip-ink:#0D1411; --good:#55C38D; --bad:#E8906A;
-    --c-qb:#A3ABA5; --c-rb:#55C38D; --c-wr:#8EAAC4; --c-te:#E0B45E;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme:dark;
-  --bg:#0D1411; --surface:#141E19; --sunk:#1B2721; --ink:#E3EBE6; --muted:#94A49B;
-  --faint:#27352E; --accent:#55C38D; --band:rgba(85,195,141,.30); --whisker:#6F8278;
-  --away:#8EAAC4; --tip-bg:#E3EBE6; --tip-ink:#0D1411; --good:#55C38D; --bad:#E8906A;
-    --c-qb:#A3ABA5; --c-rb:#55C38D; --c-wr:#8EAAC4; --c-te:#E0B45E;
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
@@ -64,6 +49,27 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 .pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
 .at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
 .winbar{display:grid;gap:6px}
+.plink .caret{display:inline-block;width:12px;color:var(--muted);font-size:11px}
+.plink.open{color:var(--sel)}
+tr.opened td{background:color-mix(in srgb,var(--sel) 8%,transparent)}
+tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 14px 16px;white-space:normal}
+.slider{display:grid;gap:12px;max-width:860px}
+.sl-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.sl-row{display:flex;align-items:center;gap:10px}
+.sl-row label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sl-row input[type=range]{flex:1;accent-color:var(--sel);height:28px;min-width:120px}
+.sl-step{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px}
+.sl-val{font-family:var(--display);font-size:26px;min-width:64px;text-align:right}
+.sl-out{display:grid;grid-template-columns:auto minmax(80px,1fr) auto;gap:14px;align-items:center}
+.sl-side{display:grid;gap:0}
+.sl-side span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.sl-side b{font-family:var(--display);font-size:34px;line-height:1}
+.sl-side em{font-style:normal;color:var(--muted);font-size:14px}
+.sl-side.over b{color:var(--good)} .sl-side.under{text-align:right} .sl-side.under b{color:var(--bad)}
+.sl-meter{height:12px;border-radius:6px;background:color-mix(in srgb,var(--bad) 55%,transparent);overflow:hidden}
+.sl-meter i{display:block;height:100%;background:var(--good)}
+.lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
+.lean.up{color:var(--good)} .lean.dn{color:var(--bad)}
 .gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
 .gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
 .gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
@@ -286,13 +292,14 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
     <div><dt>Range bar (8 in 10 games)</dt><dd>The thin line spans where 8 of every 10 simulated games landed; the darker band is the middle half. Short bar: steady player. Long bar: boom or bust.</dd></div>
     <div><dt>Chance to score</dt><dd>How often the player scored in the simulations. 40% means about 2 games in 5.</dd></div>
     <div><dt>Projected score / win chance</dt><dd>Average points or goals per team across the simulations, and how often each side won.</dd></div>
+    <div><dt>▲ blind / ▼ blind</dt><dd>Next to a player: the market-blind model is noticeably higher (green) or lower (red) on that stat. Hover for both numbers. A small lean, not a lock.</dd></div>
     <div><dt>★ and highlights</dt><dd>Stars and tinted rows mark the strongest options on a page (for example tonight's top goal scorers). Hover or tap them for the reasons.</dd></div>
     <div><dt>Results pages</dt><dd>Every past game is graded against the real box score, so you can check how often the ranges held before trusting them.</dd></div>
   </dl></section>
   <section id="odds"><h2>Odds and value</h2><dl>
     <div><dt>Fair odds</dt><dd>What a chance is worth with no bookmaker margin. 50% = −100 / +100, 33% = +200, 20% = +400.</dd></div>
     <div><dt>Finding value</dt><dd>If a book pays more than the fair odds (book +150 when fair is +120), the model thinks that side is good value. If the book's price is shorter, it isn't.</dd></div>
-    <div><dt>Price a line (NFL)</dt><dd>On the NFL page open <a href="nfl/index.html#fair">Fair odds</a>, pick a player and stat, type the book's line, and get fair over/under odds.</dd></div>
+    <div><dt>Line slider (NFL)</dt><dd>Tap any player's name in a game to open a slider: drag the line up or down (or use − / +) and the over and under chances and fair odds update as you go. Pick the stat with the buttons above it.</dd></div>
     <div><dt>Keep it in proportion</dt><dd>Even the best picks hit well under half the time for scorer props. The fair odds tell you whether the price is right, not whether it will happen.</dd></div>
   </dl></section>
   <section id="nfl"><h2>NFL terms</h2><dl>
