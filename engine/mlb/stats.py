@@ -119,6 +119,17 @@ def hitter_zones(p, pa):
     return out
 
 
+def swing_plane(p):
+    """Estimated swing plane from contact: launch angle ~ a + bz*height(zone units) + bx*plate x (ft, catcher's view).
+    Fit on his balls in play (needs 40+); the page draws where predicted launch angle is 15-30 deg (HR angles)."""
+    q = p[(p.inplay == 1) & p.la.notna() & p.px.notna() & p.pz.notna()].copy()
+    if len(q) < 40:
+        return None
+    zn = ((q.pz - q.sz_bot) / (q.sz_top - q.sz_bot)).to_numpy(); X = np.column_stack([np.ones(len(q)), zn, q.px.to_numpy()])
+    b, *_ = np.linalg.lstsq(X, q.la.to_numpy(), rcond=None)
+    return dict(a=round(float(b[0]), 2), bz=round(float(b[1]), 2), bx=round(float(b[2]), 2), n=int(len(q)))
+
+
 def pitcher_zones(p):
     out = {}
     for side in ("R", "L"):
@@ -139,8 +150,21 @@ def arsenal(p, pa):
                          vs_l=round(float((x.side == "L").sum() / max((p.side == "L").sum(), 1)), 3),
                          velo=round(float(x.speed.mean()), 1), hbreak=round(float(x.pfx_x.mean()), 1), vbreak=round(float(x.pfx_z.mean()), 1),
                          whiff=round(float(x.code.isin(WHIFF).sum() / sw), 3) if sw else None,
-                         xwobacon=round(float(y.xcon.mean()), 3) if len(y) >= 5 else None))
+                         xwobacon=round(float(y.xcon.mean()), 3) if len(y) >= 5 else None, by_side=_side_shape(x, p)))
     return sorted(rows, key=lambda r: -r["usage"])
+
+
+def _side_shape(x, p):
+    """Per batter side: usage, average location (plate x ft; height in units of the zone) and movement (in)."""
+    out = {}
+    for side in ("R", "L"):
+        q = x[x.side == side]
+        if len(q) < 5:
+            continue
+        zn = ((q.pz - q.sz_bot) / (q.sz_top - q.sz_bot)).mean()
+        out[side] = dict(usage=round(len(q) / max((p.side == side).sum(), 1), 3), px=round(float(q.px.mean()), 2), zn=round(float(zn), 2),
+                         hb=round(float(q.pfx_x.mean()), 1), vb=round(float(q.pfx_z.mean()), 1))
+    return out
 
 
 def count_usage(p):

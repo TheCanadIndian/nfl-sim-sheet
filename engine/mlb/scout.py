@@ -36,6 +36,13 @@ def build(con, date, meta, now, coef_pred, hist):
     sample = hist[hist.season == season]
     ref_pa = np.sort(coef_pred(sample.sample(min(len(sample), 60000), random_state=1)))
     form = S.form_pct(cur, [m["batter"] for m in meta], date)
+    prev = pa[(pa.season == season - 1)]
+    def data_n(col, ids):
+        """Weighted sample: this season's PAs (to date) + 0.6 x last season's -- what the model's shrinkage sees."""
+        a = cur.groupby(col).size(); b = prev.groupby(col).size()
+        return {i: int(a.get(i, 0) + .6 * b.get(i, 0)) for i in ids}
+    hn = data_n("batter", [m["batter"] for m in meta]); pn = data_n("pitcher", [m["sp_id"] for m in meta if m.get("sp_id")])
+    light = lambda n: "green" if n >= 300 else "yellow" if n >= 120 else "red"
 
     hitters = {}
     for m in meta:
@@ -55,7 +62,7 @@ def build(con, date, meta, now, coef_pred, hist):
             matchup=None if p_sp is None else round(float(np.searchsorted(ref_pa, p_sp) / len(ref_pa) * 100)),
             zone_fit=None if r.empty else round(float(np.exp(r.heat.iloc[0]) - 1), 3),
             mix_fit=None if r.empty else round(float(np.exp(r.mix.iloc[0]) - 1), 3),
-            form=form.get(b), rolling=roll, zones=S.hitter_zones(p, x))
+            form=form.get(b), rolling=roll, zones=S.hitter_zones(p, x), swing=S.swing_plane(p), data_n=hn.get(b, 0), light=light(hn.get(b, 0)))
     pitchers = {}
     for sid in {m["sp_id"] for m in meta if m.get("sp_id")}:
         x = cur[cur.pitcher == sid]; p = pit[pit.pitcher == sid]
@@ -63,5 +70,6 @@ def build(con, date, meta, now, coef_pred, hist):
                   "vs LHH": S.line(x[x.bat_side.isin(["L"]) | ((x.bat_side == "S") & (x.pitch_hand == "R"))], p[p.side == "L"])}
         pitchers[str(sid)] = dict(splits=splits, pct={k: {m: pctl(v.get(m), ref_p[m]) for m in PIT_METRICS} for k, v in splits.items()},
                                   arsenal=S.arsenal(p, x) if len(p) else [], counts=S.count_usage(p) if len(p) else {},
-                                  zones=S.pitcher_zones(p) if len(p) else {}, starts=int(x[x.sp == 1].game_pk.nunique()))
+                                  zones=S.pitcher_zones(p) if len(p) else {}, starts=int(x[x.sp == 1].game_pk.nunique()),
+                                  data_n=pn.get(sid, 0), light=light(pn.get(sid, 0)))
     return dict(hitters=hitters, pitchers=pitchers)
