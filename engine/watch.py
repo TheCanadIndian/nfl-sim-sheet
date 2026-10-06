@@ -2,7 +2,7 @@
 """
 Game-day watcher: re-run a sport's model when the facts it used change.
 
-    python watch.py            # check NFL and NBA games starting in the next 12 hours
+    python watch.py            # check NFL, NBA and MLB games starting in the next 12 hours
 
 Runs inside the cloud markets job (every 5 minutes in the 3 hours before games, 15 otherwise).
 For each upcoming game it compares what our latest projections used with ESPN right now:
@@ -31,7 +31,7 @@ H = {"User-Agent": "Mozilla/5.0"}
 ESPN = "https://site.api.espn.com/apis/site/v2/sports"
 ESPN_TEAM = {"WSH": "WAS", "LAR": "LA"}
 HORIZON_H = 12
-COOLDOWN_MIN = 20
+COOLDOWN_MIN = 20          # MLB uses 12 (lineups trickle in game by game)
 
 
 def norm(n):
@@ -130,8 +130,38 @@ def nba_checks():
     return reasons
 
 
-def busy(workflow):
-    """True if this workflow is queued / running, or started in the last COOLDOWN_MIN minutes."""
+def mlb_checks():
+    """MLB: a lineup was posted since our sheet (we used a projected one) or a probable starter changed."""
+    fs = sorted(glob.glob(os.path.join(HERE, "mlb", "projections", "????-??-??.json")))
+    if not fs:
+        return []
+    js = json.load(open(fs[-1]))
+    ours = {}
+    for p in js.get("players", []):
+        g = ours.setdefault(p["game_pk"], dict(projected=set(), sp={}))
+        if p.get("lineup") == "projected":
+            g["projected"].add(p["team"])
+        g["sp"][p["team"]] = p.get("sp_id")                  # the starter this team faces
+    reasons = []
+    d = get("https://statsapi.mlb.com/api/v1/schedule", sportId=1, date=js["date"], hydrate="probablePitcher,lineups,team") or {}
+    for day in d.get("dates", []):
+        for g in day["games"]:
+            if not soon(g["gameDate"]) or g["gamePk"] not in ours:
+                continue
+            o, lu = ours[g["gamePk"]], g.get("lineups") or {}
+            for side in ("away", "home"):
+                team = g["teams"][side]["team"]["abbreviation"]
+                opp = "home" if side == "away" else "away"
+                if team in o["projected"] and lu.get(f"{side}Players"):
+                    reasons.append(f"{team}: lineup posted (sheet used a projected one)")
+                sp_new = (g["teams"][opp].get("probablePitcher") or {}).get("id")
+                if sp_new and o["sp"].get(team) and sp_new != o["sp"][team]:
+                    reasons.append(f"{team}: opposing starter changed to {(g['teams'][opp].get('probablePitcher') or {}).get('fullName')}")
+    return reasons
+
+
+def busy(workflow, cooldown=COOLDOWN_MIN):
+    """True if this workflow is queued / running, or started in the last `cooldown` minutes."""
     gh = shutil.which("gh")
     if not gh:
         return False
@@ -143,11 +173,11 @@ def busy(workflow):
         return False
     now = pd.Timestamp.now(tz="UTC")
     return any(x["status"] in ("queued", "in_progress", "waiting", "pending") or
-               now - pd.Timestamp(x["createdAt"]) < pd.Timedelta(minutes=COOLDOWN_MIN) for x in runs)
+               now - pd.Timestamp(x["createdAt"]) < pd.Timedelta(minutes=cooldown) for x in runs)
 
 
 def main():
-    for sport, check, wf, args in (("nfl", nfl_checks, "nfl.yml", ["-f", "mode=nfl"]), ("nba", nba_checks, "nba.yml", [])):
+    for sport, check, wf, args in (("nfl", nfl_checks, "nfl.yml", ["-f", "mode=nfl"]), ("nba", nba_checks, "nba.yml", []), ("mlb", mlb_checks, "mlb.yml", [])):
         try:
             reasons = check()
         except Exception as e:                              # one sport's trouble never blocks the other
@@ -160,7 +190,7 @@ def main():
             print(f"{sport}: {r}")
         if not os.environ.get("GITHUB_ACTIONS"):
             print(f"{sport}: (local run: not starting {wf})")
-        elif busy(wf):
+        elif busy(wf, 12 if sport == "mlb" else COOLDOWN_MIN):
             print(f"{sport}: {wf} ran or is running in the last {COOLDOWN_MIN} min -- not starting another")
         else:
             subprocess.run([shutil.which("gh"), "workflow", "run", wf, *args], check=False)
