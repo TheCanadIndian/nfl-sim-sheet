@@ -58,10 +58,24 @@ def nba_results():
     return dict(games=g.set_index("game_id"), players=p.set_index(["game_id", "player_id"]))
 
 
+def mlb_results():
+    con = sqlite3.connect(os.path.join(HERE, "mlb", "mlb.db"))
+    hr = pd.read_sql("SELECT game_pk, batter, SUM(hr) hr FROM pa GROUP BY game_pk, batter", con)
+    return dict(games=pd.read_sql("SELECT game_pk game_id, home_score, away_score, home, away FROM games", con).set_index("game_id"),
+                hr=hr.set_index(["game_pk", "batter"]).hr.to_dict())
+
+
 def outcome(sport, r, R):
     """1 / 0 if the market's YES happened, None if not settled or void (player didn't play)."""
     G = R["games"]
     gid = r["game"] if sport == "nfl" else int(r["game"])
+    if sport == "mlb":
+        if gid not in G.index or r.get("pid") is None:
+            return None
+        k = (gid, int(r["pid"]))
+        if k not in R["hr"]:
+            return None                                    # didn't bat: void
+        return float(R["hr"][k] > (r.get("line") if r.get("line") is not None else 0.5))
     if gid not in G.index or pd.isna(G.loc[gid, "home_score"]):
         return None
     hs, as_ = float(G.loc[gid, "home_score"]), float(G.loc[gid, "away_score"])
@@ -129,11 +143,11 @@ def ll(y, p):
 
 
 def main(only=None):
-    loaders = {"nfl": nfl_results, "nhl": nhl_results, "nba": nba_results}
+    loaders = {"nfl": nfl_results, "nhl": nhl_results, "nba": nba_results, "mlb": mlb_results}
     gp = os.path.join(OUT, "grades.json")
     old = json.load(open(gp)) if os.path.exists(gp) else {}
     rows, done = [], set()
-    for sport in ([only] if only else ("nfl", "nhl", "nba")):
+    for sport in ([only] if only else ("nfl", "nhl", "nba", "mlb")):
         files = sorted(glob.glob(os.path.join(OUT, f"{sport}_*.json")))
         if not files:
             continue

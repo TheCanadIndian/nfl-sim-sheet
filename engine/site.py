@@ -52,9 +52,12 @@ SPORTS = [
                 ("results", "Results", "nba/results.html", "Every night graded against the box scores, both models"),
                 ("markets", "Markets", "nba/markets.html", "Live Kalshi and Polymarket prices by game and player, with money on each side"),
                 ("updates", "Model updates", "updates.html#nba", "What the model learned and changed")]),
-    dict(key="mlb", name="MLB", status="soon", eta="Launching for spring training 2027",
-         blurb="Hits, home runs, strikeouts and pitcher lines, plus moneylines and run totals.",
-         pages=[("preview", "Preview", "mlb/index.html", "What's coming")]),
+    dict(key="mlb", name="MLB", status="live",
+         blurb="Home run chances for every hitter: power, the pitchers he'll face, handedness, park and weather. Playoffs now; the full model comes for 2027.",
+         pages=[("today", "Today", "mlb/index.html", "Every hitter's chance of a home run today"),
+                ("results", "Results", "mlb/results.html", "Every night graded: who homered vs our chances"),
+                ("markets", "Markets", "mlb/markets.html", "Live Kalshi home-run prices with money on each side"),
+                ("updates", "Model updates", "updates.html#mlb", "What the model learned and changed")]),
 ]
 SPORT = {s["key"]: s for s in SPORTS}
 
@@ -169,7 +172,7 @@ def inject(src, dst, depth, active, model=None, other=None):
     s = s.replace('<div class="wrap">', bar(depth, active) + '\n<div class="wrap">' + tog, 1)
     s = s + NEWBIE_JS
     sport = os.path.basename(os.path.dirname(dst))
-    if os.path.basename(dst) == "index.html" and os.path.dirname(os.path.dirname(dst)) == SITE and sport in ("nfl", "nhl", "nba"):
+    if os.path.basename(dst) == "index.html" and os.path.dirname(os.path.dirname(dst)) == SITE and sport in ("nfl", "nhl", "nba", "mlb"):
         s += f'<script src="../mkt.js" data-sport="{sport}"></script>'     # live market prices on the current slate
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     with open(dst, "w", encoding="utf-8") as f:
@@ -181,7 +184,8 @@ def inject(src, dst, depth, active, model=None, other=None):
 PUBLISHED = {os.path.join("projections", "index.html"): os.path.join("nfl", "index.html"),
              os.path.join("projections", "results.html"): os.path.join("nfl", "results.html"),
              os.path.join("hockey", "projections", "index.html"): os.path.join("nhl", "index.html"),
-             os.path.join("nba", "projections", "index.html"): os.path.join("nba", "index.html")}
+             os.path.join("nba", "projections", "index.html"): os.path.join("nba", "index.html"),
+             os.path.join("mlb", "projections", "index.html"): os.path.join("mlb", "index.html")}
 
 
 def page_data(path):
@@ -417,7 +421,19 @@ def nba_card():
         <ol class="list">{''.join(f'<li><span>{html.escape(n)} <small>{t} vs {o}</small></span><b>{v:.0f}</b><em>pts</em></li>' for v, n, t, o in rows)}</ol>"""
 
 
-HOME_CARDS = {"nfl": nfl_card, "nhl": nhl_card, "nba": nba_card}
+def mlb_card():
+    mlb = page_data(os.path.join(HERE, "mlb", "projections", "index.html"))
+    if not mlb or not mlb.get("players"):
+        return "<p class='muted'>No MLB slate yet.</p>"
+    rows = sorted(((p["p_hr"], p["name"], p["team"], p.get("sp_name") or "TBD") for p in mlb["players"]), reverse=True)[:5]
+    day = dt.date.fromisoformat(mlb["date"]).strftime("%A, %B %d").replace(" 0", " ")
+    return f"""
+        <p class="lead">{html.escape(day)} · {len(mlb['games'])} game{'s' if len(mlb['games']) != 1 else ''}</p>
+        <h3>Most likely to homer</h3>
+        <ol class="list">{''.join(f'<li><span>{html.escape(n)} <small>{t} vs {html.escape(sp)}</small></span><b>{p*100:.0f}%</b><em>{american(p)}</em></li>' for p, n, t, sp in rows)}</ol>"""
+
+
+HOME_CARDS = {"nfl": nfl_card, "nhl": nhl_card, "nba": nba_card, "mlb": mlb_card}
 
 
 def home():
@@ -612,7 +628,7 @@ MARKETS_BODY = """
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const KIND = {win:'Winner', total:'Total', spread:'Spread', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
+const KIND = {hr:'Home run', win:'Winner', total:'Total', spread:'Spread', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
 const GAMEK = new Set(['win', 'total', 'spread']);
 let st = {show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
 try { Object.assign(st, JSON.parse(localStorage.getItem('mk-tree') || '{}'), {q: ''}); } catch (e) {}
@@ -743,7 +759,7 @@ def main():
     shutil.copy2(os.path.join(HERE, "mkt.js"), os.path.join(SITE, "mkt.js"))
     try:
         import markets
-        for sp in ("nfl", "nhl", "nba"):
+        for sp in ("nfl", "nhl", "nba", "mlb"):
             markets.write_live(sp)
     except Exception as e:                                   # pages still work without market prices
         print("live market files skipped:", type(e).__name__, e)
@@ -773,6 +789,10 @@ def main():
     for f in glob.glob(os.path.join(N, "*.html")):
         inject(f, os.path.join(SITE, "nba", os.path.basename(f)), 1,
                "nba:results" if os.path.basename(f) == "results.html" else "nba:slate")
+    MP = os.path.join(HERE, "mlb", "projections")
+    for f in glob.glob(os.path.join(MP, "*.html")):
+        inject(f, os.path.join(SITE, "mlb", os.path.basename(f)), 1,
+               "mlb:results" if os.path.basename(f) == "results.html" else "mlb:today")
     for s in SPORTS:
         if s["status"] == "soon":
             preview(s, PLANS.get(s["key"], []))

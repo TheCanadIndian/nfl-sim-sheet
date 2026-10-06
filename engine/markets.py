@@ -53,6 +53,7 @@ SERIES = {
             "KXNFLRECYDS": "rec_yds", "KXNFLRSHYDS": "rush_yds", "KXNFLPASSYDS": "pass_yds", "KXNFLREC": "rec"},
     "nhl": {"KXNHLGAME": "win", "KXNHLTOTAL": "total", "KXNHLGOAL": "goal", "KXNHLFIRSTGOAL": "first_goal"},
     "nba": {"KXNBAGAME": "win", "KXNBATOTAL": "total", "KXNBAPTS": "pts", "KXNBAREB": "reb", "KXNBAAST": "ast", "KXNBA3PT": "fg3m"},
+    "mlb": {"KXMLBHR": "hr"},                          # home runs: 1+ / 2+ ladder (ticker suffix -1 / -2)
 }
 POLY_SERIES = {"nfl": 12185, "nhl": 10346, "nba": 10345}
 POLY_KINDS = {"moneyline": "win", "totals": "total", "spreads": "spread"}
@@ -60,9 +61,10 @@ ALIAS = {   # market team codes that differ from ours (nflverse / NHL API / ESPN
     "nfl": {"LAR": "LA", "JAC": "JAX", "WSH": "WAS", "LVR": "LV"},
     "nhl": {"SJ": "SJS", "LA": "LAK", "TB": "TBL", "NJ": "NJD", "VGS": "VGK", "LV": "VGK", "MON": "MTL", "UTAH": "UTA", "WAS": "WSH", "CLB": "CBJ"},
     "nba": {"NYK": "NY", "GSW": "GS", "SAS": "SA", "NOP": "NO", "UTA": "UTAH", "WAS": "WSH", "PHO": "PHX", "BRK": "BKN", "CHO": "CHA"},
+    "mlb": {"ARI": "AZ", "WAS": "WSH", "OAK": "ATH", "CHW": "CWS", "KCR": "KC", "SDP": "SD", "SFG": "SF", "TBR": "TB", "AZ": "AZ"},
 }
 MON = {m: i for i, m in enumerate(["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"], 1)}
-LONGSHOT_KINDS = {"first_td", "first_goal", "anytime_td", "goal"}
+LONGSHOT_KINDS = {"first_td", "first_goal", "anytime_td", "goal", "hr"}
 
 
 def norm(s):
@@ -195,6 +197,16 @@ def ours_nhl(path=None):
     return dict(games=games, players=pd.read_csv(fs[-1].replace(".json", ".csv")))
 
 
+def ours_mlb():
+    fs = sorted(glob.glob(os.path.join(HERE, "mlb", "projections", "????-??-??.json")))
+    if not fs:
+        return None
+    js = json.load(open(fs[-1]))
+    games = [dict(id=int(g["id"]), date=g.get("date", js["date"]), home=g["home"], away=g["away"], start=pd.Timestamp(g["start_utc"]))
+             for g in js["games"]]
+    return dict(games=games, players=js["players"])
+
+
 def ours_nba():
     fs = sorted(glob.glob(os.path.join(HERE, "nba", "projections", "????-??-??.json")))
     if not fs:
@@ -269,6 +281,14 @@ def player_prob(sport, kind, name, line, g, O):
                 p = p_over(M["dist"].get(f"{g['id']}|{pl.team}|{pl.player}", {}).get(kind), line)
                 if p is not None:
                     out[mod] = p
+    elif sport == "mlb":
+        for p in O["players"]:
+            if p["game_pk"] == g["id"] and norm(p["name"]) == norm(name):
+                pid = p["batter"]
+                out["model"] = p["p_hr"] if (line is None or line < 1) else p.get("p_hr2")
+                if out["model"] is None:
+                    out.pop("model")
+                break
     elif sport == "nhl":
         P = O["players"][O["players"].game_id == g["id"]]
         pm = P[P.name.map(norm) == norm(name)]
@@ -308,7 +328,7 @@ def make_row(source, sport, g, kind, ticker, title, line, ours, yb, ya, extra):
 # ------------------------------------------------------------------ Kalshi
 
 def event_parts(ev):
-    m = re.match(r"[A-Z0-9]+-(\d{2})([A-Z]{3})(\d{2})([A-Z]+)$", ev)
+    m = re.match(r"[A-Z0-9]+-(\d{2})([A-Z]{3})(\d{2})(?:\d{4})?([A-Z]+)$", ev)     # MLB tickers carry a start time
     if not m:
         return None, None
     y, mon, d, teams = m.groups()
@@ -364,6 +384,8 @@ def kalshi_rows(sport, O, games, settled=None, kinds=None):
             if not g:
                 continue
             line = fnum(m.get("floor_strike"))
+            if kind == "hr":
+                line = int(m["ticker"].rsplit("-", 1)[-1]) - 0.5          # -1 = 1+ HR, -2 = 2+ HR
             pid = None
             if kind in ("win", "total"):
                 team = code(sport, m["ticker"].rsplit("-", 1)[-1]) if kind == "win" else None
@@ -384,6 +406,8 @@ def kalshi_rows(sport, O, games, settled=None, kinds=None):
 # ------------------------------------------------------------------ Polymarket
 
 def poly_rows(sport, O, games):
+    if sport not in POLY_SERIES:
+        return [], 0
     evs, off = [], 0
     while off < 1000:
         d = get(f"{GAMMA}/events", {"series_id": POLY_SERIES[sport], "closed": "false", "limit": 100, "offset": off})
@@ -444,7 +468,7 @@ def poly_rows(sport, O, games):
 # ------------------------------------------------------------------ main
 
 def run(sport):
-    O = {"nfl": ours_nfl, "nhl": ours_nhl, "nba": ours_nba}[sport]()
+    O = {"nfl": ours_nfl, "nhl": ours_nhl, "nba": ours_nba, "mlb": ours_mlb}[sport]()
     if not O:
         print(f"{sport}: no projections on disk")
         return
@@ -555,7 +579,7 @@ def live(hours=12):
     ran = False
     now = pd.Timestamp.now(tz="UTC")
     starts = []
-    for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba)):
+    for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba), ("mlb", ours_mlb)):
         try:
             for g in (f() or {}).get("games", []):
                 t = pd.Timestamp(g["start"]).tz_convert("UTC") if pd.Timestamp(g["start"]).tzinfo else pd.Timestamp(g["start"], tz="UTC")
@@ -567,7 +591,7 @@ def live(hours=12):
         os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
         json.dump(dict(games=sorted(starts, key=lambda x: x["start"])),        # no timestamp: only changes when games do
                   open(os.path.join(SITE, "markets", "schedule.json"), "w"), separators=(",", ":"))
-    for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba)):
+    for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba), ("mlb", ours_mlb)):
         try:
             O = f()
         except Exception as e:                             # one sport's missing files must not stop the others

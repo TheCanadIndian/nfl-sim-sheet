@@ -111,6 +111,15 @@ def nba():
     return True
 
 
+def mlb():
+    sh(PY, "mlb/fetch.py", "--seasons", str(dt.date.today().year))
+    sh(PY, "mlb/project.py")
+    sh(PY, "mlb/results.py")
+    sh(PY, "markets.py", "mlb")
+    sh(PY, "grade_markets.py", "mlb")
+    return True
+
+
 def learn(sport):
     sh(PY, "learn.py", sport)
     if sport == "nfl":
@@ -125,7 +134,7 @@ def learn(sport):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["nfl", "nhl", "nba", "learn"])
+    ap.add_argument("mode", choices=["nfl", "nhl", "nba", "mlb", "learn"])
     ap.add_argument("--news", action="store_true")
     ap.add_argument("--auto", action="store_true")
     ap.add_argument("--sport", choices=["nfl", "nhl"], default="nfl")
@@ -138,6 +147,8 @@ def main():
         did = nhl(a.auto)
     elif a.mode == "nba":
         did = nba()
+    elif a.mode == "mlb":
+        did = mlb()
     else:
         learn(a.sport)
     if did:
