@@ -4,9 +4,7 @@
 # saved projections in engine/. Polymarket books are also fetched live by the browser.
 name: markets
 
-on:
-  schedule:
-    - cron: "4,19,34,49 * * * *"   # every 15 min, off the busy :00/:15 marks
+on:            # started by the Cloudflare Worker sim-sheet-cron (Eastern-time schedule), or by hand
   workflow_dispatch:
 
 permissions:

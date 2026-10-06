@@ -3,10 +3,7 @@
 # within ~75 minutes, lines are 4+ hours old on a game day, or last night needs grading.
 name: nhl
 
-on:
-  schedule:
-    - cron: "11,41 * * * *"    # quick check every 30 min (off-peak minutes)
-    - cron: "30 14 * * 2"    # Tue 10:30 ET  self-tuning
+on:            # started by the Cloudflare Worker sim-sheet-cron (Eastern-time schedule), or by hand
   workflow_dispatch:
     inputs:
       mode:

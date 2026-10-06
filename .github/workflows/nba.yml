@@ -2,13 +2,7 @@
 # schedule, own queue, own data cache. Times are UTC = Eastern daylight time + 4h.
 name: nba
 
-on:
-  schedule:
-    - cron: "0 14 * * *"     # 10:00 ET  grade last night, project today
-    - cron: "0 17 * * *"     # 13:00 ET  injury report update
-    - cron: "0 21 * * *"     # 17:00 ET  injury report update
-    - cron: "30 22 * * *"    # 18:30 ET  final update before the 7:00 games
-    - cron: "0 1 * * *"      # 21:00 ET  late (West Coast) games
+on:            # started by the Cloudflare Worker sim-sheet-cron (Eastern-time schedule), or by hand
   workflow_dispatch:
 
 permissions:
