@@ -8,7 +8,7 @@ inputs:
     description: "arguments for run.py, e.g. 'nfl --news', 'nhl --auto', 'learn --sport nhl'"
     required: true
   cache-name:
-    description: "nfl-db | nhl-db | nba-db"
+    description: "nfl-db | nhl-db | nba-db | mlb-db"
     required: true
   cache-paths:
     description: "files/folders under engine/ to keep between runs"
@@ -54,6 +54,7 @@ runs:
         case "${{ inputs.seed }}" in
           nfl.db.gz) [ -f nfl.db ] || { gh release download data-seed -p nfl.db.gz -D . && gunzip -f nfl.db.gz; } || echo "no seed; will rebuild" ;;
           nba.db.gz) [ -f nba/nba.db ] || { gh release download data-seed -p nba.db.gz -D nba && gunzip -f nba/nba.db.gz; } || echo "no seed; will rebuild" ;;
+          mlb.db.gz) [ -f mlb/mlb.db ] || { gh release download data-seed -p mlb.db.gz -D mlb && gunzip -f mlb/mlb.db.gz; } || echo "no seed; will rebuild" ;;
           nhl.tar.gz) [ -f hockey/nhl.db ] || { gh release download data-seed -p nhl.tar.gz -D . && tar -xzf nhl.tar.gz && rm nhl.tar.gz; } || echo "no seed; will rebuild" ;;
         esac
 

@@ -1,0 +1,32 @@
+# MLB home-run sheet on GitHub's servers (works with the PC off). Own queue and data cache.
+# Each run: fetch new finals, project today's slate (posted lineups when out), grade, re-price, publish.
+name: mlb
+
+on:            # started by the Cloudflare Worker sim-sheet-cron (Eastern-time schedule), or by hand
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: mlb
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      SIM_SITE: ${{ github.workspace }}
+      PYTHONIOENCODING: utf-8
+      TZ: America/New_York
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/run-sport
+        with:
+          mode: mlb
+          cache-name: mlb-db
+          cache-paths: engine/mlb/mlb.db
+          seed: mlb.db.gz
