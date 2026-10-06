@@ -1,0 +1,32 @@
+{
+ "features": [
+  "l_bhr",
+  "l_bpc",
+  "l_bfb",
+  "l_phr",
+  "l_ppc",
+  "same",
+  "l_park",
+  "temp",
+  "wind_out",
+  "post",
+  "l_b_brl",
+  "l_b_hh",
+  "l_b_pull",
+  "l_p_brl",
+  "l_p_hh",
+  "l_p_pull",
+  "velo"
+ ],
+ "note": "ablation 2026-10-06: kept power + velo; form, pitch mix, location heat maps, K/BB did not lower log-loss in both windows (2026 regular, 2026 postseason)",
+ "ablation": {
+  "base": [
+   0.13403,
+   0.12689
+  ],
+  "final": [
+   0.13374,
+   0.12607
+  ]
+ }
+}
