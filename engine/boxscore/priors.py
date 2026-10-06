@@ -21,7 +21,8 @@ PLAYER_HL, PLAYER_CARRY = 5.0, 0.4
 K_TGT, K_CAR = 20, 15
 K_CATCH = 40                 # catch-rate pseudo-targets toward the position average
 K_YPR, K_YPC = 30, 80        # yards-per-catch / per-carry pseudo-counts toward the position average
-K_REC_TD, K_RUSH_TD = 4, 3  # TD-share pseudo-TDs toward red-zone usage
+K_REC_TD, K_RUSH_TD = 20, 15  # TD-share pseudo-TDs toward red-zone usage (was 4/3; 2026-10-06: past TDs over-weighted vs
+                               # red-zone usage -- TD log-loss 2024 .4084->.4044, 2025-26 .4022->.3974)
 # Snap-based usage: expected snap share (short memory, follows role changes fast) x
 # targets/carries per on-field play (steadier than raw share). Blended into the share
 # priors with weights W_SNAP_*; 0 = off. Tuned in tune.py (phase "snap").
