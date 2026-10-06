@@ -22,6 +22,8 @@ import datetime as dt
 import glob
 import html
 import json
+
+import pandas as pd
 import os
 import re
 import shutil
@@ -165,7 +167,27 @@ def model_toggle(model, here, other):
             " if (a && location.hash && !a.hasAttribute('aria-current')) { e.preventDefault(); location.href = a.getAttribute('href') + location.hash; } });</script>")
 
 
+def _stamp(path):
+    """(date, generated) from a page's embedded data, for comparing freshness."""
+    try:
+        m = DATA_RE.search(open(path, encoding="utf-8").read())
+        d = json.loads(m.group(1).replace(r"<\/", "</")) if m else {}
+    except (OSError, ValueError):
+        return ("", "")
+    g = d.get("generated") or d.get("built") or ""
+    try:
+        g = pd.Timestamp(g).isoformat()               # formats differ by sport; compare as times
+    except (ValueError, TypeError):
+        g = str(g)
+    return (str(d.get("date") or ""), g)
+
+
 def inject(src, dst, depth, active, model=None, other=None):
+    # A build on the PC must never replace a page the cloud published more recently (the PC's copy of
+    # another sport can be stale): keep the newer one.
+    if not os.environ.get("GITHUB_ACTIONS") and os.path.exists(dst) and _stamp(dst) > _stamp(src):
+        print(f"  kept newer published {os.path.relpath(dst, SITE)}")
+        return
     s = open(src, encoding="utf-8").read()
     s = s.replace("</style>", BAR_CSS + MODEL_CSS + "</style>", 1)
     tog = model_toggle(model, os.path.basename(dst), other) if model else ""

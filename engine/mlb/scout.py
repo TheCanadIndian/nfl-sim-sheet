@@ -4,7 +4,7 @@ import pandas as pd
 
 import stats as S
 
-HIT_METRICS = ["iso", "xwoba", "xwobacon", "swstr", "pullbrl", "brl_bip", "sweet", "hardhit", "ev90"]
+HIT_METRICS = ["iso", "xwoba", "xwobacon", "swstr", "pullbrl", "brl_bip", "sweet", "hardhit", "ev90", "fb"]
 PIT_METRICS = ["xwoba", "csw", "swstr", "brl_bip", "fb", "hardhit"]
 
 
