@@ -169,7 +169,8 @@
       return `<div class="mkx">${head('Prediction markets for ' + name)}${pats}${top.map(r => row(r, model, f.has(r.k), slider)).join('')}${rest.length ? `${det('p|' + gid + '|' + name)}<summary>All ${rows.length} lines for this player</summary>${rest.map(r => row(r, model, f.has(r.k), slider)).join('')}</details>` : ''}</div>`;
     },
     game(gid, model){
-      const rows = forGame(gid).filter(r => ['win', 'total', 'spread'].includes(r.k)).sort(order); if (!rows.length) return '';
+      // Polymarket moneyline / over-under left off the model pages (Kalshi covers them; PM spreads stay: Kalshi has none)
+      const rows = forGame(gid).filter(r => ['win', 'total', 'spread'].includes(r.k) && !(r.s === 'polymarket' && r.k !== 'spread')).sort(order); if (!rows.length) return '';
       // headline: winners + the total/spread rungs priced nearest 50/50; the rest one tap away
       const key = r => r.k === 'win' ? 0 : Math.abs((r.ya ?? .5) - .5);
       const top = [], rest = [];
