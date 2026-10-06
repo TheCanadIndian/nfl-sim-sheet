@@ -240,6 +240,7 @@ table.h tr:hover td{filter:brightness(1.12)}
 .mv{background:var(--sunk);border-radius:8px}
 .arrow{font-size:11px;margin-left:3px}
 .rk{display:inline-block;min-width:26px;font-weight:700;color:#f6c84c}
+.nof{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:800;background:#6cb4ff;color:#0a0f12}
 .val{display:inline-block;margin-left:6px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:800;background:#1f9d55;color:#fff;letter-spacing:.03em}
 .picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px}
 .pick{border:1px solid var(--faint);border-radius:12px;padding:12px 14px;background:var(--surface);display:grid;gap:6px}
@@ -335,13 +336,16 @@ function games(){
 }
 // Kalshi 1+ HR ask for this hitter (live), and our edge after the fee; "value" = blend beats the ask by 6%+
 function kask(p){ if (!window.MKT || !MKT.has()) return null; const r = MKT.rows().find(r => String(r.g) === String(p.game_pk) && r.k === 'hr' && (r.l == null || r.l < 1) && r.s === 'kalshi' && (String(r.pid) === String(p.batter))); return r && r.ya ? r.ya : null; }
+function kflow(p){ if (!window.MKT || !MKT.has()) return null; const r = MKT.rows().find(r => String(r.g) === String(p.game_pk) && r.k === 'hr' && (r.l == null || r.l < 1) && r.s === 'kalshi' && String(r.pid) === String(p.batter)); return r && r.fl != null ? r.fl : null; }
 function edge(p){ const a = kask(p); return a == null ? null : p.p_hr - a - .07 * a * (1 - a); }
 // data-confidence traffic light: weighted PAs (hitters) / batters faced (pitchers) = this season + 0.6 x last
 const LIGHT = {green: ['#2fbf71', 'enough data'], yellow: ['#f2c14e', 'building: numbers still lean partly on league averages'], red: ['#e5534b', 'thin data: numbers lean mostly on league averages']};
 const dot = (o, what) => { if (!o || !o.light) return ''; const [c, t] = LIGHT[o.light];
   return `<span title="${o.data_n} weighted ${what} of data (this season + 0.6 x last) -- ${t}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};margin-right:6px;vertical-align:1px"></span>`; };
 const star = p => p.game_rank == null ? '<span class="rk muted">–</span>' : p.game_rank <= 3 ? `<span class="rk" title="Top ${p.game_rank} pick in this game (blend)">★${p.game_rank}</span>` : `<span class="rk muted">${p.game_rank ?? ''}</span>`;
-const valueChip = p => { const e = edge(p); return e != null && e >= .06 ? `<span class="val" title="Blend beats Kalshi's ask by ${(e * 100).toFixed(1)} pts after the fee. Aug-Oct 2026 backtest: 6%+ edges returned ~+50% on stake (about 200 bets).">VALUE +${(e * 100).toFixed(0)}</span>` : ''; };
+const valueChip = p => { const e = edge(p); if (e == null || e < .06) return ''; const fl = kflow(p);
+  const nf = fl != null && fl <= -.2 ? `<span class="nof" title="Pre-game money so far is NO-heavy or mixed (${Math.round((1 + fl) / 2 * 100)}% of dollars bought YES). Experimental: in the Aug-Oct 2026 backtest VALUE spots with this flow returned +139% on only 31 bets (noise until a bigger sample); tracked on Results.">NO flow</span>` : '';
+  return `<span class="val" title="Blend beats Kalshi's ask by ${(e * 100).toFixed(1)} pts after the fee. Aug-Oct 2026 backtest: 6%+ edges returned ~+50% on stake (about 200 bets).">VALUE +${(e * 100).toFixed(0)}</span>${nf}`; };
 // swing-plane fit: his predicted launch angle at this starter's usual location (Aug-Oct 2026 backtest)
 const PLANE = [[5, -.44, 'poor: pitcher works below his band'], [10, -.15, 'weak'], [15, -.02, 'neutral'], [20, .13, 'good'], [25, .19, 'very good'], [99, .19, 'excellent (rare; small sample)']];
 const planeOf = p => { if (p.plane_la == null) return null; const b = PLANE.find(x => p.plane_la < x[0]); return {la: p.plane_la, eff: b[1], txt: b[2]}; };
