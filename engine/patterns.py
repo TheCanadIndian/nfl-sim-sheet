@@ -35,6 +35,12 @@ PATTERNS = {
                      desc="The easiest line on a player's yardage or catch ladder."),
     "cheap_over": dict(short="cheap over", sign=+1, label="Cheap overs (10-25¢)",
                        desc="Yardage and catch overs priced 10-25¢; they tended to climb before kickoff, so buy early."),
+    "cb1_out": dict(short="CB1 out", sign=+1, label="WR2 facing a defense missing its top corner",
+                    desc="Receiving overs for the WR2 when the opposing top corner is out (offenses shifted ~1.2 pts of target share to him)."),
+    "dbs_out": dict(short="2 DBs out", sign=+1, label="WR2/WR3 facing 2+ missing defensive backs",
+                    desc="Receiving overs for the WR2/WR3 when 2+ opposing corners/safeties are out (WRs +1.4 pts of target share)."),
+    "lb_out": dict(short="LB out", sign=+1, label="TE1 facing a missing starting linebacker",
+                   desc="Receiving overs for the TE1 when an opposing starting linebacker is out (TE1s +0.7 pts of target share)."),
     "low_total": dict(short="low total", sign=-1, label="Overs in a low-total game (42.5 or less)",
                       desc="Yardage and catch overs when the Vegas game total is 42.5 or less hit LESS often than priced."),
     "rb_td": dict(short="RB TD", sign=-1, label="Running back anytime TD",
@@ -49,8 +55,43 @@ TIMING = {"anytime_td": "Buy TDs late (after inactives): TD prices slip ~0.5¢ i
           "props": "Buy late (after inactives), when spreads are tightest; cheap overs (10-25¢) are the exception: they climb ~2¢ from 2 days out."}
 
 
-def context(players, teams):
-    """{(game, pid): dict(pos, team, fav, total, role{stat})} from one week's projection tables."""
+DEF_SHORT = {"CB1 out": "cb1_out", "2 DBs out": "dbs_out", "LB out": "lb_out"}
+
+
+def defout_flags(stem, players, con=None):
+    """{(game, pid): {pattern ids}} for players flagged by missing opposing defenders (boxscore/defout.py).
+    Live weeks: the flags saved in <stem>_matchups.json. Settled games (con given): rebuilt from who
+    actually took no defensive snaps."""
+    out = {}
+    pid = {(r.game_id, r.team, r.player): str(r.player_id) for r in players.drop_duplicates(["game_id", "team", "player"]).itertuples()}
+    mp = stem + "_matchups.json"
+    if con is None:
+        if os.path.exists(mp):
+            for key, v in json.load(open(mp)).get("players", {}).items():
+                gid, team, name = key.split("|", 2)
+                for t in v.get("tags") or []:
+                    if t.get("kind") == "defout" and t["short"] in DEF_SHORT and (gid, team, name) in pid:
+                        out.setdefault((gid, pid[(gid, team, name)]), set()).add(DEF_SHORT[t["short"]])
+        return out
+    from boxscore import defout as DO
+    tg = players[players.stat == "tgt"].rename(columns={"mean": "tgt"})
+    games = players.drop_duplicates("game_id")[["game_id", "team", "opp"]]
+    miss = DO.played(con, players.game_id.unique())
+    for gid in players.game_id.unique():
+        teams = set(players[players.game_id == gid].team)
+        for d in teams:
+            o = (teams - {d}).pop() if len(teams) == 2 else None
+            if not o or (gid, d) not in miss:
+                continue
+            for name, tags in DO.offense_flags(miss[(gid, d)], tg[(tg.game_id == gid) & (tg.team == o)][["player", "pos", "tgt"]]).items():
+                for t in tags:
+                    if t["short"] in DEF_SHORT and (gid, o, name) in pid:
+                        out.setdefault((gid, pid[(gid, o, name)]), set()).add(DEF_SHORT[t["short"]])
+    return out
+
+
+def context(players, teams, dflags=None):
+    """{(game, pid): dict(pos, team, fav, total, role{stat}, dflags)} from one week's projection tables."""
     T = teams.set_index(["game_id", "team"])
     ctx = {}
     for (gid, team, stat), x in players.groupby(["game_id", "team", "stat"]):
@@ -59,6 +100,7 @@ def context(players, teams):
             key = (gid, str(r.player_id))
             c = ctx.setdefault(key, dict(pos=r.pos, team=team, role={}))
             c["role"][stat] = rank
+            c["dflags"] = (dflags or {}).get(key, set())
             if "total" not in c and (gid, team) in T.index and (gid, r.opp) in T.index:
                 me, op = T.loc[(gid, team), "vegas_implied"], T.loc[(gid, r.opp), "vegas_implied"]
                 c["total"], c["fav"] = float(me + op), bool(me > op)
@@ -85,6 +127,8 @@ def tag_nfl(kind, line, price, pid, game, ctx, ladder_low):
             out.append("low_rung")
         if price is not None and .10 <= price <= .25:
             out.append("cheap_over")
+        if kind in ("rec", "rec_yds"):
+            out += sorted(c.get("dflags") or [])
     elif kind == "anytime_td":
         if c["pos"] == "TE":
             out.append("te_td")
@@ -116,6 +160,8 @@ def ladders(markets):
 def main():
     import grade_markets as G
     R = G.nfl_results()
+    from boxscore import data as BD
+    con = BD.connect(os.path.join(HERE, "nfl.db"))
     ctx_cache, rows = {}, []
     for f in sorted(glob.glob(os.path.join(HERE, "markets", "nfl_????-??-??.json"))):
         date = os.path.basename(f)[4:14]
@@ -126,7 +172,8 @@ def main():
             if stem is None:
                 continue
             if stem not in ctx_cache:
-                ctx_cache[stem] = context(pd.read_csv(stem + "_players.csv"), pd.read_csv(stem + "_teams.csv"))
+                P = pd.read_csv(stem + "_players.csv")
+                ctx_cache[stem] = context(P, pd.read_csv(stem + "_teams.csv"), defout_flags(stem, P, con))
             m = G.mid(r)
             pats = tag_nfl(r["kind"], r.get("line"), m, r.get("pid"), r["game"], ctx_cache[stem], low.get((r["game"], str(r.get("pid")), r["kind"])))
             if not pats:

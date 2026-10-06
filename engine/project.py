@@ -47,6 +47,7 @@ from boxscore import data as D
 from boxscore import matchups as M
 from boxscore import pipeline as PL
 from boxscore.sim import simulate_game
+from boxscore import defout as DO
 import learned  # noqa: E402
 learned.apply("nfl")      # settings adopted by the self-tuning job (learn.py)
 
@@ -408,8 +409,11 @@ def main():
         json.dump(dists, f, separators=(",", ":"))
     # As of kickoff for played games; otherwise as of now.
     when = (todo.gameday.min() - pd.Timedelta(hours=1)) if args.played else pd.Timestamp.now()
+    payload = matchup_payload(con, fr, todo, keyrows, season, when)
+    if not args.played:
+        add_defout(payload, con, todo, season, week, players)
     with open(f"{stem}_matchups.json", "w") as f:
-        json.dump(matchup_payload(con, fr, todo, keyrows, season, when), f, separators=(",", ":"))
+        json.dump(payload, f, separators=(",", ":"))
     print_box(teams, players)
     print(f"\nWrote {stem}_players.csv and {stem}_teams.csv")
 
@@ -456,6 +460,29 @@ def matchup_payload(con, fr, todo, keyrows, season, when):
                "two": M.redzone_usage(fr, keyrows, [season - 1, season], when)},
         labels={"season": str(season), "two": f"{season - 1}–{str(season)[2:]}"})
     return dict(players=players, dvp=M.dvp_summary(now, faces), rz=rz)
+
+
+def add_defout(payload, con, todo, season, week, players):
+    """Missing defensive starters (injury report + ESPN game day) and flags on the offensive players who
+    have historically seen more targets because of them (boxscore/defout.py)."""
+    try:
+        miss = DO.upcoming(con, todo, season, week, espn_out(todo))
+    except Exception as e:                                  # context only: never block a run
+        print(f"  defensive absences skipped ({type(e).__name__}: {e})")
+        return
+    tg = players[players.stat == "tgt"].rename(columns={"mean": "tgt"})
+    payload["defout"] = {}
+    for g in todo.itertuples():
+        for d, o in ((g.home_team, g.away_team), (g.away_team, g.home_team)):
+            m = miss.get((g.game_id, d))
+            if not m:
+                continue
+            payload["defout"].setdefault(g.game_id, {})[d] = m
+            off = tg[(tg.game_id == g.game_id) & (tg.team == o)][["player", "pos", "tgt"]]
+            for name, tags in DO.offense_flags(m, off).items():
+                ent = payload["players"].setdefault(f"{g.game_id}|{o}|{name}", dict(label=None, align=None, tags=[]))
+                ent["tags"] = tags + list(ent.get("tags") or [])
+                print(f"  {o} {name}: " + "; ".join(t["short"] for t in tags))
 
 
 def add_actuals(players, teams, fr):

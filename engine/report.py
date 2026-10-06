@@ -188,7 +188,7 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
     data = dict(season=int(season), week=int(week), sims=sims,
                 generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                 games=games, teams=team_rows, players=plist, props=props_list, dvp=match["dvp"],
-                rz=match.get("rz"), agree=agreement(stem, players, dists), alt=alt_model(stem, match),
+                rz=match.get("rz"), defout=match.get("defout", {}), agree=agreement(stem, players, dists), alt=alt_model(stem, match),
                 subtitle=subtitle, nav=nav or [])
     # NaN is not valid JSON: one missing value (e.g. a player with no depth label) would
     # stop the page's script entirely. Turn every NaN into null and refuse any that slip by.
@@ -382,6 +382,7 @@ input[type=search]{min-width:200px}
 .mcell{background:var(--sunk);border-radius:7px;padding:8px 10px;display:grid;gap:1px}
 .mcell .v{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.1}
 .mcell .v.up{color:var(--good)} .mcell .v.down{color:var(--bad)}
+.dmiss{margin:0;font-size:13px;color:var(--ink)} .dmiss b{color:var(--r2);font-weight:600}
 .mlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
 .mlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
 .mlist .who{font-weight:600;min-width:170px}
@@ -638,12 +639,15 @@ function matchupPanel(g){
       .sort((a,b) => b.tags[0].strength - a.tags[0].strength);
     const list = tagged.length ? `<ul class="mlist">${tagged.map(p => `<li><span class="who">${esc(p.n)} <span class="pos">${esc(p.lab || p.pos)}</span></span>${p.tags.map(t => `${chip(t)}<span class="small muted">${esc(t.text)}</span>`).join(' ')}</li>`).join('')}</ul>`
       : `<p class="note">No ${esc(off)} player has a matchup outside the normal range.</p>`;
-    return `<div style="display:grid;gap:12px;align-content:start"><h3 class="eyebrow" style="margin:0">${esc(off)} offense vs ${esc(def)} defense</h3><div class="mgrid">${cells}</div>${list}</div>`;
+    const RN = {CB1: 'top CB', CB2: 'No. 2 CB', CB3: 'slot CB', S: 'S', LB: 'LB', DL: 'DL'};
+    const dmiss = ((D.defout || {})[g.id] || {})[def] || [];
+    const dline = dmiss.length ? `<p class="dmiss"><b>${esc(def)} missing:</b> ${dmiss.map(m => `${esc(m.name)} <span class="muted">(${RN[m.role] || m.role}, ${m.status === 'out' ? 'out' : 'questionable'})</span>`).join(', ')}</p>` : '';
+    return `<div style="display:grid;gap:12px;align-content:start"><h3 class="eyebrow" style="margin:0">${esc(off)} offense vs ${esc(def)} defense</h3>${dline}<div class="mgrid">${cells}</div>${list}</div>`;
   };
   return `<section class="panel" aria-label="Matchups">
     <div class="phead"><h2>Matchups</h2><span class="key"><span class="mm up">▲ favorable</span><span class="mm down">▼ tough</span></span></div>
     <div class="two" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">${side(g.away, g.home)}${side(g.home, g.away)}</div>
-    <p class="note">Big number: where the defense ranks this season in fantasy points allowed per game to that position (1st = gives up the most; green = top 8, red = bottom 8). Hover for the stats behind it. "Blended" is the steadier number: allowed vs league average, weighted toward recent games, carrying some of last season and adjusted toward average for small samples. The projections already account for the opponent, so these notes explain the numbers. In 2025–26 backtests, flagged players did not beat their projections more often than other players.</p>
+    <p class="note">Big number: where the defense ranks this season in fantasy points allowed per game to that position (1st = gives up the most; green = top 8, red = bottom 8). Hover for the stats behind it. "Blended" is the steadier number: allowed vs league average, weighted toward recent games, carrying some of last season and adjusted toward average for small samples. The projections already account for the opponent, so these notes explain the numbers. In 2025–26 backtests, flagged players did not beat their projections more often than other players. "Missing" lists the defense's regular starters (60%+ of snaps lately) who are out or questionable; ▲ CB1 out / 2 DBs out / LB out flags mark the receivers offenses have historically fed more in that spot (2022–26), tracked on the Markets page.</p>
   </section>`;
 }
 
