@@ -46,6 +46,31 @@ def load():
     return d
 
 
+def value_record():
+    """VALUE spots (blend beats the last pregame Kalshi ask by 6%+ after fee), split by pre-game flow, graded."""
+    con = sqlite3.connect(os.path.join(HERE, "mlb.db"))
+    hr = pd.read_sql("SELECT game_pk, batter, SUM(hr) hr FROM pa GROUP BY game_pk, batter", con).set_index(["game_pk", "batter"]).hr.to_dict()
+    out = {"value + NO flow": [0, 0, 0.0, 0.0], "value, YES-heavy flow": [0, 0, 0.0, 0.0]}
+    for f in glob.glob(os.path.join(os.path.dirname(HERE), "markets", "mlb_????-??-??.json")):
+        for r in json.load(open(f)).get("markets", []):
+            if r.get("source") != "kalshi" or r.get("kind") != "hr" or (r.get("line") or 0) >= 1 or not r.get("yes_ask") or r.get("pid") is None:
+                continue
+            k = (int(r["game"]), int(r["pid"]))
+            p = (r.get("ours") or {}).get("model")
+            if k not in hr or p is None:
+                continue
+            a = r["yes_ask"]; cost = a + .07 * a * (1 - a)
+            if p - cost < .06:
+                continue
+            fl = (r.get("flow") or {}).get("imb")
+            if fl is None:
+                continue
+            key = "value + NO flow" if fl <= -.2 else "value, YES-heavy flow"
+            y = float(hr[k] > 0)
+            o = out[key]; o[0] += 1; o[1] += int(y); o[2] += y - cost; o[3] += cost
+    return {k: dict(bets=v[0], won=v[1], roi=round(v[2] / v[3], 3) if v[3] else None) for k, v in out.items()}
+
+
 def main():
     d = load()
     os.makedirs(OUT, exist_ok=True)
@@ -65,6 +90,7 @@ def main():
                        top5=dict(n=int(len(top)), hit=int(top.y.sum()), expected=round(float(top.p.sum()), 2)),
                        calibration=cal.assign(bin=cal.bin.astype(str)).round(3).to_dict("records"),
                        nights=nights.round(2).to_dict("records")[::-1], tops={k: v for k, v in tops.items()})
+    summary["value"] = value_record()
     json.dump(summary, open(os.path.join(OUT, "results.json"), "w"), default=str)
     html = PAGE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS) \
         .replace("__DATA__", json.dumps(summary, default=str).replace("</", "<\\/"))
@@ -84,6 +110,7 @@ const m = document.getElementById('main');
 if (!S.n) m.innerHTML = '<section class="panel"><p class="muted">Nothing graded yet. Results appear the morning after each slate.</p></section>';
 else m.innerHTML = `<section class="panel" style="display:grid;gap:10px"><h2>Running record</h2>
   <p>${S.n} hitter-games graded: <b>${S.homered}</b> homered vs <b>${S.expected}</b> expected. Top 5 of each slate: <b>${S.top5.hit}</b> of ${S.top5.n} homered (${S.top5.expected} expected).</p>
+  ${S.value ? `<p>VALUE flags (graded at the last pregame price): ${Object.entries(S.value).map(([k, v]) => `${k}: <b>${v.won}/${v.bets}</b> hit${v.roi != null ? `, ROI <b>${v.roi > 0 ? '+' : ''}${Math.round(v.roi * 100)}%</b>` : ''}`).join(' · ')}</p>` : ''}
   ${S.pergame ? `<p>Top 3 in each game (${S.pergame.games} games): <b>${S.pergame.caught}</b> home-run hitters per game (random 3: ${S.pergame.random}); at least one of the three homered in <b>${Math.round(S.pergame.any * 100)}%</b> of games.</p>` : ''}
   <div class="tw"><table class="t"><thead><tr><th class="l">Our chance</th><th>Hitter-games</th><th>Predicted</th><th>Actually homered</th></tr></thead><tbody>
   ${S.calibration.map(r => `<tr><td class="l">${r.bin}</td><td>${r.n}</td><td>${pct(r.predicted)}</td><td class="big">${pct(r.actual)}</td></tr>`).join('')}</tbody></table></div></section>

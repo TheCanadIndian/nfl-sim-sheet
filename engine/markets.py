@@ -120,6 +120,27 @@ def summarize_book(bids, asks):
                 asks=[[p, round(q)] for p, q in asks[:5]], bids=[[p, round(q)] for p, q in bids[:5]])
 
 
+def kalshi_flow(ticker, until=None):
+    """Pre-game taker flow so far: dollars that bought YES vs NO, and imbalance (+1 all YES, -1 all NO)."""
+    yes = no = 0.0; cursor = None
+    for _ in range(10):
+        p = {"ticker": ticker, "limit": 1000}
+        if until: p["max_ts"] = int(until)
+        if cursor: p["cursor"] = cursor
+        d = get(f"{KAL}/markets/trades", p)
+        if not d:
+            break
+        for t in d.get("trades", []):
+            c, yp = float(t.get("count_fp") or 0), float(t["yes_price_dollars"])
+            if t["taker_side"] == "yes": yes += c * yp
+            else: no += c * (1 - yp)
+        cursor = d.get("cursor")
+        if not cursor:
+            break
+    tot = yes + no
+    return dict(yes=round(yes), no=round(no), imb=round((yes - no) / tot, 3) if tot else None)
+
+
 def kalshi_book(ticker):
     d = get(f"{KAL}/markets/{ticker}/orderbook")
     if d is None:
@@ -486,6 +507,11 @@ def run(sport):
         for r in rows:
             if r["game"] == g["id"]:
                 r["start"] = pd.Timestamp(g["start"]).tz_convert("UTC").isoformat()
+    if sport == "mlb":            # pre-game taker flow on the 1+ HR markets (VALUE + NO-heavy flow badge)
+        hr1 = [r for r in rows if r["source"] == "kalshi" and r["kind"] == "hr" and (r.get("line") or 0) < 1]
+        with ThreadPoolExecutor(max_workers=4) as ex:
+            for r, fl in zip(hr1, ex.map(lambda r: kalshi_flow(r["ticker"]), hr1)):
+                r["flow"] = fl
     os.makedirs(OUT, exist_ok=True)
     date = min((g["date"] for g in O["games"]), default=dt.date.today().isoformat())
     path = os.path.join(OUT, f"{sport}_{date}.json")
@@ -551,7 +577,8 @@ def write_live(sport):
         name = (r.get("title") or "").split(":")[0].strip() if r.get("pid") is not None else None
         rows.append(dict(s=r["source"], t=r["ticker"], g=r["game"], a=r.get("away"), h=r.get("home"), ls=bool(r.get("longshot")), k=r["kind"], l=r.get("line"), ti=r.get("title"), o=r.get("outcome"),
                          pid=r.get("pid"), n=name, yb=r.get("yes_bid"), ya=r.get("yes_ask"), p=r["ours"],
-                         by=None if by is None else round(by), bn=None if bn is None else round(bn), start=r.get("start")))
+                         by=None if by is None else round(by), bn=None if bn is None else round(bn), start=r.get("start"),
+                         fl=(r.get("flow") or {}).get("imb")))
         if tagger:
             pats = tagger(r)
             if pats:
