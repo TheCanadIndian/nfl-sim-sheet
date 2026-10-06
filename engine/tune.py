@@ -144,6 +144,8 @@ GRIDS = {
     "wr": [{}, {"K_TGT": 35}, {"K_TGT": 50}, {"K_CATCH": 80}, {"K_CATCH": 150}, {"K_TGT": 35, "K_CATCH": 80}],
     "td": [{}, {"TD_GAMMA": .85}, {"QB_TD_MULT": 1.4}, {"QB_TD_MULT": 1.8}, {"QB_TD_MULT": 2.2},
            {"TD_GAMMA": .85, "QB_TD_MULT": 1.8}],
+    "rztd": [{}, {"K_REC_TD": 10, "K_RUSH_TD": 8}, {"K_REC_TD": 20, "K_RUSH_TD": 15}, {"K_REC_TD": 40, "K_RUSH_TD": 30},
+             {"K_REC_TD": 80, "K_RUSH_TD": 60}],                  # TD share pulled harder toward red-zone usage
     "weather": [{}, {"USE_WEATHER": True}],
     "eff": [{}, {"K_YPR": 15}, {"K_YPR": 60}, {"K_YPC": 40}, {"K_YPC": 160}],
     "exit": [{}, {"P_EXIT": .02}, {"P_EXIT": .04}, {"P_EXIT": .06}],
