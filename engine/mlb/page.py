@@ -87,7 +87,7 @@ let st = {game: 'summary', tab: 'matchup', sort: 'default', hitter: null, sp: {}
 try { Object.assign(st, JSON.parse(localStorage.getItem('mlb-view') || '{}')); } catch (e) {}
 const G = D.games, P = D.players;
 const H = b => SC.hitters[String(b)] || {};
-const ranks = {}; P.slice().sort((a, b) => b.p_hr - a.p_hr).forEach((p, i) => ranks[p.batter + '|' + p.game_pk] = 100 - i / Math.max(P.length - 1, 1) * 100);
+const ranks = {}; P.filter(p => (p.p_start ?? 1) >= .5).sort((a, b) => b.p_hr - a.p_hr).forEach((p, i) => ranks[p.batter + '|' + p.game_pk] = 100 - i / Math.max(P.length - 1, 1) * 100);
 
 function games(){
   const now = Date.now();
@@ -102,7 +102,7 @@ function edge(p){ const a = kask(p); return a == null ? null : p.p_hr - a - .07 
 const LIGHT = {green: ['#2fbf71', 'enough data'], yellow: ['#f2c14e', 'building: numbers still lean partly on league averages'], red: ['#e5534b', 'thin data: numbers lean mostly on league averages']};
 const dot = (o, what) => { if (!o || !o.light) return ''; const [c, t] = LIGHT[o.light];
   return `<span title="${o.data_n} weighted ${what} of data (this season + 0.6 x last) -- ${t}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};margin-right:6px;vertical-align:1px"></span>`; };
-const star = p => p.game_rank <= 3 ? `<span class="rk" title="Top ${p.game_rank} pick in this game (blend)">★${p.game_rank}</span>` : `<span class="rk muted">${p.game_rank ?? ''}</span>`;
+const star = p => p.game_rank == null ? '<span class="rk muted">–</span>' : p.game_rank <= 3 ? `<span class="rk" title="Top ${p.game_rank} pick in this game (blend)">★${p.game_rank}</span>` : `<span class="rk muted">${p.game_rank ?? ''}</span>`;
 const valueChip = p => { const e = edge(p); return e != null && e >= .06 ? `<span class="val" title="Blend beats Kalshi's ask by ${(e * 100).toFixed(1)} pts after the fee. Aug-Oct 2026 backtest: 6%+ edges returned ~+50% on stake (about 200 bets).">VALUE +${(e * 100).toFixed(0)}</span>` : ''; };
 // swing-plane fit: his predicted launch angle at this starter's usual location (Aug-Oct 2026 backtest)
 const PLANE = [[5, -.44, 'poor: pitcher works below his band'], [10, -.15, 'weak'], [15, -.02, 'neutral'], [20, .13, 'good'], [25, .19, 'very good'], [99, .19, 'excellent (rare; small sample)']];
@@ -112,6 +112,7 @@ const planeCell = p => { const f = planeOf(p); return f ? `${Math.round(f.la)}°
 const planeHeat = p => { const f = planeOf(p); return f ? heat(50 + f.eff * 150) : ''; };
 const COLS = [
   ['rank', 'Game rank', p => star(p), () => ''],
+  ['start', 'Start', p => p.lineup === 'posted' ? '<b style="color:#2fbf71">✓</b>' : pc(p.p_start ?? 1).replace('.0%', '%'), p => p.lineup === 'posted' ? '' : heat((p.p_start ?? 1) * 100)],
   ['hr', 'HR%', p => pc(p.p_hr) + valueChip(p), p => heat(ranks[p.batter + '|' + p.game_pk])],
   ['model', 'Model%', p => pc(p.p_model ?? p.p_hr), () => 'color:var(--muted)'],
   ['fair', 'Fair', p => odds(p.fair), () => ''],
@@ -147,11 +148,11 @@ function table(ps){
     ${ps.map(p => `<tr><td class="l nm">${dot(H(p.batter), 'PAs')}${esc(p.name)}<small>${esc(p.bats)}HB</small></td>${COLS.map(c => `<td style="${c[3](p)}">${c[2](p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
     <p class="note2">Data light: <span style="color:#2fbf71">●</span> 300+ weighted PAs (reliable) · <span style="color:#f2c14e">●</span> 120-300 (building) · <span style="color:#e5534b">●</span> under 120 (thin: leans on league averages).</p>`;
 }
-function sorted(ps){ return st.sort === 'default' ? ps.slice().sort((a, b) => a.slot - b.slot) : ps.slice().sort((a, b) => sortVal[st.sort](b) - sortVal[st.sort](a)); }
+function sorted(ps){ return st.sort === 'default' ? ps.slice().sort((a, b) => ((b.p_start ?? 1) >= .5) - ((a.p_start ?? 1) >= .5) || a.slot - b.slot || (b.p_start ?? 1) - (a.p_start ?? 1)) : ps.slice().sort((a, b) => sortVal[st.sort](b) - sortVal[st.sort](a)); }
 const sortCtl = () => `<label class="ctl">Sort by <select id="sort">${Object.entries(SORTS).map(([k, v]) => `<option value="${k}"${st.sort === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>`;
 
 function summary(){
-  const ps = P.slice().sort((a, b) => b.p_hr - a.p_hr).slice(0, 30);
+  const ps = P.filter(p => (p.p_start ?? 1) >= .5).sort((a, b) => b.p_hr - a.p_hr).slice(0, 30);
   const picks = G.map(g => { const top = P.filter(p => p.game_pk === g.id && p.game_rank <= 3).sort((a, b) => a.game_rank - b.game_rank);
     return `<div class="pick"><h3>${esc(g.away)} @ ${esc(g.home)} · top 3</h3>${top.map(p => `<div class="r"><span class="rk">★${p.game_rank}</span><span>${dot(H(p.batter), 'PAs')}${esc(p.name)} <small>${esc(p.team)} · ${esc(p.lineup === 'posted' ? '#' + p.slot : 'proj #' + p.slot)} · vs ${esc(p.sp_name || 'TBD')}</small></span><b>${pc(p.p_hr)}</b><span>${valueChip(p) || (kask(p) != null ? `<small>${Math.round(kask(p) * 100)}¢</small>` : '')}</span></div>`).join('')}</div>`; }).join('');
   return `<section class="blk"><div class="blkh"><h2>Game picks · top 3 in each game</h2></div><div class="picks">${picks}</div>
@@ -238,7 +239,7 @@ function oldShape(S_){
 function matchup(g){
   const side = (t, spn, spid, spteam) => { const ps = P.filter(p => p.game_pk === g.id && p.team === t); if (!ps.length) return '';
     return `<section class="blk"><div class="blkh"><h2>${esc(t)} vs ${esc(spn || 'TBD')}</h2>${sortCtl()}</div>${table(sorted(ps))}
-      <p class="note2">${esc(ps[0].lineup === 'posted' ? 'Posted lineup.' : 'Projected lineup (last game’s order) until the real one posts.')}</p></section>`; };
+      <p class="note2">${esc(ps[0].lineup === 'posted' ? 'Confirmed lineup.' : 'Lineup not posted yet: every active hitter, with his chance of starting (recent starts, weighted to games vs this starter’s hand). HR% assumes he starts; ranks include only likely starters (50%+). Once the lineup posts, only the confirmed nine show.')}</p></section>`; };
   const any = P.find(p => p.game_pk === g.id) || {};
   const awaySp = P.find(p => p.game_pk === g.id && p.team === g.home)?.sp_id, homeSp = P.find(p => p.game_pk === g.id && p.team === g.away)?.sp_id;
   return `<p class="note2">${esc(g.series || '')} · ${esc(g.venue)} · park HR factor ${any.park != null ? (any.park >= 1 ? '+' : '') + Math.round((any.park - 1) * 100) + '%' : '–'} · ${any.temp != null ? any.temp + '°F' : 'temp n/a'} · wind out ${any.wind_out ?? 'n/a'} mph</p>
