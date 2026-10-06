@@ -206,6 +206,12 @@ def main(date=None):
           for g in games]
     payload = dict(date=date, generated=dt.datetime.now().isoformat(timespec="minutes"), features=feats,
                    coef={k: round(v, 4) for k, v in coef.items()}, games=gl, players=json.loads(res.to_json(orient="records")))
+    try:                                                    # scouting tables for the page (context, not model inputs)
+        import scout
+        payload["scout"] = scout.build(con, date, meta, now, lambda x: M.predict(x, coef), hist)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        print("scouting tables skipped:", type(e).__name__, e)
     json.dump(payload, open(os.path.join(OUT, f"{date}.json"), "w"), separators=(",", ":"))
     print(res[["name", "team", "slot", "sp_name", "p_hr", "fair", "exp_pa", "lineup"]].head(20).to_string(index=False))
     try:
