@@ -48,6 +48,13 @@ table.h tr:hover td{filter:brightness(1.12)}
 .gcap{font-size:12px;color:var(--muted);text-align:center;margin-top:4px}
 .mv{background:var(--sunk);border-radius:8px}
 .arrow{font-size:11px;margin-left:3px}
+.rk{display:inline-block;min-width:26px;font-weight:700;color:#f6c84c}
+.val{display:inline-block;margin-left:6px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:800;background:#1f9d55;color:#fff;letter-spacing:.03em}
+.picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px}
+.pick{border:1px solid var(--faint);border-radius:12px;padding:12px 14px;background:var(--surface);display:grid;gap:6px}
+.pick h3{margin:0;font-size:16px;font-family:var(--display);letter-spacing:.04em}
+.pick .r{display:grid;grid-template-columns:28px 1fr auto auto;gap:8px;align-items:center;font-size:14px}
+.pick .r small{color:var(--muted)}
 .btnx{padding:8px 14px;border-radius:8px;border:1px solid var(--faint);background:var(--surface);color:var(--ink);font-weight:600;cursor:pointer}
 </style>
 <div class="wrap">
@@ -55,7 +62,7 @@ table.h tr:hover td{filter:brightness(1.12)}
   <div class="games" id="games"></div>
   <div class="tabs2" id="tabs"></div>
   <main id="main" class="blk"></main>
-  <p class="note2">HR% is the model's chance of 1+ home run (tested: beats season HR rates, well calibrated). Matchup = percentile of his per-PA HR chance vs this starter among all 2026 PAs. Ceiling = 90th-percentile exit velocity. Zone Fit, Mix Fit and HR Form are context: in testing they did not improve the HR prediction. Cell colors = league percentile (green good for the hitter).</p>
+  <p class="note2">HR% is the blend's chance of 1+ home run (stacked on the per-PA model; tested Aug-Oct 2026: more accurate than the model, and its top 3 per game held 0.52 HR hitters vs 0.33 for random). Model% = the per-PA model alone. VALUE = blend beats Kalshi's ask by 6%+ after the fee. Matchup = percentile of his per-PA HR chance vs this starter among all 2026 PAs. Ceiling = 90th-percentile exit velocity. Zone Fit, Mix Fit and HR Form are context: in testing they did not improve the HR prediction. Cell colors = league percentile (green good for the hitter).</p>
 </div>
 <script type="application/json" id="data">__DATA__</script>
 <script>
@@ -87,8 +94,19 @@ function games(){
   return btn('summary', 'Slate', 'Summary') + G.map(g => { const t = new Date(g.start_utc);
     return btn(g.id, `${esc(g.away)} @ ${esc(g.home)}`, `${t.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'})} · ${t > now ? 'Scheduled' : 'Started'}`); }).join('');
 }
+// Kalshi 1+ HR ask for this hitter (live), and our edge after the fee; "value" = blend beats the ask by 6%+
+function kask(p){ if (!window.MKT || !MKT.has()) return null; const r = MKT.rows().find(r => String(r.g) === String(p.game_pk) && r.k === 'hr' && (r.l == null || r.l < 1) && r.s === 'kalshi' && (String(r.pid) === String(p.batter))); return r && r.ya ? r.ya : null; }
+function edge(p){ const a = kask(p); return a == null ? null : p.p_hr - a - .07 * a * (1 - a); }
+// data-confidence traffic light: weighted PAs (hitters) / batters faced (pitchers) = this season + 0.6 x last
+const LIGHT = {green: ['#2fbf71', 'enough data'], yellow: ['#f2c14e', 'building: numbers still lean partly on league averages'], red: ['#e5534b', 'thin data: numbers lean mostly on league averages']};
+const dot = (o, what) => { if (!o || !o.light) return ''; const [c, t] = LIGHT[o.light];
+  return `<span title="${o.data_n} weighted ${what} of data (this season + 0.6 x last) -- ${t}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};margin-right:6px;vertical-align:1px"></span>`; };
+const star = p => p.game_rank <= 3 ? `<span class="rk" title="Top ${p.game_rank} pick in this game (blend)">★${p.game_rank}</span>` : `<span class="rk muted">${p.game_rank ?? ''}</span>`;
+const valueChip = p => { const e = edge(p); return e != null && e >= .06 ? `<span class="val" title="Blend beats Kalshi's ask by ${(e * 100).toFixed(1)} pts after the fee. Aug-Oct 2026 backtest: 6%+ edges returned ~+50% on stake (about 200 bets).">VALUE +${(e * 100).toFixed(0)}</span>` : ''; };
 const COLS = [
-  ['hr', 'HR%', p => pc(p.p_hr), p => heat(ranks[p.batter + '|' + p.game_pk])],
+  ['rank', 'Game rank', p => star(p), () => ''],
+  ['hr', 'HR%', p => pc(p.p_hr) + valueChip(p), p => heat(ranks[p.batter + '|' + p.game_pk])],
+  ['model', 'Model%', p => pc(p.p_model ?? p.p_hr), () => 'color:var(--muted)'],
   ['fair', 'Fair', p => odds(p.fair), () => ''],
   ['kalshi', 'Kalshi', p => window.MKT && MKT.has() ? MKT.cell(p.game_pk, p.batter, p.name, 'hr') : '–', () => ''],
   ['matchup', 'Matchup', p => H(p.batter).matchup ?? '–', p => heat(H(p.batter).matchup)],
@@ -109,8 +127,8 @@ const COLS = [
   ['hh', 'HardHit%', p => pc(H(p.batter).season?.hardhit), p => heat(H(p.batter).pct?.hardhit)],
   ['hrs', 'HR', p => num(H(p.batter).season?.hr), () => ''],
 ];
-const SORTS = {default: 'Lineup order', hr: 'HR%', matchup: 'Matchup', ceiling: 'Ceiling', xwoba: 'xwOBA', brl: 'Brl/BIP%', pullbrl: 'PullBrl%', fb: 'FB%', form: 'HR form'};
-const sortVal = {hr: p => p.p_hr, matchup: p => H(p.batter).matchup ?? -1, ceiling: p => H(p.batter).season?.ev90 ?? 0, xwoba: p => H(p.batter).season?.xwoba ?? 0,
+const SORTS = {default: 'Lineup order', rank: 'Game rank', hr: 'HR%', matchup: 'Matchup', ceiling: 'Ceiling', xwoba: 'xwOBA', brl: 'Brl/BIP%', pullbrl: 'PullBrl%', fb: 'FB%', form: 'HR form'};
+const sortVal = {rank: p => -p.game_rank, hr: p => p.p_hr, matchup: p => H(p.batter).matchup ?? -1, ceiling: p => H(p.batter).season?.ev90 ?? 0, xwoba: p => H(p.batter).season?.xwoba ?? 0,
   brl: p => H(p.batter).season?.brl_bip ?? 0, pullbrl: p => H(p.batter).season?.pullbrl ?? 0, fb: p => H(p.batter).season?.fb ?? 0, form: p => H(p.batter).form?.pct ?? -1};
 function num(v){ return v == null ? '–' : v.toLocaleString(); }
 function fit(v){ return v == null ? '–' : (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%'; }
@@ -118,16 +136,21 @@ function fitp(v){ return v == null ? null : 50 + Math.max(-50, Math.min(50, v * 
 function form(f){ return f ? `${f.pct}%<span class="arrow">${f.trend === 'up' ? '↑' : f.trend === 'down' ? '↓' : '→'}</span>` : '–'; }
 function table(ps){
   return `<div class="wrapx"><table class="h"><thead><tr><th class="l">Hitter</th>${COLS.map(c => `<th>${c[1]}</th>`).join('')}</tr></thead><tbody>
-    ${ps.map(p => `<tr><td class="l nm">${esc(p.name)}<small>${esc(p.bats)}HB</small></td>${COLS.map(c => `<td style="${c[3](p)}">${c[2](p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    ${ps.map(p => `<tr><td class="l nm">${dot(H(p.batter), 'PAs')}${esc(p.name)}<small>${esc(p.bats)}HB</small></td>${COLS.map(c => `<td style="${c[3](p)}">${c[2](p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+    <p class="note2">Data light: <span style="color:#2fbf71">●</span> 300+ weighted PAs (reliable) · <span style="color:#f2c14e">●</span> 120-300 (building) · <span style="color:#e5534b">●</span> under 120 (thin: leans on league averages).</p>`;
 }
 function sorted(ps){ return st.sort === 'default' ? ps.slice().sort((a, b) => a.slot - b.slot) : ps.slice().sort((a, b) => sortVal[st.sort](b) - sortVal[st.sort](a)); }
 const sortCtl = () => `<label class="ctl">Sort by <select id="sort">${Object.entries(SORTS).map(([k, v]) => `<option value="${k}"${st.sort === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>`;
 
 function summary(){
   const ps = P.slice().sort((a, b) => b.p_hr - a.p_hr).slice(0, 30);
-  return `<section class="blk"><div class="blkh"><h2>Slate summary · most likely to homer</h2></div>
+  const picks = G.map(g => { const top = P.filter(p => p.game_pk === g.id && p.game_rank <= 3).sort((a, b) => a.game_rank - b.game_rank);
+    return `<div class="pick"><h3>${esc(g.away)} @ ${esc(g.home)} · top 3</h3>${top.map(p => `<div class="r"><span class="rk">★${p.game_rank}</span><span>${dot(H(p.batter), 'PAs')}${esc(p.name)} <small>${esc(p.team)} · ${esc(p.lineup === 'posted' ? '#' + p.slot : 'proj #' + p.slot)} · vs ${esc(p.sp_name || 'TBD')}</small></span><b>${pc(p.p_hr)}</b><span>${valueChip(p) || (kask(p) != null ? `<small>${Math.round(kask(p) * 100)}¢</small>` : '')}</span></div>`).join('')}</div>`; }).join('');
+  return `<section class="blk"><div class="blkh"><h2>Game picks · top 3 in each game</h2></div><div class="picks">${picks}</div>
+    <p class="note2">Ranked by the blend across both lineups. Aug-Oct 2026 backtest: a game's top 3 held 0.52 of its home-run hitters on average (random 3: 0.33); 44% of games had at least one of the three homer.</p></section>
+    <section class="blk"><div class="blkh"><h2>Slate summary · most likely to homer</h2></div>
     <div class="wrapx"><table class="h"><thead><tr><th class="l">#</th><th class="l">Hitter</th><th class="l">Game</th><th class="l">vs</th>${COLS.slice(0, 8).map(c => `<th>${c[1]}</th>`).join('')}</tr></thead><tbody>
-    ${ps.map((p, i) => `<tr><td class="l muted">${i + 1}</td><td class="l nm">${esc(p.name)}<small>${esc(p.bats)}HB</small></td><td class="l muted">${esc(p.team)}</td><td class="l muted">${esc(p.sp_name || 'TBD')}</td>${COLS.slice(0, 8).map(c => `<td style="${c[3](p)}">${c[2](p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
+    ${ps.map((p, i) => `<tr><td class="l muted">${i + 1}</td><td class="l nm">${dot(H(p.batter), 'PAs')}${esc(p.name)}<small>${esc(p.bats)}HB</small></td><td class="l muted">${esc(p.team)}</td><td class="l muted">${esc(p.sp_name || 'TBD')}</td>${COLS.slice(0, 8).map(c => `<td style="${c[3](p)}">${c[2](p)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
 }
 function spCard(sid, name, team){
   const S_ = SC.pitchers[String(sid)]; if (!S_) return `<div class="sp"><h3>${esc(name || 'TBD')}</h3><p class="note2">No 2026 data.</p></div>`;
@@ -148,14 +171,60 @@ function spCard(sid, name, team){
     body = `<div class="wrapx"><table class="h"><thead><tr><th class="l">Count</th>${pitches.map(x => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>
       ${Object.keys(lab).filter(k => S_.counts[k]).map(k => `<tr><td class="l">${lab[k]}</td>${pitches.map(x => `<td style="${heat((S_.counts[k][x] || 0) * 200)}">${pc(S_.counts[k][x] || 0)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
   } else {
+    const opp = P.filter(p => String(p.sp_id) === String(sid)).sort((a, b) => a.slot - b.slot);
+    const ov = (st.ov || {})[sid];
+    const pick = `<label class="ctl">Overlay batter <select data-ov="${sid}"><option value="">None</option>${opp.map(p => `<option value="${p.batter}"${String(ov) === String(p.batter) ? ' selected' : ''}>${esc(p.name)} (${esc(p.bats)})</option>`).join('')}</select></label>`;
+    body = pick + shapeBoxes(S_, opp.find(p => String(p.batter) === String(ov))) + oldShape(S_);
+  }
+  return `<div class="sp"><div class="blkh"><div><span class="who">${esc(team)} starter</span><h3>${dot(S_, 'batters faced')}${esc(name)}</h3></div><div class="tabs2">${tb}</div></div>${body}</div>`;
+}
+const PCOL = {FF: '#e5534b', SI: '#f0883e', FC: '#c58c5a', SL: '#f2c14e', ST: '#e3b341', SV: '#d29922', CU: '#58a6ff', KC: '#4e8ee6', CS: '#79c0ff', CH: '#3fb950', FS: '#2ea043', FO: '#56d364', SC: '#a371f7', KN: '#a371f7'};
+// catcher's view: x in feet (+ = 1B side / catcher's right), height in units of the zone; RHH box on the left, LHH on the right
+function shapeBoxes(S_, bat){
+  const W = 300, Hh = 340, X = v => W / 2 + v * 80, Z = z => 250 - z * 140;
+  const XE = [-1.33, -0.83, -0.28, 0.28, 0.83, 1.33], ZE = [-0.33, 0, 1 / 3, 2 / 3, 1, 1.33];
+  const bside = bat ? (bat.bats === 'S' ? (bat.sp_hand === 'R' ? 'L' : 'R') : bat.bats) : null;
+  const overlay = side => {
+    if (!bat || side !== bside) return '';
+    const h = H(bat.batter), z = h.zones || [];
+    const cells = z.map((c, i) => { const r = Math.floor(i / 5), k = i % 5; if (c.xcon == null) return '';
+      const t = Math.max(0, Math.min(1, (c.xcon - .2) / .4)), col = t > .5 ? `rgba(46,158,100,${(t - .5) * 1.1})` : `rgba(181,71,63,${(.5 - t) * 1.1})`;
+      return `<rect x="${X(XE[k])}" y="${Z(ZE[5 - r])}" width="${X(XE[k + 1]) - X(XE[k])}" height="${Z(ZE[4 - r]) - Z(ZE[5 - r])}" fill="${col}"><title>xwOBA on contact ${c.xcon}</title></rect>`; }).join('');
+    let plane = '';
+    const s = h.swing;
+    if (s && Math.abs(s.bz) > 1e-3){
+      const zAt = (la, x) => (la - s.a - s.bx * x) / s.bz;            // height where predicted launch angle = la
+      const pts = la => [-1.2, 1.2].map(x => `${X(x)},${Z(Math.max(-.3, Math.min(1.3, zAt(la, x))))}`);
+      const band = [...pts(15), ...pts(30).reverse()].join(' ');
+      plane = `<polygon points="${band}" fill="rgba(108,180,255,.18)" stroke="none"/><polyline points="${pts(22).join(' ')}" fill="none" stroke="#6cb4ff" stroke-width="2.5" stroke-dasharray="6 4"/>
+        <text x="${X(-1.25)}" y="${Z(Math.max(-.3, Math.min(1.3, zAt(22, -1.2)))) - 6}" fill="#6cb4ff" font-size="10.5" font-weight="700">swing plane (est.)</text>`;
+    }
+    return cells + plane;
+  };
+  const one = side => {
+    const pts = S_.arsenal.filter(a => a.by_side && a.by_side[side]).map(a => ({a, s: a.by_side[side]}));
+    const box = side === 'R' ? `<rect x="${X(-1.95)}" y="${Z(1.55)}" width="${80 * .95}" height="${140 * 1.9}" fill="none" stroke="var(--muted)" stroke-dasharray="4 3"/><text x="${X(-1.48)}" y="${Z(1.62)}" text-anchor="middle" fill="var(--muted)" font-size="11">RHH</text>`
+      : `<rect x="${X(1.0)}" y="${Z(1.55)}" width="${80 * .95}" height="${140 * 1.9}" fill="none" stroke="var(--muted)" stroke-dasharray="4 3"/><text x="${X(1.48)}" y="${Z(1.62)}" text-anchor="middle" fill="var(--muted)" font-size="11">LHH</text>`;
+    const zone = `<rect x="${X(-0.83)}" y="${Z(1)}" width="${80 * 1.66}" height="${140}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/>
+      <path d="M${X(-0.71)} ${Z(-0.32)} L${X(0.71)} ${Z(-0.32)} L${X(0.71)} ${Z(-0.38)} L0 0 Z" fill="none"/>
+      <polygon points="${X(-0.71)},${Z(-0.3)} ${X(0.71)},${Z(-0.3)} ${X(0.71)},${Z(-0.38)} ${X(0)},${Z(-0.46)} ${X(-0.71)},${Z(-0.38)}" fill="var(--sunk)" stroke="var(--muted)"/>`;
+    const arrows = pts.map(({a, s}) => { const x1 = X(s.px), y1 = Z(s.zn), x0 = X(s.px - s.hb / 12 * .9), y0 = Z(s.zn - s.vb / 12 * .45 + .15), c = PCOL[a.code] || 'var(--sel)';
+      return `<line x1="${x0}" y1="${y0}" x2="${x1}" y2="${y1}" stroke="${c}" stroke-width="2.2" marker-end="url(#ah${side}${a.code})" opacity=".9"/>
+        <defs><marker id="ah${side}${a.code}" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto"><path d="M0,0 L7,3.5 L0,7 Z" fill="${c}"/></marker></defs>
+        <circle cx="${x1}" cy="${y1}" r="${5 + s.usage * 28}" fill="${c}" fill-opacity=".45" stroke="${c}"/><text x="${x1 + 9}" y="${y1 - 8}" fill="${c}" font-size="11" font-weight="700">${esc(a.code)} ${Math.round(s.usage * 100)}%</text>`; }).join('');
+    if (bat && side !== bside) return '';
+    return `<div><svg class="mv" width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}">${box}${overlay(side)}${zone}${arrows}</svg><div class="gcap">${bat ? esc(bat.name) + ' vs this arsenal' : `vs ${side === 'R' ? 'right' : 'left'}-handed hitters`} (catcher's view)</div></div>`;
+  };
+  return `<div class="grids">${one('R')}${one('L')}</div>
+    <p class="note2">Dot = where each pitch ends up on average vs that side (size = how often he throws it to them); arrow = its break into that spot (exaggerated for visibility). Dashed box = where that hitter stands.${bat ? ` Overlay: ${esc(bat.name)}'s damage by zone (green = he does damage there, red = weak) and his estimated swing plane: the blue band is where his contact tends to come off at home-run launch angles (15-30 deg; dashed line ~22 deg), fit from ${H(bat.batter).swing ? H(bat.batter).swing.n : 0} balls in play (no bat-tracking data, so this is an estimate from where pitches were and how he lifted them).` : ''}</p>`;
+}
+function oldShape(S_){
     const W = 260, sc = v => W / 2 + v * 5.5;
     const pts = S_.arsenal.map(a => `<circle cx="${sc(a.hbreak)}" cy="${W - sc(a.vbreak)}" r="${5 + a.usage * 30}" fill="var(--sel)" fill-opacity=".55"/><text x="${sc(a.hbreak) + 8}" y="${W - sc(a.vbreak) + 4}" fill="currentColor" font-size="11">${esc(a.code)}</text>`).join('');
-    body = `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start"><svg class="mv" width="${W}" height="${W}" viewBox="0 0 ${W} ${W}"><line x1="${W/2}" y1="0" x2="${W/2}" y2="${W}" stroke="var(--faint)"/><line x1="0" y1="${W/2}" x2="${W}" y2="${W/2}" stroke="var(--faint)"/>${pts}</svg>
+    return `<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start"><svg class="mv" width="${W}" height="${W}" viewBox="0 0 ${W} ${W}"><line x1="${W/2}" y1="0" x2="${W/2}" y2="${W}" stroke="var(--faint)"/><line x1="0" y1="${W/2}" x2="${W}" y2="${W/2}" stroke="var(--faint)"/>${pts}</svg>
       <div class="wrapx"><table class="h"><thead><tr><th class="l">Pitch</th><th>Velo</th><th>H break (in)</th><th>V break (in)</th></tr></thead><tbody>
       ${S_.arsenal.map(a => `<tr><td class="l">${esc(a.pitch)}</td><td>${a.velo}</td><td>${a.hbreak}</td><td>${a.vbreak}</td></tr>`).join('')}</tbody></table></div></div>
       <p class="note2">Movement chart: catcher's view, induced break in inches; dot size = usage.</p>`;
-  }
-  return `<div class="sp"><div class="blkh"><div><span class="who">${esc(team)} starter</span><h3>${esc(name)}</h3></div><div class="tabs2">${tb}</div></div>${body}</div>`;
 }
 function matchup(g){
   const side = (t, spn, spid, spteam) => { const ps = P.filter(p => p.game_pk === g.id && p.team === t); if (!ps.length) return '';
@@ -247,7 +316,8 @@ document.addEventListener('click', e => {
   else if (b.dataset.sptab){ st.sp[b.dataset.sid] = b.dataset.sptab; render(); }
   else if (b.dataset.exp) doExport(b.dataset.exp);
 });
-document.addEventListener('change', e => { if (e.target.id === 'sort'){ st.sort = e.target.value; render(); } else if (e.target.id === 'hsel'){ st.hitter = +e.target.value; render(); } });
+document.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.ov){ st.ov = st.ov || {}; st.ov[e.target.dataset.ov] = e.target.value; render(); return; }
+  if (e.target.id === 'sort'){ st.sort = e.target.value; render(); } else if (e.target.id === 'hsel'){ st.hitter = +e.target.value; render(); } });
 render();
 </script>"""
 

@@ -189,7 +189,31 @@ def main(date=None):
                          why={k: round(v, 3) for k, v in why.items()},
                          park=round(float(np.exp(r.l_park)), 3), temp=None if pd.isna(r.temp) else round(float(r.temp * 10 + 70)),
                          wind_out=round(float(r.wind_out * 10), 1)))
-    res = pd.DataFrame(rows).sort_values("p_hr", ascending=False)
+    res = pd.DataFrame(rows)
+    # blend (blend.py): batter-game model on top of the per-PA one; ranks hitters within each game
+    try:
+        import blend as BL
+        hist_s = hist[hist.season >= season - 1]
+        ek = BL.epa_table(hist_s)
+        tr = BL.batter_games(hist_s, coef, ek)
+        tr = tr[tr.slot.notna() & (tr.n_pa >= 2)]
+        cur = now[now.sp == 1].copy()
+        cur["home"] = 1 - cur.top
+        cur["side"] = np.where(cur.bat_side == "S", np.where(cur.pitch_hand == "R", "L", "R"), cur.bat_side)
+        cur = BL.add_mixes(cur, ek)
+        tabs = BL.swing_tables(con, season - 1, extra=cur[["batter", "pitcher", "side", "season", "date"]])
+        tr = BL.attach_swing(tr, tabs)
+        cur = BL.attach_swing(cur, tabs)
+        gb = BL.fit(tr)
+        pb = dict(zip(zip(cur.game_pk, cur.batter), gb.predict_proba(cur[BL.FEATS])[:, 1]))
+        res["p_model"] = res.p_hr
+        res["p_hr"] = [round(float(pb.get((g, b), ph)), 4) for g, b, ph in zip(res.game_pk, res.batter, res.p_hr)]
+        res["fair"] = [int(round(100 * (1 - q) / q)) if q < .5 else -int(round(100 * q / (1 - q))) for q in res.p_hr]
+        print(f"blend: trained on {len(tr):,} batter-games")
+    except Exception as e:
+        print("blend skipped (model HR% kept):", type(e).__name__, e)
+    res["game_rank"] = res.groupby("game_pk").p_hr.rank(ascending=False, method="first").astype(int)
+    res = res.sort_values("p_hr", ascending=False)
     os.makedirs(OUT, exist_ok=True)
     # games that already started keep their last pregame numbers (graded as of first pitch)
     jp = os.path.join(OUT, f"{date}.json")

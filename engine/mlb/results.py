@@ -42,6 +42,7 @@ def load():
     d = d.merge(hr, on=["game_pk", "batter"], how="inner")          # batters who actually batted
     d["y"] = (d.hr > 0).astype(int)
     d["rank"] = d.groupby("date").p.rank(ascending=False, method="first")
+    d["grank"] = d.groupby("game_pk").p.rank(ascending=False, method="first")      # the game's picks
     return d
 
 
@@ -57,7 +58,10 @@ def main():
         top = d[d["rank"] <= 5]
         nights = d.groupby("date").agg(n=("y", "size"), hrs=("y", "sum"), expected=("p", "sum")).reset_index()
         tops = top.groupby("date").apply(lambda x: x.sort_values("rank")[["name", "team", "p", "y"]].to_dict("records")).to_dict()
-        summary = dict(n=int(len(d)), homered=int(d.y.sum()), expected=round(float(d.p.sum()), 1), logloss=round(ll(d.y, d.p), 4),
+        g3 = d[d.grank <= 3].groupby("game_pk").y.sum()
+        pergame = dict(games=int(len(g3)), caught=round(float(g3.mean()), 3), any=round(float((g3 >= 1).mean()), 3),
+                       random=round(float(3 * d.y.mean()), 3))
+        summary = dict(pergame=pergame, n=int(len(d)), homered=int(d.y.sum()), expected=round(float(d.p.sum()), 1), logloss=round(ll(d.y, d.p), 4),
                        top5=dict(n=int(len(top)), hit=int(top.y.sum()), expected=round(float(top.p.sum()), 2)),
                        calibration=cal.assign(bin=cal.bin.astype(str)).round(3).to_dict("records"),
                        nights=nights.round(2).to_dict("records")[::-1], tops={k: v for k, v in tops.items()})
@@ -80,6 +84,7 @@ const m = document.getElementById('main');
 if (!S.n) m.innerHTML = '<section class="panel"><p class="muted">Nothing graded yet. Results appear the morning after each slate.</p></section>';
 else m.innerHTML = `<section class="panel" style="display:grid;gap:10px"><h2>Running record</h2>
   <p>${S.n} hitter-games graded: <b>${S.homered}</b> homered vs <b>${S.expected}</b> expected. Top 5 of each slate: <b>${S.top5.hit}</b> of ${S.top5.n} homered (${S.top5.expected} expected).</p>
+  ${S.pergame ? `<p>Top 3 in each game (${S.pergame.games} games): <b>${S.pergame.caught}</b> home-run hitters per game (random 3: ${S.pergame.random}); at least one of the three homered in <b>${Math.round(S.pergame.any * 100)}%</b> of games.</p>` : ''}
   <div class="tw"><table class="t"><thead><tr><th class="l">Our chance</th><th>Hitter-games</th><th>Predicted</th><th>Actually homered</th></tr></thead><tbody>
   ${S.calibration.map(r => `<tr><td class="l">${r.bin}</td><td>${r.n}</td><td>${pct(r.predicted)}</td><td class="big">${pct(r.actual)}</td></tr>`).join('')}</tbody></table></div></section>
   <section class="panel" style="display:grid;gap:10px"><h2>By night</h2><div class="tw"><table class="t"><thead><tr><th class="l">Date</th><th>Hitters</th><th>HR hitters</th><th>Expected</th><th class="l">Top 5</th></tr></thead><tbody>
