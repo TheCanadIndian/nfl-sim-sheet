@@ -137,6 +137,29 @@ def espn_out(todo):
     return out
 
 
+def espn_lines(todo):
+    """Current spread / total from ESPN's scoreboard for upcoming games: {game_id: (spread_line, total_line)}
+    in nflverse convention (spread_line > 0 = home favored; ESPN's spread is the negative of that).
+    The nflverse schedule only refreshes lines a few times a day; this keeps re-runs on the live number."""
+    import requests
+    out, H = {}, {"User-Agent": "Mozilla/5.0"}
+    key = {(g.away_team, g.home_team): g.game_id for g in todo.itertuples()}
+    for day in sorted({str(d)[:10].replace("-", "") for d in todo.gameday}):
+        try:
+            sb = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard",
+                              params={"dates": day}, headers=H, timeout=20).json()
+        except Exception:
+            continue
+        for e in sb.get("events", []):
+            c = e.get("competitions", [{}])[0]
+            cs = {x["homeAway"]: ESPN_TEAM.get(x["team"]["abbreviation"], x["team"]["abbreviation"]) for x in c.get("competitors", [])}
+            gid = key.get((cs.get("away"), cs.get("home")))
+            o = (c.get("odds") or [{}])[0]
+            if gid and o.get("spread") is not None and o.get("overUnder") is not None:
+                out[gid] = (-float(o["spread"]), float(o["overUnder"]))
+    return out
+
+
 def future_actives(con, todo, season, week, overrides):
     """Who plays for each team: recent snaps + current depth chart, on the active
     roster, minus injury-report Out/Doubtful, plus manual overrides."""
@@ -286,6 +309,15 @@ def main():
         todo = games[(games.season == season) & (games.week == week) & games.result.notna()]
     else:
         season, week, todo = pick_week(games, args.season, args.week)
+    if not args.played and len(todo):
+        todo = todo.copy()
+        live = espn_lines(todo)                           # use the current line, not the schedule file's
+        for gid, (sl, tl) in live.items():
+            row = todo.game_id == gid
+            old = todo.loc[row, ["spread_line", "total_line"]].iloc[0]
+            if abs((old.spread_line if pd.notna(old.spread_line) else 99) - sl) >= .5 or abs((old.total_line if pd.notna(old.total_line) else 99) - tl) >= .5:
+                print(f"  {gid}: line now {sl:+.1f} / {tl:.1f} (ESPN; schedule file had {old.spread_line} / {old.total_line})")
+            todo.loc[row, ["spread_line", "total_line"]] = [sl, tl]
     todo = todo[todo.spread_line.notna() & todo.total_line.notna()]
     if args.games:
         keys = {k.upper() for k in args.games}
