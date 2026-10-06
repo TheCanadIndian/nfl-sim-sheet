@@ -1,0 +1,206 @@
+[
+ {
+  "date": "2026-10-06T10:07",
+  "sport": "nfl",
+  "windows": [
+   2025,
+   2026
+  ],
+  "tried": [
+   {
+    "change": {
+     "boxscore.priors.K_TGT": 15
+    },
+    "ok": false,
+    "score": 0.00024,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00021,
+      "worst": 0.00222,
+      "in80": 0.799
+     },
+     "2026": {
+      "avg_change": 0.00024,
+      "worst": 0.00395,
+      "in80": 0.78
+     }
+    },
+    "what": "target-share shrinkage (games of evidence toward role average)",
+    "was": 20
+   },
+   {
+    "change": {
+     "boxscore.priors.K_TGT": 25
+    },
+    "ok": false,
+    "score": -0.00029,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00029,
+      "worst": 0.00267,
+      "in80": 0.803
+     },
+     "2026": {
+      "avg_change": -0.00096,
+      "worst": 0.00282,
+      "in80": 0.79
+     }
+    },
+    "what": "target-share shrinkage (games of evidence toward role average)",
+    "was": 20
+   },
+   {
+    "change": {
+     "boxscore.priors.K_CAR": 10
+    },
+    "ok": false,
+    "score": 0.0001,
+    "windows": {
+     "2025": {
+      "avg_change": 0.0001,
+      "worst": 0.00163,
+      "in80": 0.796
+     },
+     "2026": {
+      "avg_change": -0.00087,
+      "worst": 0.00204,
+      "in80": 0.783
+     }
+    },
+    "what": "carry-share shrinkage",
+    "was": 15
+   },
+   {
+    "change": {
+     "boxscore.priors.K_CAR": 20
+    },
+    "ok": false,
+    "score": 0.00148,
+    "windows": {
+     "2025": {
+      "avg_change": 3e-05,
+      "worst": 0.00099,
+      "in80": 0.801
+     },
+     "2026": {
+      "avg_change": 0.00148,
+      "worst": 0.00412,
+      "in80": 0.785
+     }
+    },
+    "what": "carry-share shrinkage",
+    "was": 15
+   },
+   {
+    "change": {
+     "boxscore.priors.K_CATCH": 30
+    },
+    "ok": false,
+    "score": -2e-05,
+    "windows": {
+     "2025": {
+      "avg_change": -2e-05,
+      "worst": 0.00118,
+      "in80": 0.798
+     },
+     "2026": {
+      "avg_change": -0.00126,
+      "worst": 0.00043,
+      "in80": 0.781
+     }
+    },
+    "what": "catch-rate shrinkage",
+    "was": 40
+   },
+   {
+    "change": {
+     "boxscore.priors.K_CATCH": 50
+    },
+    "ok": false,
+    "score": 0.00029,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00029,
+      "worst": 0.00106,
+      "in80": 0.799
+     },
+     "2026": {
+      "avg_change": -0.00092,
+      "worst": 0.00019,
+      "in80": 0.784
+     }
+    },
+    "what": "catch-rate shrinkage",
+    "was": 40
+   },
+   {
+    "change": {
+     "boxscore.priors.K_YPR": 20
+    },
+    "ok": false,
+    "score": -0.0,
+    "windows": {
+     "2025": {
+      "avg_change": -0.0,
+      "worst": 0.00015,
+      "in80": 0.8
+     },
+     "2026": {
+      "avg_change": -0.00013,
+      "worst": 0.00019,
+      "in80": 0.787
+     }
+    },
+    "what": "yards-per-catch shrinkage",
+    "was": 30
+   },
+   {
+    "change": {
+     "boxscore.priors.K_YPR": 40
+    },
+    "ok": false,
+    "score": 0.00013,
+    "windows": {
+     "2025": {
+      "avg_change": 4e-05,
+      "worst": 0.00035,
+      "in80": 0.801
+     },
+     "2026": {
+      "avg_change": 0.00013,
+      "worst": 0.00094,
+      "in80": 0.787
+     }
+    },
+    "what": "yards-per-catch shrinkage",
+    "was": 30
+   }
+  ],
+  "adopted": null,
+  "baseline": {
+   "2025": {
+    "qs_tgt": 0.4954,
+    "qs_rec": 0.3756,
+    "qs_rec_yds": 4.8317,
+    "qs_car": 0.9085,
+    "qs_rush_yds": 2.7005,
+    "qs_pass_yds": 20.7854,
+    "td_logloss": 0.3974,
+    "in80": 0.8006
+   },
+   "2026": {
+    "qs_tgt": 0.5321,
+    "qs_rec": 0.4009,
+    "qs_rec_yds": 5.1313,
+    "qs_car": 0.9227,
+    "qs_rush_yds": 2.5144,
+    "qs_pass_yds": 23.3515,
+    "td_logloss": 0.3934,
+    "in80": 0.7866
+   }
+  },
+  "next": 4,
+  "minutes": 5.4,
+  "dry": false
+ }
+]
