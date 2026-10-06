@@ -206,6 +206,11 @@ def main(date=None):
         cur = BL.attach_swing(cur, tabs)
         gb = BL.fit(tr)
         pb = dict(zip(zip(cur.game_pk, cur.batter), gb.predict_proba(cur[BL.FEATS])[:, 1]))
+        q1, q2 = tr.pbz.quantile([1 / 3, 2 / 3])
+        plane = {(g, b): (round(float(la), 1), "steeper" if z >= q2 else "flatter" if z <= q1 else "average")
+                 for g, b, la, z in zip(cur.game_pk, cur.batter, cur.la_at_sp, cur.pbz)}
+        res["plane_la"] = [plane.get((g, b), (None, None))[0] for g, b in zip(res.game_pk, res.batter)]
+        res["plane_slope"] = [plane.get((g, b), (None, None))[1] for g, b in zip(res.game_pk, res.batter)]
         res["p_model"] = res.p_hr
         res["p_hr"] = [round(float(pb.get((g, b), ph)), 4) for g, b, ph in zip(res.game_pk, res.batter, res.p_hr)]
         res["fair"] = [int(round(100 * (1 - q) / q)) if q < .5 else -int(round(100 * q / (1 - q))) for q in res.p_hr]

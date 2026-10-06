@@ -55,6 +55,7 @@ table.h tr:hover td{filter:brightness(1.12)}
 .pick h3{margin:0;font-size:16px;font-family:var(--display);letter-spacing:.04em}
 .pick .r{display:grid;grid-template-columns:28px 1fr auto auto;gap:8px;align-items:center;font-size:14px}
 .pick .r small{color:var(--muted)}
+.pf{margin:0;font-size:14px} .pf b{color:#6cb4ff}
 .btnx{padding:8px 14px;border-radius:8px;border:1px solid var(--faint);background:var(--surface);color:var(--ink);font-weight:600;cursor:pointer}
 </style>
 <div class="wrap">
@@ -103,6 +104,12 @@ const dot = (o, what) => { if (!o || !o.light) return ''; const [c, t] = LIGHT[o
   return `<span title="${o.data_n} weighted ${what} of data (this season + 0.6 x last) -- ${t}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${c};margin-right:6px;vertical-align:1px"></span>`; };
 const star = p => p.game_rank <= 3 ? `<span class="rk" title="Top ${p.game_rank} pick in this game (blend)">★${p.game_rank}</span>` : `<span class="rk muted">${p.game_rank ?? ''}</span>`;
 const valueChip = p => { const e = edge(p); return e != null && e >= .06 ? `<span class="val" title="Blend beats Kalshi's ask by ${(e * 100).toFixed(1)} pts after the fee. Aug-Oct 2026 backtest: 6%+ edges returned ~+50% on stake (about 200 bets).">VALUE +${(e * 100).toFixed(0)}</span>` : ''; };
+// swing-plane fit: his predicted launch angle at this starter's usual location (Aug-Oct 2026 backtest)
+const PLANE = [[5, -.44, 'poor: pitcher works below his band'], [10, -.15, 'weak'], [15, -.02, 'neutral'], [20, .13, 'good'], [25, .19, 'very good'], [99, .19, 'excellent (rare; small sample)']];
+const planeOf = p => { if (p.plane_la == null) return null; const b = PLANE.find(x => p.plane_la < x[0]); return {la: p.plane_la, eff: b[1], txt: b[2]}; };
+const SLOPE = {steeper: ['steeper plane than most', .30], average: ['average plane', 0], flatter: ['flatter plane than most', -.13]};
+const planeCell = p => { const f = planeOf(p); return f ? `${Math.round(f.la)}° <small>${f.eff >= 0 ? '+' : ''}${Math.round(f.eff * 100)}%</small>` : '–'; };
+const planeHeat = p => { const f = planeOf(p); return f ? heat(50 + f.eff * 150) : ''; };
 const COLS = [
   ['rank', 'Game rank', p => star(p), () => ''],
   ['hr', 'HR%', p => pc(p.p_hr) + valueChip(p), p => heat(ranks[p.batter + '|' + p.game_pk])],
@@ -111,6 +118,7 @@ const COLS = [
   ['kalshi', 'Kalshi', p => window.MKT && MKT.has() ? MKT.cell(p.game_pk, p.batter, p.name, 'hr') : '–', () => ''],
   ['matchup', 'Matchup', p => H(p.batter).matchup ?? '–', p => heat(H(p.batter).matchup)],
   ['ceiling', 'Ceiling', p => H(p.batter).season?.ev90 ?? '–', p => heat(H(p.batter).pct?.ev90)],
+  ['plane', 'Plane fit', p => planeCell(p), p => planeHeat(p)],
   ['zone', 'Zone fit', p => fit(H(p.batter).zone_fit), p => heat(fitp(H(p.batter).zone_fit))],
   ['mix', 'Mix fit', p => fit(H(p.batter).mix_fit), p => heat(fitp(H(p.batter).mix_fit))],
   ['form', 'HR form', p => form(H(p.batter).form), p => H(p.batter).form ? heat(H(p.batter).form.pct) : 'color:var(--muted)'],
@@ -127,8 +135,8 @@ const COLS = [
   ['hh', 'HardHit%', p => pc(H(p.batter).season?.hardhit), p => heat(H(p.batter).pct?.hardhit)],
   ['hrs', 'HR', p => num(H(p.batter).season?.hr), () => ''],
 ];
-const SORTS = {default: 'Lineup order', rank: 'Game rank', hr: 'HR%', matchup: 'Matchup', ceiling: 'Ceiling', xwoba: 'xwOBA', brl: 'Brl/BIP%', pullbrl: 'PullBrl%', fb: 'FB%', form: 'HR form'};
-const sortVal = {rank: p => -p.game_rank, hr: p => p.p_hr, matchup: p => H(p.batter).matchup ?? -1, ceiling: p => H(p.batter).season?.ev90 ?? 0, xwoba: p => H(p.batter).season?.xwoba ?? 0,
+const SORTS = {default: 'Lineup order', rank: 'Game rank', hr: 'HR%', plane: 'Plane fit', matchup: 'Matchup', ceiling: 'Ceiling', xwoba: 'xwOBA', brl: 'Brl/BIP%', pullbrl: 'PullBrl%', fb: 'FB%', form: 'HR form'};
+const sortVal = {rank: p => -p.game_rank, plane: p => p.plane_la ?? -99, hr: p => p.p_hr, matchup: p => H(p.batter).matchup ?? -1, ceiling: p => H(p.batter).season?.ev90 ?? 0, xwoba: p => H(p.batter).season?.xwoba ?? 0,
   brl: p => H(p.batter).season?.brl_bip ?? 0, pullbrl: p => H(p.batter).season?.pullbrl ?? 0, fb: p => H(p.batter).season?.fb ?? 0, form: p => H(p.batter).form?.pct ?? -1};
 function num(v){ return v == null ? '–' : v.toLocaleString(); }
 function fit(v){ return v == null ? '–' : (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%'; }
@@ -216,6 +224,7 @@ function shapeBoxes(S_, bat){
     return `<div><svg class="mv" width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}">${box}${overlay(side)}${zone}${arrows}</svg><div class="gcap">${bat ? esc(bat.name) + ' vs this arsenal' : `vs ${side === 'R' ? 'right' : 'left'}-handed hitters`} (catcher's view)</div></div>`;
   };
   return `<div class="grids">${one('R')}${one('L')}</div>
+    ${bat ? (() => { const f = planeOf(bat), sl = SLOPE[bat.plane_slope]; return f ? `<p class="pf"><b>Plane fit: ${Math.round(f.la)}° at his usual spots</b> · ${f.txt} (${f.eff >= 0 ? '+' : ''}${Math.round(f.eff * 100)}% HR vs average)${sl ? ` · ${sl[0]} (${sl[1] >= 0 ? '+' : ''}${Math.round(sl[1] * 100)}% HR vs an average plane)` : ''}</p>` : ''; })() : ''}
     <p class="note2">Dot = where each pitch ends up on average vs that side (size = how often he throws it to them); arrow = its break into that spot (exaggerated for visibility). Dashed box = where that hitter stands.${bat ? ` Overlay: ${esc(bat.name)}'s damage by zone (green = he does damage there, red = weak) and his estimated swing plane: the blue band is where his contact tends to come off at home-run launch angles (15-30 deg; dashed line ~22 deg), fit from ${H(bat.batter).swing ? H(bat.batter).swing.n : 0} balls in play (no bat-tracking data, so this is an estimate from where pitches were and how he lifted them).` : ''}</p>`;
 }
 function oldShape(S_){
