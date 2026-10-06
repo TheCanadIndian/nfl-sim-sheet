@@ -47,7 +47,7 @@ TUNABLE = {
         ("boxscore.priors.K_RUSH_TD", 5, 5, 50, "rushing-TD share shrinkage"),
         ("boxscore.priors.ROOKIE_USAGE", .05, 0, .3, "early-round rookie usage boost"),
         ("boxscore.sim.TD_GAMMA", .05, .6, 1.0, "TD share compression"),
-        ("boxscore.sim.QB_TD_MULT", .2, 1.0, 2.6, "QB goal-line weight"),
+        ("boxscore.sim.QB_TD_MULT", .2, 1.0, 4.0, "QB goal-line weight"),
         ("boxscore.pipeline.FUNNEL_BETA", .1, 0, .6, "defense target-funnel strength"),
     ],
     "nhl": [
