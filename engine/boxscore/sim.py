@@ -23,7 +23,8 @@ REC_MAX, CAR_MAX, SCR_MAX = 20, 40, 14
 
 # Tuned by tune.py on 2024 and confirmed on 2025-26 (README "Model tuning log").
 TD_GAMMA = 0.85         # <1 compresses players' TD shares toward each other (top-end TD odds were overconfident)
-QB_TD_MULT = 1.8        # extra rushing-TD weight for the starting QB (sneaks, goal line)
+QB_TD_MULT = 3.0        # extra rushing-TD weight for the starting QB (sneaks, goal line); 1.8 -> 3.0 on 2026-10-06
+                        # after the red-zone TD-share change (QB TDs 8.8% -> 11.4% vs 12.8% actual, 2025-26)
 P_EXIT = 0.0            # per-game chance a non-QB skill player leaves early. Tested: 0.06 fixed 2024's slightly
                         # narrow ranges but over-widened 2025-26, which were already on target; left off.
 EXIT_KEEP = (0.05, 0.6)  # share of his normal volume he keeps when that happens
