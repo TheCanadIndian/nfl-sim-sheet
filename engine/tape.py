@@ -22,13 +22,14 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 DIR = os.path.join(HERE, "tape")
 RELEASE = "market-tape"
+REPO = os.environ.get("GITHUB_REPOSITORY") or "TheCanadIndian/nfl-sim-sheet"
 
 
 def _gh(*a):
     gh = shutil.which("gh")
     if not gh:
         return 1
-    return subprocess.run([gh, *a], capture_output=True, text=True, cwd=HERE).returncode
+    return subprocess.run([gh, *a, "-R", REPO], capture_output=True, text=True, cwd=HERE).returncode
 
 
 def row(sport, ts, r):
