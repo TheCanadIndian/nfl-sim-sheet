@@ -202,5 +202,183 @@
   "next": 4,
   "minutes": 5.4,
   "dry": false
+ },
+ {
+  "date": "2026-10-06T10:36",
+  "sport": "nhl",
+  "windows": [
+   20242025,
+   20252026
+  ],
+  "tried": [
+   {
+    "change": {
+     "model.K_FIN_XG": 30.0
+    },
+    "ok": false,
+    "score": 5.9e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38654,
+      "change": 5.9e-05
+     },
+     "20252026": {
+      "logloss": 0.3907,
+      "change": 3.2e-05
+     }
+    },
+    "what": "finishing shrinkage (expected goals of evidence)",
+    "was": 40.0
+   },
+   {
+    "change": {
+     "model.K_FIN_XG": 50.0
+    },
+    "ok": false,
+    "score": -3e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38645,
+      "change": -2.4e-05
+     },
+     "20252026": {
+      "logloss": 0.39067,
+      "change": -3e-06
+     }
+    },
+    "what": "finishing shrinkage (expected goals of evidence)",
+    "was": 40.0
+   },
+   {
+    "change": {
+     "model.RATE_HL": 20.0
+    },
+    "ok": false,
+    "score": 0.000101,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38653,
+      "change": 5.7e-05
+     },
+     "20252026": {
+      "logloss": 0.39077,
+      "change": 0.000101
+     }
+    },
+    "what": "shot-rate memory (games)",
+    "was": 30.0
+   },
+   {
+    "change": {
+     "model.RATE_HL": 40.0
+    },
+    "ok": false,
+    "score": -8e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38647,
+      "change": -8e-06
+     },
+     "20252026": {
+      "logloss": 0.39063,
+      "change": -3.8e-05
+     }
+    },
+    "what": "shot-rate memory (games)",
+    "was": 30.0
+   },
+   {
+    "change": {
+     "model.TOI_HL": 3.0
+    },
+    "ok": false,
+    "score": 6.3e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38652,
+      "change": 4.4e-05
+     },
+     "20252026": {
+      "logloss": 0.39073,
+      "change": 6.3e-05
+     }
+    },
+    "what": "ice-time memory (games)",
+    "was": 4.0
+   },
+   {
+    "change": {
+     "model.TOI_HL": 5.0
+    },
+    "ok": false,
+    "score": -6e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38647,
+      "change": -6e-06
+     },
+     "20252026": {
+      "logloss": 0.39066,
+      "change": -6e-06
+     }
+    },
+    "what": "ice-time memory (games)",
+    "was": 4.0
+   },
+   {
+    "change": {
+     "model.K_NP_HOURS": 3.0
+    },
+    "ok": false,
+    "score": 4.2e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38651,
+      "change": 3.4e-05
+     },
+     "20252026": {
+      "logloss": 0.39071,
+      "change": 4.2e-05
+     }
+    },
+    "what": "even-strength rate shrinkage (hours)",
+    "was": 4.0
+   },
+   {
+    "change": {
+     "model.K_NP_HOURS": 5.0
+    },
+    "ok": false,
+    "score": -1.6e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38646,
+      "change": -1.6e-05
+     },
+     "20252026": {
+      "logloss": 0.39065,
+      "change": -2.2e-05
+     }
+    },
+    "what": "even-strength rate shrinkage (hours)",
+    "was": 4.0
+   }
+  ],
+  "adopted": null,
+  "baseline": {
+   "20242025": {
+    "logloss": 0.3864776062214785,
+    "mean_p": 0.14595685073632586,
+    "rate": 0.1496422893481717
+   },
+   "20252026": {
+    "logloss": 0.3906714425281036,
+    "mean_p": 0.15603368477551605,
+    "rate": 0.15164800127535769
+   }
+  },
+  "next": 4,
+  "minutes": 5.4,
+  "dry": false
  }
 ]
