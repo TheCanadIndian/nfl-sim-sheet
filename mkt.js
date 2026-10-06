@@ -7,7 +7,7 @@
   const me = document.currentScript, sport = me.dataset.sport, base = new URL('.', me.src).href;
   const FEE = {kalshi: .07, polymarket: 0};
   const KLAB = {anytime_td: 'TD', first_td: 'first TD', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', rec: 'receptions',
-    goal: 'goal', first_goal: 'first goal', pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes', win: 'winner', total: 'total', spread: 'spread'};
+    goal: 'goal', first_goal: 'first goal', hr: 'home run', pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes', win: 'winner', total: 'total', spread: 'spread'};
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z ]/g, '').replace(/\b(jr|sr|ii|iii|iv)\b/g, '').replace(/\s+/g, ' ').trim();
   const cents = p => p == null ? '–' : Math.round(p * 100) + '¢';
@@ -64,6 +64,7 @@
     if (k === 'first_td') return ['Scores first TD', 'Doesn\'t'];
     if (k === 'first_goal') return ['Scores first goal', 'Doesn\'t'];
     if (k === 'goal') return L != null && L >= 1 ? [Math.ceil(L) + '+ goals', 'Fewer'] : ['Scores a goal', 'No goal'];
+    if (k === 'hr') return L != null && L >= 1 ? [Math.ceil(L) + '+ HR', 'Fewer'] : ['Homers', 'No HR'];
     return ['Over ' + L, 'Under ' + L];
   }
   function ours(r, model){ const p = r.p || {}; return p[model] ?? p.vegas ?? p.model ?? null; }
