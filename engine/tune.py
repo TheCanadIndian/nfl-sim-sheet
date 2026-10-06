@@ -25,7 +25,7 @@ from boxscore import weather as W
 
 TUNE = dict(train=[2022, 2023], test=[2024])
 CONFIRM = dict(train=[2022, 2024], test=[2025, 2026])
-BASE = dict(K_TGT=20, K_CATCH=40, K_REC_TD=4, K_RUSH_TD=3, TD_GAMMA=0.85, QB_TD_MULT=1.8, P_EXIT=0.0,
+BASE = dict(K_TGT=20, K_CATCH=40, K_REC_TD=20, K_RUSH_TD=15, TD_GAMMA=0.85, QB_TD_MULT=1.8, P_EXIT=0.0,
             W_SNAP_TGT=0.0, W_SNAP_CAR=0.0, SNAP_HL=1.5, K_RATE_TGT=60, K_RATE_CAR=40, K_YPR=30, K_YPC=80, USE_WEATHER=False,
             ROOKIE_USAGE=0.15, ROOKIE_YPR=0.0, ROOKIE_PICK=64,
             RB_TGT_MULT=1.0, RB_YPR_MULT=1.0, QB_YPC_MULT=1.0, QB_SCR_MULT=1.0,
@@ -144,6 +144,7 @@ GRIDS = {
     "wr": [{}, {"K_TGT": 35}, {"K_TGT": 50}, {"K_CATCH": 80}, {"K_CATCH": 150}, {"K_TGT": 35, "K_CATCH": 80}],
     "td": [{}, {"TD_GAMMA": .85}, {"QB_TD_MULT": 1.4}, {"QB_TD_MULT": 1.8}, {"QB_TD_MULT": 2.2},
            {"TD_GAMMA": .85, "QB_TD_MULT": 1.8}],
+    "qbtd": [{}, {"QB_TD_MULT": 2.2}, {"QB_TD_MULT": 2.6}, {"QB_TD_MULT": 3.0}, {"QB_TD_MULT": 3.5}],   # after K_*_TD 20/15
     "rztd": [{}, {"K_REC_TD": 10, "K_RUSH_TD": 8}, {"K_REC_TD": 20, "K_RUSH_TD": 15}, {"K_REC_TD": 40, "K_RUSH_TD": 30},
              {"K_REC_TD": 80, "K_RUSH_TD": 60}],                  # TD share pulled harder toward red-zone usage
     "weather": [{}, {"USE_WEATHER": True}],
