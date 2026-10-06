@@ -105,12 +105,13 @@ const COLS = [
   ['pullbrl', 'PullBrl%', p => pc(H(p.batter).season?.pullbrl), p => heat(H(p.batter).pct?.pullbrl)],
   ['brl', 'Brl/BIP%', p => pc(H(p.batter).season?.brl_bip), p => heat(H(p.batter).pct?.brl_bip)],
   ['sweet', 'Sweet%', p => pc(H(p.batter).season?.sweet), p => heat(H(p.batter).pct?.sweet)],
+  ['fb', 'FB%', p => pc(H(p.batter).season?.fb), p => heat(H(p.batter).pct?.fb)],
   ['hh', 'HardHit%', p => pc(H(p.batter).season?.hardhit), p => heat(H(p.batter).pct?.hardhit)],
   ['hrs', 'HR', p => num(H(p.batter).season?.hr), () => ''],
 ];
-const SORTS = {default: 'Lineup order', hr: 'HR%', matchup: 'Matchup', ceiling: 'Ceiling', xwoba: 'xwOBA', brl: 'Brl/BIP%', pullbrl: 'PullBrl%', form: 'HR form'};
+const SORTS = {default: 'Lineup order', hr: 'HR%', matchup: 'Matchup', ceiling: 'Ceiling', xwoba: 'xwOBA', brl: 'Brl/BIP%', pullbrl: 'PullBrl%', fb: 'FB%', form: 'HR form'};
 const sortVal = {hr: p => p.p_hr, matchup: p => H(p.batter).matchup ?? -1, ceiling: p => H(p.batter).season?.ev90 ?? 0, xwoba: p => H(p.batter).season?.xwoba ?? 0,
-  brl: p => H(p.batter).season?.brl_bip ?? 0, pullbrl: p => H(p.batter).season?.pullbrl ?? 0, form: p => H(p.batter).form?.pct ?? -1};
+  brl: p => H(p.batter).season?.brl_bip ?? 0, pullbrl: p => H(p.batter).season?.pullbrl ?? 0, fb: p => H(p.batter).season?.fb ?? 0, form: p => H(p.batter).form?.pct ?? -1};
 function num(v){ return v == null ? '–' : v.toLocaleString(); }
 function fit(v){ return v == null ? '–' : (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%'; }
 function fitp(v){ return v == null ? null : 50 + Math.max(-50, Math.min(50, v * 500)); }
@@ -163,8 +164,8 @@ function matchup(g){
   const any = P.find(p => p.game_pk === g.id) || {};
   const awaySp = P.find(p => p.game_pk === g.id && p.team === g.home)?.sp_id, homeSp = P.find(p => p.game_pk === g.id && p.team === g.away)?.sp_id;
   return `<p class="note2">${esc(g.series || '')} · ${esc(g.venue)} · park HR factor ${any.park != null ? (any.park >= 1 ? '+' : '') + Math.round((any.park - 1) * 100) + '%' : '–'} · ${any.temp != null ? any.temp + '°F' : 'temp n/a'} · wind out ${any.wind_out ?? 'n/a'} mph</p>
-    ${side(g.away, g.sp_home)}${side(g.home, g.sp_away)}
-    <section class="blk"><h2>Starters</h2>${spCard(awaySp, g.sp_away, g.away)}${spCard(homeSp, g.sp_home, g.home)}</section>`;
+    <section class="blk"><h2>Starters</h2>${spCard(awaySp, g.sp_away, g.away)}${spCard(homeSp, g.sp_home, g.home)}</section>
+    ${side(g.away, g.sp_home)}${side(g.home, g.sp_away)}`;
 }
 function rolling(g){
   const ps = P.filter(p => g === null || p.game_pk === g.id).sort((a, b) => b.p_hr - a.p_hr);

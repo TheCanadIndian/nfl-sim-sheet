@@ -67,7 +67,18 @@ def main(cmd):
         n = copy(ENGINE, HERE, files(ENGINE, STATE))
         print(f"pulled {n} state files from the cloud")
         return
-    n = copy(HERE, ENGINE, files(HERE, CODE)) + copy(HERE, ENGINE, files(HERE, STATE))
+    # state: never push a PC copy over a newer cloud copy (the cloud runs keep updating these)
+    newer_here, newer_cloud = [], []
+    for r in files(HERE, STATE):
+        e = os.path.join(ENGINE, r)
+        if not os.path.exists(e):
+            newer_here.append(r); continue
+        t = subprocess.run([GIT, "-C", REPO, "log", "-1", "--format=%ct", "--", os.path.join("engine", r)], capture_output=True, text=True).stdout.strip()
+        (newer_cloud if t and int(t) > os.path.getmtime(os.path.join(HERE, r)) else newer_here).append(r)
+    if newer_cloud:
+        copy(ENGINE, HERE, newer_cloud)
+        print(f"kept {len(newer_cloud)} newer cloud state files (copied them to the PC)")
+    n = copy(HERE, ENGINE, files(HERE, CODE)) + copy(HERE, ENGINE, newer_here)
     print(f"copied {n} files into engine/")
     git("add", "-A", "engine", ".github")
     if git("diff", "--cached", "--quiet") != 0:
