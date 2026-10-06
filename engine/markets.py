@@ -469,6 +469,12 @@ def run(sport):
     old = json.load(open(path)).get("markets", []) if os.path.exists(path) else []
     keep = [r for r in old if r["game"] not in fresh]          # started games keep their last pregame snapshot
     snap = dict(sport=sport, fetched=dt.datetime.now().isoformat(timespec="minutes"), markets=keep + rows)
+    if TAPE:                                                # cloud markets job: keep every snapshot (tape.py)
+        try:
+            import tape
+            tape.record(sport, rows, dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"))
+        except Exception as e:
+            print("tape skipped:", type(e).__name__, e)
     json.dump(snap, open(path, "w"), separators=(",", ":"), default=str)
     e3 = sum(1 for r in rows if max(r.get("edge_yes", -1), r.get("edge_no", -1)) >= .03)
     print(f"{sport}: Kalshi {kn} open / {len(krows)} matched, Polymarket {pn} / {len(prows)} matched, "
@@ -537,10 +543,29 @@ def write_live(sport):
               open(os.path.join(SITE, "markets", f"live_{sport}.json"), "w"), separators=(",", ":"), default=str)
 
 
+TAPE = False
+
+
 def live(hours=12):
-    """Re-quote each sport that has a game starting within `hours`; 0 if anything ran, 10 if not."""
+    """Re-quote each sport that has a game starting within `hours`; 0 if anything ran, 10 if not.
+    Also writes <site>/markets/schedule.json (upcoming starts) for the Cloudflare Worker's pacing."""
+    global TAPE
+    TAPE = True
     ran = False
     now = pd.Timestamp.now(tz="UTC")
+    starts = []
+    for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba)):
+        try:
+            for g in (f() or {}).get("games", []):
+                t = pd.Timestamp(g["start"]).tz_convert("UTC") if pd.Timestamp(g["start"]).tzinfo else pd.Timestamp(g["start"], tz="UTC")
+                if now - pd.Timedelta(hours=4) < t < now + pd.Timedelta(days=8):
+                    starts.append(dict(sport=sport, game=str(g["id"]), start=t.isoformat()))
+        except Exception:
+            pass
+    if os.path.isdir(SITE):
+        os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
+        json.dump(dict(games=sorted(starts, key=lambda x: x["start"])),        # no timestamp: only changes when games do
+                  open(os.path.join(SITE, "markets", "schedule.json"), "w"), separators=(",", ":"))
     for sport, f in (("nfl", ours_nfl), ("nhl", ours_nhl), ("nba", ours_nba)):
         try:
             O = f()

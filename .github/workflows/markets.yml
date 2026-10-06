@@ -1,4 +1,4 @@
-# Live market prices for the model pages. Every 15 minutes: re-quote Kalshi and Polymarket for any
+# Live market prices for the model pages, the market tape (tape.py) and the game-day watcher (watch.py). Every 15 minutes: re-quote Kalshi and Polymarket for any
 # sport with a game in the next 12 hours (exits in seconds otherwise) and publish
 # markets/live_<sport>.json, which the NFL / NHL / NBA pages poll. Needs no databases: it reads the
 # saved projections in engine/. Polymarket books are also fetched live by the browser.
@@ -37,8 +37,11 @@ jobs:
         run: |
           set +e; python markets.py live; rc=$?; set -e
           [ $rc -eq 10 ] && echo "skip=true" >> "$GITHUB_OUTPUT" || { [ $rc -eq 0 ] || exit $rc; }
-      - if: steps.q.outputs.skip != 'true'
-        run: |
+      - name: Watch for late scratches and line moves (re-runs a sport's model if needed)
+        if: steps.q.outputs.skip != 'true'
+        working-directory: engine
+        run: python watch.py
+      - run: |
           git config user.name "sim-sheet-bot"
           git config user.email "sim-sheet-bot@users.noreply.github.com"
           git add -A markets engine/markets
