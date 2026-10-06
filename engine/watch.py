@@ -139,7 +139,7 @@ def mlb_checks():
     ours = {}
     for p in js.get("players", []):
         g = ours.setdefault(p["game_pk"], dict(projected=set(), sp={}))
-        if p.get("lineup") == "projected":
+        if p.get("lineup") != "posted":
             g["projected"].add(p["team"])
         g["sp"][p["team"]] = p.get("sp_id")                  # the starter this team faces
     reasons = []

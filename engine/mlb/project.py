@@ -75,6 +75,41 @@ def last_lineup(con, team, before):
     return sorted(order)
 
 
+def roster_hitters(team_id, date):
+    """Active-roster position players (two-way players included) from the stats API."""
+    d = get(f"{API}/v1/teams/{team_id}/roster", rosterType="active", date=date) or {}
+    return [(r["person"]["id"], r["person"]["fullName"]) for r in d.get("roster", [])
+            if (r.get("position") or {}).get("type") != "Pitcher" or (r.get("position") or {}).get("abbreviation") == "TWP"]
+
+
+def start_odds(con, team, before, sp_hand, n=14):
+    """Chance each hitter starts, from the team's last n games: his start share, leaning toward games vs the
+    same starter handedness (platoons), plus his usual lineup spot."""
+    gs = [r[0] for r in con.execute("SELECT game_pk FROM games WHERE (home=? OR away=?) AND date<? ORDER BY date DESC, game_pk DESC LIMIT ?",
+                                    (team, team, before, n))]
+    if not gs:
+        return {}
+    q = f"""SELECT p.game_pk, p.slot, p.batter, p.idx FROM pa p WHERE p.game_pk IN ({','.join(map(str, gs))}) AND p.bat_team=? AND p.slot IS NOT NULL"""
+    pa = pd.read_sql(q, con, params=(team,))
+    st = pa.sort_values("idx").drop_duplicates(["game_pk", "slot"])            # first batter in each slot = the starter
+    hand = pd.read_sql(f"""SELECT game_pk, pitch_hand FROM pa WHERE game_pk IN ({','.join(map(str, gs))}) AND fld_team!=? AND sp=1
+                           GROUP BY game_pk""", con, params=(team,)).set_index("game_pk").pitch_hand.to_dict()
+    st["vs"] = st.game_pk.map(hand)
+    ago = {g: i for i, g in enumerate(gs)}                       # 0 = most recent game
+    w = {g: .5 ** (i / 3) for g, i in ago.items()}               # recency: half weight every 3 games back
+    tot_w = sum(w.values()); same = [g for g in gs if hand.get(g) == sp_hand]; same_w = sum(w[g] for g in same)
+    out = {}
+    for b, x in st.groupby("batter"):
+        all_rate = (sum(w[g] for g in x.game_pk) + .1) / (tot_w + .2)
+        hs = [g for g in x.game_pk if hand.get(g) == sp_hand]
+        hand_rate = (sum(w[g] for g in hs) + .1) / (same_w + .2) if same else all_rate
+        k = min(len(same), 6) / 6 * .5                           # lean on same-hand games when there are enough
+        streak = all(g in set(x.game_pk) for g in gs[:5])         # started each of the last 5: an everyday player
+        pr = k * hand_rate + (1 - k) * all_rate
+        out[b] = dict(p=min(.98, max(pr, .95) if streak else pr), slot=int(x.sort_values("game_pk", key=lambda c: c.map(ago)).slot.iloc[:5].median()))
+    return out
+
+
 def feed_weather(pk):
     f = get(f"{API}/v1.1/game/{pk}/feed/live")
     w = ((f or {}).get("gameData") or {}).get("weather") or {}
@@ -123,17 +158,27 @@ def main(date=None):
         lu = g.get("lineups") or {}
         for side, team, opp in (("away", away, home), ("home", home, away)):
             posted = lu.get(f"{side}Players") or []
-            order = [(i + 1, p["id"], (pinfo.get(p["id"]) or (None, None, None))[1]) for i, p in enumerate(posted)] if posted \
-                else last_lineup(con, team, date)
             osp = sp["home" if side == "away" else "away"]
             sp_id = osp.get("id")
             sp_hand = (pinfo.get(sp_id) or (None, None, "R"))[2] or "R"
+            if posted:            # confirmed lineup: only the nine
+                order = [(i + 1, p["id"], (pinfo.get(p["id"]) or (None, None, None))[1], 1.0) for i, p in enumerate(posted)]
+            else:                 # not posted: every active hitter, with a start chance and his usual spot
+                odds = start_odds(con, team, date, sp_hand)
+                roster = roster_hitters(g["teams"][side]["team"]["id"], date) or [(b, None) for _, b, _ in last_lineup(con, team, date)]
+                order = []
+                for bid, nm in roster:
+                    o = odds.get(bid, dict(p=.04, slot=9))
+                    if nm and bid not in pinfo:
+                        pinfo[bid] = (nm, None, None)
+                    order.append((o["slot"], bid, (pinfo.get(bid) or (None, None, None))[1], round(float(o["p"]), 3)))
+                order.sort(key=lambda r: (-r[3], r[0]))
             tbf = starter_tbf(con, sp_id, season) if sp_id else 20.0
             # bullpen handedness mix this season
             bp = con.execute("""SELECT pitch_hand, COUNT(*) FROM pa p JOIN games g USING(game_pk) WHERE p.fld_team=? AND p.sp=0 AND g.season=?
                                 GROUP BY pitch_hand""", (opp, season)).fetchall()
             bpw = {h: n for h, n in bp if h}; tot = sum(bpw.values()) or 1
-            for slot, bid, bside in order:
+            for slot, bid, bside, p_start in order:
                 bside = bside or (pinfo.get(bid) or (None, "R"))[1] or "R"
                 base = dict(game_pk=pk, date=date, season=season, type=g.get("gameType", "D"), home=home, away=away,
                             venue_id=g["venue"]["id"], temp=temp, wind_mph=float(mm.group(1)) if mm else None,
@@ -145,7 +190,8 @@ def main(date=None):
                     future.append(dict(base, idx=-(len(future) + 1), pitcher=0, pitch_hand=hand, sp=0))
                 meta.append(dict(game_pk=pk, team=team, opp=opp, home=int(side == "home"), slot=slot, batter=bid,
                                  name=(pinfo.get(bid) or ("?",))[0], bats=bside, sp_id=sp_id, sp_name=osp.get("fullName"),
-                                 sp_hand=sp_hand, tbf=tbf, bp_r=bpw.get("R", 0) / tot, lineup="posted" if posted else "projected"))
+                                 sp_hand=sp_hand, tbf=tbf, bp_r=bpw.get("R", 0) / tot, p_start=p_start,
+                                 lineup="posted" if posted else ("projected" if p_start >= .5 else "bench")))
     fut = pd.DataFrame(future)
     print(f"{date}: {len(games)} games, {len(meta)} batters ({sum(m['lineup'] == 'posted' for m in meta)} from posted lineups)", flush=True)
 
@@ -181,10 +227,11 @@ def main(date=None):
             miss += pr * q0.mean(); one += pr * q1.mean(); epa += pr * k; esp += pr * vs_sp.sum(axis=1).mean()
         p1 = 1 - miss
         p2 = max(0.0, 1 - miss - one)
+        p1_start = p1                                         # bettable only if he starts: HR% is given that he starts
         r = x[x.sp == 1].iloc[0]
         why = {g: float(np.exp(contrib[g].loc[r.name]) - 1) for g in GROUPS if g != "post" and (contrib[g] != 0).any()}
         why["opportunity"] = float(epa / 4.3 - 1)
-        rows.append(dict(m, p_hr=round(p1, 4), p_hr2=round(p2, 4), p_pa_sp=round(psp, 4), p_pa_bp=round(pbp, 4), exp_pa=round(epa, 2), exp_pa_sp=round(esp, 2),
+        rows.append(dict(m, p_hr=round(p1, 4), p_hr_if_start=round(p1_start, 4), p_hr2=round(p2, 4), p_pa_sp=round(psp, 4), p_pa_bp=round(pbp, 4), exp_pa=round(epa, 2), exp_pa_sp=round(esp, 2),
                          fair=int(round(100 * (1 - p1) / p1)) if p1 < .5 else -int(round(100 * p1 / (1 - p1))),
                          why={k: round(v, 3) for k, v in why.items()},
                          park=round(float(np.exp(r.l_park)), 3), temp=None if pd.isna(r.temp) else round(float(r.temp * 10 + 70)),
@@ -217,7 +264,9 @@ def main(date=None):
         print(f"blend: trained on {len(tr):,} batter-games")
     except Exception as e:
         print("blend skipped (model HR% kept):", type(e).__name__, e)
-    res["game_rank"] = res.groupby("game_pk").p_hr.rank(ascending=False, method="first").astype(int)
+    likely = res.p_start >= .5                              # ranks / picks: confirmed or likely starters only
+    res["game_rank"] = res[likely].groupby("game_pk").p_hr.rank(ascending=False, method="first")
+    res["game_rank"] = res.game_rank.astype("Int64")
     res = res.sort_values("p_hr", ascending=False)
     os.makedirs(OUT, exist_ok=True)
     # games that already started keep their last pregame numbers (graded as of first pitch)

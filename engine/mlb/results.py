@@ -33,7 +33,7 @@ def load():
     for f in sorted(glob.glob(os.path.join(OUT, "????-??-??.json"))):
         js = json.load(open(f))
         for p in js.get("players", []):
-            if p["game_pk"] in done:
+            if p["game_pk"] in done and p.get("lineup") != "bench":          # bettable = starters
                 rows.append(dict(date=js["date"], game_pk=p["game_pk"], batter=p["batter"], name=p["name"], team=p["team"],
                                  p=p["p_hr"], slot=p["slot"], lineup=p.get("lineup")))
     d = pd.DataFrame(rows)
