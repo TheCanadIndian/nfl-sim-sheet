@@ -243,7 +243,7 @@ table.h tr:hover td{filter:brightness(1.12)}
 .nof{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:800;background:#6cb4ff;color:#0a0f12}
 .val{display:inline-block;margin-left:6px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:800;background:#1f9d55;color:#fff;letter-spacing:.03em}
 .picks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:12px}
-.pick{border:1px solid var(--faint);border-radius:12px;padding:12px 14px;background:var(--surface);display:grid;gap:6px}
+.pick{border:1px solid var(--faint);border-radius:12px;padding:12px 14px;background:var(--surface);display:grid;gap:6px;align-content:start}
 .pick h3{margin:0;font-size:16px;font-family:var(--display);letter-spacing:.04em}
 .pick .r{display:grid;grid-template-columns:28px 1fr auto auto;gap:8px;align-items:center;font-size:14px}
 .pick .r small{color:var(--muted)}
@@ -395,7 +395,7 @@ const sortCtl = () => `<label class="ctl">Sort by <select id="sort">${Object.ent
 
 function summary(){
   const ps = P.filter(p => (p.p_start ?? 1) >= .5).sort((a, b) => b.p_hr - a.p_hr).slice(0, 30);
-  const picks = G.map(g => { const top = P.filter(p => p.game_pk === g.id && p.game_rank <= 3).sort((a, b) => a.game_rank - b.game_rank);
+  const picks = G.map(g => { const top = P.filter(p => p.game_pk === g.id && p.game_rank != null && p.game_rank <= 3).sort((a, b) => a.game_rank - b.game_rank);
     return `<div class="pick"><h3>${esc(g.away)} @ ${esc(g.home)} · top 3</h3>${top.map(p => `<div class="r"><span class="rk">★${p.game_rank}</span><span>${dot(H(p.batter), 'PAs')}${esc(p.name)} <small>${esc(p.team)} · ${esc(p.lineup === 'posted' ? '#' + p.slot : 'proj #' + p.slot)} · vs ${esc(p.sp_name || 'TBD')}</small></span><b>${pc(p.p_hr)}</b><span>${valueChip(p) || (kask(p) != null ? `<small>${Math.round(kask(p) * 100)}¢</small>` : '')}</span></div>`).join('')}</div>`; }).join('');
   return `<section class="blk"><div class="blkh"><h2>Game picks · top 3 in each game</h2></div><div class="picks">${picks}</div>
     <p class="note2">Ranked by the blend across both lineups. Aug-Oct 2026 backtest: a game's top 3 held 0.52 of its home-run hitters on average (random 3: 0.33); 44% of games had at least one of the three homer.</p></section>
