@@ -3,19 +3,7 @@
 # Nov 1, 2026 (standard time) runs land an hour earlier in ET unless the hours are bumped by 1.
 name: nfl
 
-on:
-  schedule:
-    - cron: "0 13 * * 2"     # Tue 09:00 ET  results
-    - cron: "0 14 * * 2"     # Tue 10:00 ET  self-tuning
-    - cron: "0 22 * * 3"     # Wed 18:00 ET  injury report
-    - cron: "30 20 * * 4"    # Thu 16:30 ET  news check before TNF
-    - cron: "0 22 * * 4"     # Thu 18:00 ET  injury report
-    - cron: "0 22 * * 5"     # Fri 18:00 ET  injury report
-    - cron: "30 14 * * 0"    # Sun 10:30 ET  news check, early games
-    - cron: "45 15 * * 0"    # Sun 11:45 ET  early inactives
-    - cron: "15 19 * * 0"    # Sun 15:15 ET  late inactives
-    - cron: "15 23 * * 0"    # Sun 19:15 ET  SNF inactives
-    - cron: "30 21 * * 1"    # Mon 17:30 ET  news check before MNF
+on:            # started by the Cloudflare Worker sim-sheet-cron (Eastern-time schedule), or by hand
   workflow_dispatch:
     inputs:
       mode:
