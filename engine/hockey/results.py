@@ -25,7 +25,9 @@ import report  # noqa: E402
 
 OUT = os.path.join(HERE, "projections")
 DB = os.path.join(HERE, "nhl.db")
-BUCKETS = [0, .05, .1, .15, .2, .25, .3, .35, .4, .5, 1]
+BUCKETS = [0, .05, .10, .15, .20, .25, .30, .35, .40, 1]
+# hit rate by tier in the walk-forward backtest (2024-25 + 2025-26, 100,502 skater-games): the benchmark
+BACKTEST_TIER = {"0–5%": .038, "5–10%": .074, "10–15%": .121, "15–20%": .176, "20–25%": .227, "25–30%": .279, "30–35%": .326, "35–40%": .348, "40–100%": .412}
 
 
 def actuals():
@@ -151,8 +153,11 @@ def build():
     if not g.empty:
         b = pd.cut(g.p, BUCKETS)
         cal = g.groupby(b, observed=True).agg(n=("p", "size"), pred=("p", "mean"), act=("scored", "mean"))
-        data["calib"] = [dict(bucket=f"{int(i.left * 100)}–{int(i.right * 100)}%", n=int(r.n),
-                              pred=round(float(r.pred), 3), act=round(float(r.act), 3)) for i, r in cal.iterrows()]
+        nights = max(g.date.nunique(), 1)
+        cal = cal.join(g.groupby(b, observed=True).scored.sum().rename("hits"))
+        data["calib"] = [dict(bucket=f"{int(i.left * 100)}–{int(i.right * 100)}%", n=int(r.n), hits=int(r.hits),
+                              pred=round(float(r.pred), 3), act=round(float(r.act), 3), per_night=round(float(r.n / nights), 1),
+                              bt=BACKTEST_TIER.get(f"{int(i.left * 100)}–{int(i.right * 100)}%")) for i, r in cal.iterrows()]
         gi = games.set_index("game_id")
         mls = {}                                   # pregame moneylines saved with each sheet
         for jf in glob.glob(os.path.join(OUT, "????-??-??.json")):
@@ -250,7 +255,10 @@ function lineCheck(){
     <p class="note">Checked against the NHL shift charts over ${c.games} games: a listed linemate counts as right when he was really among the player's most frequent even-strength linemates; PP1 is right when the player was among his team's top five in power-play time; positions are compared with the official game sheet.</p>`;
 }
 function render(){
-  const cal = D.calib.length ? `<div class="tw"><table class="t"><thead><tr><th class="l">Projected chance</th><th>Players</th><th>Projected</th><th>Scored</th></tr></thead><tbody>${D.calib.map(c => `<tr><td class="l">${c.bucket}</td><td>${c.n}</td><td>${pct(c.pred)}</td><td class="big">${pct(c.act)}</td></tr>`).join('')}</tbody></table></div>` : '';
+  const fair = p => p > 0 ? '+' + Math.round(100 * (1 - p) / p) : '–';
+  const cal = D.calib.length ? `<h3 class="eyebrow" style="margin:14px 0 6px">Hit rate by goal-chance tier</h3>
+    <p class="small muted" style="margin:0 0 8px">Every dressed skater this season, grouped by his pregame chance. A scorer doesn't have to be a top pick: this shows how often each tier actually scored. Backtest = the same tier over 2024-25 and 2025-26 (100,502 skater-games).</p>
+    <div class="tw"><table class="t"><thead><tr><th class="l">Goal chance</th><th>Players</th><th>Per night</th><th>Scored</th><th>Projected</th><th>Hit rate</th><th>Backtest hit rate</th><th>Fair odds</th></tr></thead><tbody>${D.calib.map(c => `<tr><td class="l">${c.bucket}</td><td>${c.n}</td><td class="muted">${c.per_night ?? ''}</td><td>${c.hits ?? ''}</td><td>${pct(c.pred)}</td><td class="big">${pct(c.act)}</td><td class="muted">${c.bt != null ? pct(c.bt) : '–'}</td><td class="muted">${fair(c.pred)}</td></tr>`).join('')}</tbody></table></div>` : '';
   const nights = D.nights.map(n => `<section class="panel"><div class="phead"><h2>${esc(n.date)} <a class="lbtn" href="${esc(n.date)}.html">Pregame goal sheet</a></h2><span class="small muted">${n.s.act} scorers vs ${n.s.exp} expected · ★ top 5: ${n.s.top5_hits} of ${n.s.top5_n} · best in game: ${n.s.best_hits} of ${n.s.best_n} · top 3 per game scored ${pct(n.s.top3)}</span></div>
     <div class="gg">${n.games.map(g => `<div class="gcard"><h3>${esc(g.away)} ${g.score[0]} – ${g.score[1]} ${esc(g.home)}</h3><span class="small muted">${g.act} scorers vs ${g.exp} expected</span>
       <div class="pl">${g.top.map(pl).join('')}</div>
