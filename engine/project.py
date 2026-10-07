@@ -47,6 +47,7 @@ from boxscore import data as D
 from boxscore import matchups as M
 from boxscore import pipeline as PL
 from boxscore.sim import simulate_game
+import sgp  # noqa: E402
 from boxscore import defout as DO
 import learned  # noqa: E402
 learned.apply("nfl")      # settings adopted by the self-tuning job (learn.py)
@@ -356,12 +357,18 @@ def main():
     model, params = PL.fit(fr, train)
 
     prow, trow, box, dists, keyrows = [], [], {}, {}, []
+    sgps = {}
     for g in todo.itertuples():
         hi = PL.team_input(fr, g.game_id, g.home_team)
         ai = PL.team_input(fr, g.game_id, g.away_team)
         h, a = simulate_game(model, params, hi, ai, n=args.sims, seed=abs(hash(g.game_id)) % 2**32)
         margin = h["points"] - a["points"]
         first = first_td(h, a, hi.team, ai.team, abs(hash(g.game_id)) % 2**32)
+        if not args.blind and not args.played:                  # same-game parlays by game script (sgp.py)
+            try:
+                sgps[g.game_id] = sgp.game_parlays(g.game_id, h, a, hi, ai, g)
+            except Exception as e:
+                print(f"  {g.game_id}: parlays skipped ({type(e).__name__}: {e})")
         for res, t, opp, sign in ((h, hi, g.away_team, 1), (a, ai, g.home_team, -1)):
             trow.append(dict(
                 game_id=g.game_id, team=t.team, opp=opp, home=int(sign == 1),
@@ -407,6 +414,11 @@ def main():
     teams.to_csv(f"{stem}_teams.csv", index=False)
     with open(f"{stem}_dist.json", "w") as f:
         json.dump(dists, f, separators=(",", ":"))
+    if sgps:
+        gl = [dict(game_id=r.game_id, gameday=str(r.gameday)[:10], gametime=str(r.gametime or ""), weekday=str(r.weekday),
+                   away_team=r.away_team, home_team=r.home_team) for r in todo.itertuples()]
+        with open(f"{stem}_sgp.json", "w") as f:
+            json.dump(dict(games=sgps, cross=sgp.cross_game(gl, sgps)), f, separators=(",", ":"))
     # As of kickoff for played games; otherwise as of now.
     when = (todo.gameday.min() - pd.Timedelta(hours=1)) if args.played else pd.Timestamp.now()
     payload = matchup_payload(con, fr, todo, keyrows, season, when)

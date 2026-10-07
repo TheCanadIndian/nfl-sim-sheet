@@ -172,6 +172,8 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
     dists = json.load(open(dist_path)) if os.path.exists(dist_path) else {}
     mpath = f"{stem}_matchups.json"
     match = json.load(open(mpath)) if os.path.exists(mpath) else {"players": {}, "dvp": {}}
+    spath = f"{stem}_sgp.json"
+    sgp = json.load(open(spath)) if os.path.exists(spath) else None
     plist = []
     for (gid, team, opp, name, pid, pos), d in players.groupby(
             ["game_id", "team", "opp", "player", "player_id", "pos"], sort=False):
@@ -189,7 +191,7 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
                 generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                 games=games, teams=team_rows, players=plist, props=props_list, dvp=match["dvp"],
                 rz=match.get("rz"), defout=match.get("defout", {}), agree=agreement(stem, players, dists), alt=alt_model(stem, match),
-                subtitle=subtitle, nav=nav or [])
+                sgp=sgp, subtitle=subtitle, nav=nav or [])
     # NaN is not valid JSON: one missing value (e.g. a player with no depth label) would
     # stop the page's script entirely. Turn every NaN into null and refuse any that slip by.
     payload = json.dumps(_clean(data), separators=(",", ":"), allow_nan=False).replace("</", "<\\/")
@@ -366,6 +368,20 @@ table.t{width:100%;border-collapse:collapse;font-size:14px}
 select,input[type=search]{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px}
 input[type=search]{min-width:200px}
 .empty{padding:28px 8px;color:var(--muted)}
+.sgp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.sgp{border:1px solid var(--faint);border-radius:9px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--bg)}
+.sgp h3{font-family:var(--display);font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
+.sgp h3 small{font-family:var(--body);font-size:12px;text-transform:none;letter-spacing:0;color:var(--muted);font-weight:400}
+.sgp ol{margin:0;padding-left:22px;display:grid;gap:3px;font-size:14px}
+.sgp li .r{float:right;color:var(--muted);font-size:12.5px;margin-left:8px}
+.sgp li.after{list-style:none;margin-left:-22px;border-top:1px dashed var(--faint);padding-top:4px;margin-top:2px;font-size:12px;color:var(--muted)}
+.sgp table{width:100%;border-collapse:collapse;font-size:13.5px}
+.sgp td,.sgp th{padding:4px 6px;text-align:right;border-top:1px solid var(--faint)}
+.sgp th{font-weight:500;color:var(--muted);font-size:12px}
+.sgp td:first-child,.sgp th:first-child{text-align:left}
+.sgp td:first-child{white-space:nowrap}
+.legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
+@media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
 .plink{border:0;background:none;padding:0;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
 .plink:hover{text-decoration-color:var(--accent)}
 .fo-res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
@@ -432,6 +448,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
       <button role="tab" id="tab-games" data-view="games">Games</button>
       <button role="tab" id="tab-board" data-view="board">Player board</button>
       <button role="tab" id="tab-dvp" data-view="dvp">Defense vs position</button>
+      <button role="tab" id="tab-parlays" data-view="parlays">Parlays</button>
       <button role="tab" id="tab-fair" data-view="fair">Fair odds</button>
       <button role="tab" id="tab-agree" data-view="agree">Model agreement</button>
       <button role="tab" id="tab-props" data-view="props">Your lines</button>
@@ -465,10 +482,10 @@ const fmtTick = v => Math.abs(v) >= 10 || Number.isInteger(v) ? f0(v) : f1(v);
 const state = {view:'games', game:D.games[0]?.id, group:'receiving', bstat:'rec_yds', bpos:'All', q:'', bflag:false, dpos:'WR', rzscope:'two'};
 try { Object.assign(state, JSON.parse(localStorage.getItem('simsheet-ui') || '{}')); } catch (e) {}
 if (!D.games.some(g => g.id === state.game)) state.game = D.games[0]?.id;
-if (['games','board','dvp','fair','props','agree'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
+if (['games','board','dvp','fair','props','agree','parlays'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
 if (state.view === 'props' && !D.props.length) state.view = 'games';
 if (state.view === 'rz') { state.view = 'games'; state.group = 'td'; }
-const save = () => { try { localStorage.setItem('simsheet-ui', JSON.stringify({view:state.view, group:state.group, bstat:state.bstat, bpos:state.bpos, fo:state.fo, dpos:state.dpos, rzscope:state.rzscope})); } catch (e) {} };
+const save = () => { try { localStorage.setItem('simsheet-ui', JSON.stringify({view:state.view, gtab:state.gtab, group:state.group, bstat:state.bstat, bpos:state.bpos, fo:state.fo, dpos:state.dpos, rzscope:state.rzscope})); } catch (e) {} };
 
 document.getElementById('h1').textContent = `Week ${D.week} Sim Sheet`;
 if (D.subtitle){ const n = document.getElementById('subnote'); n.textContent = D.subtitle; n.hidden = false; }
@@ -476,6 +493,7 @@ document.getElementById('sitenav').innerHTML = (D.nav || []).map(([label, href, 
 document.getElementById('sub').textContent = `${D.season} season · ${D.games.length} game${D.games.length===1?'':'s'}` + (D.sims ? ` · ${D.sims.toLocaleString()} simulations each` : '') + ` · built ${D.generated}`;
 document.getElementById('foot').innerHTML = `Every number comes from simulated games anchored to the Vegas spread and total. Medians are the 50/50 point: half the simulations land above, half below. Bars show where 8 in 10 simulations landed (10th to 90th percentile), with the darker band holding the middle half. Fair odds are the model's no-vig price. Rebuild this page each time <code>project.py</code> runs.`;
 if (!D.props.length) document.getElementById('tab-props').hidden = true;
+if (!D.sgp) { document.getElementById('tab-parlays').hidden = true; if (state.view === 'parlays') state.view = 'games'; }
 
 function scaleFor(rows, stat){
   let lo = 0, hi = 0;
@@ -579,8 +597,44 @@ function modelSwitch(g){
   const b = !!isBlind(g);
   return `<span class="gmsw" role="group" aria-label="Model for this game"><button data-gmodel="vegas" aria-pressed="${!b}">With Vegas</button><button data-gmodel="blind" aria-pressed="${b}">Market-blind</button></span>`;
 }
+/* ---------------- parlays (sgp.py: joint simulation, 5-7 legs, no unders, main lines only) ---------------- */
+const SRC_TIP = {model: "Our median line (Kalshi has no line for this yet): check your book's number", Vegas: 'Vegas total'};
+const srcTag = L => L.src === 'Kalshi' ? '' : `<span class="legsrc" title="${esc(SRC_TIP[L.src] || L.src)}">${L.src === 'model' ? 'our line' : esc(L.src)}</span>`;
+const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
+function sgpCard(P){
+  const any = P.name === 'Most likely';
+  const rows = P.rows.map(r => `<tr><td>${r.k} legs</td><td><b>${pct1(r.p)}</b></td><td>${esc(r.fair)}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.indep)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`).join('');
+  const legs = P.legs.map((L, i) => (i === 5 ? '<li class="after">+ these for the 6- and 7-leg versions</li>' : '') + legLine(L, !any, i === 5 ? 6 : 0)).join('');
+  return `<div class="sgp"><h3>${esc(P.name)} <small>${any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
+    <div class="small muted">${esc(P.desc)}</div>
+    <ol>${legs}</ol>
+    <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function sgpPanel(g){
+  const S = D.sgp && D.sgp.games[g.id];
+  if (!S || !S.parlays.length) return '<section class="panel"><div class="empty">No parlays for this game yet: it needs 5+ main-line legs that clear 35%.</div></section>';
+  return `<section class="panel" aria-label="Same-game parlays"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: same-game parlays</h2><span class="small muted">leg chance overall → inside the script · Kalshi ask</span></div>
+    <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Fair is the no-vig price for that chance: a book's parlay is only worth it if it pays more.</p>
+    <div class="sgp-grid">${S.parlays.map(sgpCard).join('')}</div></section>`;
+}
+function renderParlays(){
+  const C = (D.sgp && D.sgp.cross) || [];
+  if (!C.length) return '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
+  const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
+  const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
+    <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`).join('')}</ol>
+    <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table></div>`;
+  return `<section class="panel"><div class="phead"><h2>Long parlays by kickoff window and day</h2><span class="small muted">each game's strongest legs, stacked</span></div>
+    <p class="note">Built from each game's most likely same-game parlay: its first legs (kept together, so their link counts), as many from each game as it takes to reach 5+ legs. The full-day parlay covers every game that day. Games are simulated separately, so across games the chances multiply. These overlap with the per-game parlays on purpose.</p>
+    <div class="sgp-grid">${C.map(card).join('')}</div></section>`;
+}
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
+  const gsw = D.sgp ? `<div class="seg" role="group" aria-label="Game view">${[['proj', 'Projections'], ['sgp', 'Same-game parlays']].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
+  return gsw + gameDetailMain(g);
+}
+function gameDetailMain(g){
   const A = TM(g)[g.away], H = TM(g)[g.home];
   const side = (t, T, cls) => `<div class="side ${cls}"><span class="code">${esc(t)}</span><span class="pts">${f1(T.points)}</span><span class="muted small">Vegas ${f1(D.teams[g.id][t].vegas_implied)}</span></div>`;
   const rows = [
@@ -932,7 +986,7 @@ function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   const main = document.getElementById('main');
   main.innerHTML = state.view === 'board' ? renderBoard() : state.view === 'props' ? renderProps()
-    : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
+    : state.view === 'parlays' ? renderParlays() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
   save();
 }
 document.addEventListener('change', e => { if (e.target.id === 'agame'){ state.agame = e.target.value; render(); } });
@@ -944,6 +998,7 @@ document.addEventListener('click', e => {
   else if (t.dataset.ostep){ const inp = document.getElementById('sl-in'); if (inp){ inp.value = Math.min(+inp.max, Math.max(+inp.min, +inp.value + (+t.dataset.ostep) * (+inp.step))); inp.dispatchEvent(new Event('input', {bubbles: true})); } }
   else if (t.dataset.line){ state.fo.line = +t.dataset.line; document.getElementById('fo-line').value = state.fo.line; refreshFair(); }
   else if (t.dataset.view){ state.view = t.dataset.view; render(); }
+  else if (t.dataset.gtab){ state.gtab = t.dataset.gtab; render(); }
   else if (t.dataset.game){ state.game = t.dataset.game; render(); }
   else if (t.dataset.gmodel){ state.gm[state.game] = t.dataset.gmodel; render(); }
   else if (t.dataset.group){ state.group = t.dataset.group; render(); }
