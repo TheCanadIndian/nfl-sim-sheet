@@ -6,7 +6,8 @@ Rules (user, Oct 2026): 5+ legs, no unders, no watered-down legs: player legs us
 priced nearest 50/50, else our own median line) or an anytime TD, and every leg must hit 35%+ on its own.
 
 Scripts: shootout, grind-it-out, each team pulling away, a close finish (kept at the user's request though
-its backtest ran low: 1.3% hit vs 5.0% predicted), plus the most likely parlay overall. Plus "Higher lines": 3-4 legs, overs at the hook at or
+its backtest ran low: 1.3% hit vs 5.0% predicted), plus the most likely parlay overall, and an "Expected" parlay
+built inside the script this model expects (close game if likelier than in a typical game, else a blowout). Plus "Higher lines": 3-4 legs, overs at the hook at or
 above the player's simulated MEAN for players whose mean beats their median (user idea; backtest 2025-26:
 calibrated, 3 legs 14.6% hit vs 14.7% predicted).
 
@@ -30,6 +31,7 @@ MAX_LEGS = 7
 SHOW = (5, 6, 7)
 LEAN = 1.04                 # a script leg must be 4%+ likelier in that script than overall
 CAL = {3: 1.0, 4: .92, 5: .84, 6: .76, 7: .79}     # backtest 2025 + 2026 wk1-4: hit / predicted by leg count
+BASE_CLOSE, BASE_BLOWOUT = .423, .332   # the model's own typical game (2025 wk8-12 sims; real games .486 / .371: sims run margins wide)
 CAL_CROSS = .80             # cross-game parlays: 6 hits vs 8.1 predicted (132)
 BUMP = {"rec_yds": (5, 20), "rush_yds": (5, 20), "rec": (1, 2), "pass_yds": (5, 150)}   # line step, min median
 
@@ -197,9 +199,38 @@ def game_parlays(gid, h, a, hi, ai, g):
                         legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3),
                                    p_script=round(float(L["hit"][mask].mean()), 3), price=L["price"], src=L["src"])
                               for L in chosen]))
+    # the script this model expects: close game or blowout, whichever this game leans to more than a typical game
+    H, A = g.home_team, g.away_team
+    fav = H if margin.mean() >= 0 else A
+    fm = margin if fav == H else -margin
+    p_close, p_blow, p_fav_blow = float((np.abs(margin) <= 7).mean()), float((np.abs(margin) >= 14).mean()), float((fm >= 14).mean())
+    rb, rc = p_blow / BASE_BLOWOUT, p_close / BASE_CLOSE
+    exp = "blowout" if rb > rc else "close"
+    slight = max(rb, rc) < 1.05                       # within 5% of the model's typical game: a lean, not a call
+    outlook = dict(fav=fav, p_close=round(p_close, 3), p_blowout=round(p_blow, 3), p_fav_blowout=round(p_fav_blow, 3),
+                   base_close=BASE_CLOSE, base_blowout=BASE_BLOWOUT, expected=exp, slight=slight)
+    mask = (fm >= 14) if exp == "blowout" else (np.abs(margin) <= 7)
+    chosen = build(legs, mask, False)
+    if len(chosen) >= min(SHOW):
+        rows = []
+        for k in SHOW:
+            if len(chosen) < k:
+                break
+            j = np.logical_and.reduce([L["hit"] for L in chosen[:k]])
+            c = CAL.get(k, 1.0)
+            px = [L["price"] for L in chosen[:k]]
+            rows.append(dict(k=k, p=round(float(j.mean()) * c, 4), p_raw=round(float(j.mean()), 4), p_script=round(float(j[mask].mean()) * c, 4),
+                             fair=american(j.mean() * c), indep=round(float(np.prod([L["p"] for L in chosen[:k]])), 4),
+                             kalshi=round(float(np.prod(px)), 4) if all(px) else None))
+        name = (f"{'Leans' if slight else 'Expected'}: {fav} blowout" if exp == "blowout" else f"{'Leans' if slight else 'Expected'}: close game")
+        desc = (f"{fav} wins by 14+ ({p_fav_blow:.0%} of sims; any 14+ margin {p_blow:.0%} vs {BASE_BLOWOUT:.0%} in a typical simulated game)" if exp == "blowout"
+                else f"decided by 7 or fewer ({p_close:.0%} of sims vs {BASE_CLOSE:.0%} in a typical simulated game)")
+        out.insert(1, dict(name=name, desc=desc, happens=round(float(mask.mean()), 3), rows=rows, any=False, expected=True,
+                           legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3),
+                                      p_script=round(float(L["hit"][mask].mean()), 3), price=L["price"], src=L["src"]) for L in chosen]))
     hl = higher_lines(gid, h, a, hi, ai)
     if hl:
-        out.insert(1, hl)
+        out.insert(2 if len(out) > 1 and out[1].get("expected") else 1, hl)
     # strongest legs for the cross-game parlays: the first legs of the most likely parlay (joint chance kept)
     core = []
     ml = build(legs, np.ones(len(margin), bool), True)
@@ -208,7 +239,7 @@ def game_parlays(gid, h, a, hi, ai, g):
             j = np.logical_and.reduce([L["hit"] for L in ml[:k]])
             core.append(dict(legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3), price=L["price"], src=L["src"]) for L in ml[:k]],
                              p=round(float(j.mean()), 4)))
-    return dict(parlays=out, core=core)
+    return dict(parlays=out, core=core, outlook=outlook)
 
 
 def slot_of(gameday, gametime, weekday):

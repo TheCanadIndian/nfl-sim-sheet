@@ -381,6 +381,9 @@ input[type=search]{min-width:200px}
 .sgp th{font-weight:500;color:var(--muted);font-size:12px}
 .sgp td:first-child,.sgp th:first-child{text-align:left}
 .sgp td:first-child{white-space:nowrap}
+.outlook{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:13.5px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
+.outlook .good{color:var(--good)}
+.sgp.exp{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--band)}
 .legsrc.both{color:var(--good);border-color:var(--good)}
 .legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
 @media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
@@ -624,7 +627,7 @@ function sgpCard(P){
   const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
   const rows = P.rows.map(r => `<tr><td>${r.k} legs</td><td><b>${pct1(r.p)}</b></td><td>${esc(r.fair)}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.indep)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`).join('');
   const legs = P.legs.map((L, i) => (i === cut && i < P.legs.length ? `<li class="after">+ ${P.legs.length - cut === 1 ? 'this' : 'these'} for the longer version${P.legs.length - cut === 1 ? '' : 's'}</li>` : '') + legLine(L, !any, i === cut ? cut + 1 : 0)).join('');
-  return `<div class="sgp"><h3>${esc(P.name)} <small>${P.name === 'Higher lines' ? 'fewer legs, bumped lines' : any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
+  return `<div class="sgp${P.expected ? ' exp' : ''}"><h3>${esc(P.name)} <small>${P.name === 'Higher lines' ? 'fewer legs, bumped lines' : any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
     <div class="small muted">${esc(P.desc)}</div>
     <ol>${legs}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -635,7 +638,20 @@ function sgpPanel(g){
   if (!S || !S.parlays.length) return '<section class="panel"><div class="empty">No parlays for this game yet: it needs 5+ main-line legs that clear 35%.</div></section>';
   return `<section class="panel" aria-label="Same-game parlays"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: same-game parlays</h2>${modelSwitch(g)}<span class="small muted">${SGP_BLIND ? 'market-blind model' : 'Vegas model'} · leg chance overall → inside the script · Kalshi ask</span></div>
     <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Hit chances are calibrated to a 2025-26 backtest (331 games): raw 5-7 leg chances ran about 20% high, so they're scaled down. "Higher lines" (3-4 overs set at or above the player's average) backtested right on its numbers. Fair is the no-vig price: a book's parlay is only worth it if it pays more. Switch models above: each leg shows the other model's chance, and "both ✓" when the other model has it at least as high (up to 50%). In the Model agreement backtest, legs where the market-blind model leans the same way hit more often.</p>
+    ${outlookBar(S.outlook)}
     <div class="sgp-grid">${S.parlays.map(sgpCard).join('')}</div></section>`;
+}
+function outlookBar(o){
+  if (!o) return '';
+  const lean = (p, b) => { const d = Math.round((p - b) * 100); return `<span class="${d >= 3 ? 'good' : 'muted'}">${d >= 0 ? '+' : '−'}${Math.abs(d)} vs the model's typical game</span>`; };
+  return `<div class="outlook"><b>${o.expected === 'blowout' ? `Model ${o.slight ? 'slightly leans to' : 'expects'} a ${esc(o.fav)} blowout` : `Model ${o.slight ? 'slightly leans to' : 'expects'} a close game`}</b>
+    <span>Decided by 7 or fewer: <b>${pct(o.p_close)}</b> ${lean(o.p_close, o.base_close)}</span>
+    <span>Decided by 14+: <b>${pct(o.p_blowout)}</b> ${lean(o.p_blowout, o.base_blowout)} · ${esc(o.fav)} by 14+: ${pct(o.p_fav_blowout)}</span>
+    ${D.alt && D.alt.sgp && D.sgp ? otherOutlook() : ''}</div>`;
+}
+function otherOutlook(){
+  const S = (SGP_BLIND ? D.sgp : D.alt.sgp).games[SGP_G.id]; const o = S && S.outlook; if (!o) return '';
+  return `<span class="muted">${SGP_BLIND ? 'Vegas model' : 'Market-blind model'}: ${o.expected === 'blowout' ? `${esc(o.fav)} blowout` : 'close game'} (7 or fewer ${pct(o.p_close)}, 14+ ${pct(o.p_blowout)})</span>`;
 }
 function renderParlays(){
   const C = (D.sgp && D.sgp.cross) || [];
