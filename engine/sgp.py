@@ -5,8 +5,8 @@ so legs that move together -- a QB's yards and his WR1's yards -- are priced tog
 Rules (user, Oct 2026): 5+ legs, no unders, no watered-down legs: player legs use the main line (the Kalshi rung
 priced nearest 50/50, else our own median line) or an anytime TD, and every leg must hit 35%+ on its own.
 
-Scripts: shootout, grind-it-out, each team pulling away, plus the most likely parlay overall. ("Close finish"
-dropped Oct 2026: backtest 1.3% hit vs 5.0% predicted.) Plus "Higher lines": 3-4 legs, overs at the hook at or
+Scripts: shootout, grind-it-out, each team pulling away, a close finish (kept at the user's request though
+its backtest ran low: 1.3% hit vs 5.0% predicted), plus the most likely parlay overall. Plus "Higher lines": 3-4 legs, overs at the hook at or
 above the player's simulated MEAN for players whose mean beats their median (user idea; backtest 2025-26:
 calibrated, 3 legs 14.6% hit vs 14.7% predicted).
 
@@ -138,18 +138,30 @@ def scripts(g, margin, tot):
         ("Grind-it-out", tot <= q25, f"{q25:.0f} or fewer combined points (bottom quarter)"),
         (f"{H} pulls away", margin >= 8, f"{H} wins by 8+, {A} forced to pass"),
         (f"{A} pulls away", margin <= -8, f"{A} wins by 8+, {H} forced to pass"),
+        ("Close finish", np.abs(margin) <= 3, "decided by 3 or fewer. Experimental: backtest hit 1.3% vs 5.0% predicted (79 parlays)"),
     ]
 
 
 def build(legs, mask, any_script):
-    """Greedy: add the leg that keeps the joint chance highest inside the script (one leg per player)."""
+    """Greedy: add the leg that keeps the joint chance highest inside the script (one leg per player). Script
+    legs must lean 4%+ into the script; if that leaves fewer than 5, fill with legs at least as likely in the
+    script as overall (no unders leaves grind-it-out / close-finish short of leaning overs)."""
     chosen, used, joint = [], set(), np.ones(len(mask), bool)
-    for _ in range(MAX_LEGS):
+    for lean in ((LEAN, 1.0) if not any_script else (0,)):
+        if lean == 1.0 and len(chosen) >= min(SHOW):
+            break
+        chosen, used, joint = _greedy(legs, mask, any_script, lean, chosen, used, joint)
+    return chosen
+
+
+def _greedy(legs, mask, any_script, lean, chosen, used, joint):
+    chosen, used = list(chosen), set(used)
+    while len(chosen) < MAX_LEGS:
         best = None
         for L in legs:
             if L["player"] in used:
                 continue
-            if not any_script and L["hit"][mask].mean() / max(L["p"], 1e-9) < LEAN:
+            if not any_script and L["hit"][mask].mean() / max(L["p"], 1e-9) < lean:
                 continue
             j = joint & L["hit"]
             sc = j[mask].mean() + .25 * j.mean()
@@ -160,7 +172,7 @@ def build(legs, mask, any_script):
         _, L, joint = best
         chosen.append(L)
         used.add(L["player"])
-    return chosen
+    return chosen, used, joint
 
 
 def game_parlays(gid, h, a, hi, ai, g):

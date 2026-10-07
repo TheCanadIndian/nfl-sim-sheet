@@ -364,7 +364,7 @@ def main():
         h, a = simulate_game(model, params, hi, ai, n=args.sims, seed=abs(hash(g.game_id)) % 2**32)
         margin = h["points"] - a["points"]
         first = first_td(h, a, hi.team, ai.team, abs(hash(g.game_id)) % 2**32)
-        if not args.blind and not args.played:                  # same-game parlays by game script (sgp.py)
+        if not args.played:                                     # same-game parlays by game script (sgp.py), both models
             try:
                 sgps[g.game_id] = sgp.game_parlays(g.game_id, h, a, hi, ai, g)
             except Exception as e:

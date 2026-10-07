@@ -113,7 +113,8 @@ def alt_model(stem, match):
         pl.append(dict(k=key, g=gid, t=team, o=opp, n=name, id=pid, pos=pos, d=bd.get(key, {}), lab=mp.get("label"), tags=mp.get("tags", []),
                        s={r["stat"]: [round(float(r[q]), 3 if r["stat"] in ("anytime_td", "first_td") else 2) for q in Q]
                           for r in d.to_dict("records")}))
-    return dict(teams=tr, players=pl)
+    sp = f"{b}_sgp.json"
+    return dict(teams=tr, players=pl, sgp=json.load(open(sp)) if os.path.exists(sp) else None)
 
 
 def agreement(stem, players, dists):
@@ -380,6 +381,7 @@ input[type=search]{min-width:200px}
 .sgp th{font-weight:500;color:var(--muted);font-size:12px}
 .sgp td:first-child,.sgp th:first-child{text-align:left}
 .sgp td:first-child{white-space:nowrap}
+.legsrc.both{color:var(--good);border-color:var(--good)}
 .legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
 @media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
 .plink{border:0;background:none;padding:0;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
@@ -600,7 +602,24 @@ function modelSwitch(g){
 /* ---------------- parlays (sgp.py: joint simulation, 5-7 legs, no unders, main lines only) ---------------- */
 const SRC_TIP = {model: "Our median line (Kalshi has no line for this yet): check your book's number", Vegas: 'Vegas total'};
 const srcTag = L => L.src === 'Kalshi' ? '' : `<span class="legsrc" title="${esc(SRC_TIP[L.src] || L.src)}">${L.src === 'model' ? 'our line' : esc(L.src)}</span>`;
-const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}${L.mean != null ? ` <span class="small muted" title="Projected average vs median">avg ${L.mean} · med ${L.med}</span>` : ''}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
+// the other model's chance for the same leg (from its saved distributions / win chance)
+const LEG_STAT = {rec: 'rec', rec_yds: 'rec_yds', rush_yds: 'rush_yds', pass_yds: 'pass_yds', anytime_td: 'tds'};
+let SGP_G = null, SGP_BLIND = false;
+function otherP(L){
+  const g = SGP_G; if (!g || !D.alt) return null;
+  if (L.kind === 'win'){ const T = (SGP_BLIND ? D.teams : D.alt.teams)[g.id]; return T && T[L.team] ? T[L.team].win_prob : null; }
+  const st = LEG_STAT[L.kind]; if (!st || L.pid == null) return null;
+  const p = (SGP_BLIND ? D.players : D.alt.players).find(x => x.g === g.id && String(x.id) === String(L.pid));
+  const d = p && p.d && p.d[st]; if (!d) return null;
+  const r = probs(d, L.kind === 'anytime_td' ? .5 : L.line); return r.over;
+}
+function otherTag(L){
+  const q = otherP(L); if (q == null) return '';
+  const who = SGP_BLIND ? 'Vegas model' : 'Market-blind';
+  return q >= Math.min(.5, L.p) - .02 ? ` <span class="legsrc both" title="${who}: ${pct(q)}. Both models like this leg (the other model has it at least as high, up to 50%).">both ✓</span>`
+                 : ` <span class="legsrc" title="${who} has this leg at ${pct(q)}">${SGP_BLIND ? 'vegas' : 'blind'} ${pct(q)}</span>`;
+}
+const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}${otherTag(L)}${L.mean != null ? ` <span class="small muted" title="Projected average vs median">avg ${L.mean} · med ${L.med}</span>` : ''}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
 function sgpCard(P){
   const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
   const rows = P.rows.map(r => `<tr><td>${r.k} legs</td><td><b>${pct1(r.p)}</b></td><td>${esc(r.fair)}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.indep)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`).join('');
@@ -611,10 +630,11 @@ function sgpCard(P){
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function sgpPanel(g){
-  const S = D.sgp && D.sgp.games[g.id];
+  SGP_G = g; SGP_BLIND = !!isBlind(g);
+  const S = SGP_BLIND ? (D.alt.sgp && D.alt.sgp.games[g.id]) : (D.sgp && D.sgp.games[g.id]);
   if (!S || !S.parlays.length) return '<section class="panel"><div class="empty">No parlays for this game yet: it needs 5+ main-line legs that clear 35%.</div></section>';
-  return `<section class="panel" aria-label="Same-game parlays"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: same-game parlays</h2><span class="small muted">leg chance overall → inside the script · Kalshi ask</span></div>
-    <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Hit chances are calibrated to a 2025-26 backtest (331 games): raw 5-7 leg chances ran about 20% high, so they're scaled down. "Higher lines" (3-4 overs set at or above the player's average) backtested right on its numbers. Fair is the no-vig price: a book's parlay is only worth it if it pays more.</p>
+  return `<section class="panel" aria-label="Same-game parlays"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: same-game parlays</h2>${modelSwitch(g)}<span class="small muted">${SGP_BLIND ? 'market-blind model' : 'Vegas model'} · leg chance overall → inside the script · Kalshi ask</span></div>
+    <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Hit chances are calibrated to a 2025-26 backtest (331 games): raw 5-7 leg chances ran about 20% high, so they're scaled down. "Higher lines" (3-4 overs set at or above the player's average) backtested right on its numbers. Fair is the no-vig price: a book's parlay is only worth it if it pays more. Switch models above: each leg shows the other model's chance, and "both ✓" when the other model has it at least as high (up to 50%). In the Model agreement backtest, legs where the market-blind model leans the same way hit more often.</p>
     <div class="sgp-grid">${S.parlays.map(sgpCard).join('')}</div></section>`;
 }
 function renderParlays(){
