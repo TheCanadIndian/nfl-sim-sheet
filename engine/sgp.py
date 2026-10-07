@@ -60,7 +60,7 @@ def legs_for_game(gid, h, a, hi, ai, g):
             continue
         team, name, pos, s = stats[r["pid"]]
         if r["kind"] == "anytime_td":
-            legs.append(_leg(team, name, pos, "anytime_td", None, s["anytime_td"], r["yes_ask"], "Kalshi"))
+            legs.append(_leg(team, name, pos, "anytime_td", None, s["anytime_td"], r["yes_ask"], "Kalshi", r["pid"]))
             have.add((r["pid"], "anytime_td"))
         elif r["kind"] in NAMES and r["kind"] in s:
             rungs.setdefault((r["pid"], r["kind"]), []).append(r)
@@ -69,7 +69,7 @@ def legs_for_game(gid, h, a, hi, ai, g):
         if not .35 <= (r["yes_bid"] + r["yes_ask"]) / 2 <= .65:
             continue
         team, name, pos, s = stats[pid]
-        legs.append(_leg(team, name, pos, kind, r["line"], s[kind] > r["line"], r["yes_ask"], "Kalshi"))
+        legs.append(_leg(team, name, pos, kind, r["line"], s[kind] > r["line"], r["yes_ask"], "Kalshi", pid))
         have.add((pid, kind))
     # our own main lines where Kalshi has none: median rounded to a hook (x.5), the usual book line
     for pid, (team, name, pos, s) in stats.items():
@@ -79,7 +79,7 @@ def legs_for_game(gid, h, a, hi, ai, g):
             x = s[kind]
             if kind == "anytime_td":
                 if x.mean() >= .3:
-                    legs.append(_leg(team, name, pos, kind, None, x, None, "model"))
+                    legs.append(_leg(team, name, pos, kind, None, x, None, "model", pid))
                 continue
             med = float(np.median(x))
             floor = {"pass_yds": 150, "rush_yds": 25, "rec_yds": 20, "rec": 2}[kind]
@@ -89,7 +89,7 @@ def legs_for_game(gid, h, a, hi, ai, g):
             base = np.floor(med / step) * step
             cands = [base + k * step - .5 for k in (-1, 0, 1, 2)]
             line = min(cands, key=lambda c: abs((x > c).mean() - .5))                    # the hook nearest 50/50
-            legs.append(_leg(team, name, pos, kind, float(line), x > line, None, "model"))
+            legs.append(_leg(team, name, pos, kind, float(line), x > line, None, "model", pid))
     # game legs: winner and the over on the Vegas total (no unders)
     margin, tot = h["points"] - a["points"], h["points"] + a["points"]
     legs.append(dict(lab=f"{g.home_team} wins", team=g.home_team, player="_win", pos="", kind="win", line=None, hit=margin > 0, price=None, src="model"))
@@ -104,9 +104,9 @@ def legs_for_game(gid, h, a, hi, ai, g):
     return keep, margin, tot
 
 
-def _leg(team, name, pos, kind, line, hit, price, src):
+def _leg(team, name, pos, kind, line, hit, price, src, pid=None):
     lab = f"{name} anytime TD" if kind == "anytime_td" else f"{name} over {line:g} {NAMES[kind]}"
-    return dict(lab=lab, team=team, player=name, pos=pos, kind=kind, line=line, hit=np.asarray(hit, bool), price=price, src=src)
+    return dict(lab=lab, team=team, player=name, pid=pid, pos=pos, kind=kind, line=line, hit=np.asarray(hit, bool), price=price, src=src)
 
 
 def scripts(g, margin, tot):
@@ -163,7 +163,7 @@ def game_parlays(gid, h, a, hi, ai, g):
                              fair=american(j.mean()), indep=round(ind, 4),
                              kalshi=round(float(np.prod(px)), 4) if all(px) else None))
         out.append(dict(name=name, desc=desc, happens=round(float(mask.mean()), 3), rows=rows,
-                        legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], p=round(L["p"], 3),
+                        legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3),
                                    p_script=round(float(L["hit"][mask].mean()), 3), price=L["price"], src=L["src"])
                               for L in chosen]))
     # strongest legs for the cross-game parlays: the first legs of the most likely parlay (joint chance kept)
@@ -172,7 +172,7 @@ def game_parlays(gid, h, a, hi, ai, g):
     for k in range(1, MAX_LEGS + 1):
         if len(ml) >= k:
             j = np.logical_and.reduce([L["hit"] for L in ml[:k]])
-            core.append(dict(legs=[dict(lab=L["lab"], p=round(L["p"], 3), price=L["price"], src=L["src"]) for L in ml[:k]],
+            core.append(dict(legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3), price=L["price"], src=L["src"]) for L in ml[:k]],
                              p=round(float(j.mean()), 4)))
     return dict(parlays=out, core=core)
 
