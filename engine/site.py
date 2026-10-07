@@ -658,7 +658,9 @@ const money = r => (r.by || 0) + (r.bn || 0);
 const bestV = r => { const b = MKT.best(r, 'vegas'); return b.v ?? -9; };
 const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}); };
 function chip(r){
-  const b = MKT.best(r, 'vegas'); if (b.v == null || b.v < .02) return '<span class="mt-chip muted">no edge</span>';
+  const b = MKT.best(r, 'vegas');
+  if (b.v == null && MKT.lost(r.k)) return `<span class="mt-chip muted" title="${esc(MKT.lostTip(r.k))}">edges hidden</span>`;
+  if (b.v == null || b.v < .02) return '<span class="mt-chip muted">no edge</span>';
   const w = MKT.weak(r.k);
   return `<span class="mt-chip ${w ? 'muted' : MKT.shade(b.v)}" title="${esc(b.lab)} · ${esc(KIND[r.k] || r.k)}${w ? ' · market has been more accurate on this type' : ''}">+${(b.v * 100).toFixed(1)}% ${esc(b.lab)}</span>`;
 }

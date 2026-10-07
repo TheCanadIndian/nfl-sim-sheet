@@ -70,7 +70,11 @@
     return ['Over ' + L, 'Under ' + L];
   }
   function ours(r, model){ const p = r.p || {}; return p[model] ?? p.vegas ?? p.model ?? null; }
+  // market types where our flagged edges have lost 10%+ on settled games (markets.losing_kinds): edges hidden
+  const lost = k => (D && D.losing && D.losing[k]) || null;
+  const lostTip = k => { const L = lost(k); return L ? `Our 3%+ edges on this market type have gone ${L.bets} bets at ${Math.round(L.roi * 100)}% ROI on settled games, so we don't show them until that recovers. The market price is the better number here.` : ''; };
   function edges(r, p){
+    if (lost(r.k)) return {y: null, n: null};
     const f = FEE[r.s] || 0, ya = r.ya, na = r.yb != null ? 1 - r.yb : null;
     return {y: p != null && ya > 0 && ya < 1 ? p - ya - f * ya * (1 - ya) : null, n: p != null && na > 0 && na < 1 ? (1 - p) - na - f * na * (1 - na) : null};
   }
@@ -115,7 +119,7 @@
     const setBtn = slider && r.l != null && !['win', 'spread', 'anytime_td', 'first_td', 'first_goal'].includes(r.k) ? `<button class="mkx-set" data-mline="${r.l}" title="Move the slider to this line">use line</button>` : '';
     return `<div class="mkx-r${focus ? ' on' : ''}">
       <div class="mkx-l"><span class="mkx-src" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket (live)'}">${r.s === 'kalshi' ? 'K' : 'P'}</span><b>${esc(yl)}</b> <small>${esc(KLAB[r.k] || r.k)}</small>${isThin(r) ? `<span class="mkx-thin" title="Bid/ask gap ${Math.round(spr(r) * 100)}¢: a less-traded market">thin ${Math.round(spr(r) * 100)}¢</span>` : ''}${(r.pat || []).map(id => pchip(id)).join('')}${flowChips(r, e.y)}${setBtn}</div>
-      <div class="mkx-p">Price <b>${cents(r.ya)}</b> · ours <b>${pc(p)}</b>${best.v != null && best.v >= .02 ? ` · <span class="e ${weak ? '' : shade(best.v)}">+${(best.v * 100).toFixed(1)}% ${esc(best.lab)}</span>${weak ? ' <span class="mkx-warn" title="On settled games of this type the market has been more accurate than our model">market ahead</span>' : ''}` : ' · <small>no edge</small>'}</div>
+      <div class="mkx-p">Price <b>${cents(r.ya)}</b> · ours <b>${pc(p)}</b>${best.v != null && best.v >= .02 ? ` · <span class="e ${weak ? '' : shade(best.v)}">+${(best.v * 100).toFixed(1)}% ${esc(best.lab)}</span>${weak ? ' <span class="mkx-warn" title="On settled games of this type the market has been more accurate than our model">market ahead</span>' : ''}` : lost(r.k) ? ` · <span class="mkx-warn" title="${esc(lostTip(r.k))}">edges hidden: market sharper</span>` : ' · <small>no edge</small>'}</div>
       <div class="mkx-liq" title="Dollars you could spend within 3¢ of the best price on each side"><span>${esc(yl.length > 14 ? 'Yes' : yl)} <b>${usd(by)}</b></span><div class="mkx-bar">${tot > 0 ? `<i style="width:${by / tot * 100}%"></i><i style="width:${bn / tot * 100}%"></i>` : ''}</div><span><b>${usd(bn)}</b> ${esc(nl.length > 14 ? 'No' : nl)}</span></div>
     </div>`;
   }
@@ -164,6 +168,7 @@
     rows: () => (D ? D.rows : []),
     fetched: () => (D ? D.fetched : null),
     weak: k => !!(D && D.weak && D.weak.includes(k)),
+    lost: k => !!lost(k), lostTip,
     row: (r, model, focus) => row(r, model, focus, false),
     best, thin: isThin,
     patChips(gid, pid, name){ if (!D || !D.patterns) return ''; return Object.keys(playerPats(gid, pid, name)).map(id => pchip(id)).join(''); },
@@ -198,7 +203,7 @@
       const p = ours(r, model), e = edges(r, p), v = Math.max(e.y ?? -9, e.n ?? -9), side = (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no';
       const weak = D.weak && D.weak.includes(r.k);
       const fc = flowChips(r, e.y);
-      return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${cents(r.ya)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
+      return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${cents(r.ya)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${lost(r.k) ? ` <small class="muted" title="${esc(lostTip(r.k))}">market sharper</small>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
     },
   };
 
