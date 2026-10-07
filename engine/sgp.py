@@ -30,7 +30,7 @@ MAX_P = .70                 # no watered-down legs (our own lines / moneylines)
 MAX_LEGS = 7
 SHOW = (5, 6, 7)
 LEAN = 1.04                 # a script leg must be 4%+ likelier in that script than overall
-CAL = {3: 1.0, 4: .92, 5: .84, 6: .76, 7: .79}     # backtest 2025 + 2026 wk1-4: hit / predicted by leg count
+CAL = {3: 1.0, 4: .92, 5: .84, 6: .85, 7: .93}     # hit / predicted by leg count, two 2025-26 backtests averaged (Oct 2026)
 BASE_CLOSE, BASE_BLOWOUT = .423, .332   # the model's own typical game (2025 wk8-12 sims; real games .486 / .371: sims run margins wide)
 CAL_CROSS = .80             # cross-game parlays: 6 hits vs 8.1 predicted (132)
 BUMP = {"rec_yds": (5, 20), "rush_yds": (5, 20), "rec": (1, 2), "pass_yds": (5, 150)}   # line step, min median
@@ -210,7 +210,7 @@ def game_parlays(gid, h, a, hi, ai, g):
     outlook = dict(fav=fav, p_close=round(p_close, 3), p_blowout=round(p_blow, 3), p_fav_blowout=round(p_fav_blow, 3),
                    base_close=BASE_CLOSE, base_blowout=BASE_BLOWOUT, expected=exp, slight=slight)
     mask = (fm >= 14) if exp == "blowout" else (np.abs(margin) <= 7)
-    chosen = build(legs, mask, False)
+    chosen = build(legs, mask, False) if not slight else []    # 'Leans' calls backtested as noise: no parlay
     if len(chosen) >= min(SHOW):
         rows = []
         for k in SHOW:
