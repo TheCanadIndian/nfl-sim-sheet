@@ -549,6 +549,17 @@ def weak_kinds(sport):
                    if g["sport"] == sport and g["kind"] != "all" and g["n"] >= 30 and g["model_ll"] > g["market_ll"] + .005})
 
 
+def losing_kinds(sport, min_bets=50, max_roi=-.10):
+    """Market types where our flagged 3%+ edge bets have lost 10%+ on settled Kalshi games: the site hides our
+    edges on these (NHL goal / total in Oct 2026) until the record recovers."""
+    gp = os.path.join(OUT, "grades.json")
+    if not os.path.exists(gp):
+        return {}
+    return {g["kind"]: dict(bets=g["bets"], roi=g["roi"]) for g in json.load(open(gp)).get("groups", [])
+            if g["sport"] == sport and g["source"] == "kalshi" and g["kind"] != "all" and g["bets"] >= min_bets
+            and g["roi"] is not None and g["roi"] <= max_roi}
+
+
 def write_live(sport):
     """Compact copy of the latest pregame snapshot for the model pages: <site>/markets/live_<sport>.json."""
     fs = [f for f in sorted(glob.glob(os.path.join(OUT, f"{sport}_????-??-??.json")))
@@ -599,7 +610,7 @@ def write_live(sport):
         pass
     pp = os.path.join(OUT, "patterns.json")
     extra = json.load(open(pp)) if sport == "nfl" and os.path.exists(pp) else {}
-    json.dump(dict(sport=sport, fetched=f, weak=weak_kinds(sport), rows=rows, **extra),
+    json.dump(dict(sport=sport, fetched=f, weak=weak_kinds(sport), losing=losing_kinds(sport), rows=rows, **extra),
               open(os.path.join(SITE, "markets", f"live_{sport}.json"), "w"), separators=(",", ":"), default=str)
 
 
