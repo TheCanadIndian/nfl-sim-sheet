@@ -507,8 +507,16 @@ def run(sport):
         for r in rows:
             if r["game"] == g["id"]:
                 r["start"] = pd.Timestamp(g["start"]).tz_convert("UTC").isoformat()
-    if sport == "mlb":            # pre-game taker flow on the 1+ HR markets (VALUE + NO-heavy flow badge)
-        hr1 = [r for r in rows if r["source"] == "kalshi" and r["kind"] == "hr" and (r.get("line") or 0) < 1]
+    # pre-game taker flow (who has been buying): every MLB 1+ HR, NFL anytime TD and NHL goal market (crowded-YES
+    # warning + VALUE/NO-flow badge), plus any other player market where we show a YES edge of 3%+
+    def wants_flow(r):
+        if r["source"] != "kalshi" or r.get("pid") is None:
+            return False
+        if r["kind"] in ("hr", "goal") and (r.get("line") or 0) < 1:
+            return True
+        return r["kind"] == "anytime_td" or (r.get("edge_yes") or -1) >= .03
+    if True:
+        hr1 = [r for r in rows if wants_flow(r)]
         with ThreadPoolExecutor(max_workers=4) as ex:
             for r, fl in zip(hr1, ex.map(lambda r: kalshi_flow(r["ticker"]), hr1)):
                 r["flow"] = fl

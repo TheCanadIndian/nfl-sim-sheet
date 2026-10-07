@@ -172,7 +172,14 @@ def main(only=None):
                     a = r["yes_ask"]; bet, cost = "YES", a + fee * a * (1 - a); pnl = y - cost
                 elif (r.get("edge_no") or -1) >= .03 and r.get("no_ask"):
                     a = r["no_ask"]; bet, cost = "NO", a + fee * a * (1 - a); pnl = (1 - y) - cost
-                rows.append(dict(sport=sport, source=r["source"], kind=r["kind"], longshot=bool(r.get("longshot")), y=y, p=p, m=m,
+                fl = (r.get("flow") or {}).get("imb")
+                ey = r.get("edge_yes")
+                tag = None
+                if fl is not None and ey is not None and ey >= .03:
+                    tag = "value + NO flow" if fl <= -.2 else "value, YES-heavy flow"
+                crowd = fl is not None and fl >= .6 and r["kind"] in ("anytime_td", "goal")
+                ya = r.get("yes_ask"); ycost = (ya + fee * ya * (1 - ya)) if ya else None
+                rows.append(dict(flowtag=tag, crowd=crowd, ycost=ycost, sport=sport, source=r["source"], kind=r["kind"], longshot=bool(r.get("longshot")), y=y, p=p, m=m,
                                  bet=bet, pnl=pnl, cost=cost, title=r["title"], game=f"{r['away']} @ {r['home']}"))
     keep = [g for g in old.get("groups", []) if g["sport"] not in done]          # sports not regraded this run
     out = dict(groups=keep, n=len(rows) + sum(g["n"] for g in keep if g["kind"] == "all"))
@@ -186,6 +193,11 @@ def main(only=None):
                                       model_brier=round(float(((x.p - x.y) ** 2).mean()), 4), market_brier=round(float(((x.m - x.y) ** 2).mean()), 4),
                                       bets=int(len(b)), bets_won=int((b.pnl > 0).sum()),
                                       roi=None if b.empty else round(float(b.pnl.sum() / b.cost.sum()), 3)))
+        fr = {}
+        for (sp_, lab), x in [((s_, t_), x) for (s_, t_), x in d[d.flowtag.notna() & d.ycost.notna()].groupby(["sport", "flowtag"])] +                 [((s_, "crowded YES (buying YES)"), x) for s_, x in d[d.crowd & d.ycost.notna()].groupby("sport")]:
+            fr.setdefault(sp_, {})[lab] = dict(bets=int(len(x)), won=int(x.y.sum()), roi=round(float((x.y - x.ycost).sum() / x.ycost.sum()), 3))
+        keep_fr = {k: v for k, v in old.get("flow", {}).items() if k not in done}
+        out["flow"] = {**keep_fr, **fr}
         out["recent"] = [r for r in old.get("recent", []) if r["sport"] not in done] + d[d.bet.notna()].tail(40).to_dict("records")
     json.dump(out, open(gp, "w"), separators=(",", ":"))
     print(f"graded {out['n']} settled markets -> markets/grades.json")

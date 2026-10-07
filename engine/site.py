@@ -611,8 +611,8 @@ def markets_page():
             continue
         sport = s["key"]
         g = [x for x in grades.get("groups", []) if x["sport"] == sport]
-        payload = json.dumps(dict(sport=sport, groups=g), separators=(",", ":")).replace("</", "<\\/")
-        body = MARKETS_BODY.replace("__SPORT__", s["name"]).replace("__GR__", payload)
+        payload = json.dumps(dict(sport=sport, groups=g, flow=grades.get("flow", {})), separators=(",", ":")).replace("</", "<\\/")
+        body = MARKETS_BODY.replace("__SPORT__", s["name"]).replace("__GR__", payload).replace("__KEY__", sport)
         write_page(f"{sport}/markets.html", f"{s['name']} markets · Sim Sheet", f"{sport}:markets",
                    body + f'<script src="../mkt.js" data-sport="{sport}"></script>', depth=1)
     path = os.path.join(SITE, "markets.html")
@@ -634,7 +634,7 @@ MARKETS_BODY = """
     <input class="mk-q" id="mq" type="search" placeholder="Find a player or team" aria-label="Find a player or team">
   </div>
   <div class="tiles" id="mtiles"></div>
-  <details class="card mk-score" id="scorebox"><summary id="scoresum"></summary><div id="score"></div></details>
+  <details class="card mk-score" id="scorebox" data-sport="__KEY__"><summary id="scoresum"></summary><div id="score"></div></details>
   <details class="card mk-score" id="patbox" hidden><summary id="patsum"></summary><div id="pat"></div></details>
   <div id="mtree" class="mt"></div>
   <section class="card" style="gap:8px">
@@ -677,11 +677,13 @@ function scorecard(){
   if (!g.length){ sm.innerHTML = '<b>Scorecard: model vs market</b><span class="muted">nothing settled yet</span>'; el.innerHTML = '<p class="muted" style="margin:0">Each game is graded on its last pregame price once it is final.</p>'; return; }
   const a = g.filter(x => x.kind === 'all'), N = a.reduce((t, x) => t + x.n, 0), B = a.reduce((t, x) => t + x.bets, 0), W = a.reduce((t, x) => t + x.bets_won, 0);
   const big = g.filter(x => x.kind !== 'all' && x.n >= 30), theirs = [...new Set(big.filter(x => x.market_ll < x.model_ll - .002).map(x => KIND[x.kind] || x.kind))], ours = [...new Set(big.filter(x => x.model_ll < x.market_ll - .002).map(x => KIND[x.kind] || x.kind))];
+  const FL = (GR.flow || {})[document.getElementById('scorebox').dataset.sport] || {};
+  const fline = Object.keys(FL).length ? `<p class="muted" style="margin:0">Flow tracker (Kalshi pre-game buying, graded at the last pregame price): ${Object.entries(FL).map(([k, v]) => `${k}: <b>${v.won}/${v.bets}</b>, ROI <b class="${v.roi > 0 ? 'g2' : 'r2'}">${v.roi > 0 ? '+' : ''}${Math.round(v.roi * 100)}%</b>`).join(' · ')}</p>` : '';
   sm.innerHTML = `<b>Scorecard: model vs market</b><span class="muted">${N.toLocaleString()} settled · ${theirs.length ? 'market better on ' + theirs.join(', ') : 'no type where the market is clearly better'}${ours.length ? ' · model better on ' + ours.join(', ') : ''} · edge bets ${W}/${B} won</span>`;
   const who = x => x.model_ll < x.market_ll - .002 ? '<span class="g2">Model</span>' : x.market_ll < x.model_ll - .002 ? '<span class="r2">Market</span>' : '<span class="muted">Tie</span>';
   const roi = x => x.bets ? `${x.bets_won}/${x.bets} won · <b class="${x.roi > 0 ? 'g2' : 'r2'}">${x.roi > 0 ? '+' : ''}${Math.round(x.roi * 100)}%</b>` : '<span class="muted">no bets</span>';
   const rows = a.concat(g.filter(x => x.kind !== 'all').sort((p, q) => q.n - p.n));
-  el.innerHTML = `<p class="muted" style="margin:0">Settled games only, priced at the last pregame snapshot. "Closer" = lower prediction error (log-loss). Bets = buying the side with a 3%+ edge; result per $1 staked. Small samples swing a lot.</p>
+  el.innerHTML = fline + `<p class="muted" style="margin:0">Settled games only, priced at the last pregame snapshot. "Closer" = lower prediction error (log-loss). Bets = buying the side with a 3%+ edge; result per $1 staked. Small samples swing a lot.</p>
     <div class="tw"><table class="t"><thead><tr><th class="l">Market</th><th class="l">Source</th><th>Settled</th><th class="l">Closer to the result</th><th class="l">3%+ edge bets</th></tr></thead><tbody>
     ${rows.map(x => `<tr${x.kind === 'all' ? ' style="font-weight:600"' : ''}><td class="l">${x.kind === 'all' ? 'All markets' : (KIND[x.kind] || x.kind)}</td><td class="l">${x.source === 'kalshi' ? 'Kalshi' : 'Polymarket'}</td><td>${x.n}</td><td class="l">${who(x)} <small class="muted">${x.model_ll.toFixed(3)} vs ${x.market_ll.toFixed(3)}</small></td><td class="l">${roi(x)}</td></tr>`).join('')}</tbody></table></div>`;
 }

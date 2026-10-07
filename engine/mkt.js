@@ -50,6 +50,8 @@
 .mkx-pr{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start;font-size:13px}
 .mkx-pr small{color:var(--muted);font-size:11.5px}
 .mkx-tip{font-size:12.5px;color:var(--muted)}
+.mkx-nof{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:800;background:#6cb4ff;color:#0a0f12;cursor:help}
+.mkx-crowd{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:700;border:1px solid #e5534b;color:#e5534b;cursor:help}
 .mkx-c{display:grid;gap:1px;line-height:1.2;white-space:nowrap}
 .mkx-c small{color:var(--muted);font-size:11px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
@@ -94,6 +96,16 @@
   let rr = null;
   function rerender(){ clearTimeout(rr); rr = setTimeout(() => { try { window.render && window.render(); } catch (e) {} }, 250); }
 
+  // flow badges (Kalshi pre-game taker flow, r.fl: +1 all money bought YES, -1 all NO). Backtests Sep-Oct 2026:
+  // VALUE (YES edge) with NO-heavy/mixed flow beat VALUE with YES-heavy flow in MLB HR, NFL yards and NHL goals;
+  // crowded YES (80%+ of $ buying YES) ran overpriced on NFL anytime TDs (-2.8 pts) and NHL goals (-1.7).
+  function flowChips(r, yesEdge){
+    if (r.fl == null) return '';
+    let s = '';
+    if (yesEdge != null && yesEdge >= .03 && r.fl <= -.2) s += `<span class="mkx-nof" title="Pre-game money is NO-heavy or mixed (${Math.round((1 + r.fl) / 2 * 100)}% of $ bought YES) while we see YES value. Experimental: in Sep-Oct 2026 backtests VALUE spots like this beat YES-heavy ones in MLB, NFL yards and NHL (small samples).">NO flow</span>`;
+    if ((r.k === 'anytime_td' || r.k === 'goal') && r.fl >= .6) s += `<span class="mkx-crowd" title="${Math.round((1 + r.fl) / 2 * 100)}% of pre-game $ bought YES. Crowded YES TD / goal markets ran overpriced in Sep-Oct 2026 (NFL TD -2.8 pts, NHL -1.7); following that crowd lost 14-17%.">crowded YES</span>`;
+    return s;
+  }
   function row(r, model, focus, slider){
     poly(r);
     const [yl, nl] = sides(r), p = ours(r, model), e = edges(r, p);
@@ -102,7 +114,7 @@
     const by = r.by ?? null, bn = r.bn ?? null, tot = (by || 0) + (bn || 0);
     const setBtn = slider && r.l != null && !['win', 'spread', 'anytime_td', 'first_td', 'first_goal'].includes(r.k) ? `<button class="mkx-set" data-mline="${r.l}" title="Move the slider to this line">use line</button>` : '';
     return `<div class="mkx-r${focus ? ' on' : ''}">
-      <div class="mkx-l"><span class="mkx-src" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket (live)'}">${r.s === 'kalshi' ? 'K' : 'P'}</span><b>${esc(yl)}</b> <small>${esc(KLAB[r.k] || r.k)}</small>${isThin(r) ? `<span class="mkx-thin" title="Bid/ask gap ${Math.round(spr(r) * 100)}¢: a less-traded market">thin ${Math.round(spr(r) * 100)}¢</span>` : ''}${(r.pat || []).map(id => pchip(id)).join('')}${setBtn}</div>
+      <div class="mkx-l"><span class="mkx-src" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket (live)'}">${r.s === 'kalshi' ? 'K' : 'P'}</span><b>${esc(yl)}</b> <small>${esc(KLAB[r.k] || r.k)}</small>${isThin(r) ? `<span class="mkx-thin" title="Bid/ask gap ${Math.round(spr(r) * 100)}¢: a less-traded market">thin ${Math.round(spr(r) * 100)}¢</span>` : ''}${(r.pat || []).map(id => pchip(id)).join('')}${flowChips(r, e.y)}${setBtn}</div>
       <div class="mkx-p">Price <b>${cents(r.ya)}</b> · ours <b>${pc(p)}</b>${best.v != null && best.v >= .02 ? ` · <span class="e ${weak ? '' : shade(best.v)}">+${(best.v * 100).toFixed(1)}% ${esc(best.lab)}</span>${weak ? ' <span class="mkx-warn" title="On settled games of this type the market has been more accurate than our model">market ahead</span>' : ''}` : ' · <small>no edge</small>'}</div>
       <div class="mkx-liq" title="Dollars you could spend within 3¢ of the best price on each side"><span>${esc(yl.length > 14 ? 'Yes' : yl)} <b>${usd(by)}</b></span><div class="mkx-bar">${tot > 0 ? `<i style="width:${by / tot * 100}%"></i><i style="width:${bn / tot * 100}%"></i>` : ''}</div><span><b>${usd(bn)}</b> ${esc(nl.length > 14 ? 'No' : nl)}</span></div>
     </div>`;
@@ -185,7 +197,8 @@
       poly(r);
       const p = ours(r, model), e = edges(r, p), v = Math.max(e.y ?? -9, e.n ?? -9), side = (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no';
       const weak = D.weak && D.weak.includes(r.k);
-      return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${cents(r.ya)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
+      const fc = flowChips(r, e.y);
+      return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${cents(r.ya)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
     },
   };
 
