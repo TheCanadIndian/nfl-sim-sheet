@@ -5,7 +5,13 @@ so legs that move together -- a QB's yards and his WR1's yards -- are priced tog
 Rules (user, Oct 2026): 5+ legs, no unders, no watered-down legs: player legs use the main line (the Kalshi rung
 priced nearest 50/50, else our own median line) or an anytime TD, and every leg must hit 35%+ on its own.
 
-Scripts: shootout, grind-it-out, each team pulling away, a close finish, plus the most likely parlay overall.
+Scripts: shootout, grind-it-out, each team pulling away, plus the most likely parlay overall. ("Close finish"
+dropped Oct 2026: backtest 1.3% hit vs 5.0% predicted.) Plus "Higher lines": 3-4 legs, overs at the hook at or
+above the player's simulated MEAN for players whose mean beats their median (user idea; backtest 2025-26:
+calibrated, 3 legs 14.6% hit vs 14.7% predicted).
+
+Shown chances are scaled by the backtest's hit/predicted ratio (CAL): 5-7 main-line legs ran 16-24% high
+(greedy picking favours legs whose simulations ran hot).
 Cross-game: for each kickoff window and each day, one long parlay built from each game's strongest legs. Games
 are simulated independently, so across games the chances multiply.
 """
@@ -23,6 +29,9 @@ MAX_P = .70                 # no watered-down legs (our own lines / moneylines)
 MAX_LEGS = 7
 SHOW = (5, 6, 7)
 LEAN = 1.04                 # a script leg must be 4%+ likelier in that script than overall
+CAL = {3: 1.0, 4: .92, 5: .84, 6: .76, 7: .79}     # backtest 2025 + 2026 wk1-4: hit / predicted by leg count
+CAL_CROSS = .80             # cross-game parlays: 6 hits vs 8.1 predicted (132)
+BUMP = {"rec_yds": (5, 20), "rush_yds": (5, 20), "rec": (1, 2), "pass_yds": (5, 150)}   # line step, min median
 
 
 def american(p):
@@ -30,8 +39,18 @@ def american(p):
     return f"+{round(100 * (1 - p) / p)}" if p < .5 else f"-{round(100 * p / (1 - p))}"
 
 
+_KCACHE = {}
+
+
 def kalshi_rows(gid):
     """Latest Kalshi snapshot rows for this game (empty if markets haven't listed it yet)."""
+    if gid in _KCACHE:
+        return _KCACHE[gid]
+    _KCACHE[gid] = _kalshi_rows(gid)
+    return _KCACHE[gid]
+
+
+def _kalshi_rows(gid):
     for f in sorted(glob.glob(os.path.join(HERE, "markets", "nfl_????-??-??.json")), reverse=True):
         try:
             rows = [r for r in json.load(open(f)).get("markets", []) if r.get("source") == "kalshi" and r.get("game") == gid]
@@ -119,7 +138,6 @@ def scripts(g, margin, tot):
         ("Grind-it-out", tot <= q25, f"{q25:.0f} or fewer combined points (bottom quarter)"),
         (f"{H} pulls away", margin >= 8, f"{H} wins by 8+, {A} forced to pass"),
         (f"{A} pulls away", margin <= -8, f"{A} wins by 8+, {H} forced to pass"),
-        ("Close finish", np.abs(margin) <= 3, "decided by 3 or fewer"),
     ]
 
 
@@ -159,13 +177,17 @@ def game_parlays(gid, h, a, hi, ai, g):
             j = np.logical_and.reduce([L["hit"] for L in chosen[:k]])
             ind = float(np.prod([L["p"] for L in chosen[:k]]))
             px = [L["price"] for L in chosen[:k]]
-            rows.append(dict(k=k, p=round(float(j.mean()), 4), p_script=round(float(j[mask].mean()), 4),
-                             fair=american(j.mean()), indep=round(ind, 4),
+            c = CAL.get(k, 1.0)
+            rows.append(dict(k=k, p=round(float(j.mean()) * c, 4), p_raw=round(float(j.mean()), 4), p_script=round(float(j[mask].mean()) * c, 4),
+                             fair=american(j.mean() * c), indep=round(ind, 4),
                              kalshi=round(float(np.prod(px)), 4) if all(px) else None))
-        out.append(dict(name=name, desc=desc, happens=round(float(mask.mean()), 3), rows=rows,
+        out.append(dict(name=name, desc=desc, happens=round(float(mask.mean()), 3), rows=rows, any=name == "Most likely",
                         legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3),
                                    p_script=round(float(L["hit"][mask].mean()), 3), price=L["price"], src=L["src"])
                               for L in chosen]))
+    hl = higher_lines(gid, h, a, hi, ai)
+    if hl:
+        out.insert(1, hl)
     # strongest legs for the cross-game parlays: the first legs of the most likely parlay (joint chance kept)
     core = []
     ml = build(legs, np.ones(len(margin), bool), True)
@@ -208,6 +230,7 @@ def cross_game(games, per_game, min_legs=5):
             for L in c["legs"]:
                 legs.append(dict(L, game=f"{g['away_team']} @ {g['home_team']}"))
                 px = px * L["price"] if px is not None and L["price"] else None
+        p *= CAL_CROSS
         return dict(title=title, when=when, games=len(gs), legs=legs, p=round(p, 6), fair=american(p), kalshi=round(px, 6) if px else None)
 
     slots = {}
@@ -220,3 +243,68 @@ def cross_game(games, per_game, min_legs=5):
         if len(gs) > 1 and len({slot_of(g["gameday"], g["gametime"], g["weekday"]) for g in gs}) > 1:
             out.append(make(f"All of {wd}", day, gs, per(gs)))
     return out
+
+
+def _hook_at_or_above(v, step):
+    return np.floor(v) + .5 if step == 1 else np.ceil((v + .5) / step) * step - .5     # x4.5 / x9.5 for yards
+
+
+def higher_lines(gid, h, a, hi, ai, legs_max=4):
+    """Overs at the line at or just above the simulated mean, for players whose mean beats their median; the
+    Kalshi ladder rung at/above the mean when one is listed. Greedy joint chance, one leg per player, 3-4 legs."""
+    rungs = {}
+    for r in kalshi_rows(gid):
+        if r.get("pid") and r["kind"] in BUMP and r.get("yes_ask"):
+            rungs.setdefault((r["pid"], r["kind"]), []).append((float(r["line"]), float(r["yes_ask"])))
+    pool = []
+    for res, t in ((h, hi), (a, ai)):
+        pl = res["players"]
+        for j, p in enumerate(t.players):
+            st = dict(rec=pl["rec"][:, j], rec_yds=pl["rec_yds"][:, j], rush_yds=pl["rush_yds"][:, j])
+            if j == res["qi"]:
+                st["pass_yds"] = res["pass_yds"]
+            pid = str(p.player_id)
+            for kind, x in st.items():
+                step, mmin = BUMP[kind]
+                med, mean = float(np.median(x)), float(x.mean())
+                if med < mmin or mean <= med:
+                    continue
+                line, price, src = _hook_at_or_above(mean, step), None, "model"
+                rs = [rr for rr in rungs.get((pid, kind), []) if rr[0] >= mean - .5 * step]
+                if rs:
+                    (line, price), src = min(rs), "Kalshi"
+                hit = x > line
+                if hit.mean() < .25:
+                    continue
+                L = _leg(t.team, p.name, p.pos, kind, float(line), hit, price, src, pid)
+                L.update(p=float(hit.mean()), mean=round(mean, 1), med=round(med, 1))
+                pool.append(L)
+    chosen, used, joint = [], set(), None
+    for _ in range(legs_max):
+        best = None
+        for L in pool:
+            if L["player"] in used:
+                continue
+            jj = L["hit"] if joint is None else joint & L["hit"]
+            if best is None or jj.mean() > best[0]:
+                best = (jj.mean(), L, jj)
+        if best is None:
+            break
+        _, L, joint = best
+        chosen.append(L)
+        used.add(L["player"])
+    if len(chosen) < 3:
+        return None
+    rows = []
+    for k in (3, 4):
+        if len(chosen) < k:
+            break
+        j = np.logical_and.reduce([L["hit"] for L in chosen[:k]])
+        c = CAL.get(k, 1.0)
+        px = [L["price"] for L in chosen[:k]]
+        rows.append(dict(k=k, p=round(float(j.mean()) * c, 4), p_raw=round(float(j.mean()), 4), p_script=None, fair=american(j.mean() * c),
+                         indep=round(float(np.prod([L["p"] for L in chosen[:k]])), 4), kalshi=round(float(np.prod(px)), 4) if all(px) else None))
+    return dict(name="Higher lines", any=True, happens=1.0, rows=rows,
+                desc="3-4 overs set at or above each player's projected average (players whose average beats their median)",
+                legs=[dict(lab=L["lab"], team=L["team"], kind=L["kind"], pid=L.get("pid"), line=L.get("line"), p=round(L["p"], 3),
+                           p_script=None, price=L["price"], src=L["src"], mean=L["mean"], med=L["med"]) for L in chosen])
