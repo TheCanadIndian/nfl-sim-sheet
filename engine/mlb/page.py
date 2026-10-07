@@ -1,5 +1,6 @@
 """MLB home-run page: slate summary + per-game matchup tables, rolling form, pitcher / hitter zones, exports."""
 import json
+import math
 import os
 import sys
 
@@ -336,10 +337,27 @@ render();
 </script>"""
 
 
+def _clean(o):
+    """NaN / inf -> None: JSON.parse rejects NaN, and one bad cell blanked the whole page (2026-10-07)."""
+    if isinstance(o, float):
+        return o if math.isfinite(o) else None
+    if isinstance(o, dict):
+        return {k: _clean(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_clean(v) for v in o]
+    if hasattr(o, "item") and not isinstance(o, (str, bytes)):          # numpy scalars
+        try:
+            return _clean(o.item())
+        except (ValueError, TypeError):
+            return o
+    return o
+
+
 def write(payload):
     os.makedirs(OUT, exist_ok=True)
+    data = json.dumps(_clean(payload), separators=(",", ":"), default=str, allow_nan=False)
     html = TEMPLATE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS).replace("__DATE__", payload["date"]) \
-        .replace("__DATA__", json.dumps(payload, separators=(",", ":"), default=str).replace("</", "<\\/"))
+        .replace("__DATA__", data.replace("</", "<\\/"))
     for f in (f"{payload['date']}.html", "index.html"):
         open(os.path.join(OUT, f), "w", encoding="utf-8").write(html)
     print("Wrote", os.path.join(OUT, "index.html"))
