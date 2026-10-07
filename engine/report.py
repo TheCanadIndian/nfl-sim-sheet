@@ -600,12 +600,12 @@ function modelSwitch(g){
 /* ---------------- parlays (sgp.py: joint simulation, 5-7 legs, no unders, main lines only) ---------------- */
 const SRC_TIP = {model: "Our median line (Kalshi has no line for this yet): check your book's number", Vegas: 'Vegas total'};
 const srcTag = L => L.src === 'Kalshi' ? '' : `<span class="legsrc" title="${esc(SRC_TIP[L.src] || L.src)}">${L.src === 'model' ? 'our line' : esc(L.src)}</span>`;
-const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
+const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}${L.mean != null ? ` <span class="small muted" title="Projected average vs median">avg ${L.mean} · med ${L.med}</span>` : ''}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
 function sgpCard(P){
-  const any = P.name === 'Most likely';
+  const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
   const rows = P.rows.map(r => `<tr><td>${r.k} legs</td><td><b>${pct1(r.p)}</b></td><td>${esc(r.fair)}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.indep)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`).join('');
-  const legs = P.legs.map((L, i) => (i === 5 ? '<li class="after">+ these for the 6- and 7-leg versions</li>' : '') + legLine(L, !any, i === 5 ? 6 : 0)).join('');
-  return `<div class="sgp"><h3>${esc(P.name)} <small>${any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
+  const legs = P.legs.map((L, i) => (i === cut && i < P.legs.length ? `<li class="after">+ ${P.legs.length - cut === 1 ? 'this' : 'these'} for the longer version${P.legs.length - cut === 1 ? '' : 's'}</li>` : '') + legLine(L, !any, i === cut ? cut + 1 : 0)).join('');
+  return `<div class="sgp"><h3>${esc(P.name)} <small>${P.name === 'Higher lines' ? 'fewer legs, bumped lines' : any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
     <div class="small muted">${esc(P.desc)}</div>
     <ol>${legs}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table></div>`;
@@ -614,7 +614,7 @@ function sgpPanel(g){
   const S = D.sgp && D.sgp.games[g.id];
   if (!S || !S.parlays.length) return '<section class="panel"><div class="empty">No parlays for this game yet: it needs 5+ main-line legs that clear 35%.</div></section>';
   return `<section class="panel" aria-label="Same-game parlays"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: same-game parlays</h2><span class="small muted">leg chance overall → inside the script · Kalshi ask</span></div>
-    <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Fair is the no-vig price for that chance: a book's parlay is only worth it if it pays more.</p>
+    <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Hit chances are calibrated to a 2025-26 backtest (331 games): raw 5-7 leg chances ran about 20% high, so they're scaled down. "Higher lines" (3-4 overs set at or above the player's average) backtested right on its numbers. Fair is the no-vig price: a book's parlay is only worth it if it pays more.</p>
     <div class="sgp-grid">${S.parlays.map(sgpCard).join('')}</div></section>`;
 }
 function renderParlays(){
