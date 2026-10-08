@@ -417,7 +417,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"mlb","groups":[{"sport":"mlb","source":"kalshi","kind":"all","n":92,"hit":0.043,"model_ll":0.1725,"market_ll":0.165,"model_brier":0.0431,"market_brier":0.0419,"bets":2,"bets_won":0,"roi":-1.0},{"sport":"mlb","source":"kalshi","kind":"hr","n":92,"hit":0.043,"model_ll":0.1725,"market_ll":0.165,"model_brier":0.0431,"market_brier":0.0419,"bets":2,"bets_won":0,"roi":-1.0}],"flow":{"mlb":{"value, YES-heavy flow":{"bets":2,"won":0,"roi":-1.0}}}}</script>
+<script type="application/json" id="grdata">{"sport":"mlb","groups":[{"sport":"mlb","source":"kalshi","kind":"all","n":92,"hit":0.043,"model_ll":0.1725,"market_ll":0.165,"model_brier":0.0431,"market_brier":0.0419,"bets":2,"bets_won":0,"roi":-1.0},{"sport":"mlb","source":"kalshi","kind":"hr","n":92,"hit":0.043,"model_ll":0.1725,"market_ll":0.165,"model_brier":0.0431,"market_brier":0.0419,"bets":2,"bets_won":0,"roi":-1.0}],"flow":{}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
