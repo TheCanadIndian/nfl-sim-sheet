@@ -82,12 +82,16 @@
 .slippanel li > span:last-child{white-space:nowrap}
 .slippanel li small{color:var(--muted,#95A6B0)}
 .slippanel .x{border:0;background:none;color:var(--muted,#95A6B0);cursor:pointer;font-size:15px;padding:0 2px}
+.slippanel h3 .x{font-size:20px;min-width:40px;min-height:40px;margin:-8px -8px -8px 0;color:var(--ink,#EAF1F4)}
+.slippanel li .x{min-width:30px;min-height:30px}
+@media (max-width:640px){.slippanel{bottom:64px;max-height:65vh}.slipfab{bottom:12px}}
 .slippanel .sum{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;text-align:center;border-top:1px solid var(--faint,#22313A);padding-top:8px}
 .slippanel .sum b{display:block;font-size:18px}
 .slippanel .sum span{font-size:11.5px;color:var(--muted,#95A6B0)}
 .slippanel .acts{display:flex;flex-wrap:wrap;gap:6px}
 .slippanel .acts a,.slippanel .acts button{font-size:12.5px;border:1px solid var(--faint,#22313A);border-radius:999px;padding:4px 11px;color:var(--ink,#EAF1F4);background:none;text-decoration:none;cursor:pointer}
 .slippanel .note{font-size:11.5px;color:var(--muted,#95A6B0);margin:0}
+.slipfab[hidden],.slippanel[hidden]{display:none!important}
 .slipadd{border:1px solid var(--faint,#22313A);background:none;color:var(--accent,#36D399);border-radius:999px;padding:1px 8px;font-size:12px;cursor:pointer;margin-left:6px;white-space:nowrap}
 .slipadd.on{background:var(--accent,#36D399);color:var(--bg,#0A0F12);border-color:var(--accent,#36D399)}`;
   const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -95,23 +99,38 @@
   const panel = document.createElement('div'); panel.className = 'slippanel'; panel.hidden = true;
   document.addEventListener('DOMContentLoaded', () => { document.body.append(fab, panel); draw(); });
   if (document.body) document.body.append(fab, panel);
-  fab.addEventListener('click', () => { panel.hidden = !panel.hidden; draw(); });
+  fab.addEventListener('click', e => { e.stopPropagation(); panel.hidden = !panel.hidden; draw(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden){ panel.hidden = true; draw(); } });
 
   function gambly(){
     const text = 'Build a ' + legs.length + '-leg parlay: ' + legs.map(L => L.lab + (L.glab ? ` (${L.glab})` : '')).join(', ');
     return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt: text, autoSubmit: '1'}).toString();
   }
+  // keep the slip inside what's on screen: wide pages (tables) can make the page wider than a phone, and fixed
+  // elements then sit off the right edge. Place from the visual viewport instead.
+  function place(){
+    const vv = window.visualViewport, w = vv ? vv.width : window.innerWidth, ox = vv ? vv.offsetLeft : 0;
+    if (w < 640){
+      panel.style.left = (ox + 8) + 'px'; panel.style.right = 'auto'; panel.style.width = (w - 16) + 'px';
+      fab.style.right = 'auto'; fab.style.left = (ox + w - fab.offsetWidth - 12) + 'px';
+    } else {
+      panel.style.left = panel.style.width = fab.style.left = ''; panel.style.right = fab.style.right = '';
+    }
+  }
+  if (window.visualViewport){ visualViewport.addEventListener('resize', place); visualViewport.addEventListener('scroll', place); }
+  window.addEventListener('resize', place);
   function draw(){
-    fab.hidden = !legs.length && panel.hidden;
-    fab.innerHTML = `My parlay <b>${legs.length}</b>${result && legs.length ? ` · ${pct(result.p)}` : ''}`;
+    fab.hidden = false;                                            // always visible so the slip can be found
+    fab.innerHTML = legs.length ? `My parlay <b>${legs.length}</b>${result ? ` · ${pct(result.p)}` : ''}` : 'My parlay <b>+</b>';
+    place();
     if (panel.hidden) return;
-    if (!legs.length){ panel.innerHTML = `<h3>My parlay <button class="x" data-slipclose aria-label="Close">✕</button></h3><p class="note">Tap a "+" next to any line on the NFL, NBA, NHL or MLB pages to add it. Legs from different sports can be combined.</p>`; return; }
+    if (!legs.length){ panel.innerHTML = `<h3>My parlay <button class="x" data-slipclose aria-label="Close">✕</button></h3><p class="note">Tap a "+" next to any line on the NFL, NBA, NHL or MLB pages to add it (NHL: "+ ATG" by each player; NFL / NBA: open a player and use + Over / + Under; MLB: "+" by HR%). Legs from different sports can be combined.</p><div class="acts"><button data-slipclose>Close</button></div>`; return; }
     const r = result || {};
     panel.innerHTML = `<h3>My parlay · ${legs.length} leg${legs.length === 1 ? '' : 's'} <button class="x" data-slipclose aria-label="Close">✕</button></h3>
       <ol>${legs.map(L => `<li><span>${esc(L.lab)} <small>${esc(SPORT[L.sport] || '')}${L.glab ? ' · ' + esc(L.glab) : ''}</small></span><span>${pct(L.p)} <button class="x" data-slipdel="${esc(L.id)}" aria-label="Remove">✕</button></span></li>`).join('')}</ol>
       <div class="sum"><div><b>${pct(r.p)}</b><span>hits</span></div><div><b>${r.p ? american(r.p) : '–'}</b><span>fair odds</span></div><div><b>${pct(r.indep)}</b><span>if unrelated</span></div></div>
       <p class="note">${r.linked ? `${r.linked} legs judged together in the same simulated games (their link counts). ` : ''}Other legs multiply. Take a book's parlay only if it pays more than the fair odds.</p>
-      <div class="acts"><a href="${esc(gambly())}" target="_blank" rel="noopener">Build in Gambly ↗</a><button data-slipcopy>Copy legs</button><button data-slipclear>Clear</button></div>`;
+      <div class="acts"><a href="${esc(gambly())}" target="_blank" rel="noopener">Build in Gambly ↗</a><button data-slipcopy>Copy legs</button><button data-slipclear>Clear</button><button data-slipclose>Close</button></div>`;
   }
   function changed(){ save(); result = null; draw(); compute(); try { window.render && window.render(); } catch (e) {} }
   document.addEventListener('click', e => {
@@ -124,6 +143,7 @@
     const all = e.target.closest('[data-sliplegs]');
     if (all){ e.preventDefault(); let ls; try { ls = JSON.parse(all.dataset.sliplegs); } catch (err) { return; } SLIP.addMany(ls); panel.hidden = false; changed(); return; }
     if (e.target.closest('[data-slipclose]')){ panel.hidden = true; draw(); return; }
+    if (!panel.hidden && !e.target.closest('.slippanel') && !e.target.closest('.slipfab')){ panel.hidden = true; draw(); }   // tap outside closes
     const d = e.target.closest('[data-slipdel]'); if (d){ legs = legs.filter(x => x.id !== d.dataset.slipdel); changed(); return; }
     if (e.target.closest('[data-slipclear]')){ legs = []; changed(); return; }
     if (e.target.closest('[data-slipcopy]')){ const t = legs.map(L => `${L.lab}${L.glab ? ' (' + L.glab + ')' : ''}`).join('\n'); try { navigator.clipboard.writeText(t); } catch (err) {} return; }
