@@ -246,6 +246,15 @@ def compress(x, stat):
     return {"q": [round(float(v), 1) for v in q]}
 
 
+def pack(x, n=1000):
+    """First n simulations of an array as small ints, base64 (the page's build-your-own parlay slip reads these)."""
+    import base64
+    a = np.rint(np.asarray(x, float)[:n]).astype(int)
+    if a.min() >= 0 and a.max() <= 255:
+        return {"t": "u8", "b": base64.b64encode(a.astype(np.uint8).tobytes()).decode()}
+    return {"t": "i16", "b": base64.b64encode(np.clip(a, -32768, 32767).astype("<i2").tobytes()).decode()}
+
+
 DST_TD_PER_GAME = 0.27   # defense / special-teams TDs per game, both teams (2022-26 play-by-play)
 
 
@@ -357,7 +366,7 @@ def main():
     model, params = PL.fit(fr, train)
 
     prow, trow, box, dists, keyrows = [], [], {}, {}, []
-    sgps = {}
+    sgps, draws = {}, {}
     for g in todo.itertuples():
         hi = PL.team_input(fr, g.game_id, g.home_team)
         ai = PL.team_input(fr, g.game_id, g.away_team)
@@ -391,6 +400,9 @@ def main():
                 box[(t.team, p.name)] = s
                 keyrows.append((g.game_id, t.team, p.player_id, p.name))
                 s_all = dict(s, tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])
+                if not args.played and not args.blind:           # saved simulations for the build-your-own slip
+                    draws.setdefault(g.game_id, {"n": 1000, "p": {}, "g": {"margin": pack(margin), "total": pack(h["points"] + a["points"])}})["p"][
+                        f"{g.game_id}|{t.team}|{p.name}"] = {st: pack(s_all[st]) for st in DIST_STATS if st in s_all}
                 dists[f"{g.game_id}|{t.team}|{p.name}"] = {
                     stat: compress(s_all[stat], stat) for stat in DIST_STATS if stat in s_all}
                 for stat in PLAYER_STATS:
@@ -414,6 +426,12 @@ def main():
     teams.to_csv(f"{stem}_teams.csv", index=False)
     with open(f"{stem}_dist.json", "w") as f:
         json.dump(dists, f, separators=(",", ":"))
+    if draws:
+        ddir = os.path.join(args.out, "draws")
+        os.makedirs(ddir, exist_ok=True)
+        for gid, dd in draws.items():
+            with open(os.path.join(ddir, f"{gid}.json"), "w") as f:
+                json.dump(dd, f, separators=(",", ":"))
     if sgps:
         gl = [dict(game_id=r.game_id, gameday=str(r.gameday)[:10], gametime=str(r.gametime or ""), weekday=str(r.weekday),
                    away_team=r.away_team, home_team=r.home_team) for r in todo.itertuples()]

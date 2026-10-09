@@ -531,12 +531,20 @@ function pdline(opp){
 }
 document.getElementById('sub').textContent = `${D.games.length} games · ${D.date} · built ${D.generated}`;
 const bar = (p, max) => `<div class="pbar" role="img" aria-label="${pct(p)}"><i style="width:${Math.min(p/max,1)*100}%"></i></div>`;
+// build-your-own parlay (slip.js): the goal model treats players' goals as independent, so goal legs multiply
+function nhlSlip(p, team){
+  if (!window.SLIP) return '';
+  const g = D.games.find(x => x.home.team === team || x.away.team === team); if (!g) return '';
+  const lam = -Math.log(1 - Math.min(p.p, .999)), p2 = 1 - Math.exp(-lam) * (1 + lam);
+  const leg = (n, prob) => ({id: `nhl|${g.id}|${p.id}|goal${n}`, sport: 'nhl', g: g.id, glab: `${g.away.team} @ ${g.home.team}`, lab: n === 1 ? `${p.name} to score` : `${p.name} 2+ goals`, p: prob, side: 'over', stat: 'goals', line: n - .5});
+  return SLIP.btn(leg(1, p.p)) + (p2 >= .02 ? SLIP.btn(leg(2, p2), '2+') : '');
+}
 function side(s, opp, gid){
   const max = .5, mk = window.MKT && MKT.has();
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
     ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
     <div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
-    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
+    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big">${pct(p.p)}${nhlSlip(p, s.team)}</td><td>${odds(p.fair)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     </tbody></table></div></div>`;
 }
 function picksKey(){
@@ -562,7 +570,7 @@ function board(){
   const seg = `<div class="phead"><div class="seg" role="group" aria-label="Sort by"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button></div><span class="small muted">First goal = chance to score the game's first goal (regulation or overtime)</span></div>`;
   const bv = p => state.bsort === 'pf' ? (p.pf ?? 0) : p.p, bmax = state.bsort === 'pf' ? .12 : .5;
   return `<section class="panel">${seg}<div class="tw"><table class="t"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Team</th><th class="l">Pos</th><th class="l" style="min-width:140px">Chance</th><th>P(goal)</th><th>Fair</th><th>1st goal</th><th>Fair</th><th>Exp. goals</th><th>TOI</th><th class="l">H2H G-A-P</th></tr></thead><tbody>
-    ${rows.map((p,i) => `<tr class="${rowCls(p.orig)}"><td class="muted">${i+1}</td><td class="l name">${pickMark(p.orig)}${esc(p.name)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${mtag(p.pos, p.opp)}${whyLine(p.orig)}</td><td class="l">${esc(p.team)} <span class="small muted">vs ${esc(p.opp)}</span></td><td class="l"><span class="pos">${esc(p.pos)}</span></td><td class="l">${bar(bv(p), bmax)}</td><td class="${state.bsort === 'pf' ? '' : 'big'}">${pct(p.p)}</td><td>${odds(p.fair)}</td><td class="${state.bsort === 'pf' ? 'big' : ''}">${p.pf != null ? pct(p.pf) : '–'}</td><td>${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td>${p.lam.toFixed(2)}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, p.opp)}</td></tr>`).join('')}
+    ${rows.map((p,i) => `<tr class="${rowCls(p.orig)}"><td class="muted">${i+1}</td><td class="l name">${pickMark(p.orig)}${esc(p.name)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${mtag(p.pos, p.opp)}${whyLine(p.orig)}</td><td class="l">${esc(p.team)} <span class="small muted">vs ${esc(p.opp)}</span></td><td class="l"><span class="pos">${esc(p.pos)}</span></td><td class="l">${bar(bv(p), bmax)}</td><td class="${state.bsort === 'pf' ? '' : 'big'}">${pct(p.p)}${nhlSlip(p.orig, p.team)}</td><td>${odds(p.fair)}</td><td class="${state.bsort === 'pf' ? 'big' : ''}">${p.pf != null ? pct(p.pf) : '–'}</td><td>${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td>${p.lam.toFixed(2)}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, p.opp)}</td></tr>`).join('')}
     </tbody></table></div></section>`;
 }
 function posdef(){

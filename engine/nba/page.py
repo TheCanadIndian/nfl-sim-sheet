@@ -142,14 +142,22 @@ function slider(p, g){
   const s = p.s[m][st];
   return `<div class="slider" data-sk="${esc(p.k)}"><div class="sl-top"><div class="seg">${stats.map(x => `<button data-ostat="${x}" aria-pressed="${x===st}">${LAB[x]}</button>`).join('')}</div><span class="muted small">Median <b>${f1(s[MED])}</b> · 8 in 10 games ${f1(s[P10])}–${f1(s[P90])} · ${m === 'vegas' ? 'With Vegas' : 'Market-blind'}</span></div>
     <div class="sl-row"><label for="sl-in">Line</label><button class="sl-step" data-ostep="-1">−</button><input id="sl-in" type="range" min="${lo}" max="${hi}" step="1" value="${L}"><button class="sl-step" data-ostep="1">+</button><b class="sl-val" id="sl-val">${L}</b></div>
-    <div id="sl-res">${readout(d, L)}</div>
+    <div id="sl-res">${readout(d, L, p, st)}</div>
     ${window.MKT ? MKT.player(g, p.id, p.n, [st], m, true) : ''}</div>`;
 }
-function readout(d, L){
+const SLIP_LAB = {pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes', stl: 'steals', blk: 'blocks', tov: 'turnovers', pra: 'pts+reb+ast'};
+function slipBtns(p, st, L, r){
+  if (!window.SLIP || !p) return '';
+  const g = D.games.find(x => x.id === p.g), m = mode(p.g);
+  const leg = (side, prob) => ({id: `nba|${p.g}|${p.k}|${st}|${side}|${L}|${m}`, sport: 'nba', g: p.g, glab: g ? `${g.away} @ ${g.home}` : '', lab: `${p.n} ${side} ${L} ${SLIP_LAB[st] || st}`,
+    p: prob, side, stat: st, line: L, pk: p.k, model: m, draws: `nba/draws/${p.g}.json`});
+  return `<div class="small muted" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px">My parlay: ${SLIP.btn(leg('over', r.over), 'Over ' + L)}${SLIP.btn(leg('under', r.under), 'Under ' + L)}</div>`;
+}
+function readout(d, L, p, st){
   const r = probs(d, L), np = Math.max(r.over + r.under, 1e-9), ov = r.over/np, un = r.under/np, so = shadeP(ov), su = shadeP(un);
   return `<div class="sl-out"><div class="sl-side over"><span>Over ${L}</span><b class="${so}">${pct(r.over)}</b><em>${american(ov)}</em></div>
     <div class="sl-meter"><i class="f-${so||'n'}" style="width:${r.over*100}%"></i><i class="f-${su||'n'}" style="width:${r.under*100}%"></i></div>
-    <div class="sl-side under"><span>Under ${L}</span><b class="${su}">${pct(r.under)}</b><em>${american(un)}</em></div></div>`;
+    <div class="sl-side under"><span>Under ${L}</span><b class="${su}">${pct(r.under)}</b><em>${american(un)}</em></div></div>${slipBtns(p, st, L, r)}`;
 }
 function teamTable(g, team){
   const ps = D.players.filter(p => p.g === g.id && p.t === team).sort((a,b) => (b.s[mode(g.id)]?.min?.[MED] ?? 0) - (a.s[mode(g.id)]?.min?.[MED] ?? 0));
@@ -208,7 +216,7 @@ document.addEventListener('input', e => {
   if (e.target.id !== 'sl-in') return;
   const box = e.target.closest('.slider'), p = D.players.find(x => x.k === box.dataset.sk), g = state.game;
   state.oline = +e.target.value; document.getElementById('sl-val').textContent = state.oline;
-  document.getElementById('sl-res').innerHTML = readout(p.d[mode(p.g)][state.ostat], state.oline);
+  document.getElementById('sl-res').innerHTML = readout(p.d[mode(p.g)][state.ostat], state.oline, p, state.ostat);
 });
 render();
 </script>

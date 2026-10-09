@@ -106,6 +106,23 @@ def summarize(out, sims, mode):
     return pd.DataFrame(rows), dists
 
 
+def save_draws(out, sims, n=1000):
+    """First n simulations per player and stat, packed as small ints: <OUT>/draws/<game_id>.json."""
+    import base64
+    def pack(x):
+        v = np.rint(np.asarray(x, float)[:n]).astype(int)
+        if v.min() >= 0 and v.max() <= 255:
+            return {"t": "u8", "b": base64.b64encode(v.astype(np.uint8).tobytes()).decode()}
+        return {"t": "i16", "b": base64.b64encode(np.clip(v, -32768, 32767).astype("<i2").tobytes()).decode()}
+    by = {}
+    for i, r in enumerate(out.itertuples()):
+        by.setdefault(int(r.game_id), {"n": n, "p": {}})["p"][f"{r.game_id}|{r.team}|{r.name}"] = {c: pack(sims[c][i]) for c in sims if c != "min"}
+    d = os.path.join(OUT, "draws")
+    os.makedirs(d, exist_ok=True)
+    for gid, dd in by.items():
+        json.dump(dd, open(os.path.join(d, f"{gid}.json"), "w"), separators=(",", ":"))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date")
@@ -149,6 +166,8 @@ def main():
         tab, d = summarize(out, sims, mode)
         tabs.append(tab)
         dists[mode] = d
+        if mode == "vegas":                       # saved simulations for the page's build-your-own parlay slip
+            save_draws(out, sims)
     tab = pd.concat(tabs, ignore_index=True)
     meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play"]].copy()
     meta["e_min"] = M.team_minutes(rows, live=True)
