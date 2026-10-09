@@ -86,8 +86,8 @@ PAIRS_PER_NIGHT = 5
 
 def pairs_15x(games, n=PAIRS_PER_NIGHT):
     """The likeliest anytime-goal pairs from DIFFERENT games whose fair payout is 15x+ (joint chance <= 1/15), no
-    player used twice. Backtest (one pair a night, walk-forward): 2024-25 hit 8.1%, 2025-26 7.4% vs 6.7% implied;
-    same-team and same-game pairs did worse (teammates' goals don't come together)."""
+    player used twice. Backtests: pairs like these hit about their implied rate (5-8% depending on which near-identical pair
+    gets picked -- dozens sit at ~6.7% each night), so treat them as fairly priced; same-team / same-game pairs did worse."""
     import itertools
     P = [dict(gid=g["id"], game=f'{g["away"]["team"]} @ {g["home"]["team"]}', team=s["team"], id=p["id"], name=p["name"], p=p["p"])
          for g in games for s in (g["away"], g["home"]) for p in s["players"]]
@@ -627,7 +627,7 @@ function pairsCard(){
   const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
   const legSlip = L => ({id: `nhl|${L.gid}|${L.id}|goal1`, sport: 'nhl', g: L.gid, glab: L.game, lab: `${L.name} to score`, p: L.p, side: 'over', stat: 'goals', line: .5});
   return `<section class="panel"><div class="phead"><h2>2-leg pairs paying 15x+</h2><span class="small muted">${rec}</span></div>
-    <p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). Backtest, one pair a night: 8.1% (2024-25) and 7.4% (2025-26) vs 6.7% implied. Pairs freeze at the night's first puck drop and are graded on the Results page.</p>
+    <p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). These are fairly priced, not a proven edge: in backtests, pairs built this way hit about their implied 1 in 15 (anywhere from 5% to 8% depending on exactly which near-identical pair was picked). Pairs freeze at the night's first puck drop and are graded on the Results page.</p>
     <div class="tw"><table class="t"><thead><tr><th class="l">Pair</th><th>Chance</th><th>Fair payout</th><th class="l">My parlay</th></tr></thead><tbody>
     ${P.map(x => `<tr><td class="l">${x.legs.map(L => `<b>${esc(L.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p)}</span>`).join(' + ')}</td><td class="big">${pct(x.p)}</td><td>${x.payout}x</td><td class="l">${window.SLIP ? SLIP.allBtn(x.legs.map(legSlip), '+ add pair') : ''}</td></tr>`).join('')}
     </tbody></table></div></section>`;
