@@ -449,10 +449,18 @@ def apply_top_calibration(p, abc):
     return 1 / (1 + np.exp(-(_hinge_X(p) @ abc)))
 
 
+# The fitted opposing-goalie effect keeps growing as seasons are added (0.09 fit on 2023-24, 0.40 on 2023-25) and the
+# model underweighted it: skaters facing goalies rated 5%+ weak beat their chance by ~6%. Doubling the fitted goalie
+# coefficient (walk-forward, Oct 2026): goal-tier error 2025-26 0.37 -> 0.24 pts, 2024-25 0.46 -> 0.47 (flat),
+# log-loss better both seasons, top-3 1.032 -> 1.038 in 2025-26.
+GOALIE_SCALE = 2.0
+
+
 class GoalModel:
     def fit(self, pg):
         x = pg[pg.toi.notna()]
         self.b = poisson_glm(design(x), x.goals.to_numpy(float))
+        self.b[GLM_X.index("log_opp_gq") + 1] *= GOALIE_SCALE
         return self
 
     def lam(self, pg):
