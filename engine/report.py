@@ -384,6 +384,9 @@ input[type=search]{min-width:200px}
 .outlook{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:13.5px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
 .outlook .good{color:var(--good)}
 .sgp.exp{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--band)}
+.gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
+.gbtn:hover{border-color:var(--accent);color:var(--accent)}
 .legsrc.both{color:var(--good);border-color:var(--good)}
 .legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
 @media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
@@ -623,6 +626,14 @@ function otherTag(L){
                  : ` <span class="legsrc" title="${who} has this leg at ${pct(q)}">${SGP_BLIND ? 'vegas' : 'blind'} ${pct(q)}</span>`;
 }
 const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}${otherTag(L)}${L.mean != null ? ` <span class="small muted" title="Projected average vs median">avg ${L.mean} · med ${L.med}</span>` : ''}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
+// "Build in Gambly": opens Gambly's chat with the parlay typed in (its own ask-Gambly links use these params);
+// Gambly turns it into bet slips at the user's books (Hard Rock, Kalshi, Novig, ...). Unofficial: may change.
+function gamblyLink(legs, k, game){
+  const ls = legs.slice(0, k).map(L => L.lab).join(', ');
+  const prompt = `Build a ${k}-leg ${game ? 'same game parlay for ' + game : 'parlay'}: ${ls}`;
+  return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt, autoSubmit: '1'}).toString();
+}
+const gamblyBtns = (legs, ks, game) => `<div class="gbtns"><span class="small muted">Build in Gambly:</span>${ks.map(k => `<a class="gbtn" href="${esc(gamblyLink(legs, k, game))}" target="_blank" rel="noopener" title="Opens Gambly's chat with these ${k} legs typed in; pick your book there">${k} legs ↗</a>`).join('')}</div>`;
 function sgpCard(P){
   const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
   const rows = P.rows.map(r => `<tr><td>${r.k} legs</td><td><b>${pct1(r.p)}</b></td><td>${esc(r.fair)}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.indep)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`).join('');
@@ -630,7 +641,8 @@ function sgpCard(P){
   return `<div class="sgp${P.expected ? ' exp' : ''}"><h3>${esc(P.name)} <small>${P.name === 'Higher lines' ? 'fewer legs, bumped lines' : any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
     <div class="small muted">${esc(P.desc)}</div>
     <ol>${legs}</ol>
-    <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table>
+    ${gamblyBtns(P.legs, P.rows.map(r => r.k), SGP_G ? `${SGP_G.away} @ ${SGP_G.home}` : '')}</div>`;
 }
 function sgpPanel(g){
   SGP_G = g; SGP_BLIND = !!isBlind(g);
@@ -659,7 +671,8 @@ function renderParlays(){
   const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
     <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`).join('')}</ol>
-    <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table></div>`;
+    <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table>
+    ${gamblyBtns(c.legs.map(L => ({lab: `${L.lab} (${L.game})`})), [c.legs.length], '')}</div>`;
   return `<section class="panel"><div class="phead"><h2>Long parlays by kickoff window and day</h2><span class="small muted">each game's strongest legs, stacked</span></div>
     <p class="note">Built from each game's most likely same-game parlay: its first legs (kept together, so their link counts), as many from each game as it takes to reach 5+ legs. The full-day parlay covers every game that day. Games are simulated separately, so across games the chances multiply. These overlap with the per-game parlays on purpose.</p>
     <div class="sgp-grid">${C.map(card).join('')}</div></section>`;
