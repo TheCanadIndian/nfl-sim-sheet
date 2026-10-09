@@ -258,6 +258,21 @@ def main():
     tot = lam_c.groupby(pg.game_id).transform("sum")
     pg["p_first"] = lam_c / tot * (1 - np.exp(-tot))
     pg["fair_first"] = pg.p_first.map(american)
+    # usage ranking (display only; P(goal) and its tiers stay as above): live expected goals x exp(beta . usage),
+    # usage from this season's shift charts (usage.py). Backtest 2025-26: top 3 caught 1.045 scorers/game vs 1.032.
+    pg["u_mult"], pg["u_rank"] = 1.0, np.nan
+    try:
+        import sqlite3
+        import usage as UG
+        ucon = sqlite3.connect(M.DB)
+        season = int(todo.season.iloc[0])
+        rows = UG.update(ucon, season)
+        sids = {g for (g,) in ucon.execute("SELECT game_id FROM games WHERE season = ?", (season,))}
+        pg["u_mult"] = UG.scores(rows, sids, pg.player_id.astype(int)).to_numpy()
+        pg["u_rank"] = (lam_c * pg.u_mult).groupby(pg.game_id).rank(ascending=False, method="first")
+        print(f"usage ranking: {rows[rows.game_id.isin(sids)].game_id.nunique()} games of shift charts this season")
+    except Exception as e:
+        print("usage ranking skipped:", type(e).__name__, e)
     pp_rank = pg.groupby(["game_id", "team"]).e_pp_toi.rank(ascending=False, method="first")
     pg["pp_role"] = np.where(has_units, pg.unit, np.select(
         [(pp_rank <= 5) & (pg.e_pp_toi >= 45), (pp_rank <= 10) & (pg.e_pp_toi >= 20)], ["PP1", "PP2"], ""))
@@ -306,7 +321,8 @@ def main():
                               pf=round(float(r.p_first), 4), fair_first=int(r.fair_first), why=r.why,
                               lam=round(float(r.lam), 3), toi=round(float(r.e_np_toi + r.e_pp_toi) / 60, 1),
                               pp=r.pp_role, line=r.line, new=bool(r.games_prior < 1),
-                              h2h=h2h.get((int(r.player_id), r.opp))) for r in x.itertuples()])
+                              h2h=h2h.get((int(r.player_id), r.opp)),
+                              ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3)) for r in x.itertuples()])
         lam_t = {t: float(-np.log(1 - pg[(pg.game_id == g.game_id) & (pg.team == t)].p_goal.clip(upper=.999)).sum())
                  for t in (g.away, g.home)}
         o = GS.outcome(lam_t[g.home], lam_t[g.away])
@@ -432,6 +448,9 @@ __CSS__
 .newp{font-size:11px;color:var(--muted);margin-left:6px}
 .src{margin:6px 0 2px}
 .sides .pbar{min-width:60px}
+.urtop{color:var(--accent);font-weight:700}
+.urup{color:var(--good)}
+.urdn{color:var(--muted)}
 .mlrow{display:flex;flex-wrap:wrap;gap:8px}
 .mlc{display:grid;gap:1px;background:var(--sunk);border-radius:7px;padding:7px 12px;min-width:104px}
 .mlc b{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.1}
@@ -539,12 +558,21 @@ function nhlSlip(p, team){
   const leg = (n, prob) => ({id: `nhl|${g.id}|${p.id}|goal${n}`, sport: 'nhl', g: g.id, glab: `${g.away.team} @ ${g.home.team}`, lab: n === 1 ? `${p.name} to score` : `${p.name} 2+ goals`, p: prob, side: 'over', stat: 'goals', line: n - .5});
   return SLIP.btn(leg(1, p.p), 'ATG') + (p2 >= .02 ? SLIP.btn(leg(2, p2), '2+') : '');
 }
+// usage rank (display only): rank in the game by live expected goals x usage multiplier; the model's own rank for comparison
+const MRANK = {};
+D.games.forEach(g => [...g.away.players, ...g.home.players].sort((a, b) => b.p - a.p).forEach((p, i) => { MRANK[g.id + '|' + p.id] = i + 1; }));
+const UTIP = "Rank in this game after a usage adjustment: shot share while on the ice, shift length and count, 6-on-5 and late-game ice time (from this season's shift charts). Backtest 2025-26: the usage top 3 caught 1.045 scorers per game vs 1.032 for the plain ranking. P(goal) and fair odds are unchanged.";
+function urCell(p, gid){
+  if (p.ur == null) return '<span class="muted">–</span>';
+  const m = MRANK[gid + '|' + p.id], d = m ? m - p.ur : 0;
+  return `<span class="${p.ur <= 3 ? 'urtop' : ''}" title="Usage-adjusted rank ${p.ur} (model rank ${m}); usage multiplier ${p.um}">#${p.ur}</span>${d ? ` <span class="small ${d > 0 ? 'urup' : 'urdn'}">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>` : ''}`;
+}
 function side(s, opp, gid){
   const max = .5, mk = window.MKT && MKT.has();
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
     ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
-    <div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
-    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
+    <div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="${UTIP}">Usage rank</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
+    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${urCell(p, gid)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     </tbody></table></div></div>`;
 }
 function picksKey(){
@@ -564,10 +592,11 @@ function games(){
   return picksKey() + D.games.map(g => `<section class="panel gcard"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
     ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
+const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);
 function board(){
   const rows = D.games.flatMap(g => [[g.away, g.home], [g.home, g.away]].flatMap(([s, o]) => s.players.map(p => ({...p, orig: p, team: s.team, opp: o.team}))))
-    .sort((a,b) => state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : b.p - a.p);
-  const seg = `<div class="phead"><div class="seg" role="group" aria-label="Sort by"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button></div><span class="small muted">First goal = chance to score the game's first goal (regulation or overtime)</span></div>`;
+    .sort((a,b) => state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : state.bsort === 'u' ? ulam(b) - ulam(a) : b.p - a.p);
+  const seg = `<div class="phead"><div class="seg" role="group" aria-label="Sort by"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button><button data-bsort="u" aria-pressed="${state.bsort === 'u'}" title="${UTIP}">Usage rank</button></div><span class="small muted">First goal = chance to score the game's first goal (regulation or overtime)</span></div>`;
   const bv = p => state.bsort === 'pf' ? (p.pf ?? 0) : p.p, bmax = state.bsort === 'pf' ? .12 : .5;
   return `<section class="panel">${seg}<div class="tw"><table class="t"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Team</th><th class="l">Pos</th><th class="l" style="min-width:140px">Chance</th><th>P(goal)</th><th>Fair</th><th>1st goal</th><th>Fair</th><th>Exp. goals</th><th>TOI</th><th class="l">H2H G-A-P</th></tr></thead><tbody>
     ${rows.map((p,i) => `<tr class="${rowCls(p.orig)}"><td class="muted">${i+1}</td><td class="l name">${pickMark(p.orig)}${esc(p.name)}${nhlSlip(p.orig, p.team)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${mtag(p.pos, p.opp)}${whyLine(p.orig)}</td><td class="l">${esc(p.team)} <span class="small muted">vs ${esc(p.opp)}</span></td><td class="l"><span class="pos">${esc(p.pos)}</span></td><td class="l">${bar(bv(p), bmax)}</td><td class="${state.bsort === 'pf' ? '' : 'big'}">${pct(p.p)}</td><td>${odds(p.fair)}</td><td class="${state.bsort === 'pf' ? 'big' : ''}">${p.pf != null ? pct(p.pf) : '–'}</td><td>${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td>${p.lam.toFixed(2)}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, p.opp)}</td></tr>`).join('')}
