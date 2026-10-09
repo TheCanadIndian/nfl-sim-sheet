@@ -111,10 +111,9 @@ def legs_for_game(gid, h, a, hi, ai, g):
             cands = [base + k * step - .5 for k in (-1, 0, 1, 2)]
             line = min(cands, key=lambda c: abs((x > c).mean() - .5))                    # the hook nearest 50/50
             legs.append(_leg(team, name, pos, kind, float(line), x > line, None, "model", pid))
-    # game legs: winner and the over on the Vegas total (no unders)
+    # game leg: the over on the Vegas total (no unders, no moneylines)
     margin, tot = h["points"] - a["points"], h["points"] + a["points"]
-    legs.append(dict(lab=f"{g.home_team} wins", team=g.home_team, player="_win", pos="", kind="win", line=None, hit=margin > 0, price=None, src="model"))
-    legs.append(dict(lab=f"{g.away_team} wins", team=g.away_team, player="_win", pos="", kind="win", line=None, hit=margin < 0, price=None, src="model"))
+    # no moneylines (user, Oct 2026)
     if g.total_line == g.total_line:
         legs.append(dict(lab=f"Over {g.total_line:g} total points", team="", player="_total", pos="", kind="total", line=float(g.total_line), hit=tot > g.total_line, price=None, src="Vegas"))
     for L in legs:
