@@ -80,6 +80,31 @@ def load_overrides(path):
     return o
 
 
+PAIR_MIN_PAYOUT = 15.0   # user rule (Oct 2026): 2-leg parlays only if they pay 15x or more
+PAIRS_PER_NIGHT = 5
+
+
+def pairs_15x(games, n=PAIRS_PER_NIGHT):
+    """The likeliest anytime-goal pairs from DIFFERENT games whose fair payout is 15x+ (joint chance <= 1/15), no
+    player used twice. Backtest (one pair a night, walk-forward): 2024-25 hit 8.1%, 2025-26 7.4% vs 6.7% implied;
+    same-team and same-game pairs did worse (teammates' goals don't come together)."""
+    import itertools
+    P = [dict(gid=g["id"], game=f'{g["away"]["team"]} @ {g["home"]["team"]}', team=s["team"], id=p["id"], name=p["name"], p=p["p"])
+         for g in games for s in (g["away"], g["home"]) for p in s["players"]]
+    P = sorted(P, key=lambda x: -x["p"])[:90]
+    cands = sorted(((a["p"] * b["p"], a, b) for a, b in itertools.combinations(P, 2)
+                    if a["gid"] != b["gid"] and a["p"] * b["p"] <= 1 / PAIR_MIN_PAYOUT), key=lambda z: -z[0])
+    out, used = [], set()
+    for pj, a, b in cands:
+        if a["id"] in used or b["id"] in used:
+            continue
+        out.append(dict(p=round(pj, 4), payout=round(1 / pj, 1), legs=[a, b]))
+        used |= {a["id"], b["id"]}
+        if len(out) >= n:
+            break
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date")
@@ -341,9 +366,18 @@ def main():
     payload["goalies"] = [dict(name=gname.get(p, str(p)), team=next((t for (gid, t), q in fut_goalies.items() if q == p), ""),
                                now=gstats(p, cur_season), last=gstats(p, prev)) for p in starters]
     json_path = os.path.join(OUT, f"{date}.json")
-    if os.path.exists(json_path):
-        kept = [x for x in json.load(open(json_path))["games"] if x["id"] not in set(todo.game_id.astype(int))]
+    old = json.load(open(json_path)) if os.path.exists(json_path) else {}
+    if old:
+        kept = [x for x in old["games"] if x["id"] not in set(todo.game_id.astype(int))]
         payload["games"] = sorted(kept + payload["games"], key=lambda x: x.get("start_utc") or "")
+    # nightly 2-leg pairs paying 15x+ (frozen once the night's first game starts, so the record is pregame)
+    starts = [pd.Timestamp(x["start_utc"]) for x in payload["games"] if x.get("start_utc")]
+    if old.get("pairs") is not None and starts and min(starts) <= pd.Timestamp.now(tz="UTC"):
+        payload["pairs"] = old["pairs"]
+    else:
+        payload["pairs"] = pairs_15x(payload["games"])
+    rp = os.path.join(OUT, "pairs_record.json")
+    payload["pairs_record"] = json.load(open(rp)) if os.path.exists(rp) else None
     json.dump(payload, open(json_path, "w"), separators=(",", ":"))
     html = TEMPLATE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS) \
         .replace("__DATA__", json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")).replace("__DATE__", date)
@@ -588,8 +622,18 @@ function mlBlock(g){
   const tline = Object.entries(m.totals).filter(([k]) => k === '5.5' || k === '6.5').map(([k, p]) => `<span class="mlc"><span class="eyebrow">O/U ${k}</span><b>${pct(p)} / ${pct(1 - p)}</b><span class="muted">${o(p)} / ${o(1 - p)}</span></span>`).join('');
   return `<div class="mlrow">${line(g.away.team + ' ML', m.away)}${line(g.home.team + ' ML', m.home)}${line(g.away.team + ' −1.5', m.away_pl)}${line(g.home.team + ' −1.5', m.home_pl)}${tline}<span class="mlc"><span class="eyebrow">Proj total</span><b>${m.total.toFixed(1)}</b><span class="muted">OT ${pct(m.ot)}</span></span></div>`;
 }
+function pairsCard(){
+  const P = D.pairs || []; if (!P.length) return '';
+  const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
+  const legSlip = L => ({id: `nhl|${L.gid}|${L.id}|goal1`, sport: 'nhl', g: L.gid, glab: L.game, lab: `${L.name} to score`, p: L.p, side: 'over', stat: 'goals', line: .5});
+  return `<section class="panel"><div class="phead"><h2>2-leg pairs paying 15x+</h2><span class="small muted">${rec}</span></div>
+    <p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). Backtest, one pair a night: 8.1% (2024-25) and 7.4% (2025-26) vs 6.7% implied. Pairs freeze at the night's first puck drop and are graded on the Results page.</p>
+    <div class="tw"><table class="t"><thead><tr><th class="l">Pair</th><th>Chance</th><th>Fair payout</th><th class="l">My parlay</th></tr></thead><tbody>
+    ${P.map(x => `<tr><td class="l">${x.legs.map(L => `<b>${esc(L.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p)}</span>`).join(' + ')}</td><td class="big">${pct(x.p)}</td><td>${x.payout}x</td><td class="l">${window.SLIP ? SLIP.allBtn(x.legs.map(legSlip), '+ add pair') : ''}</td></tr>`).join('')}
+    </tbody></table></div></section>`;
+}
 function games(){
-  return picksKey() + D.games.map(g => `<section class="panel gcard"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
+  return picksKey() + pairsCard() + D.games.map(g => `<section class="panel gcard"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
     ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
 const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);

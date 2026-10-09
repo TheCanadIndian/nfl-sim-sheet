@@ -137,11 +137,37 @@ def ml_summary(rows):
                 over=int(x.over.sum()), over_exp=round(float(x.o55.sum()), 1))
 
 
+def pairs_record():
+    """Grade every night's frozen 2-leg pairs: both legs must score; a leg that didn't play voids the pair."""
+    toi, goals, games = actuals()
+    played = set(zip(toi.game_id, toi.player_id))
+    final = set(toi.game_id)
+    scored = {(r.game_id, int(r.player_id)) for r in goals.itertuples()}
+    nights, n, hits, ps = [], 0, 0, []
+    for jf in sorted(glob.glob(os.path.join(OUT, "????-??-??.json"))):
+        prs = json.load(open(jf)).get("pairs") or []
+        if not prs or not all(L["gid"] in final for x in prs for L in x["legs"]):
+            continue
+        rows = []
+        for x in prs:
+            if not all((L["gid"], L["id"]) in played for L in x["legs"]):
+                rows.append(dict(x, hit=None)); continue
+            h = all((L["gid"], L["id"]) in scored for L in x["legs"])
+            rows.append(dict(x, hit=h, scored=[(L["gid"], L["id"]) in scored for L in x["legs"]]))
+            n += 1; hits += h; ps.append(x["p"])
+        nights.append(dict(date=os.path.basename(jf)[:10], pairs=rows))
+    rec = dict(n=n, hits=hits, pred=round(float(np.mean(ps)), 4) if ps else None,
+               ret=round(float(sum(1 / p for p, x in zip(ps, [r for nt in nights for r in nt["pairs"] if r["hit"] is not None]) if x["hit"]) / n - 1), 3) if n else None,
+               since=nights[0]["date"] if nights else None, nights=nights[::-1])
+    json.dump(rec, open(os.path.join(OUT, "pairs_record.json"), "w"), separators=(",", ":"))
+    return rec
+
+
 def build():
     g, void, games, lu = grade()
     data = dict(generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                 void=void, season=summary(g), nights=[], calib=[], lineup=[],
-                first=first_summary(g) if not g.empty else None)
+                first=first_summary(g) if not g.empty else None, pairs=pairs_record())
     names = {"official": "Official NHL roster", "lines": "Reported lines", "estimate": "Ice-time estimate"}
     lc = os.path.join(OUT, "linecheck.json")      # written by linecheck.py (shift charts vs the sheet)
     data["linecheck"] = json.load(open(lc)) if os.path.exists(lc) else None
@@ -254,6 +280,14 @@ function lineCheck(){
   return `<div class="tiles" style="margin-top:12px">${lines.forward ? cell(pct(lines.forward.m / lines.forward.n), 'Forward linemates right', `${lines.forward.n} forwards`) : ''}${lines.defense ? cell(pct(lines.defense.m / lines.defense.n), 'D partners right', `${lines.defense.n} defensemen`) : ''}${pp.t ? cell(pct(pp.r / pp.t), 'PP1 right', `${pp.t} team-games`) : ''}${c.positions ? cell(pct(c.positions.right), 'Positions right', `${c.positions.n} players`) : ''}</div>
     <p class="note">Checked against the NHL shift charts over ${c.games} games: a listed linemate counts as right when he was really among the player's most frequent even-strength linemates; PP1 is right when the player was among his team's top five in power-play time; positions are compared with the official game sheet.</p>`;
 }
+function pairsSec(){
+  const R = D.pairs; if (!R || !R.nights || !R.nights.length) return '<p class="note">2-leg 15x+ pairs: nothing graded yet (tracking started Oct 10, 2026).</p>';
+  const row = x => `<tr><td class="l">${x.legs.map((L, i) => `${esc(L.name)} <span class="small muted">${esc(L.team)} ${pct(L.p)}</span>${x.scored ? (x.scored[i] ? ' <span class="hit">✓</span>' : ' <span class="miss">✗</span>') : ''}`).join(' + ')}</td><td>${pct(x.p)}</td><td>${x.payout}x</td><td>${x.hit == null ? '<span class="muted">void</span>' : x.hit ? '<span class="hit">won</span>' : '<span class="miss">lost</span>'}</td></tr>`;
+  return `<h3 class="eyebrow" style="margin:14px 0 6px">2-leg pairs paying 15x+</h3>
+    <p class="small muted" style="margin:0 0 8px">${R.hits}-${R.n - R.hits} (${R.n ? (R.hits / R.n * 100).toFixed(1) : 0}% vs ${R.pred ? (R.pred * 100).toFixed(1) : '–'}% implied) · return if paid our fair odds ${R.ret != null ? (R.ret >= 0 ? '+' : '') + (R.ret * 100).toFixed(0) + '%' : '–'}. Five pairs a night, frozen at first puck drop. Backtest (one a night): 8.1% / 7.4% vs 6.7%.</p>
+    <div class="tw"><table class="t"><thead><tr><th class="l">Pair</th><th>Chance</th><th>Fair payout</th><th>Result</th></tr></thead><tbody>
+    ${R.nights.slice(0, 10).map(nt => `<tr><td class="l" colspan="4"><b>${esc(nt.date)}</b></td></tr>` + nt.pairs.map(row).join('')).join('')}</tbody></table></div>`;
+}
 function render(){
   const fair = p => p > 0 ? '+' + Math.round(100 * (1 - p) / p) : '–';
   const cal = D.calib.length ? `<h3 class="eyebrow" style="margin:14px 0 6px">Hit rate by goal-chance tier</h3>
@@ -266,7 +300,7 @@ function render(){
       ${g.first ? `<span class="small">First goal: ${g.first.scorer ? `<b>${esc(g.first.scorer)}</b>${g.first.p != null ? ` <span class="muted">${pct(g.first.p)}, #${g.first.rank} of ${g.first.n}</span>` : ' <span class="muted">(not projected)</span>'}` : '<span class="muted">none</span>'} · our pick ${esc(g.first.top)} <span class="muted">${pct(g.first.top_p)}</span>${g.first.top_hit ? ' <span class="hit">✓</span>' : ''}</span>` : ''}
       ${g.surprise.length ? `<span class="small muted">Surprise scorers (under 15%): ${g.surprise.map(p => `${esc(p.name)} ${pct(p.p)}`).join(', ')}</span>` : ''}</div>`).join('')}</div></section>`).join('');
   const lu = D.lineup && D.lineup.length ? `<div class="tw"><table class="t"><thead><tr><th class="l">Lineup source</th><th>Team-games</th><th>Listed players who played</th><th>Dressed but not listed (per team)</th></tr></thead><tbody>${D.lineup.map(r => `<tr><td class="l">${esc(r.src)}</td><td>${r.teams}</td><td class="big">${pct(r.played)}</td><td>${r.missed}</td></tr>`).join('')}</tbody></table></div><p class="note">How well each lineup source predicted who dressed. A perfect lineup lists all 18 skaters who played and misses none.</p>${lineCheck()}` : '';
-  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Season so far</h2>${D.void ? `<span class="small muted">${D.void} voided (didn't play)</span>` : ''}</div>${tiles(D.season)}${cal}${mlSec()}${firstSec()}${lu}</section>${nights}`;
+  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Season so far</h2>${D.void ? `<span class="small muted">${D.void} voided (didn't play)</span>` : ''}</div>${tiles(D.season)}${cal}${mlSec()}${firstSec()}${pairsSec()}${lu}</section>${nights}`;
 }
 render();
 </script>
