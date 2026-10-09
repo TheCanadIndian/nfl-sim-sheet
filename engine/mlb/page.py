@@ -100,6 +100,12 @@ function games(){
 // Kalshi 1+ HR ask for this hitter (live), and our edge after the fee; "value" = blend beats the ask by 6%+
 function kask(p){ if (!window.MKT || !MKT.has()) return null; const r = MKT.rows().find(r => String(r.g) === String(p.game_pk) && r.k === 'hr' && (r.l == null || r.l < 1) && r.s === 'kalshi' && (String(r.pid) === String(p.batter))); return r && r.ya ? r.ya : null; }
 function kflow(p){ if (!window.MKT || !MKT.has()) return null; const r = MKT.rows().find(r => String(r.g) === String(p.game_pk) && r.k === 'hr' && (r.l == null || r.l < 1) && r.s === 'kalshi' && String(r.pid) === String(p.batter)); return r && r.fl != null ? r.fl : null; }
+// build-your-own parlay (slip.js): homers are close to independent, so legs multiply
+function slipHr(p){
+  if (!window.SLIP) return '';
+  const g = (D.games || []).find(x => x.id === p.game_pk);
+  return SLIP.btn({id: `mlb|${p.game_pk}|${p.batter}|hr`, sport: 'mlb', g: p.game_pk, glab: g ? `${g.away} @ ${g.home}` : '', lab: `${p.name} to homer`, p: p.p_hr, side: 'over', stat: 'hr', line: .5});
+}
 function edge(p){ const a = kask(p); return a == null ? null : p.p_hr - a - .07 * a * (1 - a); }
 // data-confidence traffic light: weighted PAs (hitters) / batters faced (pitchers) = this season + 0.6 x last
 const LIGHT = {green: ['#2fbf71', 'enough data'], yellow: ['#f2c14e', 'building: numbers still lean partly on league averages'], red: ['#e5534b', 'thin data: numbers lean mostly on league averages']};
@@ -118,7 +124,7 @@ const planeHeat = p => { const f = planeOf(p); return f ? heat(50 + f.eff * 150)
 const COLS = [
   ['rank', 'Game rank', p => star(p), () => ''],
   ['start', 'Start', p => p.lineup === 'posted' ? '<b style="color:#2fbf71">✓</b>' : pc(p.p_start ?? 1).replace('.0%', '%'), p => p.lineup === 'posted' ? '' : heat((p.p_start ?? 1) * 100)],
-  ['hr', 'HR%', p => pc(p.p_hr) + valueChip(p), p => heat(ranks[p.batter + '|' + p.game_pk])],
+  ['hr', 'HR%', p => pc(p.p_hr) + valueChip(p) + slipHr(p), p => heat(ranks[p.batter + '|' + p.game_pk])],
   ['model', 'Model%', p => pc(p.p_model ?? p.p_hr), () => 'color:var(--muted)'],
   ['fair', 'Fair', p => odds(p.fair), () => ''],
   ['kalshi', 'Kalshi', p => window.MKT && MKT.has() ? MKT.cell(p.game_pk, p.batter, p.name, 'hr') : '–', () => ''],

@@ -196,6 +196,7 @@ def inject(src, dst, depth, active, model=None, other=None):
     sport = os.path.basename(os.path.dirname(dst))
     if os.path.basename(dst) == "index.html" and os.path.dirname(os.path.dirname(dst)) == SITE and sport in ("nfl", "nhl", "nba", "mlb"):
         s += f'<script src="../mkt.js" data-sport="{sport}"></script>'     # live market prices on the current slate
+        s += '<script src="../slip.js"></script>'                              # build-your-own parlay slip
     os.makedirs(os.path.dirname(dst), exist_ok=True)
     with open(dst, "w", encoding="utf-8") as f:
         f.write(s)
@@ -782,6 +783,14 @@ def redirect(dst, target):
 def main():
     os.makedirs(SITE, exist_ok=True)
     shutil.copy2(os.path.join(HERE, "mkt.js"), os.path.join(SITE, "mkt.js"))
+    shutil.copy2(os.path.join(HERE, "slip.js"), os.path.join(SITE, "slip.js"))
+    # saved simulations for the slip (current slate only: replace the folder)
+    for src, dst in ((os.path.join(HERE, "projections", "draws"), os.path.join(SITE, "nfl", "draws")),
+                     (os.path.join(HERE, "nba", "projections", "draws"), os.path.join(SITE, "nba", "draws"))):
+        if os.path.isdir(src):
+            if os.path.isdir(dst):
+                shutil.rmtree(dst)
+            shutil.copytree(src, dst)
     try:
         import markets
         for sp in ("nfl", "nhl", "nba", "mlb"):

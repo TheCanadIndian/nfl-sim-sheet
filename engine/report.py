@@ -633,6 +633,19 @@ function gamblyLink(legs, k, game){
   const prompt = `Build a ${k}-leg ${game ? 'same game parlay for ' + game : 'parlay'}: ${ls}`;
   return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt, autoSubmit: '1'}).toString();
 }
+// a card's legs as slip legs (player key looked up on this page; game legs read the saved margin / total)
+function cardSlipLegs(legs, gid){
+  const g = D.games.find(x => x.id === gid); if (!g) return [];
+  const pool = (state.gm[gid] === 'blind' && D.alt ? D.alt.players : D.players);
+  return legs.map(L => {
+    const base = {sport: 'nfl', g: gid, glab: `${g.away} @ ${g.home}`, lab: L.lab, p: L.p, model: state.gm[gid] === 'blind' ? 'blind' : 'vegas', draws: `nfl/draws/${gid}.json`};
+    if (L.kind === 'win') return {...base, id: `nfl|${gid}|win|${L.team}`, stat: 'win', home: L.team === g.home, side: 'over'};
+    if (L.kind === 'total') return {...base, id: `nfl|${gid}|total|over|${L.line}`, stat: 'total', line: L.line, side: 'over'};
+    const p = pool.find(x => x.g === gid && String(x.id) === String(L.pid)); if (!p) return null;
+    const stat = L.kind === 'anytime_td' ? 'tds' : L.kind, line = L.kind === 'anytime_td' ? .5 : L.line;
+    return {...base, id: `nfl|${gid}|${p.k}|${stat}|over|${line}|${base.model}`, stat, line, side: 'over', pk: p.k};
+  }).filter(Boolean);
+}
 const gamblyBtns = (legs, ks, game) => `<div class="gbtns"><span class="small muted">Build in Gambly:</span>${ks.map(k => `<a class="gbtn" href="${esc(gamblyLink(legs, k, game))}" target="_blank" rel="noopener" title="Opens Gambly's chat with these ${k} legs typed in; pick your book there">${k} legs ↗</a>`).join('')}</div>`;
 function sgpCard(P){
   const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
@@ -642,7 +655,8 @@ function sgpCard(P){
     <div class="small muted">${esc(P.desc)}</div>
     <ol>${legs}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table>
-    ${gamblyBtns(P.legs, P.rows.map(r => r.k), SGP_G ? `${SGP_G.away} @ ${SGP_G.home}` : '')}</div>`;
+    ${gamblyBtns(P.legs, P.rows.map(r => r.k), SGP_G ? `${SGP_G.away} @ ${SGP_G.home}` : '')}
+    ${window.SLIP && SGP_G ? `<div class="gbtns"><span class="small muted">My parlay:</span>${P.rows.map(r => SLIP.allBtn(cardSlipLegs(P.legs.slice(0, r.k), SGP_G.id), `+ ${r.k} legs`)).join('')}</div>` : ''}</div>`;
 }
 function sgpPanel(g){
   SGP_G = g; SGP_BLIND = !!isBlind(g);
@@ -981,6 +995,14 @@ function sliderRange(d, stat){
   const step = FSTATS[stat] && FSTATS[stat].step >= 5 ? 1 : .5;
   return {lo: Math.max(.5, Math.floor(d.q[2]) + .5), hi: Math.ceil(d.q[96]) + .5, step};
 }
+// build-your-own parlay (slip.js): legs from this page carry the game's saved simulations so same-game legs link
+const SLIP_LAB = {pass_yds: 'pass yds', att: 'pass att', cmp: 'completions', pass_td: 'pass TDs', ints: 'INTs', rush_yds: 'rush yds', car: 'carries', rec_yds: 'rec yds', rec: 'receptions', tgt: 'targets', tds: 'TDs'};
+const glabel = gid => { const g = D.games.find(x => x.id === gid); return g ? `${g.away} @ ${g.home}` : ''; };
+function slipLeg(p, stat, L, side, prob){
+  const model = state.gm[p.g] === 'blind' ? 'blind' : 'vegas';
+  const lab = stat === 'tds' && L === .5 ? (side === 'over' ? `${p.n} anytime TD` : `${p.n} no TD`) : `${p.n} ${side} ${L} ${SLIP_LAB[stat] || stat}`;
+  return {id: `nfl|${p.g}|${p.k}|${stat}|${side}|${L}|${model}`, sport: 'nfl', g: p.g, glab: glabel(p.g), lab, p: prob, side, stat, line: L, pk: p.k, model, draws: `nfl/draws/${p.g}.json`};
+}
 function sliderReadout(p, stat, L){
   const d = p.d[stat], r = probs(d, L), np = Math.max(r.over + r.under, 1e-9);
   const ov = r.over / np, un = r.under / np;
@@ -988,7 +1010,8 @@ function sliderReadout(p, stat, L){
   return `<div class="sl-out"><div class="sl-side over"><span>Over ${L}</span><b class="${so}">${pct(r.over)}</b><em>${american(ov)}</em></div>
     <div class="sl-meter" aria-hidden="true"><i class="f-${so || 'n'}" style="width:${r.over * 100}%"></i><i class="f-${su || 'n'}" style="width:${r.under * 100}%"></i></div>
     <div class="sl-side under"><span>Under ${L}</span><b class="${su}">${pct(r.under)}</b><em>${american(un)}</em></div></div>
-    ${r.push >= .005 ? `<p class="muted small" style="margin:0">Exactly ${L}: ${pct(r.push)} (a push; odds exclude it)</p>` : ''}`;
+    ${r.push >= .005 ? `<p class="muted small" style="margin:0">Exactly ${L}: ${pct(r.push)} (a push; odds exclude it)</p>` : ''}
+    ${window.SLIP ? `<div class="small muted" style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">My parlay: ${SLIP.btn(slipLeg(p, stat, L, 'over', r.over), 'Over ' + L)}${SLIP.btn(slipLeg(p, stat, L, 'under', r.under), 'Under ' + L)}</div>` : ''}`;
 }
 const MK_KIND = {rec_yds: ['rec_yds'], rush_yds: ['rush_yds'], pass_yds: ['pass_yds'], rec: ['rec'], tds: ['anytime_td', 'first_td']};
 function sliderPanel(p){
