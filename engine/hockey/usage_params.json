@@ -1,0 +1,25 @@
+{
+ "features": [
+  "l_att",
+  "l_len",
+  "l_spg",
+  "l_x6",
+  "l_late"
+ ],
+ "beta": [
+  0.201,
+  0.4509,
+  0.1624,
+  0.0381,
+  0.0486
+ ],
+ "mu": {
+  "l_att": -0.04302,
+  "l_len": 0.04403,
+  "l_spg": 0.01592,
+  "l_x6": -1.63308,
+  "l_late": -1.3649
+ },
+ "lg_att": 0.21888,
+ "note": "NHL usage ranking (display only; P(goal) stays the live model). Fit 2023-26 inside the live GLM design. Backtest 2025-26 (fit 23-25): ranking by live lam x exp(beta . usage) caught 1.045 scorers/game in top 3 vs 1.032 live."
+}
