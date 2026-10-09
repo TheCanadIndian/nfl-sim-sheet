@@ -34,7 +34,7 @@ MAX_P = .70                 # no watered-down legs (our own lines / moneylines)
 MAX_LEGS = 7
 SHOW = (5, 6, 7)
 LEAN = 1.04                 # a script leg must be 4%+ likelier in that script than overall
-CAL = {3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: .92}     # hit / predicted by leg count after the depth adjustments (backtest Oct 9 2026; capped at 1)
+CAL = {3: 1.0, 4: 1.0, 5: 1.0, 6: 1.0, 7: 1.0}     # hit / predicted by leg count after depth adjustments + late-leg rule (backtest Oct 9 2026; capped at 1)
 BASE_CLOSE, BASE_BLOWOUT = .423, .332   # the model's own typical game (2025 wk8-12 sims; real games .486 / .371: sims run margins wide)
 CAL_CROSS = .80             # cross-game parlays: 6 hits vs 8.1 predicted (132)
 BUMP = {"rec_yds": (5, 20), "rush_yds": (5, 20), "rec": (1, 2), "pass_yds": (5, 150)}   # line step, min median
@@ -45,6 +45,16 @@ ROLE_ADJ = {("RB2+", "*", "*"): -.05,                # backup RBs: hit 45.2% vs 
             ("WR3+", "rec", "*"): -.03,               # 51.1% vs 55.0%
             ("RB1", "rush_yds", "*"): .03,            # 54.6% vs 50.7%
             ("RB1", "anytime_td", "*"): .02}          # 56.5% vs 54.0%
+# Legs 6 and 7 must be 50%+ on their own AND a reliable type (Kalshi line, game leg, RB1 rushing / TD, WR1 or
+# TE1): backtest 2025-26, 7-leg hit 2.47% -> 3.48%, better in both halves (cards that can't find two such legs stop at 6).
+LATE_MIN_P = .50
+
+
+def reliable(L):
+    return (L["src"] == "Kalshi" or L["kind"] in ("win", "total") or (L.get("role") == "RB1" and L["kind"] in ("rush_yds", "anytime_td"))
+            or L.get("role") in ("WR1", "TE1"))
+
+
 HL_ADJ = {("QB", "pass_yds", "*"): -.03, ("RB1", "rec", "*"): -.10, ("TE1", "rec", "*"): -.03, ("WR1", "rec", "*"): -.025}   # Higher-lines legs
 
 
@@ -211,7 +221,9 @@ def _greedy(legs, mask, any_script, lean, chosen, used, joint):
         for L in legs:
             if L["player"] in used:
                 continue
-            if not any_script and L["hit"][mask].mean() / max(L["p"], 1e-9) < lean:
+            if not any_script and L["hit"][mask].mean() / max(L.get("p_sim", L["p"]), 1e-9) < lean:
+                continue
+            if len(chosen) >= 5 and (L["p"] < LATE_MIN_P or not reliable(L)):      # legs 6-7: only strong, reliable legs
                 continue
             j = joint & L["hit"]
             a = np.prod([x.get("adj", 1.0) for x in chosen]) * L.get("adj", 1.0)
