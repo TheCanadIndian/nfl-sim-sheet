@@ -84,6 +84,20 @@ PAIR_MIN_PAYOUT = 15.0   # user rule (Oct 2026): 2-leg parlays only if they pay 
 PAIRS_PER_NIGHT = 5
 
 
+SLATES = (("Early slate", 0, 17), ("Middle slate", 17, 21), ("Late slate", 21, 24))   # Eastern start hour
+
+
+def slates(games):
+    out = {}
+    for g in games:
+        if not g.get("start_utc"):
+            continue
+        h = pd.Timestamp(g["start_utc"]).tz_convert("America/New_York").hour
+        lab = next(l for l, a, b in SLATES if a <= h < b)
+        out.setdefault(lab, []).append(g)
+    return {l: out[l] for l, _, _ in SLATES if l in out}
+
+
 def pairs_15x(games, n=PAIRS_PER_NIGHT):
     """The likeliest anytime-goal pairs from DIFFERENT games whose fair payout is 15x+ (joint chance <= 1/15), no
     player used twice. Backtests: pairs like these hit about their implied rate (5-8% depending on which near-identical pair
@@ -371,11 +385,17 @@ def main():
         kept = [x for x in old["games"] if x["id"] not in set(todo.game_id.astype(int))]
         payload["games"] = sorted(kept + payload["games"], key=lambda x: x.get("start_utc") or "")
     # nightly 2-leg pairs paying 15x+ (frozen once the night's first game starts, so the record is pregame)
-    starts = [pd.Timestamp(x["start_utc"]) for x in payload["games"] if x.get("start_utc")]
-    if old.get("pairs") is not None and starts and min(starts) <= pd.Timestamp.now(tz="UTC"):
-        payload["pairs"] = old["pairs"]
-    else:
-        payload["pairs"] = pairs_15x(payload["games"])
+    # split by slate (early / middle / late, Eastern start time); each slate freezes at its own first puck drop
+    now = pd.Timestamp.now(tz="UTC")
+    payload["pairs"] = []
+    for sl, gs in slates(payload["games"]).items():
+        first = min(pd.Timestamp(x["start_utc"]) for x in gs)
+        olds = [x for x in (old.get("pairs") or []) if x.get("slate") == sl]
+        if first <= now and olds:
+            payload["pairs"] += olds
+        else:
+            payload["pairs"] += [dict(x, slate=sl, slate_start=first.tz_convert("America/New_York").strftime("%I:%M %p").lstrip("0")) for x in pairs_15x(gs)]
+    payload["slates"] = {sl: len(gs) for sl, gs in slates(payload["games"]).items()}
     rp = os.path.join(OUT, "pairs_record.json")
     payload["pairs_record"] = json.load(open(rp)) if os.path.exists(rp) else None
     json.dump(payload, open(json_path, "w"), separators=(",", ":"))
@@ -626,10 +646,15 @@ function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
   const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
   const legSlip = L => ({id: `nhl|${L.gid}|${L.id}|goal1`, sport: 'nhl', g: L.gid, glab: L.game, lab: `${L.name} to score`, p: L.p, side: 'over', stat: 'goals', line: .5});
+  const order = ['Early slate', 'Middle slate', 'Late slate'], by = {};
+  P.forEach(x => (by[x.slate || 'Tonight'] = by[x.slate || 'Tonight'] || []).push(x));
+  const rowsFor = list => list.map(x => `<tr><td class="l">${x.legs.map(L => `<b>${esc(L.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p)}</span>`).join(' + ')}</td><td class="big">${pct(x.p)}</td><td>${x.payout}x</td><td class="l">${window.SLIP ? SLIP.allBtn(x.legs.map(legSlip), '+ add pair') : ''}</td></tr>`).join('');
+  const singles = Object.entries(D.slates || {}).filter(([sl, n]) => n < 2 && !by[sl]).map(([sl]) => `<tr><td class="l muted" colspan="4"><b>${esc(sl)}</b>: one game only, no different-game pair possible</td></tr>`).join('');
+  const body = [...order.filter(k => by[k]), ...Object.keys(by).filter(k => !order.includes(k))].map(k => `<tr><td class="l" colspan="4"><b>${esc(k)}</b> <span class="small muted">first puck drop ${esc(by[k][0].slate_start || '')} ET · ${by[k].length} pair${by[k].length === 1 ? '' : 's'}</span></td></tr>` + rowsFor(by[k])).join('') + singles;
   return `<section class="panel"><div class="phead"><h2>2-leg pairs paying 15x+</h2><span class="small muted">${rec}</span></div>
-    <p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). These are fairly priced, not a proven edge: in backtests, pairs built this way hit about their implied 1 in 15 (anywhere from 5% to 8% depending on exactly which near-identical pair was picked). Pairs freeze at the night's first puck drop and are graded on the Results page.</p>
+    <p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). These are fairly priced, not a proven edge: in backtests, pairs built this way hit about their implied 1 in 15 (anywhere from 5% to 8% depending on exactly which near-identical pair was picked). Both legs come from the same slate (early before 5 PM ET, middle 5-9 PM, late 9 PM+), and each slate's pairs freeze at its first puck drop and are graded on the Results page.</p>
     <div class="tw"><table class="t"><thead><tr><th class="l">Pair</th><th>Chance</th><th>Fair payout</th><th class="l">My parlay</th></tr></thead><tbody>
-    ${P.map(x => `<tr><td class="l">${x.legs.map(L => `<b>${esc(L.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p)}</span>`).join(' + ')}</td><td class="big">${pct(x.p)}</td><td>${x.payout}x</td><td class="l">${window.SLIP ? SLIP.allBtn(x.legs.map(legSlip), '+ add pair') : ''}</td></tr>`).join('')}
+    ${body}
     </tbody></table></div></section>`;
 }
 function games(){
