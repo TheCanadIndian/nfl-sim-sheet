@@ -91,7 +91,7 @@ def pairs_15x(games, n=PAIRS_PER_NIGHT):
     import itertools
     P = [dict(gid=g["id"], game=f'{g["away"]["team"]} @ {g["home"]["team"]}', team=s["team"], id=p["id"], name=p["name"], p=p["p"])
          for g in games for s in (g["away"], g["home"]) for p in s["players"]]
-    P = sorted(P, key=lambda x: -x["p"])[:90]
+    P = sorted([x for x in P if x["p"] >= .08], key=lambda x: -x["p"])       # every plausible leg (a top-90 cut left big slates with no pair under 1/15)
     cands = sorted(((a["p"] * b["p"], a, b) for a, b in itertools.combinations(P, 2)
                     if a["gid"] != b["gid"] and a["p"] * b["p"] <= 1 / PAIR_MIN_PAYOUT), key=lambda z: -z[0])
     out, used = [], set()
