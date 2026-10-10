@@ -420,7 +420,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"nba","groups":[],"flow":{"nhl":{"value + NO flow":{"bets":2,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":33,"won":9,"roi":0.34},"crowded YES (buying YES)":{"bets":395,"won":62,"roi":-0.123}}}}</script>
+<script type="application/json" id="grdata">{"sport":"nba","groups":[],"flow":{}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
