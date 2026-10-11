@@ -738,15 +738,15 @@ function summaryPanel(g){
       <div class="sp-name"><b>${esc(c.name)}</b><span>${esc(c.team)} · ${esc(c.pos)}${c.label ? ' · ' + esc(c.label) : ''}</span></div>
       ${c.facts.length ? `<div class="sp-facts">${c.facts.map(esc).join(' · ')}</div>` : ''}
       ${c.reasons.map(r => `<div class="sp-why${/^tough/.test(r) ? ' neg' : ''}">↳ ${esc(r).replace(/ -- /g, ' — ')}</div>`).join('')}</div></div>`;
-  return `<section class="panel sp"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: who to look at</h2><span class="small muted">${esc(g.kickoff)}</span></div>
-    <div class="sp-list">${L.map(row).join('')}</div>
+  return `<section class="panel sp"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: what changed</h2><span class="small muted">${esc(g.kickoff)}</span></div>
+    ${L.length ? `<div class="sp-list">${L.map(row).join('')}</div>` : '<div class="empty" style="padding:8px 0">No notable changes for this game: no snap jumps, injuries opening up volume, or missing defenders.</div>'}
     <p class="note">Context only: the projections already include these.</p></section>`;
 }
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
-  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.spot && D.spot[g.id] ? [['sum', 'Summary']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
-  if (state.gtab === 'sum' && D.spot && D.spot[g.id]) return gsw + summaryPanel(g);
+  if (state.gtab === 'sum' && D.spot && g.id in D.spot) return gsw + summaryPanel(g);
   return gsw + gameDetailMain(g);
 }
 // game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)
