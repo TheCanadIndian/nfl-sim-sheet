@@ -167,6 +167,21 @@ function teamTable(g, team){
   const outLine = outs.length ? `<p class="muted small" style="margin:6px 0 0"><b style="color:var(--r2)">Out:</b> ${outs.map(o => `${esc(o.n)}${o.note ? ` <span title="${esc(o.note)}">(${esc(o.st)})</span>` : ''}`).join(', ')}. Their minutes are shared among the players below.</p>` : '';
   return outLine + `<div class="tw"><table class="t"><thead><tr><th class="l">${esc(team)}</th><th class="l">Pos</th>${COLS.map(c => `<th>${c === 'fg3m' ? '3PM' : c === 'pra' ? 'PRA' : c.toUpperCase()}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div>`;
 }
+// game legs for the parlay slip: normal around the projected margin (SD 12.5, nba/project.py MARGIN_SD) and total
+// (SD 18.5, approximate). They multiply with player legs (no joint game simulation saved for games).
+const MSD = 12.5, TSD = 18.5;
+function ncdf(z){ const t = 1 / (1 + .2316419 * Math.abs(z)), d = .3989423 * Math.exp(-z * z / 2), q = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - q : q; }
+function nbaGameBets(g){
+  if (!window.SLIP) return '';
+  const M = g.models[mode(g.id)], m = M.home_pts - M.away_pts, tot = M.home_pts + M.away_pts, gl = `${g.away} @ ${g.home}`;
+  const leg = (key, lab, p) => SLIP.btn({id: `nba|${g.id}|${key}|${mode(g.id)}`, sport: 'nba', g: g.id, glab: gl, lab: `${lab} (${gl})`, p, side: 'over', stat: key}, `${lab} ${pct(p)}`);
+  const out = [leg('ml_away', `${g.away} ML`, 1 - M.home_win), leg('ml_home', `${g.home} ML`, M.home_win)];
+  if (g.spread != null){ const L = -g.spread;     // home margin line (spread is the home team's line)
+    const ph = 1 - ncdf((L - m) / MSD);
+    out.push(leg('sp_away', `${g.away} ${g.spread > 0 ? '−' : '+'}${Math.abs(g.spread)}`, 1 - ph), leg('sp_home', `${g.home} ${g.spread > 0 ? '+' : '−'}${Math.abs(g.spread)}`.replace('+-', '−'), ph)); }
+  if (g.total != null){ const po = 1 - ncdf((g.total - tot) / TSD); out.push(leg('over', `Over ${g.total}`, po), leg('under', `Under ${g.total}`, 1 - po)); }
+  return `<div class="small muted" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0">Add to my parlay: ${out.join('')}</div>`;
+}
 function gameView(){
   const g = D.games.find(x => x.id === state.game) || D.games[0]; if (!g) return '<div class="empty">No games.</div>';
   const M = g.models[mode(g.id)], hw = M.home_win;
@@ -176,6 +191,7 @@ function gameView(){
     ${!g.has_line && mode(g.id) === 'vegas' ? '<p class="noline" style="margin:0">No betting line posted yet: With Vegas uses the market-blind team forecast until it is.</p>' : ''}
     <div class="score"><div class="side away"><span class="code">${esc(g.away)}</span><span class="pts">${f1(M.away_pts)}</span><span class="muted small">win ${pct(1 - hw)}</span></div><span class="at">@</span><div class="side home"><span class="code">${esc(g.home)}</span><span class="pts">${f1(M.home_pts)}</span><span class="muted small">win ${pct(hw)}</span></div></div>
     <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div>
+    ${nbaGameBets(g)}
     ${window.MKT ? MKT.game(g.id, mode(g.id)) : ''}</section>`;
   const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small">Median, with 8-in-10 range below. Color = matchup vs this defense. Tap a name to slide a line.</span></div>${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;

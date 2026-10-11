@@ -638,9 +638,12 @@ function mlBlock(g){
   const m = g.ml; if (!m) return '';
   const o = p => p == null ? '–' : odds(Math.abs(p - .5) < 1e-9 ? -100 : (p >= .5 ? -Math.round(100 * p / (1 - p)) : Math.round(100 * (1 - p) / p)));
   const fav = m.home >= m.away ? g.home.team : g.away.team;
-  const line = (lab, p) => `<span class="mlc"><span class="eyebrow">${lab}</span><b>${pct(p)}</b><span class="muted">${o(p)}</span></span>`;
-  const tline = Object.entries(m.totals).filter(([k]) => k === '5.5' || k === '6.5').map(([k, p]) => `<span class="mlc"><span class="eyebrow">O/U ${k}</span><b>${pct(p)} / ${pct(1 - p)}</b><span class="muted">${o(p)} / ${o(1 - p)}</span></span>`).join('');
-  return `<div class="mlrow">${line(g.away.team + ' ML', m.away)}${line(g.home.team + ' ML', m.home)}${line(g.away.team + ' −1.5', m.away_pl)}${line(g.home.team + ' −1.5', m.home_pl)}${tline}<span class="mlc"><span class="eyebrow">Proj total</span><b>${m.total.toFixed(1)}</b><span class="muted">OT ${pct(m.ot)}</span></span></div>`;
+  const gl = `${g.away.team} @ ${g.home.team}`;
+  // game legs for the parlay slip (multiply with goal legs: the goal model has no joint game simulation)
+  const gleg = (key, lab, p) => window.SLIP ? SLIP.btn({id: `nhl|${g.id}|${key}`, sport: 'nhl', g: g.id, glab: gl, lab, p, side: 'over', stat: key}, '') : '';
+  const line = (lab, p, key) => `<span class="mlc"><span class="eyebrow">${lab}</span><b>${pct(p)}</b><span class="muted">${o(p)}</span>${key ? `<span>${gleg(key, `${lab} (${gl})`, p)}</span>` : ''}</span>`;
+  const tline = Object.entries(m.totals).filter(([k]) => k === '5.5' || k === '6.5').map(([k, p]) => `<span class="mlc"><span class="eyebrow">O/U ${k}</span><b>${pct(p)} / ${pct(1 - p)}</b><span class="muted">${o(p)} / ${o(1 - p)}</span><span>${gleg('over' + k, `Over ${k} (${gl})`, p)}<small class="muted">O</small> ${gleg('under' + k, `Under ${k} (${gl})`, 1 - p)}<small class="muted">U</small></span></span>`).join('');
+  return `<div class="mlrow">${line(g.away.team + ' ML', m.away, 'ml_away')}${line(g.home.team + ' ML', m.home, 'ml_home')}${line(g.away.team + ' −1.5', m.away_pl, 'pl_away_m')}${line(g.home.team + ' −1.5', m.home_pl, 'pl_home_m')}${m.away_pl_plus != null ? line(g.away.team + ' +1.5', m.away_pl_plus, 'pl_away_p') + line(g.home.team + ' +1.5', m.home_pl_plus, 'pl_home_p') : ''}${tline}<span class="mlc"><span class="eyebrow">Proj total</span><b>${m.total.toFixed(1)}</b><span class="muted">OT ${pct(m.ot)}</span></span></div>`;
 }
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';

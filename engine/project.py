@@ -383,6 +383,9 @@ def main():
                 game_id=g.game_id, team=t.team, opp=opp, home=int(sign == 1),
                 vegas_implied=t.row["implied"], points=res["points"].mean(),
                 win_prob=np.mean(sign * margin > 0) + 0.5 * np.mean(margin == 0),
+                spread_line=float(g.spread_line), total_line=float(g.total_line),     # home margin line, game total line
+                p_cover=float(np.mean(sign * margin > sign * g.spread_line)), p_push=float(np.mean(margin == g.spread_line)),
+                p_over=float(np.mean(h["points"] + a["points"] > g.total_line)), p_under=float(np.mean(h["points"] + a["points"] < g.total_line)),
                 plays=res["plays"].mean(), pass_att=res["att"].mean(), cmp=res["cmp"].mean(),
                 pass_yds=res["pass_yds"].mean(), sacks=res["sacks"].mean(), ints=res["ints"].mean(),
                 rush_att=res["rush_att"].mean(), rush_yds=res["rush_yds"].mean(),
