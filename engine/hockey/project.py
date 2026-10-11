@@ -502,6 +502,12 @@ __CSS__
 .newp{font-size:11px;color:var(--muted);margin-left:6px}
 .src{margin:6px 0 2px}
 .sides .pbar{min-width:60px}
+.gjump{position:sticky;top:0;z-index:30;display:flex;gap:6px;overflow-x:auto;padding:8px 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.gjump::-webkit-scrollbar{display:none}
+.gjump a{flex:0 0 auto;display:flex;gap:6px;align-items:baseline;border:1px solid var(--faint);border-radius:999px;padding:5px 11px;color:var(--ink);text-decoration:none;font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.02em}
+.gjump a small{font-family:var(--body);font-weight:400;font-size:11.5px;color:var(--muted);letter-spacing:0}
+.gjump a:hover{border-color:var(--accent)}
+.gcard{scroll-margin-top:56px}
 .urtop{color:var(--accent);font-weight:700}
 .urup{color:var(--good)}
 .urdn{color:var(--muted)}
@@ -660,8 +666,13 @@ function pairsCard(){
     ${body}
     </tbody></table></div></section>`;
 }
+function jumpBar(){
+  if (D.games.length < 2) return '';
+  const t = g => (g.start || '').split('·').pop().replace(' ET', '').trim();
+  return `<nav class="gjump" aria-label="Jump to game">${D.games.map(g => `<a href="#g${g.id}">${esc(g.away.team)} @ ${esc(g.home.team)}<small>${esc(t(g))}</small></a>`).join('')}</nav>`;
+}
 function games(){
-  return picksKey() + pairsCard() + D.games.map(g => `<section class="panel gcard"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
+  return jumpBar() + picksKey() + pairsCard() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
     ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
 const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);

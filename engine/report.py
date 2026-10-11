@@ -433,11 +433,17 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
 @media (max-width:980px){.two{grid-template-columns:1fr}}
-@media (max-width:1100px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px}}
+@media (max-width:1100px) and (min-width:861px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px;width:auto;flex:0 0 auto}}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
-  .rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .game-btn{min-width:180px}
+  /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
+  .rail{position:sticky;top:0;z-index:30;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail::-webkit-scrollbar{display:none}
+  .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
+  .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
+  .game-btn .teams{font-size:15px}
+  .game-btn .m{gap:6px}
+  .game-btn > .line, .game-btn .mini{display:none}
   .pts{font-size:48px}
   h1{font-size:34px}
 }
@@ -1083,6 +1089,8 @@ function render(){
   main.innerHTML = state.view === 'board' ? renderBoard() : state.view === 'props' ? renderProps()
     : state.view === 'parlays' ? renderParlays() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
   save();
+  const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
+  if (cur && cur.parentElement.scrollWidth > cur.parentElement.clientWidth) cur.parentElement.scrollLeft = cur.offsetLeft - 12;
 }
 document.addEventListener('change', e => { if (e.target.id === 'agame'){ state.agame = e.target.value; render(); } });
 document.addEventListener('click', e => {

@@ -216,6 +216,8 @@ function dvpView(){
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : gameView();
+  const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
+  if (cur && cur.parentElement.scrollWidth > cur.parentElement.clientWidth) cur.parentElement.scrollLeft = cur.offsetLeft - 12;
 }
 document.addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return;
