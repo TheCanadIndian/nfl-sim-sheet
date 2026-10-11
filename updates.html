@@ -230,7 +230,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
   /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
-  .rail{position:sticky;top:0;z-index:30;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
   .rail::-webkit-scrollbar{display:none}
   .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
   .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
