@@ -216,11 +216,17 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
 @media (max-width:980px){.two{grid-template-columns:1fr}}
-@media (max-width:1100px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px}}
+@media (max-width:1100px) and (min-width:861px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px;width:auto;flex:0 0 auto}}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
-  .rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .game-btn{min-width:180px}
+  /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
+  .rail{position:sticky;top:0;z-index:30;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail::-webkit-scrollbar{display:none}
+  .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
+  .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
+  .game-btn .teams{font-size:15px}
+  .game-btn .m{gap:6px}
+  .game-btn > .line, .game-btn .mini{display:none}
   .pts{font-size:48px}
   h1{font-size:34px}
 }
@@ -283,7 +289,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <main id="main"></main>
   <footer>Every slate's projections are frozen at tip-off and graded against the box score, for both models. Players who didn't play are voided. A calibrated model puts about 80% of results inside its 8-in-10 range and about half above the median (a bit under for counts like threes, where landing exactly on the median is common).</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Oct 11, 2026 4:38 AM","void":0,"season":[],"nights":[]}</script>
+<script type="application/json" id="data">{"generated":"Oct 11, 2026 5:04 AM","void":0,"season":[],"nights":[]}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

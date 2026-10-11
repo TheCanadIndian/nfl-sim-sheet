@@ -215,11 +215,17 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
 @media (max-width:980px){.two{grid-template-columns:1fr}}
-@media (max-width:1100px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px}}
+@media (max-width:1100px) and (min-width:861px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px;width:auto;flex:0 0 auto}}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
-  .rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .game-btn{min-width:180px}
+  /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
+  .rail{position:sticky;top:0;z-index:30;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail::-webkit-scrollbar{display:none}
+  .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
+  .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
+  .game-btn .teams{font-size:15px}
+  .game-btn .m{gap:6px}
+  .game-btn > .line, .game-btn .mini{display:none}
   .pts{font-size:48px}
   h1{font-size:34px}
 }
@@ -420,7 +426,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"nba","groups":[],"flow":{"nfl":{"value + NO flow":{"bets":4,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":19,"won":6,"roi":-0.104},"crowded YES (buying YES)":{"bets":11,"won":3,"roi":-0.139}},"nhl":{"value + NO flow":{"bets":3,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":57,"won":11,"roi":0.032},"crowded YES (buying YES)":{"bets":735,"won":115,"roi":-0.14}}}}</script>
+<script type="application/json" id="grdata">{"sport":"nba","groups":[],"flow":{}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
