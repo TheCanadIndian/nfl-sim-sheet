@@ -679,6 +679,11 @@ function otherOutlook(){
   const S = (SGP_BLIND ? D.sgp : D.alt.sgp).games[SGP_G.id]; const o = S && S.outlook; if (!o) return '';
   return `<span class="muted">${SGP_BLIND ? 'Vegas model' : 'Market-blind model'}: ${o.expected === 'blowout' ? `${esc(o.fav)} blowout` : 'close game'} (7 or fewer ${pct(o.p_close)}, 14+ ${pct(o.p_blowout)})</span>`;
 }
+function crossSlipLegs(legs){
+  const byGame = {};
+  legs.forEach(L => { const g = D.games.find(x => `${x.away} @ ${x.home}` === L.game); if (g) (byGame[g.id] = byGame[g.id] || []).push(L); });
+  return Object.entries(byGame).flatMap(([gid, ls]) => cardSlipLegs(ls, gid));
+}
 function renderParlays(){
   const C = (D.sgp && D.sgp.cross) || [];
   if (!C.length) return '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
@@ -686,7 +691,8 @@ function renderParlays(){
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
     <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`).join('')}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table>
-    ${gamblyBtns(c.legs.map(L => ({lab: `${L.lab} (${L.game})`})), [c.legs.length], '')}</div>`;
+    ${gamblyBtns(c.legs.map(L => ({lab: `${L.lab} (${L.game})`})), [c.legs.length], '')}
+    ${window.SLIP ? `<div class="gbtns"><span class="small muted">My parlay:</span>${SLIP.allBtn(crossSlipLegs(c.legs), '+ add parlay')}</div>` : ''}</div>`;
   return `<section class="panel"><div class="phead"><h2>Long parlays by kickoff window and day</h2><span class="small muted">each game's strongest legs, stacked</span></div>
     <p class="note">Built from each game's most likely same-game parlay: its first legs (kept together, so their link counts), as many from each game as it takes to reach 5+ legs. The full-day parlay covers every game that day. Games are simulated separately, so across games the chances multiply. These overlap with the per-game parlays on purpose.</p>
     <div class="sgp-grid">${C.map(card).join('')}</div></section>`;
@@ -696,6 +702,22 @@ function gameDetail(){
   const gsw = D.sgp ? `<div class="seg" role="group" aria-label="Game view">${[['proj', 'Projections'], ['sgp', 'Same-game parlays']].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
   return gsw + gameDetailMain(g);
+}
+// game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)
+function gameBets(g){
+  if (!window.SLIP) return '';
+  const T = D.teams[g.id], H = T[g.home], A = T[g.away]; if (H.spread_line == null) return '';
+  const L = H.spread_line, tl = H.total_line, glab = `${g.away} @ ${g.home}`, base = {sport: 'nfl', g: g.id, glab, draws: `nfl/draws/${g.id}.json`, model: 'vegas'};
+  const sp = v => (v > 0 ? '+' : v < 0 ? '−' : '') + f1(Math.abs(v)).replace('.0', '');
+  const legs = [
+    {...base, id: `nfl|${g.id}|win|${g.away}`, stat: 'win', home: false, side: 'over', lab: `${g.away} moneyline`, p: A.win_prob},
+    {...base, id: `nfl|${g.id}|win|${g.home}`, stat: 'win', home: true, side: 'over', lab: `${g.home} moneyline`, p: H.win_prob},
+    {...base, id: `nfl|${g.id}|spread|${g.away}|${L}`, stat: 'spread', home: false, line: L, side: 'over', lab: `${g.away} ${sp(L)}`, p: A.p_cover},
+    {...base, id: `nfl|${g.id}|spread|${g.home}|${L}`, stat: 'spread', home: true, line: L, side: 'over', lab: `${g.home} ${sp(-L)}`, p: H.p_cover},
+    {...base, id: `nfl|${g.id}|total|over|${tl}`, stat: 'total', line: tl, side: 'over', lab: `Over ${tl} (${glab})`, p: H.p_over},
+    {...base, id: `nfl|${g.id}|total|under|${tl}`, stat: 'total', line: tl, side: 'under', lab: `Under ${tl} (${glab})`, p: H.p_under},
+  ];
+  return `<div class="gbtns"><span class="small muted">Add to my parlay:</span>${legs.map(x => SLIP.btn(x, `${x.lab.replace(` (${glab})`, '')} ${pct(x.p)}`)).join('')}</div>`;
 }
 function gameDetailMain(g){
   const A = TM(g)[g.away], H = TM(g)[g.home];
@@ -714,6 +736,7 @@ function gameDetailMain(g){
         <div class="score">${side(g.away, A, 'away')}<span class="at">@</span>${side(g.home, H, 'home')}</div>
         <div class="winbar"><div class="bar" role="img" aria-label="Win probability ${esc(g.away)} ${pct(A.win_prob)}, ${esc(g.home)} ${pct(H.win_prob)}"><i style="flex:${A.win_prob};background:var(--away)"></i><i style="flex:${H.win_prob};background:var(--accent)"></i></div>
           <div class="lbl"><span>${esc(g.away)} ${pct(A.win_prob)}</span><span class="muted">projected points and win chance</span><span>${esc(g.home)} ${pct(H.win_prob)}</span></div></div>
+        ${gameBets(g)}
         ${firstTdBlock(g)}
         ${window.MKT ? MKT.game(g.id, isBlind(g) ? 'blind' : 'vegas') : ''}
         ${isBlind(g) ? '<p class="note" style="margin:0">Market-blind: this game simulated without the Vegas spread or total (its own points forecast). Vegas lines shown for comparison.</p>' : ''}
