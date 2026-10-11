@@ -219,7 +219,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
   /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
-  .rail{position:sticky;top:0;z-index:30;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
   .rail::-webkit-scrollbar{display:none}
   .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
   .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
@@ -423,7 +423,8 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
           <p style="margin:0" class="muted">Settings the model has adopted on its own:</p><ul class="plan" style="margin:0"><li class='muted'>None yet: the code defaults are still the best tested settings.</li></ul><div class='tw'><table class='t'><thead><tr><th class='l'>Run</th><th class='l'>Result</th><th class='l'>Settings tested</th><th>Tested on</th></tr></thead><tbody><tr><td class='l'>Oct 6, 2026</td><td class='l'><span class="badge">No change</span> nothing beat the current settings in both test windows</td><td class='l small muted' style='white-space:normal'>even-strength rate shrinkage (hours), finishing shrinkage (expected goals of evidence), ice-time memory (games), shot-rate memory (games)</td><td class='muted'>20242025, 20252026</td></tr></tbody></table></div></section>
   <section id="nba"><h2>NBA</h2>
           <p style="margin:0" class="muted">Settings the model has adopted on its own:</p><ul class="plan" style="margin:0"><li class='muted'>None yet: the code defaults are still the best tested settings.</li></ul><p class='muted' style='margin:0'>No self-tuning runs yet. The first runs Tuesday morning.</p></section>
-  </div></div><script>
+  </div></div><script>(function(){function f(){var t=document.querySelector('.topbar');if(t)document.documentElement.style.setProperty('--tbh',Math.round(t.getBoundingClientRect().height)+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
+<script>
 (function(){ var b = document.getElementById('newbie'); if (!b) return;
   try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
   b.hidden = false;
