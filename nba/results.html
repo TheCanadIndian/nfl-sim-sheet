@@ -181,6 +181,23 @@ input[type=search]{min-width:200px}
 .gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
+.sp-list{display:grid;gap:0}
+.sp-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--faint)}
+.sp-row:first-child{border-top:0}
+.tierb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;white-space:nowrap;margin-top:3px}
+.tierb.t1{background:var(--accent);color:var(--bg)}
+.tierb.t2{background:#F2C14E;color:var(--bg)}
+.tierb.t3{background:var(--sunk);color:var(--muted);border:1px solid var(--faint)}
+.sp-name{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sp-name b{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:.01em}
+.sp-name span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sp-facts{font-size:13.5px;margin-top:3px}
+.sp-why{font-size:13.5px;color:#F2C14E;margin-top:2px}
+.sp-why.neg{color:var(--r2)}
+.gsw{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.gsw::-webkit-scrollbar{display:none}
+.gsw button{white-space:nowrap}
+@media (max-width:520px){.sp-row{grid-template-columns:1fr;gap:4px}.tierb{justify-self:start;margin-top:0}.sp-name b{font-size:19px}}
 .legsrc.both{color:var(--good);border-color:var(--good)}
 .legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
 @media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
@@ -300,7 +317,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <main id="main"></main>
   <footer>Every slate's projections are frozen at tip-off and graded against the box score, for both models. Players who didn't play are voided. A calibrated model puts about 80% of results inside its 8-in-10 range and about half above the median (a bit under for counts like threes, where landing exactly on the median is common).</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Oct 11, 2026 5:13 AM","void":0,"season":[],"nights":[]}</script>
+<script type="application/json" id="data">{"generated":"Oct 11, 2026 10:02 AM","void":0,"season":[],"nights":[]}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
