@@ -29,9 +29,11 @@
   }
   function hitsFor(L, D){
     let x;
-    if (L.stat === 'win' || L.stat === 'total'){
-      const m = decode(D.g && D.g[L.stat === 'win' ? 'margin' : 'total']); if (!m) return null;
-      return Array.from(m, v => L.stat === 'win' ? (L.home ? v > 0 : v < 0) : (L.side === 'under' ? v < L.line : v > L.line));
+    if (L.stat === 'win' || L.stat === 'total' || L.stat === 'spread'){
+      const m = decode(D.g && D.g[L.stat === 'total' ? 'total' : 'margin']); if (!m) return null;
+      if (L.stat === 'win') return Array.from(m, v => L.home ? v > 0 : v < 0);
+      if (L.stat === 'spread') return Array.from(m, v => L.home ? v > L.line : v < L.line);      // line = home margin line
+      return Array.from(m, v => L.side === 'under' ? v < L.line : v > L.line);
     }
     x = decode(D.p && D.p[L.pk] && D.p[L.pk][L.stat]); if (!x) return null;
     return Array.from(x, v => L.side === 'under' ? v < L.line : v > L.line);
