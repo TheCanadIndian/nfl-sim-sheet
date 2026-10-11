@@ -149,6 +149,17 @@ table.t{width:100%;border-collapse:collapse;font-size:14px}
 select,input[type=search]{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px}
 input[type=search]{min-width:200px}
 .empty{padding:28px 8px;color:var(--muted)}
+.betgrid{display:grid;gap:8px}
+.betrow{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center}
+.bets{display:flex;flex-wrap:wrap;gap:6px}
+.bet{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px}
+.bet b{font-family:var(--display);font-size:17px;font-weight:700}
+.bet small{color:var(--muted);font-size:12px}
+.bet i{font-style:normal;color:var(--accent);font-weight:700;margin-left:2px}
+.bet.on{border-color:var(--accent);background:rgba(54,211,153,.12)}
+.bet:disabled{cursor:default}
+.bet:disabled i{display:none}
+@media (max-width:520px){.betrow{grid-template-columns:1fr;gap:4px}.bets{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bet{justify-content:space-between;gap:4px;padding:5px 8px;font-size:12.5px;min-width:0}.bet b{font-size:15px}.bet small{display:none}.bet span{white-space:nowrap}}
 .sgp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
 .sgp{border:1px solid var(--faint);border-radius:9px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--bg)}
 .sgp h3{font-family:var(--display);font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
@@ -167,6 +178,23 @@ input[type=search]{min-width:200px}
 .gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
+.sp-list{display:grid;gap:0}
+.sp-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--faint)}
+.sp-row:first-child{border-top:0}
+.tierb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;white-space:nowrap;margin-top:3px}
+.tierb.t1{background:var(--accent);color:var(--bg)}
+.tierb.t2{background:#F2C14E;color:var(--bg)}
+.tierb.t3{background:var(--sunk);color:var(--muted);border:1px solid var(--faint)}
+.sp-name{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sp-name b{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:.01em}
+.sp-name span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sp-facts{font-size:13.5px;margin-top:3px}
+.sp-why{font-size:13.5px;color:#F2C14E;margin-top:2px}
+.sp-why.neg{color:var(--r2)}
+.gsw{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.gsw::-webkit-scrollbar{display:none}
+.gsw button{white-space:nowrap}
+@media (max-width:520px){.sp-row{grid-template-columns:1fr;gap:4px}.tierb{justify-self:start;margin-top:0}.sp-name b{font-size:19px}}
 .legsrc.both{color:var(--good);border-color:var(--good)}
 .legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
 @media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
@@ -213,11 +241,17 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
 @media (max-width:980px){.two{grid-template-columns:1fr}}
-@media (max-width:1100px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px}}
+@media (max-width:1100px) and (min-width:861px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px;width:auto;flex:0 0 auto}}
 @media (max-width:860px){
   .games{grid-template-columns:1fr}
-  .rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .game-btn{min-width:180px}
+  /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
+  .rail{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail::-webkit-scrollbar{display:none}
+  .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
+  .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
+  .game-btn .teams{font-size:15px}
+  .game-btn .m{gap:6px}
+  .game-btn > .line, .game-btn .mini{display:none}
   .pts{font-size:48px}
   h1{font-size:34px}
 }
@@ -273,7 +307,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 <div class="wrap"><header class="hero" style="display:grid;gap:6px"><h1>Home run results</h1>
 <p class="sub" style="color:var(--muted);max-width:70ch;margin:0">Every pregame home-run chance, frozen at first pitch, against what happened. Only hitters who batted count.</p></header>
 <main id="main"></main></div>
-<script type="application/json" id="data">{"pergame": {"games": 24, "caught": 0.583, "any": 0.458, "random": 0.285}, "n": 432, "homered": 41, "expected": 50.1, "logloss": 0.3019, "top5": {"n": 45, "hit": 9, "expected": 9.4}, "calibration": [{"bin": "<6%", "n": 56, "predicted": 0.045, "actual": 0.036}, {"bin": "6-9%", "n": 87, "predicted": 0.076, "actual": 0.057}, {"bin": "9-12%", "n": 105, "predicted": 0.103, "actual": 0.067}, {"bin": "12-15%", "n": 86, "predicted": 0.134, "actual": 0.105}, {"bin": "15-20%", "n": 71, "predicted": 0.17, "actual": 0.169}, {"bin": "20%+", "n": 27, "predicted": 0.239, "actual": 0.222}], "nights": [{"date": "2026-10-08", "n": 18, "hrs": 2, "expected": 1.59}, {"date": "2026-10-07", "n": 72, "hrs": 4, "expected": 8.23}, {"date": "2026-10-06", "n": 36, "hrs": 4, "expected": 3.88}, {"date": "2026-10-05", "n": 36, "hrs": 1, "expected": 3.67}, {"date": "2026-10-04", "n": 36, "hrs": 1, "expected": 4.91}, {"date": "2026-10-03", "n": 72, "hrs": 9, "expected": 8.72}, {"date": "2026-10-01", "n": 18, "hrs": 3, "expected": 2.5}, {"date": "2026-09-30", "n": 72, "hrs": 11, "expected": 8.33}, {"date": "2026-09-29", "n": 72, "hrs": 6, "expected": 8.27}], "tops": {"2026-09-29": [{"name": "Yordan Alvarez", "team": "HOU", "p": 0.2691, "y": 0}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.2346, "y": 0}, {"name": "Kyle Schwarber", "team": "PHI", "p": 0.2237, "y": 0}, {"name": "Pete Crow-Armstrong", "team": "CHC", "p": 0.2026, "y": 0}, {"name": "Manny Machado", "team": "SD", "p": 0.1874, "y": 1}], "2026-09-30": [{"name": "Yordan Alvarez", "team": "HOU", "p": 0.2935, "y": 0}, {"name": "Kyle Schwarber", "team": "PHI", "p": 0.2781, "y": 1}, {"name": "Pete Crow-Armstrong", "team": "CHC", "p": 0.2137, "y": 0}, {"name": "Ben Rice", "team": "NYY", "p": 0.1997, "y": 0}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.1937, "y": 0}], "2026-10-01": [{"name": "Matt Olson", "team": "ATL", "p": 0.2742, "y": 1}, {"name": "Kyle Schwarber", "team": "PHI", "p": 0.273, "y": 0}, {"name": "Drake Baldwin", "team": "ATL", "p": 0.2133, "y": 0}, {"name": "Michael Harris II", "team": "ATL", "p": 0.1842, "y": 1}, {"name": "Ronald Acu\u00f1a Jr.", "team": "ATL", "p": 0.1658, "y": 0}], "2026-10-03": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.3121, "y": 0}, {"name": "Will Smith", "team": "LAD", "p": 0.2454, "y": 0}, {"name": "Matt Olson", "team": "ATL", "p": 0.2332, "y": 0}, {"name": "Ben Rice", "team": "NYY", "p": 0.2198, "y": 0}, {"name": "Max Muncy", "team": "LAD", "p": 0.2187, "y": 1}], "2026-10-04": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.3039, "y": 0}, {"name": "Will Smith", "team": "LAD", "p": 0.2382, "y": 0}, {"name": "Matt Olson", "team": "ATL", "p": 0.2224, "y": 0}, {"name": "Teoscar Hern\u00e1ndez", "team": "LAD", "p": 0.197, "y": 0}, {"name": "Mookie Betts", "team": "LAD", "p": 0.1964, "y": 0}], "2026-10-05": [{"name": "Ben Rice", "team": "NYY", "p": 0.2269, "y": 1}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.1779, "y": 0}, {"name": "Spencer Jones", "team": "NYY", "p": 0.1761, "y": 0}, {"name": "Luis Garc\u00eda Jr.", "team": "NYY", "p": 0.1738, "y": 0}, {"name": "Junior Caminero", "team": "TB", "p": 0.1641, "y": 0}], "2026-10-06": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.2119, "y": 0}, {"name": "Jackson Merrill", "team": "SD", "p": 0.1756, "y": 0}, {"name": "Jake Bauers", "team": "MIL", "p": 0.1731, "y": 0}, {"name": "Fernando Tatis Jr.", "team": "SD", "p": 0.1713, "y": 0}, {"name": "Matt Olson", "team": "ATL", "p": 0.1658, "y": 0}], "2026-10-07": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.2477, "y": 0}, {"name": "Ben Rice", "team": "NYY", "p": 0.2368, "y": 0}, {"name": "Max Muncy", "team": "LAD", "p": 0.2236, "y": 1}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.2146, "y": 0}, {"name": "Spencer Jones", "team": "NYY", "p": 0.1977, "y": 0}], "2026-10-08": [{"name": "Munetaka Murakami", "team": "CWS", "p": 0.1556, "y": 0}, {"name": "Jo Adell", "team": "CLE", "p": 0.1386, "y": 0}, {"name": "Miguel Vargas", "team": "CWS", "p": 0.1325, "y": 1}, {"name": "Randal Grichuk", "team": "CWS", "p": 0.1278, "y": 0}, {"name": "Jos\u00e9 Ram\u00edrez", "team": "CLE", "p": 0.1105, "y": 1}]}, "value": {"value + NO flow": {"bets": 0, "won": 0, "roi": null}, "value, YES-heavy flow": {"bets": 0, "won": 0, "roi": null}}}</script>
+<script type="application/json" id="data">{"pergame": {"games": 25, "caught": 0.6, "any": 0.48, "random": 0.28}, "n": 450, "homered": 42, "expected": 52.1, "logloss": 0.2982, "top5": {"n": 50, "hit": 10, "expected": 10.22}, "calibration": [{"bin": "<6%", "n": 58, "predicted": 0.045, "actual": 0.034}, {"bin": "6-9%", "n": 92, "predicted": 0.076, "actual": 0.054}, {"bin": "9-12%", "n": 109, "predicted": 0.104, "actual": 0.064}, {"bin": "12-15%", "n": 90, "predicted": 0.134, "actual": 0.1}, {"bin": "15-20%", "n": 73, "predicted": 0.17, "actual": 0.178}, {"bin": "20%+", "n": 28, "predicted": 0.237, "actual": 0.214}], "nights": [{"date": "2026-10-10", "n": 18, "hrs": 1, "expected": 1.98}, {"date": "2026-10-08", "n": 18, "hrs": 2, "expected": 1.59}, {"date": "2026-10-07", "n": 72, "hrs": 4, "expected": 8.23}, {"date": "2026-10-06", "n": 36, "hrs": 4, "expected": 3.88}, {"date": "2026-10-05", "n": 36, "hrs": 1, "expected": 3.67}, {"date": "2026-10-04", "n": 36, "hrs": 1, "expected": 4.91}, {"date": "2026-10-03", "n": 72, "hrs": 9, "expected": 8.72}, {"date": "2026-10-01", "n": 18, "hrs": 3, "expected": 2.5}, {"date": "2026-09-30", "n": 72, "hrs": 11, "expected": 8.33}, {"date": "2026-09-29", "n": 72, "hrs": 6, "expected": 8.27}], "tops": {"2026-09-29": [{"name": "Yordan Alvarez", "team": "HOU", "p": 0.2691, "y": 0}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.2346, "y": 0}, {"name": "Kyle Schwarber", "team": "PHI", "p": 0.2237, "y": 0}, {"name": "Pete Crow-Armstrong", "team": "CHC", "p": 0.2026, "y": 0}, {"name": "Manny Machado", "team": "SD", "p": 0.1874, "y": 1}], "2026-09-30": [{"name": "Yordan Alvarez", "team": "HOU", "p": 0.2935, "y": 0}, {"name": "Kyle Schwarber", "team": "PHI", "p": 0.2781, "y": 1}, {"name": "Pete Crow-Armstrong", "team": "CHC", "p": 0.2137, "y": 0}, {"name": "Ben Rice", "team": "NYY", "p": 0.1997, "y": 0}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.1937, "y": 0}], "2026-10-01": [{"name": "Matt Olson", "team": "ATL", "p": 0.2742, "y": 1}, {"name": "Kyle Schwarber", "team": "PHI", "p": 0.273, "y": 0}, {"name": "Drake Baldwin", "team": "ATL", "p": 0.2133, "y": 0}, {"name": "Michael Harris II", "team": "ATL", "p": 0.1842, "y": 1}, {"name": "Ronald Acu\u00f1a Jr.", "team": "ATL", "p": 0.1658, "y": 0}], "2026-10-03": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.3121, "y": 0}, {"name": "Will Smith", "team": "LAD", "p": 0.2454, "y": 0}, {"name": "Matt Olson", "team": "ATL", "p": 0.2332, "y": 0}, {"name": "Ben Rice", "team": "NYY", "p": 0.2198, "y": 0}, {"name": "Max Muncy", "team": "LAD", "p": 0.2187, "y": 1}], "2026-10-04": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.3039, "y": 0}, {"name": "Will Smith", "team": "LAD", "p": 0.2382, "y": 0}, {"name": "Matt Olson", "team": "ATL", "p": 0.2224, "y": 0}, {"name": "Teoscar Hern\u00e1ndez", "team": "LAD", "p": 0.197, "y": 0}, {"name": "Mookie Betts", "team": "LAD", "p": 0.1964, "y": 0}], "2026-10-05": [{"name": "Ben Rice", "team": "NYY", "p": 0.2269, "y": 1}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.1779, "y": 0}, {"name": "Spencer Jones", "team": "NYY", "p": 0.1761, "y": 0}, {"name": "Luis Garc\u00eda Jr.", "team": "NYY", "p": 0.1738, "y": 0}, {"name": "Junior Caminero", "team": "TB", "p": 0.1641, "y": 0}], "2026-10-06": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.2119, "y": 0}, {"name": "Jackson Merrill", "team": "SD", "p": 0.1756, "y": 0}, {"name": "Jake Bauers", "team": "MIL", "p": 0.1731, "y": 0}, {"name": "Fernando Tatis Jr.", "team": "SD", "p": 0.1713, "y": 0}, {"name": "Matt Olson", "team": "ATL", "p": 0.1658, "y": 0}], "2026-10-07": [{"name": "Shohei Ohtani", "team": "LAD", "p": 0.2477, "y": 0}, {"name": "Ben Rice", "team": "NYY", "p": 0.2368, "y": 0}, {"name": "Max Muncy", "team": "LAD", "p": 0.2236, "y": 1}, {"name": "Munetaka Murakami", "team": "CWS", "p": 0.2146, "y": 0}, {"name": "Spencer Jones", "team": "NYY", "p": 0.1977, "y": 0}], "2026-10-08": [{"name": "Munetaka Murakami", "team": "CWS", "p": 0.1556, "y": 0}, {"name": "Jo Adell", "team": "CLE", "p": 0.1386, "y": 0}, {"name": "Miguel Vargas", "team": "CWS", "p": 0.1325, "y": 1}, {"name": "Randal Grichuk", "team": "CWS", "p": 0.1278, "y": 0}, {"name": "Jos\u00e9 Ram\u00edrez", "team": "CLE", "p": 0.1105, "y": 1}], "2026-10-10": [{"name": "Munetaka Murakami", "team": "CWS", "p": 0.2048, "y": 0}, {"name": "Jo Adell", "team": "CLE", "p": 0.1635, "y": 0}, {"name": "Jos\u00e9 Ram\u00edrez", "team": "CLE", "p": 0.1619, "y": 1}, {"name": "Colson Montgomery", "team": "CWS", "p": 0.1491, "y": 0}, {"name": "Nathaniel Lowe", "team": "CLE", "p": 0.1406, "y": 0}]}, "value": {"value + NO flow": {"bets": 0, "won": 0, "roi": null}, "value, YES-heavy flow": {"bets": 0, "won": 0, "roi": null}}}</script>
 <script>
 const S = JSON.parse(document.getElementById('data').textContent), pct = p => (p * 100).toFixed(1) + '%';
 const m = document.getElementById('main');
@@ -286,7 +320,8 @@ else m.innerHTML = `<section class="panel" style="display:grid;gap:10px"><h2>Run
   ${S.calibration.map(r => `<tr><td class="l">${r.bin}</td><td>${r.n}</td><td>${pct(r.predicted)}</td><td class="big">${pct(r.actual)}</td></tr>`).join('')}</tbody></table></div></section>
   <section class="panel" style="display:grid;gap:10px"><h2>By night</h2><div class="tw"><table class="t"><thead><tr><th class="l">Date</th><th>Hitters</th><th>HR hitters</th><th>Expected</th><th class="l">Top 5</th></tr></thead><tbody>
   ${S.nights.map(r => `<tr><td class="l">${r.date}</td><td>${r.n}</td><td class="big">${r.hrs}</td><td>${r.expected}</td><td class="l small">${(S.tops[r.date] || []).map(t => `${t.y ? '✅' : '·'} ${t.name} ${pct(t.p)}`).join(' &nbsp; ')}</td></tr>`).join('')}</tbody></table></div></section>`;
-</script><script>
+</script><script>(function(){function f(){var t=document.querySelector('.topbar');if(t)document.documentElement.style.setProperty('--tbh',Math.round(t.getBoundingClientRect().height)+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
+<script>
 (function(){ var b = document.getElementById('newbie'); if (!b) return;
   try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
   b.hidden = false;
