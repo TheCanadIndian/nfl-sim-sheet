@@ -105,7 +105,8 @@ BAR_CSS = """
 }
 """
 
-NEWBIE_JS = """<script>
+NEWBIE_JS = """<script>(function(){function f(){var t=document.querySelector('.topbar');if(t)document.documentElement.style.setProperty('--tbh',Math.round(t.getBoundingClientRect().height)+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
+<script>
 (function(){ var b = document.getElementById('newbie'); if (!b) return;
   try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
   b.hidden = false;

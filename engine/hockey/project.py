@@ -502,16 +502,27 @@ __CSS__
 .newp{font-size:11px;color:var(--muted);margin-left:6px}
 .src{margin:6px 0 2px}
 .sides .pbar{min-width:60px}
-.gjump{position:sticky;top:0;z-index:30;display:flex;gap:6px;overflow-x:auto;padding:8px 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.gjump{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;gap:6px;overflow-x:auto;padding:8px 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .gjump::-webkit-scrollbar{display:none}
 .gjump a{flex:0 0 auto;display:flex;gap:6px;align-items:baseline;border:1px solid var(--faint);border-radius:999px;padding:5px 11px;color:var(--ink);text-decoration:none;font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.02em}
 .gjump a small{font-family:var(--body);font-weight:400;font-size:11.5px;color:var(--muted);letter-spacing:0}
 .gjump a:hover{border-color:var(--accent)}
-.gcard{scroll-margin-top:56px}
+.gcard{scroll-margin-top:calc(var(--tbh,0px) + 56px)}
 .urtop{color:var(--accent);font-weight:700}
 .urup{color:var(--good)}
 .urdn{color:var(--muted)}
 .mlrow{display:flex;flex-wrap:wrap;gap:8px}
+.betgrid{display:grid;gap:8px}
+.betrow{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center}
+.bets{display:flex;flex-wrap:wrap;gap:6px}
+.bet{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px}
+.bet b{font-family:var(--display);font-size:17px;font-weight:700}
+.bet small{color:var(--muted);font-size:12px}
+.bet i{font-style:normal;color:var(--accent);font-weight:700;margin-left:2px}
+.bet.on{border-color:var(--accent);background:rgba(54,211,153,.12)}
+.bet:disabled{cursor:default}
+.bet:disabled i{display:none}
+@media (max-width:520px){.betrow{grid-template-columns:1fr;gap:4px}.bets{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bet{justify-content:space-between;gap:4px;padding:5px 8px;font-size:12.5px;min-width:0}.bet b{font-size:15px}.bet small{display:none}.bet span{white-space:nowrap}}
 .mlc{display:grid;gap:1px;background:var(--sunk);border-radius:7px;padding:7px 12px;min-width:104px}
 .mlc b{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.1}
 .mlc .muted{font-size:12.5px}
@@ -643,13 +654,21 @@ function picksKey(){
 function mlBlock(g){
   const m = g.ml; if (!m) return '';
   const o = p => p == null ? '–' : odds(Math.abs(p - .5) < 1e-9 ? -100 : (p >= .5 ? -Math.round(100 * p / (1 - p)) : Math.round(100 * (1 - p) / p)));
-  const fav = m.home >= m.away ? g.home.team : g.away.team;
   const gl = `${g.away.team} @ ${g.home.team}`;
-  // game legs for the parlay slip (multiply with goal legs: the goal model has no joint game simulation)
-  const gleg = (key, lab, p) => window.SLIP ? SLIP.btn({id: `nhl|${g.id}|${key}`, sport: 'nhl', g: g.id, glab: gl, lab, p, side: 'over', stat: key}, '') : '';
-  const line = (lab, p, key) => `<span class="mlc"><span class="eyebrow">${lab}</span><b>${pct(p)}</b><span class="muted">${o(p)}</span>${key ? `<span>${gleg(key, `${lab} (${gl})`, p)}</span>` : ''}</span>`;
-  const tline = Object.entries(m.totals).filter(([k]) => k === '5.5' || k === '6.5').map(([k, p]) => `<span class="mlc"><span class="eyebrow">O/U ${k}</span><b>${pct(p)} / ${pct(1 - p)}</b><span class="muted">${o(p)} / ${o(1 - p)}</span><span>${gleg('over' + k, `Over ${k} (${gl})`, p)}<small class="muted">O</small> ${gleg('under' + k, `Under ${k} (${gl})`, 1 - p)}<small class="muted">U</small></span></span>`).join('');
-  return `<div class="mlrow">${line(g.away.team + ' ML', m.away, 'ml_away')}${line(g.home.team + ' ML', m.home, 'ml_home')}${line(g.away.team + ' −1.5', m.away_pl, 'pl_away_m')}${line(g.home.team + ' −1.5', m.home_pl, 'pl_home_m')}${m.away_pl_plus != null ? line(g.away.team + ' +1.5', m.away_pl_plus, 'pl_away_p') + line(g.home.team + ' +1.5', m.home_pl_plus, 'pl_home_p') : ''}${tline}<span class="mlc"><span class="eyebrow">Proj total</span><b>${m.total.toFixed(1)}</b><span class="muted">OT ${pct(m.ot)}</span></span></div>`;
+  // each option is one tappable chip that adds it to the parlay slip (game legs multiply with goal legs)
+  const chip = (key, lab, p, full) => {
+    const L = {id: `nhl|${g.id}|${key}`, sport: 'nhl', g: g.id, glab: gl, lab: `${full || lab} (${gl})`, p, side: 'over', stat: key};
+    const on = window.SLIP && SLIP.has(L.id);
+    return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${o(p)}</small><i>${on ? '✓' : '+'}</i></button>`;
+  };
+  const row = (lab, chips) => `<div class="betrow"><span class="eyebrow">${lab}</span><div class="bets">${chips.join('')}</div></div>`;
+  const A = g.away.team, H = g.home.team;
+  const rows = [row('Moneyline', [chip('ml_away', A, m.away), chip('ml_home', H, m.home)]),
+                row('Puck line', [chip('pl_away_m', A + ' −1.5', m.away_pl), chip('pl_home_m', H + ' −1.5', m.home_pl)]
+                  .concat(m.away_pl_plus != null ? [chip('pl_away_p', A + ' +1.5', m.away_pl_plus), chip('pl_home_p', H + ' +1.5', m.home_pl_plus)] : []))];
+  for (const k of ['5.5', '6.5']) if (m.totals[k] != null)
+    rows.push(row('Total ' + k, [chip('over' + k, 'Over', m.totals[k], 'Over ' + k), chip('under' + k, 'Under', 1 - m.totals[k], 'Under ' + k)]));
+  return `<div class="betgrid">${rows.join('')}<div class="small muted">Projected total ${m.total.toFixed(1)} goals · overtime ${pct(m.ot)} · tap any option to add it to your parlay</div></div>`;
 }
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
