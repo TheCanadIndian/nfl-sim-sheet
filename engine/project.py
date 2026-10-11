@@ -596,7 +596,7 @@ def spotlight(con, fr, todo, season, week, keyrows, players, payload):
                     s = s.iloc[-1]
                 ctx = payload["players"].get(f"{g.game_id}|{team}|{r.player}", {})
                 label, align = ctx.get("label"), ctx.get("align")
-                facts, reasons, boost = [], [], 0
+                facts, reasons, boost, change, jump = [], [], 0, 0, 0.0
                 gp = int(s.gp) if s is not None else 0
                 if pos == "QB" and gp:
                     facts.append(f"{s.att / gp:.0f} attempts, {s.pass_yds / gp:.0f} pass yds a game" + (f" · {s.rush_yds / gp:.0f} rush yds" if s.rush_yds / gp >= 15 else ""))
@@ -610,36 +610,35 @@ def spotlight(con, fr, todo, season, week, keyrows, players, payload):
                         facts.append(f"{int(s.rz_tgt)} red-zone targets"); boost += 1
                 sn_ = snap.get((team, _norm(r.player)))
                 if sn_ and sn_[1] is not None and sn_[0] - sn_[1] >= .15 and pos != "QB":
-                    facts.append(f"snaps jumped to {sn_[0]:.0%} last week ({sn_[1]:.0%} on the season)"); boost += 1
+                    facts.append(f"snaps jumped to {sn_[0]:.0%} last week ({sn_[1]:.0%} on the season)"); boost += 1; change += 1; jump = sn_[0] - sn_[1]
                 elif sn_ and sn_[0] >= .8 and pos in ("WR", "TE", "RB"):
                     facts.append(f"on the field {sn_[0]:.0%} of snaps")
                 if gp == 0:
-                    facts.append("first game of the season for him on this team")
+                    facts.append("first game of the season for him on this team"); change += 1
                 if pos in ("WR", "TE") and vac_t >= .1 and gone_txt:
-                    reasons.append(f"{gone_txt} OUT -- {vac_t:.0%} of {NICK.get(team, team)} targets up for grabs"); boost += 1
+                    reasons.append(f"{gone_txt} OUT -- {vac_t:.0%} of {NICK.get(team, team)} targets up for grabs"); boost += 1; change += 1
                 elif pos == "RB" and vac_c >= .2 and gone_txt:
-                    reasons.append(f"{gone_txt} OUT -- {vac_c:.0%} of {NICK.get(team, team)} carries up for grabs"); boost += 1
+                    reasons.append(f"{gone_txt} OUT -- {vac_c:.0%} of {NICK.get(team, team)} carries up for grabs"); boost += 1; change += 1
                 for t in (ctx.get("tags") or []):
                     if t.get("kind") == "defout" and t.get("dir", 1) > 0:
-                        reasons.append(t.get("text", t.get("short", "")).split(":")[0]); boost += 1
+                        reasons.append(t.get("text", t.get("short", "")).split(":")[0]); boost += 1; change += 1
                         break
                 dl, rk = dvp_line(pos, opp, align)
                 if dl and rk <= 8:
                     reasons.append(dl); boost += 1
                 elif dl and rk >= 25 and not reasons:
                     reasons.append(dl); boost -= 1
-                score = float(r.pct) + .12 * boost
-                if boost <= 0 and r.pct < .9:
+                # how much this week's changes matter: projected production for his position, each signal, and the size of a snap jump
+                score = .5 * float(r.pct) + .15 * boost + .6 * jump
+                if change == 0:                                    # only players affected by a change this week
                     continue
-                cands.append(dict(name=r.player, team=team, pos=pos, label=label, facts=facts, reasons=reasons[:2], score=round(score, 3),
+                cands.append(dict(name=r.player, team=team, pos=pos, label=label, facts=facts, reasons=reasons[:3], score=round(score, 3),
                                   proj=dict(tgt=round(float(getattr(r, "tgt", 0) or 0), 1), car=round(float(getattr(r, "car", 0) or 0), 1),
                                             pass_yds=round(float(getattr(r, "pass_yds", 0) or 0)))))
         cands.sort(key=lambda c: -c["score"])
-        sel = cands[:4]
-        for c in sel:
-            c["tier"] = 1 if c["score"] >= 1.05 else 2 if c["score"] >= .9 else 3
-        if sel:
-            out[g.game_id] = sel
+        for c in cands:
+            c["tier"] = 1 if c["score"] >= .85 else 2 if c["score"] >= .6 else 3
+        out[g.game_id] = cands                                   # [] = no changes this week
     return out
 
 
