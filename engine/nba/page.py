@@ -171,16 +171,23 @@ function teamTable(g, team){
 // (SD 18.5, approximate). They multiply with player legs (no joint game simulation saved for games).
 const MSD = 12.5, TSD = 18.5;
 function ncdf(z){ const t = 1 / (1 + .2316419 * Math.abs(z)), d = .3989423 * Math.exp(-z * z / 2), q = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - q : q; }
+// one tappable chip per bet option (adds it to the parlay slip; ✓ once added)
+function betChip(L, lab, p){
+  const on = window.SLIP && SLIP.has(L.id);
+  const odd = p == null ? '' : american(p);
+  return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${odd}</small><i>${on ? '✓' : '+'}</i></button>`;
+}
+const betRow = (lab, chips) => `<div class="betrow"><span class="eyebrow">${lab}</span><div class="bets">${chips.join('')}</div></div>`;
 function nbaGameBets(g){
-  if (!window.SLIP) return '';
   const M = g.models[mode(g.id)], m = M.home_pts - M.away_pts, tot = M.home_pts + M.away_pts, gl = `${g.away} @ ${g.home}`;
-  const leg = (key, lab, p) => SLIP.btn({id: `nba|${g.id}|${key}|${mode(g.id)}`, sport: 'nba', g: g.id, glab: gl, lab: `${lab} (${gl})`, p, side: 'over', stat: key}, `${lab} ${pct(p)}`);
-  const out = [leg('ml_away', `${g.away} ML`, 1 - M.home_win), leg('ml_home', `${g.home} ML`, M.home_win)];
-  if (g.spread != null){ const L = -g.spread;     // home margin line (spread is the home team's line)
-    const ph = 1 - ncdf((L - m) / MSD);
-    out.push(leg('sp_away', `${g.away} ${g.spread > 0 ? '−' : '+'}${Math.abs(g.spread)}`, 1 - ph), leg('sp_home', `${g.home} ${g.spread > 0 ? '+' : '−'}${Math.abs(g.spread)}`.replace('+-', '−'), ph)); }
-  if (g.total != null){ const po = 1 - ncdf((g.total - tot) / TSD); out.push(leg('over', `Over ${g.total}`, po), leg('under', `Under ${g.total}`, 1 - po)); }
-  return `<div class="small muted" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:6px 0">Add to my parlay: ${out.join('')}</div>`;
+  const leg = (key, lab, p) => ({id: `nba|${g.id}|${key}|${mode(g.id)}`, sport: 'nba', g: g.id, glab: gl, lab: `${lab} (${gl})`, p, side: 'over', stat: key});
+  const rows = [betRow('Moneyline', [betChip(leg('ml_away', `${g.away} ML`, 1 - M.home_win), g.away, 1 - M.home_win), betChip(leg('ml_home', `${g.home} ML`, M.home_win), g.home, M.home_win)])];
+  if (g.spread != null){ const L = -g.spread, ph = 1 - ncdf((L - m) / MSD);
+    const a = `${g.away} ${g.spread > 0 ? '−' : '+'}${Math.abs(g.spread)}`, h = `${g.home} ${g.spread > 0 ? '+' : '−'}${Math.abs(g.spread)}`;
+    rows.push(betRow('Spread', [betChip(leg('sp_away', a, 1 - ph), a, 1 - ph), betChip(leg('sp_home', h, ph), h, ph)])); }
+  if (g.total != null){ const po = 1 - ncdf((g.total - tot) / TSD);
+    rows.push(betRow(`Total ${g.total}`, [betChip(leg('over', `Over ${g.total}`, po), 'Over', po), betChip(leg('under', `Under ${g.total}`, 1 - po), 'Under', 1 - po)])); }
+  return `<div class="betgrid" style="margin:8px 0">${rows.join('')}</div>`;
 }
 function gameView(){
   const g = D.games.find(x => x.id === state.game) || D.games[0]; if (!g) return '<div class="empty">No games.</div>';
@@ -217,7 +224,7 @@ function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : gameView();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
-  if (cur && cur.parentElement.scrollWidth > cur.parentElement.clientWidth) cur.parentElement.scrollLeft = cur.offsetLeft - 12;
+  if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; }
 }
 document.addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return;

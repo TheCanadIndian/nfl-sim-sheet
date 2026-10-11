@@ -369,6 +369,17 @@ table.t{width:100%;border-collapse:collapse;font-size:14px}
 select,input[type=search]{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px}
 input[type=search]{min-width:200px}
 .empty{padding:28px 8px;color:var(--muted)}
+.betgrid{display:grid;gap:8px}
+.betrow{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center}
+.bets{display:flex;flex-wrap:wrap;gap:6px}
+.bet{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px}
+.bet b{font-family:var(--display);font-size:17px;font-weight:700}
+.bet small{color:var(--muted);font-size:12px}
+.bet i{font-style:normal;color:var(--accent);font-weight:700;margin-left:2px}
+.bet.on{border-color:var(--accent);background:rgba(54,211,153,.12)}
+.bet:disabled{cursor:default}
+.bet:disabled i{display:none}
+@media (max-width:520px){.betrow{grid-template-columns:1fr;gap:4px}.bets{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bet{justify-content:space-between;gap:4px;padding:5px 8px;font-size:12.5px;min-width:0}.bet b{font-size:15px}.bet small{display:none}.bet span{white-space:nowrap}}
 .sgp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
 .sgp{border:1px solid var(--faint);border-radius:9px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--bg)}
 .sgp h3{font-family:var(--display);font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
@@ -710,20 +721,26 @@ function gameDetail(){
   return gsw + gameDetailMain(g);
 }
 // game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)
+// one tappable chip per bet option (adds it to the parlay slip; ✓ once added)
+function betChip(L, lab, p){
+  const on = window.SLIP && SLIP.has(L.id);
+  const odd = p == null ? '' : american(p);
+  return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${odd}</small><i>${on ? '✓' : '+'}</i></button>`;
+}
+const betRow = (lab, chips) => `<div class="betrow"><span class="eyebrow">${lab}</span><div class="bets">${chips.join('')}</div></div>`;
 function gameBets(g){
-  if (!window.SLIP) return '';
   const T = D.teams[g.id], H = T[g.home], A = T[g.away]; if (H.spread_line == null) return '';
   const L = H.spread_line, tl = H.total_line, glab = `${g.away} @ ${g.home}`, base = {sport: 'nfl', g: g.id, glab, draws: `nfl/draws/${g.id}.json`, model: 'vegas'};
   const sp = v => (v > 0 ? '+' : v < 0 ? '−' : '') + f1(Math.abs(v)).replace('.0', '');
-  const legs = [
-    {...base, id: `nfl|${g.id}|win|${g.away}`, stat: 'win', home: false, side: 'over', lab: `${g.away} moneyline`, p: A.win_prob},
-    {...base, id: `nfl|${g.id}|win|${g.home}`, stat: 'win', home: true, side: 'over', lab: `${g.home} moneyline`, p: H.win_prob},
-    {...base, id: `nfl|${g.id}|spread|${g.away}|${L}`, stat: 'spread', home: false, line: L, side: 'over', lab: `${g.away} ${sp(L)}`, p: A.p_cover},
-    {...base, id: `nfl|${g.id}|spread|${g.home}|${L}`, stat: 'spread', home: true, line: L, side: 'over', lab: `${g.home} ${sp(-L)}`, p: H.p_cover},
-    {...base, id: `nfl|${g.id}|total|over|${tl}`, stat: 'total', line: tl, side: 'over', lab: `Over ${tl} (${glab})`, p: H.p_over},
-    {...base, id: `nfl|${g.id}|total|under|${tl}`, stat: 'total', line: tl, side: 'under', lab: `Under ${tl} (${glab})`, p: H.p_under},
-  ];
-  return `<div class="gbtns"><span class="small muted">Add to my parlay:</span>${legs.map(x => SLIP.btn(x, `${x.lab.replace(` (${glab})`, '')} ${pct(x.p)}`)).join('')}</div>`;
+  const leg = (id, extra, lab) => ({...base, id: `nfl|${g.id}|${id}`, side: 'over', lab, ...extra});
+  return `<div class="betgrid">${[
+    betRow('Moneyline', [betChip(leg(`win|${g.away}`, {stat: 'win', home: false}, `${g.away} moneyline`), g.away, A.win_prob),
+                         betChip(leg(`win|${g.home}`, {stat: 'win', home: true}, `${g.home} moneyline`), g.home, H.win_prob)]),
+    betRow('Spread', [betChip(leg(`spread|${g.away}|${L}`, {stat: 'spread', home: false, line: L}, `${g.away} ${sp(L)}`), `${g.away} ${sp(L)}`, A.p_cover),
+                      betChip(leg(`spread|${g.home}|${L}`, {stat: 'spread', home: true, line: L}, `${g.home} ${sp(-L)}`), `${g.home} ${sp(-L)}`, H.p_cover)]),
+    betRow(`Total ${tl}`, [betChip(leg(`total|over|${tl}`, {stat: 'total', line: tl}, `Over ${tl} (${glab})`), 'Over', H.p_over),
+                           betChip(leg(`total|under|${tl}`, {stat: 'total', line: tl, side: 'under'}, `Under ${tl} (${glab})`), 'Under', H.p_under)]),
+  ].join('')}</div>`;
 }
 function gameDetailMain(g){
   const A = TM(g)[g.away], H = TM(g)[g.home];
@@ -1090,7 +1107,7 @@ function render(){
     : state.view === 'parlays' ? renderParlays() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
   save();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
-  if (cur && cur.parentElement.scrollWidth > cur.parentElement.clientWidth) cur.parentElement.scrollLeft = cur.offsetLeft - 12;
+  if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; }
 }
 document.addEventListener('change', e => { if (e.target.id === 'agame'){ state.agame = e.target.value; render(); } });
 document.addEventListener('click', e => {

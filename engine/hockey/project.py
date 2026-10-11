@@ -668,7 +668,7 @@ function mlBlock(g){
                   .concat(m.away_pl_plus != null ? [chip('pl_away_p', A + ' +1.5', m.away_pl_plus), chip('pl_home_p', H + ' +1.5', m.home_pl_plus)] : []))];
   for (const k of ['5.5', '6.5']) if (m.totals[k] != null)
     rows.push(row('Total ' + k, [chip('over' + k, 'Over', m.totals[k], 'Over ' + k), chip('under' + k, 'Under', 1 - m.totals[k], 'Under ' + k)]));
-  return `<div class="betgrid">${rows.join('')}<div class="small muted">Projected total ${m.total.toFixed(1)} goals · overtime ${pct(m.ot)} · tap any option to add it to your parlay</div></div>`;
+  return `<div class="betgrid">${rows.join('')}<div class="small muted">Projected total ${m.total.toFixed(1)} goals · overtime ${pct(m.ot)}</div></div>`;
 }
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
