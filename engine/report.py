@@ -192,7 +192,7 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
                 generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                 games=games, teams=team_rows, players=plist, props=props_list, dvp=match["dvp"],
                 rz=match.get("rz"), defout=match.get("defout", {}), agree=agreement(stem, players, dists), alt=alt_model(stem, match),
-                sgp=sgp, subtitle=subtitle, nav=nav or [])
+                sgp=sgp, spot=match.get("spot", {}), subtitle=subtitle, nav=nav or [])
     # NaN is not valid JSON: one missing value (e.g. a player with no depth label) would
     # stop the page's script entirely. Turn every NaN into null and refuse any that slip by.
     payload = json.dumps(_clean(data), separators=(",", ":"), allow_nan=False).replace("</", "<\\/")
@@ -398,6 +398,23 @@ input[type=search]{min-width:200px}
 .gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
+.sp-list{display:grid;gap:0}
+.sp-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--faint)}
+.sp-row:first-child{border-top:0}
+.tierb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;white-space:nowrap;margin-top:3px}
+.tierb.t1{background:var(--accent);color:var(--bg)}
+.tierb.t2{background:#F2C14E;color:var(--bg)}
+.tierb.t3{background:var(--sunk);color:var(--muted);border:1px solid var(--faint)}
+.sp-name{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sp-name b{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:.01em}
+.sp-name span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sp-facts{font-size:13.5px;margin-top:3px}
+.sp-why{font-size:13.5px;color:#F2C14E;margin-top:2px}
+.sp-why.neg{color:var(--r2)}
+.gsw{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.gsw::-webkit-scrollbar{display:none}
+.gsw button{white-space:nowrap}
+@media (max-width:520px){.sp-row{grid-template-columns:1fr;gap:4px}.tierb{justify-self:start;margin-top:0}.sp-name b{font-size:19px}}
 .legsrc.both{color:var(--good);border-color:var(--good)}
 .legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
 @media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
@@ -714,10 +731,22 @@ function renderParlays(){
     <p class="note">Built from each game's most likely same-game parlay: its first legs (kept together, so their link counts), as many from each game as it takes to reach 5+ legs. The full-day parlay covers every game that day. Games are simulated separately, so across games the chances multiply. These overlap with the per-game parlays on purpose.</p>
     <div class="sgp-grid">${C.map(card).join('')}</div></section>`;
 }
+/* ---------------- game summary: players worth a look, tiered, with the reasons (display only) ---------------- */
+function summaryPanel(g){
+  const L = D.spot[g.id] || [];
+  const row = c => `<div class="sp-row"><span class="tierb t${c.tier}">Tier ${c.tier}</span><div class="sp-main">
+      <div class="sp-name"><b>${esc(c.name)}</b><span>${esc(c.team)} · ${esc(c.pos)}${c.label ? ' · ' + esc(c.label) : ''}</span></div>
+      ${c.facts.length ? `<div class="sp-facts">${c.facts.map(esc).join(' · ')}</div>` : ''}
+      ${c.reasons.map(r => `<div class="sp-why${/^tough/.test(r) ? ' neg' : ''}">↳ ${esc(r).replace(/ -- /g, ' — ')}</div>`).join('')}</div></div>`;
+  return `<section class="panel sp"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: who to look at</h2><span class="small muted">${esc(g.kickoff)}</span></div>
+    <div class="sp-list">${L.map(row).join('')}</div>
+    <p class="note">Context only: the projections already include these.</p></section>`;
+}
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
-  const gsw = D.sgp ? `<div class="seg" role="group" aria-label="Game view">${[['proj', 'Projections'], ['sgp', 'Same-game parlays']].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.spot && D.spot[g.id] ? [['sum', 'Summary']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
+  if (state.gtab === 'sum' && D.spot && D.spot[g.id]) return gsw + summaryPanel(g);
   return gsw + gameDetailMain(g);
 }
 // game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)

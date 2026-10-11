@@ -445,6 +445,10 @@ def main():
     payload = matchup_payload(con, fr, todo, keyrows, season, when)
     if not args.played:
         add_defout(payload, con, todo, season, week, players)
+        try:
+            payload["spot"] = spotlight(con, fr, todo, season, week, keyrows, players, payload)
+        except Exception as e:
+            print(f"  game summaries skipped ({type(e).__name__}: {e})")
     with open(f"{stem}_matchups.json", "w") as f:
         json.dump(payload, f, separators=(",", ":"))
     print_box(teams, players)
@@ -493,6 +497,151 @@ def matchup_payload(con, fr, todo, keyrows, season, when):
                "two": M.redzone_usage(fr, keyrows, [season - 1, season], when)},
         labels={"season": str(season), "two": f"{season - 1}–{str(season)[2:]}"})
     return dict(players=players, dvp=M.dvp_summary(now, faces), rz=rz)
+
+
+NICK = {"ARI": "Cardinals", "ATL": "Falcons", "BAL": "Ravens", "BUF": "Bills", "CAR": "Panthers", "CHI": "Bears", "CIN": "Bengals",
+        "CLE": "Browns", "DAL": "Cowboys", "DEN": "Broncos", "DET": "Lions", "GB": "Packers", "HOU": "Texans", "IND": "Colts",
+        "JAX": "Jaguars", "KC": "Chiefs", "LA": "Rams", "LAC": "Chargers", "LV": "Raiders", "MIA": "Dolphins", "MIN": "Vikings",
+        "NE": "Patriots", "NO": "Saints", "NYG": "Giants", "NYJ": "Jets", "PHI": "Eagles", "PIT": "Steelers", "SEA": "Seahawks",
+        "SF": "49ers", "TB": "Buccaneers", "TEN": "Titans", "WAS": "Commanders"}
+ORD = lambda n: {1: "most", 2: "2nd-most", 3: "3rd-most"}.get(n, f"{n}th-most")
+
+
+def spotlight(con, fr, todo, season, week, keyrows, players, payload):
+    """Per game: the players worth a look, all positions, tiered 1-3 with short reasons (usage, snap jumps,
+    red-zone work, vacated volume from Out/Doubtful teammates, what the defense allows, missing defenders).
+    Display only -- nothing here changes a projection."""
+    pg = fr.pg[(fr.pg.season == season) & (fr.pg.week < week)].copy()
+    if pg.empty:
+        return {}
+    team_g = pg.groupby(["team", "game_id"])[["tgt", "car", "att"]].sum().reset_index()
+    team_tot = team_g.groupby("team")[["tgt", "car", "att"]].sum()
+    team_n = team_g.groupby("team").size()
+    ps = pg.groupby(["team", "player_id"]).agg(gp=("game_id", "nunique"), tgt=("tgt", "sum"), car=("car", "sum"), att=("att", "sum"),
+                                               pass_yds=("pass_yds", "sum"), rush_yds=("rush_yds", "sum"), rec_yds=("rec_yds", "sum"),
+                                               rz_tgt=("rz_tgt", "sum"), rz_car=("rz_car", "sum"), name=("name", "last")).reset_index()
+    ps["tgt_sh"] = ps.tgt / ps.team.map(team_tot.tgt).clip(lower=1)
+    ps["car_sh"] = ps.car / ps.team.map(team_tot.car).clip(lower=1)
+    psi = ps.set_index("player_id")
+    # snap share: last game vs the season before it (pfr names -> normalized)
+    sn = pd.read_sql("SELECT week, team, player, offense_pct FROM snaps WHERE season = ? AND week < ?", con, params=(season, week))
+    sn["k"] = sn.player.map(_norm)
+    last_wk = sn.groupby("team").week.max()
+    snap = {}
+    for (team, k), x in sn.groupby(["team", "k"]):
+        lw = x[x.week == last_wk.get(team)]
+        prev = x[x.week != last_wk.get(team)]
+        if len(lw):
+            snap[(team, k)] = (float(lw.offense_pct.iloc[0]), float(prev.offense_pct.mean()) if len(prev) else None)
+    # who's out: ESPN game day + the latest injury report
+    try:
+        eo = espn_out(todo)
+    except Exception:
+        eo = {}
+    inj = pd.read_sql("SELECT team, gsis_id, full_name, report_status, week FROM injuries WHERE season = ?", con, params=(season,))
+    inj = inj[inj.week == inj.week.max()] if len(inj) else inj
+    out_ids = set(inj[inj.report_status.isin(["Out", "Doubtful"])].gsis_id)
+    full = dict(pd.read_sql("SELECT gsis_id, full_name FROM rosters WHERE season = ?", con, params=(season,)).dropna().itertuples(index=False))
+    # projections this week, per player
+    pv = players.pivot_table(index=["game_id", "team", "player", "player_id", "pos"], columns="stat", values="mean").reset_index()
+    pv[[c for c in pv.columns if c not in ("game_id", "team", "player", "player_id", "pos")]] = pv[[c for c in pv.columns if c not in ("game_id", "team", "player", "player_id", "pos")]].fillna(0)
+    pos_fp = {}
+    pv["fp"] = (pv.get("pass_yds", 0) * .04 + pv.get("pass_td", 0) * 4 + pv.get("rush_yds", 0) * .1 + pv.get("rec", 0) * 1
+                + pv.get("rec_yds", 0) * .1 + pv.get("anytime_td", 0) * 6).fillna(0)
+    for pos, x in pv.groupby("pos"):
+        pos_fp[pos] = x.fp.rank(pct=True)
+    pv["pct"] = pd.concat(pos_fp.values()) if pos_fp else 0
+    dvp = payload.get("dvp", {})
+
+    def dvp_line(pos, opp, align):
+        key = {"WR": (align if align in ("SLOT", "OUT") and align in dvp else "WR"), "TE": "TE", "RB": "RB", "QB": "QB"}.get(pos)
+        D = dvp.get(key)
+        if not D:
+            return None, 99
+        col = {"QB": "Pass yds", "RB": "Rush yds", "WR": "Rec yds", "TE": "Rec yds", "SLOT": "Rec yds", "OUT": "Rec yds"}[key]
+        i = D["cols"].index(col)
+        rows = [r for r in D["rows"] if r.get("season_stats")]
+        rows.sort(key=lambda r: -r["season_stats"][i])
+        rk = next((n + 1 for n, r in enumerate(rows) if r["team"] == opp), 99)
+        lab = {"QB": "QBs", "RB": "RBs", "WR": "WRs", "TE": "TEs", "SLOT": "slot WRs", "OUT": "outside WRs"}[key]
+        stat = "passing yards" if key == "QB" else "rushing yards" if key == "RB" else "yards"
+        v = next(r["season_stats"][i] for r in rows if r["team"] == opp) if rk < 99 else None
+        if rk <= 8:
+            return f"{NICK.get(opp, opp)} give up the {ORD(rk)} {stat} to {lab} ({v:.0f}/G)", rk
+        if rk >= 25:
+            return f"tough matchup: {NICK.get(opp, opp)} allow the {['fewest', '2nd-fewest', '3rd-fewest'][32 - rk] if rk >= 30 else f'{33 - rk}th-fewest'} {stat} to {lab}", rk
+        return None, rk
+
+    out = {}
+    for g in todo.itertuples():
+        cands = []
+        for team, opp in ((g.away_team, g.home_team), (g.home_team, g.away_team)):
+            # vacated volume: this season's regulars on this team who are Out / Doubtful
+            gone = [r for r in ps[ps.team == team].itertuples()
+                    if (r.tgt_sh >= .08 or r.car_sh >= .2) and (r.player_id in out_ids or (team, _norm(r.name)) in eo)]
+            vac_t = sum(r.tgt_sh for r in gone); vac_c = sum(r.car_sh for r in gone)
+            gone_txt = " & ".join(full.get(r.player_id, r.name) for r in gone[:2])
+            for r in pv[(pv.game_id == g.game_id) & (pv.team == team)].itertuples():
+                pos = r.pos
+                if pos not in ("QB", "RB", "WR", "TE"):
+                    continue
+                if pos == "QB" and getattr(r, "att", 0) < 15:
+                    continue
+                if pos in ("WR", "TE") and getattr(r, "tgt", 0) < 3:
+                    continue
+                if pos == "RB" and getattr(r, "car", 0) + getattr(r, "tgt", 0) < 6:
+                    continue
+                s = psi.loc[r.player_id] if r.player_id in psi.index else None
+                if isinstance(s, pd.DataFrame):
+                    s = s.iloc[-1]
+                ctx = payload["players"].get(f"{g.game_id}|{team}|{r.player}", {})
+                label, align = ctx.get("label"), ctx.get("align")
+                facts, reasons, boost = [], [], 0
+                gp = int(s.gp) if s is not None else 0
+                if pos == "QB" and gp:
+                    facts.append(f"{s.att / gp:.0f} attempts, {s.pass_yds / gp:.0f} pass yds a game" + (f" · {s.rush_yds / gp:.0f} rush yds" if s.rush_yds / gp >= 15 else ""))
+                elif pos == "RB" and gp:
+                    facts.append(f"{s.car / gp:.1f} carries + {s.tgt / gp:.1f} targets a game")
+                    if s.rz_car >= 5:
+                        facts.append(f"{int(s.rz_car)} red-zone carries"); boost += 1
+                elif gp:
+                    facts.append(f"{s.tgt / gp:.1f} targets a game")
+                    if s.rz_tgt >= 4:
+                        facts.append(f"{int(s.rz_tgt)} red-zone targets"); boost += 1
+                sn_ = snap.get((team, _norm(r.player)))
+                if sn_ and sn_[1] is not None and sn_[0] - sn_[1] >= .15 and pos != "QB":
+                    facts.append(f"snaps jumped to {sn_[0]:.0%} last week ({sn_[1]:.0%} on the season)"); boost += 1
+                elif sn_ and sn_[0] >= .8 and pos in ("WR", "TE", "RB"):
+                    facts.append(f"on the field {sn_[0]:.0%} of snaps")
+                if gp == 0:
+                    facts.append("first game of the season for him on this team")
+                if pos in ("WR", "TE") and vac_t >= .1 and gone_txt:
+                    reasons.append(f"{gone_txt} OUT -- {vac_t:.0%} of {NICK.get(team, team)} targets up for grabs"); boost += 1
+                elif pos == "RB" and vac_c >= .2 and gone_txt:
+                    reasons.append(f"{gone_txt} OUT -- {vac_c:.0%} of {NICK.get(team, team)} carries up for grabs"); boost += 1
+                for t in (ctx.get("tags") or []):
+                    if t.get("kind") == "defout" and t.get("dir", 1) > 0:
+                        reasons.append(t.get("text", t.get("short", "")).split(":")[0]); boost += 1
+                        break
+                dl, rk = dvp_line(pos, opp, align)
+                if dl and rk <= 8:
+                    reasons.append(dl); boost += 1
+                elif dl and rk >= 25 and not reasons:
+                    reasons.append(dl); boost -= 1
+                score = float(r.pct) + .12 * boost
+                if boost <= 0 and r.pct < .9:
+                    continue
+                cands.append(dict(name=r.player, team=team, pos=pos, label=label, facts=facts, reasons=reasons[:2], score=round(score, 3),
+                                  proj=dict(tgt=round(float(getattr(r, "tgt", 0) or 0), 1), car=round(float(getattr(r, "car", 0) or 0), 1),
+                                            pass_yds=round(float(getattr(r, "pass_yds", 0) or 0)))))
+        cands.sort(key=lambda c: -c["score"])
+        sel = cands[:4]
+        for c in sel:
+            c["tier"] = 1 if c["score"] >= 1.05 else 2 if c["score"] >= .9 else 3
+        if sel:
+            out[g.game_id] = sel
+    return out
+
 
 
 def add_defout(payload, con, todo, season, week, players):
