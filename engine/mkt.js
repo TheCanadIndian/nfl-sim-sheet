@@ -15,7 +15,7 @@
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
   let D = null, stamp = null, timer = null;
-  let BK = null;                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
+  let BK = null, FL = null;                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
   const SKIP = new Set(['kalshi']);               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
   const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
@@ -63,6 +63,7 @@
 .bet .bk{flex-basis:100%;contain:inline-size;font-style:normal;font-size:11.5px;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bet .bk b{font:inherit;font-weight:600;color:var(--ink)}
 .bet .bk.v{color:var(--good)} .bet .bk.v b{color:var(--good)}
+.vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
 
@@ -184,6 +185,13 @@
       return `<em class="bk${v ? ' v' : ''}" title="Best price across ${L.length} book${L.length > 1 ? 's' : ''} (as of ${esc(BK.fetched ? new Date(BK.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '')}): ${esc(all)}${ev != null ? ` · our edge at the best price ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${va ? ' · not highlighted: so far the market has been more accurate than our model on this bet type' : ''}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${v ? ` · +${(ev * 100).toFixed(0)}%` : va ? ` · +${(ev * 100).toFixed(0)}% (market ahead)` : ''}</em>`;
     },
     bkFetched: () => (BK ? BK.fetched : null),
+    // 'Value' tag next to a player: a major sportsbook pays clearly more than our fair price on this bet
+    flag(gid, name){
+      if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
+      const b = (FL.tags[String(gid)] || {})[norm(name)]; if (!b) return '';
+      const t = new Date(FL.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+      return `<span class="vtag" title="Value: at least one major sportsbook pays ${Math.round((FL.min_ev || .05) * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.">Value · ${esc(b)}</span>`;
+    },
     bkNote(gid){
       if (!BK || !BK.games || !BK.games[String(gid)]) return '';
       const t = BK.fetched ? new Date(BK.fetched).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '';
@@ -253,6 +261,10 @@
     fetch(base + 'markets/books_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
       if (!d || d.fetched === bstamp) return;
       bstamp = d.fetched; BK = d; rerender();
+    }).catch(() => {});
+    fetch(base + 'markets/flags_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
+      if (!d || (FL && d.fetched === FL.fetched)) return;
+      FL = d; rerender();
     }).catch(() => {});
   }
   if (sport){ load(); loadBooks(); timer = setInterval(() => { load(); loadBooks(); }, 120000); }
