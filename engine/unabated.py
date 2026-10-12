@@ -95,11 +95,11 @@ def kalshi_price(c):
     return int(round(-100 * q / (1 - q))) if q >= .5 else int(round(100 * (1 - q) / q))
 
 
-def board(sport, market_type, bet_types=None, kalshi=False):
+def board(sport, market_type, bet_types=None, kalshi=False, tries=8):
     """Flat pregame rows: one per (market, side, book) for books in BOOKS.
     Fields: event, start, away, home (Unabated abbreviations), bt, person, name, team, side_index, points, book, price, opener, liq, url."""
     params = [("betTypeId", b) for b in (bet_types or [])]
-    d = get(f"/market/{LEAGUE[sport]}/{market_type}/odds", params or None)
+    d = get(f"/market/{LEAGUE[sport]}/{market_type}/odds", params or None, tries=tries)
     if not d:
         return None
     teams = lookup(sport, "teams")
