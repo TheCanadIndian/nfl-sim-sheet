@@ -177,7 +177,7 @@ def pull_ua(sport, st, now, games, force):
     last = st.get("ua_last", {}).get(sport)
     if not force and last and now - pd.Timestamp(last) < pd.Timedelta(minutes=UA_GAP):
         return False
-    df = U.board(sport, "straight", [1, 2, 3])
+    df = U.board(sport, "straight", [1, 2, 3], kalshi=True)
     G = tidy_ua(df, sport, games) if df is not None and not df.empty else {}
     if not G:
         print(f"books {sport}: Unabated returned no matching games"); return False

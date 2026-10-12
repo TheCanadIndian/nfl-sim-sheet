@@ -246,14 +246,14 @@ def ua_nv(df):
 
 def ua_row(NV, gid, me, bet, p, r):
     ev, chk = judge(p, r.price, NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index)))
-    return (gid, me["name"], bet, ev, chk, dict(o=int(r.price), k=U.SHORT[r.book], u=r.url))
+    return (gid, me["name"], bet, ev, chk, dict(o=int(r.price), k=U.SHORT[r.book], u=r.url, p=round(float(p), 4)))
 
 
 def ua_nhl(now):
     pl, date = nhl_ours(now)
     if pl is None:
         return None
-    df = U.board("nhl", "props", [278])
+    df = U.board("nhl", "props", [278], kalshi=True)
     if df is None or df.empty:
         return False
     df = df[pd.to_datetime(df.start, utc=True) > now]
@@ -272,7 +272,7 @@ def ua_nfl(now):
     games, by = nfl_ours()
     if games is None:
         return None
-    df = U.board("nfl", "props", list(UA_NFL))
+    df = U.board("nfl", "props", list(UA_NFL), kalshi=True)
     if df is None or df.empty:
         return False
     df = df[(pd.to_datetime(df.start, utc=True) > now) & df.side_index.isin([0, 1])]
@@ -300,11 +300,13 @@ def tags(rows):
     """Best price per bet; a player gets one tag (his best bet clearing MIN_EV without a news flag), at most
     PER_GAME a game. 'Under 0.5' bets are skipped (thin roles the model overrates).
     SharpAPI rows publish only the bet; Unabated rows also carry price, book and the bet link."""
-    best = {}
+    best, alls = {}, {}
     for gid, name, bet, ev, chk, extra in rows:
         if bet.startswith("under 0.5"):
             continue
         kk = (str(gid), name, bet)
+        if extra and not chk:                                   # every book's price for this bet (the page can prefer the viewer's books)
+            alls.setdefault(kk, {})[extra["k"]] = [extra["o"], extra["u"]]
         if kk not in best or ev > best[kk][0]:
             best[kk] = (ev, chk, extra)
     top = {}
@@ -314,7 +316,7 @@ def tags(rows):
     out = {}
     for (gid, name), (ev, bet, extra) in sorted(top.items(), key=lambda kv: -kv[1][0]):
         if len(out.get(gid, {})) < PER_GAME:
-            out.setdefault(gid, {})[jsnorm(name)] = dict(b=bet, **extra) if extra else bet
+            out.setdefault(gid, {})[jsnorm(name)] = dict(b=bet, **extra, all=alls.get((gid, name, bet), {})) if extra else bet
     return out
 
 
