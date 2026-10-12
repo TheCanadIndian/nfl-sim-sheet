@@ -17,7 +17,12 @@
   let D = null, stamp = null, timer = null;
   let BK = null, FL = null;                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
-  const SKIP = new Set(['kalshi']);               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
+  const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
+  const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'ProphetX', 'Fliff', 'Bally Bet', 'betPARX'];
+  let MY = [], bkOpen = null;                      // the viewer's sportsbooks (this device), [] = all books
+  try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
+  const mine = k => !MY.length || MY.includes(k);
+  const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
   const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
   const am = o => (o > 0 ? '+' : '') + o;
   const polyAt = {}, openD = new Set();            // which 'All lines' lists are open (kept across redraws)
@@ -63,6 +68,13 @@
 .bet .bk{flex-basis:100%;contain:inline-size;font-style:normal;font-size:11.5px;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bet .bk b{font:inherit;font-weight:600;color:var(--ink)}
 .bet .bk.v{color:var(--good)} .bet .bk.v b{color:var(--good)}
+.bet .bk.nm,.bet .bk.nm b{color:var(--muted)}
+.bkset{border:1px solid var(--faint);border-radius:999px;padding:0 8px;background:none;color:var(--ink);font:inherit;font-size:12px;cursor:pointer;line-height:18px}
+.bkset:hover,.bkset[aria-expanded="true"]{border-color:var(--accent)}
+.bkpanel{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.bkpanel button{border:1px solid var(--faint);border-radius:999px;padding:4px 10px;background:none;color:var(--ink);font:inherit;font-size:12.5px;cursor:pointer}
+.bkpanel button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:rgba(54,211,153,.10)}
+.bkpanel .bkall{color:var(--muted)}
 .bet .bk.go{cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent);text-underline-offset:2px}
 .bet .bk.go:hover{color:var(--ink)}
 .vtag b{font-weight:800}
@@ -182,29 +194,46 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const G = BK && BK.games && BK.games[String(gid)]; if (!G) return '';
       let o = G[kind]; if (kind !== 'ml') o = o && o[String(+line)]; o = o && o[side];
       // a price is [odds, Gambly bet link] (Unabated) or plain odds (The Odds API)
-      const L = o ? Object.entries(o).filter(([k]) => !SKIP.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null])
-        .sort((a, b) => dec(b[1]) - dec(a[1]) || (!!b[2] - !!a[2])) : []; if (!L.length) return '';
-      const [bk, price, url] = L[0], ev = p == null ? null : p * dec(price) - 1, mk = {ml: 'win', spread: 'spread', total: 'total'}[kind];
+      const all = o ? Object.entries(o).filter(([k]) => !SKIP.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null])
+        .sort((a, b) => dec(b[1]) - dec(a[1]) || (!!b[2] - !!a[2])) : []; if (!all.length) return '';
+      // the viewer's books (saved per device); if none of them prices this bet, show the best elsewhere, greyed
+      const L = all.filter(([k]) => mine(k)), other = !L.length;
+      const [bk, price, url] = (other ? all : L)[0], ev = p == null ? null : p * dec(price) - 1, mk = {ml: 'win', spread: 'spread', total: 'total'}[kind];
       const ahead = !!(D && ((D.weak && D.weak.includes(mk)) || lost(mk)));      // markets have out-predicted us on this bet type so far
-      const v = ev != null && ev >= .03 && !ahead, va = ev != null && ev >= .03 && ahead;
-      const all = L.map(([k, x]) => `${BKS[k] || k} ${am(x)}`).join(' · ');
-      return `<em class="bk${v ? ' v' : ''}${url ? ' go' : ''}"${url ? ` data-go="${esc(url)}" role="link" tabindex="0"` : ''} title="${url ? `Tap to open this bet at ${esc(BKS[bk] || bk)}. ` : ''}"Best price across ${L.length} book${L.length > 1 ? 's' : ''} (as of ${esc(BK.fetched ? new Date(BK.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '')}): ${esc(all)}${ev != null ? ` · our edge at the best price ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${va ? ' · not highlighted: so far the market has been more accurate than our model on this bet type' : ''}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${v ? ` · +${(ev * 100).toFixed(0)}%` : va ? ` · +${(ev * 100).toFixed(0)}%` : ''}${url ? ' ↗' : ''}</em>`;
+      const v = ev != null && ev >= .03 && !ahead && !other, va = ev != null && ev >= .03 && (ahead || other);
+      const list = all.map(([k, x]) => `${FULL[k] || BKS[k] || k} ${am(x)}`).join(' · ');
+      const when = BK.fetched ? new Date(BK.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '';
+      const tip = `${url ? `Tap to open this bet at ${esc(FULL[bk] || bk)}. ` : ''}${other ? 'None of your books prices this; best elsewhere. ' : MY.length ? 'Best price at your books. ' : ''}All books (as of ${esc(when)}): ${esc(list)}${ev != null ? ` · our edge at this price ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${va && ahead ? ' · not highlighted: so far the market has been more accurate than our model on this bet type' : ''}`;
+      return `<em class="bk${v ? ' v' : ''}${url ? ' go' : ''}${other ? ' nm' : ''}"${url ? ` data-go="${esc(url)}" role="link" tabindex="0"` : ''} title="${tip}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${(v || va) ? ` · +${(ev * 100).toFixed(0)}%` : ''}${url ? ' ↗' : ''}</em>`;
     },
     bkFetched: () => (BK ? BK.fetched : null),
-    // 'Value' tag next to a player: a major sportsbook pays clearly more than our fair price on this bet
+    // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
     flag(gid, name){
       if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
       const v = (FL.tags[String(gid)] || {})[norm(name)]; if (!v) return '';
       const b = typeof v === 'string' ? v : v.b, t = new Date(FL.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
-      const tip = `Value: ${typeof v === 'string' ? 'at least one major sportsbook' : esc(v.k)} pays ${Math.round((FL.min_ev || .05) * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
-      if (typeof v !== 'string' && v.u)                      // Unabated: price, book and a bet link (partner code)
-        return `<a class="vtag" href="${esc(v.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.">Value · ${esc(b)} <b>${v.o > 0 ? '+' : ''}${v.o}</b> ${esc(v.k)} ↗</a>`;
+      const min = FL.min_ev || .05;
+      let o = typeof v === 'string' ? null : {k: v.k, o: v.o, u: v.u};
+      if (o && MY.length && v.all && v.p != null){             // only the viewer's books: best of those, and only if it still clears the bar
+        const c = Object.entries(v.all).filter(([k]) => mine(k)).map(([k, x]) => ({k, o: x[0], u: x[1]})).sort((x, y) => dec(y.o) - dec(x.o))[0];
+        if (!c || v.p * dec(c.o) - 1 < min) return '';
+        o = c;
+      }
+      const tip = `Value: ${o ? esc(FULL[o.k] || o.k) : 'at least one major sportsbook'} pays ${Math.round(min * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
+      if (o && o.u)                                          // Unabated: price, book and a bet link (partner code)
+        return `<a class="vtag" href="${esc(o.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)} ↗</a>`;
+      if (MY.length && typeof v === 'string') return '';     // no per-book prices to check against the viewer's books
       return `<span class="vtag" title="${tip}">Value · ${esc(b)}</span>`;
     },
     bkNote(gid){
       if (!BK || !BK.games || !BK.games[String(gid)]) return '';
       const t = BK.fetched ? new Date(BK.fetched).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '';
-      return `<div class="small muted">Under each option: the best price across DraftKings, FanDuel, Hard Rock, BetMGM, Caesars and more (${esc(t)}); tap it to open that bet. <span style="color:var(--good)">Green</span> = our chance beats that price by 3%+ (a grey % means the market has out-predicted our model on that bet type so far).</div>`;
+      const names = [...new Set(Object.values(BK.games).flatMap(g => ['ml', 'spread', 'total'].flatMap(k => {
+        const x = g[k] || {}; return k === 'ml' ? Object.values(x).flatMap(Object.keys) : Object.values(x).flatMap(sd => Object.values(sd).flatMap(Object.keys)); })))]
+        .filter(k => !SKIP.has(k)).sort((a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99 || a.localeCompare(b));
+      const lab = MY.length ? MY.map(k => FULL[k] || k).join(', ') : 'all books';
+      const panel = bkOpen === String(gid) ? `<div class="bkpanel" role="group" aria-label="Your sportsbooks">${names.map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : '';
+      return `<div class="small muted bknote">Price under each option: best at <button type="button" class="bkset" data-bkset="${esc(String(gid))}" aria-expanded="${bkOpen === String(gid)}" title="Choose the sportsbooks you use (saved on this device)">${esc(lab)} ▾</button> (${esc(t)}); tap it to open that bet. <span style="color:var(--good)">Green</span> = our chance beats that price by 3%+ (a grey % means the market has out-predicted our model on that bet type so far).${panel}</div>`;
     },
     has: () => !!(D && D.rows.length),
     loaded: () => !!D,
@@ -254,6 +283,15 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   const go = e => { const t = e.target.closest && e.target.closest('[data-go]'); if (!t) return false;
     e.preventDefault(); e.stopPropagation(); window.open(t.dataset.go, '_blank', 'noopener'); return true; };
   document.addEventListener('click', go, true);
+  document.addEventListener('click', e => {                 // choose your sportsbooks (saved on this device)
+    const st = e.target.closest && e.target.closest('[data-bkset]');
+    if (st){ bkOpen = bkOpen === st.dataset.bkset ? null : st.dataset.bkset; rerender(); return; }
+    const b = e.target.closest && e.target.closest('[data-bkpick]'); if (!b) return;
+    const k = b.dataset.bkpick;
+    MY = !k ? [] : MY.includes(k) ? MY.filter(x => x !== k) : [...MY, k];
+    try { localStorage.setItem('simbooks-v1', JSON.stringify(MY)); } catch (e2) {}
+    rerender();
+  });
   document.addEventListener('keydown', e => { if (e.key === 'Enter') go(e); }, true);
   document.addEventListener('toggle', e => { const k = e.target.dataset && e.target.dataset.mkd; if (k) e.target.open ? openD.add(k) : openD.delete(k); }, true);
   document.addEventListener('click', e => {                 // "use line": move the page's slider to the market line
