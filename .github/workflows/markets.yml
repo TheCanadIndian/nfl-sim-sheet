@@ -48,6 +48,7 @@ jobs:
         if: steps.q.outputs.skip != 'true'
         working-directory: engine
         env:
+          UNABATED_API_KEY: ${{ secrets.UNABATED_API_KEY }}
           SHARPAPI_KEY: ${{ secrets.SHARPAPI_KEY }}
         run: python sharp.py || true
       - name: Watch for late scratches and line moves (re-runs a sport's model if needed)
