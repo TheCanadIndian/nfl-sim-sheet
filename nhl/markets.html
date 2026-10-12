@@ -220,7 +220,46 @@ input[type=search]{min-width:200px}
 .mlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
 .mlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
 .mlist .who{font-weight:600;min-width:170px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
+.mmeta{display:none}
+details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:pointer;color:var(--ink);font-size:13px;margin-bottom:4px}
+@media (max-width:640px){
+  /* player tables become two-line rows: name + chips + a small details line on the left, the key number big on the right */
+  .pt,.pt tbody{display:block;width:100%}
+  .pt thead{display:none}
+  .pt tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pt tbody tr.grp,.pt tbody tr.xrow{display:block;padding:0;border:0}
+  .pt tbody tr.grp td,.pt tbody tr.xrow td{display:block;padding:10px 2px 4px!important}
+  .pt td{display:none;border:0!important;padding:0!important;text-align:left}
+  .pt td.name{display:block;grid-column:1;min-width:0;width:auto;white-space:normal}
+  .pt td.kp{display:block;grid-column:2;grid-row:1;text-align:right;font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
+  .pt td.kp b{font-weight:700}
+  .pt .mmeta{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;line-height:1.35}
+  .pt .mmeta b{color:var(--ink);font-weight:600}
+  .tw:has(> .pt){overflow:visible}
+  /* pairs: stacked cards */
+  .pairs,.pairs tbody{display:block;width:100%}
+  .pairs thead{display:none}
+  .pairs tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pairs td{border:0!important;padding:0!important;white-space:normal!important}
+  .pairs td:first-child{grid-column:1 / -1}
+  .pairs td.big{grid-column:1;font-size:14px;text-align:left}
+  .pairs td.big::after{content:" chance";color:var(--muted);font-weight:400;font-size:12px}
+  .pairs td.pay{grid-column:1;grid-row:3;text-align:left;color:var(--muted);font-size:12.5px}
+  .pairs td.pay::after{content:" fair payout"}
+  .pairs td.add{grid-column:2;grid-row:2 / span 2;align-self:center}
+  .pairs tr.slate td{grid-column:1 / -1}
+  .tw:has(> .pairs){overflow:visible}
+  /* chips wrap instead of running off the edge; Kalshi pattern chips live in the tap-open panel on phones */
+  .pt td.name .mkx-pat{display:none}
+  .pt td.name .vtag{white-space:normal;line-height:1.35;margin:3px 4px 0 0}
+  /* first-TD list: full names, no bar */
+  .ftd-r{grid-template-columns:minmax(0,1fr) 46px 52px 36px;gap:8px}
+  .ftd-r .pbar{display:none}
+  .ftd-r .n{white-space:normal}
+  .ftd-r .n .small{display:block}
+}
 .dvbar{position:relative;height:10px;min-width:150px;background:var(--sunk);border-radius:2px}
 .dvbar i{position:absolute;top:0;bottom:0;border-radius:2px}
 .dvbar .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
@@ -454,7 +493,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"nhl","groups":[{"sport":"nhl","source":"kalshi","kind":"all","n":5882,"hit":0.119,"model_ll":0.2894,"market_ll":0.2888,"model_brier":0.0855,"market_brier":0.0849,"bets":403,"bets_won":124,"roi":-0.105},{"sport":"nhl","source":"polymarket","kind":"all","n":268,"hit":0.485,"model_ll":0.6275,"market_ll":0.6298,"model_brier":0.2193,"market_brier":0.2201,"bets":153,"bets_won":75,"roi":0.045},{"sport":"nhl","source":"kalshi","kind":"first_goal","n":2621,"hit":0.029,"model_ll":0.1278,"market_ll":0.1286,"model_brier":0.0282,"market_brier":0.0283,"bets":0,"bets_won":0,"roi":null},{"sport":"nhl","source":"kalshi","kind":"goal","n":2865,"hit":0.15,"model_ll":0.3915,"market_ll":0.3912,"model_brier":0.1199,"market_brier":0.1195,"bets":236,"bets_won":48,"roi":-0.168},{"sport":"nhl","source":"kalshi","kind":"total","n":264,"hit":0.492,"model_ll":0.6155,"market_ll":0.603,"model_brier":0.2135,"market_brier":0.2078,"bets":133,"bets_won":62,"roi":-0.056},{"sport":"nhl","source":"kalshi","kind":"win","n":132,"hit":0.5,"model_ll":0.6279,"market_ll":0.6191,"model_brier":0.2183,"market_brier":0.2144,"bets":34,"bets_won":14,"roi":-0.078},{"sport":"nhl","source":"polymarket","kind":"spread","n":53,"hit":0.434,"model_ll":0.6566,"market_ll":0.6645,"model_brier":0.2327,"market_brier":0.2363,"bets":23,"bets_won":10,"roi":0.176},{"sport":"nhl","source":"polymarket","kind":"total","n":172,"hit":0.512,"model_ll":0.6107,"market_ll":0.6154,"model_brier":0.2117,"market_brier":0.2135,"bets":111,"bets_won":56,"roi":0.035},{"sport":"nhl","source":"polymarket","kind":"win","n":43,"hit":0.442,"model_ll":0.6588,"market_ll":0.6444,"model_brier":0.2333,"market_brier":0.2266,"bets":19,"bets_won":9,"roi":-0.019}],"flow":{"nhl":{"value + NO flow":{"bets":4,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":72,"won":16,"roi":0.133},"crowded YES (buying YES)":{"bets":832,"won":132,"roi":-0.124}},"nfl":{"value + NO flow":{"bets":71,"won":15,"roi":-0.356},"value, YES-heavy flow":{"bets":293,"won":68,"roi":-0.183},"crowded YES (buying YES)":{"bets":279,"won":70,"roi":-0.02}}}}</script>
+<script type="application/json" id="grdata">{"sport":"nhl","groups":[{"sport":"nhl","source":"kalshi","kind":"all","n":5882,"hit":0.119,"model_ll":0.2894,"market_ll":0.2888,"model_brier":0.0855,"market_brier":0.0849,"bets":403,"bets_won":124,"roi":-0.105},{"sport":"nhl","source":"polymarket","kind":"all","n":268,"hit":0.485,"model_ll":0.6275,"market_ll":0.6298,"model_brier":0.2193,"market_brier":0.2201,"bets":153,"bets_won":75,"roi":0.045},{"sport":"nhl","source":"kalshi","kind":"first_goal","n":2621,"hit":0.029,"model_ll":0.1278,"market_ll":0.1286,"model_brier":0.0282,"market_brier":0.0283,"bets":0,"bets_won":0,"roi":null},{"sport":"nhl","source":"kalshi","kind":"goal","n":2865,"hit":0.15,"model_ll":0.3915,"market_ll":0.3912,"model_brier":0.1199,"market_brier":0.1195,"bets":236,"bets_won":48,"roi":-0.168},{"sport":"nhl","source":"kalshi","kind":"total","n":264,"hit":0.492,"model_ll":0.6155,"market_ll":0.603,"model_brier":0.2135,"market_brier":0.2078,"bets":133,"bets_won":62,"roi":-0.056},{"sport":"nhl","source":"kalshi","kind":"win","n":132,"hit":0.5,"model_ll":0.6279,"market_ll":0.6191,"model_brier":0.2183,"market_brier":0.2144,"bets":34,"bets_won":14,"roi":-0.078},{"sport":"nhl","source":"polymarket","kind":"spread","n":53,"hit":0.434,"model_ll":0.6566,"market_ll":0.6645,"model_brier":0.2327,"market_brier":0.2363,"bets":23,"bets_won":10,"roi":0.176},{"sport":"nhl","source":"polymarket","kind":"total","n":172,"hit":0.512,"model_ll":0.6107,"market_ll":0.6154,"model_brier":0.2117,"market_brier":0.2135,"bets":111,"bets_won":56,"roi":0.035},{"sport":"nhl","source":"polymarket","kind":"win","n":43,"hit":0.442,"model_ll":0.6588,"market_ll":0.6444,"model_brier":0.2333,"market_brier":0.2266,"bets":19,"bets_won":9,"roi":-0.019}],"flow":{}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
