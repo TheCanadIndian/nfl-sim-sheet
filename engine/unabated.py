@@ -26,8 +26,10 @@ LEAGUE = {"nfl": "nfl", "nhl": "nhl", "nba": "nba", "mlb": "mlb"}
 # books whose price is a real sportsbook bet (DFS pick'em, Canadian / duplicate feeds and fee-charging
 # prediction markets are left out of 'best price': Kalshi and Polymarket have their own box on the pages)
 BOOKS = {1: "DraftKings", 2: "FanDuel", 4: "BetMGM", 20: "Caesars", 36: "theScore", 86: "Fanatics", 89: "Novig", 66: "ProphetX"}
-SHORT = {1: "DK", 2: "FD", 4: "MGM", 20: "Caesars", 36: "theScore", 86: "Fanatics", 89: "Novig", 66: "ProphetX", 105: "Kalshi"}
+SHORT = {1: "DK", 2: "FD", 4: "MGM", 20: "Caesars", 36: "theScore", 86: "Fanatics", 89: "Novig", 66: "ProphetX", 105: "Kalshi",
+         107: "Polymarket", 111: "Poly US"}
 KALSHI = 105        # included on request, priced after its taker fee (see kalshi_price)
+PMS = (107, 111)    # Polymarket, Polymarket US: included with Kalshi (no fee assumed)
 _last = [0.0]
 
 
@@ -115,7 +117,7 @@ def board(sport, market_type, bet_types=None, kalshi=False):
                 nm, tm = people.get(pid, (None, None)) if pid else (None, None)
                 for src, L in (sd.get("marketSourceLines") or {}).items():
                     src = int(src)
-                    if (src not in BOOKS and not (kalshi and src == KALSHI)) or L.get("disabled") or L.get("statusId") != 1 or L.get("price") is None:
+                    if (src not in BOOKS and not (kalshi and (src == KALSHI or src in PMS))) or L.get("disabled") or L.get("statusId") != 1 or L.get("price") is None:
                         continue
                     price = int(L["price"])
                     if src == KALSHI:
