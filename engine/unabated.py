@@ -26,7 +26,8 @@ LEAGUE = {"nfl": "nfl", "nhl": "nhl", "nba": "nba", "mlb": "mlb"}
 # books whose price is a real sportsbook bet (DFS pick'em, Canadian / duplicate feeds and fee-charging
 # prediction markets are left out of 'best price': Kalshi and Polymarket have their own box on the pages)
 BOOKS = {1: "DraftKings", 2: "FanDuel", 4: "BetMGM", 20: "Caesars", 36: "theScore", 86: "Fanatics", 89: "Novig", 66: "ProphetX"}
-SHORT = {1: "DK", 2: "FD", 4: "MGM", 20: "Caesars", 36: "theScore", 86: "Fanatics", 89: "Novig", 66: "ProphetX"}
+SHORT = {1: "DK", 2: "FD", 4: "MGM", 20: "Caesars", 36: "theScore", 86: "Fanatics", 89: "Novig", 66: "ProphetX", 105: "Kalshi"}
+KALSHI = 105        # included on request, priced after its taker fee (see kalshi_price)
 _last = [0.0]
 
 
@@ -84,7 +85,15 @@ def lookup(sport, what):
     return out
 
 
-def board(sport, market_type, bet_types=None):
+def kalshi_price(c):
+    """American odds a Kalshi buyer really gets: contract price c plus the 7% x c x (1 - c) taker fee."""
+    q = c + .07 * c * (1 - c)
+    if not 0 < q < 1:
+        return None
+    return int(round(-100 * q / (1 - q))) if q >= .5 else int(round(100 * (1 - q) / q))
+
+
+def board(sport, market_type, bet_types=None, kalshi=False):
     """Flat pregame rows: one per (market, side, book) for books in BOOKS.
     Fields: event, start, away, home (Unabated abbreviations), bt, person, name, team, side_index, points, book, price, opener, liq, url."""
     params = [("betTypeId", b) for b in (bet_types or [])]
@@ -106,10 +115,17 @@ def board(sport, market_type, bet_types=None):
                 nm, tm = people.get(pid, (None, None)) if pid else (None, None)
                 for src, L in (sd.get("marketSourceLines") or {}).items():
                     src = int(src)
-                    if src not in BOOKS or L.get("disabled") or L.get("statusId") != 1 or L.get("price") is None:
+                    if (src not in BOOKS and not (kalshi and src == KALSHI)) or L.get("disabled") or L.get("statusId") != 1 or L.get("price") is None:
                         continue
+                    price = int(L["price"])
+                    if src == KALSHI:
+                        if L.get("sourceFormat") != 4 or L.get("sourcePrice") is None:
+                            continue
+                        price = kalshi_price(float(L["sourcePrice"]))
+                        if price is None:
+                            continue
                     rows.append(dict(event=m["eventId"], start=m.get("eventStart"), away=away, home=home, bt=m.get("betTypeId"),
                                      person=pid, name=nm, team=teams.get(tm) if tm else None, side_index=sd.get("sideIndex"),
-                                     team_side=sd.get("teamId"), points=L.get("points"), book=src, price=int(L["price"]),
+                                     team_side=sd.get("teamId"), points=L.get("points"), book=src, price=price,
                                      opener=L.get("openerPrice"), liq=L.get("liquidity"), url=link(L.get("deepLink"))))
     return pd.DataFrame(rows)
