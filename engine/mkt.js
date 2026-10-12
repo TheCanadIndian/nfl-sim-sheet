@@ -18,8 +18,9 @@
   let BK = null, FL = null, PR = null;            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
-  const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'ProphetX', 'Fliff', 'Bally Bet', 'betPARX'];
-  let MY = [], bkOpen = null;                      // the viewer's sportsbooks (this device), [] = all books
+  const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'Polymarket', 'Poly US', 'ProphetX', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'Fliff', 'Bally Bet', 'betPARX'];
+  let MY = [], bkOpen = null;
+  const OV = {g: 'all', m: 'all', q: ''};          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
   const mine = k => !MY.length || MY.includes(k);
   const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
@@ -74,6 +75,25 @@ a.pc b{font-weight:700} a.pc:hover{color:var(--accent)}
 a.pc.v,a.pc.v b{color:var(--good)} a.pc i{font-style:normal;font-weight:700;font-size:11.5px}
 a.pc.nm,a.pc.nm b{color:var(--muted)}
 .pcm{display:none}
+.ovc{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:6px}
+.ovc select,.ovc input{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;color:var(--ink);font:inherit;font-size:13.5px}
+.ovc input{flex:1;min-width:150px}
+.ovm{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.ovm::-webkit-scrollbar{display:none}
+.ovm button{flex:0 0 auto;white-space:nowrap;border:1px solid var(--faint);background:none;border-radius:999px;padding:5px 11px;cursor:pointer;font:inherit;font-size:13px;color:var(--ink)}
+.ovm button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ovt td,.ovt th{white-space:nowrap}
+.ovt th .gl{display:block;font-size:9.5px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase;margin-bottom:2px;text-align:left}
+.ovt .g0{border-left:1px solid var(--faint)}
+.ovt td{text-align:right}
+.ovt .name{position:sticky;left:0;z-index:1;background:var(--surface);min-width:150px;white-space:normal}
+.ovt thead th:first-child{position:sticky;left:0;z-index:2;background:var(--surface)}
+.ovt .name b{display:block;font-weight:600}.ovt .name small,.ovt td small{display:block;color:var(--muted);font-size:11.5px}
+.ovt td a{color:inherit;text-decoration:none}
+.ovt td.bst{font-weight:800;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.ovt td.v,.ovt td.v a{color:var(--good);font-weight:700}
+.ovt th.my,.ovt td.my{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+@media (max-width:640px){ .ovt .name{min-width:118px;max-width:140px} .ovt td,.ovt th{padding:6px 7px;font-size:12.5px} }
 @media (max-width:640px){ .pcd{display:none} .pcm{display:block;margin-top:2px;font-weight:400} .pcm a.pc{font-size:12.5px} }
 .bkset{border:1px solid var(--faint);border-radius:999px;padding:0 8px;background:none;color:var(--ink);font:inherit;font-size:12px;cursor:pointer;line-height:18px}
 .bkset:hover,.bkset[aria-expanded="true"]{border-color:var(--accent)}
@@ -213,6 +233,69 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return `<em class="bk${v ? ' v' : ''}${url ? ' go' : ''}${other ? ' nm' : ''}"${url ? ` data-go="${esc(url)}" role="link" tabindex="0"` : ''} title="${tip}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${(v || va) ? ` · +${(ev * 100).toFixed(0)}%` : ''}${url ? ' ↗' : ''}</em>`;
     },
     bkFetched: () => (BK ? BK.fetched : null),
+    // 'Book odds' tab: every game line and player prop with each book's price side by side.
+    // games: [{id, label}] in page order. Filters (game / market / player search) work on the DOM, so typing keeps focus.
+    oddsView(games){
+      const KL = {goal: 'Anytime goal', td: 'Anytime TD', rec: 'Receptions', rec_yds: 'Receiving yds', rush_yds: 'Rushing yds', pass_yds: 'Passing yds'};
+      const fresh = x => x && x.fetched && Date.now() - new Date(x.fetched) < 12 * 3600e3;
+      const rows = [], used = new Set();
+      const link = (v, partner) => { const u = Array.isArray(v) ? v[1] : null; if (!u) return null;
+        return u.startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent(partner || '')}`; };
+      const add = (r, prices, partner) => { const P = {};
+        for (const [k, v] of Object.entries(prices || {})){ if (SKIP.has(k)) continue; const o = Array.isArray(v) ? v[0] : v; if (o == null) continue; P[k] = {o, u: link(v, partner)}; used.add(k); }
+        if (Object.keys(P).length) rows.push({...r, P}); };
+      for (const g of games){
+        const G = fresh(BK) && BK.games && BK.games[String(g.id)];
+        if (G){
+          const main = o => Object.entries(o || {}).sort((a, b) => Object.values(b[1]).reduce((n, s) => n + Object.keys(s).length, 0) - Object.values(a[1]).reduce((n, s) => n + Object.keys(s).length, 0))[0];
+          for (const sd of ['away', 'home']) add({gid: g.id, m: 'lines', o: 0, who: (g[sd] || sd), what: 'Moneyline'}, (G.ml || {})[sd]);
+          const sp = main(G.spread); if (sp) for (const sd of ['away', 'home']){ const L = sd === 'home' ? +sp[0] : -sp[0];
+            add({gid: g.id, m: 'lines', o: 1, who: (g[sd] || sd), what: `Spread ${L > 0 ? '+' : L < 0 ? '−' : ''}${Math.abs(L)}`}, sp[1][sd]); }
+          const tt = main(G.total); if (tt) for (const sd of ['over', 'under']) add({gid: g.id, m: 'lines', o: 2, who: sd === 'over' ? 'Over' : 'Under', what: `Total ${tt[0]}`}, tt[1][sd]);
+        }
+        const X = fresh(PR) && PR.props && PR.props[String(g.id)];
+        for (const [nm, kinds] of Object.entries(X || {})) for (const [k, e] of Object.entries(kinds)){
+          const name = nm.replace(/\b\w/g, c => c.toUpperCase());
+          if (e.l == null) add({gid: g.id, m: k, o: 10, who: name, what: KL[k] || k, p: e.p, w: e.w}, e.o, PR.partner);
+          else { add({gid: g.id, m: k, o: 10, who: name, what: `${KL[k] || k} o${e.l}`, p: e.p, w: e.w}, e.o, PR.partner);
+                 add({gid: g.id, m: k, o: 10.5, who: name, what: `${KL[k] || k} u${e.l}`, p: e.p == null ? null : 1 - e.p, w: e.w}, e.u, PR.partner); }
+        }
+      }
+      if (!rows.length) return `<section class="panel"><div class="phead"><h2>Book odds</h2></div><p class="note">No sportsbook prices yet for these games. Game lines appear about a day before each game; player props when Unabated's props feed is up (it retries every 15 minutes).</p></section>`;
+      const PMG = ['Kalshi', 'Polymarket', 'Poly US', 'Novig', 'ProphetX'];
+      const ord = (a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99 || a.localeCompare(b);
+      const groups = [['My books', MY.filter(k => used.has(k))], ['Prediction markets & exchanges', PMG.filter(k => used.has(k) && !MY.includes(k))],
+                      ['Sportsbooks', [...used].filter(k => !PMG.includes(k) && !MY.includes(k)).sort(ord)]].filter(g => g[1].length);
+      const cols = groups.flatMap(g => g[1]), first = new Set(groups.map(g => g[1][0]));
+      const mkts = [...new Set(rows.map(r => r.m))], mlab = m => m === 'lines' ? 'Game lines' : KL[m] || m;
+      const glab = Object.fromEntries(games.map(g => [String(g.id), g.label]));
+      const show = r => (OV.g === 'all' || String(r.gid) === OV.g) && (OV.m === 'all' || r.m === OV.m) && (!OV.q || norm(r.who).includes(norm(OV.q)));
+      const amS = o => (o > 0 ? '+' : '') + o;
+      const fairAm = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+      let body = '', last = null;
+      rows.sort((a, b) => games.findIndex(g => String(g.id) === String(a.gid)) - games.findIndex(g => String(g.id) === String(b.gid)) || a.o - b.o || (a.m < b.m ? -1 : a.m > b.m ? 1 : 0) || (b.p ?? 0) - (a.p ?? 0));
+      for (const r of rows){
+        if (r.gid !== last){ last = r.gid; body += `<tr class="grp" data-ovg="${esc(String(r.gid))}"${OV.g !== 'all' && OV.g !== String(r.gid) ? ' hidden' : ''}><td colspan="${cols.length + 2}">${esc(glab[String(r.gid)] || r.gid)}</td></tr>`; }
+        const best = Math.max(...Object.values(r.P).map(x => dec(x.o)));
+        const cells = cols.map(k => { const x = r.P[k]; if (!x) return `<td class="muted${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}">–</td>`;
+          const ev = r.p == null ? null : r.p * dec(x.o) - 1, v = ev != null && !r.w && ev >= ((FL && FL.min_ev) || .05);
+          const t = `${FULL[k] || k} ${amS(x.o)}${ev != null ? ` · our edge ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${x.u ? ' · tap to open this bet' : ''}`;
+          const inner = `${amS(x.o)}`, cls = `${dec(x.o) === best ? 'bst' : ''}${v ? ' v' : ''}${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}`;
+          return `<td class="${cls}" title="${esc(t)}">${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${inner}</a>` : inner}</td>`; }).join('');
+        const fair = r.p == null ? '<td class="muted">–</td>' : `<td title="Our chance ${(r.p * 100).toFixed(1)}%${r.w ? ' (low trust: outside our top 3 or likely news)' : ''}">${amS(fairAm(r.p))}<small>${(r.p * 100).toFixed(0)}%</small></td>`;
+        body += `<tr data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}><td class="l name"><b>${esc(r.who)}</b><small>${esc(r.what)}</small></td>${fair}${cells}</tr>`;
+      }
+      const t = x => x && x.fetched ? new Date(x.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : null;
+      const when = [t(fresh(BK) && BK) && `game lines ${t(BK)}`, t(fresh(PR) && PR) && `props ${t(PR)}`].filter(Boolean).join(' · ');
+      return `<section class="panel ov"><div class="phead"><h2>Book odds</h2><span class="small muted">${esc(when)}</span></div>
+        <div class="ovc"><select id="ov-g" aria-label="Game"><option value="all">All games</option>${games.filter(g => rows.some(r => String(r.gid) === String(g.id))).map(g => `<option value="${esc(String(g.id))}"${OV.g === String(g.id) ? ' selected' : ''}>${esc(g.label)}</option>`).join('')}</select>
+        <div class="ovm" role="group" aria-label="Market">${['all', ...mkts].map(m => `<button type="button" data-ovm-pick="${esc(m)}" aria-pressed="${OV.m === m}">${m === 'all' ? 'All' : esc(mlab(m))}</button>`).join('')}</div>
+        <input id="ov-q" type="search" placeholder="Player or team" value="${esc(OV.q)}" aria-label="Search players"></div>
+        <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock has game lines only (no player props in our feeds). Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
+        ${bkOpen === 'ov' ? `<div class="bkpanel">${[...used].sort(ord).map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : ''}
+        <div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${groups.map(([lab, ks]) => ks.map((k, i) =>
+          `<th class="${MY.includes(k) ? 'my' : ''}${i === 0 ? ' g0' : ''}">${i === 0 ? `<small class="gl">${esc(lab)}</small>` : '<small class="gl">&nbsp;</small>'}${esc(BKS[k] || k)}</th>`).join('')).join('')}</tr></thead><tbody>${body.replace(/<td class="([^"]*)" title/g, (m, c) => m)}</tbody></table></div></section>`;
+    },
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
     // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)
@@ -307,6 +390,17 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   const go = e => { const t = e.target.closest && e.target.closest('[data-go]'); if (!t) return false;
     e.preventDefault(); e.stopPropagation(); window.open(t.dataset.go, '_blank', 'noopener'); return true; };
   document.addEventListener('click', go, true);
+  // Book odds filters: hide/show rows in place (no redraw, so the search box keeps focus)
+  const ovApply = () => {
+    for (const tr of document.querySelectorAll('tr[data-ovr]'))
+      tr.hidden = !((OV.g === 'all' || tr.dataset.ovg === OV.g) && (OV.m === 'all' || tr.dataset.ovm === OV.m) && (!OV.q || tr.dataset.ovn.includes(norm(OV.q))));
+    for (const tr of document.querySelectorAll('tr.grp[data-ovg]'))
+      tr.hidden = !document.querySelector(`tr[data-ovr][data-ovg="${CSS.escape(tr.dataset.ovg)}"]:not([hidden])`);
+    for (const b of document.querySelectorAll('[data-ovm-pick]')) b.setAttribute('aria-pressed', b.dataset.ovmPick === OV.m);
+  };
+  document.addEventListener('input', e => { if (e.target.id === 'ov-q'){ OV.q = e.target.value; ovApply(); } });
+  document.addEventListener('change', e => { if (e.target.id === 'ov-g'){ OV.g = e.target.value; ovApply(); } });
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovm-pick]'); if (b){ OV.m = b.dataset.ovmPick; ovApply(); } });
   document.addEventListener('click', e => {                 // choose your sportsbooks (saved on this device)
     const st = e.target.closest && e.target.closest('[data-bkset]');
     if (st){ bkOpen = bkOpen === st.dataset.bkset ? null : st.dataset.bkset; rerender(); return; }
