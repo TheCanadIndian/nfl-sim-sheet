@@ -37,6 +37,12 @@ jobs:
         run: |
           set +e; python markets.py live; rc=$?; set -e
           [ $rc -eq 10 ] && echo "skip=true" >> "$GITHUB_OUTPUT" || { [ $rc -eq 0 ] || exit $rc; }
+      - name: Sportsbook game lines (The Odds API, paced to the monthly credit budget)
+        if: steps.q.outputs.skip != 'true'
+        working-directory: engine
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python books.py || true
       - name: Watch for late scratches and line moves (re-runs a sport's model if needed)
         if: steps.q.outputs.skip != 'true'
         working-directory: engine

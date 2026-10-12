@@ -15,6 +15,11 @@
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
   let D = null, stamp = null, timer = null;
+  let BK = null;                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
+  const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
+  const SKIP = new Set(['kalshi']);               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
+  const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+  const am = o => (o > 0 ? '+' : '') + o;
   const polyAt = {}, openD = new Set();            // which 'All lines' lists are open (kept across redraws)
   const det = key => `<details data-mkd="${esc(key)}"${openD.has(key) ? ' open' : ''}>`;
 
@@ -54,6 +59,10 @@
 .mkx-crowd{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:700;border:1px solid #e5534b;color:#e5534b;cursor:help}
 .mkx-c{display:grid;gap:1px;line-height:1.2;white-space:nowrap}
 .mkx-c small{color:var(--muted);font-size:11px}
+.bet{flex-wrap:wrap}
+.bet .bk{flex-basis:100%;contain:inline-size;font-style:normal;font-size:11.5px;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bet .bk b{font:inherit;font-weight:600;color:var(--ink)}
+.bet .bk.v{color:var(--good)} .bet .bk.v b{color:var(--good)}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
 
@@ -162,6 +171,24 @@
   }
   const P_NOTE = 'early leads from 3 weeks: the "since" record shows whether they keep hitting';
   window.MKT = {
+    // best sportsbook price for one game-line option, as a small second line inside the page's bet chip.
+    // kind: 'ml' (side home|away), 'spread' (line = HOME team's handicap, side home|away), 'total' (side over|under)
+    bk(gid, kind, side, line, p){
+      const G = BK && BK.games && BK.games[String(gid)]; if (!G) return '';
+      let o = G[kind]; if (kind !== 'ml') o = o && o[String(+line)]; o = o && o[side];
+      const L = o ? Object.entries(o).filter(([k]) => !SKIP.has(k)).sort((a, b) => dec(b[1]) - dec(a[1])) : []; if (!L.length) return '';
+      const [bk, price] = L[0], ev = p == null ? null : p * dec(price) - 1, mk = {ml: 'win', spread: 'spread', total: 'total'}[kind];
+      const ahead = !!(D && ((D.weak && D.weak.includes(mk)) || lost(mk)));      // markets have out-predicted us on this bet type so far
+      const v = ev != null && ev >= .03 && !ahead, va = ev != null && ev >= .03 && ahead;
+      const all = L.map(([k, x]) => `${BKS[k] || k} ${am(x)}`).join(' · ');
+      return `<em class="bk${v ? ' v' : ''}" title="Best price across ${L.length} book${L.length > 1 ? 's' : ''} (as of ${esc(BK.fetched ? new Date(BK.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '')}): ${esc(all)}${ev != null ? ` · our edge at the best price ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${va ? ' · not highlighted: so far the market has been more accurate than our model on this bet type' : ''}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${v ? ` · +${(ev * 100).toFixed(0)}%` : va ? ` · +${(ev * 100).toFixed(0)}% (market ahead)` : ''}</em>`;
+    },
+    bkFetched: () => (BK ? BK.fetched : null),
+    bkNote(gid){
+      if (!BK || !BK.games || !BK.games[String(gid)]) return '';
+      const t = BK.fetched ? new Date(BK.fetched).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '';
+      return `<div class="small muted">Under each option: the best price at Hard Rock, Novig, DraftKings, FanDuel and 6 more books (${esc(t)}). <span style="color:var(--good)">Green</span> = our chance beats that price by 3%+.</div>`;
+    },
     has: () => !!(D && D.rows.length),
     loaded: () => !!D,
     rows: () => (D ? D.rows : []),
@@ -221,5 +248,12 @@
       stamp = d.fetched; D = d; rerender();
     }).catch(() => {});
   }
-  if (sport){ load(); timer = setInterval(load, 120000); }
+  let bstamp = null;
+  function loadBooks(){
+    fetch(base + 'markets/books_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
+      if (!d || d.fetched === bstamp) return;
+      bstamp = d.fetched; BK = d; rerender();
+    }).catch(() => {});
+  }
+  if (sport){ load(); loadBooks(); timer = setInterval(() => { load(); loadBooks(); }, 120000); }
 })();

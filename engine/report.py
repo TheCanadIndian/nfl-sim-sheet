@@ -751,11 +751,12 @@ function gameDetail(){
 }
 // game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)
 // one tappable chip per bet option (adds it to the parlay slip; ✓ once added)
-function betChip(L, lab, p){
+function betChip(L, lab, p, bk){                         // bk: best sportsbook price line (mkt.js MKT.bk), if any
   const on = window.SLIP && SLIP.has(L.id);
   const odd = p == null ? '' : american(p);
-  return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${odd}</small><i>${on ? '✓' : '+'}</i></button>`;
+  return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${odd}</small><i>${on ? '✓' : '+'}</i>${bk || ''}</button>`;
 }
+const BK = (...a) => window.MKT && MKT.bk ? MKT.bk(...a) : '';
 const betRow = (lab, chips) => `<div class="betrow"><span class="eyebrow">${lab}</span><div class="bets">${chips.join('')}</div></div>`;
 function gameBets(g){
   const T = D.teams[g.id], H = T[g.home], A = T[g.away]; if (H.spread_line == null) return '';
@@ -763,13 +764,13 @@ function gameBets(g){
   const sp = v => (v > 0 ? '+' : v < 0 ? '−' : '') + f1(Math.abs(v)).replace('.0', '');
   const leg = (id, extra, lab) => ({...base, id: `nfl|${g.id}|${id}`, side: 'over', lab, ...extra});
   return `<div class="betgrid">${[
-    betRow('Moneyline', [betChip(leg(`win|${g.away}`, {stat: 'win', home: false}, `${g.away} moneyline`), g.away, A.win_prob),
-                         betChip(leg(`win|${g.home}`, {stat: 'win', home: true}, `${g.home} moneyline`), g.home, H.win_prob)]),
-    betRow('Spread', [betChip(leg(`spread|${g.away}|${L}`, {stat: 'spread', home: false, line: L}, `${g.away} ${sp(L)}`), `${g.away} ${sp(L)}`, A.p_cover),
-                      betChip(leg(`spread|${g.home}|${L}`, {stat: 'spread', home: true, line: L}, `${g.home} ${sp(-L)}`), `${g.home} ${sp(-L)}`, H.p_cover)]),
-    betRow(`Total ${tl}`, [betChip(leg(`total|over|${tl}`, {stat: 'total', line: tl}, `Over ${tl} (${glab})`), 'Over', H.p_over),
-                           betChip(leg(`total|under|${tl}`, {stat: 'total', line: tl, side: 'under'}, `Under ${tl} (${glab})`), 'Under', H.p_under)]),
-  ].join('')}</div>`;
+    betRow('Moneyline', [betChip(leg(`win|${g.away}`, {stat: 'win', home: false}, `${g.away} moneyline`), g.away, A.win_prob, BK(g.id, 'ml', 'away', null, A.win_prob)),
+                         betChip(leg(`win|${g.home}`, {stat: 'win', home: true}, `${g.home} moneyline`), g.home, H.win_prob, BK(g.id, 'ml', 'home', null, H.win_prob))]),
+    betRow('Spread', [betChip(leg(`spread|${g.away}|${L}`, {stat: 'spread', home: false, line: L}, `${g.away} ${sp(L)}`), `${g.away} ${sp(L)}`, A.p_cover, BK(g.id, 'spread', 'away', -L, A.p_cover)),
+                      betChip(leg(`spread|${g.home}|${L}`, {stat: 'spread', home: true, line: L}, `${g.home} ${sp(-L)}`), `${g.home} ${sp(-L)}`, H.p_cover, BK(g.id, 'spread', 'home', -L, H.p_cover))]),
+    betRow(`Total ${tl}`, [betChip(leg(`total|over|${tl}`, {stat: 'total', line: tl}, `Over ${tl} (${glab})`), 'Over', H.p_over, BK(g.id, 'total', 'over', tl, H.p_over)),
+                           betChip(leg(`total|under|${tl}`, {stat: 'total', line: tl, side: 'under'}, `Under ${tl} (${glab})`), 'Under', H.p_under, BK(g.id, 'total', 'under', tl, H.p_under))]),
+  ].join('')}${window.MKT && MKT.bkNote ? MKT.bkNote(g.id) : ''}</div>`;
 }
 function gameDetailMain(g){
   const A = TM(g)[g.away], H = TM(g)[g.home];

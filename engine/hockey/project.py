@@ -656,10 +656,15 @@ function mlBlock(g){
   const o = p => p == null ? '–' : odds(Math.abs(p - .5) < 1e-9 ? -100 : (p >= .5 ? -Math.round(100 * p / (1 - p)) : Math.round(100 * (1 - p) / p)));
   const gl = `${g.away.team} @ ${g.home.team}`;
   // each option is one tappable chip that adds it to the parlay slip (game legs multiply with goal legs)
+  const BK = (...a) => window.MKT && MKT.bk ? MKT.bk(g.id, ...a) : '';
+  const bkOf = {ml_away: ['ml', 'away'], ml_home: ['ml', 'home'], pl_away_m: ['spread', 'away', 1.5], pl_home_m: ['spread', 'home', -1.5],
+                pl_away_p: ['spread', 'away', -1.5], pl_home_p: ['spread', 'home', 1.5]};      // spread line = home team's handicap
   const chip = (key, lab, p, full) => {
+    const bk = key.startsWith('over') ? BK('total', 'over', key.slice(4), p) : key.startsWith('under') ? BK('total', 'under', key.slice(5), p)
+             : bkOf[key] ? BK(bkOf[key][0], bkOf[key][1], bkOf[key][2], p) : '';
     const L = {id: `nhl|${g.id}|${key}`, sport: 'nhl', g: g.id, glab: gl, lab: `${full || lab} (${gl})`, p, side: 'over', stat: key};
     const on = window.SLIP && SLIP.has(L.id);
-    return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${o(p)}</small><i>${on ? '✓' : '+'}</i></button>`;
+    return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${o(p)}</small><i>${on ? '✓' : '+'}</i>${bk}</button>`;
   };
   const row = (lab, chips) => `<div class="betrow"><span class="eyebrow">${lab}</span><div class="bets">${chips.join('')}</div></div>`;
   const A = g.away.team, H = g.home.team;
@@ -668,7 +673,7 @@ function mlBlock(g){
                   .concat(m.away_pl_plus != null ? [chip('pl_away_p', A + ' +1.5', m.away_pl_plus), chip('pl_home_p', H + ' +1.5', m.home_pl_plus)] : []))];
   for (const k of ['5.5', '6.5']) if (m.totals[k] != null)
     rows.push(row('Total ' + k, [chip('over' + k, 'Over', m.totals[k], 'Over ' + k), chip('under' + k, 'Under', 1 - m.totals[k], 'Under ' + k)]));
-  return `<div class="betgrid">${rows.join('')}<div class="small muted">Projected total ${m.total.toFixed(1)} goals · overtime ${pct(m.ot)}</div></div>`;
+  return `<div class="betgrid">${rows.join('')}<div class="small muted">Projected total ${m.total.toFixed(1)} goals · overtime ${pct(m.ot)}</div>${window.MKT && MKT.bkNote ? MKT.bkNote(g.id) : ''}</div>`;
 }
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
