@@ -172,22 +172,23 @@ function teamTable(g, team){
 const MSD = 12.5, TSD = 18.5;
 function ncdf(z){ const t = 1 / (1 + .2316419 * Math.abs(z)), d = .3989423 * Math.exp(-z * z / 2), q = d * t * (.3193815 + t * (-.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274)))); return z > 0 ? 1 - q : q; }
 // one tappable chip per bet option (adds it to the parlay slip; ✓ once added)
-function betChip(L, lab, p){
+function betChip(L, lab, p, bk){                         // bk: best sportsbook price line (mkt.js MKT.bk), if any
   const on = window.SLIP && SLIP.has(L.id);
   const odd = p == null ? '' : american(p);
-  return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${odd}</small><i>${on ? '✓' : '+'}</i></button>`;
+  return `<button type="button" class="bet${on ? ' on' : ''}"${window.SLIP ? ` data-slip="${esc(JSON.stringify(L))}" title="${on ? 'Remove from' : 'Add to'} my parlay"` : ' disabled'}><span>${esc(lab)}</span><b>${pct(p)}</b><small>${odd}</small><i>${on ? '✓' : '+'}</i>${bk || ''}</button>`;
 }
+const BK = (...a) => window.MKT && MKT.bk ? MKT.bk(...a) : '';
 const betRow = (lab, chips) => `<div class="betrow"><span class="eyebrow">${lab}</span><div class="bets">${chips.join('')}</div></div>`;
 function nbaGameBets(g){
   const M = g.models[mode(g.id)], m = M.home_pts - M.away_pts, tot = M.home_pts + M.away_pts, gl = `${g.away} @ ${g.home}`;
   const leg = (key, lab, p) => ({id: `nba|${g.id}|${key}|${mode(g.id)}`, sport: 'nba', g: g.id, glab: gl, lab: `${lab} (${gl})`, p, side: 'over', stat: key});
-  const rows = [betRow('Moneyline', [betChip(leg('ml_away', `${g.away} ML`, 1 - M.home_win), g.away, 1 - M.home_win), betChip(leg('ml_home', `${g.home} ML`, M.home_win), g.home, M.home_win)])];
+  const rows = [betRow('Moneyline', [betChip(leg('ml_away', `${g.away} ML`, 1 - M.home_win), g.away, 1 - M.home_win, BK(g.id, 'ml', 'away', null, 1 - M.home_win)), betChip(leg('ml_home', `${g.home} ML`, M.home_win), g.home, M.home_win, BK(g.id, 'ml', 'home', null, M.home_win))])];
   if (g.spread != null){ const L = -g.spread, ph = 1 - ncdf((L - m) / MSD);
     const a = `${g.away} ${g.spread > 0 ? '−' : '+'}${Math.abs(g.spread)}`, h = `${g.home} ${g.spread > 0 ? '+' : '−'}${Math.abs(g.spread)}`;
-    rows.push(betRow('Spread', [betChip(leg('sp_away', a, 1 - ph), a, 1 - ph), betChip(leg('sp_home', h, ph), h, ph)])); }
+    rows.push(betRow('Spread', [betChip(leg('sp_away', a, 1 - ph), a, 1 - ph, BK(g.id, 'spread', 'away', g.spread, 1 - ph)), betChip(leg('sp_home', h, ph), h, ph, BK(g.id, 'spread', 'home', g.spread, ph))])); }
   if (g.total != null){ const po = 1 - ncdf((g.total - tot) / TSD);
-    rows.push(betRow(`Total ${g.total}`, [betChip(leg('over', `Over ${g.total}`, po), 'Over', po), betChip(leg('under', `Under ${g.total}`, 1 - po), 'Under', 1 - po)])); }
-  return `<div class="betgrid" style="margin:8px 0">${rows.join('')}</div>`;
+    rows.push(betRow(`Total ${g.total}`, [betChip(leg('over', `Over ${g.total}`, po), 'Over', po, BK(g.id, 'total', 'over', g.total, po)), betChip(leg('under', `Under ${g.total}`, 1 - po), 'Under', 1 - po, BK(g.id, 'total', 'under', g.total, 1 - po))])); }
+  return `<div class="betgrid" style="margin:8px 0">${rows.join('')}${window.MKT && MKT.bkNote ? MKT.bkNote(g.id) : ''}</div>`;
 }
 function gameView(){
   const g = D.games.find(x => x.id === state.game) || D.games[0]; if (!g) return '<div class="empty">No games.</div>';
