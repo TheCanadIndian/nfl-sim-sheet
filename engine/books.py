@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """
-Sportsbook prices for game lines (moneyline, spread, total) from The Odds API, matched to our
-games and published for the model pages: <site>/markets/books_<sport>.json.
+Sportsbook prices for game lines (moneyline, spread, total), matched to our games and published for
+the model pages: <site>/markets/books_<sport>.json. Each price is [American odds, bet link] (Unabated:
+a Gambly link with our partner code) or plain odds (The Odds API backup, no links).
+
+Primary: Unabated free API (unabated.py): 8 sportsbooks, no credit limit, pulled at most every 20 min
+for sports with a game within 24 h. Backup when Unabated fails: The Odds API (below).
 
     python books.py            # cloud, after markets.py live: pull each sport with a game soon, within the credit budget
     python books.py nfl        # one sport now (still budget-checked)
@@ -23,17 +27,20 @@ import pandas as pd
 import requests
 
 import markets as M
+import unabated as U
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 STATE = os.path.join(M.OUT, "books_state.json")
 API = "https://api.the-odds-api.com/v4/sports/{}/odds"
 KEYS = {"nfl": "americanfootball_nfl", "nhl": "icehockey_nhl", "nba": "basketball_nba"}
 OURS = {"nfl": M.ours_nfl, "nhl": M.ours_nhl, "nba": M.ours_nba}
-BOOKS = ["hardrockbet", "novig", "draftkings", "fanduel", "betmgm", "williamhill_us", "espnbet", "betrivers", "fliff", "ballybet"]
+BOOKS = ["hardrockbet", "betrivers", "espnbet", "fliff", "ballybet", "betparx"]       # books Unabated doesn't carry
 SHORT = {"hardrockbet": "Hard Rock", "novig": "Novig", "draftkings": "DraftKings", "fanduel": "FanDuel", "betmgm": "BetMGM",
-         "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet"}
+         "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet", "betparx": "betPARX"}
 COST = 3
-PULL_WINDOW, MIN_GAP = 8, 6       # hours
+PULL_WINDOW, MIN_GAP = 8, 6       # hours (The Odds API backup: credit-limited)
+UA_WINDOW, UA_GAP = 24, 20        # Unabated (primary): games within 24 h, at most every 20 minutes
+OA_FRESH = 3                      # hours an Odds API price is shown (pulled far less often)
 
 NAMES = {
     "nfl": {"Arizona Cardinals": "ARI", "Atlanta Falcons": "ATL", "Baltimore Ravens": "BAL", "Buffalo Bills": "BUF", "Carolina Panthers": "CAR",
@@ -113,21 +120,84 @@ def tidy(events, sport, games):
     return out
 
 
-def pull(sport, st, now, force=False):
+def tidy_ua(df, sport, games):
+    """Same shape as tidy(), from Unabated rows; each price is [American odds, Gambly link with our partner code]."""
+    out = {}
+    for ev, x in df[df.bt.isin([1, 2, 3])].groupby("event"):
+        a, h = M.code(sport, str(x.away.iloc[0] or "")), M.code(sport, str(x.home.iloc[0] or ""))
+        t = pd.Timestamp(x.start.iloc[0])
+        g = next((y for y in games if y["home"] == h and y["away"] == a
+                  and abs((pd.Timestamp(y["start"]).tz_convert("UTC") - t).total_seconds()) < 36 * 3600), None)
+        if not g:
+            continue
+        G = out.setdefault(str(g["id"]), {"ml": {}, "spread": {}, "total": {}})
+        for r in x.itertuples():
+            bk, v = U.SHORT[r.book], [r.price, r.url]
+            if r.bt == 1 and r.side_index in (0, 1):
+                G["ml"].setdefault("away" if r.side_index == 0 else "home", {})[bk] = v
+            elif r.bt == 2 and r.side_index in (0, 1) and pd.notna(r.points):
+                side = "away" if r.side_index == 0 else "home"
+                hl = r.points if side == "home" else -r.points                  # keyed by the home team's handicap
+                hl = hl + 0.0 if hl else 0.0
+                G["spread"].setdefault(f"{hl:g}", {}).setdefault(side, {})[bk] = v
+            elif r.bt == 3 and r.side_index in (0, 1) and pd.notna(r.points):
+                G["total"].setdefault(f"{r.points:g}", {}).setdefault("over" if r.side_index == 0 else "under", {})[bk] = v
+    return out
+
+
+def write(sport, G, now, source):
+    # free-tier condition: every published Gambly link carries our partner code
+    def links(o):
+        if isinstance(o, list):
+            yield from ([o[1]] if len(o) == 2 and isinstance(o[1], str) else [])
+        elif isinstance(o, dict):
+            for v in o.values():
+                yield from links(v)
+    bad = [u for u in links(G) if f"utm_campaign={U.PARTNER}" not in u]
+    if bad:
+        raise RuntimeError(f"{len(bad)} links without the partner code: not published")
+    os.makedirs(os.path.join(M.SITE, "markets"), exist_ok=True)
+    json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), source=source, games=G),
+              open(os.path.join(M.SITE, "markets", f"books_{sport}.json"), "w"), separators=(",", ":"))
+
+
+def cache(sport, src, G=None, now=None):
+    """Last pull per source (engine state): markets/books_<src>_<sport>.json."""
+    f = os.path.join(M.OUT, f"books_{src}_{sport}.json")
+    if G is not None:
+        os.makedirs(M.OUT, exist_ok=True)
+        json.dump(dict(fetched=now.isoformat(), games=G), open(f, "w"), separators=(",", ":"))
+    try:
+        return json.load(open(f))
+    except (OSError, ValueError):
+        return None
+
+
+def pull_ua(sport, st, now, games, force):
+    last = st.get("ua_last", {}).get(sport)
+    if not force and last and now - pd.Timestamp(last) < pd.Timedelta(minutes=UA_GAP):
+        return False
+    df = U.board(sport, "straight", [1, 2, 3])
+    G = tidy_ua(df, sport, games) if df is not None and not df.empty else {}
+    if not G:
+        print(f"books {sport}: Unabated returned no matching games"); return False
+    cache(sport, "ua", G, now)
+    st.setdefault("ua_last", {})[sport] = now.isoformat()
+    print(f"books {sport}: {len(G)} games from Unabated")
+    return True
+
+
+def pull_oa(sport, st, now, games, force):
+    """The Odds API: only the books Unabated lacks (Hard Rock and others); credit-paced."""
     k = key()
     if not k:
-        print("books: no ODDS_API_KEY"); return False
-    O = OURS[sport]()
-    games = [g for g in (O or {}).get("games", []) if pd.Timestamp(g["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=1)]
+        return False
     soon = [g for g in games if pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=PULL_WINDOW)]
     last = st.get("last", {}).get(sport)
-    if not force:
-        if not soon:
-            print(f"books {sport}: no game in the next {PULL_WINDOW} h"); return False
-        if last and now - pd.Timestamp(last) < pd.Timedelta(hours=MIN_GAP):
-            print(f"books {sport}: pulled at {last}"); return False
+    if not force and (not soon or (last and now - pd.Timestamp(last) < pd.Timedelta(hours=MIN_GAP))):
+        return False
     if not budget_ok(st, now):
-        print(f"books {sport}: daily credit budget used ({st.get('spent_today')} today, {st.get('remaining')} left this month)"); return False
+        print(f"books {sport}: Odds API daily credit budget used ({st.get('spent_today')} today, {st.get('remaining')} left this month)"); return False
     r = requests.get(API.format(KEYS[sport]), timeout=30, params=dict(apiKey=k, bookmakers=",".join(BOOKS), markets="h2h,spreads,totals",
                                                                     oddsFormat="american"))
     used = int(r.headers.get("x-requests-last") or COST)
@@ -135,14 +205,52 @@ def pull(sport, st, now, force=False):
     if r.headers.get("x-requests-remaining"):
         st["remaining"] = int(float(r.headers["x-requests-remaining"]))
     if r.status_code != 200:
-        print(f"books {sport}: HTTP {r.status_code} {r.text[:200]}"); return False
+        print(f"books {sport}: Odds API HTTP {r.status_code} {r.text[:200]}"); return False
     st.setdefault("last", {})[sport] = now.isoformat()
     G = tidy(r.json(), sport, games)
-    os.makedirs(os.path.join(M.SITE, "markets"), exist_ok=True)
-    json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), names=SHORT, games=G),
-              open(os.path.join(M.SITE, "markets", f"books_{sport}.json"), "w"), separators=(",", ":"))
-    print(f"books {sport}: {len(G)} games matched, {used} credits, {st.get('remaining')} left")
+    cache(sport, "oa", G, now)
+    print(f"books {sport}: {len(G)} games from The Odds API, {used} credits, {st.get('remaining')} left")
     return True
+
+
+def merge(sport, now):
+    """Unabated prices (with bet links) plus Odds API books it lacks, each only while fresh."""
+    ua, oa = cache(sport, "ua"), cache(sport, "oa")
+    fresh = lambda c, h: c and now - pd.Timestamp(c["fetched"]) < pd.Timedelta(hours=h)
+    G = json.loads(json.dumps(ua["games"])) if fresh(ua, 2) else {}
+    if fresh(oa, OA_FRESH):
+        for gid, g in oa["games"].items():
+            T = G.setdefault(gid, {"ml": {}, "spread": {}, "total": {}})
+            for kind, v in g.items():
+                for k1, v1 in v.items():
+                    dst = T[kind].setdefault(k1, {})
+                    for k2, v2 in (v1.items() if kind != "ml" else [(None, v1)]):
+                        d = dst.setdefault(k2, {}) if kind != "ml" else dst
+                        for bk, price in v2.items():
+                            d.setdefault(SHORT.get(bk, bk), [price, None])
+    if not G:
+        return False
+    times = [pd.Timestamp(c["fetched"]) for c, h in ((ua, 2), (oa, OA_FRESH)) if fresh(c, h)]
+    write(sport, G, min(times), "unabated" if fresh(ua, 2) else "the-odds-api")
+    return True
+
+
+def pull(sport, st, now, force=False):
+    O = OURS[sport]()
+    games = [g for g in (O or {}).get("games", []) if pd.Timestamp(g["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=1)]
+    if not force and not any(pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=UA_WINDOW) for g in games):
+        print(f"books {sport}: no game in the next {UA_WINDOW} h"); return False
+    got = False
+    if U.key():
+        try:
+            got = pull_ua(sport, st, now, games, force)
+        except Exception as e:
+            print(f"books {sport}: Unabated failed ({type(e).__name__}: {e})")
+    try:
+        got = pull_oa(sport, st, now, games, force) or got
+    except Exception as e:
+        print(f"books {sport}: Odds API failed ({type(e).__name__}: {e})")
+    return merge(sport, now) if got else False
 
 
 def main(argv):

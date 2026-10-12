@@ -63,6 +63,8 @@
 .bet .bk{flex-basis:100%;contain:inline-size;font-style:normal;font-size:11.5px;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bet .bk b{font:inherit;font-weight:600;color:var(--ink)}
 .bet .bk.v{color:var(--good)} .bet .bk.v b{color:var(--good)}
+.bet .bk.go{cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent);text-underline-offset:2px}
+.bet .bk.go:hover{color:var(--ink)}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
@@ -177,12 +179,14 @@
     bk(gid, kind, side, line, p){
       const G = BK && BK.games && BK.games[String(gid)]; if (!G) return '';
       let o = G[kind]; if (kind !== 'ml') o = o && o[String(+line)]; o = o && o[side];
-      const L = o ? Object.entries(o).filter(([k]) => !SKIP.has(k)).sort((a, b) => dec(b[1]) - dec(a[1])) : []; if (!L.length) return '';
-      const [bk, price] = L[0], ev = p == null ? null : p * dec(price) - 1, mk = {ml: 'win', spread: 'spread', total: 'total'}[kind];
+      // a price is [odds, Gambly bet link] (Unabated) or plain odds (The Odds API)
+      const L = o ? Object.entries(o).filter(([k]) => !SKIP.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null])
+        .sort((a, b) => dec(b[1]) - dec(a[1]) || (!!b[2] - !!a[2])) : []; if (!L.length) return '';
+      const [bk, price, url] = L[0], ev = p == null ? null : p * dec(price) - 1, mk = {ml: 'win', spread: 'spread', total: 'total'}[kind];
       const ahead = !!(D && ((D.weak && D.weak.includes(mk)) || lost(mk)));      // markets have out-predicted us on this bet type so far
       const v = ev != null && ev >= .03 && !ahead, va = ev != null && ev >= .03 && ahead;
       const all = L.map(([k, x]) => `${BKS[k] || k} ${am(x)}`).join(' · ');
-      return `<em class="bk${v ? ' v' : ''}" title="Best price across ${L.length} book${L.length > 1 ? 's' : ''} (as of ${esc(BK.fetched ? new Date(BK.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '')}): ${esc(all)}${ev != null ? ` · our edge at the best price ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${va ? ' · not highlighted: so far the market has been more accurate than our model on this bet type' : ''}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${v ? ` · +${(ev * 100).toFixed(0)}%` : va ? ` · +${(ev * 100).toFixed(0)}% (market ahead)` : ''}</em>`;
+      return `<em class="bk${v ? ' v' : ''}${url ? ' go' : ''}"${url ? ` data-go="${esc(url)}" role="link" tabindex="0"` : ''} title="${url ? `Tap to open this bet at ${esc(BKS[bk] || bk)}. ` : ''}"Best price across ${L.length} book${L.length > 1 ? 's' : ''} (as of ${esc(BK.fetched ? new Date(BK.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '')}): ${esc(all)}${ev != null ? ` · our edge at the best price ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${va ? ' · not highlighted: so far the market has been more accurate than our model on this bet type' : ''}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${v ? ` · +${(ev * 100).toFixed(0)}%` : va ? ` · +${(ev * 100).toFixed(0)}%` : ''}${url ? ' ↗' : ''}</em>`;
     },
     bkFetched: () => (BK ? BK.fetched : null),
     // 'Value' tag next to a player: a major sportsbook pays clearly more than our fair price on this bet
@@ -195,7 +199,7 @@
     bkNote(gid){
       if (!BK || !BK.games || !BK.games[String(gid)]) return '';
       const t = BK.fetched ? new Date(BK.fetched).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '';
-      return `<div class="small muted">Under each option: the best price at Hard Rock, Novig, DraftKings, FanDuel and 6 more books (${esc(t)}). <span style="color:var(--good)">Green</span> = our chance beats that price by 3%+.</div>`;
+      return `<div class="small muted">Under each option: the best price across DraftKings, FanDuel, Hard Rock, BetMGM, Caesars and more (${esc(t)}); tap it to open that bet. <span style="color:var(--good)">Green</span> = our chance beats that price by 3%+ (a grey % means the market has out-predicted our model on that bet type so far).</div>`;
     },
     has: () => !!(D && D.rows.length),
     loaded: () => !!D,
@@ -241,6 +245,11 @@
     },
   };
 
+  // price links inside the bet chips: open the book's bet slip instead of adding the chip to the parlay
+  const go = e => { const t = e.target.closest && e.target.closest('[data-go]'); if (!t) return false;
+    e.preventDefault(); e.stopPropagation(); window.open(t.dataset.go, '_blank', 'noopener'); return true; };
+  document.addEventListener('click', go, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') go(e); }, true);
   document.addEventListener('toggle', e => { const k = e.target.dataset && e.target.dataset.mkd; if (k) e.target.open ? openD.add(k) : openD.delete(k); }, true);
   document.addEventListener('click', e => {                 // "use line": move the page's slider to the market line
     const b = e.target.closest('button[data-mline]'); if (!b) return;

@@ -37,10 +37,11 @@ jobs:
         run: |
           set +e; python markets.py live; rc=$?; set -e
           [ $rc -eq 10 ] && echo "skip=true" >> "$GITHUB_OUTPUT" || { [ $rc -eq 0 ] || exit $rc; }
-      - name: Sportsbook game lines (The Odds API, paced to the monthly credit budget)
+      - name: Sportsbook game lines (Unabated with Gambly links; The Odds API for the books it lacks, credit-paced)
         if: steps.q.outputs.skip != 'true'
         working-directory: engine
         env:
+          UNABATED_API_KEY: ${{ secrets.UNABATED_API_KEY }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python books.py || true
       - name: Value tags on player props (SharpAPI; publishes only our tag, no book data)
