@@ -15,7 +15,7 @@
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
   let D = null, stamp = null, timer = null;
-  let BK = null, FL = null;                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
+  let BK = null, FL = null, PR = null;            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
   const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'ProphetX', 'Fliff', 'Bally Bet', 'betPARX'];
@@ -69,6 +69,12 @@
 .bet .bk b{font:inherit;font-weight:600;color:var(--ink)}
 .bet .bk.v{color:var(--good)} .bet .bk.v b{color:var(--good)}
 .bet .bk.nm,.bet .bk.nm b{color:var(--muted)}
+a.pc{white-space:nowrap;color:var(--ink);text-decoration:none;font-size:13px;border-bottom:1px dotted color-mix(in srgb,currentColor 40%,transparent)}
+a.pc b{font-weight:700} a.pc:hover{color:var(--accent)}
+a.pc.v,a.pc.v b{color:var(--good)} a.pc i{font-style:normal;font-weight:700;font-size:11.5px}
+a.pc.nm,a.pc.nm b{color:var(--muted)}
+.pcm{display:none}
+@media (max-width:640px){ .pcd{display:none} .pcm{display:block;margin-top:2px;font-weight:400} .pcm a.pc{font-size:12.5px} }
 .bkset{border:1px solid var(--faint);border-radius:999px;padding:0 8px;background:none;color:var(--ink);font:inherit;font-size:12px;cursor:pointer;line-height:18px}
 .bkset:hover,.bkset[aria-expanded="true"]{border-color:var(--accent)}
 .bkpanel{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
@@ -207,6 +213,24 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return `<em class="bk${v ? ' v' : ''}${url ? ' go' : ''}${other ? ' nm' : ''}"${url ? ` data-go="${esc(url)}" role="link" tabindex="0"` : ''} title="${tip}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${(v || va) ? ` · +${(ev * 100).toFixed(0)}%` : ''}${url ? ' ↗' : ''}</em>`;
     },
     bkFetched: () => (BK ? BK.fetched : null),
+    hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
+    // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
+    // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)
+    prop(gid, name, kind){
+      if (!PR || !PR.props || Date.now() - new Date(PR.fetched) > 12 * 3600e3) return '<span class="muted">–</span>';
+      const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e) return '<span class="muted">–</span>';
+      const pick = side => { const all = Object.entries(e[side] || {}).sort((a, b) => dec(b[1][0]) - dec(a[1][0]));
+        const L = all.filter(([k]) => mine(k)); return L.length ? [L[0], false] : all.length ? [all[0], true] : null; };
+      const opts = (e.u ? ['o', 'u'] : ['o']).map(sd => { const c = pick(sd); if (!c) return null;
+        const p = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p; return {sd, k: c[0][0], o: c[0][1][0], path: c[0][1][1], other: c[1], ev: p == null ? null : p * dec(c[0][1][0]) - 1}; })
+        .filter(Boolean).sort((a, b) => (a.other - b.other) || ((b.ev ?? -9) - (a.ev ?? -9)));
+      const c = opts[0]; if (!c) return '<span class="muted">–</span>';
+      const url = `https://www.gambly.com/deeplink/odds/${c.path}?utm_campaign=${encodeURIComponent(PR.partner || '')}`;
+      const v = !c.other && !e.w && c.ev != null && c.ev >= (FL && FL.min_ev || .05);
+      const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
+      const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · our edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
+      return `<a class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}" href="${esc(url)}" target="_blank" rel="noopener" title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</a>`;
+    },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
     flag(gid, name){
       if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
@@ -313,6 +337,10 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     fetch(base + 'markets/books_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
       if (!d || d.fetched === bstamp) return;
       bstamp = d.fetched; BK = d; rerender();
+    }).catch(() => {});
+    fetch(base + 'markets/props_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
+      if (!d || (PR && d.fetched === PR.fetched)) return;
+      PR = d; rerender();
     }).catch(() => {});
     fetch(base + 'markets/flags_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
       if (!d || (FL && d.fetched === FL.fetched)) return;
