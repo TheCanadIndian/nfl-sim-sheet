@@ -438,7 +438,46 @@ input[type=search]{min-width:200px}
 .mlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
 .mlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
 .mlist .who{font-weight:600;min-width:170px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
+.mmeta{display:none}
+details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:pointer;color:var(--ink);font-size:13px;margin-bottom:4px}
+@media (max-width:640px){
+  /* player tables become two-line rows: name + chips + a small details line on the left, the key number big on the right */
+  .pt,.pt tbody{display:block;width:100%}
+  .pt thead{display:none}
+  .pt tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pt tbody tr.grp,.pt tbody tr.xrow{display:block;padding:0;border:0}
+  .pt tbody tr.grp td,.pt tbody tr.xrow td{display:block;padding:10px 2px 4px!important}
+  .pt td{display:none;border:0!important;padding:0!important;text-align:left}
+  .pt td.name{display:block;grid-column:1;min-width:0;width:auto;white-space:normal}
+  .pt td.kp{display:block;grid-column:2;grid-row:1;text-align:right;font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
+  .pt td.kp b{font-weight:700}
+  .pt .mmeta{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;line-height:1.35}
+  .pt .mmeta b{color:var(--ink);font-weight:600}
+  .tw:has(> .pt){overflow:visible}
+  /* pairs: stacked cards */
+  .pairs,.pairs tbody{display:block;width:100%}
+  .pairs thead{display:none}
+  .pairs tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pairs td{border:0!important;padding:0!important;white-space:normal!important}
+  .pairs td:first-child{grid-column:1 / -1}
+  .pairs td.big{grid-column:1;font-size:14px;text-align:left}
+  .pairs td.big::after{content:" chance";color:var(--muted);font-weight:400;font-size:12px}
+  .pairs td.pay{grid-column:1;grid-row:3;text-align:left;color:var(--muted);font-size:12.5px}
+  .pairs td.pay::after{content:" fair payout"}
+  .pairs td.add{grid-column:2;grid-row:2 / span 2;align-self:center}
+  .pairs tr.slate td{grid-column:1 / -1}
+  .tw:has(> .pairs){overflow:visible}
+  /* chips wrap instead of running off the edge; Kalshi pattern chips live in the tap-open panel on phones */
+  .pt td.name .mkx-pat{display:none}
+  .pt td.name .vtag{white-space:normal;line-height:1.35;margin:3px 4px 0 0}
+  /* first-TD list: full names, no bar */
+  .ftd-r{grid-template-columns:minmax(0,1fr) 46px 52px 36px;gap:8px}
+  .ftd-r .pbar{display:none}
+  .ftd-r .n{white-space:normal}
+  .ftd-r .n .small{display:block}
+}
 .dvbar{position:relative;height:10px;min-width:150px;background:var(--sunk);border-radius:2px}
 .dvbar i{position:absolute;top:0;bottom:0;border-radius:2px}
 .dvbar .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
@@ -613,16 +652,25 @@ function playerTable(g){
   // best price at the viewer's books (mkt.js), the tab's main bet
   const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(g.id)), bk = {passing: 'pass_yds', rushing: 'rush_yds', receiving: 'rec_yds', td: 'td'}[state.group];
   const ncol = G.head.length + 2 + (bo ? 1 : 0);
+  // phones: the key number on the right, the rest in one small line under the name
+  const kIdx = {passing: 2, rushing: 2, receiving: 3, td: 1}[state.group];
+  const rng = s => s ? ` · usually ${f0(s[P10])}–${f0(s[P90])} yds` : '';
+  const mmeta = p => { const s = p.s, m = {
+      passing: () => `${f0(s.cmp[MED])}/${f0(s.att[MED])} · ${f1(s.pass_td[MEAN])} TD · ${f1(s.ints[MEAN])} INT${rng(s.pass_yds)}`,
+      rushing: () => `${f0(s.car[MED])} carries${rng(s.rush_yds)}`,
+      receiving: () => `${f0(s.tgt[MED])} tgt · ${f0(s.rec[MED])} rec${rng(s.rec_yds)}`,
+      td: () => `fair ${american(s.anytime_td[MEAN])}${s.first_td ? ` · first TD ${pct1(s.first_td[MEAN])}` : ''}`}[state.group];
+    return `<span class="mmeta">${esc(p.lab || p.pos)} · ${m ? m() : ''}</span>`; };
   let body = '';
   for (const team of [g.away, g.home]){
     const tr = rows.filter(p => p.t === team).sort((a,b) => by(b) - by(a));
     const oppTeam = team === g.home ? g.away : g.home;
     body += `<tr class="grp"><td colspan="${ncol}">${esc(team)}${state.group === 'td' ? rzTeamLine(team, oppTeam) : ''}</td></tr>`;
-    body += tr.length ? tr.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}">${nameCell(p, GROUP_STAT[state.group], bo ? `<span class="pcm">${MKT.prop(g.id, p.n, bk)}</span>` : '')}<td class="l">${posCell(p)}</td>${G.cells(p, sc).map((c,i) => `<td class="${i===scIdx?'l':''}">${c}</td>`).join('')}${bo ? `<td class="l pcd">${MKT.prop(g.id, p.n, bk)}</td>` : ''}</tr>`
+    body += tr.length ? tr.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}">${nameCell(p, GROUP_STAT[state.group], mmeta(p) + (bo ? `<span class="pcm">${MKT.prop(g.id, p.n, bk)}</span>` : ''))}<td class="l">${posCell(p)}</td>${G.cells(p, sc).map((c,i) => `<td class="${i===scIdx?'l':''}${i===kIdx?' kp':''}">${c}</td>`).join('')}${bo ? `<td class="l pcd">${MKT.prop(g.id, p.n, bk)}</td>` : ''}</tr>`
         + (state.open === p.k ? `<tr class="xrow"><td colspan="${ncol}">${sliderPanel(p)}</td></tr>` : '')).join('')
       : `<tr><td colspan="${ncol}" class="l muted small">No players with meaningful volume.</td></tr>`;
   }
-  return `<div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th>${headCells}${bo ? '<th class="l pcd" title="Best price at your sportsbooks (choose them under the game bets); over/unders show the side we rate better. Green = our chance beats it by 5%+">Best odds</th>' : ''}</tr></thead><tbody>${body}</tbody></table></div>`;
+  return `<div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th class="l">Pos</th>${headCells}${bo ? '<th class="l pcd" title="Best price at your sportsbooks (choose them under the game bets); over/unders show the side we rate better. Green = our chance beats it by 5%+">Best odds</th>' : ''}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 // Most likely first TD scorers in this game (backtest 2024-26: calibrated; top pick scored first 14%).
 function firstTdBlock(g){
