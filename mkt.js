@@ -65,6 +65,8 @@
 .bet .bk.v{color:var(--good)} .bet .bk.v b{color:var(--good)}
 .bet .bk.go{cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent);text-underline-offset:2px}
 .bet .bk.go:hover{color:var(--ink)}
+.vtag b{font-weight:800}
+a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--good) 12%,transparent)}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
@@ -192,9 +194,12 @@
     // 'Value' tag next to a player: a major sportsbook pays clearly more than our fair price on this bet
     flag(gid, name){
       if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
-      const b = (FL.tags[String(gid)] || {})[norm(name)]; if (!b) return '';
-      const t = new Date(FL.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
-      return `<span class="vtag" title="Value: at least one major sportsbook pays ${Math.round((FL.min_ev || .05) * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.">Value · ${esc(b)}</span>`;
+      const v = (FL.tags[String(gid)] || {})[norm(name)]; if (!v) return '';
+      const b = typeof v === 'string' ? v : v.b, t = new Date(FL.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+      const tip = `Value: ${typeof v === 'string' ? 'at least one major sportsbook' : esc(v.k)} pays ${Math.round((FL.min_ev || .05) * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
+      if (typeof v !== 'string' && v.u)                      // Unabated: price, book and a bet link (partner code)
+        return `<a class="vtag" href="${esc(v.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.">Value · ${esc(b)} <b>${v.o > 0 ? '+' : ''}${v.o}</b> ${esc(v.k)} ↗</a>`;
+      return `<span class="vtag" title="${tip}">Value · ${esc(b)}</span>`;
     },
     bkNote(gid){
       if (!BK || !BK.games || !BK.games[String(gid)]) return '';
