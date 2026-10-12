@@ -38,7 +38,7 @@ BOOKS = ["hardrockbet", "betrivers", "espnbet", "fliff", "ballybet", "betparx"] 
 SHORT = {"hardrockbet": "Hard Rock", "novig": "Novig", "draftkings": "DraftKings", "fanduel": "FanDuel", "betmgm": "BetMGM",
          "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet", "betparx": "betPARX"}
 COST = 3
-PULL_WINDOW, MIN_GAP = 8, 6       # hours (The Odds API backup: credit-limited)
+PULL_WINDOW, MIN_GAP = 8, 8       # hours (The Odds API: credit-limited; leaves room for Hard Rock props in sharp.py)
 UA_WINDOW, UA_GAP = 24, 20        # Unabated (primary): games within 24 h, at most every 20 minutes
 OA_FRESH = 3                      # hours an Odds API price is shown (pulled far less often)
 

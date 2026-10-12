@@ -357,6 +357,132 @@ def tags(rows):
     return out
 
 
+# ---------------------------------------------------------------- Hard Rock props (The Odds API; Unabated's free feed lacks Hard Rock)
+HR_MKT = {"nhl": ("icehockey_nhl", "player_goal_scorer_anytime", "goal", 2), "nfl": ("americanfootball_nfl", "player_anytime_td", "td", 3)}
+HR_CACHE = os.path.join(M.OUT, "hr_props_{}.json")
+
+
+def hr_pull(sport, now, st):
+    """Hard Rock's anytime-goal (NHL) / anytime-TD (NFL) prices for each game starting within HR_MKT[..][3] hours.
+    1 credit per game when Hard Rock has posted the market (an empty answer is free, so we simply retry next run);
+    shares books.py's monthly credit pacing. Cache: markets/hr_props_<sport>.json {gid: {player: [odds, link]}}."""
+    k = B.key()
+    if not k:
+        return
+    key, mkt, kind, hours = HR_MKT[sport]
+    O = (M.ours_nhl if sport == "nhl" else M.ours_nfl)() or {}
+    soon = {(g["away"], g["home"]): g for g in O.get("games", [])
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=hours)}
+    try:
+        cache = json.load(open(HR_CACHE.format(sport)))
+    except (OSError, ValueError):
+        cache = {}
+    todo = {ga: g for ga, g in soon.items() if str(g["id"]) not in cache}
+    if not todo:
+        return
+    r = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events", params=dict(apiKey=k), timeout=30)   # free
+    if r.status_code != 200:
+        return
+    bst = B.load_state()
+    for e in r.json():
+        g = todo.get((B.NAMES[sport].get(e["away_team"]), B.NAMES[sport].get(e["home_team"])))
+        if not g:
+            continue
+        if not B.budget_ok(bst, now):
+            print(f"hard rock {sport}: credit budget used for today"); break
+        q = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events/{e['id']}/odds", timeout=30,
+                         params=dict(apiKey=k, bookmakers="hardrockbet", markets=mkt, oddsFormat="american", includeLinks="true"))
+        used = int(q.headers.get("x-requests-last") or 0)
+        bst["spent_today"] = bst.get("spent_today", 0) + used
+        if q.headers.get("x-requests-remaining"):
+            bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+        if q.status_code != 200:
+            continue
+        P = {}
+        for b in q.json().get("bookmakers", []):
+            for m in b.get("markets", []):
+                for o in m.get("outcomes", []):
+                    if (o.get("name") or "").lower() in ("yes", "over") and o.get("description"):
+                        P[jsnorm(o["description"])] = [int(o["price"]), o.get("link")]
+        if P:
+            cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), kind=kind, prices=P)
+            print(f"hard rock {sport}: {g['away']} @ {g['home']}: {len(P)} prices ({used} credits, {bst.get('remaining')} left)")
+        else:
+            print(f"hard rock {sport}: {g['away']} @ {g['home']}: not posted yet (free, will retry)")
+    json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    # keep only games that haven't started
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(HR_CACHE.format(sport), "w"), separators=(",", ":"))
+
+
+def hr_merge(sport, now):
+    """Add Hard Rock's prices to the published prices (props_<sport>.json) and Value tags (flags_<sport>.json)."""
+    try:
+        cache = json.load(open(HR_CACHE.format(sport)))
+    except (OSError, ValueError):
+        return
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now}
+    if not cache:
+        return
+    # our chance + trust per player
+    ours = {}
+    if sport == "nhl":
+        pl, _ = nhl_ours(now)
+        for v in (pl or {}).values():
+            ours[(str(v["gid"]), jsnorm(v["name"]))] = (v["p"], v["rank"] > 3)
+    else:
+        _, by = nfl_ours()
+        for (gid, _n), v in (by or {}).items():
+            if v["td"] is not None:
+                ours[(str(gid), jsnorm(v["name"]))] = (v["td"], None)
+    site = os.path.join(M.SITE, "markets")
+    os.makedirs(site, exist_ok=True)
+    fp, ff = os.path.join(site, f"props_{sport}.json"), os.path.join(site, f"flags_{sport}.json")
+    stamp = now.tz_convert("America/New_York").isoformat(timespec="minutes")
+    try:
+        PR = json.load(open(fp))
+        if now - pd.Timestamp(PR["fetched"]) > pd.Timedelta(hours=12):
+            raise ValueError
+    except (OSError, ValueError, KeyError):
+        PR = dict(sport=sport, fetched=stamp, partner=U.PARTNER, props={})
+    try:
+        FL = json.load(open(ff))
+    except (OSError, ValueError):
+        FL = dict(sport=sport, fetched=stamp, min_ev=MIN_EV, source="hardrock", tags={})
+    nt = 0
+    for gid, c in cache.items():
+        kind, bet = c["kind"], ("goal" if c["kind"] == "goal" else "TD")
+        for nm, (o, link) in c["prices"].items():
+            me = ours.get((gid, nm))
+            if not me:
+                continue
+            p, warn = me
+            if warn is None:
+                warn = judge(p, o)[1]
+            e = PR["props"].setdefault(gid, {}).setdefault(nm, {}).setdefault(kind, {})
+            e.setdefault("p", round(float(p), 4))
+            if warn:
+                e["w"] = 1
+            e.setdefault("o", {})["Hard Rock"] = [o, link]
+            if warn or p * dec(o) - 1 < MIN_EV:
+                continue
+            tg = FL["tags"].setdefault(gid, {})
+            v = tg.get(nm)
+            if isinstance(v, dict):
+                v.setdefault("all", {})["Hard Rock"] = [o, link]
+                if dec(o) > dec(v["o"]):
+                    v.update(o=o, k="Hard Rock", u=link)
+            elif len(tg) < PER_GAME or nm in tg:
+                tg[nm] = dict(b=bet, o=o, k="Hard Rock", u=link, p=round(float(p), 4), all={"Hard Rock": [o, link]})
+                nt += 1
+    if not FL.get("fetched") or now - pd.Timestamp(FL["fetched"]) > pd.Timedelta(hours=12):
+        FL["fetched"] = stamp
+    json.dump(PR, open(fp, "w"), separators=(",", ":"))
+    json.dump(FL, open(ff, "w"), separators=(",", ":"))
+    print(f"hard rock {sport}: merged {sum(len(c['prices']) for c in cache.values())} prices, {nt} new Value tags")
+
+
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
     try:
@@ -411,6 +537,14 @@ def main(argv):
                   + (f", prices for {sum(len(g) for g in PROPS[sport].values())} players" if src == "unabated" and PROPS.get(sport) else ""))
         except Exception as e:                                   # never break the markets run
             print(f"sharp {sport}: skipped ({type(e).__name__}: {e})")
+    for sport in ("nhl", "nfl"):                                # Hard Rock props, then merged into the published files
+        if argv and sport not in argv:
+            continue
+        try:
+            hr_pull(sport, now, st)
+            hr_merge(sport, now)
+        except Exception as e:
+            print(f"hard rock {sport}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=1)
 
