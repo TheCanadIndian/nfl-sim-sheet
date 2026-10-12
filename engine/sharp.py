@@ -43,6 +43,7 @@ API = "https://api.sharpapi.io/api/v1"
 STATE = os.path.join(M.OUT, "sharp_state.json")
 MIN_EV, WINDOW, MIN_GAP, PER_GAME = .05, 12, 3, 5          # hours
 UA_GAP = 20                                                   # minutes between Unabated props tries
+UA_WINDOW = {"nhl": 12, "nfl": 24 * 7}                        # hours ahead to try Unabated (NFL props are posted all week)
 NFL_PROP = {"player_receiving_yards": ("rec_yds", "rec yds"), "player_rushing_yards": ("rush_yds", "rush yds"),
             "player_passing_yards": ("pass_yds", "pass yds"), "player_receptions": ("rec", "receptions")}
 UA_NFL = {216: ("td", "TD"), 15: ("rec", "receptions"), 16: ("rec_yds", "rec yds"), 12: ("rush_yds", "rush yds"), 14: ("pass_yds", "pass yds")}
@@ -299,9 +300,13 @@ def ua_nfl(now):
     games, by = nfl_ours()
     if games is None:
         return None
-    df = U.board("nfl", "props", list(UA_NFL), kalshi=True)
-    if df is None or df.empty:
+    # one stat per request: the big all-stats board fails far more often; keep whatever comes back
+    parts = [U.board("nfl", "props", [bt], kalshi=True, tries=3) for bt in UA_NFL]
+    parts = [x for x in parts if x is not None and not x.empty]
+    if not parts:
         return False
+    df = pd.concat(parts, ignore_index=True)
+    print(f"sharp nfl: Unabated returned {', '.join(sorted({UA_NFL[b][1] for b in df.bt.unique()}))}")
     df = df[(pd.to_datetime(df.start, utc=True) > now) & df.side_index.isin([0, 1])]
     NV, out, P = ua_nv(df), [], {}
     # each player's main line for a stat: the number the most books price on both sides
@@ -494,12 +499,13 @@ def main(argv):
             continue
         try:
             O = ours() or {}
-            soon = any(now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=WINDOW) for g in O.get("games", []))
-            if not soon and not argv:
-                print(f"sharp {sport}: no game in the next {WINDOW} h"); continue
+            within = lambda h: any(now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=h) for g in O.get("games", []))
+            soon, soon_ua = within(WINDOW), within(UA_WINDOW[sport])
+            if not soon_ua and not argv:
+                print(f"sharp {sport}: no game in the next {UA_WINDOW[sport]} h"); continue
             rows, src = None, None
             ul = st.get("ua_" + sport)
-            if U.key() and (argv or not ul or now - pd.Timestamp(ul) >= pd.Timedelta(minutes=UA_GAP)):
+            if U.key() and (argv or not ul or now - pd.Timestamp(ul) >= pd.Timedelta(minutes=UA_GAP)):     # Unabated: free, try often
                 tries, ok = st.setdefault("ua_attempts", {}), st.setdefault("ua_ok", {})
                 tries[sport] = tries.get(sport, 0) + 1
                 try:
@@ -517,7 +523,7 @@ def main(argv):
             if rows is None:
                 ufresh = ul and now - pd.Timestamp(ul) < pd.Timedelta(minutes=UA_GAP)
                 last = st.get(sport)
-                if not key() or ufresh or (not argv and last and now - pd.Timestamp(last) < pd.Timedelta(hours=MIN_GAP)):
+                if not key() or ufresh or (not argv and (not soon or (last and now - pd.Timestamp(last) < pd.Timedelta(hours=MIN_GAP)))):
                     print(f"sharp {sport}: not due"); continue
                 rows, src = fn(now), "sharpapi"
                 if rows is None:
@@ -531,8 +537,21 @@ def main(argv):
             json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), min_ev=MIN_EV, source=src, tags=T),
                       open(os.path.join(M.SITE, "markets", f"flags_{sport}.json"), "w"), separators=(",", ":"))
             if src == "unabated" and PROPS.get(sport):
+                fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
+                P = PROPS[sport]
+                try:                                        # keep stats this pull didn't get from the previous file (< 12 h old)
+                    old = json.load(open(fp))
+                    if now - pd.Timestamp(old["fetched"]) < pd.Timedelta(hours=12):
+                        got = {k for g in P.values() for pl in g.values() for k in pl}
+                        for gid, g in old.get("props", {}).items():
+                            for nm, kinds in g.items():
+                                for k, e in kinds.items():
+                                    if k not in got and k != "goal":
+                                        P.setdefault(gid, {}).setdefault(nm, {}).setdefault(k, e)
+                except (OSError, ValueError, KeyError):
+                    pass
                 json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER,
-                               props=PROPS[sport]), open(os.path.join(M.SITE, "markets", f"props_{sport}.json"), "w"), separators=(",", ":"))
+                               props=P), open(fp, "w"), separators=(",", ":"))
             print(f"sharp {sport}: {src}, {len(rows)} priced bets, {sum(len(g) for g in T.values())} tagged"
                   + (f", prices for {sum(len(g) for g in PROPS[sport].values())} players" if src == "unabated" and PROPS.get(sport) else ""))
         except Exception as e:                                   # never break the markets run
