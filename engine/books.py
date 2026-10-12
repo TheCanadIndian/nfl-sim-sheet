@@ -250,7 +250,7 @@ def pull(sport, st, now, force=False):
         got = pull_oa(sport, st, now, games, force) or got
     except Exception as e:
         print(f"books {sport}: Odds API failed ({type(e).__name__}: {e})")
-    return merge(sport, now) if got else False
+    return merge(sport, now)                   # rebuild from the latest pulls even when neither source was due
 
 
 def main(argv):
