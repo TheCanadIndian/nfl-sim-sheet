@@ -609,16 +609,19 @@ function playerTable(g){
   const headCells = G.head.map((h,i) => i === scIdx
     ? `<th class="sc l">${G.stat === 'anytime_td' ? `<div class="axis"><span style="left:0">0%</span><span style="left:100%;transform:translateX(-100%)">${pct(sc.hi)}</span></div>` : axis(sc)}</th>`
     : `<th>${h}</th>`).join('');
+  // best price at the viewer's books (mkt.js), the tab's main bet
+  const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(g.id)), bk = {passing: 'pass_yds', rushing: 'rush_yds', receiving: 'rec_yds', td: 'td'}[state.group];
+  const ncol = G.head.length + 2 + (bo ? 1 : 0);
   let body = '';
   for (const team of [g.away, g.home]){
     const tr = rows.filter(p => p.t === team).sort((a,b) => by(b) - by(a));
     const oppTeam = team === g.home ? g.away : g.home;
-    body += `<tr class="grp"><td colspan="${G.head.length+2}">${esc(team)}${state.group === 'td' ? rzTeamLine(team, oppTeam) : ''}</td></tr>`;
-    body += tr.length ? tr.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}">${nameCell(p, GROUP_STAT[state.group])}<td class="l">${posCell(p)}</td>${G.cells(p, sc).map((c,i) => `<td class="${i===scIdx?'l':''}">${c}</td>`).join('')}</tr>`
-        + (state.open === p.k ? `<tr class="xrow"><td colspan="${G.head.length+2}">${sliderPanel(p)}</td></tr>` : '')).join('')
-      : `<tr><td colspan="${G.head.length+2}" class="l muted small">No players with meaningful volume.</td></tr>`;
+    body += `<tr class="grp"><td colspan="${ncol}">${esc(team)}${state.group === 'td' ? rzTeamLine(team, oppTeam) : ''}</td></tr>`;
+    body += tr.length ? tr.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}">${nameCell(p, GROUP_STAT[state.group], bo ? `<span class="pcm">${MKT.prop(g.id, p.n, bk)}</span>` : '')}<td class="l">${posCell(p)}</td>${G.cells(p, sc).map((c,i) => `<td class="${i===scIdx?'l':''}">${c}</td>`).join('')}${bo ? `<td class="l pcd">${MKT.prop(g.id, p.n, bk)}</td>` : ''}</tr>`
+        + (state.open === p.k ? `<tr class="xrow"><td colspan="${ncol}">${sliderPanel(p)}</td></tr>` : '')).join('')
+      : `<tr><td colspan="${ncol}" class="l muted small">No players with meaningful volume.</td></tr>`;
   }
-  return `<div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th>${headCells}</tr></thead><tbody>${body}</tbody></table></div>`;
+  return `<div class="tw"><table class="t"><thead><tr><th class="l">Player</th><th class="l">Pos</th>${headCells}${bo ? '<th class="l pcd" title="Best price at your sportsbooks (choose them under the game bets); over/unders show the side we rate better. Green = our chance beats it by 5%+">Best odds</th>' : ''}</tr></thead><tbody>${body}</tbody></table></div>`;
 }
 // Most likely first TD scorers in this game (backtest 2024-26: calibrated; top pick scored first 14%).
 function firstTdBlock(g){
