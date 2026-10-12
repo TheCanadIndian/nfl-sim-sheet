@@ -249,6 +249,29 @@ def ua_row(NV, gid, me, bet, p, r):
     return (gid, me["name"], bet, ev, chk, dict(o=int(r.price), k=U.SHORT[r.book], u=r.url, p=round(float(p), 4)))
 
 
+PROPS = {}          # sport -> every matched player's prices (published as props_<sport>.json when Unabated works)
+
+
+def gpath(url):
+    """'book/line/points' from a Gambly deep link; the page rebuilds the link with our partner code."""
+    m = re.search(r"/deeplink/odds/(\d+/\d+/[^?]+)", url or "")
+    return m.group(1) if m else None
+
+
+def add_price(P, gid, name, kind, side, r, p=None, line=None, warn=False):
+    """warn: we don't trust our edge here (NHL outside our top 3, or 'check news'): the page won't highlight it."""
+    e = P.setdefault(str(gid), {}).setdefault(jsnorm(name), {}).setdefault(kind, {})
+    if warn:
+        e["w"] = 1
+    if p is not None:
+        e["p"] = round(float(p), 4)
+    if line is not None:
+        e["l"] = float(line)
+    gp = gpath(r.url)
+    if gp:
+        e.setdefault(side, {})[U.SHORT[r.book]] = [int(r.price), gp]
+
+
 def ua_nhl(now):
     pl, date = nhl_ours(now)
     if pl is None:
@@ -257,14 +280,18 @@ def ua_nhl(now):
     if df is None or df.empty:
         return False
     df = df[pd.to_datetime(df.start, utc=True) > now]
-    NV, out = ua_nv(df), []
+    NV, out, P = ua_nv(df), [], {}
     for r in df[(df.side_index == 0) & (df.points == .5)].itertuples():           # side 0 = over 0.5 goals = scores
         if pd.Timestamp(r.start).tz_convert("America/New_York").date().isoformat() != date:
             continue
         a, h = M.code("nhl", str(r.away)), M.code("nhl", str(r.home))
         me = pl.get((a, h, a, norm(r.name))) or pl.get((a, h, h, norm(r.name)))
-        if me and me["rank"] <= 3:
+        if not me:
+            continue
+        add_price(P, me["gid"], me["name"], "goal", "o", r, p=me["p"], warn=me["rank"] > 3)
+        if me["rank"] <= 3:
             out.append(ua_row(NV, me["gid"], me, "goal", me["p"], r))
+    PROPS["nhl"] = P
     return out
 
 
@@ -276,7 +303,11 @@ def ua_nfl(now):
     if df is None or df.empty:
         return False
     df = df[(pd.to_datetime(df.start, utc=True) > now) & df.side_index.isin([0, 1])]
-    NV, out = ua_nv(df), []
+    NV, out, P = ua_nv(df), [], {}
+    # each player's main line for a stat: the number the most books price on both sides
+    two = df.groupby(["event", "bt", "person", "points", "book"]).side_index.nunique().reset_index()
+    two = two[two.side_index == 2].groupby(["event", "bt", "person", "points"]).size().reset_index(name="n")
+    main = {(e, b, pp): pts for e, b, pp, pts in two.sort_values("n").drop_duplicates(["event", "bt", "person"], keep="last")[["event", "bt", "person", "points"]].values}
     for r in df.itertuples():
         gid = games.get((M.code("nfl", str(r.away)), M.code("nfl", str(r.home))))
         me = by.get((gid, norm(r.name))) if gid else None
@@ -285,14 +316,20 @@ def ua_nfl(now):
         st, lab = UA_NFL[r.bt]
         if st == "td":
             if r.side_index == 0 and r.points == .5 and me["td"] is not None:
+                add_price(P, gid, me["name"], "td", "o", r, p=me["td"], warn=judge(me["td"], r.price)[1])
                 out.append(ua_row(NV, gid, me, "TD", me["td"], r))
             continue
         if NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index)) is None:
             continue                                                    # one-sided / ladder rung: no clean comparison
         po = p_over(me["d"].get(st), float(r.points))
         if po is not None:
+            if main.get((r.event, r.bt, r.person)) == r.points:
+                nv = NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index))
+                add_price(P, gid, me["name"], st, "o" if r.side_index == 0 else "u", r, p=po, line=r.points,
+                          warn=judge(po if r.side_index == 0 else 1 - po, r.price, nv)[1])
             sd = "over" if r.side_index == 0 else "under"
             out.append(ua_row(NV, gid, me, f"{sd} {float(r.points):g} {lab}", po if sd == "over" else 1 - po, r))
+    PROPS["nfl"] = P
     return out
 
 
@@ -367,7 +404,11 @@ def main(argv):
             os.makedirs(os.path.join(M.SITE, "markets"), exist_ok=True)
             json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), min_ev=MIN_EV, source=src, tags=T),
                       open(os.path.join(M.SITE, "markets", f"flags_{sport}.json"), "w"), separators=(",", ":"))
-            print(f"sharp {sport}: {src}, {len(rows)} priced bets, {sum(len(g) for g in T.values())} tagged")
+            if src == "unabated" and PROPS.get(sport):
+                json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER,
+                               props=PROPS[sport]), open(os.path.join(M.SITE, "markets", f"props_{sport}.json"), "w"), separators=(",", ":"))
+            print(f"sharp {sport}: {src}, {len(rows)} priced bets, {sum(len(g) for g in T.values())} tagged"
+                  + (f", prices for {sum(len(g) for g in PROPS[sport].values())} players" if src == "unabated" and PROPS.get(sport) else ""))
         except Exception as e:                                   # never break the markets run
             print(f"sharp {sport}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
