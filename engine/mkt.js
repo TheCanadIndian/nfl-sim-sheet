@@ -291,7 +291,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <div class="ovc"><select id="ov-g" aria-label="Game"><option value="all">All games</option>${games.filter(g => rows.some(r => String(r.gid) === String(g.id))).map(g => `<option value="${esc(String(g.id))}"${OV.g === String(g.id) ? ' selected' : ''}>${esc(g.label)}</option>`).join('')}</select>
         <div class="ovm" role="group" aria-label="Market">${['all', ...mkts].map(m => `<button type="button" data-ovm-pick="${esc(m)}" aria-pressed="${OV.m === m}">${m === 'all' ? 'All' : esc(mlab(m))}</button>`).join('')}</div>
         <input id="ov-q" type="search" placeholder="Player or team" value="${esc(OV.q)}" aria-label="Search players"></div>
-        <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock has game lines only (no player props in our feeds). Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
+        <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props: NHL anytime goal and NFL anytime TD, added close to each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
         ${bkOpen === 'ov' ? `<div class="bkpanel">${[...used].sort(ord).map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : ''}
         <div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${groups.map(([lab, ks]) => ks.map((k, i) =>
           `<th class="${MY.includes(k) ? 'my' : ''}${i === 0 ? ' g0' : ''}">${i === 0 ? `<small class="gl">${esc(lab)}</small>` : '<small class="gl">&nbsp;</small>'}${esc(BKS[k] || k)}</th>`).join('')).join('')}</tr></thead><tbody>${body.replace(/<td class="([^"]*)" title/g, (m, c) => m)}</tbody></table></div></section>`;
@@ -327,8 +327,10 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         o = c;
       }
       const tip = `Value: ${o ? esc(FULL[o.k] || o.k) : 'at least one major sportsbook'} pays ${Math.round(min * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
-      if (o && o.u)                                          // Unabated: price, book and a bet link (partner code)
+      if (o && o.u)                                          // price, book and a bet link
         return `<a class="vtag" href="${esc(o.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)} ↗</a>`;
+      if (o && o.o != null)                                  // price without a link (e.g. Hard Rock)
+        return `<span class="vtag" title="${tip}">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)}</span>`;
       if (MY.length && typeof v === 'string') return '';     // no per-book prices to check against the viewer's books
       return `<span class="vtag" title="${tip}">Value · ${esc(b)}</span>`;
     },
