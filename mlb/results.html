@@ -221,6 +221,19 @@ input[type=search]{min-width:200px}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
 .mmeta{display:none}
+.pchips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+details.pfold{margin-bottom:14px}
+details.pfold > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:1px solid var(--faint);border-radius:12px;background:var(--surface)}
+details.pfold > summary::-webkit-details-marker{display:none}
+details.pfold > summary h2{margin:0}
+details.pfold > summary .chev{color:var(--muted);transition:transform .15s}
+details.pfold[open] > summary{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+details.pfold:not([open]) > summary .chev{transform:rotate(-90deg)}
+details.pfold > section.panel{border-top-left-radius:0;border-top-right-radius:0;border-top:0;margin-top:0}
+.kps{display:none}
+.atgp td a{color:var(--accent);text-decoration:none;white-space:nowrap}
+.atgp td a:hover{text-decoration:underline}
+.rr{border:1px solid var(--faint);border-radius:9px;padding:10px 12px;margin:6px 0 12px;background:var(--bg)}
 details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:pointer;color:var(--ink);font-size:13px;margin-bottom:4px}
 @media (max-width:640px){
   /* player tables become two-line rows: name + chips + a small details line on the left, the key number big on the right */
@@ -233,6 +246,7 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
   .pt td.name{display:block;grid-column:1;min-width:0;width:auto;white-space:normal}
   .pt td.kp{display:block;grid-column:2;grid-row:1;text-align:right;font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
   .pt td.kp b{font-weight:700}
+  .pt td.kp .kps{display:block;font-family:var(--body);font-size:11.5px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.3}
   .pt .mmeta{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;line-height:1.35}
   .pt .mmeta b{color:var(--ink);font-weight:600}
   .tw:has(> .pt){overflow:visible}
@@ -249,6 +263,10 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
   .pairs td.add{grid-column:2;grid-row:2 / span 2;align-self:center}
   .pairs tr.slate td{grid-column:1 / -1}
   .tw:has(> .pairs){overflow:visible}
+  .atgp td.pay::after{content:" payout"}
+  .atgp td.edge{grid-column:1;text-align:left;font-size:12.5px}
+  .atgp td.edge::after{content:" edge";font-weight:400;color:var(--muted)}
+  .atgp td.add{grid-row:2 / span 3}
   /* chips wrap instead of running off the edge; Kalshi pattern chips live in the tap-open panel on phones */
   .pt td.name .pat-high_total,.pt td.name .pat-cheap_over,.pt td.name .pat-low_rung,.pt td.name .pat-low_total{display:none}
   .pt td.name .vtag{white-space:normal;line-height:1.35;margin:3px 4px 0 0}
