@@ -444,7 +444,9 @@ def hr_pull(sport, now, st):
 
 
 # ---------------------------------------------------------------- Pinnacle de-vig for NFL props (The Odds API)
-PIN_MKT = {"player_reception_yds": "rec_yds", "player_rush_yds": "rush_yds", "player_pass_yds": "pass_yds", "player_receptions": "rec"}
+PIN_MKT = {"player_reception_yds": "rec_yds", "player_rush_yds": "rush_yds", "player_pass_yds": "pass_yds", "player_receptions": "rec",
+           "player_anytime_td": "td"}       # anytime TD is one-way (Yes only)
+PIN_K = 1.04                          # power exponent when a game has no two-way lines to solve it from
 PIN_HOURS = 3.5                       # one pull per game this close to kickoff (Pinnacle's lines are sharpest late)
 PIN_CACHE = os.path.join(M.OUT, "pin_props_nfl.json")
 
@@ -490,6 +492,8 @@ def pin_pull(now):
                 kind = PIN_MKT.get(m["key"])
                 for o in m.get("outcomes", []):
                     nm, side = o.get("description"), (o.get("name") or "").lower()
+                    if kind == "td" and side == "yes":
+                        side, o = "over", dict(o, point=.5)
                     if not kind or not nm or side not in ("over", "under") or o.get("point") is None:
                         continue
                     x = P.setdefault(jsnorm(nm), {}).setdefault(kind, [float(o["point"]), None, None])
@@ -504,6 +508,36 @@ def pin_pull(now):
     cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
     os.makedirs(M.OUT, exist_ok=True)
     json.dump(cache, open(PIN_CACHE, "w"), separators=(",", ":"))
+
+
+def pin_k(props):
+    """Power de-vig exponent for one game: the k that makes Pinnacle's two-way lines sum to 1 (p_over^k + p_under^k = 1),
+    median over the game's two-way props. One-way prices in that game are then de-vigged as p^k."""
+    ks = []
+    for kinds in props.values():
+        for line, o, u in kinds.values():
+            if o is None or u is None:
+                continue
+            a, b = 1 / dec(o), 1 / dec(u)
+            if a + b <= 1:
+                continue
+            lo, hi = 1.0, 3.0
+            for _ in range(50):
+                k = (lo + hi) / 2
+                lo, hi = (k, hi) if a ** k + b ** k > 1 else (lo, k)
+            ks.append((lo + hi) / 2)
+    return float(np.median(ks)) if ks else PIN_K
+
+
+def pin_nv(mine, other, k):
+    """Pinnacle no-vig chance for one side: multiplicative when both sides are posted, power (p^k) when one-way."""
+    if mine is None:
+        return None
+    a = 1 / dec(mine)
+    if other is None:
+        return min(a ** k, .999)
+    b = 1 / dec(other)
+    return a / (a + b)
 
 
 def pin_merge(now):
@@ -521,14 +555,16 @@ def pin_merge(now):
     try:
         PR = json.load(open(fp))
         for gid, c in cache.items():
+            k = pin_k(c["props"])
             for nm, kinds in c["props"].items():
                 for kind, (line, o, u) in kinds.items():
-                    if o is None or u is None:
-                        continue
                     e = PR.get("props", {}).get(gid, {}).get(nm, {}).get(kind)
-                    if e and e.get("l") is not None and abs(float(e["l"]) - line) < 1e-9:
-                        a, b = 1 / dec(o), 1 / dec(u)
-                        e["pin"] = dict(l=line, o=round(a / (a + b), 4))
+                    if not e or o is None and u is None:
+                        continue
+                    el = e.get("l", .5 if kind == "td" else None)
+                    if el is not None and abs(float(el) - line) < 1e-9:
+                        po = pin_nv(o, u, k) if o is not None else 1 - pin_nv(u, None, k)
+                        e["pin"] = dict(l=line, o=round(po, 4), w=1 if o is None or u is None else 2)
                         n += 1
         json.dump(PR, open(fp, "w"), separators=(",", ":"))
     except (OSError, ValueError):
@@ -537,6 +573,7 @@ def pin_merge(now):
         FL = json.load(open(ff))
         LAB = {"rec_yds": "rec yds", "rush_yds": "rush yds", "pass_yds": "pass yds", "rec": "receptions"}
         for gid, c in cache.items():
+            k = pin_k(c["props"])
             for nm, kinds in c["props"].items():
                 v = FL.get("tags", {}).get(gid, {}).get(nm)
                 if not isinstance(v, dict):
@@ -544,9 +581,9 @@ def pin_merge(now):
                 for kind, (line, o, u) in kinds.items():
                     for sd, mine in (("over", o), ("under", u)):
                         other = u if sd == "over" else o
-                        if mine is not None and other is not None and v.get("b") == f"{sd} {line:g} {LAB[kind]}":
-                            a, b = 1 / dec(mine), 1 / dec(other)
-                            v["pin"] = round(a / (a + b), 4)            # shown next to our tag; the tag's own rule is unchanged
+                        bet = "TD" if kind == "td" else f"{sd} {line:g} {LAB[kind]}"
+                        if mine is not None and v.get("b") == bet:
+                            v["pin"] = round(pin_nv(mine, other, k), 4)   # shown next to our tag; the tag's own rule is unchanged
         json.dump(FL, open(ff, "w"), separators=(",", ":"))
     except (OSError, ValueError):
         pass
