@@ -109,7 +109,7 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .ovt thead th:first-child{position:sticky;left:0;z-index:2;background:var(--surface)}
 .ovt .name b{display:block;font-weight:600}.ovt .name small,.ovt td small{display:block;color:var(--muted);font-size:11.5px}
 .ovt td a{color:inherit;text-decoration:none}
-.ovt td.bst{font-weight:800;text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:4px}
+.ovt td.bst{font-weight:800}.ovt td.bst .pp{text-decoration:underline;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}.ovt td .pp+small{margin-top:4px;font-weight:400}.ovt td .pp+small.pe{font-weight:700}
 .ovt td.v,.ovt td.v a{color:var(--good);font-weight:700}
 .ovt th.my,.ovt td.my{background:color-mix(in srgb,var(--accent) 6%,transparent)}
 @media (max-width:640px){ .ovt .name{min-width:118px;max-width:140px} .ovt td,.ovt th{padding:6px 7px;font-size:12.5px} }
@@ -123,6 +123,15 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .bet .bk.go{cursor:pointer;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 35%,transparent);text-underline-offset:2px}
 .bet .bk.go:hover{color:var(--ink)}
 .vtag b{font-weight:800}
+@media (max-width:640px){.vtag{display:block;width:fit-content;white-space:normal;max-width:100%;line-height:1.35;margin:3px 4px 0 0}.vtag .pinv{margin-left:0}td.name:has(> .vtag){white-space:normal;max-width:62vw}}
+.pinv b{color:var(--good);font-weight:800}.pinv.neg b{color:var(--muted);font-weight:600}
+.ovt td small.pe{color:var(--good);font-weight:700}
+.pev{margin:10px 0 14px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
+.pev h3{margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.pev ol{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.pev li a{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;color:inherit;text-decoration:none;padding:3px 0}
+.pev li a:hover b{text-decoration:underline}
+.pev li .w{color:var(--muted);font-size:12.5px}.pev li .px{margin-left:auto;white-space:nowrap}.pev li .px i{font-style:normal;color:var(--good);font-weight:800;margin-left:6px}
 .pinv{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;border:1px solid var(--faint);color:var(--muted);font-size:10.5px;font-weight:600;line-height:16px;white-space:nowrap;text-decoration:none}
 a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--good) 12%,transparent)}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
@@ -304,12 +313,24 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const best = Math.max(...Object.entries(r.P).filter(([k]) => !NOBET.has(k)).map(([, x]) => dec(x.o)));
         const cells = cols.map(k => { const x = r.P[k]; if (!x) return `<td class="muted${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}">–</td>`;
           const ev = r.p == null ? null : r.p * dec(x.o) - 1, v = ev != null && !r.w && ev >= ((FL && FL.min_ev) || .05);
-          const t = `${FULL[k] || k} ${amS(x.o)}${ev != null ? ` · our edge ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${x.u ? ' · tap to open this bet' : ''}`;
-          const inner = `${amS(x.o)}`, cls = `${dec(x.o) === best ? 'bst' : ''}${v ? ' v' : ''}${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}`;
+          const t = `${FULL[k] || k} ${amS(x.o)}${ev != null ? ` · our edge ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${r.pin != null && !NOBET.has(k) ? ` · vs Pinnacle no-vig ${r.pin * dec(x.o) >= 1 ? '+' : ''}${((r.pin * dec(x.o) - 1) * 100).toFixed(1)}%` : ''}${x.u ? ' · tap to open this bet' : ''}`;
+          const pe = r.pin != null && !NOBET.has(k) ? r.pin * dec(x.o) - 1 : null;
+          const inner = `<span class="pp">${amS(x.o)}</span>${pe != null ? `<small class="${pe > 0 ? 'pe' : ''}">${pe > 0 ? '+' : ''}${(pe * 100).toFixed(1)}%</small>` : ''}`, cls = `${dec(x.o) === best ? 'bst' : ''}${v ? ' v' : ''}${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}`;
           return `<td class="${cls}" title="${esc(t)}">${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${inner}</a>` : inner}</td>`; }).join('');
         const fair = r.p == null ? '<td class="muted">–</td>' : `<td title="Our chance ${(r.p * 100).toFixed(1)}%${r.w ? ' (low trust: outside our top 3 or likely news)' : ''}">${amS(fairAm(r.p))}<small>${(r.p * 100).toFixed(0)}%</small></td>`;
         const pinCell = hasPin ? (r.pin != null ? `<td title="Pinnacle no-vig ${(r.pin * 100).toFixed(1)}% (${r.pw === 1 ? 'one-way price: power de-vig' : 'both sides: multiplicative de-vig'})">${amS(fairAm(r.pin))}<small>${(r.pin * 100).toFixed(0)}%</small></td>` : '<td class="muted">–</td>') : '';
         body += `<tr data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}><td class="l name"><b>${esc(r.who)}</b><small>${esc(r.what)}</small></td>${fair}${pinCell}${cells}</tr>`;
+      }
+      // props where a bettable book (yours, if chosen) pays more than Pinnacle's no-vig price: best book per prop, by EV
+      let pev = '';
+      if (hasPin){
+        const its = rows.filter(r => r.pin != null).map(r => {
+          const c = Object.entries(r.P).filter(([k]) => !NOBET.has(k) && mine(k)).map(([k, x]) => ({k, x, ev: r.pin * dec(x.o) - 1})).sort((a, b) => b.ev - a.ev)[0];
+          return c && c.ev > 0 ? {r, ...c} : null; }).filter(Boolean).sort((a, b) => b.ev - a.ev);
+        pev = `<div class="pev"><h3>Beats Pinnacle’s no-vig${MY.length ? ' at your books' : ''}</h3>${its.length ? `<ol>${its.map(({r, k, x, ev}) => {
+          const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)} · Pin ${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} ${esc(BKS[k] || k)}<i>+${(ev * 100).toFixed(1)}%</i></span>`;
+          return `<li data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}>${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener" title="${esc(FULL[k] || k)} pays ${(ev * 100).toFixed(1)}% more than Pinnacle’s fair price. Tap to open this bet.">${inner}</a>` : `<a>${inner}</a>`}</li>`; }).join('')}</ol>`
+          : `<p class="small muted" style="margin:0">None ${MY.length ? 'of your books' : 'of the books'} pays more than Pinnacle’s fair price right now.</p>`}</div>`;
       }
       const t = x => x && x.fetched ? new Date(x.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : null;
       const when = [t(fresh(BK) && BK) && `game lines ${t(BK)}`, t(fresh(PR) && PR) && `props ${t(PR)}`].filter(Boolean).join(' · ');
@@ -319,7 +340,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <input id="ov-q" type="search" placeholder="Player or team" value="${esc(OV.q)}" aria-label="Search players"></div>
         <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props: NHL anytime goal and NFL anytime TD, added close to each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
         ${bkOpen === 'ov' ? `<div class="bkpanel">${[...used].sort(ord).map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : ''}
-        <div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${hasPin ? '<th title="Pinnacle no-vig: the sharp book’s chance with its margin removed">Pinnacle<br>no-vig</th>' : ''}${groups.map(([lab, ks]) => ks.map((k, i) =>
+        ${pev}<div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${hasPin ? '<th title="Pinnacle no-vig: the sharp book’s chance with its margin removed">Pinnacle<br>no-vig</th>' : ''}${groups.map(([lab, ks]) => ks.map((k, i) =>
           `<th class="${MY.includes(k) ? 'my' : ''}${i === 0 ? ' g0' : ''}">${i === 0 ? `<small class="gl">${esc(lab)}</small>` : '<small class="gl">&nbsp;</small>'}${esc(BKS[k] || k)}</th>`).join('')).join('')}</tr></thead><tbody>${body.replace(/<td class="([^"]*)" title/g, (m, c) => m)}</tbody></table></div></section>`;
     },
     // best YES price for a player prop at the viewer's books (all books if none chosen): {k, o, u, mine} or null
@@ -440,7 +461,12 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
       const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · ${c.m != null ? `ours ${(c.p0 * 100).toFixed(1)}%, ${e.pin ? 'Pinnacle no-vig' : 'market'} ${(c.m * 100).toFixed(1)}%, blended ` : ''}edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
       const pinP = sport === 'nfl' && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
-      return `<a class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}" href="${esc(url)}" target="_blank" rel="noopener" title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</a>${pinP != null ? ` <span class="pinv" title="Pinnacle's no-vig chance for this side (the sharp benchmark; ${e.pin.w === 1 ? 'one-way price, power de-vig' : 'both sides, multiplicative de-vig'})">Pin ${(pinP * 100).toFixed(0)}%</span>` : ''}`;
+      // the side and book that beat Pinnacle's no-vig by the most (your books first)
+      const pb = pinP == null ? null : opts.filter(x => !x.other || opts.every(y => y.other)).map(x => { const q = x.sd === 'o' ? e.pin.o : 1 - e.pin.o; return {...x, q, pe: q * dec(x.o) - 1}; }).sort((a, b) => b.pe - a.pe)[0];
+      const pinChip = !pb ? '' : pb.pe > 0
+        ? ` <span class="pinv" title="Pinnacle's no-vig chance ${(pb.q * 100).toFixed(1)}% (${e.pin.w === 1 ? 'one-way price, power de-vig' : 'both sides, multiplicative de-vig'}); ${esc(FULL[pb.k] || pb.k)} ${am(pb.o)} pays ${(pb.pe * 100).toFixed(1)}% more than Pinnacle's fair price">Pin ${pb.sd !== c.sd ? (pb.sd === 'o' ? 'O ' : 'U ') : ''}${(pb.q * 100).toFixed(0)}% · <b>+${(pb.pe * 100).toFixed(1)}%</b> ${esc(BKS[pb.k] || pb.k)}${pb.sd !== c.sd || pb.k !== c.k ? ' ' + am(pb.o) : ''}</span>`
+        : ` <span class="pinv neg" title="Pinnacle's no-vig chance for this side (${e.pin.w === 1 ? 'one-way price, power de-vig' : 'both sides, multiplicative de-vig'}); no book beats its fair price">Pin ${(pinP * 100).toFixed(0)}%</span>`;
+      return `<a class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}" href="${esc(url)}" target="_blank" rel="noopener" title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</a>${pinChip}`;
     },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
     flag(gid, name){
@@ -457,7 +483,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       }
       const tip = `Value: ${o ? esc(FULL[o.k] || o.k) : 'at least one major sportsbook'} pays ${Math.round(min * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
       if (o && o.u)                                          // price, book and a bet link
-        return `<a class="vtag" href="${esc(o.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.${v.pin != null ? ` Pinnacle's no-vig chance: ${(v.pin * 100).toFixed(1)}%.` : ''}">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)} ↗${v.pin != null ? ` <span class="pinv">Pin ${(v.pin * 100).toFixed(0)}%</span>` : ''}</a>`;
+        return `<a class="vtag" href="${esc(o.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.${v.pin != null ? ` Pinnacle's no-vig chance: ${(v.pin * 100).toFixed(1)}%.` : ''}">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)} ↗${v.pin != null ? (() => { const pe = v.pin * dec(o.o) - 1; return ` <span class="pinv${pe > 0 ? '' : ' neg'}">Pin ${(v.pin * 100).toFixed(0)}% · <b>${pe > 0 ? '+' : ''}${(pe * 100).toFixed(1)}%</b></span>`; })() : ''}</a>`;
       if (o && o.o != null)                                  // price without a link (e.g. Hard Rock)
         return `<span class="vtag" title="${tip}">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)}</span>`;
       if (MY.length && typeof v === 'string') return '';     // no per-book prices to check against the viewer's books
@@ -528,7 +554,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   });
   // Book odds filters: hide/show rows in place (no redraw, so the search box keeps focus)
   const ovApply = () => {
-    for (const tr of document.querySelectorAll('tr[data-ovr]'))
+    for (const tr of document.querySelectorAll('[data-ovr]'))
       tr.hidden = !((OV.g === 'all' || tr.dataset.ovg === OV.g) && (OV.m === 'all' || tr.dataset.ovm === OV.m) && (!OV.q || tr.dataset.ovn.includes(norm(OV.q))));
     for (const tr of document.querySelectorAll('tr.grp[data-ovg]'))
       tr.hidden = !document.querySelector(`tr[data-ovr][data-ovg="${CSS.escape(tr.dataset.ovg)}"]:not([hidden])`);
