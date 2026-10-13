@@ -113,11 +113,19 @@ def attach_swing(d, tables):
     return d
 
 
-def fit(train):
+class Avg:
+    """Average of several fits. One fit's top-3 capture moves +-0.01 with the random seed (early stopping holds out a
+    random 10%); the 5-fit average ranked better than a typical single fit (Aug-Oct 2026: .535 vs .525)."""
+    def __init__(self, models):
+        self.models = models
+
+    def predict_proba(self, X):
+        return np.mean([m.predict_proba(X) for m in self.models], axis=0)
+
+
+def fit(train, seeds=5):
     from sklearn.ensemble import HistGradientBoostingClassifier
-    gb = HistGradientBoostingClassifier(**PARAMS)
-    gb.fit(train[FEATS], train.y)
-    return gb
+    return Avg([HistGradientBoostingClassifier(**dict(PARAMS, random_state=s)).fit(train[FEATS], train.y) for s in range(seeds)])
 
 
 def evaluate():
