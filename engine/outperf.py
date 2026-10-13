@@ -98,6 +98,11 @@ def flag():
     season, week = int(os.path.basename(stem)[:4]), int(os.path.basename(stem)[7:9])
     pl = pd.read_csv(stem + "_players.csv")
     tm = pd.read_csv(stem + "_teams.csv")
+    try:                                                      # target-share dips for the live pattern chips (patterns.py)
+        import patterns
+        print(f"usage flags: {patterns.write_usage(stem, pl, sqlite3.connect(os.path.join(HERE, 'nfl.db')))} receivers with a target-share dip")
+    except Exception as e:
+        print("usage flags skipped:", type(e).__name__, e)
     rows = pl[(pl.stat == "rec_yds") & pl.pos.isin(["WR", "TE", "RB"]) & (pl["mean"] >= 15)].copy()
     rows = rows.merge(tm[["game_id", "team", "vegas_implied"]].rename(columns={"vegas_implied": "team_total"}), on=["game_id", "team"], how="left")
     con = sqlite3.connect(os.path.join(HERE, "nfl.db"))

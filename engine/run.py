@@ -66,10 +66,10 @@ def nfl(news=False):
         # first run without a cached database: build the seasons the models use
         y = season_nfl()
         sh(PY, "build_nfl_db.py", "--seasons", *map(str, range(y - 4, y + 1)), "--db", "nfl.db",
-           "--skip", "ngs_pass", "ngs_rush", "ngs_rec", "player_week")
+           "--skip", "ngs_pass", "ngs_rush", "ngs_rec")      # player_week: weekly stats for outperf.py
     else:
         sh(PY, "build_nfl_db.py", "--seasons", str(season_nfl()), "--db", "nfl.db",
-           "--skip", "ngs_pass", "ngs_rush", "ngs_rec", "player_week")
+           "--skip", "ngs_pass", "ngs_rush", "ngs_rec")      # player_week: weekly stats for outperf.py
     if not (news and news_check()):
         sh(PY, "project.py")
     sh(PY, "project.py", "--blind")
