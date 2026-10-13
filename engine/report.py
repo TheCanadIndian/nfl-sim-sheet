@@ -469,6 +469,10 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
   .pairs td.add{grid-column:2;grid-row:2 / span 2;align-self:center}
   .pairs tr.slate td{grid-column:1 / -1}
   .tw:has(> .pairs){overflow:visible}
+  .atgp td.pay::after{content:" payout"}
+  .atgp td.edge{grid-column:1;text-align:left;font-size:12.5px}
+  .atgp td.edge::after{content:" edge";font-weight:400;color:var(--muted)}
+  .atgp td.add{grid-row:2 / span 3}
   /* chips wrap instead of running off the edge; Kalshi pattern chips live in the tap-open panel on phones */
   .pt td.name .pat-high_total,.pt td.name .pat-cheap_over,.pt td.name .pat-low_rung,.pt td.name .pat-low_total{display:none}
   .pt td.name .vtag{white-space:normal;line-height:1.35;margin:3px 4px 0 0}

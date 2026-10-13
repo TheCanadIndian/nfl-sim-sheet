@@ -313,6 +313,16 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${groups.map(([lab, ks]) => ks.map((k, i) =>
           `<th class="${MY.includes(k) ? 'my' : ''}${i === 0 ? ' g0' : ''}">${i === 0 ? `<small class="gl">${esc(lab)}</small>` : '<small class="gl">&nbsp;</small>'}${esc(BKS[k] || k)}</th>`).join('')).join('')}</tr></thead><tbody>${body.replace(/<td class="([^"]*)" title/g, (m, c) => m)}</tbody></table></div></section>`;
     },
+    // best YES price for a player prop at the viewer's books (all books if none chosen): {k, o, u, mine} or null
+    propBest(gid, name, kind){
+      if (!PR || !PR.props || Date.now() - new Date(PR.fetched) > 12 * 3600e3) return null;
+      const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || !e.o) return null;
+      const all = Object.entries(e.o).sort((a, b) => dec(b[1][0]) - dec(a[1][0]));
+      const L = all.filter(([k]) => mine(k)), c = (L.length ? L : all)[0];
+      const u = c[1][1] ? (String(c[1][1]).startsWith('http') ? c[1][1] : `https://www.gambly.com/deeplink/odds/${c[1][1]}?utm_campaign=${encodeURIComponent(PR.partner || '')}`) : null;
+      return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length};
+    },
+    myBooks: () => MY.slice(),
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
     // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)

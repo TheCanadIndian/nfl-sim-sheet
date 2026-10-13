@@ -676,6 +676,39 @@ function mlBlock(g){
     rows.push(row('Total ' + k, [chip('over' + k, 'Over', m.totals[k], 'Over ' + k), chip('under' + k, 'Under', 1 - m.totals[k], 'Under ' + k)]));
   return `<div class="betgrid">${rows.join('')}<div class="small muted">Projected total ${m.total.toFixed(1)} goals · overtime ${pct(m.ot)}</div>${window.MKT && MKT.bkNote ? MKT.bkNote(g.id) : ''}</div>`;
 }
+// Anytime-goal parlays priced at the viewer's books: legs only from our top 3 per game (usage-adjusted rank, the one slice
+// that has held up vs Kalshi), one leg per game, games not started. Ranked by payout vs our fair odds.
+function atgParlays(){
+  if (!(window.MKT && MKT.propBest)) return '';
+  const now = Date.now(), dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o, am = o => (o > 0 ? '+' : '') + o;
+  const legs = [];
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const side of [g.away, g.home]) for (const p of side.players){
+      if (!(p.ur && p.ur <= 3)) continue;
+      const b = MKT.propBest(g.id, p.name, 'goal'); if (!b) continue;
+      legs.push({g, p, team: side.team, b, ev: p.p * dec(b.o) - 1});
+    }
+  }
+  if (legs.length < 2) return '';
+  const byGame = {}; legs.forEach(L => (byGame[L.g.id] = byGame[L.g.id] || []).push(L));
+  const gids = Object.keys(byGame), combos = [];
+  const walk = (i, pick, k) => {
+    if (pick.length === k){ const p = pick.reduce((a, L) => a * L.p.p, 1), d = pick.reduce((a, L) => a * dec(L.b.o), 1); combos.push({legs: pick, p, d, ev: p * d - 1}); return; }
+    for (let j = i; j < gids.length; j++) for (const L of byGame[gids[j]]) walk(j + 1, [...pick, L], k);
+  };
+  walk(0, [], 2); if (gids.length >= 3) walk(0, [], 3);
+  if (!combos.length) return '';
+  const top = k => combos.filter(c => c.legs.length === k).sort((a, b) => b.ev - a.ev).slice(0, 4);
+  const legSlip = L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.p.p, side: 'over', stat: 'goals', line: .5});
+  const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p.p)} · ${L.b.u ? `<a href="${esc(L.b.u)}" target="_blank" rel="noopener">${am(L.b.o)} ${esc(L.b.name)} ↗</a>` : `${am(L.b.o)} ${esc(L.b.name)}`}${L.b.mine ? '' : ' (not at your books)'}</span>`).join('<br>')}</td>
+    <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.ev >= .1 ? 'pos-d' : c.ev < 0 ? 'neg-d' : ''}" style="font-weight:700">${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(0)}%</td>
+    <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(legSlip), '+ add parlay') : ''}</td></tr>`;
+  const mine = MKT.myBooks();
+  return `<section class="panel"><div class="phead"><h2>Anytime-goal parlays at your books</h2><span class="small muted">${mine.length ? 'Priced at ' + esc(mine.join(', ')) : 'Priced at the best book (choose yours under any game’s bets)'}</span></div>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Only our top 3 scorers in each game (usage-adjusted rank): on Kalshi those roughly broke even while everyone else lost. One player per game, so legs are independent; parlays multiply the books' margin, so the edge column matters more than the payout. Edge = our chance × the payout − 1. Backtest (2024-26, the likeliest such parlays each night): 2-leg hit 15.6-16.2% vs 15-17% predicted, 3-leg 6.7-7.2% vs 6-7%, so a 2-leg needs to pay about 6.3x and a 3-leg about 14x just to break even; the nightly top 2-leg once went 24 nights without hitting. Treat these as small stakes.</p></details>
+    ${[2, 3].map(k => top(k).length ? `<div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">${k}-leg parlay</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${top(k).map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
+}
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
   const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
@@ -697,7 +730,7 @@ function jumpBar(){
   return `<nav class="gjump" aria-label="Jump to game">${D.games.map(g => `<a href="#g${g.id}">${esc(g.away.team)} @ ${esc(g.home.team)}<small>${esc(t(g))}</small></a>`).join('')}</nav>`;
 }
 function games(){
-  return jumpBar() + picksKey() + pairsCard() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
+  return jumpBar() + picksKey() + atgParlays() + pairsCard() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
     ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
 const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);
