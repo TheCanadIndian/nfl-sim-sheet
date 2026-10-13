@@ -122,9 +122,11 @@ def two_sided(rows):
     return out
 
 
-def judge(p, odds, nv=None):
-    """(EV, check) for our chance p at these odds."""
-    ev, imp = p * dec(odds) - 1, 1 / dec(odds)
+def judge(p, odds, nv=None, blend=False):
+    """(EV, check) for our chance p at these odds. blend: judge the edge on (ours + market no-vig) / 2 (NFL props:
+    on Kalshi 2026 that blend with a 5%+ edge returned +8.4%, our projection alone lost)."""
+    q = (p + nv) / 2 if blend and nv is not None else p
+    ev, imp = q * dec(odds) - 1, 1 / dec(odds)
     check = (nv is not None and abs(p - nv) >= .20) or (nv is None and p >= 2 * imp and p - imp >= .08)
     return ev, check
 
@@ -227,7 +229,7 @@ def nfl(now):
             po = p_over(me["d"].get(st), float(r["line"]))
             if po is None:
                 continue
-            ev, chk = judge(po if sd == "over" else 1 - po, r["odds_american"], nv)
+            ev, chk = judge(po if sd == "over" else 1 - po, r["odds_american"], nv, blend=True)
             out.append((gid, me["name"], f"{sd} {float(r['line']):g} {lab}", ev, chk, None))
     return out
 
@@ -245,9 +247,13 @@ def ua_nv(df):
     return out
 
 
-def ua_row(NV, gid, me, bet, p, r):
-    ev, chk = judge(p, r.price, NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index)))
-    return (gid, me["name"], bet, ev, chk, dict(o=int(r.price), k=U.SHORT[r.book], u=r.url, p=round(float(p), 4)))
+def ua_row(NV, gid, me, bet, p, r, blend=False):
+    nv = NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index))
+    ev, chk = judge(p, r.price, nv, blend=blend)
+    x = dict(o=int(r.price), k=U.SHORT[r.book], u=r.url, p=round(float(p), 4))
+    if blend and nv is not None:
+        x["m"] = round(float(nv), 4)                      # the page re-checks the viewer's books on the same blend
+    return (gid, me["name"], bet, ev, chk, x)
 
 
 PROPS = {}          # sport -> every matched player's prices (published as props_<sport>.json when Unabated works)
@@ -349,7 +355,7 @@ def ua_nfl(now):
                 add_price(P, gid, me["name"], st, "o" if r.side_index == 0 else "u", r, p=po, line=r.points,
                           warn=judge(po if r.side_index == 0 else 1 - po, r.price, nv)[1])
             sd = "over" if r.side_index == 0 else "under"
-            out.append(ua_row(NV, gid, me, f"{sd} {float(r.points):g} {lab}", po if sd == "over" else 1 - po, r))
+            out.append(ua_row(NV, gid, me, f"{sd} {float(r.points):g} {lab}", po if sd == "over" else 1 - po, r, blend=True))
     PROPS["nfl"] = P
     return out
 
