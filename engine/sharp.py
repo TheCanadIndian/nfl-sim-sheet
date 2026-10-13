@@ -155,7 +155,7 @@ def nhl_ours(now):
         allp = sorted(allp, key=lambda p: -(p.get("um") or 1) * -np.log(1 - min(p["p"], .999)))   # usage-adjusted rank, as on the page
         for i, p in enumerate(allp):
             team = a if p in g["away"]["players"] else h
-            pl[(a, h, team, norm(p["name"]))] = dict(gid=g["id"], name=p["name"], p=p["p"], rank=i + 1)
+            pl[(a, h, team, norm(p["name"]))] = dict(gid=g["id"], name=p["name"], p=p["p"], rank=i + 1, so=p.get("so"))
     return pl, date
 
 
@@ -277,11 +277,27 @@ def ua_nhl(now):
     pl, date = nhl_ours(now)
     if pl is None:
         return None
+    P = {}
+    # shots on goal (bet type 86): every line 0.5-4.5, both sides, with our shots model's chance (hockey/sog.py)
+    sg = U.board("nhl", "props", [86], kalshi=True, tries=3)
+    if sg is not None and not sg.empty:
+        sg = sg[(pd.to_datetime(sg.start, utc=True) > now) & sg.side_index.isin([0, 1]) & sg.points.isin([.5, 1.5, 2.5, 3.5, 4.5])]
+        for r in sg.itertuples():
+            a, h = M.code("nhl", str(r.away)), M.code("nhl", str(r.home))
+            me = pl.get((a, h, a, norm(r.name))) or pl.get((a, h, h, norm(r.name)))
+            if not me or not me.get("so"):
+                continue
+            po = me["so"][int(r.points)]                                              # so = P(over 0.5, 1.5, ... 4.5)
+            add_price(P, me["gid"], me["name"], f"sog{int(r.points * 10):02d}", "o" if r.side_index == 0 else "u", r, p=po, line=r.points)
+        print(f"sharp nhl: Unabated shots on goal, {sg.person.nunique()} players")
     df = U.board("nhl", "props", [278], kalshi=True)
     if df is None or df.empty:
+        if P:
+            PROPS["nhl"] = P
+            return []                                                                 # shots only: publish prices, no goal tags
         return False
     df = df[pd.to_datetime(df.start, utc=True) > now]
-    NV, out, P = ua_nv(df), [], {}
+    NV, out = ua_nv(df), []
     for r in df[(df.side_index == 0) & (df.points == .5)].itertuples():           # side 0 = over 0.5 goals = scores
         if pd.Timestamp(r.start).tz_convert("America/New_York").date().isoformat() != date:
             continue
@@ -488,6 +504,26 @@ def hr_merge(sport, now):
     print(f"hard rock {sport}: merged {sum(len(c['prices']) for c in cache.values())} prices, {nt} new Value tags")
 
 
+def write_props(sport, now):
+    """Publish PROPS[sport] as <site>/markets/props_<sport>.json, keeping kinds this pull didn't get (< 12 h old)."""
+    fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
+    os.makedirs(os.path.dirname(fp), exist_ok=True)
+    P = PROPS[sport]
+    try:
+        old = json.load(open(fp))
+        if now - pd.Timestamp(old["fetched"]) < pd.Timedelta(hours=12):
+            got = {k for g in P.values() for pl in g.values() for k in pl}
+            for gid, g in old.get("props", {}).items():
+                for nm, kinds in g.items():
+                    for k, e in kinds.items():
+                        if k not in got:
+                            P.setdefault(gid, {}).setdefault(nm, {}).setdefault(k, e)
+    except (OSError, ValueError, KeyError):
+        pass
+    json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER, props=P),
+              open(fp, "w"), separators=(",", ":"))
+
+
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
     try:
@@ -518,6 +554,9 @@ def main(argv):
                     rows, src = r, "unabated"
                     st["ua_" + sport] = now.isoformat()
                     ok[sport] = ok.get(sport, 0) + 1
+                elif r == [] and PROPS.get(sport):                    # only shot prices came back: publish them, tags fall back below
+                    write_props(sport, now)
+                    print(f"sharp {sport}: Unabated shots only (goal props unavailable)")
                 else:
                     print(f"sharp {sport}: Unabated props unavailable ({ok.get(sport, 0)} of {tries[sport]} tries have worked)")
             if rows is None:
@@ -537,21 +576,7 @@ def main(argv):
             json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), min_ev=MIN_EV, source=src, tags=T),
                       open(os.path.join(M.SITE, "markets", f"flags_{sport}.json"), "w"), separators=(",", ":"))
             if src == "unabated" and PROPS.get(sport):
-                fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
-                P = PROPS[sport]
-                try:                                        # keep stats this pull didn't get from the previous file (< 12 h old)
-                    old = json.load(open(fp))
-                    if now - pd.Timestamp(old["fetched"]) < pd.Timedelta(hours=12):
-                        got = {k for g in P.values() for pl in g.values() for k in pl}
-                        for gid, g in old.get("props", {}).items():
-                            for nm, kinds in g.items():
-                                for k, e in kinds.items():
-                                    if k not in got and k != "goal":
-                                        P.setdefault(gid, {}).setdefault(nm, {}).setdefault(k, e)
-                except (OSError, ValueError, KeyError):
-                    pass
-                json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER,
-                               props=P), open(fp, "w"), separators=(",", ":"))
+                write_props(sport, now)
             print(f"sharp {sport}: {src}, {len(rows)} priced bets, {sum(len(g) for g in T.values())} tagged"
                   + (f", prices for {sum(len(g) for g in PROPS[sport].values())} players" if src == "unabated" and PROPS.get(sport) else ""))
         except Exception as e:                                   # never break the markets run

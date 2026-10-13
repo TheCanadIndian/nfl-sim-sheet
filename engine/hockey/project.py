@@ -502,7 +502,7 @@ def pos_defense(fr):
 
 TEMPLATE = r"""<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Goal Sheet __DATE__</title>
+<title>Goals & Shots __DATE__</title>
 __FONTS__<style>
 __CSS__
 .gcard{display:grid;gap:14px}
@@ -561,10 +561,10 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 </style>
 <div class="wrap">
   <header>
-    <div><div class="eyebrow" id="sub"></div><h1>Anytime Goal Sheet</h1></div>
+    <div><div class="eyebrow" id="sub"></div><h1>Goals &amp; Shots</h1></div>
     <div class="tabs" role="tablist" aria-label="View">
       <button role="tab" data-view="games">Games</button>
-      <button role="tab" data-view="shots">Shots</button>
+      <button role="tab" data-view="plays">Plays</button>
       <button role="tab" data-view="board">All players</button>
       <button role="tab" data-view="posdef">Defense vs position</button>
       <button role="tab" data-view="goalies">Goalies</button>
@@ -581,7 +581,7 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pct = p => (p*100).toFixed(1) + '%';
 const odds = o => (o > 0 ? '+' : '') + o;
-const state = {view: ['#board', '#posdef', '#goalies', '#books', '#shots'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
+const state = {view: ['#board', '#posdef', '#goalies', '#books', '#shots', '#plays'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
 // Highlights: tonight's top 5 by goal chance (backtest 2024-26: scored 38%, average skater 15%)
 // and the best option in each game (38%). The model's probability already includes every factor
 // that tested as useful, so the ranking is the selection rule; reasons explain it.
@@ -657,7 +657,7 @@ function side(s, opp, gid){
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
     ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
     <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="${UTIP}">Usage rank</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Expected shots on goal, and the chance of 2+ and 3+ (shots model: calibrated within ~1 pt on 2024-26)">Shots</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${bo ? '<th class="l pcd" title="Best anytime-goal price at your sportsbooks (choose them under the game bets). Green = our chance beats it by 5%+">Best odds</th>' : ''}${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
-    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}${p.sog != null ? ` · ${p.sog.toFixed(1)} shots` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big kp">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${urCell(p, gid)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
+    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big kp">${pct(p.p)}${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots<br>3+ ${pct(p.so[2])}</small>` : ''}</td><td>${odds(p.fair)}</td><td>${urCell(p, gid)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     </tbody></table></div></div>`;
 }
 function picksKey(){
@@ -750,8 +750,20 @@ function tierParlays(){
     for (const k of ['5.5', '6.5']) if (m.totals[k] != null)
       gameLegs.push({gid: g.id, kind: 'total', side: 'over', line: +k, p: m.totals[k], lab: `${A}-${H} over ${k}`}, {gid: g.id, kind: 'total', side: 'under', line: +k, p: 1 - m.totals[k], lab: `${A}-${H} under ${k}`});
   }
-  return MKT.tierCard({sport: 'nhl', title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, start: g.start_utc})),
-                       gameLegs, propKinds: {goal: 'to score'}, propOk: (gid, nm) => !!top[gid + '|' + nm]});
+  const games = D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, start: g.start_utc}));
+  const shots = {sog05: 'shots', sog15: 'shots', sog25: 'shots', sog35: 'shots', sog45: 'shots'};
+  // anytime goals only from our top 3 (30%+); shots from anyone (the shots model is calibrated across the board)
+  const all = MKT.tierCard({sport: 'nhl', title: 'Parlays by payout (your books)', games, gameLegs,
+                            propKinds: {goal: 'to score', ...shots}, propOk: (gid, nm, k) => k !== 'goal' || !!top[gid + '|' + nm]});
+  const sml = MKT.tierCard({sport: 'nhl', title: 'Shots + moneyline parlays (your books)', games, gameLegs: gameLegs.filter(L => L.kind === 'ml'),
+                            propKinds: shots, overOnly: true});
+  const body = h => h.replace(/<h2>[^<]*<\/h2>/, '');
+  return body(all) === body(sml) ? sml : all + sml;                 // same picks (no goal prices yet): show one card
+}
+// Plays tab: every parlay card in one place
+function playsView(){
+  const h = atgParlays() + tierParlays() + pairsCard();
+  return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
@@ -774,7 +786,7 @@ function jumpBar(){
   return `<nav class="gjump" aria-label="Jump to game">${D.games.map(g => `<a href="#g${g.id}">${esc(g.away.team)} @ ${esc(g.home.team)}<small>${esc(t(g))}</small></a>`).join('')}</nav>`;
 }
 function games(){
-  return jumpBar() + picksKey() + atgParlays() + tierParlays() + pairsCard() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
+  return jumpBar() + picksKey() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
     ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
 const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);
@@ -830,7 +842,7 @@ function goaliesView(){
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
-  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'posdef' ? posdef() : state.view === 'goalies' ? goaliesView() : state.view === 'shots' ? shotsView()
+  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'posdef' ? posdef() : state.view === 'goalies' ? goaliesView() : state.view === 'shots' ? shotsView() : state.view === 'plays' ? playsView()
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, away: g.away.team, home: g.home.team}))) : '<div class="empty">Loading prices…</div>') : games();
 }
 document.addEventListener('click', e => {
