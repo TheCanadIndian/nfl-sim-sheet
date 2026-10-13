@@ -441,6 +441,7 @@ input[type=search]{min-width:200px}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
 .mmeta{display:none}
+.pchips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
 .kps{display:none}
 .atgp td a{color:var(--accent);text-decoration:none;white-space:nowrap}
 .atgp td a:hover{text-decoration:underline}
