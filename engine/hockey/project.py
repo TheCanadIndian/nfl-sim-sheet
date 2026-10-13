@@ -564,6 +564,7 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
     <div><div class="eyebrow" id="sub"></div><h1>Anytime Goal Sheet</h1></div>
     <div class="tabs" role="tablist" aria-label="View">
       <button role="tab" data-view="games">Games</button>
+      <button role="tab" data-view="shots">Shots</button>
       <button role="tab" data-view="board">All players</button>
       <button role="tab" data-view="posdef">Defense vs position</button>
       <button role="tab" data-view="goalies">Goalies</button>
@@ -580,7 +581,7 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pct = p => (p*100).toFixed(1) + '%';
 const odds = o => (o > 0 ? '+' : '') + o;
-const state = {view: ['#board', '#posdef', '#goalies', '#books'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
+const state = {view: ['#board', '#posdef', '#goalies', '#books', '#shots'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
 // Highlights: tonight's top 5 by goal chance (backtest 2024-26: scored 38%, average skater 15%)
 // and the best option in each game (38%). The model's probability already includes every factor
 // that tested as useful, so the ranking is the selection rule; reasons explain it.
@@ -785,6 +786,22 @@ function posdef(){
   </tbody></table></div>
   <p class="small muted">How much each defense allows to opposing centers, left wings, right wings and defensemen, compared with the average team (+15% = 15% more). Shooter positions are the NHL's roster listings. Recent games count most, carried over from last season early on, and small samples are pulled toward average. Expected goals (xG) is the steadier measure; actual goals are noisier. Green = soft spot for that position, red = tough. On the Games tab, players facing a 10%+ soft or tough even-strength matchup get a tag. This is context, not part of the probabilities: in backtests (2024–25 and 2025–26) it added nothing beyond each opponent's overall defense, which the model already uses.</p></section>`;
 }
+// shots on goal (sog.py): every skater by expected shots, with the chance of 2+ / 3+ / 4+
+function shotsView(){
+  const rows = [];
+  for (const g of D.games) for (const [me, op] of [[g.away, g.home], [g.home, g.away]]) for (const p of me.players)
+    if (p.sog != null) rows.push({p, team: me.team, opp: op.team, gid: g.id, start: g.start});
+  if (!rows.length) return '<section class="panel"><div class="empty">Shots on goal appear with tonight’s projections.</div></section>';
+  rows.sort((a, b) => b.p.sog - a.p.sog);
+  const t = state.shotsAll ? rows : rows.slice(0, 60);
+  return `<section class="panel"><div class="phead"><h2>Shots on goal</h2><span class="small muted">expected shots and the chance of each line going over</span></div>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these work</summary><p class="note">Each skater's shots per 60 minutes (recent form counts a little; few games are pulled toward his position's average) times tonight's expected ice time, adjusted for how many shots the opponent allows, power-play time, home ice and back-to-backs. Shot counts spread out more than a simple average suggests, so the chances use a wider (negative binomial) curve. Checked on games the model never saw (2024-25 and 2025-26): over 1.5 / 2.5 / 3.5 shots were predicted 42.2 / 21.5 / 10.1% and happened 42.7 / 21.9 / 10.2%.</p></details>
+    <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th>Expected</th><th>2+ (over 1.5)</th><th>3+ (over 2.5)</th><th>4+ (over 3.5)</th><th class="l">Game</th></tr></thead><tbody>
+    ${t.map(r => `<tr><td class="l name">${esc(r.p.name)} <span class="small muted">${esc(r.team)} · ${esc(r.p.pos)}${r.p.pp ? ' · ' + esc(r.p.pp) : ''}</span>
+      <span class="mmeta">2+ <b>${pct(r.p.so[1])}</b> · 3+ <b>${pct(r.p.so[2])}</b> · 4+ <b>${pct(r.p.so[3])}</b> · vs ${esc(r.opp)}</span></td>
+      <td class="big kp">${r.p.sog.toFixed(1)}</td><td>${pct(r.p.so[1])}</td><td>${pct(r.p.so[2])}</td><td>${pct(r.p.so[3])}</td><td class="l small muted">vs ${esc(r.opp)} · ${esc(r.start)}</td></tr>`).join('')}
+    </tbody></table></div>${rows.length > 60 && !state.shotsAll ? `<p><button type="button" class="bkset" data-shotsall="1">Show all ${rows.length} skaters</button></p>` : ''}</section>`;
+}
 function goaliesView(){
   const rows = (D.goalies || []).slice().sort((a, b) => ((b.now || b.last || {}).gsaa ?? -99) - ((a.now || a.last || {}).gsaa ?? -99));
   const c = x => x ? `<td>${x.gp}</td><td>${x.sa}</td><td>${x.ga}</td><td class="big">${sv3(x.sv)}</td><td class="big">${sgn(x.gsaa)}</td><td>${sgn(x.gsax)}</td>` : '<td colspan="6" class="muted small">no games</td>';
@@ -796,12 +813,13 @@ function goaliesView(){
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
-  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'posdef' ? posdef() : state.view === 'goalies' ? goaliesView()
+  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'posdef' ? posdef() : state.view === 'goalies' ? goaliesView() : state.view === 'shots' ? shotsView()
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, away: g.away.team, home: g.home.team}))) : '<div class="empty">Loading prices…</div>') : games();
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('button[data-view]');
   if (b){ state.view = b.dataset.view; history.replaceState(null, '', state.view === 'games' ? location.pathname : '#' + state.view); render(); return; }
+  if (e.target.closest('[data-shotsall]')){ state.shotsAll = true; render(); return; }
   const bs = e.target.closest('button[data-bsort]');
   if (bs){ state.bsort = bs.dataset.bsort; render(); return; }
   const h = e.target.closest('th[data-sort]');
