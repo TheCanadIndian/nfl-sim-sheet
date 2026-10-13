@@ -323,6 +323,16 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length};
     },
     myBooks: () => MY.slice(),
+    // the market's chance for a player prop: median implied chance at the exchanges / prediction markets (low margin;
+    // Kalshi already fee-adjusted), less ~3% for their margin. null when no exchange prices it.
+    propMarket(gid, name, kind){
+      if (!PR || !PR.props) return null;
+      const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || !e.o) return null;
+      const q = Object.entries(e.o).filter(([k]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(k)).map(([, v]) => 1 / dec(v[0])).sort((a, b) => a - b);
+      if (!q.length) return null;
+      const med = q.length % 2 ? q[(q.length - 1) / 2] : (q[q.length / 2 - 1] + q[q.length / 2]) / 2;
+      return med / 1.03;
+    },
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
     // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)
