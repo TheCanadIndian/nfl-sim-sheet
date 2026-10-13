@@ -442,6 +442,14 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
 .mmeta{display:none}
 .pchips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+details.pfold{margin-bottom:14px}
+details.pfold > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:1px solid var(--faint);border-radius:12px;background:var(--surface)}
+details.pfold > summary::-webkit-details-marker{display:none}
+details.pfold > summary h2{margin:0}
+details.pfold > summary .chev{color:var(--muted);transition:transform .15s}
+details.pfold[open] > summary{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+details.pfold:not([open]) > summary .chev{transform:rotate(-90deg)}
+details.pfold > section.panel{border-top-left-radius:0;border-top-right-radius:0;border-top:0;margin-top:0}
 .kps{display:none}
 .atgp td a{color:var(--accent);text-decoration:none;white-space:nowrap}
 .atgp td a:hover{text-decoration:underline}

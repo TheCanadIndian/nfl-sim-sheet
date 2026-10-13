@@ -762,12 +762,53 @@ function tierParlays(){
   return body(all) === body(sml) ? sml : all + sml;                 // same picks (no goal prices yet): show one card
 }
 // Plays tab: every parlay card in one place
+// each card folds under its title; folded cards are remembered on this device
+let FOLD = {};
+try { FOLD = JSON.parse(localStorage.getItem('nhl-plays-fold') || '{}'); } catch (e) {}
+function foldable(html){
+  return html.split(/(?=<section class="panel")/).filter(x => x.trim()).map(sec => {
+    const m = sec.match(/<h2>([\s\S]*?)<\/h2>/); if (!m) return sec;
+    const key = m[1].replace(/<[^>]+>/g, '').trim();
+    const body = sec.replace(m[0], '');
+    return `<details class="pfold" data-fold="${esc(key)}"${FOLD[key] ? '' : ' open'}><summary><h2>${m[1]}</h2><span class="chev" aria-hidden="true">▾</span></summary>${body}</details>`;
+  }).join('');
+}
 function playsView(){
-  const h = atgParlays() + tierParlays() + pairsCard();
+  const h = foldable(atgParlays() + tierParlays() + pairsCard());
   return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
+// Longshot two-mans priced at the viewer's books: legs 15-35% to score, chance blended with the exchanges', every
+// leg beating its price, two different games, paying 12x+ at the book. (Backtest 2024-26: adding shot / xG / DvP signals
+// to the pick made these pairs hit LESS often -- 5.4% vs 6.0% and 5.1% vs 7.3% -- so the goal chance stays the pick.)
+function pricedLongshots(){
+  if (!(window.MKT && MKT.propBest && MKT.myBooks().length)) return [];
+  const now = Date.now(), dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o, legs = [];
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const side of [g.away, g.home]) for (const p of side.players){
+      if (p.p < .15 || p.p > .35) continue;
+      const b = MKT.propBest(g.id, p.name, 'goal'); if (!b || !b.mine) continue;
+      const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null, q = m != null ? (p.p + m) / 2 : p.p;
+      if (q * dec(b.o) - 1 <= 0) continue;
+      legs.push({g, p, team: side.team, b, q, m});
+    }
+  }
+  const out = [];
+  for (let i = 0; i < legs.length; i++) for (let j = i + 1; j < legs.length; j++){
+    const a = legs[i], c = legs[j]; if (a.g.id === c.g.id) continue;
+    const d = dec(a.b.o) * dec(c.b.o); if (d < 12) continue;
+    out.push({legs: [a, c], p: a.q * c.q, d});
+  }
+  return out.sort((x, y) => y.p - x.p).slice(0, 6);
+}
 function pairsCard(){
-  const P = D.pairs || []; if (!P.length) return '';
+  const P = D.pairs || [];
+  const L2 = pricedLongshots(), am = o => (o > 0 ? '+' : '') + o;
+  const pricedRows = L2.map(c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted" title="Our chance ${pct(L.p.p)}${L.m != null ? ', exchanges ' + pct(L.m) : ''}">${esc(L.team)} · ${pct(L.q)} · ${L.b.u ? `<a href="${esc(L.b.u)}" target="_blank" rel="noopener">${am(L.b.o)} ${esc(L.b.name)} ↗</a>` : `${am(L.b.o)} ${esc(L.b.name)}`}</span>`).join('<br>')}</td>
+      <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
+      <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.q, side: 'over', stat: 'goals', line: .5})), '+ add pair') : ''}</td></tr>`).join('');
+  const priced = L2.length ? `<div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Two-man</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${pricedRows}</tbody></table></div>` : '';
+  if (!P.length && !priced) return '';
   const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
   const legSlip = L => ({id: `nhl|${L.gid}|${L.id}|goal1`, sport: 'nhl', g: L.gid, glab: L.game, lab: `${L.name} to score`, p: L.p, side: 'over', stat: 'goals', line: .5});
   const order = ['Early slate', 'Middle slate', 'Late slate'], by = {};
@@ -775,6 +816,13 @@ function pairsCard(){
   const rowsFor = list => list.map(x => `<tr><td class="l">${x.legs.map(L => `<b>${esc(L.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p)}</span>`).join(' + ')}</td><td class="big">${pct(x.p)}</td><td class="pay">${x.payout}x</td><td class="l add">${window.SLIP ? SLIP.allBtn(x.legs.map(legSlip), '+ add pair') : ''}</td></tr>`).join('');
   const singles = Object.entries(D.slates || {}).filter(([sl, n]) => n < 2 && !by[sl]).map(([sl]) => `<tr class="slate"><td class="l muted" colspan="4"><b>${esc(sl)}</b>: one game only, no different-game pair possible</td></tr>`).join('');
   const body = [...order.filter(k => by[k]), ...Object.keys(by).filter(k => !order.includes(k))].map(k => `<tr class="slate"><td class="l" colspan="4"><b>${esc(k)}</b> <span class="small muted">first puck drop ${esc(by[k][0].slate_start || '')} ET · ${by[k].length} pair${by[k].length === 1 ? '' : 's'}</span></td></tr>` + rowsFor(by[k])).join('') + singles;
+  const tracked = P.length ? `<details${priced ? '' : ' open'}><summary class="small muted" style="cursor:pointer;margin:10px 0 6px">Tracked 15x pairs (fair odds) · ${rec}</summary>
+    <div class="tw"><table class="t pairs"><thead><tr><th class="l">Pair</th><th>Chance</th><th>Fair payout</th><th class="l">My parlay</th></tr></thead><tbody>
+    ${body}
+    </tbody></table></div></details>` : '';
+  return `<section class="panel"><div class="phead"><h2>Longshot two-mans</h2><span class="small muted">${priced ? 'Priced at ' + esc(MKT.myBooks().join(', ')) + ' · pays 12x+' : 'waiting for prices at your books'}</span></div>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Two anytime-goal legs from different games, each 15-35% to score, with each chance averaged with the exchanges' price and each beating its price at your books; the pairs paying 12x+ that are most likely to hit. We tested adding shot volume, expected-goal trends and defense-vs-position on top of our goal chance (2024-26): pairs picked that way hit less often (5.4% vs 6.0%, 5.1% vs 7.3%), because the goal model already uses shot quality, the opponent and the goalie. Expect about 1 hit in 12-15.</p></details>
+    ${priced}${tracked}</section>`;
   return `<section class="panel"><div class="phead"><h2>2-leg pairs paying 15x+</h2><span class="small muted">${rec}</span></div>
     <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these work</summary><p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). These are fairly priced, not a proven edge: in backtests, pairs built this way hit about their implied 1 in 15 (anywhere from 5% to 8% depending on exactly which near-identical pair was picked). Both legs come from the same slate (early before 5 PM ET, middle 5-9 PM, late 9 PM+), and each slate's pairs freeze at its first puck drop and are graded on the Results page.</p></details>
     <div class="tw"><table class="t pairs"><thead><tr><th class="l">Pair</th><th>Chance</th><th>Fair payout</th><th class="l">My parlay</th></tr></thead><tbody>
@@ -867,6 +915,11 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button[data-view]');
   if (b){ state.view = b.dataset.view; history.replaceState(null, '', state.view === 'games' ? location.pathname : '#' + state.view); render(); return; }
   if (e.target.closest('[data-shotsall]')){ state.shotsAll = true; render(); return; }
+  if (e.target.closest('details.pfold > summary')){
+    const d = e.target.closest('details.pfold');
+    setTimeout(() => { FOLD[d.dataset.fold] = !d.open; try { localStorage.setItem('nhl-plays-fold', JSON.stringify(FOLD)); } catch (e2) {} }, 0);
+    return;
+  }
   if (e.target.closest('[data-bval]')){ state.bval = !state.bval; render(); return; }
   const bs = e.target.closest('button[data-bsort]');
   if (bs){ state.bsort = bs.dataset.bsort; render(); return; }
