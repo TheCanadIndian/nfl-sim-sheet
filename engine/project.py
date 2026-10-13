@@ -207,9 +207,12 @@ def future_actives(con, todo, season, week, overrides):
     pos = D.positions(con)
     snaps = D.game_actives(con, pos).merge(
         pd.read_sql("SELECT game_id, season, week FROM games", con), on="game_id")
-    roster = pd.read_sql(f"""SELECT gsis_id AS player_id, team, position, status, full_name
-                             FROM rosters WHERE season={season}
-                               AND week=(SELECT MAX(week) FROM rosters WHERE season={season})""", con)
+    # each team's latest roster week: weekly rosters skip a team on its bye, so a league-wide MAX(week)
+    # left a team coming off a bye with no active players (Carolina, week 6 2026)
+    roster = pd.read_sql(f"""SELECT r.gsis_id AS player_id, r.team, r.position, r.status, r.full_name
+                             FROM rosters r JOIN (SELECT team, MAX(week) AS wk FROM rosters WHERE season={season} GROUP BY team) m
+                               ON r.team = m.team AND r.week = m.wk
+                             WHERE r.season={season}""", con)
     active_roster = roster[roster.status == "ACT"]
     depth = pd.read_sql(f"""SELECT team, gsis_id AS player_id, pos_abb, pos_rank FROM depth_charts
                             WHERE season={season}
