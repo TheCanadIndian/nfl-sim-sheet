@@ -584,5 +584,183 @@
   "next": 8,
   "minutes": 10.2,
   "dry": false
+ },
+ {
+  "date": "2026-10-13T10:38",
+  "sport": "nhl",
+  "windows": [
+   20242025,
+   20252026
+  ],
+  "tried": [
+   {
+    "change": {
+     "model.K_PP_HOURS": 1.0
+    },
+    "ok": false,
+    "score": 2.4e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38646,
+      "change": 6e-06
+     },
+     "20252026": {
+      "logloss": 0.39067,
+      "change": 2.4e-05
+     }
+    },
+    "what": "power-play rate shrinkage (hours)",
+    "was": 1.5
+   },
+   {
+    "change": {
+     "model.K_PP_HOURS": 2.0
+    },
+    "ok": false,
+    "score": 6e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38646,
+      "change": 6e-06
+     },
+     "20252026": {
+      "logloss": 0.39064,
+      "change": -7e-06
+     }
+    },
+    "what": "power-play rate shrinkage (hours)",
+    "was": 1.5
+   },
+   {
+    "change": {
+     "model.K_GOALIE_XG": 40.0
+    },
+    "ok": false,
+    "score": 5e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38646,
+      "change": 5e-06
+     },
+     "20252026": {
+      "logloss": 0.39065,
+      "change": 2e-06
+     }
+    },
+    "what": "goalie rating shrinkage",
+    "was": 60.0
+   },
+   {
+    "change": {
+     "model.K_GOALIE_XG": 80.0
+    },
+    "ok": false,
+    "score": -1e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38645,
+      "change": -3e-06
+     },
+     "20252026": {
+      "logloss": 0.39065,
+      "change": -1e-06
+     }
+    },
+    "what": "goalie rating shrinkage",
+    "was": 60.0
+   },
+   {
+    "change": {
+     "model.TEAM_HL": 10.0
+    },
+    "ok": false,
+    "score": 2.5e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38646,
+      "change": 7e-06
+     },
+     "20252026": {
+      "logloss": 0.39067,
+      "change": 2.5e-05
+     }
+    },
+    "what": "team defense memory (games)",
+    "was": 15.0
+   },
+   {
+    "change": {
+     "model.TEAM_HL": 20.0
+    },
+    "ok": false,
+    "score": 1.1e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38647,
+      "change": 1.1e-05
+     },
+     "20252026": {
+      "logloss": 0.39063,
+      "change": -1.7e-05
+     }
+    },
+    "what": "team defense memory (games)",
+    "was": 15.0
+   },
+   {
+    "change": {
+     "model.K_FIN_XG": 30.0
+    },
+    "ok": false,
+    "score": 6e-05,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38652,
+      "change": 6e-05
+     },
+     "20252026": {
+      "logloss": 0.39068,
+      "change": 3.3e-05
+     }
+    },
+    "what": "finishing shrinkage (expected goals of evidence)",
+    "was": 40.0
+   },
+   {
+    "change": {
+     "model.K_FIN_XG": 50.0
+    },
+    "ok": false,
+    "score": -4e-06,
+    "windows": {
+     "20242025": {
+      "logloss": 0.38643,
+      "change": -2.4e-05
+     },
+     "20252026": {
+      "logloss": 0.39064,
+      "change": -4e-06
+     }
+    },
+    "what": "finishing shrinkage (expected goals of evidence)",
+    "was": 40.0
+   }
+  ],
+  "adopted": null,
+  "baseline": {
+   "20242025": {
+    "logloss": 0.3864575488680188,
+    "mean_p": 0.14587092525126646,
+    "rate": 0.1496422893481717
+   },
+   "20252026": {
+    "logloss": 0.3906463834179057,
+    "mean_p": 0.15480850617354192,
+    "rate": 0.15164800127535769
+   }
+  },
+  "next": 1,
+  "minutes": 5.3,
+  "dry": false
  }
 ]
