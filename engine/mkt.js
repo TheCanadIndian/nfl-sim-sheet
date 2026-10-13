@@ -11,6 +11,19 @@
   const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z ]/g, '').replace(/\b(jr|sr|ii|iii|iv)\b/g, '').replace(/\s+/g, ' ').trim();
   const cents = p => p == null ? '–' : Math.round(p * 100) + '¢';
+  // price display for prediction-market contracts: cents (as listed), American odds or a payout multiplier.
+  // Odds / multiplier include Kalshi's taker fee (7% x p x (1-p)), so they're what a $1 YES bet really pays.
+  let PXF = 'am';                                   // default: American odds
+  try { PXF = localStorage.getItem('simpx-v1') || 'am'; } catch (e) {}
+  const px = (p, src) => {
+    if (p == null) return '–';
+    if (PXF === 'c') return cents(p);
+    const q = Math.min(.999, p + ((src || 'kalshi') === 'kalshi' ? .07 * p * (1 - p) : 0));
+    if (PXF === 'x') return (1 / q).toFixed(1 / q < 10 ? 2 : 1) + 'x';
+    const o = q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+    return (o > 0 ? '+' : '') + o;
+  };
+  const pxSwitch = () => `<span class="pxs" role="group" aria-label="Price format">${[['c', '¢'], ['am', 'odds'], ['x', 'x']].map(([k, l]) => `<button type="button" data-pxf="${k}" aria-pressed="${PXF === k}" title="${k === 'c' ? 'Contract price in cents' : k === 'am' ? 'American odds (Kalshi fee included)' : 'Payout per $1 staked (Kalshi fee included)'}">${l}</button>`).join('')}</span>`;
   const pc = p => p == null ? '–' : (p < .1 && p > 0 ? (p * 100).toFixed(1) : Math.round(p * 100)) + '%';
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
@@ -65,6 +78,9 @@
 .mkx-crowd{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:700;border:1px solid #e5534b;color:#e5534b;cursor:help}
 .mkx-c{display:grid;gap:1px;line-height:1.2;white-space:nowrap}
 .mkx-c small{color:var(--muted);font-size:11px}
+.pxs{display:inline-flex;margin-left:6px;border:1px solid var(--faint);border-radius:999px;overflow:hidden;vertical-align:1px}
+.pxs button{border:0;background:none;color:var(--muted);font:inherit;font-size:11px;padding:0 7px;line-height:17px;cursor:pointer}
+.pxs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .bet{flex-wrap:wrap}
 .bet .bk{flex-basis:100%;contain:inline-size;font-style:normal;font-size:11.5px;color:var(--muted);text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bet .bk b{font:inherit;font-weight:600;color:var(--ink)}
@@ -170,14 +186,14 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     const setBtn = slider && r.l != null && !['win', 'spread', 'anytime_td', 'first_td', 'first_goal'].includes(r.k) ? `<button class="mkx-set" data-mline="${r.l}" title="Move the slider to this line">use line</button>` : '';
     return `<div class="mkx-r${focus ? ' on' : ''}">
       <div class="mkx-l"><span class="mkx-src" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket (live)'}">${r.s === 'kalshi' ? 'K' : 'P'}</span><b>${esc(yl)}</b> <small>${esc(KLAB[r.k] || r.k)}</small>${isThin(r) ? `<span class="mkx-thin" title="Bid/ask gap ${Math.round(spr(r) * 100)}¢: a less-traded market">thin ${Math.round(spr(r) * 100)}¢</span>` : ''}${(r.pat || []).map(id => pchip(id)).join('')}${flowChips(r, e.y)}${setBtn}</div>
-      <div class="mkx-p">Price <b>${cents(r.ya)}</b> · ours <b>${pc(p)}</b>${best.v != null && best.v >= .02 ? ` · <span class="e ${weak ? '' : shade(best.v)}">+${(best.v * 100).toFixed(1)}% ${esc(best.lab)}</span>${lost(r.k) ? ` <span class="mkx-warn" title="${esc(lostTip(r.k))}">losing record</span>` : weak ? ' <span class="mkx-warn" title="On settled games of this type the market has been more accurate than our model">market ahead</span>' : ''}` : ' · <small>no edge</small>'}</div>
+      <div class="mkx-p">Price <b>${px(r.ya, r.s)}</b> · ours <b>${pc(p)}</b>${best.v != null && best.v >= .02 ? ` · <span class="e ${weak ? '' : shade(best.v)}">+${(best.v * 100).toFixed(1)}% ${esc(best.lab)}</span>${lost(r.k) ? ` <span class="mkx-warn" title="${esc(lostTip(r.k))}">losing record</span>` : weak ? ' <span class="mkx-warn" title="On settled games of this type the market has been more accurate than our model">market ahead</span>' : ''}` : ' · <small>no edge</small>'}</div>
       <div class="mkx-liq" title="Dollars you could spend within 3¢ of the best price on each side"><span>${esc(yl.length > 14 ? 'Yes' : yl)} <b>${usd(by)}</b></span><div class="mkx-bar">${tot > 0 ? `<i style="width:${by / tot * 100}%"></i><i style="width:${bn / tot * 100}%"></i>` : ''}</div><span><b>${usd(bn)}</b> ${esc(nl.length > 14 ? 'No' : nl)}</span></div>
     </div>`;
   }
   function head(title){
     const k = D && D.fetched ? new Date(D.fetched) : null;
     const t = k && !isNaN(k) ? k.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : '';
-    return `<div class="mkx-h"><span class="t">${esc(title)}</span><small>Kalshi as of ${t || '–'} · Polymarket live · bar = money to buy each side within 3¢</small></div>`;
+    return `<div class="mkx-h"><span class="t">${esc(title)}</span><small>Kalshi as of ${t || '–'} · Polymarket live · bar = money to buy each side within 3¢ ${pxSwitch()}</small></div>`;
   }
   const same = (a, b) => String(a) === String(b);
   const forGame = gid => (D ? D.rows.filter(r => same(r.g, gid)) : []);
@@ -233,6 +249,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return `<em class="bk${v ? ' v' : ''}${url ? ' go' : ''}${other ? ' nm' : ''}"${url ? ` data-go="${esc(url)}" role="link" tabindex="0"` : ''} title="${tip}"><b>${am(price)}</b> ${esc(BKS[bk] || bk)}${(v || va) ? ` · +${(ev * 100).toFixed(0)}%` : ''}${url ? ' ↗' : ''}</em>`;
     },
     bkFetched: () => (BK ? BK.fetched : null),
+    px, pxSwitch,
     // 'Book odds' tab: every game line and player prop with each book's price side by side.
     // games: [{id, label}] in page order. Filters (game / market / player search) work on the DOM, so typing keeps focus.
     oddsView(games){
@@ -384,7 +401,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const p = ours(r, model), e = edges(r, p), v = Math.max(e.y ?? -9, e.n ?? -9), side = (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no';
       const weak = (D.weak && D.weak.includes(r.k)) || !!lost(r.k);
       const fc = flowChips(r, e.y);
-      return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${cents(r.ya)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${lost(r.k) && v >= .02 ? ` <small class="muted" title="${esc(lostTip(r.k))}">losing record</small>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
+      return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)}${PXF === 'c' ? '' : ` = ${px(r.ya, r.s)} with fee`} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${px(r.ya, r.s)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${lost(r.k) && v >= .02 ? ` <small class="muted" title="${esc(lostTip(r.k))}">losing record</small>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
     },
   };
 
@@ -392,6 +409,11 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   const go = e => { const t = e.target.closest && e.target.closest('[data-go]'); if (!t) return false;
     e.preventDefault(); e.stopPropagation(); window.open(t.dataset.go, '_blank', 'noopener'); return true; };
   document.addEventListener('click', go, true);
+  document.addEventListener('click', e => {                 // price format switch (saved on this device)
+    const b = e.target.closest && e.target.closest('[data-pxf]'); if (!b) return;
+    PXF = b.dataset.pxf; try { localStorage.setItem('simpx-v1', PXF); } catch (e2) {}
+    rerender();
+  });
   // Book odds filters: hide/show rows in place (no redraw, so the search box keeps focus)
   const ovApply = () => {
     for (const tr of document.querySelectorAll('tr[data-ovr]'))
