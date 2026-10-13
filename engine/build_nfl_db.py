@@ -42,7 +42,8 @@ BASE = "https://github.com/nflverse/nflverse-data/releases/download"
 # dataset -> (release_tag, filename_template, table_name, season_scoped)
 FILES = {
     "pbp":         ("pbp",          "play_by_play_{s}.parquet",   "plays",        True),
-    "player_week": ("player_stats", "player_stats_{s}.parquet",   "player_week",  True),
+    # nflverse moved weekly player stats (player_stats/player_stats_{s} now 404s); renamed back in load_dataset
+    "player_week": ("stats_player", "stats_player_week_{s}.parquet", "player_week", True),
     "roster":      ("rosters",      "roster_{s}.parquet",         "rosters",      True),
     "snaps":       ("snap_counts",  "snap_counts_{s}.parquet",    "snaps",        True),
     "ftn":         ("ftn_charting", "ftn_charting_{s}.parquet",   "charting",     True),
@@ -101,6 +102,11 @@ def load_dataset(con, key, season, report):
         if missing:
             report.append((f"pbp {season} cols", "NOTE",
                            f"{len(missing)} expected cols absent: {', '.join(missing[:6])}"))
+
+    if key == "player_week":
+        # the new stats_player file renamed a few columns; keep the names the models use
+        df = df.rename(columns={"team": "recent_team", "passing_interceptions": "interceptions",
+                                "sacks_suffered": "sacks", "sack_yards_lost": "sack_yards"})
 
     if key == "depth":
         # ~550k daily rows per season; the box-score model only needs skill positions.

@@ -580,7 +580,10 @@ def write_live(sport):
                     return []
                 if stem not in ctxs:
                     P = pd.read_csv(stem + "_players.csv")
-                    ctxs[stem] = PT.context(P, pd.read_csv(stem + "_teams.csv"), PT.defout_flags(stem, P))
+                    fl = PT.defout_flags(stem, P)
+                    for k, v in PT.usage_flags(stem, P).items():
+                        fl.setdefault(k, set()).update(v)
+                    ctxs[stem] = PT.context(P, pd.read_csv(stem + "_teams.csv"), fl)
                 yb, ya = r.get("yes_bid"), r.get("yes_ask")
                 mid = (yb + ya) / 2 if yb and ya else ya
                 return PT.tag_nfl(r["kind"], r.get("line"), mid, r.get("pid"), r["game"], ctxs[stem], low.get((r["game"], str(r.get("pid")), r["kind"])))

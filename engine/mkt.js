@@ -195,7 +195,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   }
   function pchip(id, extra){
     const P = D && D.patterns && D.patterns[id]; if (!P) return '';
-    return `<span class="mkx-pat ${P.sign > 0 ? 'up' : 'down'}" title="${esc(P.label)}: ${esc(P.desc)} ${esc(precord(P))}${extra ? ' · ' + esc(extra) : ''}">◆ ${esc(P.short)}${P.sign > 0 ? '' : ' ▼'}</span>`;
+    return `<span class="mkx-pat pat-${esc(id)} ${P.sign > 0 ? 'up' : 'down'}" title="${esc(P.label)}: ${esc(P.desc)} ${esc(precord(P))}${extra ? ' · ' + esc(extra) : ''}">◆ ${esc(P.short)}${P.sign > 0 ? '' : ' ▼'}</span>`;
   }
   function playerPats(gid, pid, name){
     const by = {};

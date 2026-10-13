@@ -41,6 +41,14 @@ PATTERNS = {
                     desc="Receiving overs for the WR2/WR3 when 2+ opposing corners/safeties are out (WRs +1.4 pts of target share)."),
     "lb_out": dict(short="LB out", sign=+1, label="TE1 facing a missing starting linebacker",
                    desc="Receiving overs for the TE1 when an opposing starting linebacker is out (TE1s +0.7 pts of target share)."),
+    "dog_wr": dict(short="dog WR", sign=+1, since="2026-10-13", label="Underdog wide receivers, receiving yards overs",
+                   desc="Receiving-yard overs for any WR on the underdog: beat Kalshi's price by 5-6 pts in weeks 1-3 and again in weeks 4-5."),
+    "wr3": dict(short="WR3 over", sign=+1, since="2026-10-13", label="Third (or lower) receiver, receiving yards overs",
+                desc="Receiving-yard overs for a team's WR3 and below: beat Kalshi's price by 4.6 pts (weeks 1-3) and 9 pts (weeks 4-5)."),
+    "tgt_dip": dict(short="share dip", sign=+1, since="2026-10-13", label="Receiver whose target share just dipped",
+                    desc="Catch / yardage overs for a WR or TE whose target share fell 4+ pts over his last 2 games vs his season: the market seems to overreact (+4 pts in weeks 4-5, small sample)."),
+    "rb_rec": dict(short="RB catches", sign=-1, since="2026-10-13", label="Running back receiving overs",
+                   desc="Catch and receiving-yard overs for RBs hit LESS often than priced in both weeks 1-3 and 4-5."),
     "low_total": dict(short="low total", sign=-1, label="Overs in a low-total game (42.5 or less)",
                       desc="Yardage and catch overs when the Vegas game total is 42.5 or less hit LESS often than priced."),
     "rb_td": dict(short="RB TD", sign=-1, label="Running back anytime TD",
@@ -90,6 +98,30 @@ def defout_flags(stem, players, con=None):
     return out
 
 
+def usage_flags(stem, players, con=None):
+    """{(game, pid): {'tgt_dip'}}: WR/TE whose target share over his last 2 games is 4+ pts below his season average
+    (3+ earlier games this season). Live: <stem>_usage.json; settled (con given): rebuilt from weekly stats."""
+    path = stem + "_usage.json"
+    if con is None:
+        return {tuple(k.split("|", 1)): set(v) for k, v in json.load(open(path)).items()} if os.path.exists(path) else {}
+    base = os.path.basename(stem)
+    season, week = int(base[:4]), int(base[7:9])
+    pw = pd.read_sql("SELECT player_id, week, target_share FROM player_week WHERE season = ? AND week < ?", con, params=(season, week))
+    out = {}
+    for r in players[players.pos.isin(["WR", "TE"])].drop_duplicates(["game_id", "player_id"]).itertuples():
+        h = pw[pw.player_id == r.player_id].sort_values("week")
+        if len(h) >= 3 and h.target_share.tail(2).mean() - h.target_share.mean() <= -.04:
+            out.setdefault((r.game_id, str(r.player_id)), set()).add("tgt_dip")
+    return out
+
+
+def write_usage(stem, players, con):
+    """Save this week's target-share dips for the live pattern tags (called by the NFL run)."""
+    f = usage_flags(stem, players, con)
+    json.dump({f"{g}|{p}": sorted(v) for (g, p), v in f.items()}, open(stem + "_usage.json", "w"))
+    return len(f)
+
+
 def context(players, teams, dflags=None):
     """{(game, pid): dict(pos, team, fav, total, role{stat}, dflags)} from one week's projection tables."""
     T = teams.set_index(["game_id", "team"])
@@ -100,6 +132,8 @@ def context(players, teams, dflags=None):
             key = (gid, str(r.player_id))
             c = ctx.setdefault(key, dict(pos=r.pos, team=team, role={}))
             c["role"][stat] = rank
+            if stat == "rec_yds" and r.pos == "WR":
+                c["wr_rank"] = 1 + sum(1 for q in x.itertuples() if q.pos == "WR" and q.mean > r.mean)
             c["dflags"] = (dflags or {}).get(key, set())
             if "total" not in c and (gid, team) in T.index and (gid, r.opp) in T.index:
                 me, op = T.loc[(gid, team), "vegas_implied"], T.loc[(gid, r.opp), "vegas_implied"]
@@ -121,6 +155,12 @@ def tag_nfl(kind, line, price, pid, game, ctx, ladder_low):
             out.append("low_total")
         if kind == "rec_yds" and c["pos"] == "WR" and c["role"].get("rec_yds") == 1 and fav is False:
             out.append("dog_wr1")
+        if kind == "rec_yds" and c["pos"] == "WR" and fav is False:
+            out.append("dog_wr")
+        if kind == "rec_yds" and c["pos"] == "WR" and (c.get("wr_rank") or 0) >= 3:
+            out.append("wr3")
+        if kind in ("rec", "rec_yds") and c["pos"] == "RB":
+            out.append("rb_rec")
         if kind == "pass_yds" and c["pos"] == "QB" and fav is False:
             out.append("dog_qb")
         if line is not None and ladder_low is not None and abs(line - ladder_low) < 1e-9:
@@ -173,7 +213,10 @@ def main():
                 continue
             if stem not in ctx_cache:
                 P = pd.read_csv(stem + "_players.csv")
-                ctx_cache[stem] = context(P, pd.read_csv(stem + "_teams.csv"), defout_flags(stem, P, con))
+                fl = defout_flags(stem, P, con)
+                for k, v in usage_flags(stem, P, con).items():
+                    fl.setdefault(k, set()).update(v)
+                ctx_cache[stem] = context(P, pd.read_csv(stem + "_teams.csv"), fl)
             m = G.mid(r)
             pats = tag_nfl(r["kind"], r.get("line"), m, r.get("pid"), r["game"], ctx_cache[stem], low.get((r["game"], str(r.get("pid")), r["kind"])))
             if not pats:
@@ -182,18 +225,18 @@ def main():
             if y is None or m is None:
                 continue
             for p in pats:
-                rows.append(dict(p=p, y=y, m=m, pg=f"{r['game']}|{r.get('pid')}", tracked=date >= TRACK_FROM, src=r["source"]))
+                rows.append(dict(p=p, y=y, m=m, pg=f"{r['game']}|{r.get('pid')}", tracked=date >= PATTERNS.get(p, {}).get("since", TRACK_FROM), src=r["source"]))
     d = pd.DataFrame(rows, columns=["p", "y", "m", "pg", "tracked", "src"])
     rec = lambda x: dict(n=int(len(x)), player_games=int(x.pg.nunique()), hit=round(float(x.y.mean()), 4) if len(x) else None,
                          priced=round(float(x.m.mean()), 4) if len(x) else None)
     out = {}
     for pid, meta in PATTERNS.items():
         x = d[d.p == pid]
-        out[pid] = dict(meta, found=rec(x[~x.tracked]), tracking=rec(x[x.tracked]), since=TRACK_FROM)
+        out[pid] = dict(meta, found=rec(x[~x.tracked]), tracking=rec(x[x.tracked]), since=meta.get("since", TRACK_FROM))
     json.dump(dict(patterns=out, timing=TIMING), open(os.path.join(HERE, "markets", "patterns.json"), "w"), indent=1)
     for k, v in out.items():
         f, t = v["found"], v["tracking"]
-        print(f"{v['label'][:52]:52s} found: {f['hit'] if f['hit'] is not None else '-'} vs {f['priced'] if f['priced'] is not None else '-'} (n {f['n']}) | since {TRACK_FROM}: n {t['n']}")
+        print(f"{v['label'][:52]:52s} found: {f['hit'] if f['hit'] is not None else '-'} vs {f['priced'] if f['priced'] is not None else '-'} (n {f['n']}) | since {v['since']}: n {t['n']}")
 
 
 if __name__ == "__main__":

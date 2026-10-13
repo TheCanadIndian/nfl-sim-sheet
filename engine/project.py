@@ -269,6 +269,16 @@ def future_actives(con, todo, season, week, overrides):
 
 
 COUNT_STATS = {"att", "cmp", "pass_td", "ints", "car", "tgt", "rec", "tds"}
+# Workhorse RBs: our rushing-yard projections ran low for RBs projected 40+ yds (walk-forward backtest, late 2025 and 2026:
+# 52.3% landed in the top half of our range; +3% fixes it without hurting early 2025). Scale their rushing-yard draws.
+RB_BIG, RB_BOOST = 40.0, 1.03
+
+
+def rb_boost(pos, s):
+    if pos == "RB" and np.median(s["rush_yds"]) >= RB_BIG:
+        s["rush_yds"] = np.round(s["rush_yds"] * RB_BOOST)
+
+
 DIST_STATS = ["pass_yds", "att", "cmp", "pass_td", "ints", "rush_yds", "car", "tgt", "rec",
               "rec_yds", "tds"]
 
@@ -439,6 +449,7 @@ def main():
                     s.update(res["qb_line"])
                 if max(s["tgt"].mean(), s["car"].mean(), s.get("att", np.zeros(1)).mean()) < 0.5:
                     continue
+                rb_boost(p.pos, s)
                 box[(t.team, p.name)] = s
                 keyrows.append((g.game_id, t.team, p.player_id, p.name))
                 s_all = dict(s, tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])

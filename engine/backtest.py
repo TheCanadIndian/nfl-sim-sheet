@@ -43,6 +43,8 @@ def player_samples(res, t):
                  anytime_td=((pl["rec_td"][:, j] + pl["rush_td"][:, j]) > 0).astype(float))
         if j == res["qi"]:
             s.update(res["qb_line"])
+        if p.pos == "RB" and np.median(s["rush_yds"]) >= 40.0:     # same workhorse-RB correction as project.py (RB_BIG, RB_BOOST)
+            s["rush_yds"] = np.round(s["rush_yds"] * 1.03)
         out[p.player_id] = (p, s)
     return out
 
