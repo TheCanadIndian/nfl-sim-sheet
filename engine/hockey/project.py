@@ -312,6 +312,15 @@ def main():
         print(f"usage ranking: {rows[rows.game_id.isin(sids)].game_id.nunique()} games of shift charts this season")
     except Exception as e:
         print("usage ranking skipped:", type(e).__name__, e)
+    # shots on goal (sog.py): expected shots and the chance of going over each common line
+    try:
+        import sqlite3
+        import sog as SOG
+        sg = SOG.project(sqlite3.connect(M.DB), pg[["game_id", "team", "opp", "player_id", "pos", "e_np_toi", "e_pp_toi"]], todo)
+        for c in [c for c in sg.columns if c.startswith("sog")]:
+            pg[c] = sg[c].to_numpy()
+    except Exception as e:
+        print("shots on goal skipped:", type(e).__name__, e)
     pp_rank = pg.groupby(["game_id", "team"]).e_pp_toi.rank(ascending=False, method="first")
     pg["pp_role"] = np.where(has_units, pg.unit, np.select(
         [(pp_rank <= 5) & (pg.e_pp_toi >= 45), (pp_rank <= 10) & (pg.e_pp_toi >= 20)], ["PP1", "PP2"], ""))
@@ -361,7 +370,10 @@ def main():
                               lam=round(float(r.lam), 3), toi=round(float(r.e_np_toi + r.e_pp_toi) / 60, 1),
                               pp=r.pp_role, line=r.line, new=bool(r.games_prior < 1),
                               h2h=h2h.get((int(r.player_id), r.opp)),
-                              ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3)) for r in x.itertuples()])
+                              ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3),
+                              sog=round(float(r.sog), 2) if "sog" in x and pd.notna(r.sog) else None,
+                              so=[round(float(getattr(r, f"sog_o{k}")), 3) for k in ("05", "15", "25", "35", "45")] if "sog" in x and pd.notna(r.sog) else None)
+                         for r in x.itertuples()])
         lam_t = {t: float(-np.log(1 - pg[(pg.game_id == g.game_id) & (pg.team == t)].p_goal.clip(upper=.999)).sum())
                  for t in (g.away, g.home)}
         o = GS.outcome(lam_t[g.home], lam_t[g.away])
@@ -643,8 +655,8 @@ function side(s, opp, gid){
   const max = .5, mk = window.MKT && MKT.has(), bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(gid));
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
     ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
-    <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="${UTIP}">Usage rank</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${bo ? '<th class="l pcd" title="Best anytime-goal price at your sportsbooks (choose them under the game bets). Green = our chance beats it by 5%+">Best odds</th>' : ''}${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
-    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big kp">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${urCell(p, gid)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
+    <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th class="l">Pos</th><th class="l" style="min-width:70px">Chance</th><th>P(goal)</th><th>Fair</th><th title="${UTIP}">Usage rank</th><th title="Chance to score the game's first goal">1st goal</th><th>Fair</th><th>TOI</th><th class="l" title="Expected shots on goal, and the chance of 2+ and 3+ (shots model: calibrated within ~1 pt on 2024-26)">Shots</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${bo ? '<th class="l pcd" title="Best anytime-goal price at your sportsbooks (choose them under the game bets). Green = our chance beats it by 5%+">Best odds</th>' : ''}${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
+    ${s.players.map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}${p.sog != null ? ` · ${p.sog.toFixed(1)} shots` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="l"><span class="pos">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span></td><td class="l">${bar(p.p, max)}</td><td class="big kp">${pct(p.p)}</td><td>${odds(p.fair)}</td><td>${urCell(p, gid)}</td><td>${p.pf != null ? pct(p.pf) : '–'}</td><td class="muted">${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     </tbody></table></div></div>`;
 }
 function picksKey(){
