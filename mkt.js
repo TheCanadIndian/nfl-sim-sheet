@@ -412,14 +412,20 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e) return '<span class="muted">–</span>';
       const pick = side => { const all = Object.entries(e[side] || {}).sort((a, b) => dec(b[1][0]) - dec(a[1][0]));
         const L = all.filter(([k]) => mine(k)); return L.length ? [L[0], false] : all.length ? [all[0], true] : null; };
+      // NFL props: our chance averaged 50/50 with the market's no-vig chance (books pricing both sides). On Kalshi 2026
+      // that blend with a 5%+ edge returned +8.4%; our projection alone lost. NHL keeps our number (its top picks beat Kalshi).
+      const nvOf = sd => { if (sport !== 'nfl' || !e.o || !e.u) return null;
+        const xs = Object.keys(e[sd] || {}).filter(k => (e[sd === 'o' ? 'u' : 'o'] || {})[k]).map(k => { const a = 1 / dec(e[sd][k][0]), b = 1 / dec(e[sd === 'o' ? 'u' : 'o'][k][0]); return a / (a + b); }).sort((x, y) => x - y);
+        return xs.length ? xs[(xs.length - 1) >> 1] : null; };
       const opts = (e.u ? ['o', 'u'] : ['o']).map(sd => { const c = pick(sd); if (!c) return null;
-        const p = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p; return {sd, k: c[0][0], o: c[0][1][0], path: c[0][1][1], other: c[1], ev: p == null ? null : p * dec(c[0][1][0]) - 1}; })
+        const p0 = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p, m = nvOf(sd), p = p0 != null && m != null ? (p0 + m) / 2 : p0;
+        return {sd, k: c[0][0], o: c[0][1][0], path: c[0][1][1], other: c[1], p0, m, ev: p == null ? null : p * dec(c[0][1][0]) - 1}; })
         .filter(Boolean).sort((a, b) => (a.other - b.other) || ((b.ev ?? -9) - (a.ev ?? -9)));
       const c = opts[0]; if (!c) return '<span class="muted">–</span>';
       const url = `https://www.gambly.com/deeplink/odds/${c.path}?utm_campaign=${encodeURIComponent(PR.partner || '')}`;
       const v = !c.other && !e.w && c.ev != null && c.ev >= (FL && FL.min_ev || .05);
       const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
-      const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · our edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
+      const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · ${c.m != null ? `ours ${(c.p0 * 100).toFixed(1)}%, market ${(c.m * 100).toFixed(1)}%, blended ` : ''}edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
       return `<a class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}" href="${esc(url)}" target="_blank" rel="noopener" title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</a>`;
     },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
@@ -431,7 +437,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       let o = typeof v === 'string' ? null : {k: v.k, o: v.o, u: v.u};
       if (o && MY.length && v.all && v.p != null){             // only the viewer's books: best of those, and only if it still clears the bar
         const c = Object.entries(v.all).filter(([k]) => mine(k)).map(([k, x]) => ({k, o: x[0], u: x[1]})).sort((x, y) => dec(y.o) - dec(x.o))[0];
-        if (!c || v.p * dec(c.o) - 1 < min) return '';
+        const q = v.m != null ? (v.p + v.m) / 2 : v.p;       // NFL props: 50/50 with the market, as the cloud judged it
+        if (!c || q * dec(c.o) - 1 < min) return '';
         o = c;
       }
       const tip = `Value: ${o ? esc(FULL[o.k] || o.k) : 'at least one major sportsbook'} pays ${Math.round(min * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
