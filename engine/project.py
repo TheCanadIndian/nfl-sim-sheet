@@ -136,7 +136,46 @@ def espn_out(todo):
                 for i in t.get("injuries", []):
                     if i.get("status") in ("Out", "Doubtful"):
                         out[(team, _norm(i.get("athlete", {}).get("displayName")))] = i["status"]
+            # the official inactives (posted ~90 min before kickoff): ESPN's game roster marks them didNotPlay.
+            # They include late / unlisted scratches the injury feeds miss (e.g. DJ Moore, week 5 2026).
+            for c in e.get("competitions", [{}])[0].get("competitors", []):
+                team = ESPN_TEAM.get(c["team"]["abbreviation"], c["team"]["abbreviation"])
+                try:
+                    ro = requests.get(f"https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/{e['id']}/competitions/{e['id']}"
+                                      f"/competitors/{c['team']['id']}/roster", headers=H, timeout=20).json()
+                except Exception:
+                    continue
+                dnp = [x for x in ro.get("entries", []) if x.get("didNotPlay")]
+                if not 1 <= len(dnp) <= 15:                       # not posted yet (or not the inactives list)
+                    continue
+                for x in dnp:
+                    name = _espn_name(x)
+                    if name:
+                        out.setdefault((team, _norm(name)), "Out")
     return out
+
+
+_ESPN_NAMES = {}
+
+
+def _espn_name(entry):
+    """Full name for an ESPN game-roster entry (which only carries the last name): our rosters' espn_id, else ESPN."""
+    import requests
+    pid = str(entry.get("playerId"))
+    if not _ESPN_NAMES:
+        try:
+            import sqlite3
+            con = sqlite3.connect(os.path.join(os.path.dirname(os.path.abspath(__file__)), "nfl.db"))
+            _ESPN_NAMES.update({str(i): n for i, n in con.execute("SELECT espn_id, full_name FROM rosters WHERE espn_id IS NOT NULL")})
+        except Exception:
+            _ESPN_NAMES[""] = ""
+    if pid in _ESPN_NAMES:
+        return _ESPN_NAMES[pid]
+    try:
+        a = requests.get(entry["athlete"]["$ref"], headers={"User-Agent": "Mozilla/5.0"}, timeout=20).json()
+        return a.get("fullName") or a.get("displayName")
+    except Exception:
+        return None
 
 
 def espn_lines(todo):
