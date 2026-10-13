@@ -33,10 +33,11 @@
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
   const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'Polymarket', 'Poly US', 'ProphetX', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'Fliff', 'Bally Bet', 'betPARX'];
   let MY = [], bkOpen = null;
-  const OV = {g: 'all', m: 'all', q: ''};          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
+  const OV = {g: 'all', m: 'all', q: '', alt: false};          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
   const mine = k => !MY.length || MY.includes(k);
   // Pinnacle's no-vig is on the prop when its line matches ours (TD props have no line: .5). w: 2 two-way (multiplicative), 1 one-way (power)
+  const pinHow = (w, pl) => w === 1 ? 'one-way price, power de-vig' : w === 3 ? `carried from Pinnacle’s ${pl != null ? pl + ' ' : ''}line by our distribution’s shape` : 'both sides, multiplicative de-vig';
   const pinOk = e => !!(e && e.pin && e.pin.o != null && Math.abs(e.pin.l - (e.l ?? .5)) < 1e-9);
   const NOBET = new Set(['Pinnacle']);             // sharp reference only: never a 'best price' (not bettable from the US)
   const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
@@ -125,6 +126,11 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .vtag b{font-weight:800}
 @media (max-width:640px){.vtag{display:block;width:fit-content;white-space:normal;max-width:100%;line-height:1.35;margin:3px 4px 0 0}.vtag .pinv{margin-left:0}td.name:has(> .vtag){white-space:normal;max-width:62vw}}
 .pinv b{color:var(--good);font-weight:800}.pinv.neg b{color:var(--muted);font-weight:600}
+.pev .mine{color:var(--good);font-weight:700}.pev h3 .mine{font-weight:600}
+.altb{display:inline-block;padding:0 5px;border-radius:4px;border:1px solid var(--faint);font-size:10px;line-height:14px;text-transform:uppercase;letter-spacing:.05em}
+.pev details summary{cursor:pointer;color:var(--muted);font-size:12.5px;padding:4px 0}.pev details ol{margin-top:4px}
+.ovt i.anc{font-style:normal;color:var(--muted);margin-right:2px}
+a.pinv{color:var(--muted)}a.pinv:hover{border-color:var(--good)}
 .ovt td small.pe{color:var(--good);font-weight:700}
 .pev{margin:10px 0 14px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
 .pev h3{margin:0 0 6px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -289,9 +295,15 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         for (const [nm, kinds] of Object.entries(X || {})) for (const [k, e] of Object.entries(kinds)){
           const name = nm.replace(/\b\w/g, c => c.toUpperCase());
           const pin = pinOk(e) ? e.pin.o : null;
+          const pl = e.pin ? (e.pin.pl ?? e.pin.l) : null;
+          for (const [al, x] of Object.entries(e.a || {}).sort((a, b) => a[0] - b[0])){
+            const ap = x.pin ?? null, base = {gid: g.id, m: mkey(k), who: name, w: e.w, pw: ap != null ? 3 : null, pl, alt: 1};
+            add({...base, o: 11, what: `${KL[k] || k} o${al}`, p: x.p, pin: ap}, x.o, PR.partner);
+            add({...base, o: 11.5, what: `${KL[k] || k} u${al}`, p: x.p == null ? null : 1 - x.p, pin: ap == null ? null : 1 - ap}, x.u, PR.partner);
+          }
           if (e.l == null) add({gid: g.id, m: mkey(k), o: 10, who: name, what: KL[k] || k, p: e.p, w: e.w, pin, pw: pin != null ? e.pin.w : null}, e.o, PR.partner);
-          else { add({gid: g.id, m: mkey(k), o: 10, who: name, what: `${KL[k] || k} o${e.l}`, p: e.p, w: e.w, pin, pw: pin != null ? e.pin.w : null}, e.o, PR.partner);
-                 add({gid: g.id, m: mkey(k), o: 10.5, who: name, what: `${KL[k] || k} u${e.l}`, p: e.p == null ? null : 1 - e.p, w: e.w, pin: pin == null ? null : 1 - pin, pw: pin != null ? e.pin.w : null}, e.u, PR.partner); }
+          else { add({gid: g.id, m: mkey(k), o: 10, who: name, what: `${KL[k] || k} o${e.l}`, p: e.p, w: e.w, pin, pw: pin != null ? e.pin.w : null, pl}, e.o, PR.partner);
+                 add({gid: g.id, m: mkey(k), o: 10.5, who: name, what: `${KL[k] || k} u${e.l}`, p: e.p == null ? null : 1 - e.p, w: e.w, pin: pin == null ? null : 1 - pin, pw: pin != null ? e.pin.w : null, pl}, e.u, PR.partner); }
         }
       }
       if (!rows.length) return `<section class="panel"><div class="phead"><h2>Book odds</h2></div><p class="note">No sportsbook prices yet for these games. Game lines appear about a day before each game; player props when Unabated's props feed is up (it retries every 15 minutes).</p></section>`;
@@ -303,6 +315,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const mkts = [...new Set(rows.map(r => r.m))], mlab = m => m === 'lines' ? 'Game lines' : KL[m] || m;
       const glab = Object.fromEntries(games.map(g => [String(g.id), g.label]));
       const show = r => (OV.g === 'all' || String(r.gid) === OV.g) && (OV.m === 'all' || r.m === OV.m) && (!OV.q || norm(r.who).includes(norm(OV.q)));
+      const showRow = r => show(r) && (!r.alt || OV.alt);
       const amS = o => (o > 0 ? '+' : '') + o;
       const fairAm = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
       let body = '', last = null;
@@ -318,25 +331,27 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           const inner = `<span class="pp">${amS(x.o)}</span>${pe != null ? `<small class="${pe > 0 ? 'pe' : ''}">${pe > 0 ? '+' : ''}${(pe * 100).toFixed(1)}%</small>` : ''}`, cls = `${dec(x.o) === best ? 'bst' : ''}${v ? ' v' : ''}${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}`;
           return `<td class="${cls}" title="${esc(t)}">${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener">${inner}</a>` : inner}</td>`; }).join('');
         const fair = r.p == null ? '<td class="muted">–</td>' : `<td title="Our chance ${(r.p * 100).toFixed(1)}%${r.w ? ' (low trust: outside our top 3 or likely news)' : ''}">${amS(fairAm(r.p))}<small>${(r.p * 100).toFixed(0)}%</small></td>`;
-        const pinCell = hasPin ? (r.pin != null ? `<td title="Pinnacle no-vig ${(r.pin * 100).toFixed(1)}% (${r.pw === 1 ? 'one-way price: power de-vig' : 'both sides: multiplicative de-vig'})">${amS(fairAm(r.pin))}<small>${(r.pin * 100).toFixed(0)}%</small></td>` : '<td class="muted">–</td>') : '';
-        body += `<tr data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}><td class="l name"><b>${esc(r.who)}</b><small>${esc(r.what)}</small></td>${fair}${pinCell}${cells}</tr>`;
+        const pinCell = hasPin ? (r.pin != null ? `<td title="Pinnacle no-vig ${(r.pin * 100).toFixed(1)}% (${pinHow(r.pw, r.pl)})">${r.pw === 3 ? '<i class="anc" aria-hidden="true">≈</i>' : ''}${amS(fairAm(r.pin))}<small>${(r.pin * 100).toFixed(0)}%</small></td>` : '<td class="muted">–</td>') : '';
+        body += `<tr data-ovr${r.alt ? ' data-alt="1"' : ''} data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${showRow(r) ? '' : ' hidden'}><td class="l name"><b>${esc(r.who)}</b><small>${esc(r.what)}</small></td>${fair}${pinCell}${cells}</tr>`;
       }
       // props where a bettable book (yours, if chosen) pays more than Pinnacle's no-vig price: best book per prop, by EV
       let pev = '';
       if (hasPin){
         const its = rows.filter(r => r.pin != null).map(r => {
-          const c = Object.entries(r.P).filter(([k]) => !NOBET.has(k) && mine(k)).map(([k, x]) => ({k, x, ev: r.pin * dec(x.o) - 1})).sort((a, b) => b.ev - a.ev)[0];
+          const c = Object.entries(r.P).filter(([k]) => !NOBET.has(k)).map(([k, x]) => ({k, x, ev: r.pin * dec(x.o) - 1})).sort((a, b) => b.ev - a.ev)[0];
           return c && c.ev > 0 ? {r, ...c} : null; }).filter(Boolean).sort((a, b) => b.ev - a.ev);
-        pev = `<div class="pev"><h3>Beats Pinnacle’s no-vig${MY.length ? ' at your books' : ''}</h3>${its.length ? `<ol>${its.map(({r, k, x, ev}) => {
-          const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)} · Pin ${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} ${esc(BKS[k] || k)}<i>+${(ev * 100).toFixed(1)}%</i></span>`;
-          return `<li data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}>${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener" title="${esc(FULL[k] || k)} pays ${(ev * 100).toFixed(1)}% more than Pinnacle’s fair price. Tap to open this bet.">${inner}</a>` : `<a>${inner}</a>`}</li>`; }).join('')}</ol>`
-          : `<p class="small muted" style="margin:0">None ${MY.length ? 'of your books' : 'of the books'} pays more than Pinnacle’s fair price right now.</p>`}</div>`;
+        const li = ({r, k, x, ev}) => {
+          const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)}${r.alt ? ' <span class="altb">alt</span>' : ''} · Pin ${r.pw === 3 ? '≈' : ''}${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} <span class="${MY.includes(k) ? 'mine' : ''}">${esc(BKS[k] || k)}</span><i>+${(ev * 100).toFixed(1)}%</i></span>`;
+          return `<li data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}>${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener" title="${esc(FULL[k] || k)} pays ${(ev * 100).toFixed(1)}% more than Pinnacle’s fair price. Tap to open this bet.">${inner}</a>` : `<a>${inner}</a>`}</li>`; };
+        const TOP = 12;
+        pev = `<div class="pev"><h3>Beats Pinnacle’s no-vig · all books${MY.length ? ' · <span class="mine">yours in green</span>' : ''}</h3>${its.length ? `<ol>${its.slice(0, TOP).map(li).join('')}</ol>${its.length > TOP ? `<details><summary>${its.length - TOP} more</summary><ol>${its.slice(TOP).map(li).join('')}</ol></details>` : ''}`
+          : `<p class="small muted" style="margin:0">No book pays more than Pinnacle’s fair price right now.</p>`}${its.some(i => i.r.pw === 3) ? `<p class="small muted" style="margin:6px 0 0">≈ Pinnacle doesn’t post this number (alt line, or a different main line), so its price is carried over with our distribution’s shape.</p>` : ''}</div>`;
       }
       const t = x => x && x.fetched ? new Date(x.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : null;
       const when = [t(fresh(BK) && BK) && `game lines ${t(BK)}`, t(fresh(PR) && PR) && `props ${t(PR)}`].filter(Boolean).join(' · ');
       return `<section class="panel ov"><div class="phead"><h2>Book odds</h2><span class="small muted">${esc(when)}</span></div>
         <div class="ovc"><select id="ov-g" aria-label="Game"><option value="all">All games</option>${games.filter(g => rows.some(r => String(r.gid) === String(g.id))).map(g => `<option value="${esc(String(g.id))}"${OV.g === String(g.id) ? ' selected' : ''}>${esc(g.label)}</option>`).join('')}</select>
-        <div class="ovm" role="group" aria-label="Market">${['all', ...mkts].map(m => `<button type="button" data-ovm-pick="${esc(m)}" aria-pressed="${OV.m === m}">${m === 'all' ? 'All' : esc(mlab(m))}</button>`).join('')}</div>
+        <div class="ovm" role="group" aria-label="Market">${['all', ...mkts].map(m => `<button type="button" data-ovm-pick="${esc(m)}" aria-pressed="${OV.m === m}">${m === 'all' ? 'All' : esc(mlab(m))}</button>`).join('')}${rows.some(r => r.alt) ? `<button type="button" class="ovalt" data-ovalt aria-pressed="${OV.alt}" title="Show alternate lines in the table">+ Alt lines</button>` : ''}</div>
         <input id="ov-q" type="search" placeholder="Player or team" value="${esc(OV.q)}" aria-label="Search players"></div>
         <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props: NHL anytime goal and NFL anytime TD, added close to each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
         ${bkOpen === 'ov' ? `<div class="bkpanel">${[...used].sort(ord).map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : ''}
@@ -461,11 +476,16 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
       const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · ${c.m != null ? `ours ${(c.p0 * 100).toFixed(1)}%, ${e.pin ? 'Pinnacle no-vig' : 'market'} ${(c.m * 100).toFixed(1)}%, blended ` : ''}edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
       const pinP = sport === 'nfl' && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
-      // the side and book that beat Pinnacle's no-vig by the most (your books first)
-      const pb = pinP == null ? null : opts.filter(x => !x.other || opts.every(y => y.other)).map(x => { const q = x.sd === 'o' ? e.pin.o : 1 - e.pin.o; return {...x, q, pe: q * dec(x.o) - 1}; }).sort((a, b) => b.pe - a.pe)[0];
-      const pinChip = !pb ? '' : pb.pe > 0
-        ? ` <span class="pinv" title="Pinnacle's no-vig chance ${(pb.q * 100).toFixed(1)}% (${e.pin.w === 1 ? 'one-way price, power de-vig' : 'both sides, multiplicative de-vig'}); ${esc(FULL[pb.k] || pb.k)} ${am(pb.o)} pays ${(pb.pe * 100).toFixed(1)}% more than Pinnacle's fair price">Pin ${pb.sd !== c.sd ? (pb.sd === 'o' ? 'O ' : 'U ') : ''}${(pb.q * 100).toFixed(0)}% · <b>+${(pb.pe * 100).toFixed(1)}%</b> ${esc(BKS[pb.k] || pb.k)}${pb.sd !== c.sd || pb.k !== c.k ? ' ' + am(pb.o) : ''}</span>`
-        : ` <span class="pinv neg" title="Pinnacle's no-vig chance for this side (${e.pin.w === 1 ? 'one-way price, power de-vig' : 'both sides, multiplicative de-vig'}); no book beats its fair price">Pin ${(pinP * 100).toFixed(0)}%</span>`;
+      // the bet that beats Pinnacle's no-vig by the most: any book, main or alt line
+      const cands = [];
+      const addC = (sd, line, q, prices, alt) => { if (q == null) return; for (const [k, v] of Object.entries(prices || {})){
+        if (NOBET.has(k) || SKIP.has(k) || !Array.isArray(v)) continue; const qq = sd === 'o' ? q : 1 - q; cands.push({sd, line, q: qq, k, o: v[0], path: v[1], alt, pe: qq * dec(v[0]) - 1}); } };
+      if (pinP != null){ addC('o', e.l, e.pin.o, e.o, 0); addC('u', e.l, e.pin.o, e.u, 0); }
+      if (sport === 'nfl') for (const [al, x] of Object.entries(e.a || {})){ addC('o', +al, x.pin, x.o, 1); addC('u', +al, x.pin, x.u, 1); }
+      const pb = cands.sort((a, b) => b.pe - a.pe)[0];
+      const pinChip = pb && pb.pe > 0
+        ? ` <a class="pinv" href="${esc(`https://www.gambly.com/deeplink/odds/${pb.path}?utm_campaign=${encodeURIComponent(PR.partner || '')}`)}" target="_blank" rel="noopener" title="${esc(`${pb.line != null ? (pb.sd === 'o' ? 'Over ' : 'Under ') + pb.line + (pb.alt ? ' (alt line)' : '') + ': ' : ''}${FULL[pb.k] || pb.k} ${am(pb.o)} pays ${(pb.pe * 100).toFixed(1)}% more than Pinnacle's fair price (${(pb.q * 100).toFixed(1)}%: ${pinHow(pb.alt ? 3 : e.pin && e.pin.w, e.pin && (e.pin.pl ?? e.pin.l))}). Tap to open this bet.`)}">Pin <b>+${(pb.pe * 100).toFixed(1)}%</b> ${pb.line != null && (pb.alt || pb.sd !== c.sd) ? (pb.sd === 'o' ? 'O' : 'U') + pb.line + ' ' : ''}${esc(BKS[pb.k] || pb.k)}${pb.alt || pb.sd !== c.sd || pb.k !== c.k ? ' ' + am(pb.o) : ''}</a>`
+        : pinP != null ? ` <span class="pinv neg" title="Pinnacle's no-vig chance for this side (${pinHow(e.pin.w, e.pin.pl ?? e.pin.l)}); no book beats its fair price">Pin ${e.pin.w === 3 ? '≈' : ''}${(pinP * 100).toFixed(0)}%</span>` : '';
       return `<a class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}" href="${esc(url)}" target="_blank" rel="noopener" title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</a>${pinChip}`;
     },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
@@ -555,7 +575,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   // Book odds filters: hide/show rows in place (no redraw, so the search box keeps focus)
   const ovApply = () => {
     for (const tr of document.querySelectorAll('[data-ovr]'))
-      tr.hidden = !((OV.g === 'all' || tr.dataset.ovg === OV.g) && (OV.m === 'all' || tr.dataset.ovm === OV.m) && (!OV.q || tr.dataset.ovn.includes(norm(OV.q))));
+      tr.hidden = !((OV.g === 'all' || tr.dataset.ovg === OV.g) && (OV.m === 'all' || tr.dataset.ovm === OV.m) && (!OV.q || tr.dataset.ovn.includes(norm(OV.q))) && (!tr.dataset.alt || OV.alt));
+    for (const b of document.querySelectorAll('[data-ovalt]')) b.setAttribute('aria-pressed', OV.alt);
     for (const tr of document.querySelectorAll('tr.grp[data-ovg]'))
       tr.hidden = !document.querySelector(`tr[data-ovr][data-ovg="${CSS.escape(tr.dataset.ovg)}"]:not([hidden])`);
     for (const b of document.querySelectorAll('[data-ovm-pick]')) b.setAttribute('aria-pressed', b.dataset.ovmPick === OV.m);
@@ -563,6 +584,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   document.addEventListener('input', e => { if (e.target.id === 'ov-q'){ OV.q = e.target.value; ovApply(); } });
   document.addEventListener('change', e => { if (e.target.id === 'ov-g'){ OV.g = e.target.value; ovApply(); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovm-pick]'); if (b){ OV.m = b.dataset.ovmPick; ovApply(); } });
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovalt]'); if (b){ OV.alt = !OV.alt; ovApply(); } });
   document.addEventListener('click', e => {                 // choose your sportsbooks (saved on this device)
     const st = e.target.closest && e.target.closest('[data-bkset]');
     if (st){ bkOpen = bkOpen === st.dataset.bkset ? null : st.dataset.bkset; rerender(); return; }
