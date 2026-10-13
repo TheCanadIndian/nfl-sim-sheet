@@ -711,7 +711,7 @@ function otherTag(L){
   return q >= Math.min(.5, L.p) - .02 ? ` <span class="legsrc both" title="${who}: ${pct(q)}. Both models like this leg (the other model has it at least as high, up to 50%).">both ✓</span>`
                  : ` <span class="legsrc" title="${who} has this leg at ${pct(q)}">${SGP_BLIND ? 'vegas' : 'blind'} ${pct(q)}</span>`;
 }
-const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}${otherTag(L)}${L.mean != null ? ` <span class="small muted" title="Projected average vs median">avg ${L.mean} · med ${L.med}</span>` : ''}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`;
+const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}${srcTag(L)}${otherTag(L)}${L.mean != null ? ` <span class="small muted" title="Projected average vs median">avg ${L.mean} · med ${L.med}</span>` : ''}<span class="r">${pct(L.p)}${script && L.p_script != null && Math.abs(L.p_script - L.p) >= .02 ? ` → ${pct(L.p_script)}` : ''}${L.price ? ` · ${window.MKT && MKT.px ? MKT.px(L.price, 'kalshi') : Math.round(L.price * 100) + '¢'}` : ''}</span></li>`;
 // "Build in Gambly": opens Gambly's chat with the parlay typed in (its own ask-Gambly links use these params);
 // Gambly turns it into bet slips at the user's books (Hard Rock, Kalshi, Novig, ...). Unofficial: may change.
 function gamblyLink(legs, k, game){
@@ -775,7 +775,7 @@ function renderParlays(){
   if (!C.length) return '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
   const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
-    <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${Math.round(L.price * 100)}¢` : ''}</span></li>`).join('')}</ol>
+    <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${window.MKT && MKT.px ? MKT.px(L.price, 'kalshi') : Math.round(L.price * 100) + '¢'}` : ''}</span></li>`).join('')}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table>
     ${gamblyBtns(c.legs.map(L => ({lab: `${L.lab} (${L.game})`})), [c.legs.length], '')}
     ${window.SLIP ? `<div class="gbtns"><span class="small muted">My parlay:</span>${SLIP.allBtn(crossSlipLegs(c.legs), '+ add parlay')}</div>` : ''}</div>`;
