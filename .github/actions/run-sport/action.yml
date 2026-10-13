@@ -64,6 +64,12 @@ runs:
       working-directory: engine
       run: python run.py ${{ inputs.mode }}
 
+    - name: Receiving-yards fade flags (tracked forward, not shown on the site)
+      if: steps.gate.outputs.skip != 'true' && startsWith(inputs.mode, 'nfl')
+      shell: bash
+      working-directory: engine
+      run: python outperf.py && python outperf.py grade || true
+
     - uses: actions/cache/save@v4
       if: steps.gate.outputs.skip != 'true'
       with:
