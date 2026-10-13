@@ -443,6 +443,116 @@ def hr_pull(sport, now, st):
     json.dump(cache, open(HR_CACHE.format(sport), "w"), separators=(",", ":"))
 
 
+# ---------------------------------------------------------------- Pinnacle de-vig for NFL props (The Odds API)
+PIN_MKT = {"player_reception_yds": "rec_yds", "player_rush_yds": "rush_yds", "player_pass_yds": "pass_yds", "player_receptions": "rec"}
+PIN_HOURS = 3.5                       # one pull per game this close to kickoff (Pinnacle's lines are sharpest late)
+PIN_CACHE = os.path.join(M.OUT, "pin_props_nfl.json")
+
+
+def pin_pull(now):
+    """Pinnacle over/under for NFL yardage and catch props, once per game ~3.5 h before kickoff. 1 credit per market
+    with data (an empty answer is free, retried next run); shares books.py's monthly credit pacing.
+    Cache: {gid: {player: {kind: [line, over odds, under odds]}}}."""
+    k = B.key()
+    if not k:
+        return
+    O = M.ours_nfl() or {}
+    soon = {(g["away"], g["home"]): g for g in O.get("games", [])
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=PIN_HOURS)}
+    try:
+        cache = json.load(open(PIN_CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    todo = {ga: g for ga, g in soon.items() if str(g["id"]) not in cache}
+    if not todo:
+        return
+    r = requests.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events", params=dict(apiKey=k), timeout=30)
+    if r.status_code != 200:
+        return
+    bst = B.load_state()
+    for e in r.json():
+        g = todo.get((B.NAMES["nfl"].get(e["away_team"]), B.NAMES["nfl"].get(e["home_team"])))
+        if not g:
+            continue
+        if not B.budget_ok(bst, now):
+            print("pinnacle nfl: credit budget used for today"); break
+        q = requests.get(f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events/{e['id']}/odds", timeout=30,
+                         params=dict(apiKey=k, bookmakers="pinnacle", markets=",".join(PIN_MKT), oddsFormat="american"))
+        used = int(q.headers.get("x-requests-last") or 0)
+        bst["spent_today"] = bst.get("spent_today", 0) + used
+        if q.headers.get("x-requests-remaining"):
+            bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+        if q.status_code != 200:
+            continue
+        P = {}
+        for b in q.json().get("bookmakers", []):
+            for m in b.get("markets", []):
+                kind = PIN_MKT.get(m["key"])
+                for o in m.get("outcomes", []):
+                    nm, side = o.get("description"), (o.get("name") or "").lower()
+                    if not kind or not nm or side not in ("over", "under") or o.get("point") is None:
+                        continue
+                    x = P.setdefault(jsnorm(nm), {}).setdefault(kind, [float(o["point"]), None, None])
+                    if abs(x[0] - float(o["point"])) < 1e-9:
+                        x[1 if side == "over" else 2] = int(o["price"])
+        if P:
+            cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+            print(f"pinnacle nfl: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+        else:
+            print(f"pinnacle nfl: {g['away']} @ {g['home']}: not posted yet (free, will retry)")
+    json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(PIN_CACHE, "w"), separators=(",", ":"))
+
+
+def pin_merge(now):
+    """Put Pinnacle's no-vig chance on the published NFL props (props_nfl.json: e.pin = {l, o}) where its line matches,
+    and on matching Value tags (flags_nfl.json: m), so the page judges NFL props against the sharp book."""
+    try:
+        cache = json.load(open(PIN_CACHE))
+    except (OSError, ValueError):
+        return
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now}
+    if not cache:
+        return
+    fp, ff = os.path.join(M.SITE, "markets", "props_nfl.json"), os.path.join(M.SITE, "markets", "flags_nfl.json")
+    n = 0
+    try:
+        PR = json.load(open(fp))
+        for gid, c in cache.items():
+            for nm, kinds in c["props"].items():
+                for kind, (line, o, u) in kinds.items():
+                    if o is None or u is None:
+                        continue
+                    e = PR.get("props", {}).get(gid, {}).get(nm, {}).get(kind)
+                    if e and e.get("l") is not None and abs(float(e["l"]) - line) < 1e-9:
+                        a, b = 1 / dec(o), 1 / dec(u)
+                        e["pin"] = dict(l=line, o=round(a / (a + b), 4))
+                        n += 1
+        json.dump(PR, open(fp, "w"), separators=(",", ":"))
+    except (OSError, ValueError):
+        pass
+    try:
+        FL = json.load(open(ff))
+        LAB = {"rec_yds": "rec yds", "rush_yds": "rush yds", "pass_yds": "pass yds", "rec": "receptions"}
+        for gid, c in cache.items():
+            for nm, kinds in c["props"].items():
+                v = FL.get("tags", {}).get(gid, {}).get(nm)
+                if not isinstance(v, dict):
+                    continue
+                for kind, (line, o, u) in kinds.items():
+                    for sd, mine in (("over", o), ("under", u)):
+                        other = u if sd == "over" else o
+                        if mine is not None and other is not None and v.get("b") == f"{sd} {line:g} {LAB[kind]}":
+                            a, b = 1 / dec(mine), 1 / dec(other)
+                            v["pin"] = round(a / (a + b), 4)            # shown next to our tag; the tag's own rule is unchanged
+        json.dump(FL, open(ff, "w"), separators=(",", ":"))
+    except (OSError, ValueError):
+        pass
+    print(f"pinnacle nfl: de-vig attached to {n} props")
+
+
 def hr_merge(sport, now):
     """Add Hard Rock's prices to the published prices (props_<sport>.json) and Value tags (flags_<sport>.json)."""
     try:
@@ -593,6 +703,9 @@ def main(argv):
         try:
             hr_pull(sport, now, st)
             hr_merge(sport, now)
+            if sport == "nfl":
+                pin_pull(now)
+                pin_merge(now)
         except Exception as e:
             print(f"hard rock {sport}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
