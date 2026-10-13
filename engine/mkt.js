@@ -253,7 +253,9 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     // 'Book odds' tab: every game line and player prop with each book's price side by side.
     // games: [{id, label}] in page order. Filters (game / market / player search) work on the DOM, so typing keeps focus.
     oddsView(games){
-      const KL = {goal: 'Anytime goal', td: 'Anytime TD', rec: 'Receptions', rec_yds: 'Receiving yds', rush_yds: 'Rushing yds', pass_yds: 'Passing yds'};
+      const KL = {goal: 'Anytime goal', td: 'Anytime TD', rec: 'Receptions', rec_yds: 'Receiving yds', rush_yds: 'Rushing yds', pass_yds: 'Passing yds', sog: 'Shots on goal'};
+      ['05', '15', '25', '35', '45'].forEach(x => { KL['sog' + x] = 'Shots'; });
+      const mkey = k => k.startsWith('sog') ? 'sog' : k;
       const fresh = x => x && x.fetched && Date.now() - new Date(x.fetched) < 12 * 3600e3;
       const rows = [], used = new Set();
       const link = (v, partner) => { const u = Array.isArray(v) ? v[1] : null; if (!u) return null;
@@ -273,9 +275,9 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const X = fresh(PR) && PR.props && PR.props[String(g.id)];
         for (const [nm, kinds] of Object.entries(X || {})) for (const [k, e] of Object.entries(kinds)){
           const name = nm.replace(/\b\w/g, c => c.toUpperCase());
-          if (e.l == null) add({gid: g.id, m: k, o: 10, who: name, what: KL[k] || k, p: e.p, w: e.w}, e.o, PR.partner);
-          else { add({gid: g.id, m: k, o: 10, who: name, what: `${KL[k] || k} o${e.l}`, p: e.p, w: e.w}, e.o, PR.partner);
-                 add({gid: g.id, m: k, o: 10.5, who: name, what: `${KL[k] || k} u${e.l}`, p: e.p == null ? null : 1 - e.p, w: e.w}, e.u, PR.partner); }
+          if (e.l == null) add({gid: g.id, m: mkey(k), o: 10, who: name, what: KL[k] || k, p: e.p, w: e.w}, e.o, PR.partner);
+          else { add({gid: g.id, m: mkey(k), o: 10, who: name, what: `${KL[k] || k} o${e.l}`, p: e.p, w: e.w}, e.o, PR.partner);
+                 add({gid: g.id, m: mkey(k), o: 10.5, who: name, what: `${KL[k] || k} u${e.l}`, p: e.p == null ? null : 1 - e.p, w: e.w}, e.u, PR.partner); }
         }
       }
       if (!rows.length) return `<section class="panel"><div class="phead"><h2>Book odds</h2></div><p class="note">No sportsbook prices yet for these games. Game lines appear about a day before each game; player props when Unabated's props feed is up (it retries every 15 minutes).</p></section>`;
@@ -354,7 +356,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         if (!live.has(gid)) continue;
         for (const [nm, kinds] of Object.entries(pl)) for (const [k, e] of Object.entries(kinds)) {
           if (!opts.propKinds[k] || e.p == null || e.w) continue;
-          for (const sd of e.u ? ['o', 'u'] : ['o']) {
+          for (const sd of e.u && !opts.overOnly ? ['o', 'u'] : ['o']) {
             const p = sd === 'o' ? e.p : 1 - e.p, name = nm.replace(/\b\w/g, c => c.toUpperCase());
             if (opts.propOk && !opts.propOk(gid, nm, k, p)) continue;
             const b = pick(e[sd]); if (!b) continue;
