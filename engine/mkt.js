@@ -322,7 +322,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const all = Object.entries(e.o).sort((a, b) => dec(b[1][0]) - dec(a[1][0]));
       const L = all.filter(([k]) => mine(k)), c = (L.length ? L : all)[0];
       const u = c[1][1] ? (String(c[1][1]).startsWith('http') ? c[1][1] : `https://www.gambly.com/deeplink/odds/${c[1][1]}?utm_campaign=${encodeURIComponent(PR.partner || '')}`) : null;
-      return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length};
+      return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length, w: !!e.w};
     },
     myBooks: () => MY.slice(),
     // the market's chance for a player prop: median implied chance at the exchanges / prediction markets (low margin;
