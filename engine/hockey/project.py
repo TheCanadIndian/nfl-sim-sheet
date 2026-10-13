@@ -685,23 +685,27 @@ function atgParlays(){
   for (const g of D.games){
     if (g.start_utc && new Date(g.start_utc) <= now) continue;
     for (const side of [g.away, g.home]) for (const p of side.players){
-      if (!(p.ur && p.ur <= 3)) continue;
+      if (!(p.ur && p.ur <= 3) || p.p < .30) continue;              // our top 3, and 30%+ (shorter droughts, same calibration)
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b) continue;
-      legs.push({g, p, team: side.team, b, ev: p.p * dec(b.o) - 1});
+      const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null;
+      const q = m != null ? (p.p + m) / 2 : p.p;                     // our chance blended with the exchanges' (equally accurate)
+      const ev = q * dec(b.o) - 1;
+      if (ev <= 0) continue;                                         // every leg needs its own edge
+      legs.push({g, p, team: side.team, b, q, m, ev});
     }
   }
   if (legs.length < 2) return '';
   const byGame = {}; legs.forEach(L => (byGame[L.g.id] = byGame[L.g.id] || []).push(L));
   const gids = Object.keys(byGame), combos = [];
   const walk = (i, pick, k) => {
-    if (pick.length === k){ const p = pick.reduce((a, L) => a * L.p.p, 1), d = pick.reduce((a, L) => a * dec(L.b.o), 1); combos.push({legs: pick, p, d, ev: p * d - 1}); return; }
+    if (pick.length === k){ const p = pick.reduce((a, L) => a * L.q, 1), d = pick.reduce((a, L) => a * dec(L.b.o), 1); combos.push({legs: pick, p, d, ev: p * d - 1}); return; }
     for (let j = i; j < gids.length; j++) for (const L of byGame[gids[j]]) walk(j + 1, [...pick, L], k);
   };
   walk(0, [], 2); if (gids.length >= 3) walk(0, [], 3);
   if (!combos.length) return '';
   const top = k => combos.filter(c => c.legs.length === k).sort((a, b) => b.ev - a.ev).slice(0, 4);
   const legSlip = L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.p.p, side: 'over', stat: 'goals', line: .5});
-  const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p.p)} · ${L.b.u ? `<a href="${esc(L.b.u)}" target="_blank" rel="noopener">${am(L.b.o)} ${esc(L.b.name)} ↗</a>` : `${am(L.b.o)} ${esc(L.b.name)}`}${L.b.mine ? '' : ' (not at your books)'}</span>`).join('<br>')}</td>
+  const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted" title="Our chance ${pct(L.p.p)}${L.m != null ? ', exchanges ' + pct(L.m) + ', blended ' + pct(L.q) : ' (no exchange price to blend)'}">${esc(L.team)} · ${pct(L.q)} · ${L.b.u ? `<a href="${esc(L.b.u)}" target="_blank" rel="noopener">${am(L.b.o)} ${esc(L.b.name)} ↗</a>` : `${am(L.b.o)} ${esc(L.b.name)}`}${L.b.mine ? '' : ' (not at your books)'}</span>`).join('<br>')}</td>
     <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.ev >= .1 ? 'pos-d' : c.ev < 0 ? 'neg-d' : ''}" style="font-weight:700">${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(0)}%</td>
     <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(legSlip), '+ add parlay') : ''}</td></tr>`;
   // round robin: the 3 best-edge legs from different games, bet as all three 2-leg parlays (backtest 2024-26: longest
@@ -709,13 +713,13 @@ function atgParlays(){
   const rr = [], seen = new Set();
   for (const L of legs.slice().sort((a, b) => b.ev - a.ev)) if (!seen.has(L.g.id) && rr.length < 3){ seen.add(L.g.id); rr.push(L); }
   const rrPairs = rr.length === 3 ? [[rr[0], rr[1]], [rr[0], rr[2]], [rr[1], rr[2]]].map(pk => {
-    const p = pk[0].p.p * pk[1].p.p, d = dec(pk[0].b.o) * dec(pk[1].b.o); return {legs: pk, p, d, ev: p * d - 1}; }) : [];
+    const p = pk[0].q * pk[1].q, d = dec(pk[0].b.o) * dec(pk[1].b.o); return {legs: pk, p, d, ev: p * d - 1}; }) : [];
   const rrBlock = rrPairs.length ? `<div class="rr"><div class="eyebrow">Round robin · fewer dry spells</div>
-    <p class="small muted" style="margin:4px 0 8px">Bet all three 2-leg parlays below (same stake each). At least one hits whenever 2 of the 3 score: ${pct(rr[0].p.p * rr[1].p.p + rr[0].p.p * rr[2].p.p + rr[1].p.p * rr[2].p.p - 2 * rr[0].p.p * rr[1].p.p * rr[2].p.p)} by our chances; in the 2024-26 backtest the longest stretch with no winner was 7-9 nights, vs 20-23 for one 2-leg a night.</p>
+    <p class="small muted" style="margin:4px 0 8px">Bet all three 2-leg parlays below (same stake each). At least one hits whenever 2 of the 3 score: ${pct(rr[0].q * rr[1].q + rr[0].q * rr[2].q + rr[1].q * rr[2].q - 2 * rr[0].q * rr[1].q * rr[2].q)} by our blended chances; in the 2024-26 backtest the longest stretch with no winner was 7-9 nights, vs 20-23 for one 2-leg a night.</p>
     <div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">2-leg</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rrPairs.map(row).join('')}</tbody></table></div></div>` : '';
   const mine = MKT.myBooks();
   return `<section class="panel"><div class="phead"><h2>Anytime-goal parlays at your books</h2><span class="small muted">${mine.length ? 'Priced at ' + esc(mine.join(', ')) : 'Priced at the best book (choose yours under any game’s bets)'}</span></div>
-    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Only our top 3 scorers in each game (usage-adjusted rank): on Kalshi those roughly broke even while everyone else lost. One player per game, so legs are independent; parlays multiply the books' margin, so the edge column matters more than the payout. Edge = our chance × the payout − 1. Backtest (2024-26, the likeliest such parlays each night): 2-leg hit 15.6-16.2% vs 15-17% predicted, 3-leg 6.7-7.2% vs 6-7%, so a 2-leg needs to pay about 6.3x and a 3-leg about 14x just to break even; the nightly top 2-leg once went 24 nights without hitting. Treat these as small stakes.</p></details>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Legs: our top 3 scorers in each game (usage-adjusted rank; on Kalshi those roughly broke even while everyone else lost) who are 30%+ to score. Each leg's chance is our number averaged with the exchanges' (Novig, Kalshi, Polymarket, ProphetX), since the two are about equally accurate, and each leg must beat its own price. One player per game, so legs are independent; parlays multiply the books' margin, so the edge column matters more than the payout. Edge = our chance × the payout − 1. Backtest (2024-26, the likeliest such parlays each night): 2-leg hit 15.6-16.2% vs 15-17% predicted, 3-leg 6.7-7.2% vs 6-7%, so a 2-leg needs to pay about 6.3x and a 3-leg about 14x just to break even; the nightly top 2-leg once went 24 nights without hitting. Treat these as small stakes.</p></details>
     ${rrBlock}
     ${[2, 3].map(k => top(k).length ? `<div class="eyebrow" style="margin-top:10px">Best ${k}-leg parlays</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${top(k).map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
 }
