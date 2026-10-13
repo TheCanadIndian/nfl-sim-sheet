@@ -298,7 +298,7 @@ def compress(x, stat):
     return {"q": [round(float(v), 1) for v in q]}
 
 
-def pack(x, n=1000):
+def pack(x, n=5000):
     """First n simulations of an array as small ints, base64 (the page's build-your-own parlay slip reads these)."""
     import base64
     a = np.rint(np.asarray(x, float)[:n]).astype(int)
@@ -344,7 +344,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--season", type=int)
     ap.add_argument("--week", type=int)
-    ap.add_argument("--sims", type=int, default=10000)
+    ap.add_argument("--sims", type=int, default=50000)   # 50k: steadier first-TD, deep alt-line and same-game-parlay chances (10k is fine for medians)
     ap.add_argument("--db", default="nfl.db")
     ap.add_argument("--overrides")
     ap.add_argument("--lines")
@@ -457,7 +457,7 @@ def main():
                 keyrows.append((g.game_id, t.team, p.player_id, p.name))
                 s_all = dict(s, tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])
                 if not args.played and not args.blind:           # saved simulations for the build-your-own slip
-                    draws.setdefault(g.game_id, {"n": 1000, "p": {}, "g": {"margin": pack(margin), "total": pack(h["points"] + a["points"])}})["p"][
+                    draws.setdefault(g.game_id, {"n": 5000, "p": {}, "g": {"margin": pack(margin), "total": pack(h["points"] + a["points"])}})["p"][
                         f"{g.game_id}|{t.team}|{p.name}"] = {st: pack(s_all[st]) for st in DIST_STATS if st in s_all}
                 dists[f"{g.game_id}|{t.team}|{p.name}"] = {
                     stat: compress(s_all[stat], stat) for stat in DIST_STATS if stat in s_all}
@@ -476,7 +476,7 @@ def main():
     teams = pd.DataFrame(trow).round(2)
     if args.played:
         stem += ("_" + "_".join(sorted(todo.game_id.str.split("_", n=2).str[2])) if args.games else "") + "_pregame"
-        players, teams = add_actuals(players, teams, fr)
+        players, teams = add_actuals(players, teams, fr, con)
         print_actuals(players, teams)
     players.to_csv(f"{stem}_players.csv", index=False)
     teams.to_csv(f"{stem}_teams.csv", index=False)
@@ -719,14 +719,30 @@ def add_defout(payload, con, todo, season, week, players):
                 print(f"  {o} {name}: " + "; ".join(t["short"] for t in tags))
 
 
-def add_actuals(players, teams, fr):
+def first_scorers(plays):
+    """{game id: player id of the game's first offensive TD scorer, or None if a defense / special teams scored first}."""
+    t = plays[(plays.touchdown == 1)].sort_values(["game_id", "play_id"]).drop_duplicates("game_id")
+    out = {}
+    for r in t.itertuples():
+        off = r.td_team == r.posteam
+        out[r.game_id] = (r.receiver_player_id if r.pass_touchdown == 1 else r.rusher_player_id if r.rush_touchdown == 1 else None) if off else None
+    return out
+
+
+def add_actuals(players, teams, fr, con):
     pg = fr.pg.set_index(["game_id", "player_id"])
+    gids = sorted(set(players.game_id))
+    first = first_scorers(pd.read_sql(f"select game_id, play_id, posteam, td_team, touchdown, pass_touchdown, rush_touchdown, receiver_player_id, rusher_player_id from plays where touchdown = 1 and game_id in ({','.join('?' * len(gids))})", con, params=gids))
     def actual(r):
+        if r.stat == "first_td":                       # graded from play-by-play (box scores don't say who scored first)
+            return float(first.get(r.game_id) == r.player_id) if r.game_id in first else np.nan
         key = (r.game_id, r.player_id)
         if key not in pg.index:
             return 0.0
         a = pg.loc[key]
-        return float(a.rec_td + a.rush_td > 0) if r.stat == "anytime_td" else float(a[r.stat])
+        if r.stat == "anytime_td":
+            return float(a.rec_td + a.rush_td > 0)
+        return float(a[r.stat]) if r.stat in a.index else np.nan
     players["actual"] = [actual(r) for r in players.itertuples()]
     act = fr.df.set_index(["game_id", "team"])
     cols = {"points": "points", "plays": "plays", "pass_att": "att", "cmp": "cmp", "pass_yds": "pass_yds",
