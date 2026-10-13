@@ -279,6 +279,17 @@ def add_price(P, gid, name, kind, side, r, p=None, line=None, warn=False):
         e.setdefault(side, {})[U.SHORT[r.book]] = [int(r.price), gp]
 
 
+def add_alt(P, gid, name, kind, side, r, po):
+    """Alternate line for a prop: e.a = {line: {p: our over chance, o: {book: [odds, path]}, u: {...}}}."""
+    gp = gpath(r.url)
+    if not gp:
+        return
+    a = P.setdefault(str(gid), {}).setdefault(jsnorm(name), {}).setdefault(kind, {}).setdefault("a", {}).setdefault(f"{float(r.points):g}", {})
+    if po is not None:
+        a["p"] = round(float(po), 4)
+    a.setdefault(side, {})[U.SHORT[r.book]] = [int(r.price), gp]
+
+
 def ua_nhl(now):
     pl, date = nhl_ours(now)
     if pl is None:
@@ -346,6 +357,8 @@ def ua_nfl(now):
                 add_price(P, gid, me["name"], "td", "o", r, p=me["td"], warn=judge(me["td"], r.price)[1])
                 out.append(ua_row(NV, gid, me, "TD", me["td"], r))
             continue
+        if main.get((r.event, r.bt, r.person)) not in (None, r.points):   # alt line / ladder rung: shown with Pinnacle's anchored price
+            add_alt(P, gid, me["name"], st, "o" if r.side_index == 0 else "u", r, p_over(me["d"].get(st), float(r.points)))
         if NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index)) is None:
             continue                                                    # one-sided / ladder rung: no clean comparison
         po = p_over(me["d"].get(st), float(r.points))
@@ -510,6 +523,29 @@ def pin_pull(now):
     json.dump(cache, open(PIN_CACHE, "w"), separators=(",", ":"))
 
 
+def p_over_s(dist, x):
+    """Our over chance at any number x, interpolated between half-points so a shift moves it smoothly."""
+    if not dist:
+        return None
+    lo = np.floor(x - .5) + .5
+    a, b = p_over(dist, lo), p_over(dist, lo + 1)
+    return a + (b - a) * (x - lo)
+
+
+def pin_anchor(dist, pl, q):
+    """Shift our distribution so its over chance at Pinnacle's line pl equals Pinnacle's no-vig q; returns the shift s
+    (Pinnacle-anchored over chance at any line L = p_over_s(dist, L + s)), or None without a usable distribution."""
+    if not dist or q is None or not .01 < q < .99:
+        return None
+    lo, hi = -400.0, 400.0
+    if p_over_s(dist, pl + lo) < q or p_over_s(dist, pl + hi) > q:
+        return None
+    for _ in range(60):
+        s = (lo + hi) / 2
+        lo, hi = (s, hi) if p_over_s(dist, pl + s) > q else (lo, s)
+    return (lo + hi) / 2
+
+
 def pin_k(props):
     """Power de-vig exponent for one game: the k that makes Pinnacle's two-way lines sum to 1 (p_over^k + p_under^k = 1),
     median over the game's two-way props. One-way prices in that game are then de-vigged as p^k."""
@@ -552,6 +588,10 @@ def pin_merge(now):
         return
     fp, ff = os.path.join(M.SITE, "markets", "props_nfl.json"), os.path.join(M.SITE, "markets", "flags_nfl.json")
     n = 0
+    _, by = nfl_ours()
+    dist = {}
+    for (gid, _n), me in (by or {}).items():
+        dist[(str(gid), jsnorm(me["name"]))] = me["d"]
     try:
         PR = json.load(open(fp))
         for gid, c in cache.items():
@@ -562,10 +602,23 @@ def pin_merge(now):
                     if not e or o is None and u is None:
                         continue
                     el = e.get("l", .5 if kind == "td" else None)
+                    po = pin_nv(o, u, k) if o is not None else 1 - pin_nv(u, None, k)
                     if el is not None and abs(float(el) - line) < 1e-9:
-                        po = pin_nv(o, u, k) if o is not None else 1 - pin_nv(u, None, k)
                         e["pin"] = dict(l=line, o=round(po, 4), w=1 if o is None or u is None else 2)
                         n += 1
+                    if kind == "td":
+                        continue
+                    # other numbers (the books' main line when it differs, and every alt line): Pinnacle's price carried
+                    # over by our distribution's shape (w 3 = anchored; pl = Pinnacle's own line)
+                    s = pin_anchor(dist.get((gid, nm), {}).get(kind), line, po)
+                    if s is None:
+                        continue
+                    d = dist[(gid, nm)][kind]
+                    if el is not None and abs(float(el) - line) >= 1e-9:
+                        e["pin"] = dict(l=float(el), o=round(p_over_s(d, float(el) + s), 4), w=3, pl=line, po=round(po, 4))
+                        n += 1
+                    for al, x in (e.get("a") or {}).items():
+                        x["pin"] = round(p_over_s(d, float(al) + s), 4)
         json.dump(PR, open(fp, "w"), separators=(",", ":"))
     except (OSError, ValueError):
         pass

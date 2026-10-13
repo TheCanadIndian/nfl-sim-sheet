@@ -89,7 +89,9 @@ def budget_ok(st, now):
     st["month"] = now.strftime("%Y-%m")
     nxt = (now.replace(day=1) + pd.DateOffset(months=1)).date()
     days_left = (nxt - now.date()).days
-    allow = max(COST, st["left_at_day_start"] / max(days_left, 1))
+    W = {6: 5.0, 0: 1.5, 3: 1.5}                       # Sunday (NFL slate), Monday/Thursday nights; other days 1
+    days = pd.date_range(now.date(), periods=max(days_left, 1), freq="D")
+    allow = max(COST, st["left_at_day_start"] * W.get(now.weekday(), 1.0) / sum(W.get(d.weekday(), 1.0) for d in days))
     return st["spent_today"] + COST <= allow and st.get("remaining", 500) >= COST
 
 
