@@ -756,8 +756,9 @@ function tierParlays(){
   // anytime goals only from our top 3 (30%+); shots from anyone (the shots model is calibrated across the board)
   const all = MKT.tierCard({sport: 'nhl', title: 'Parlays by payout (your books)', games, gameLegs, wOurs: {goal: .75},
                             propKinds: {goal: 'to score', ...shots}, propOk: (gid, nm, k) => k !== 'goal' || !!top[gid + '|' + nm]});
-  const sml = MKT.tierCard({sport: 'nhl', title: 'Shots + moneyline parlays (your books)', games, gameLegs: gameLegs.filter(L => L.kind === 'ml'),
-                            propKinds: shots, overOnly: true});
+  // shots + moneyline: priced at the best book anywhere, every combo has at least one of each
+  const sml = MKT.tierCard({sport: 'nhl', title: 'Shots + moneyline parlays', games, gameLegs: gameLegs.filter(L => L.kind === 'ml'),
+                            propKinds: shots, overOnly: true, anyBook: true, need: ['ml', 'shots']});
   const body = h => h.replace(/<h2>[^<]*<\/h2>/, '');
   return body(all) === body(sml) ? sml : all + sml;                 // same picks (no goal prices yet): show one card
 }

@@ -125,6 +125,10 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .bet .bk.go:hover{color:var(--ink)}
 .vtag b{font-weight:800}
 @media (max-width:640px){.vtag{display:block;width:fit-content;white-space:normal;max-width:100%;line-height:1.35;margin:3px 4px 0 0}.vtag .pinv{margin-left:0}td.name:has(> .vtag){white-space:normal;max-width:62vw}}
+.mybk{color:var(--good);font-weight:700}
+.bestshot{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);background:color-mix(in srgb,var(--good) 7%,transparent);border-radius:10px;padding:10px 12px;margin:8px 0 12px}
+.bestshot ul{list-style:none;margin:6px 0;padding:0;display:grid;gap:4px}.bestshot li{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}.bestshot li a{margin-left:auto;color:inherit;white-space:nowrap}
+.bestshot .bsum{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;border-top:1px solid var(--faint);padding-top:8px;font-size:13.5px}.bestshot .bsum button{margin-left:auto}
 .pinv b{color:var(--good);font-weight:800}.pinv.neg b{color:var(--muted);font-weight:600}
 .pev .mine{color:var(--good);font-weight:700}.pev h3 .mine{font-weight:600}
 .altb{display:inline-block;padding:0 5px;border-radius:4px;border:1px solid var(--faint);font-size:10px;line-height:14px;text-transform:uppercase;letter-spacing:.05em}
@@ -390,6 +394,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const median = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
       const pick = (o, side) => {                       // best price at the viewer's books for one side: [book, odds, link]
         const all = Object.entries(o || {}).filter(([k]) => !SKIP.has(k) && !NOBET.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null]).sort((a, b) => dec(b[1]) - dec(a[1]));
+        if (opts.anyBook) return all[0] || null;          // best price anywhere (the viewer's books are marked)
         const L = all.filter(([k]) => mine(k)); return L.length ? L[0] : null; };
       const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
       const live = new Set(opts.games.filter(g => !g.start || new Date(g.start) > now).map(g => String(g.id)));
@@ -406,7 +411,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
             const pin = pinOk(e) ? (sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
             const w = (opts.wOurs || {})[k] ?? .5, m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
-            legs.push({gid, lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, q, p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
+            legs.push({gid, kind: opts.propKinds[k], lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, q, p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
                        slip: {id: `${opts.sport}|${gid}|tier|${nm}|${k}|${sd}`, sport: opts.sport, g: gid, glab: glab[gid], lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, p: q, side: 'over'}});
           }
         }
@@ -425,29 +430,34 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const px = (s, k) => { const v = o[s] && o[s][k]; return v == null ? null : 1 / dec(Array.isArray(v) ? v[0] : v); };
         const pa = px(L.side, 'Pinnacle'), pb = px(other, 'Pinnacle');
         const m = pa && pb ? pa / (pa + pb) : nv.length ? median(nv) : null, q = m != null ? (L.p + m) / 2 : L.p;
-        legs.push({gid: String(L.gid), lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
+        legs.push({gid: String(L.gid), kind: L.kind, lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
                    slip: {id: `${opts.sport}|${L.gid}|tier|${L.kind}|${L.side}|${L.line}`, sport: opts.sport, g: L.gid, glab: glab[String(L.gid)], lab: L.lab, p: q, side: 'over'}});
       }
       const good = legs.filter(L => L.ev > (opts.minEdge || 0));
-      if (!MY.length) return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">Choose your sportsbooks first (the "all books ▾" button under any game's bets): these parlays are priced only at the books you can bet.</p></section>`;
+      if (!MY.length && !opts.anyBook) return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">Choose your sportsbooks first (the "all books ▾" button under any game's bets): these parlays are priced only at the books you can bet.</p></section>`;
       // per game: the 3 best-edge legs
       const by = {}; good.sort((a, b) => b.ev - a.ev).forEach(L => { (by[L.gid] = by[L.gid] || []).length < 3 && by[L.gid].push(L); });
       const gids = Object.keys(by);
       const TIERS = [['+250 to +600', 3.5, 7], ['+600 to +1500', 7, 16]];
       const best = TIERS.map(() => []);
       const walk = (i, pk, pr, d) => {
-        if (pk.length >= 2) TIERS.forEach(([, lo, hi], t) => { if (d >= lo && d < hi) best[t].push({legs: pk, p: pr, d}); });
+        if (pk.length >= 2 && (opts.need || []).every(k => pk.some(L => L.kind === k))) TIERS.forEach(([, lo, hi], t) => { if (d >= lo && d < hi) best[t].push({legs: pk, p: pr, d}); });
         if (pk.length === 4 || d >= 16) return;
         for (let j = i; j < gids.length; j++) for (const L of by[gids[j]]) walk(j + 1, [...pk, L], pr * L.q, d * dec(L.b[1]));
       };
       walk(0, [], 1, 1);
       const rows = best.map(list => list.sort((a, b) => b.p - a.p || a.legs.length - b.legs.length).slice(0, 3));
-      if (!rows.some(r => r.length)) return '';
-      const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.lab)}</b> <span class="small muted" title="Our chance ${pct(L.p)}${L.m != null ? ', market ' + pct(L.m) : ''}, blended ${pct(L.q)}">${esc(glab[L.gid] || '')} · ${pct(L.q)} · ${L.u ? `<a href="${esc(L.u)}" target="_blank" rel="noopener">${amS(L.b[1])} ${esc(FULL[L.b[0]] || L.b[0])} ↗</a>` : `${amS(L.b[1])} ${esc(FULL[L.b[0]] || L.b[0])}`}</span>`).join('<br>')}</td>
+      if (!rows.some(r => r.length)) return opts.anyBook ? `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">No combination with an edge on every leg yet. Prices fill in through the afternoon; check back closer to puck drop.</p></section>` : '';
+      // 'best shot': the likeliest combo paying +250 or more whose edge is at least 10%
+      const pickBest = opts.anyBook ? best.flat().filter(c => c.p * c.d - 1 >= .10).sort((a, b) => b.p - a.p)[0] : null;
+      const bkLab = k => `<span class="${MY.includes(k) ? 'mybk' : ''}">${esc(FULL[k] || k)}</span>`;
+      const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.lab)}</b> <span class="small muted" title="Our chance ${pct(L.p)}${L.m != null ? ', market ' + pct(L.m) : ''}, blended ${pct(L.q)}">${esc(glab[L.gid] || '')} · ${pct(L.q)} · ${L.u ? `<a href="${esc(L.u)}" target="_blank" rel="noopener">${amS(L.b[1])} ${bkLab(L.b[0])} ↗</a>` : `${amS(L.b[1])} ${bkLab(L.b[0])}`}</span>`).join('<br>')}</td>
         <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
         <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => L.slip), '+ add parlay') : ''}</td></tr>`;
-      return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2><span class="small muted">Priced at ${esc(MY.map(k => FULL[k] || k).join(', '))}</span></div>
-        <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are built</summary><p class="note">Every leg beats its price at your books: its chance is our number blended with the market's (NHL goals lean 75% on our model, where it has beaten Kalshi; NFL props 50/50 with a 5%+ edge required, where that's what made money; game lines 50/50 with the books' no-vig line). One leg per game, so the legs are independent; for each payout range these are the combinations most likely to cash. Because every leg has an edge, they should cash more often than the payout implies, but only by the edge column: a +600 parlay still loses most of the time.</p></details>
+      const bestBox = pickBest ? `<div class="bestshot"><div class="eyebrow">Best shot tonight</div><ul>${pickBest.legs.map(L => `<li><b>${esc(L.lab)}</b> <span class="small muted">${esc(glab[L.gid] || '')} · ${pct(L.q)}</span> ${L.u ? `<a href="${esc(L.u)}" target="_blank" rel="noopener">${amS(L.b[1])} ${bkLab(L.b[0])} ↗</a>` : `${amS(L.b[1])} ${bkLab(L.b[0])}`}</li>`).join('')}</ul>
+        <div class="bsum"><span><b>${pct(pickBest.p)}</b> to hit</span><span>pays <b>${pickBest.d.toFixed(1)}x</b> (${amS(Math.round((pickBest.d - 1) * 100))})</span><span class="pos-d"><b>+${((pickBest.p * pickBest.d - 1) * 100).toFixed(0)}%</b> edge</span>${window.SLIP ? SLIP.allBtn(pickBest.legs.map(L => L.slip), '+ add parlay') : ''}</div></div>` : '';
+      return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2><span class="small muted">${opts.anyBook ? `Best price at any book${MY.length ? '; <span class="mybk">yours in green</span>' : ''}` : 'Priced at ' + esc(MY.map(k => FULL[k] || k).join(', '))}</span></div>${bestBox}
+        <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are built</summary><p class="note">Every leg beats its price ${opts.anyBook ? 'at the best book for it' : 'at your books'}: its chance is our number blended with the market's (NHL goals lean 75% on our model, where it has beaten Kalshi; NFL props 50/50 with a 5%+ edge required, where that's what made money; game lines 50/50 with the books' no-vig line). One leg per game, so the legs are independent; for each payout range these are the combinations most likely to cash. Because every leg has an edge, they should cash more often than the payout implies, but only by the edge column: a +600 parlay still loses most of the time.</p></details>
         ${TIERS.map(([lab], t) => rows[t].length ? `<div class="eyebrow" style="margin-top:10px">Pays ${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rows[t].map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
     },
     norm,
