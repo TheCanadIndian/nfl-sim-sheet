@@ -736,6 +736,23 @@ function atgParlays(){
     ${rrBlock}
     ${[2, 3].map(k => top(k).length ? `<div class="eyebrow" style="margin-top:10px">Best ${k}-leg parlays</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${top(k).map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
 }
+// parlays by payout tier (mkt.js tierCard): anytime goals from our top 3 per game (30%+), plus game lines
+function tierParlays(){
+  if (!(window.MKT && MKT.tierCard)) return '';
+  const gameLegs = [], top = {};
+  for (const g of D.games){
+    for (const s of [g.away, g.home]) for (const p of s.players) if (p.ur && p.ur <= 3 && p.p >= .30) top[g.id + '|' + MKT.norm(p.name)] = 1;
+    const m = g.ml; if (!m) continue;
+    const A = g.away.team, H = g.home.team;
+    gameLegs.push({gid: g.id, kind: 'ml', side: 'away', p: m.away, lab: `${A} moneyline`}, {gid: g.id, kind: 'ml', side: 'home', p: m.home, lab: `${H} moneyline`},
+                  {gid: g.id, kind: 'spread', side: 'away', line: 1.5, p: m.away_pl, lab: `${A} −1.5`}, {gid: g.id, kind: 'spread', side: 'home', line: -1.5, p: m.home_pl, lab: `${H} −1.5`},
+                  {gid: g.id, kind: 'spread', side: 'away', line: -1.5, p: m.away_pl_plus, lab: `${A} +1.5`}, {gid: g.id, kind: 'spread', side: 'home', line: 1.5, p: m.home_pl_plus, lab: `${H} +1.5`});
+    for (const k of ['5.5', '6.5']) if (m.totals[k] != null)
+      gameLegs.push({gid: g.id, kind: 'total', side: 'over', line: +k, p: m.totals[k], lab: `${A}-${H} over ${k}`}, {gid: g.id, kind: 'total', side: 'under', line: +k, p: 1 - m.totals[k], lab: `${A}-${H} under ${k}`});
+  }
+  return MKT.tierCard({sport: 'nhl', title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, start: g.start_utc})),
+                       gameLegs, propKinds: {goal: 'to score'}, propOk: (gid, nm) => !!top[gid + '|' + nm]});
+}
 function pairsCard(){
   const P = D.pairs || []; if (!P.length) return '';
   const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
@@ -757,7 +774,7 @@ function jumpBar(){
   return `<nav class="gjump" aria-label="Jump to game">${D.games.map(g => `<a href="#g${g.id}">${esc(g.away.team)} @ ${esc(g.home.team)}<small>${esc(t(g))}</small></a>`).join('')}</nav>`;
 }
 function games(){
-  return jumpBar() + picksKey() + atgParlays() + pairsCard() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
+  return jumpBar() + picksKey() + atgParlays() + tierParlays() + pairsCard() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
     ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
 }
 const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);

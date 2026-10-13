@@ -777,9 +777,24 @@ function crossSlipLegs(legs){
   legs.forEach(L => { const g = D.games.find(x => `${x.away} @ ${x.home}` === L.game); if (g) (byGame[g.id] = byGame[g.id] || []).push(L); });
   return Object.entries(byGame).flatMap(([gid, ls]) => cardSlipLegs(ls, gid));
 }
+function tierParlays(){
+  if (!(window.MKT && MKT.tierCard)) return '';
+  const gameLegs = [];
+  for (const g of D.games){
+    const T = D.teams[g.id]; if (!T) continue;
+    const H = T[g.home], A = T[g.away]; if (H.spread_line == null) continue;
+    const L = H.spread_line, tl = H.total_line, sp = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+    gameLegs.push({gid: g.id, kind: 'ml', side: 'away', p: A.win_prob, lab: `${g.away} moneyline`}, {gid: g.id, kind: 'ml', side: 'home', p: H.win_prob, lab: `${g.home} moneyline`},
+                  {gid: g.id, kind: 'spread', side: 'away', line: -L, p: A.p_cover, lab: `${g.away} ${sp(L)}`}, {gid: g.id, kind: 'spread', side: 'home', line: -L, p: H.p_cover, lab: `${g.home} ${sp(-L)}`},
+                  {gid: g.id, kind: 'total', side: 'over', line: tl, p: H.p_over, lab: `${g.away}-${g.home} over ${tl}`}, {gid: g.id, kind: 'total', side: 'under', line: tl, p: H.p_under, lab: `${g.away}-${g.home} under ${tl}`});
+  }
+  return MKT.tierCard({sport: 'nfl', title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort})),
+                       gameLegs, propKinds: {td: 'TD', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', rec: 'receptions'}});
+}
 function renderParlays(){
   const C = (D.sgp && D.sgp.cross) || [];
-  if (!C.length) return '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
+  const tiers = tierParlays();
+  if (!C.length) return tiers + '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
   const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
     <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${window.MKT && MKT.px ? MKT.px(L.price, 'kalshi') : Math.round(L.price * 100) + '¢'}` : ''}</span></li>`).join('')}</ol>

@@ -333,6 +333,75 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const med = q.length % 2 ? q[(q.length - 1) / 2] : (q[q.length / 2 - 1] + q[q.length / 2]) / 2;
       return med / 1.03;
     },
+    // Parlays by payout tier, built from legs with an edge at the viewer's books. Legs: player props (props file) and
+    // game lines (page supplies our chance). Each leg's chance = ours averaged with the market's (exchanges for props,
+    // the books' no-vig for game lines); a leg must beat its own price. One leg per game, so legs are independent:
+    // chance = product, payout = product of prices, and the parlay cashes more often than it pays when every leg does.
+    // opts: {games:[{id,label,start}], gameLegs:[{gid,kind:'ml'|'spread'|'total',side,line,p,lab}], propKinds:{kind:label},
+    //        propOk(gid,name,kind,p) -> bool, sport, title}
+    tierCard(opts){
+      const now = Date.now(), legs = [];
+      const amS = o => (o > 0 ? '+' : '') + o;
+      const median = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
+      const pick = (o, side) => {                       // best price at the viewer's books for one side: [book, odds, link]
+        const all = Object.entries(o || {}).filter(([k]) => !SKIP.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null]).sort((a, b) => dec(b[1]) - dec(a[1]));
+        const L = all.filter(([k]) => mine(k)); return L.length ? L[0] : null; };
+      const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
+      const live = new Set(opts.games.filter(g => !g.start || new Date(g.start) > now).map(g => String(g.id)));
+      const glab = Object.fromEntries(opts.games.map(g => [String(g.id), g.label]));
+      // player props
+      if (PR && PR.props && now - new Date(PR.fetched) < 12 * 3600e3) for (const [gid, pl] of Object.entries(PR.props)) {
+        if (!live.has(gid)) continue;
+        for (const [nm, kinds] of Object.entries(pl)) for (const [k, e] of Object.entries(kinds)) {
+          if (!opts.propKinds[k] || e.p == null || e.w) continue;
+          for (const sd of e.u ? ['o', 'u'] : ['o']) {
+            const p = sd === 'o' ? e.p : 1 - e.p, name = nm.replace(/\b\w/g, c => c.toUpperCase());
+            if (opts.propOk && !opts.propOk(gid, nm, k, p)) continue;
+            const b = pick(e[sd]); if (!b) continue;
+            const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
+            const m = ex.length ? median(ex) / 1.03 : null, q = m != null ? (p + m) / 2 : p;
+            legs.push({gid, lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, q, p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
+                       slip: {id: `${opts.sport}|${gid}|tier|${nm}|${k}|${sd}`, sport: opts.sport, g: gid, glab: glab[gid], lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, p: q, side: 'over'}});
+          }
+        }
+      }
+      // game lines
+      for (const L of opts.gameLegs || []) {
+        if (!live.has(String(L.gid)) || L.p == null) continue;
+        const G = BK && BK.games && BK.games[String(L.gid)]; if (!G) continue;
+        let o = G[L.kind]; if (L.kind !== 'ml') o = o && o[String(+L.line)];
+        if (!o || !o[L.side]) continue;
+        const b = pick(o[L.side]); if (!b) continue;
+        const other = {home: 'away', away: 'home', over: 'under', under: 'over'}[L.side];
+        const nv = Object.keys(o[L.side]).filter(k => o[other] && o[other][k] != null && !SKIP.has(k)).map(k => {
+          const a = 1 / dec(Array.isArray(o[L.side][k]) ? o[L.side][k][0] : o[L.side][k]), c = 1 / dec(Array.isArray(o[other][k]) ? o[other][k][0] : o[other][k]); return a / (a + c); });
+        const m = nv.length ? median(nv) : null, q = m != null ? (L.p + m) / 2 : L.p;
+        legs.push({gid: String(L.gid), lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
+                   slip: {id: `${opts.sport}|${L.gid}|tier|${L.kind}|${L.side}|${L.line}`, sport: opts.sport, g: L.gid, glab: glab[String(L.gid)], lab: L.lab, p: q, side: 'over'}});
+      }
+      const good = legs.filter(L => L.ev > 0);
+      if (!MY.length) return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">Choose your sportsbooks first (the "all books ▾" button under any game's bets): these parlays are priced only at the books you can bet.</p></section>`;
+      // per game: the 3 best-edge legs
+      const by = {}; good.sort((a, b) => b.ev - a.ev).forEach(L => { (by[L.gid] = by[L.gid] || []).length < 3 && by[L.gid].push(L); });
+      const gids = Object.keys(by);
+      const TIERS = [['+250 to +600', 3.5, 7], ['+600 to +1500', 7, 16]];
+      const best = TIERS.map(() => []);
+      const walk = (i, pk, pr, d) => {
+        if (pk.length >= 2) TIERS.forEach(([, lo, hi], t) => { if (d >= lo && d < hi) best[t].push({legs: pk, p: pr, d}); });
+        if (pk.length === 4 || d >= 16) return;
+        for (let j = i; j < gids.length; j++) for (const L of by[gids[j]]) walk(j + 1, [...pk, L], pr * L.q, d * dec(L.b[1]));
+      };
+      walk(0, [], 1, 1);
+      const rows = best.map(list => list.sort((a, b) => b.p - a.p || a.legs.length - b.legs.length).slice(0, 3));
+      if (!rows.some(r => r.length)) return '';
+      const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.lab)}</b> <span class="small muted" title="Our chance ${pct(L.p)}${L.m != null ? ', market ' + pct(L.m) : ''}, blended ${pct(L.q)}">${esc(glab[L.gid] || '')} · ${pct(L.q)} · ${L.u ? `<a href="${esc(L.u)}" target="_blank" rel="noopener">${amS(L.b[1])} ${esc(FULL[L.b[0]] || L.b[0])} ↗</a>` : `${amS(L.b[1])} ${esc(FULL[L.b[0]] || L.b[0])}`}</span>`).join('<br>')}</td>
+        <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
+        <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => L.slip), '+ add parlay') : ''}</td></tr>`;
+      return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2><span class="small muted">Priced at ${esc(MY.map(k => FULL[k] || k).join(', '))}</span></div>
+        <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are built</summary><p class="note">Every leg beats its price at your books: its chance is our number averaged with the market's (exchanges for player props, the books' no-vig line for game lines), so edges that only exist because our model is off shrink. One leg per game, so the legs are independent; for each payout range these are the combinations most likely to cash. Because every leg has an edge, they should cash more often than the payout implies, but only by the edge column: a +600 parlay still loses most of the time.</p></details>
+        ${TIERS.map(([lab], t) => rows[t].length ? `<div class="eyebrow" style="margin-top:10px">Pays ${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rows[t].map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
+    },
+    norm,
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
     // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)
