@@ -36,6 +36,7 @@
   const OV = {g: 'all', m: 'all', q: ''};          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
   const mine = k => !MY.length || MY.includes(k);
+  const NOBET = new Set(['Pinnacle']);             // sharp reference only: never a 'best price' (not bettable from the US)
   const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
   const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
   const am = o => (o > 0 ? '+' : '') + o;
@@ -236,7 +237,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const G = BK && BK.games && BK.games[String(gid)]; if (!G) return '';
       let o = G[kind]; if (kind !== 'ml') o = o && o[String(+line)]; o = o && o[side];
       // a price is [odds, Gambly bet link] (Unabated) or plain odds (The Odds API)
-      const all = o ? Object.entries(o).filter(([k]) => !SKIP.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null])
+      const all = o ? Object.entries(o).filter(([k]) => !SKIP.has(k) && !NOBET.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null])
         .sort((a, b) => dec(b[1]) - dec(a[1]) || (!!b[2] - !!a[2])) : []; if (!all.length) return '';
       // the viewer's books (saved per device); if none of them prices this bet, show the best elsewhere, greyed
       const L = all.filter(([k]) => mine(k)), other = !L.length;
@@ -281,9 +282,9 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         }
       }
       if (!rows.length) return `<section class="panel"><div class="phead"><h2>Book odds</h2></div><p class="note">No sportsbook prices yet for these games. Game lines appear about a day before each game; player props when Unabated's props feed is up (it retries every 15 minutes).</p></section>`;
-      const PMG = ['Kalshi', 'Polymarket', 'Poly US', 'Novig', 'ProphetX'];
+      const PMG = ['Pinnacle', 'Kalshi', 'Polymarket', 'Poly US', 'Novig', 'ProphetX'];
       const ord = (a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99 || a.localeCompare(b);
-      const groups = [['My books', MY.filter(k => used.has(k))], ['Prediction markets & exchanges', PMG.filter(k => used.has(k) && !MY.includes(k))],
+      const groups = [['My books', MY.filter(k => used.has(k))], ['Sharp book & exchanges', PMG.filter(k => used.has(k) && !MY.includes(k))],
                       ['Sportsbooks', [...used].filter(k => !PMG.includes(k) && !MY.includes(k)).sort(ord)]].filter(g => g[1].length);
       const cols = groups.flatMap(g => g[1]), first = new Set(groups.map(g => g[1][0]));
       const mkts = [...new Set(rows.map(r => r.m))], mlab = m => m === 'lines' ? 'Game lines' : KL[m] || m;
@@ -295,7 +296,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       rows.sort((a, b) => games.findIndex(g => String(g.id) === String(a.gid)) - games.findIndex(g => String(g.id) === String(b.gid)) || a.o - b.o || (a.m < b.m ? -1 : a.m > b.m ? 1 : 0) || (b.p ?? 0) - (a.p ?? 0));
       for (const r of rows){
         if (r.gid !== last){ last = r.gid; body += `<tr class="grp" data-ovg="${esc(String(r.gid))}"${OV.g !== 'all' && OV.g !== String(r.gid) ? ' hidden' : ''}><td colspan="${cols.length + 2}">${esc(glab[String(r.gid)] || r.gid)}</td></tr>`; }
-        const best = Math.max(...Object.values(r.P).map(x => dec(x.o)));
+        const best = Math.max(...Object.entries(r.P).filter(([k]) => !NOBET.has(k)).map(([, x]) => dec(x.o)));
         const cells = cols.map(k => { const x = r.P[k]; if (!x) return `<td class="muted${MY.includes(k) ? ' my' : ''}${first.has(k) ? ' g0' : ''}">–</td>`;
           const ev = r.p == null ? null : r.p * dec(x.o) - 1, v = ev != null && !r.w && ev >= ((FL && FL.min_ev) || .05);
           const t = `${FULL[k] || k} ${amS(x.o)}${ev != null ? ` · our edge ${ev >= 0 ? '+' : ''}${(ev * 100).toFixed(1)}%` : ''}${x.u ? ' · tap to open this bet' : ''}`;
@@ -346,7 +347,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const amS = o => (o > 0 ? '+' : '') + o;
       const median = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
       const pick = (o, side) => {                       // best price at the viewer's books for one side: [book, odds, link]
-        const all = Object.entries(o || {}).filter(([k]) => !SKIP.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null]).sort((a, b) => dec(b[1]) - dec(a[1]));
+        const all = Object.entries(o || {}).filter(([k]) => !SKIP.has(k) && !NOBET.has(k)).map(([k, v]) => [k, Array.isArray(v) ? v[0] : v, Array.isArray(v) ? v[1] : null]).sort((a, b) => dec(b[1]) - dec(a[1]));
         const L = all.filter(([k]) => mine(k)); return L.length ? L[0] : null; };
       const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
       const live = new Set(opts.games.filter(g => !g.start || new Date(g.start) > now).map(g => String(g.id)));
@@ -377,7 +378,10 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const other = {home: 'away', away: 'home', over: 'under', under: 'over'}[L.side];
         const nv = Object.keys(o[L.side]).filter(k => o[other] && o[other][k] != null && !SKIP.has(k)).map(k => {
           const a = 1 / dec(Array.isArray(o[L.side][k]) ? o[L.side][k][0] : o[L.side][k]), c = 1 / dec(Array.isArray(o[other][k]) ? o[other][k][0] : o[other][k]); return a / (a + c); });
-        const m = nv.length ? median(nv) : null, q = m != null ? (L.p + m) / 2 : L.p;           // game lines: 50/50 with the books' no-vig
+        // the market's chance: Pinnacle's no-vig line when it prices both sides (the sharp benchmark), else the books' median
+        const px = (s, k) => { const v = o[s] && o[s][k]; return v == null ? null : 1 / dec(Array.isArray(v) ? v[0] : v); };
+        const pa = px(L.side, 'Pinnacle'), pb = px(other, 'Pinnacle');
+        const m = pa && pb ? pa / (pa + pb) : nv.length ? median(nv) : null, q = m != null ? (L.p + m) / 2 : L.p;
         legs.push({gid: String(L.gid), lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
                    slip: {id: `${opts.sport}|${L.gid}|tier|${L.kind}|${L.side}|${L.line}`, sport: opts.sport, g: L.gid, glab: glab[String(L.gid)], lab: L.lab, p: q, side: 'over'}});
       }

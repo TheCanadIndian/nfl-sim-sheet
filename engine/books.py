@@ -34,9 +34,9 @@ STATE = os.path.join(M.OUT, "books_state.json")
 API = "https://api.the-odds-api.com/v4/sports/{}/odds"
 KEYS = {"nfl": "americanfootball_nfl", "nhl": "icehockey_nhl", "nba": "basketball_nba"}
 OURS = {"nfl": M.ours_nfl, "nhl": M.ours_nhl, "nba": M.ours_nba}
-BOOKS = ["hardrockbet", "betrivers", "espnbet", "fliff", "ballybet", "betparx"]       # books Unabated doesn't carry
+BOOKS = ["hardrockbet", "betrivers", "espnbet", "fliff", "ballybet", "betparx", "pinnacle"]   # books Unabated doesn't carry (+ Pinnacle: the sharp reference, not bettable from the US)
 SHORT = {"hardrockbet": "Hard Rock", "novig": "Novig", "draftkings": "DraftKings", "fanduel": "FanDuel", "betmgm": "BetMGM",
-         "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet", "betparx": "betPARX"}
+         "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet", "betparx": "betPARX", "pinnacle": "Pinnacle"}
 COST = 3
 PULL_WINDOW, MIN_GAP = 8, 8       # hours (The Odds API: credit-limited; leaves room for Hard Rock props in sharp.py)
 UA_WINDOW, UA_GAP = 24, 20        # Unabated (primary): games within 24 h, at most every 20 minutes
