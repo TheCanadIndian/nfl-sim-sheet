@@ -4,6 +4,7 @@ Keep this folder and the cloud engine (site/engine in the GitHub repo) in step.
 
     python sync_engine.py pull    # get the cloud's saved state (projections, grades, learned settings)
     python sync_engine.py push    # send code changes (and state) up to the repo, commit and push
+    python sync_engine.py code    # copy code edited in the repo (from another device) down to this PC
 
 The cloud runs (GitHub Actions) work inside the repo's engine/ folder; this PC keeps the
 same layout in D:\\football. Code always flows PC -> cloud; state (frozen pregame projections,
@@ -67,6 +68,10 @@ def main(cmd):
         n = copy(ENGINE, HERE, files(ENGINE, STATE))
         print(f"pulled {n} state files from the cloud")
         return
+    if cmd == "code":                                   # after editing code in the repo from another device
+        n = copy(ENGINE, HERE, files(ENGINE, CODE))
+        print(f"copied {n} code files from the repo to the PC")
+        return
     # state: never push a PC copy over a newer cloud copy (the cloud runs keep updating these)
     newer_here, newer_cloud = [], []
     for r in files(HERE, STATE):
@@ -78,7 +83,22 @@ def main(cmd):
     if newer_cloud:
         copy(ENGINE, HERE, newer_cloud)
         print(f"kept {len(newer_cloud)} newer cloud state files (copied them to the PC)")
-    n = copy(HERE, ENGINE, files(HERE, CODE)) + copy(HERE, ENGINE, newer_here)
+    # code edited in the repo from another device (see CLAUDE.md): keep it rather than overwrite it with an older PC copy
+    code, newer_repo = [], []
+    for r in files(HERE, CODE):
+        e = os.path.join(ENGINE, r)
+        if os.path.exists(e) and open(e, "rb").read() != open(os.path.join(HERE, r), "rb").read():
+            t = subprocess.run([GIT, "-C", REPO, "log", "-1", "--format=%ct", "--", os.path.join("engine", r)], capture_output=True, text=True).stdout.strip()
+            if t and int(t) > os.path.getmtime(os.path.join(HERE, r)):
+                newer_repo.append(r); continue
+        code.append(r)
+    for r in files(ENGINE, CODE):                       # new files added in the repo
+        if not os.path.exists(os.path.join(HERE, r)):
+            newer_repo.append(r)
+    if newer_repo:
+        copy(ENGINE, HERE, newer_repo)
+        print(f"kept {len(newer_repo)} code files edited in the repo (copied them to the PC): {', '.join(newer_repo)}")
+    n = copy(HERE, ENGINE, code) + copy(HERE, ENGINE, newer_here)
     print(f"copied {n} files into engine/")
     git("add", "-A", "engine", ".github")
     if git("diff", "--cached", "--quiet") != 0:
