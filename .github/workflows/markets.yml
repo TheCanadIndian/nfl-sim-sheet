@@ -56,10 +56,17 @@ jobs:
         if: steps.q.outputs.skip != 'true'
         working-directory: engine
         run: python watch.py
+      - name: Parlay record (freeze every parlay card before the day's first game, grade from box scores, publish the Parlays tab)
+        working-directory: engine
+        run: |
+          if [ "${{ steps.q.outputs.skip }}" != "true" ]; then python parlays.py freeze || true; fi
+          python parlays.py grade || true
+          python parlays.py page || true
       - run: |
           git config user.name "sim-sheet-bot"
           git config user.email "sim-sheet-bot@users.noreply.github.com"
-          git add -A markets engine/markets
+          git add -A markets engine/markets engine/parlays
+          for f in nhl/parlays.html nfl/parlays.html; do [ -f "$f" ] && git add "$f"; done
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi
           git commit -q -m "Auto: market prices $(date -u +'%Y-%m-%d %H:%M') UTC"
           for i in 1 2 3 4 5; do git pull -q --rebase -X theirs && git push -q && break; sleep $((i * 5)); done

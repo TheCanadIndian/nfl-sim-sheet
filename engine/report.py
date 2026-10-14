@@ -808,6 +808,16 @@ function tierParlays(){
 function renderParlays(){
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays();
+  if (window.MKT && MKT.reg){                                      // freeze mode: record for the Results page
+    const byLab = Object.fromEntries(D.games.map(g => [`${g.away} @ ${g.home}`, g]));
+    const PK = {anytime_td: 'td', rec: 'rec', rec_yds: 'rec_yds', rush_yds: 'rush_yds', pass_yds: 'pass_yds'};
+    C.forEach(c => MKT.reg('Cross-game parlays', c.title, c.legs.map(L => { const g = byLab[L.game] || {};
+      const base = {gid: g.id || null, start: g.sort || null, lab: L.lab, p: L.p, price: L.price, book: L.price ? 'Kalshi' : null};
+      if (L.kind === 'win') return {...base, kind: 'ml', side: L.team === g.home ? 'home' : 'away', line: null, name: null};
+      if (L.kind === 'total') return {...base, kind: 'total', side: /^under/i.test(L.lab) ? 'under' : 'over', line: L.line, name: null};
+      return {...base, kind: PK[L.kind] || L.kind, side: 'o', line: L.kind === 'anytime_td' ? .5 : L.line, name: MKT.norm(L.lab.replace(/ (anytime TD|over .*)$/, ''))}; }),
+      c.p, c.kalshi ? 1 / c.kalshi : null));
+  }
   if (!C.length) return tiers + '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
   const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>

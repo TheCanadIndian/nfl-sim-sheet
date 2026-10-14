@@ -36,6 +36,15 @@
   const OV = {g: 'all', m: 'all', q: '', alt: false};
   const WV = {edge: true, mine: false, all: false, long: false};   // Weighted fair tab toggles          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
+  // ?freeze=1 (parlays.py, in the cloud): price at the owner's books and record every parlay the cards show, so the
+  // Results page can grade them. Each leg: {gid, start, kind, side, line, name, lab, p, price, book}.
+  const FREEZE = /[?&]freeze=1(&|$)/.test(location.search);
+  if (FREEZE) MY = ['Novig', 'Kalshi', 'Hard Rock'];
+  let FROZEN = [];
+  const reg = (card, tier, legs, p, d) => { if (FREEZE && legs && legs.length) FROZEN.push({card, tier, legs, p: +(+p).toFixed(5), d: d == null ? null : +(+d).toFixed(3)}); };
+  const dumpFrozen = () => { let el = document.getElementById('frozen-parlays');
+    if (!el){ el = document.createElement('script'); el.type = 'application/json'; el.id = 'frozen-parlays'; document.body.appendChild(el); }
+    el.textContent = JSON.stringify({generated: new Date().toISOString(), books: MY, prices: BK && BK.fetched, props: PR && PR.fetched, parlays: FROZEN}); };
   const mine = k => !MY.length || MY.includes(k);
   // Pinnacle's no-vig is on the prop when its line matches ours (TD props have no line: .5). w: 2 two-way (multiplicative), 1 one-way (power)
   const pinHow = (w, pl) => w === 1 ? 'one-way price, power de-vig' : w === 3 ? `carried from Pinnacle’s ${pl != null ? pl + ' ' : ''}line by our distribution’s shape` : 'both sides, multiplicative de-vig';
@@ -195,7 +204,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     }).catch(() => {});
   }
   let rr = null;
-  function rerender(){ clearTimeout(rr); rr = setTimeout(() => { try { window.render && window.render(); } catch (e) {} }, 250); }
+  function rerender(){ clearTimeout(rr); rr = setTimeout(() => { FROZEN = []; try { window.render && window.render(); } catch (e) {} if (FREEZE) dumpFrozen(); }, 250); }
 
   // flow badges (Kalshi pre-game taker flow, r.fl: +1 all money bought YES, -1 all NO). Backtests Sep-Oct 2026:
   // VALUE (YES edge) with NO-heavy/mixed flow beat VALUE with YES-heavy flow in MLB HR, NFL yards and NHL goals;
@@ -484,6 +493,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const L = all.filter(([k]) => mine(k)); return L.length ? L[0] : null; };
       const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
       const live = new Set(opts.games.filter(g => !g.start || new Date(g.start) > now).map(g => String(g.id)));
+      const startOf = Object.fromEntries(opts.games.map(g => [String(g.id), g.start || null]));
       const glab = Object.fromEntries(opts.games.map(g => [String(g.id), g.label]));
       // player props
       if (PR && PR.props && now - new Date(PR.fetched) < 12 * 3600e3) for (const [gid, pl] of Object.entries(PR.props)) {
@@ -497,7 +507,10 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
             const pin = pinOk(e) ? (sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
             const w = (opts.wOurs || {})[k] ?? .5, m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
-            legs.push({gid, kind: opts.propKinds[k], lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, q, p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
+            const isSog = k.startsWith('sog');
+            const leg = {gid, start: startOf[gid], kind: isSog ? 'sog' : k, side: sd, line: isSog ? +k.slice(3) / 10 : (e.l ?? .5), name: nm,
+                         lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, p: +q.toFixed(4), price: b[1], book: b[0]};
+            legs.push({gid, leg, kind: opts.propKinds[k], lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, q, p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
                        slip: {id: `${opts.sport}|${gid}|tier|${nm}|${k}|${sd}`, sport: opts.sport, g: gid, glab: glab[gid], lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, p: q, side: 'over'}});
           }
         }
@@ -516,7 +529,10 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const px = (s, k) => { const v = o[s] && o[s][k]; return v == null ? null : 1 / dec(Array.isArray(v) ? v[0] : v); };
         const pa = px(L.side, 'Pinnacle'), pb = px(other, 'Pinnacle');
         const m = pa && pb ? pa / (pa + pb) : nv.length ? median(nv) : null, q = m != null ? (L.p + m) / 2 : L.p;
-        legs.push({gid: String(L.gid), kind: L.kind, lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
+        const leg = {gid: String(L.gid), start: startOf[String(L.gid)], kind: L.kind, side: L.side,
+                     line: L.kind === 'spread' ? (L.side === 'home' ? +L.line : -L.line) : (L.line ?? null),   // spread: that team's handicap
+                     name: null, lab: L.lab, p: +q.toFixed(4), price: b[1], book: b[0]};
+        legs.push({gid: String(L.gid), leg, kind: L.kind, lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
                    slip: {id: `${opts.sport}|${L.gid}|tier|${L.kind}|${L.side}|${L.line}`, sport: opts.sport, g: L.gid, glab: glab[String(L.gid)], lab: L.lab, p: q, side: 'over'}});
       }
       const good = legs.filter(L => L.ev > (opts.minEdge || 0));
@@ -536,6 +552,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       if (!rows.some(r => r.length)) return opts.anyBook ? `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">No combination with an edge on every leg yet. Prices fill in through the afternoon; check back closer to puck drop.</p></section>` : '';
       // 'best shot': the likeliest combo paying +250 or more whose edge is at least 10%
       const pickBest = opts.anyBook ? best.flat().filter(c => c.p * c.d - 1 >= .10).sort((a, b) => b.p - a.p)[0] : null;
+      rows.forEach((list, t) => list.forEach(c => reg(opts.title, TIERS[t][0], c.legs.map(L => L.leg), c.p, c.d)));
+      if (pickBest) reg(opts.title, 'Best shot', pickBest.legs.map(L => L.leg), pickBest.p, pickBest.d);
       const bkLab = k => `<span class="${MY.includes(k) ? 'mybk' : ''}">${esc(FULL[k] || k)}</span>`;
       const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.lab)}</b> <span class="small muted" title="Our chance ${pct(L.p)}${L.m != null ? ', market ' + pct(L.m) : ''}, blended ${pct(L.q)}">${esc(glab[L.gid] || '')} · ${pct(L.q)} · ${L.u ? `<a href="${esc(L.u)}" target="_blank" rel="noopener">${amS(L.b[1])} ${bkLab(L.b[0])} ↗</a>` : `${amS(L.b[1])} ${bkLab(L.b[0])}`}</span>`).join('<br>')}</td>
         <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
@@ -546,7 +564,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are built</summary><p class="note">Every leg beats its price ${opts.anyBook ? 'at the best book for it' : 'at your books'}: its chance is our number blended with the market's (NHL goals lean 75% on our model, where it has beaten Kalshi; NFL props 50/50 with a 5%+ edge required, where that's what made money; game lines 50/50 with the books' no-vig line). One leg per game, so the legs are independent; for each payout range these are the combinations most likely to cash. Because every leg has an edge, they should cash more often than the payout implies, but only by the edge column: a +600 parlay still loses most of the time.</p></details>
         ${TIERS.map(([lab], t) => rows[t].length ? `<div class="eyebrow" style="margin-top:10px">Pays ${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rows[t].map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
     },
-    norm,
+    norm, reg, FREEZE,
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
     // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)

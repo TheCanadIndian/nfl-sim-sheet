@@ -192,6 +192,12 @@ def inject(src, dst, depth, active, model=None, other=None):
     s = open(src, encoding="utf-8").read()
     s = s.replace("</style>", BAR_CSS + MODEL_CSS + "</style>", 1)
     tog = model_toggle(model, os.path.basename(dst), other) if model else ""
+    # NHL / NFL Results: a tab switch between the model's graded results and the parlay record (parlays.py)
+    if os.path.basename(os.path.dirname(dst)) in ("nhl", "nfl") and os.path.basename(dst) in ("results.html", "parlays.html"):
+        cur = os.path.basename(dst)
+        tog = ('<div class="mtoggle rtabs"><span class="seg">' + "".join(
+            f'<a href="{f}"' + (' aria-current="true"' if f == cur else "") + f'>{lab}</a>'
+            for f, lab in (("results.html", "Model results"), ("parlays.html", "Parlays"))) + '</span></div>') + tog
     s = s.replace('<div class="wrap">', bar(depth, active) + '\n<div class="wrap">' + tog, 1)
     s = s + NEWBIE_JS
     sport = os.path.basename(os.path.dirname(dst))
