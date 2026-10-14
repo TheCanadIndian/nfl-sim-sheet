@@ -295,8 +295,8 @@ def page_data(sport):
                      res=L.get("res")) for L in p["legs"]]) for p in d["parlays"]]))
     allp = [p for d in days for p in d["parlays"]]
     cards = {}
-    for p in allp:
-        cards.setdefault((p["card"], p["tier"]), []).append(p)
+    for p in allp:                                      # the 15x pairs are one card (their tier is just the slate)
+        cards.setdefault((p["card"], "15x+" if p["card"].startswith("2-leg pairs") else p["tier"]), []).append(p)
     return dict(sport=sport, overall=summarize(allp),                   # no build time: the page only changes when the record does
                 cards=[dict(card=c, tier=t, **summarize(ps)) for (c, t), ps in sorted(cards.items())],
                 days=[dict(date=d["date"], graded=d["graded"], rebuilt=any(p.get("rebuilt") for p in d["parlays"]), **summarize(d["parlays"]), parlays=d["parlays"]) for d in days])
@@ -305,7 +305,7 @@ def page_data(sport):
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>__TITLE__</title>__FONTS__<style>__CSS__
 .rec{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:6px 0 14px}
-.rec div{background:var(--sunk);border-radius:8px;padding:10px 12px}.rec b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}.rec span{font-size:12px;color:var(--muted)}.rec b span{font-size:inherit}.rb{border:1px solid var(--faint);border-radius:4px;padding:0 5px;font-size:10.5px;color:var(--muted);margin-left:4px;white-space:nowrap}
+.rec div{background:var(--sunk);border-radius:8px;padding:10px 12px}.rec b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}.rec span{font-size:12px;color:var(--muted)}.rec b span{font-size:inherit}.rec b span.rp{color:var(--good)}.rec b span.rn{color:var(--bad)}.rb{border:1px solid var(--faint);border-radius:4px;padding:0 5px;font-size:10.5px;color:var(--muted);margin-left:4px;white-space:nowrap}
 .pt2 td.l{white-space:normal}.pt2 .tier{color:var(--muted);font-size:12px;display:block}
 .rp{color:var(--good);font-weight:700}.rn{color:var(--bad);font-weight:700}
 details.day{border:1px solid var(--faint);border-radius:10px;margin:8px 0;background:var(--surface)}
