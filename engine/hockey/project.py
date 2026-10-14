@@ -514,7 +514,14 @@ __CSS__
 .newp{font-size:11px;color:var(--muted);margin-left:6px}
 .src{margin:6px 0 2px}
 .sides .pbar{min-width:60px}
-.gjump{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;gap:6px;overflow-x:auto;padding:8px 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.gjw{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;align-items:center;gap:4px;background:var(--bg)}
+.gjump{flex:1;min-width:0;display:flex;gap:6px;overflow-x:auto;padding:8px 0;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.gjw.ml .gjump{-webkit-mask-image:linear-gradient(90deg,transparent,#000 28px);mask-image:linear-gradient(90deg,transparent,#000 28px)}
+.gjw.mr .gjump{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+.gjw.ml.mr .gjump{-webkit-mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+.gjarr{display:none}
+@media (hover:hover) and (pointer:fine){.gjarr{display:grid;place-items:center;flex:0 0 30px;height:30px;border:1px solid var(--faint);border-radius:999px;background:var(--sunk);color:var(--ink);font-size:18px;line-height:1;cursor:pointer;padding:0}
+.gjarr:hover:not(:disabled){border-color:var(--accent)}.gjarr:disabled{opacity:.3;cursor:default}}
 .gjump::-webkit-scrollbar{display:none}
 .gjump a{flex:0 0 auto;display:flex;gap:6px;align-items:baseline;border:1px solid var(--faint);border-radius:999px;padding:5px 11px;color:var(--ink);text-decoration:none;font-family:var(--display);font-weight:600;font-size:15px;letter-spacing:.02em}
 .gjump a small{font-family:var(--body);font-weight:400;font-size:11.5px;color:var(--muted);letter-spacing:0}
@@ -833,8 +840,24 @@ function pairsCard(){
 function jumpBar(){
   if (D.games.length < 2) return '';
   const t = g => (g.start || '').split('·').pop().replace(' ET', '').trim();
-  return `<nav class="gjump" aria-label="Jump to game">${D.games.map(g => `<a href="#g${g.id}">${esc(g.away.team)} @ ${esc(g.home.team)}<small>${esc(t(g))}</small></a>`).join('')}</nav>`;
+  return `<div class="gjw"><button type="button" class="gjarr" data-gj="-1" aria-label="Earlier games">‹</button><nav class="gjump" aria-label="Jump to game">${D.games.map(g => `<a href="#g${g.id}">${esc(g.away.team)} @ ${esc(g.home.team)}<small>${esc(t(g))}</small></a>`).join('')}</nav><button type="button" class="gjarr" data-gj="1" aria-label="Later games">›</button></div>`;
 }
+// game strip: arrows and the mouse wheel scroll it sideways on desktop; fades / disabled arrows show where more games are
+function gjSync(){
+  for (const w of document.querySelectorAll('.gjw')){
+    const n = w.querySelector('.gjump'); if (!n) continue;
+    const l = n.scrollLeft > 2, r = n.scrollLeft + n.clientWidth < n.scrollWidth - 2;
+    w.classList.toggle('ml', l); w.classList.toggle('mr', r);
+    const [a, b] = w.querySelectorAll('.gjarr'); if (a) a.disabled = !l; if (b) b.disabled = !r;
+  }
+}
+document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-gj]'); if (!b) return;
+  const n = b.parentElement.querySelector('.gjump'); n.scrollBy({left: +b.dataset.gj * n.clientWidth * .7}); });
+document.addEventListener('wheel', e => { const n = e.target.closest && e.target.closest('.gjump'); if (!n || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  if (n.scrollWidth <= n.clientWidth) return; e.preventDefault(); n.style.scrollBehavior = 'auto'; n.scrollLeft += e.deltaY; n.style.scrollBehavior = ''; }, {passive: false});
+document.addEventListener('scroll', e => { if (e.target.classList && e.target.classList.contains('gjump')) gjSync(); }, true);
+addEventListener('resize', gjSync);
+new MutationObserver(() => requestAnimationFrame(gjSync)).observe(document.body, {childList: true, subtree: true});
 // the All players sort / Value-only chips, shared with the Games tab (same state, so the choice carries over)
 function playerChips(){
   return `<div class="pchips"><div class="seg" role="group" aria-label="Sort players"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf' && state.bsort !== 'u'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button><button data-bsort="u" aria-pressed="${state.bsort === 'u'}" title="${UTIP}">Usage rank</button></div><div class="seg" role="group" aria-label="Filter"><button data-bval="1" aria-pressed="${!!state.bval}" title="Only players whose best anytime-goal price at your books beats our chance by 5%+ (top-3 usage players; same rule as the green prices)">Value only</button></div></div>`;
