@@ -286,6 +286,17 @@ def summarize(ps):
                 open=sum(1 for p in ps if p.get("res") is None))
 
 
+def group_tier(p):
+    """Summary rows: 15x pairs as one card, cross-game parlays across slots, same-game parlays by size (script names stay on each parlay)."""
+    if p["card"].startswith("2-leg pairs"):
+        return "15x+"
+    if p["card"] == "Cross-game parlays":
+        return "every slot"
+    if p["card"].startswith("Same-game"):
+        return p["tier"].split(" · ")[-1]
+    return p["tier"]
+
+
 def page_data(sport):
     days = []
     for fp in sorted(glob.glob(os.path.join(OUT, sport, "*.json")), reverse=True):
@@ -296,11 +307,14 @@ def page_data(sport):
     allp = [p for d in days for p in d["parlays"]]
     cards = {}
     for p in allp:                                      # the 15x pairs are one card (their tier is just the slate)
-        tier = "15x+" if p["card"].startswith("2-leg pairs") else "every slot" if p["card"] == "Cross-game parlays" else p["tier"]
+        tier = group_tier(p)
         cards.setdefault((p["card"], tier), []).append(p)
     return dict(sport=sport, overall=summarize(allp),                   # no build time: the page only changes when the record does
                 cards=[dict(card=c, tier=t, **summarize(ps)) for (c, t), ps in sorted(cards.items())],
-                days=[dict(date=d["date"], graded=d["graded"], rebuilt=any(p.get("rebuilt") for p in d["parlays"]), **summarize(d["parlays"]), parlays=d["parlays"]) for d in days])
+                days=[dict(date=d["date"], graded=d["graded"], rebuilt=any(p.get("rebuilt") for p in d["parlays"]), **summarize(d["parlays"]),
+               groups=[dict(card=c, tier=t, **summarize(ps), parlays=ps) for (c, t), ps in sorted(
+                   {k: [p for p in d["parlays"] if (p["card"], group_tier(p)) == k] for k in {(p["card"], group_tier(p)) for p in d["parlays"]}}.items())])
+          for d in days])
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -314,6 +328,9 @@ details.day>summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;a
 details.day>summary::-webkit-details-marker{display:none}
 details.day>summary b{font-family:var(--display);font-size:18px;letter-spacing:.02em;text-transform:uppercase;margin-right:auto}
 details.day>summary .chev{color:var(--muted);transition:transform .15s}details.day[open]>summary .chev{transform:rotate(180deg)}
+details.grp{border-top:1px solid var(--faint)}details.grp>summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;padding:10px 14px;font-size:14px}
+details.grp>summary::-webkit-details-marker{display:none}details.grp>summary .gn{margin-right:auto}details.grp>summary .chev{color:var(--muted);transition:transform .15s}details.grp[open]>summary .chev{transform:rotate(180deg)}
+details.grp .pl{padding-left:24px;background:color-mix(in srgb,var(--sunk) 50%,transparent)}
 .pl{border-top:1px solid var(--faint);padding:10px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px}
 .pl .hd{font-size:12px;color:var(--muted)}.pl ul{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:2px;font-size:13.5px}
 .pl li .m{display:inline-block;width:18px;font-weight:800}.pl li.W .m{color:var(--good)}.pl li.L .m{color:var(--bad)}.pl li.V .m,.pl li.P .m,.pl li.N .m{color:var(--muted)}
@@ -351,7 +368,8 @@ function render(){
     ${D.cards.map(c => `<tr><td class="l"><b>${esc(c.card)}</b><span class="tier">${esc(c.tier)}</span></td><td>${c.w}-${c.l}${c.open ? ` <small class="muted">+${c.open} open</small>` : ''}</td><td>${c.n ? pc(c.w / c.n) : '–'}</td><td class="muted">${pc(c.exp)}</td><td>${roi(c.roi)}</td></tr>`).join('')}</tbody></table></div>` : '';
   const openAt = Math.max(0, D.days.findIndex(d => d.n));          // the latest day with results starts open
   const days = D.days.map((d, i) => `<details class="day"${i === openAt ? ' open' : ''}><summary><b>${day(d.date)}</b><span>${d.w}-${d.l}${d.open ? ` · ${d.open} open` : ''}</span><span>${d.n ? pc(d.w / d.n) + ' hit' : ''}</span><span>${d.roi == null ? '' : roi(d.roi)}</span><span class="chev" aria-hidden="true">▾</span></summary>
-    ${d.parlays.slice().sort((a, b) => ({W: 0, O: 1, L: 2, V: 3}[a.res || 'O'] - {W: 0, O: 1, L: 2, V: 3}[b.res || 'O'])).map(parlay).join('')}</details>`).join('');
+    ${d.groups.map(gr => `<details class="grp"><summary><span class="gn"><b>${esc(gr.card)}</b> <span class="muted">${esc(gr.tier)}</span></span><span>${gr.w}-${gr.l}${gr.open ? ` · ${gr.open} open` : ''}</span><span>${gr.roi == null ? '' : roi(gr.roi)}</span><span class="chev" aria-hidden="true">▾</span></summary>
+      ${gr.parlays.slice().sort((a, b) => ({W: 0, O: 1, L: 2, V: 3}[a.res || 'O'] - {W: 0, O: 1, L: 2, V: 3}[b.res || 'O'])).map(parlay).join('')}</details>`).join('')}</details>`).join('');
   document.getElementById('main').innerHTML = D.days.length
     ? `<section class="panel"><div class="phead"><h2>Overall</h2><span class="small muted">since ${day(D.days[D.days.length - 1].date)}</span></div>${tiles}${cards}</section><section class="panel"><div class="phead"><h2>By day</h2></div>${days}</section>`
     : `<section class="panel"><div class="phead"><h2>Overall</h2></div><p class="note">Tracking starts with the next slate: every parlay card is saved before the first game and graded the next morning.</p></section>`;
