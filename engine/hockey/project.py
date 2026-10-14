@@ -739,6 +739,12 @@ function atgParlays(){
   const rrBlock = rrPairs.length ? `<div class="rr"><div class="eyebrow">Round robin · fewer dry spells</div>
     <p class="small muted" style="margin:4px 0 8px">Bet all three 2-leg parlays below (same stake each). At least one hits whenever 2 of the 3 score: ${pct(rr[0].q * rr[1].q + rr[0].q * rr[2].q + rr[1].q * rr[2].q - 2 * rr[0].q * rr[1].q * rr[2].q)} by our blended chances; in the 2024-26 backtest the longest stretch with no winner was 7-9 nights, vs 20-23 for one 2-leg a night.</p>
     <div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">2-leg</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rrPairs.map(row).join('')}</tbody></table></div></div>` : '';
+  if (MKT.reg){                                                    // freeze mode: record for the Results page
+    const lg = L => ({gid: String(L.g.id), start: L.g.start_utc, kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.p.name), lab: `${L.p.name} to score`, p: +L.q.toFixed(4), price: L.b.o, book: L.b.k});
+    top(2).forEach(c => MKT.reg('Anytime-goal parlays', 'Best 2-leg', c.legs.map(lg), c.p, c.d));
+    top(3).forEach(c => MKT.reg('Anytime-goal parlays', 'Best 3-leg', c.legs.map(lg), c.p, c.d));
+    rrPairs.forEach(c => MKT.reg('Anytime-goal parlays', 'Round robin', c.legs.map(lg), c.p, c.d));
+  }
   const mine = MKT.myBooks();
   return `<section class="panel"><div class="phead"><h2>Anytime-goal parlays at your books</h2><span class="small muted">${mine.length ? 'Priced at ' + esc(mine.join(', ')) : 'Priced at the best book (choose yours under any game’s bets)'}</span></div>
     <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Legs: our top 3 scorers in each game (usage-adjusted rank; on Kalshi those roughly broke even while everyone else lost) who are 30%+ to score. Each leg's chance leans on our number (75%) with the exchanges' price as a check (25%): on Kalshi this season, our top-3 picks returned +9-10% that way vs +8.6% on a 50/50 blend, with twice as many plays. Each leg must beat its own price. One player per game, so legs are independent; parlays multiply the books' margin, so the edge column matters more than the payout. Edge = our chance × the payout − 1. Backtest (2024-26, the likeliest such parlays each night): 2-leg hit 15.6-16.2% vs 15-17% predicted, 3-leg 6.7-7.2% vs 6-7%, so a 2-leg needs to pay about 6.3x and a 3-leg about 14x just to break even; the nightly top 2-leg once went 24 nights without hitting. Treat these as small stakes.</p></details>
@@ -817,6 +823,11 @@ function pairsCard(){
       <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
       <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.q, side: 'over', stat: 'goals', line: .5})), '+ add pair') : ''}</td></tr>`).join('');
   const priced = L2.length ? `<div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Two-man</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${pricedRows}</tbody></table></div>` : '';
+  if (MKT.reg){
+    const gs = Object.fromEntries(D.games.map(g => [String(g.id), g.start_utc]));
+    L2.forEach(c => MKT.reg('Longshot two-mans', '12x+', c.legs.map(L => ({gid: String(L.g.id), start: L.g.start_utc, kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.p.name), lab: `${L.p.name} to score`, p: +L.q.toFixed(4), price: L.b.o, book: L.b.k})), c.p, c.d));
+    P.forEach(x => MKT.reg('2-leg pairs paying 15x+', x.slate || 'Tonight', x.legs.map(L => ({gid: String(L.gid), start: gs[String(L.gid)], kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.name), lab: `${L.name} to score`, p: L.p, price: null, book: null})), x.p, x.payout));
+  }
   if (!P.length && !priced) return '';
   const R = D.pairs_record, rec = R && R.n ? `Record since ${esc(R.since)}: <b>${R.hits}-${R.n - R.hits}</b> (${(R.hits / R.n * 100).toFixed(1)}% vs ${(R.pred * 100).toFixed(1)}% implied) · return if paid our fair odds ${R.ret >= 0 ? '+' : ''}${(R.ret * 100).toFixed(0)}%` : 'Record: tracking starts with tonight\'s pairs.';
   const legSlip = L => ({id: `nhl|${L.gid}|${L.id}|goal1`, sport: 'nhl', g: L.gid, glab: L.game, lab: `${L.name} to score`, p: L.p, side: 'over', stat: 'goals', line: .5});

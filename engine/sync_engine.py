@@ -28,7 +28,7 @@ CODE = ["*.py", "*.js", "*.ps1", "README.md", "requirements.txt", "*.example.csv
 STATE = ["model_params.json", "learning_log.json", "overrides/*.csv", "hockey/overrides.csv",
          "hockey/.last_run.json", "projections/*", "projections/weeks/*", "projections/blind/*",
          "projections/blind/weeks/*", "hockey/projections/*", "nba/projections/*", "nba/.last_run.json", "markets/*.json",
-         "mlb/projections/*"]
+         "mlb/projections/*", "parlays/nhl/*.json", "parlays/nfl/*.json"]
 SKIP = ["*.html", "*_pregame_*", "backtest_rows.csv"]     # generated pages / one-off files
 
 
