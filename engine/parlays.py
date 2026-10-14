@@ -296,7 +296,8 @@ def page_data(sport):
     allp = [p for d in days for p in d["parlays"]]
     cards = {}
     for p in allp:                                      # the 15x pairs are one card (their tier is just the slate)
-        cards.setdefault((p["card"], "15x+" if p["card"].startswith("2-leg pairs") else p["tier"]), []).append(p)
+        tier = "15x+" if p["card"].startswith("2-leg pairs") else "every slot" if p["card"] == "Cross-game parlays" else p["tier"]
+        cards.setdefault((p["card"], tier), []).append(p)
     return dict(sport=sport, overall=summarize(allp),                   # no build time: the page only changes when the record does
                 cards=[dict(card=c, tier=t, **summarize(ps)) for (c, t), ps in sorted(cards.items())],
                 days=[dict(date=d["date"], graded=d["graded"], rebuilt=any(p.get("rebuilt") for p in d["parlays"]), **summarize(d["parlays"]), parlays=d["parlays"]) for d in days])
@@ -348,7 +349,8 @@ function render(){
     <div><b>${roi(O.roi)}</b><span>return, flat stakes</span></div></div>`;
   const cards = D.cards.length ? `<div class="tw"><table class="t pt2"><thead><tr><th class="l">Card</th><th>Record</th><th>Hit</th><th>Expected</th><th>Return</th></tr></thead><tbody>
     ${D.cards.map(c => `<tr><td class="l"><b>${esc(c.card)}</b><span class="tier">${esc(c.tier)}</span></td><td>${c.w}-${c.l}${c.open ? ` <small class="muted">+${c.open} open</small>` : ''}</td><td>${c.n ? pc(c.w / c.n) : '–'}</td><td class="muted">${pc(c.exp)}</td><td>${roi(c.roi)}</td></tr>`).join('')}</tbody></table></div>` : '';
-  const days = D.days.map((d, i) => `<details class="day"${i === 0 ? ' open' : ''}><summary><b>${day(d.date)}</b><span>${d.w}-${d.l}${d.open ? ` · ${d.open} open` : ''}</span><span>${d.n ? pc(d.w / d.n) + ' hit' : ''}</span><span>${d.roi == null ? '' : roi(d.roi)}</span><span class="chev" aria-hidden="true">▾</span></summary>
+  const openAt = Math.max(0, D.days.findIndex(d => d.n));          // the latest day with results starts open
+  const days = D.days.map((d, i) => `<details class="day"${i === openAt ? ' open' : ''}><summary><b>${day(d.date)}</b><span>${d.w}-${d.l}${d.open ? ` · ${d.open} open` : ''}</span><span>${d.n ? pc(d.w / d.n) + ' hit' : ''}</span><span>${d.roi == null ? '' : roi(d.roi)}</span><span class="chev" aria-hidden="true">▾</span></summary>
     ${d.parlays.slice().sort((a, b) => ({W: 0, O: 1, L: 2, V: 3}[a.res || 'O'] - {W: 0, O: 1, L: 2, V: 3}[b.res || 'O'])).map(parlay).join('')}</details>`).join('');
   document.getElementById('main').innerHTML = D.days.length
     ? `<section class="panel"><div class="phead"><h2>Overall</h2><span class="small muted">since ${day(D.days[D.days.length - 1].date)}</span></div>${tiles}${cards}</section><section class="panel"><div class="phead"><h2>By day</h2></div>${days}</section>`
