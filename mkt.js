@@ -33,7 +33,8 @@
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
   const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'Polymarket', 'Poly US', 'ProphetX', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'Fliff', 'Bally Bet', 'betPARX'];
   let MY = [], bkOpen = null;
-  const OV = {g: 'all', m: 'all', q: '', alt: false};          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
+  const OV = {g: 'all', m: 'all', q: '', alt: false};
+  const WV = {edge: true, mine: false, all: false, long: false};   // Weighted fair tab toggles          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
   const mine = k => !MY.length || MY.includes(k);
   // Pinnacle's no-vig is on the prop when its line matches ours (TD props have no line: .5). w: 2 two-way (multiplicative), 1 one-way (power)
@@ -126,6 +127,12 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .vtag b{font-weight:800}
 @media (max-width:640px){.vtag{display:block;width:fit-content;white-space:normal;max-width:100%;line-height:1.35;margin:3px 4px 0 0}.vtag .pinv{margin-left:0}td.name:has(> .vtag){white-space:normal;max-width:62vw}}
 .mybk{color:var(--good);font-weight:700}
+.beta{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.wvc{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}.wvc button,.wvmore{border:1px solid var(--faint);border-radius:999px;padding:4px 12px;background:none;color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+.wvc button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:rgba(54,211,153,.10)}.wvmore{margin-top:10px}
+.wv details.how div{font-size:12.5px;color:var(--muted);margin-top:4px}
+.wvt td{white-space:nowrap}.wvt td small{display:block;color:var(--muted);font-size:11.5px}.wvt .name{white-space:normal;min-width:150px}.wvt td.pe{color:var(--good);font-weight:700}.wvt td a{color:inherit;text-decoration:none}
+@media (max-width:640px){.wvt th:nth-child(2),.wvt td:nth-child(2),.wvt th:nth-child(4),.wvt td:nth-child(4),.wvt th:nth-child(7),.wvt td:nth-child(7){display:none}.wvt td,.wvt th{padding:6px 4px}.wvt td{white-space:normal}.wvt .name{min-width:0;max-width:34vw}.wvt td small{font-size:11px}}
 .bestshot{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);background:color-mix(in srgb,var(--good) 7%,transparent);border-radius:10px;padding:10px 12px;margin:8px 0 12px}
 .bestshot ul{list-style:none;margin:6px 0;padding:0;display:grid;gap:4px}.bestshot li{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}.bestshot li a{margin-left:auto;color:inherit;white-space:nowrap}
 .bestshot .bsum{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;border-top:1px solid var(--faint);padding-top:8px;font-size:13.5px}.bestshot .bsum button{margin-left:auto}
@@ -273,6 +280,85 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     },
     bkFetched: () => (BK ? BK.fetched : null),
     px, pxSwitch,
+    // EXPERIMENTAL tab: fair chance = the owner's book weights (weighted mean of each book's no-vig chance; the book
+    // being judged is left out). Two-way prices de-vig multiplicatively; one-way prices with the power method, each
+    // book's exponent solved from its own two-way lines on this slate. Compared with the plain median of the books.
+    weightView(games){
+      const W_LINES = {Novig: 7.5, FD: 1.1, Kalshi: 1.1, DK: 1, ProphetX: 1, Polymarket: 1, 'Poly US': 1, Pinnacle: 1, Caesars: .3, MGM: .1, Fanatics: .1};
+      const W_PROPS = {Novig: 7, Kalshi: 7, DK: 1.4, ProphetX: 1.4, Pinnacle: 1.4, FD: 1, Caesars: .5, Fliff: .5, bet365: .3, 'Hard Rock': .1};
+      const KL = {goal: 'Anytime goal', td: 'Anytime TD', rec: 'Receptions', rec_yds: 'Receiving yds', rush_yds: 'Rushing yds', pass_yds: 'Passing yds'};
+      ['05', '15', '25', '35', '45'].forEach(x => { KL['sog' + x] = 'Shots'; });
+      const fresh = x => x && x.fetched && Date.now() - new Date(x.fetched) < 12 * 3600e3;
+      const P0 = v => Array.isArray(v) ? v[0] : v;
+      const link = v => { const u = Array.isArray(v) ? v[1] : null; if (!u) return null;
+        return u.startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`; };
+      const amS = o => (o > 0 ? '+' : '') + o, pc = v => v == null ? '–' : (v * 100).toFixed(1) + '%';
+      const median = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
+      // markets: {gid, who, what, kind ('lines'|'props'), p (ours), A: {book: odds} for this side, B: {book: odds} other side}
+      const mk = [];
+      for (const g of games){
+        const G = fresh(BK) && BK.games && BK.games[String(g.id)];
+        if (G){
+          const main = o => Object.entries(o || {}).sort((a, b) => Object.values(b[1]).reduce((n, x) => n + Object.keys(x).length, 0) - Object.values(a[1]).reduce((n, x) => n + Object.keys(x).length, 0))[0];
+          for (const [sd, ot] of [['away', 'home'], ['home', 'away']]) mk.push({gid: g.id, who: g[sd] || sd, what: 'Moneyline', kind: 'lines', A: (G.ml || {})[sd], B: (G.ml || {})[ot]});
+          const sp = main(G.spread); if (sp) for (const [sd, ot] of [['away', 'home'], ['home', 'away']]){ const L = sd === 'home' ? +sp[0] : -sp[0];
+            mk.push({gid: g.id, who: g[sd] || sd, what: `Spread ${L > 0 ? '+' : L < 0 ? '−' : ''}${Math.abs(L)}`, kind: 'lines', A: sp[1][sd], B: sp[1][ot]}); }
+          const tt = main(G.total); if (tt) for (const [sd, ot] of [['over', 'under'], ['under', 'over']]) mk.push({gid: g.id, who: sd === 'over' ? 'Over' : 'Under', what: `Total ${tt[0]}`, kind: 'lines', A: tt[1][sd], B: tt[1][ot]});
+        }
+        const X = fresh(PR) && PR.props && PR.props[String(g.id)];
+        for (const [nm, kinds] of Object.entries(X || {})) for (const [k, e] of Object.entries(kinds)){
+          if (!KL[k]) continue;
+          const name = nm.replace(/\b\w/g, c => c.toUpperCase()), line = e.l ?? (k.startsWith('sog') ? (+k.slice(3) / 10) : null);
+          const lab = line != null && k !== 'goal' && k !== 'td' ? ` ${line}` : '';
+          mk.push({gid: g.id, who: name, what: `${KL[k]}${lab ? ' o' + lab.trim() : ''}`, kind: 'props', p: e.p, A: e.o, B: e.u});
+          if (e.u) mk.push({gid: g.id, who: name, what: `${KL[k]}${lab ? ' u' + lab.trim() : ''}`, kind: 'props', p: e.p == null ? null : 1 - e.p, A: e.u, B: e.o});
+        }
+      }
+      // each book's power exponent for one-way prices, from its two-way pairs here (median); default 1.05
+      const ks = {};
+      for (const m of mk) for (const [b, v] of Object.entries(m.A || {})){ const o = m.B && m.B[b]; if (o == null || SKIP.has(b)) continue;
+        const a = 1 / dec(P0(v)), c = 1 / dec(P0(o)); if (a + c <= 1) continue;
+        let lo = 1, hi = 3; for (let i = 0; i < 40; i++){ const kk = (lo + hi) / 2; (a ** kk + c ** kk > 1) ? lo = kk : hi = kk; }
+        (ks[b] = ks[b] || []).push((lo + hi) / 2); }
+      const K = b => ks[b] ? median(ks[b]) : 1.05;
+      const chance = (m, b) => { const v = m.A[b]; if (v == null) return null; const a = 1 / dec(P0(v)); const o = m.B && m.B[b];
+        if (o != null){ const c = 1 / dec(P0(o)); return a / (a + c); } return Math.min(a ** K(b), .999); };
+      const rows = [];
+      for (const m of mk){
+        if (!m.A) continue;
+        const W = m.kind === 'props' ? W_PROPS : W_LINES;
+        const books = Object.keys(m.A).filter(b => !SKIP.has(b));
+        const ch = Object.fromEntries(books.map(b => [b, chance(m, b)]).filter(([, q]) => q != null));
+        const fairEx = ex => { let sw = 0, sq = 0; for (const [b, q] of Object.entries(ch)) if (b !== ex && W[b]){ sw += W[b]; sq += W[b] * q; } return sw ? sq / sw : null; };
+        const medEx = ex => median(Object.entries(ch).filter(([b]) => b !== ex && m.B && m.B[b] != null).map(([, q]) => q));
+        let best = null;
+        for (const b of books){ if (NOBET.has(b)) continue; const f = fairEx(b); if (f == null) continue;
+          const o = P0(m.A[b]), ev = f * dec(o) - 1, md = medEx(b);
+          if (!best || ev > best.ev || (ev === best.ev && MY.includes(b))) best = {b, o, ev, f, u: link(m.A[b]), evm: md == null ? null : md * dec(o) - 1}; }
+        if (!best) continue;
+        const nW = Object.keys(ch).filter(b => b !== best.b && W[b]).length;
+        rows.push({...m, best, fair: fairEx(null), med: medEx(null), nW});
+      }
+      const glab = Object.fromEntries(games.map(g => [String(g.id), g.label]));
+      let list = rows.filter(r => r.nW >= 2 && (WV.long || r.best.f >= .08) && (!WV.mine || MY.includes(r.best.b)) && (!WV.edge || r.best.ev >= .02)).sort((a, b) => b.best.ev - a.best.ev);
+      const total = list.length, LIM = 60;
+      if (!WV.all) list = list.slice(0, LIM);
+      const trs = list.map(r => `<tr><td class="l name"><b>${esc(r.who)}</b><small>${esc(r.what)} · ${esc(glab[String(r.gid)] || '')}</small></td>
+        <td>${r.p == null ? '–' : pc(r.p)}</td>
+        <td title="Weighted fair from ${r.nW} book${r.nW === 1 ? '' : 's'} (the priced book left out)"><b>${pc(r.best.f)}</b><small>${r.nW} book${r.nW === 1 ? '' : 's'}</small></td>
+        <td class="muted">${pc(r.med)}</td>
+        <td class="l">${r.best.u ? `<a href="${esc(r.best.u)}" target="_blank" rel="noopener">${amS(r.best.o)} <span class="${MY.includes(r.best.b) ? 'mybk' : ''}">${esc(FULL[r.best.b] || r.best.b)}</span> ↗</a>` : `${amS(r.best.o)} <span class="${MY.includes(r.best.b) ? 'mybk' : ''}">${esc(FULL[r.best.b] || r.best.b)}</span>`}</td>
+        <td class="${r.best.ev >= .02 ? 'pe' : ''}">${r.best.ev >= 0 ? '+' : ''}${(r.best.ev * 100).toFixed(1)}%</td>
+        <td class="muted">${r.best.evm == null ? '–' : (r.best.evm >= 0 ? '+' : '') + (r.best.evm * 100).toFixed(1) + '%'}</td></tr>`).join('');
+      const wl = (lab, W) => `<div><b>${lab}</b> ${Object.entries(W).sort((a, b) => b[1] - a[1]).map(([b, w]) => `${esc(FULL[b] || b)} ${w}`).join(' · ')} · everything else off</div>`;
+      const chip = (k, lab) => `<button type="button" data-wv="${k}" aria-pressed="${!!WV[k]}">${lab}</button>`;
+      return `<section class="panel wv"><div class="phead"><h2>Weighted fair <span class="beta">experimental</span></h2><span class="small muted">${MY.length ? '<span class="mybk">your books in green</span>' : ''}</span></div>
+        <div class="wvc">${chip('edge', '2%+ edge only')}${chip('mine', 'Your books only')}${chip('long', 'Include longshots')}</div>
+        <details class="how"><summary>How this works</summary><p class="note">Fair chance = a weighted average of each book’s no-vig chance, using your weights; the book being priced is left out of its own fair. Two-sided prices are de-vigged multiplicatively; one-sided prices (like a lone “yes”) with the power method, each book’s exponent fit from its own two-sided lines tonight. Edge = weighted fair × the payout − 1, at the best price anywhere. A fair needs 2+ weighted books; longshots (fair under 8%) are hidden unless you include them, since one-sided longshot prices de-vig least reliably. “Median” is the plain median of the books, for comparison. In private tracking so far (24 games), the weighted fair was slightly more accurate on anytime goals and flagged about a third fewer edges, and the ones it dropped lost money. Edges against the market alone have still lost overall (the biggest gaps are usually stale prices), so treat these as a check, not picks.</p>${wl('Game lines:', W_LINES)}${wl('Player props:', W_PROPS)}</details>
+        ${total ? `<div class="tw"><table class="t wvt"><thead><tr><th class="l">Bet</th><th>Ours</th><th>Weighted fair</th><th>Median</th><th class="l">Best price</th><th>Edge</th><th title="Edge against the median fair">vs median</th></tr></thead><tbody>${trs}</tbody></table></div>
+        ${total > LIM ? `<button type="button" class="wvmore" data-wv="all">${WV.all ? 'Show top ' + LIM : 'Show all ' + total}</button>` : ''}`
+        : `<p class="note">${WV.edge ? 'No price beats the weighted fair by 2% right now.' : 'No prices yet.'}</p>`}</section>`;
+    },
     // 'Book odds' tab: every game line and player prop with each book's price side by side.
     // games: [{id, label}] in page order. Filters (game / market / player search) work on the DOM, so typing keeps focus.
     oddsView(games){
@@ -594,6 +680,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   document.addEventListener('input', e => { if (e.target.id === 'ov-q'){ OV.q = e.target.value; ovApply(); } });
   document.addEventListener('change', e => { if (e.target.id === 'ov-g'){ OV.g = e.target.value; ovApply(); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovm-pick]'); if (b){ OV.m = b.dataset.ovmPick; ovApply(); } });
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-wv]'); if (b){ WV[b.dataset.wv] = !WV[b.dataset.wv]; rerender(); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovalt]'); if (b){ OV.alt = !OV.alt; ovApply(); } });
   document.addEventListener('click', e => {                 // choose your sportsbooks (saved on this device)
     const st = e.target.closest && e.target.closest('[data-bkset]');
