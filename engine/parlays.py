@@ -137,8 +137,16 @@ _cache = {}
 
 def get(url, **kw):
     if url not in _cache:
-        r = requests.get(url, timeout=30, **kw)
-        _cache[url] = r.json() if r.ok else None
+        for i in range(4):                               # the NHL API sometimes answers empty or rate-limits: back off and retry
+            try:
+                r = requests.get(url, timeout=30, **kw)
+                if r.ok and r.content:
+                    _cache[url] = r.json()
+                    return _cache[url]
+            except (requests.RequestException, ValueError):
+                pass
+            time.sleep(2 * (i + 1))
+        return None                                       # not cached: tried again next run
     return _cache[url]
 
 
@@ -282,7 +290,7 @@ def page_data(sport):
     days = []
     for fp in sorted(glob.glob(os.path.join(OUT, sport, "*.json")), reverse=True):
         d = json.load(open(fp))
-        days.append(dict(date=d["date"], graded=d.get("graded"), parlays=[dict(card=p["card"], tier=p["tier"], p=p["p"], d=p.get("d"),
+        days.append(dict(date=d["date"], graded=d.get("graded"), parlays=[dict(card=p["card"], tier=p["tier"], p=p["p"], d=p.get("d"), rebuilt=p.get("rebuilt"),
                      paid=p.get("paid"), res=p.get("res"), legs=[dict(lab=L.get("lab"), p=L.get("p"), price=L.get("price"), book=L.get("book"),
                      res=L.get("res")) for L in p["legs"]]) for p in d["parlays"]]))
     allp = [p for d in days for p in d["parlays"]]
@@ -291,13 +299,13 @@ def page_data(sport):
         cards.setdefault((p["card"], p["tier"]), []).append(p)
     return dict(sport=sport, overall=summarize(allp),                   # no build time: the page only changes when the record does
                 cards=[dict(card=c, tier=t, **summarize(ps)) for (c, t), ps in sorted(cards.items())],
-                days=[dict(date=d["date"], graded=d["graded"], **summarize(d["parlays"]), parlays=d["parlays"]) for d in days])
+                days=[dict(date=d["date"], graded=d["graded"], rebuilt=any(p.get("rebuilt") for p in d["parlays"]), **summarize(d["parlays"]), parlays=d["parlays"]) for d in days])
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>__TITLE__</title>__FONTS__<style>__CSS__
 .rec{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:6px 0 14px}
-.rec div{background:var(--sunk);border-radius:8px;padding:10px 12px}.rec b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}.rec span{font-size:12px;color:var(--muted)}.rec b span{font-size:inherit}
+.rec div{background:var(--sunk);border-radius:8px;padding:10px 12px}.rec b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}.rec span{font-size:12px;color:var(--muted)}.rec b span{font-size:inherit}.rb{border:1px solid var(--faint);border-radius:4px;padding:0 5px;font-size:10.5px;color:var(--muted);margin-left:4px;white-space:nowrap}
 .pt2 td.l{white-space:normal}.pt2 .tier{color:var(--muted);font-size:12px;display:block}
 .rp{color:var(--good);font-weight:700}.rn{color:var(--bad);font-weight:700}
 details.day{border:1px solid var(--faint);border-radius:10px;margin:8px 0;background:var(--surface)}
@@ -314,7 +322,7 @@ details.day>summary .chev{color:var(--muted);transition:transform .15s}details.d
 </style></head><body><div class="wrap">
 <header><div><div class="eyebrow">Results</div><h1>__H1__</h1></div></header>
 <main id="main"></main>
-<footer>Every parlay the __SPORT__ page showed, frozen at the last price check before each day's first game (priced at Novig, Kalshi and Hard Rock), then graded from the box scores. A parlay loses on any losing leg; legs on players who didn't play, and pushes, drop out as they do at the books. Expected = our chance when shown. Return = flat 1-unit stakes at the prices shown (cards without book prices count at their fair payout).</footer>
+<footer>Every parlay the __SPORT__ page showed, frozen at the last price check before each day's first game (priced at Novig, Kalshi and Hard Rock), then graded from the box scores. A parlay loses on any losing leg; legs on players who didn't play, and pushes, drop out as they do at the books. Expected = our chance when shown. Return = flat 1-unit stakes at the prices shown (cards without book prices count at their fair payout). NHL Oct 9-13: the 15x pairs are as saved; the anytime-goal parlays and longshot two-mans are rebuilt with the same rules from that night's projections and Kalshi prices (marked "rebuilt"); the payout-tier and shots + moneyline cards weren't saved before Oct 14.</footer>
 </div><script>
 const D = __DATA__;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
@@ -330,7 +338,7 @@ function legLine(L){
 function parlay(p){
   const st = p.res === 'W' ? '<span class="badge W">WON</span>' : p.res === 'L' ? '<span class="badge L">LOST</span>' : p.res === 'V' ? '<span class="badge V">VOID</span>' : '<span class="badge O">OPEN</span>';
   const pay = p.paid || p.d;
-  return `<div class="pl"><div><div class="hd">${esc(p.card)} · ${esc(p.tier)}</div><ul>${p.legs.map(legLine).join('')}</ul></div>
+  return `<div class="pl"><div><div class="hd">${esc(p.card)} · ${esc(p.tier)}${p.rebuilt ? ` <span class="rb" title="Saved before tracking started: rebuilt with the page’s rules from that night’s projections and ${esc(p.rebuilt)}">rebuilt · ${esc(p.rebuilt)}</span>` : ''}</div><ul>${p.legs.map(legLine).join('')}</ul></div>
     <div class="out">${st}<b>${pc(p.p)}</b>${pay ? pay.toFixed(1) + 'x' : 'fair only'}</div></div>`;
 }
 function render(){
