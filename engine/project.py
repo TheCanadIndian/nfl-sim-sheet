@@ -232,8 +232,22 @@ def future_actives(con, todo, season, week, overrides):
     out_inj = inj[inj.report_status.astype(str).str.match(r"(Out|Doubtful)")]
 
     rows, qbs, notes = [], {}, []
+    # the schedule file's QB can lag a change (2026 wk 6: it still listed Drew Lock for SEA after Sam Darnold returned
+    # and started weeks 3-5). When the latest depth chart's QB1 and the QB who started the team's last game agree on
+    # someone else, use them.
+    qb1 = depth_qbs.sort_values("pos_rank").drop_duplicates("team").set_index("team").player_id.to_dict()
+    pq = pd.read_sql(f"""SELECT season, week, posteam AS team, passer_player_id AS player_id, COUNT(*) AS n FROM plays
+                         WHERE qb_dropback = 1 AND passer_player_id IS NOT NULL AND season >= {season - 1}
+                         GROUP BY 1, 2, 3, 4""", con)
+    pq = pq[(pq.season < season) | (pq.week < week)].sort_values(["season", "week", "n"])
+    last_starter = pq.groupby("team").tail(1).set_index("team").player_id.to_dict()
     for g in todo.itertuples():
         for team, qb_id in ((g.home_team, g.home_qb_id), (g.away_team, g.away_qb_id)):
+            d1, ls = qb1.get(team), last_starter.get(team)
+            if d1 is not None and d1 == ls and d1 != qb_id and d1 not in set(out_inj.player_id):
+                nm = names.loc[names.player_id == d1, "full_name"]
+                notes.append(f"{team}: starting QB -> {nm.iloc[0] if len(nm) else d1} (depth chart QB1 and last game's starter; schedule had {qb_id})")
+                qb_id = d1
             ts = snaps[(snaps.team == team) & ((snaps.season < season) | (snaps.week < week))]
             recent = ts.drop_duplicates("game_id").sort_values(["season", "week"]).game_id.iloc[-RECENT_GAMES:]
             cand = set(ts[ts.game_id.isin(recent)].player_id) | set(depth[depth.team == team].player_id)
