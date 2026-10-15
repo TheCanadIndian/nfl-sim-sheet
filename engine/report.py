@@ -117,6 +117,58 @@ def alt_model(stem, match):
     return dict(teams=tr, players=pl, sgp=json.load(open(sp)) if os.path.exists(sp) else None)
 
 
+# matchup map: where each offense goes (pass depth x direction, run lane) against how this defense does there.
+# Plays from this season before this week, plus last season at 0.35 weight; defense rates shrunk toward the league.
+PASS_ROWS = [("deep", "Deep (20+ yds)", 20, 99), ("inter", "Intermediate (10-19)", 10, 19), ("short", "Short (1-9)", 1, 9), ("behind", "Screens / behind line", -99, 0)]
+RUN_LANES = [("left", "end", "L end"), ("left", "tackle", "L tackle"), ("left", "guard", "L guard"), ("middle", None, "Middle"),
+             ("right", "guard", "R guard"), ("right", "tackle", "R tackle"), ("right", "end", "R end")]
+
+
+def field_map(db, games, season, week, k=25):
+    try:
+        con = sqlite3.connect(db)
+        pl = pd.read_sql(f"""SELECT season, week, posteam, defteam, pass, rush, qb_scramble, pass_location, air_yards, run_location, run_gap, success
+                             FROM plays WHERE season >= {season - 1} AND (pass = 1 OR rush = 1) AND two_point_attempt = 0""", con)
+    except Exception:                                                           # noqa: BLE001
+        return {}
+    pl = pl[(pl.season < season) | (pl.week < week)].copy()
+    pl["w"] = np.where(pl.season == season, 1.0, .35)
+    zone = pd.Series(None, index=pl.index, dtype=object)
+    ps = (pl["pass"] == 1) & (pl.qb_scramble != 1) & pl.pass_location.notna() & pl.air_yards.notna()
+    for key, _, lo, hi in PASS_ROWS:
+        m = ps & pl.air_yards.between(lo, hi)
+        zone[m] = key + "|" + pl.loc[m, "pass_location"]
+    rs = (pl.rush == 1) & (pl.qb_scramble != 1) & pl.run_location.notna()
+    gap = pl.run_gap.where(pl.run_location != "middle")
+    zone[rs] = "run|" + pl.loc[rs, "run_location"] + "|" + gap[rs].fillna("")
+    zone = zone.str.replace(r"run\|middle\|.*", "run|middle|", regex=True)
+    pl["zone"], pl["kind"] = zone, np.where(ps, "pass", np.where(rs, "run", None))
+    pl = pl[pl.zone.notna()]
+    pl["ws"] = pl.w * pl.success.fillna(0)
+    lg = pl.groupby("zone")[["w", "ws"]].sum()
+    lg_sr = (lg.ws / lg.w).to_dict()
+    off = pl.groupby(["posteam", "zone"])[["w", "ws"]].sum()
+    off_tot = pl.groupby(["posteam", "kind"]).w.sum()
+    de = pl.groupby(["defteam", "zone"])[["w", "ws"]].sum()
+    zones = [f"{r}|{c}" for r, _, _, _ in PASS_ROWS for c in ("left", "middle", "right")] + [f"run|{a}|{b or ''}" for a, b, _ in RUN_LANES]
+    out = {}
+    for g in games:
+        for o, d in ((g["away"], g["home"]), (g["home"], g["away"])):
+            cells = {}
+            for z in zones:
+                kind = "run" if z.startswith("run") else "pass"
+                ow = off.loc[(o, z)].w if (o, z) in off.index else 0.0
+                tot = off_tot.get((o, kind), 0.0)
+                dw, dws = (de.loc[(d, z)].w, de.loc[(d, z)].ws) if (d, z) in de.index else (0.0, 0.0)
+                L = lg_sr.get(z)
+                if L is None:
+                    continue
+                da = (dws + k * L) / (dw + k)
+                cells[z] = dict(s=round(ow / tot, 3) if tot else 0, da=round(da, 3), lg=round(L, 3), n=round(dw, 1))
+            out.setdefault(g["id"], {})[o] = dict(vs=d, cells=cells)
+    return out
+
+
 def agreement(stem, players, dists):
     """Vegas-anchored vs market-blind projections for the same player lines, with a calibrated
     chance of beating the Vegas-model median: p = P_vegas(over) + AGREE_W x (P_blind(over) - P_vegas(over))."""
@@ -192,7 +244,8 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
                 generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                 games=games, teams=team_rows, players=plist, props=props_list, dvp=match["dvp"],
                 rz=match.get("rz"), defout=match.get("defout", {}), agree=agreement(stem, players, dists), alt=alt_model(stem, match),
-                sgp=sgp, spot=match.get("spot", {}), subtitle=subtitle, nav=nav or [])
+                sgp=sgp, spot=match.get("spot", {}), fmap=field_map(db, games, int(season), int(week)) if db else {},
+                subtitle=subtitle, nav=nav or [])
     # NaN is not valid JSON: one missing value (e.g. a player with no depth label) would
     # stop the page's script entirely. Turn every NaN into null and refuse any that slip by.
     payload = json.dumps(_clean(data), separators=(",", ":"), allow_nan=False).replace("</", "<\\/")
@@ -399,6 +452,23 @@ input[type=search]{min-width:200px}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
 .sp-list{display:grid;gap:0}
+.fm-off{border-top:1px solid var(--faint);padding-top:14px;margin-top:14px}.fm-off:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.fm-off h3{margin:0 0 10px;font-family:var(--display);font-size:20px;letter-spacing:.02em;text-transform:uppercase}.fm-off h3 small{font-family:var(--body);font-size:13px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:500}
+.fm-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.fm-grid{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:5px;align-items:stretch}
+.fm-grid .rl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);align-self:center;padding-right:4px;max-width:92px;line-height:1.25}
+.fm-grid .cl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center}
+.fm-c{border-radius:8px;padding:8px 6px;text-align:center;border:1px solid var(--faint);background:var(--sunk);min-height:58px;display:flex;flex-direction:column;justify-content:center}
+.fm-c b{font-family:var(--display);font-size:22px;line-height:1}.fm-c small{display:block;font-size:11.5px;margin-top:3px;color:var(--ink);opacity:.85}
+.fm-c.thin{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(127,127,127,.12) 6px 12px)}
+.fm-los{grid-column:1/-1;border-top:2px solid var(--accent);margin:2px 0;position:relative}.fm-los span{position:absolute;right:0;top:-9px;font-size:10px;color:var(--accent);background:var(--surface);padding:0 4px;letter-spacing:.06em}
+.fm-run{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}.fm-run .cl{grid-row:2}
+.fm-run .fm-c{min-height:52px;padding:6px 2px}.fm-run .fm-c b{font-size:18px}
+.fm-sub{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:2px 0 6px}
+.fm-list{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:14px}.fm-list li{line-height:1.4}.fm-list li b{font-weight:700}
+.fm-list .up{color:var(--good);font-weight:800}.fm-list .dn{color:var(--bad);font-weight:800}
+.fm-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}.fm-key i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+@media (max-width:760px){.fm-wrap{grid-template-columns:minmax(0,1fr)}.fm-run{gap:3px}.fm-run .fm-c b{font-size:15px}.fm-run .fm-c small{font-size:10px}.fm-grid .rl{max-width:64px;font-size:10px}}
 .sp-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--faint)}
 .sp-row:first-child{border-top:0}
 .tierb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;white-space:nowrap;margin-top:3px}
@@ -848,11 +918,48 @@ function summaryPanel(g){
     ${L.length ? `<div class="sp-list">${L.map(row).join('')}</div>` : '<div class="empty" style="padding:8px 0">No notable changes for this game: no snap jumps, injuries opening up volume, or missing defenders.</div>'}
     <p class="note">Context only: the projections already include these.</p></section>`;
 }
+// Matchup map: where each offense goes (number = share of its passes or runs) and how this defense does there
+// (color = success it allows vs the league in that spot; striped = few plays, so the color is mostly league average)
+const FM_ROWS = [['deep', 'Deep 20+'], ['inter', 'Medium 10-19'], ['short', 'Short 1-9'], ['behind', 'Screens / behind line']];
+const FM_COLS = [['left', 'Left'], ['middle', 'Middle'], ['right', 'Right']];
+const FM_RUN = [['left|end', 'L end'], ['left|tackle', 'L tackle'], ['left|guard', 'L guard'], ['middle|', 'Middle'], ['right|guard', 'R guard'], ['right|tackle', 'R tackle'], ['right|end', 'R end']];
+function fmZoneName(z){
+  const [a, b, c] = z.split('|');
+  if (a === 'run') return b === 'middle' ? 'runs up the middle' : `runs off the ${b} ${c}`;
+  return `${{deep: 'deep', inter: 'intermediate', short: 'short', behind: 'screen/behind-the-line'}[a]} ${b} passes`;
+}
+function fmCell(c, def, off, z){
+  if (!c) return '<div class="fm-c"><small class="muted">–</small></div>';
+  const e = c.da - c.lg, a = Math.min(Math.abs(e) / .10, 1) * .55, thin = c.n < 12;
+  const bg = Math.abs(e) < .015 ? '' : `background-color:color-mix(in srgb,var(${e > 0 ? '--good' : '--bad'}) ${Math.round(a * 100)}%,var(--sunk))`;
+  const tip = `${off}: ${Math.round(c.s * 100)}% of its ${z.startsWith('run') ? 'runs' : 'passes'} go here. ${def} allows success on ${Math.round(c.da * 100)}% of these (league ${Math.round(c.lg * 100)}%)${thin ? '; few plays here, so mostly league average' : ''}.`;
+  return `<div class="fm-c${thin ? ' thin' : ''}" style="${bg}" title="${esc(tip)}"><b>${Math.round(c.s * 100)}%</b><small>${Math.abs(e) < .015 ? 'even' : (e > 0 ? '+' : '−') + Math.round(Math.abs(e) * 100) + ' pts'}</small></div>`;
+}
+function mapPanel(g){
+  const M = D.fmap[g.id];
+  const block = off => {
+    const X = M[off]; if (!X) return ''; const C = X.cells, def = X.vs;
+    const grid = `<div class="fm-grid"><span></span>${FM_COLS.map(([, l]) => `<span class="cl">${l}</span>`).join('')}
+      ${FM_ROWS.map(([r, lab], i) => `${i === 3 ? '<div class="fm-los"><span>LINE OF SCRIMMAGE</span></div>' : ''}<span class="rl">${lab}</span>${FM_COLS.map(([c]) => fmCell(C[r + '|' + c], def, off, r)).join('')}`).join('')}</div>`;
+    const run = `<div class="fm-sub" style="margin-top:14px">Runs, by lane</div><div class="fm-run">${FM_RUN.map(([z]) => fmCell(C['run|' + z], def, off, 'run')).join('')}${FM_RUN.map(([, l]) => `<span class="cl">${l}</span>`).join('')}</div>`;
+    const Z = Object.entries(C).filter(([, c]) => c.s >= .05 && c.n >= 12).map(([z, c]) => ({z, c, e: c.da - c.lg, w: c.s * (c.da - c.lg)}));
+    const line = ({z, c, e}) => `<li><b>${esc(fmZoneName(z)[0].toUpperCase() + fmZoneName(z).slice(1))}</b>: ${esc(off)} goes here ${Math.round(c.s * 100)}% of the time; ${esc(def)} allows success on <span class="${e > 0 ? 'up' : 'dn'}">${Math.round(c.da * 100)}%</span> (league ${Math.round(c.lg * 100)}%).</li>`;
+    const best = Z.filter(x => x.e > .02).sort((a, b) => b.w - a.w).slice(0, 3), tough = Z.filter(x => x.e < -.02).sort((a, b) => a.w - b.w).slice(0, 2);
+    return `<div class="fm-off"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3><div class="fm-wrap"><div><div class="fm-sub">Passes, by depth and direction</div>${grid}</div>
+      <div>${run}<div class="fm-sub" style="margin-top:16px">Where ${esc(off)} should find room</div><ul class="fm-list">${best.map(line).join('') || '<li class="muted">No spot stands out.</li>'}</ul>
+      <div class="fm-sub" style="margin-top:12px">Where ${esc(def)} is tough</div><ul class="fm-list">${tough.map(line).join('') || '<li class="muted">No spot stands out.</li>'}</ul></div></div></div>`;
+  };
+  return `<section class="panel"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: matchup map</h2><span class="small muted">${esc(g.kickoff)}</span></div>
+    <div class="fm-key"><span><b style="color:var(--ink)">22%</b> = how often the offense goes there</span><span><i style="background:color-mix(in srgb,var(--good) 55%,var(--sunk))"></i>defense gives up more than average</span><span><i style="background:color-mix(in srgb,var(--bad) 55%,var(--sunk))"></i>defense is tougher than average</span><span><i style="background:var(--sunk);background-image:repeating-linear-gradient(45deg,transparent 0 3px,rgba(127,127,127,.35) 3px 6px)"></i>few plays: mostly league average</span></div>
+    ${block(g.away)}${block(g.home)}
+    <p class="note">Success = a play that improved the offense's expected points. This season so far (last season counts a third as much); each defense's rates lean toward the league average until it has enough plays in a spot. Context only: the projections already include each defense's overall strength.</p></section>`;
+}
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
-  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.fmap && D.fmap[g.id] ? [['map', 'Matchup map']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
   if (state.gtab === 'sum' && D.spot && g.id in D.spot) return gsw + summaryPanel(g);
+  if (state.gtab === 'map' && D.fmap && D.fmap[g.id]) return gsw + mapPanel(g);
   return gsw + gameDetailMain(g);
 }
 // game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)
