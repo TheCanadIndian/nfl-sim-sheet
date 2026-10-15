@@ -460,6 +460,8 @@ input[type=search]{min-width:200px}
 .fm-grid .cl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center}
 .fm-c{border-radius:8px;padding:8px 6px;text-align:center;border:1px solid var(--faint);background:var(--sunk);min-height:58px;display:flex;flex-direction:column;justify-content:center}
 .fm-c b{font-family:var(--display);font-size:22px;line-height:1}.fm-c small{display:block;font-size:11.5px;margin-top:3px;color:var(--ink);opacity:.85}
+.fm-c.out{outline:2px dashed #F2C14E;outline-offset:-2px}.fm-c .ob{display:block;font-size:10px;font-weight:700;color:#F2C14E;margin-top:2px;letter-spacing:.02em}
+.fm-miss{font-size:13px;margin:0 0 10px;padding:8px 10px;border:1px dashed #F2C14E;border-radius:8px;color:var(--ink)}.fm-miss small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
 .fm-c.thin{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(127,127,127,.12) 6px 12px)}
 .fm-los{grid-column:1/-1;border-top:2px solid var(--accent);margin:2px 0;position:relative}.fm-los span{position:absolute;right:0;top:-9px;font-size:10px;color:var(--accent);background:var(--surface);padding:0 4px;letter-spacing:.06em}
 .fm-run{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}.fm-run .cl{grid-row:2}
@@ -923,29 +925,39 @@ function summaryPanel(g){
 const FM_ROWS = [['deep', 'Deep 20+'], ['inter', 'Medium 10-19'], ['short', 'Short 1-9'], ['behind', 'Screens / behind line']];
 const FM_COLS = [['left', 'Left'], ['middle', 'Middle'], ['right', 'Right']];
 const FM_RUN = [['left|end', 'L end'], ['left|tackle', 'L tackle'], ['left|guard', 'L guard'], ['middle|', 'Middle'], ['right|guard', 'R guard'], ['right|tackle', 'R tackle'], ['right|end', 'R end']];
+// areas a missing defensive starter usually covers (boxscore/defout.py roles), for the dashed outline
+const FM_COVER = {CB1: ['short|left', 'short|right', 'inter|left', 'inter|right', 'deep|left', 'deep|right'], CB2: ['short|left', 'short|right', 'inter|left', 'inter|right', 'deep|left', 'deep|right'],
+  CB3: ['short|middle', 'inter|middle', 'behind|left', 'behind|right'], S: ['deep|left', 'deep|middle', 'deep|right', 'inter|middle'],
+  LB: ['short|middle', 'inter|middle', 'behind|middle', 'run|middle|', 'run|left|guard', 'run|right|guard'],
+  DL: ['run|middle|', 'run|left|guard', 'run|right|guard', 'run|left|tackle', 'run|right|tackle', 'run|left|end', 'run|right|end']};
 function fmZoneName(z){
   const [a, b, c] = z.split('|');
   if (a === 'run') return b === 'middle' ? 'runs up the middle' : `runs off the ${b} ${c}`;
-  return `${{deep: 'deep', inter: 'intermediate', short: 'short', behind: 'screen/behind-the-line'}[a]} ${b} passes`;
+  return `${{deep: 'deep', inter: 'medium', short: 'short', behind: 'screen/behind-the-line'}[a]} ${b} passes`;
 }
-function fmCell(c, def, off, z){
+function fmCell(c, def, off, z, outs){
   if (!c) return '<div class="fm-c"><small class="muted">–</small></div>';
+  const ob = (outs || []).filter(o => (FM_COVER[o.role] || []).includes(z)).map(o => o.role);
   const e = c.da - c.lg, a = Math.min(Math.abs(e) / .10, 1) * .55, thin = c.n < 12;
   const bg = Math.abs(e) < .015 ? '' : `background-color:color-mix(in srgb,var(${e > 0 ? '--good' : '--bad'}) ${Math.round(a * 100)}%,var(--sunk))`;
   const tip = `${off}: ${Math.round(c.s * 100)}% of its ${z.startsWith('run') ? 'runs' : 'passes'} go here. ${def} allows success on ${Math.round(c.da * 100)}% of these (league ${Math.round(c.lg * 100)}%)${thin ? '; few plays here, so mostly league average' : ''}.`;
-  return `<div class="fm-c${thin ? ' thin' : ''}" style="${bg}" title="${esc(tip)}"><b>${Math.round(c.s * 100)}%</b><small>${Math.abs(e) < .015 ? 'even' : (e > 0 ? '+' : '−') + Math.round(Math.abs(e) * 100) + ' pts'}</small></div>`;
+  return `<div class="fm-c${thin ? ' thin' : ''}${ob.length ? ' out' : ''}" style="${bg}" title="${esc(tip + (ob.length ? ' Missing here: ' + ob.join(', ') + '.' : ''))}"><b>${Math.round(c.s * 100)}%</b><small>${Math.abs(e) < .015 ? 'even' : (e > 0 ? '+' : '−') + Math.round(Math.abs(e) * 100) + ' pts'}</small>${ob.length ? `<span class="ob">${[...new Set(ob)].join(' · ')} out</span>` : ''}</div>`;
 }
 function mapPanel(g){
   const M = D.fmap[g.id];
   const block = off => {
     const X = M[off]; if (!X) return ''; const C = X.cells, def = X.vs;
+    const outs = ((D.defout || {})[g.id] || {})[def] || [];
+    const RN = {CB1: 'top corner', CB2: 'No. 2 corner', CB3: 'slot corner', S: 'safety', LB: 'linebacker', DL: 'D-lineman'};
+    const miss = outs.length ? `<div class="fm-miss"><b>${esc(def)} missing:</b> ${outs.map(o => `${esc(o.name)} (${esc(RN[o.role] || o.role)}${o.status && o.status !== 'out' ? ', ' + esc(o.status) : ''})`).join(', ')}
+      <small>Dashed boxes are where they usually play. In 2022-26 games, a missing starter changed the success allowed in his area by only about 1-2 points (not enough to trust), so the colors stay as they are.</small></div>` : '';
     const grid = `<div class="fm-grid"><span></span>${FM_COLS.map(([, l]) => `<span class="cl">${l}</span>`).join('')}
-      ${FM_ROWS.map(([r, lab], i) => `${i === 3 ? '<div class="fm-los"><span>LINE OF SCRIMMAGE</span></div>' : ''}<span class="rl">${lab}</span>${FM_COLS.map(([c]) => fmCell(C[r + '|' + c], def, off, r)).join('')}`).join('')}</div>`;
-    const run = `<div class="fm-sub" style="margin-top:14px">Runs, by lane</div><div class="fm-run">${FM_RUN.map(([z]) => fmCell(C['run|' + z], def, off, 'run')).join('')}${FM_RUN.map(([, l]) => `<span class="cl">${l}</span>`).join('')}</div>`;
+      ${FM_ROWS.map(([r, lab], i) => `${i === 3 ? '<div class="fm-los"><span>LINE OF SCRIMMAGE</span></div>' : ''}<span class="rl">${lab}</span>${FM_COLS.map(([c]) => fmCell(C[r + '|' + c], def, off, r + '|' + c, outs)).join('')}`).join('')}</div>`;
+    const run = `<div class="fm-sub" style="margin-top:14px">Runs, by lane</div><div class="fm-run">${FM_RUN.map(([z]) => fmCell(C['run|' + z], def, off, 'run|' + z, outs)).join('')}${FM_RUN.map(([, l]) => `<span class="cl">${l}</span>`).join('')}</div>`;
     const Z = Object.entries(C).filter(([, c]) => c.s >= .05 && c.n >= 12).map(([z, c]) => ({z, c, e: c.da - c.lg, w: c.s * (c.da - c.lg)}));
     const line = ({z, c, e}) => `<li><b>${esc(fmZoneName(z)[0].toUpperCase() + fmZoneName(z).slice(1))}</b>: ${esc(off)} goes here ${Math.round(c.s * 100)}% of the time; ${esc(def)} allows success on <span class="${e > 0 ? 'up' : 'dn'}">${Math.round(c.da * 100)}%</span> (league ${Math.round(c.lg * 100)}%).</li>`;
     const best = Z.filter(x => x.e > .02).sort((a, b) => b.w - a.w).slice(0, 3), tough = Z.filter(x => x.e < -.02).sort((a, b) => a.w - b.w).slice(0, 2);
-    return `<div class="fm-off"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3><div class="fm-wrap"><div><div class="fm-sub">Passes, by depth and direction</div>${grid}</div>
+    return `<div class="fm-off"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${miss}<div class="fm-wrap"><div><div class="fm-sub">Passes, by depth and direction</div>${grid}</div>
       <div>${run}<div class="fm-sub" style="margin-top:16px">Where ${esc(off)} should find room</div><ul class="fm-list">${best.map(line).join('') || '<li class="muted">No spot stands out.</li>'}</ul>
       <div class="fm-sub" style="margin-top:12px">Where ${esc(def)} is tough</div><ul class="fm-list">${tough.map(line).join('') || '<li class="muted">No spot stands out.</li>'}</ul></div></div></div>`;
   };
