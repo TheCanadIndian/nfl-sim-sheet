@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-15",
 "lock": "2026-10-15T23:00:00+00:00",
-"frozen_at": "2026-10-15T16:03:39.551Z",
+"frozen_at": "2026-10-15T16:18:16.487Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -603,7 +603,7 @@
 "line": 6.5,
 "name": null,
 "lab": "VAN-FLA over 6.5",
-"p": 0.5186,
+"p": 0.5181,
 "price": 117,
 "book": "Novig"
 },
@@ -620,7 +620,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.18832,
+"p": 0.18814,
 "d": 7.407,
 "first": "2026-10-15T23:00:00+00:00",
 "res": null
@@ -635,22 +635,10 @@
 "kind": "sog",
 "side": "o",
 "line": 2.5,
-"name": "darren raddysh",
-"lab": "Darren Raddysh over 2.5 shots",
-"p": 0.5671,
-"price": 108,
-"book": "Novig"
-},
-{
-"gid": "2026020112",
-"start": "2026-10-15T23:00:00Z",
-"kind": "total",
-"side": "over",
-"line": 6.5,
-"name": null,
-"lab": "VAN-FLA over 6.5",
-"p": 0.5189,
-"price": 115,
+"name": "tim stutzle",
+"lab": "Tim Stutzle over 2.5 shots",
+"p": 0.496,
+"price": 130,
 "book": "Novig"
 },
 {
@@ -664,10 +652,22 @@
 "p": 0.6403,
 "price": -156,
 "book": "Novig"
+},
+{
+"gid": "2026020117",
+"start": "2026-10-16T01:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "mattias ekholm",
+"lab": "Mattias Ekholm under 1.5 shots",
+"p": 0.5907,
+"price": -117,
+"book": "Novig"
 }
 ],
-"p": 0.18841,
-"d": 7.339,
+"p": 0.18762,
+"d": 7,
 "first": "2026-10-15T23:00:00+00:00",
 "res": null
 },
@@ -684,8 +684,8 @@
 "name": null,
 "lab": "BUF moneyline",
 "p": 0.5193,
-"price": 106,
-"book": "ProphetX"
+"price": 108,
+"book": "Novig"
 },
 {
 "gid": "2026020113",
@@ -701,7 +701,7 @@
 }
 ],
 "p": 0.32175,
-"d": 3.806,
+"d": 3.843,
 "first": "2026-10-15T23:00:00+00:00",
 "res": null
 },
@@ -719,7 +719,7 @@
 "lab": "CHI moneyline",
 "p": 0.463,
 "price": 122,
-"book": "Novig"
+"book": "ProphetX"
 },
 {
 "gid": "2026020115",
@@ -753,7 +753,7 @@
 "lab": "CHI moneyline",
 "p": 0.463,
 "price": 122,
-"book": "Novig"
+"book": "ProphetX"
 },
 {
 "gid": "2026020115",
@@ -780,14 +780,60 @@
 {
 "gid": "2026020108",
 "start": "2026-10-15T23:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "darren raddysh",
+"lab": "Darren Raddysh over 2.5 shots",
+"p": 0.5671,
+"price": 108,
+"book": "Novig"
+},
+{
+"gid": "2026020115",
+"start": "2026-10-16T00:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "macklin celebrini",
+"lab": "Macklin Celebrini over 2.5 shots",
+"p": 0.679,
+"price": -160,
+"book": "theScore"
+},
+{
+"gid": "2026020117",
+"start": "2026-10-16T01:00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "UTA moneyline",
+"p": 0.4965,
+"price": 108,
+"book": "Novig"
+}
+],
+"p": 0.19118,
+"d": 7.03,
+"first": "2026-10-15T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020108",
+"start": "2026-10-15T23:00:00Z",
 "kind": "ml",
 "side": "away",
 "line": null,
 "name": null,
 "lab": "BUF moneyline",
 "p": 0.5193,
-"price": 106,
-"book": "ProphetX"
+"price": 108,
+"book": "Novig"
 },
 {
 "gid": "2026020113",
@@ -815,7 +861,7 @@
 }
 ],
 "p": 0.18873,
-"d": 7.144,
+"d": 7.214,
 "first": "2026-10-15T23:00:00+00:00",
 "res": null
 },
@@ -867,52 +913,6 @@
 },
 {
 "card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020108",
-"start": "2026-10-15T23:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "BUF moneyline",
-"p": 0.5193,
-"price": 106,
-"book": "Novig"
-},
-{
-"gid": "2026020112",
-"start": "2026-10-15T23:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "sam reinhart",
-"lab": "Sam Reinhart over 2.5 shots",
-"p": 0.5089,
-"price": 115,
-"book": "Novig"
-},
-{
-"gid": "2026020115",
-"start": "2026-10-16T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "will smith",
-"lab": "Will Smith over 1.5 shots",
-"p": 0.6864,
-"price": -170,
-"book": "Caesars"
-}
-],
-"p": 0.1814,
-"d": 7.034,
-"first": "2026-10-15T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
 "tier": "Best shot",
 "legs": [
 {
@@ -924,8 +924,8 @@
 "name": null,
 "lab": "BUF moneyline",
 "p": 0.5193,
-"price": 106,
-"book": "ProphetX"
+"price": 108,
+"book": "Novig"
 },
 {
 "gid": "2026020113",
@@ -941,7 +941,7 @@
 }
 ],
 "p": 0.32175,
-"d": 3.806,
+"d": 3.843,
 "first": "2026-10-15T23:00:00+00:00",
 "res": null
 },
