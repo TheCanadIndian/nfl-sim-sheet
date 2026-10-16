@@ -508,6 +508,7 @@ __CSS__
 .gcard{display:grid;gap:14px}
 .gh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
 .sides{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,1080px),1fr));gap:18px}
+@media (max-width:1500px){.sides .mkc{display:none}}   /* Best odds already shows the exchange prices */
 .sides .lp{display:inline-block;margin-left:6px;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;vertical-align:1px;white-space:nowrap}
 .sides td.kp .kpv{white-space:nowrap}.sides td.kp .kpv small,.sides .fo{font-size:12px;font-weight:500;color:var(--muted);margin-left:5px}
 .sides td.kp .pbar{margin-top:4px;min-width:0;width:100%}
@@ -557,6 +558,8 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .picks-key b{color:var(--ink);font-weight:600}
 .sides .t td,.sides .t th{padding-left:6px;padding-right:6px}
 .h2h{white-space:nowrap;cursor:default}
+.tg3{display:inline-block;margin-left:6px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:700;line-height:16px;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);background:color-mix(in srgb,var(--good) 10%,transparent);white-space:nowrap;cursor:help;vertical-align:1px}
+.exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
 .h2h b{font-weight:600}
 .h2h .hot{color:var(--good)}
 .mu{font-size:11px;font-weight:600;border-radius:4px;padding:0 4px;margin-left:6px;border:1px solid currentColor}
@@ -615,6 +618,17 @@ const PNAME = {C: 'C', L: 'LW', R: 'RW', D: 'D'};
 const hshade = v => v >= 1.20 ? 'g3' : v >= 1.12 ? 'g2' : v >= 1.05 ? 'g1' : v <= 1/1.2 ? 'r3' : v <= 1/1.12 ? 'r2' : v <= 1/1.05 ? 'r1' : '';
 const rel = v => { const n = Math.round((v - 1) * 100); return (n >= 0 ? '+' : '−') + Math.abs(n) + '%'; };
 // Matchup tag: opponent's even-strength xG allowed to the player's position, 10%+ off average.
+// Triple green: green head-to-head (3+ meetings, +0.25 pts/game over his overall rate), opposing goalie GSAA -1.5 or worse
+// (this season once he has 3 games, else last season), and the opponent allowing 5%+ more expected goals to his position.
+// Backtest 2024-26: all three together scored 12-20% above the model's chance (~340 player-games a season; not proven);
+// one or two greens: nothing consistent. Experimental and tracked (Parlays results).
+function gGreen(o){ const g = o && o.gstats; if (!g) return false; const x = g.now && g.now.gp >= 3 ? g.now : (g.last || g.now); return !!x && x.gsaa != null && x.gsaa <= -1.5; }
+function tripleGreen(p, oppSide){
+  const h = p.h2h, hot = !!(h && h.gp >= 3 && h.pts / h.gp >= h.ppg_all + .25);
+  const r = PD[oppSide.team], k = PNAME[p.pos] ? p.pos : 'C', dv = !!(r && r[k] && r[k].ev >= 1.05);
+  return hot && dv && gGreen(oppSide);
+}
+const TG3_TIP = 'Triple green: strong head-to-head vs this opponent, a struggling opposing goalie (GSAA -1.5 or worse) and a defense that allows more to his position. In 2024-26 backtests players with all three scored 12-20% more often than our chance (small sample: experimental, tracked on the Parlays results tab).';
 function mtag(pos, opp){
   const r = PD[opp], k = PNAME[pos] ? pos : 'C';
   if (!r) return '';
@@ -668,8 +682,8 @@ function side(s, opp, gid){
   const max = .5, mk = window.MKT && MKT.has(), bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(gid));
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
     ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
-    <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th style="min-width:96px" title="Chance to score, and the fair (no-vig) odds">Goal · fair</th><th title="${UTIP}">Usage</th><th title="Chance to score the game's first goal, and its fair odds">1st goal · fair</th><th>TOI</th><th class="l" title="Expected shots on goal, and the chance of 2+ and 3+ (shots model: calibrated within ~1 pt on 2024-26)">Shots</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${bo ? '<th class="l pcd" title="Best anytime-goal price at your sportsbooks (choose them under the game bets). Green = our chance beats it by 5%+">Best odds</th>' : ''}${mk ? '<th class="l" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
-    ${gamePlayers(s.players, gid).map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="lp">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span><span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}${(() => { const m = MRANK[gid + '|' + p.id], d = m ? m - p.ur : 0; return d ? ` ${d > 0 ? '▲' : '▼'}${Math.abs(d)}` : ''; })()}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="big kp"><div class="kpv">${pct(p.p)}<small class="dk">${odds(p.fair)}</small></div><div class="dk">${bar(p.p, max)}</div>${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots<br>3+ ${pct(p.so[2])}</small>` : ''}</td><td>${urCell(p, gid)}</td><td style="white-space:nowrap">${p.pf != null ? `${pct(p.pf)}<span class="fo">${p.fair_first != null ? odds(p.fair_first) : ''}</span>` : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
+    <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th style="min-width:96px" title="Chance to score, and the fair (no-vig) odds">Goal · fair</th><th title="${UTIP}">Usage</th><th title="Chance to score the game's first goal, and its fair odds">1st goal · fair</th><th>TOI</th><th class="l" title="Expected shots on goal, and the chance of 2+ and 3+ (shots model: calibrated within ~1 pt on 2024-26)">Shots</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${bo ? '<th class="l pcd" title="Best anytime-goal price at your sportsbooks (choose them under the game bets). Green = our chance beats it by 5%+">Best odds</th>' : ''}${mk ? '<th class="l mkc" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
+    ${gamePlayers(s.players, gid).map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="lp">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span><span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}${(() => { const m = MRANK[gid + '|' + p.id], d = m ? m - p.ur : 0; return d ? ` ${d > 0 ? '▲' : '▼'}${Math.abs(d)}` : ''; })()}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${tripleGreen(p, opp) ? `<span class="tg3" title="${esc(TG3_TIP)}">Triple green</span>` : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="big kp"><div class="kpv">${pct(p.p)}<small class="dk">${odds(p.fair)}</small></div><div class="dk">${bar(p.p, max)}</div>${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots<br>3+ ${pct(p.so[2])}</small>` : ''}</td><td>${urCell(p, gid)}</td><td style="white-space:nowrap">${p.pf != null ? `${pct(p.pf)}<span class="fo">${p.fair_first != null ? odds(p.fair_first) : ''}</span>` : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l mkc">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     ${state.bval && !gamePlayers(s.players, gid).length ? '<tr><td colspan="9" class="l name muted small">No value plays on this team at your books.</td></tr>' : ''}
     </tbody></table></div></div>`;
 }
@@ -792,8 +806,38 @@ function foldable(html){
     return `<details class="pfold" data-fold="${esc(key)}"${FOLD[key] ? '' : ' open'}><summary><h2>${m[1]}</h2><span class="chev" aria-hidden="true">▾</span></summary>${body}</details>`;
   }).join('');
 }
+// Triple-green longshots (experimental): two triple-green players from different games, each 15-35% to score, whose fair
+// payout is 12x+; the likeliest six. Backtest 2024-26: such pairs hit ~16 times vs ~10 expected (pairs share players, so
+// weaker evidence than it looks). Shown and tracked, not recommended.
+function tripleCard(){
+  const legs = [], now = Date.now(), dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o, am = o => (o > 0 ? '+' : '') + o;
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const [s, o] of [[g.away, g.home], [g.home, g.away]]) for (const p of s.players)
+      if (tripleGreen(p, o)) legs.push({g, p, team: s.team, b: window.MKT && MKT.propBest ? MKT.propBest(g.id, p.name, 'goal') : null});
+  }
+  if (!legs.length) return '';
+  const pairs = [];
+  for (let i = 0; i < legs.length; i++) for (let j = i + 1; j < legs.length; j++){
+    const a = legs[i], c = legs[j];
+    if (a.g.id === c.g.id || a.p.p < .15 || a.p.p > .35 || c.p.p < .15 || c.p.p > .35) continue;
+    const pr = a.p.p * c.p.p; if (pr > 1 / 12) continue;
+    pairs.push({legs: [a, c], p: pr, d: a.b && c.b ? dec(a.b.o) * dec(c.b.o) : 1 / pr});
+  }
+  pairs.sort((x, y) => y.p - x.p); const top = pairs.slice(0, 6);
+  if (window.MKT && MKT.reg) top.forEach(c => MKT.reg('Triple-green longshots (experimental)', '2-leg', c.legs.map(L => ({gid: String(L.g.id), start: L.g.start_utc, kind: 'goal', side: 'o', line: .5,
+    name: MKT.norm(L.p.name), lab: `${L.p.name} to score`, p: L.p.p, price: L.b ? L.b.o : null, book: L.b ? L.b.k : null})), c.p, c.d));
+  const price = L => L.b ? (L.b.u ? `<a href="${esc(L.b.u)}" target="_blank" rel="noopener">${am(L.b.o)} ${esc(L.b.name)} ↗</a>` : `${am(L.b.o)} ${esc(L.b.name)}`) : '<span class="muted">no price yet</span>';
+  const who = legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p.p)} · ${price(L)}</span>`).join('<br>');
+  const rows = top.map(c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.p.p)} · ${price(L)}</span>`).join('<br>')}</td>
+    <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.p.p, side: 'over', stat: 'goals', line: .5})), '+ add pair') : ''}</td></tr>`).join('');
+  return `<section class="panel"><div class="phead"><h2>Triple-green longshots <span class="exp3">experimental</span></h2><span class="small muted">${legs.length} triple-green player${legs.length === 1 ? '' : 's'} tonight</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">Players with all three green flags: a strong head-to-head record against tonight's opponent (3+ meetings, 0.25+ points a game above his usual rate), an opposing goalie struggling this season (GSAA −1.5 or worse) and a defense that allows more expected goals to his position. One or two of these on their own predicted nothing in our 2024-26 tests, but players with all three scored 12-20% more often than our chance in both seasons, and pairs of them hit about 16 times vs 10 expected. That is a small sample (about 340 player-games a season), so this card is tracked on the Parlays results tab to see if it holds up, not a recommendation. Chances shown are our model's, unadjusted.</p></details>
+    <div class="eyebrow" style="margin-top:8px">Tonight's triple-green players</div><p style="margin:6px 0 10px;line-height:1.7">${who}</p>
+    ${top.length ? `<div class="eyebrow">Pairs paying 12x+ (fair)</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Two-man</th><th>Chance</th><th>Pays</th><th class="l">My parlay</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="small muted">No pair from two different games in the 15-35% range tonight.</p>'}</section>`;
+}
 function playsView(){
-  const h = foldable(atgParlays() + tierParlays() + pairsCard());
+  const h = foldable(atgParlays() + tierParlays() + pairsCard() + tripleCard());
   return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
 // Longshot two-mans priced at the viewer's books: legs 15-35% to score, chance blended with the exchanges', every
