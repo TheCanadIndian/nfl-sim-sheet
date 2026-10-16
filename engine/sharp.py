@@ -649,6 +649,111 @@ def pin_merge(now):
     print(f"pinnacle nfl: de-vig attached to {n} props")
 
 
+# ---------------------------------------------------------------- Pinnacle anytime goals for the NHL (The Odds API)
+PIN_NHL_HOURS = 2.0                   # one pull per game in its last 2 hours before puck drop (1 credit when Pinnacle has it)
+PIN_NHL_CACHE = os.path.join(M.OUT, "pin_props_nhl.json")
+PIN_NHL_LOG = os.path.join(M.OUT, "pin_nhl_history.json")   # every pull kept, so Pinnacle can be graded against goals later
+
+
+def pin_pull_nhl(now):
+    """Pinnacle's two-way anytime-goal market (Yes / No, ~11 main scorers a game) for NHL games starting within 2 hours,
+    once per game, inside books.py's monthly credit pacing. Cache: {gid: {start, props: {player: [yes, no]}}}."""
+    k = B.key()
+    if not k:
+        return
+    O = M.ours_nhl() or {}
+    soon = {(g["away"], g["home"]): g for g in O.get("games", [])
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=PIN_NHL_HOURS)}
+    try:
+        cache = json.load(open(PIN_NHL_CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    todo = {ga: g for ga, g in soon.items() if str(g["id"]) not in cache}
+    if not todo:
+        return
+    r = requests.get("https://api.the-odds-api.com/v4/sports/icehockey_nhl/events", params=dict(apiKey=k), timeout=30)
+    if r.status_code != 200:
+        return
+    try:
+        log = json.load(open(PIN_NHL_LOG))
+    except (OSError, ValueError):
+        log = []
+    bst = B.load_state()
+    for e in r.json():
+        g = todo.get((B.NAMES["nhl"].get(e["away_team"]), B.NAMES["nhl"].get(e["home_team"])))
+        if not g:
+            continue
+        if not B.budget_ok(bst, now):
+            print("pinnacle nhl: credit budget used for today"); break
+        q = requests.get(f"https://api.the-odds-api.com/v4/sports/icehockey_nhl/events/{e['id']}/odds", timeout=30,
+                         params=dict(apiKey=k, bookmakers="pinnacle", markets="player_goal_scorer_anytime", oddsFormat="american"))
+        used = int(q.headers.get("x-requests-last") or 0)
+        bst["spent_today"] = bst.get("spent_today", 0) + used
+        if q.headers.get("x-requests-remaining"):
+            bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+        if q.status_code != 200:
+            continue
+        P = {}
+        for b in q.json().get("bookmakers", []):
+            for m in b.get("markets", []):
+                for o in m.get("outcomes", []):
+                    nm, side = o.get("description"), (o.get("name") or "").lower()
+                    if nm and side in ("yes", "no"):
+                        P.setdefault(jsnorm(nm), [None, None])[0 if side == "yes" else 1] = int(o["price"])
+        if P:
+            cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+            log.append(dict(gid=int(g["id"]), fetched=now.isoformat(), start=str(g["start"]), props=P))
+            print(f"pinnacle nhl: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+        else:
+            print(f"pinnacle nhl: {g['away']} @ {g['home']}: not posted yet (free, will retry)")
+    json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(PIN_NHL_CACHE, "w"), separators=(",", ":"))
+    json.dump(log[-3000:], open(PIN_NHL_LOG, "w"), separators=(",", ":"))
+
+
+def pin_merge_nhl(now):
+    """Pinnacle's no-vig scoring chance on the published NHL anytime-goal props (props_nhl.json: goal.pin = {l: .5, o, w})
+    and on matching Value tags (flags_nhl.json: m, the market half of the 50/50 blend, and pin for display)."""
+    try:
+        cache = json.load(open(PIN_NHL_CACHE))
+    except (OSError, ValueError):
+        return
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now}
+    if not cache:
+        return
+    fp, ff = os.path.join(M.SITE, "markets", "props_nhl.json"), os.path.join(M.SITE, "markets", "flags_nhl.json")
+    n = 0
+    try:
+        PR = json.load(open(fp))
+        for gid, c in cache.items():
+            for nm, (yes, no) in c["props"].items():
+                nv = pin_nv(yes, no, 1.05) if yes is not None else None
+                if nv is None:
+                    continue
+                e = PR.get("props", {}).get(gid, {}).get(nm, {}).get("goal")
+                if e is not None:
+                    e["pin"] = dict(l=.5, o=round(nv, 4), w=2 if no is not None else 1)
+                    n += 1
+        json.dump(PR, open(fp, "w"), separators=(",", ":"))
+    except (OSError, ValueError):
+        pass
+    try:
+        FL = json.load(open(ff))
+        for gid, c in cache.items():
+            for nm, (yes, no) in c["props"].items():
+                v = FL.get("tags", {}).get(gid, {}).get(nm)
+                if isinstance(v, dict) and v.get("b") == "goal" and yes is not None:
+                    nv = pin_nv(yes, no, 1.05)
+                    v["m"] = round(nv, 4)                      # Pinnacle replaces the exchange median as the market half
+                    v["pin"] = round(nv, 4)
+        json.dump(FL, open(ff, "w"), separators=(",", ":"))
+    except (OSError, ValueError):
+        pass
+    print(f"pinnacle nhl: no-vig attached to {n} anytime-goal props")
+
+
 def hr_merge(sport, now):
     """Add Hard Rock's prices to the published prices (props_<sport>.json) and Value tags (flags_<sport>.json)."""
     try:
@@ -802,6 +907,9 @@ def main(argv):
             if sport == "nfl":
                 pin_pull(now)
                 pin_merge(now)
+            if sport == "nhl":
+                pin_pull_nhl(now)
+                pin_merge_nhl(now)
         except Exception as e:
             print(f"hard rock {sport}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
