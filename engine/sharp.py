@@ -250,6 +250,9 @@ def ua_nv(df):
 def ua_row(NV, gid, me, bet, p, r, blend=False):
     nv = NV.get((r.book, r.event, r.bt, r.person, r.points, r.side_index))
     ev, chk = judge(p, r.price, nv, blend=blend)
+    # NFL yardage / catch props: only the side our median is on, our number 10+ pts from the market, and on exchanges a tight (3c or less), 15c+ market. Kalshi 2026 wk 1-5: the plain 5%-edge rule lost 5% in both halves; this cut it to about breakeven (-0.6% / +7.7%) by dropping far-side ladder rungs and thin markets.
+    if blend and bet.startswith(("over ", "under ")) and (p < .5 or (nv is not None and abs(p - nv) < .10)):
+        chk = True
     x = dict(o=int(r.price), k=U.SHORT[r.book], u=r.url, p=round(float(p), 4))
     if blend and nv is not None:
         x["m"] = round(float(nv), 4)                      # the page re-checks the viewer's books on the same blend
