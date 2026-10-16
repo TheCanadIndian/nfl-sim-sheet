@@ -62,3 +62,4 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
   - **Bar:** top-3 capture up in every half of two test windows, and log-loss not worse.
   - **Current model:** the swing plane passed. Bullpen, pitch-type miss rates and pull-direction × park failed. The live blend averages 5 seeds (`blend.Avg`).
 - **Rejected:** shots/xG/DvP signals for longshot goal pairs made picks worse.
+  Goalie save % by shot zone and the team shot-location overlay (2024-26): no better than the model's xG + GSAx ratings, so the NHL Shot map tab is display only.
