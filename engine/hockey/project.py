@@ -714,7 +714,7 @@ function atgParlays(){
       if (!(p.ur && p.ur <= 3) || p.p < .30) continue;              // our top 3, and 30%+ (shorter droughts, same calibration)
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b) continue;
       const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null;
-      const q = m != null ? .75 * p.p + .25 * m : p.p;               // 75% ours / 25% exchanges: on Kalshi 2026 top-3 legs, leaning on our model returned more
+      const q = m != null ? .5 * p.p + .5 * m : p.p;                 // 50/50 ours and exchanges: on Kalshi 2026 (3,822 graded legs) a 50/50 blend was more accurate than our number alone and our top-3 legs returned +10% (vs +6% at 75/25)
       const ev = q * dec(b.o) - 1;
       if (ev <= 0) continue;                                         // every leg needs its own edge
       legs.push({g, p, team: side.team, b, q, m, ev});
@@ -743,7 +743,7 @@ function atgParlays(){
   const rrBlock = rrPairs.length ? `<div class="rr"><div class="eyebrow">Round robin · fewer dry spells</div>
     <p class="small muted" style="margin:4px 0 8px">Bet all three 2-leg parlays below (same stake each). At least one hits whenever 2 of the 3 score: ${pct(rr[0].q * rr[1].q + rr[0].q * rr[2].q + rr[1].q * rr[2].q - 2 * rr[0].q * rr[1].q * rr[2].q)} by our blended chances; in the 2024-26 backtest the longest stretch with no winner was 7-9 nights, vs 20-23 for one 2-leg a night.</p>
     <div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">2-leg</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rrPairs.map(row).join('')}</tbody></table></div></div>` : '';
-  if (MKT.reg){                                                    // freeze mode: record for the Results page
+  if (window.MKT && MKT.reg){                                                    // freeze mode: record for the Results page
     const lg = L => ({gid: String(L.g.id), start: L.g.start_utc, kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.p.name), lab: `${L.p.name} to score`, p: +L.q.toFixed(4), price: L.b.o, book: L.b.k});
     top(2).forEach(c => MKT.reg('Anytime-goal parlays', 'Best 2-leg', c.legs.map(lg), c.p, c.d));
     top(3).forEach(c => MKT.reg('Anytime-goal parlays', 'Best 3-leg', c.legs.map(lg), c.p, c.d));
@@ -751,7 +751,7 @@ function atgParlays(){
   }
   const mine = MKT.myBooks();
   return `<section class="panel"><div class="phead"><h2>Anytime-goal parlays at your books</h2><span class="small muted">${mine.length ? 'Priced at ' + esc(mine.join(', ')) : 'Priced at the best book (choose yours under any game’s bets)'}</span></div>
-    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Legs: our top 3 scorers in each game (usage-adjusted rank; on Kalshi those roughly broke even while everyone else lost) who are 30%+ to score. Each leg's chance leans on our number (75%) with the exchanges' price as a check (25%): on Kalshi this season, our top-3 picks returned +9-10% that way vs +8.6% on a 50/50 blend, with twice as many plays. Each leg must beat its own price. One player per game, so legs are independent; parlays multiply the books' margin, so the edge column matters more than the payout. Edge = our chance × the payout − 1. Backtest (2024-26, the likeliest such parlays each night): 2-leg hit 15.6-16.2% vs 15-17% predicted, 3-leg 6.7-7.2% vs 6-7%, so a 2-leg needs to pay about 6.3x and a 3-leg about 14x just to break even; the nightly top 2-leg once went 24 nights without hitting. Treat these as small stakes.</p></details>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Legs: our top 3 scorers in each game (usage-adjusted rank; on Kalshi those roughly broke even while everyone else lost) who are 30%+ to score. Each leg's chance is half our number, half the exchanges' price: on Kalshi this season (3,822 graded legs) that blend was more accurate than our number alone, and our top-3 picks returned +10% (vs +6% leaning 75% on our model). Each leg must beat its own price. One player per game, so legs are independent; parlays multiply the books' margin, so the edge column matters more than the payout. Edge = our chance × the payout − 1. Backtest (2024-26, the likeliest such parlays each night): 2-leg hit 15.6-16.2% vs 15-17% predicted, 3-leg 6.7-7.2% vs 6-7%, so a 2-leg needs to pay about 6.3x and a 3-leg about 14x just to break even; the nightly top 2-leg once went 24 nights without hitting. Treat these as small stakes.</p></details>
     ${rrBlock}
     ${[2, 3].map(k => top(k).length ? `<div class="eyebrow" style="margin-top:10px">Best ${k}-leg parlays</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${top(k).map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
 }
@@ -772,7 +772,7 @@ function tierParlays(){
   const games = D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, start: g.start_utc}));
   const shots = {sog05: 'shots', sog15: 'shots', sog25: 'shots', sog35: 'shots', sog45: 'shots'};
   // anytime goals only from our top 3 (30%+); shots from anyone (the shots model is calibrated across the board)
-  const all = MKT.tierCard({sport: 'nhl', title: 'Parlays by payout (your books)', games, gameLegs, wOurs: {goal: .75},
+  const all = MKT.tierCard({sport: 'nhl', title: 'Parlays by payout (your books)', games, gameLegs, wOurs: {goal: .5},
                             propKinds: {goal: 'to score', ...shots}, propOk: (gid, nm, k) => k !== 'goal' || !!top[gid + '|' + nm]});
   // shots + moneyline: priced at the best book anywhere, every combo has at least one of each
   const sml = MKT.tierCard({sport: 'nhl', title: 'Shots + moneyline parlays', games, gameLegs: gameLegs.filter(L => L.kind === 'ml'),
@@ -805,9 +805,9 @@ function pricedLongshots(){
   for (const g of D.games){
     if (g.start_utc && new Date(g.start_utc) <= now) continue;
     for (const side of [g.away, g.home]) for (const p of side.players){
-      if (p.p < .15 || p.p > .35) continue;
+      if (p.p < .15 || p.p > .35 || !(p.ur && p.ur <= 3)) continue;  // our top 3 per game only: everyone else has lost on Kalshi
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b || !b.mine) continue;
-      const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null, q = m != null ? .75 * p.p + .25 * m : p.p;
+      const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null, q = m != null ? .5 * p.p + .5 * m : p.p;
       if (q * dec(b.o) - 1 <= 0) continue;
       legs.push({g, p, team: side.team, b, q, m});
     }
@@ -827,7 +827,7 @@ function pairsCard(){
       <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
       <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.q, side: 'over', stat: 'goals', line: .5})), '+ add pair') : ''}</td></tr>`).join('');
   const priced = L2.length ? `<div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Two-man</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${pricedRows}</tbody></table></div>` : '';
-  if (MKT.reg){
+  if (window.MKT && MKT.reg){
     const gs = Object.fromEntries(D.games.map(g => [String(g.id), g.start_utc]));
     L2.forEach(c => MKT.reg('Longshot two-mans', '12x+', c.legs.map(L => ({gid: String(L.g.id), start: L.g.start_utc, kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.p.name), lab: `${L.p.name} to score`, p: +L.q.toFixed(4), price: L.b.o, book: L.b.k})), c.p, c.d));
     P.forEach(x => MKT.reg('2-leg pairs paying 15x+', x.slate || 'Tonight', x.legs.map(L => ({gid: String(L.gid), start: gs[String(L.gid)], kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.name), lab: `${L.name} to score`, p: L.p, price: null, book: null})), x.p, x.payout));
@@ -845,7 +845,7 @@ function pairsCard(){
     ${body}
     </tbody></table></div></details>` : '';
   return `<section class="panel"><div class="phead"><h2>Longshot two-mans</h2><span class="small muted">${priced ? 'Priced at ' + esc(MKT.myBooks().join(', ')) + ' · pays 12x+' : 'waiting for prices at your books'}</span></div>
-    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Two anytime-goal legs from different games, each 15-35% to score, with each chance 75% ours / 25% the exchanges' and each beating its price at your books (careful: on Kalshi this season, legs outside our top 3 have lost money); the pairs paying 12x+ that are most likely to hit. We tested adding shot volume, expected-goal trends and defense-vs-position on top of our goal chance (2024-26): pairs picked that way hit less often (5.4% vs 6.0%, 5.1% vs 7.3%), because the goal model already uses shot quality, the opponent and the goalie. Expect about 1 hit in 12-15.</p></details>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">Two anytime-goal legs from different games, each from our top 3 in its game and 15-35% to score (on Kalshi this season, legs outside our top 3 have lost money at every weighting), with each chance half ours and half the exchanges' and each beating its price at your books; the pairs paying 12x+ that are most likely to hit. We tested adding shot volume, expected-goal trends and defense-vs-position on top of our goal chance (2024-26): pairs picked that way hit less often (5.4% vs 6.0%, 5.1% vs 7.3%), because the goal model already uses shot quality, the opponent and the goalie. Expect about 1 hit in 12-15.</p></details>
     ${priced}${tracked}</section>`;
   return `<section class="panel"><div class="phead"><h2>2-leg pairs paying 15x+</h2><span class="small muted">${rec}</span></div>
     <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these work</summary><p class="note">The likeliest anytime-goal pairs from different games whose fair payout is 15x or more (only take one if your book pays at least that). These are fairly priced, not a proven edge: in backtests, pairs built this way hit about their implied 1 in 15 (anywhere from 5% to 8% depending on exactly which near-identical pair was picked). Both legs come from the same slate (early before 5 PM ET, middle 5-9 PM, late 9 PM+), and each slate's pairs freeze at its first puck drop and are graded on the Results page.</p></details>

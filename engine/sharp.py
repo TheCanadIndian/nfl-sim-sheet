@@ -315,6 +315,10 @@ def ua_nhl(now):
         return False
     df = df[pd.to_datetime(df.start, utc=True) > now]
     NV, out = ua_nv(df), []
+    # the exchanges' price for each scorer (median yes price, ~3% margin off), blended 50/50 with ours as on the page:
+    # on Kalshi 2026 (3,822 graded legs) that blend beat our number alone; our top-3 legs returned +10% (vs +6% at 75/25)
+    ex = df[(df.side_index == 0) & (df.points == .5) & df.book.isin([89, 66, 105] + list(U.PMS))]
+    EXM = (ex.assign(q=1 / ex.price.map(dec)).groupby(["event", "person"]).q.median() / 1.03).to_dict()
     for r in df[(df.side_index == 0) & (df.points == .5)].itertuples():           # side 0 = over 0.5 goals = scores
         if pd.Timestamp(r.start).tz_convert("America/New_York").date().isoformat() != date:
             continue
@@ -324,7 +328,9 @@ def ua_nhl(now):
             continue
         add_price(P, me["gid"], me["name"], "goal", "o", r, p=me["p"], warn=me["rank"] > 3)
         if me["rank"] <= 3:
-            out.append(ua_row(NV, me["gid"], me, "goal", me["p"], r))
+            m = EXM.get((r.event, r.person))
+            nv = {(r.book, r.event, r.bt, r.person, r.points, r.side_index): m} if m is not None else {}
+            out.append(ua_row(nv, me["gid"], me, "goal", me["p"], r, blend=True))
     PROPS["nhl"] = P
     return out
 
