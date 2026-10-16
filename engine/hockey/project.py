@@ -360,7 +360,7 @@ def main():
             x = pg[(pg.game_id == g.game_id) & (pg.team == t)].sort_values("p_goal", ascending=False)
             side[t] = dict(
                 team=t, exp_goals=round(float(x.lam.sum()), 2),
-                goalie=gname.get(fut_goalies.get((g.game_id, t)), "unknown"),
+                goalie=gname.get(fut_goalies.get((g.game_id, t)), "unknown"), goalie_id=None if fut_goalies.get((g.game_id, t)) is None else int(fut_goalies[(g.game_id, t)]),
                 goalie_status=goalie_status.get((g.game_id, t), ""), lineup=lineup_note.get((g.game_id, t), ""),
                 gstats=dict(now=gstats(fut_goalies.get((g.game_id, t)), cur_season),
                             last=gstats(fut_goalies.get((g.game_id, t)), prev),
@@ -387,6 +387,10 @@ def main():
         payload["games"].append(dict(id=int(g.game_id), start=et(g.start_utc), start_utc=g.start_utc,
                                      away=side[g.away], home=side[g.home], ml=ml))
     payload["posdef"] = pos_defense(fr)
+    sm = shot_maps(games, shots, teams, list(fut_goalies.values()), players=pg.player_id.dropna().astype(int).unique())
+    osm = (json.load(open(os.path.join(OUT, f"{date}.json"))) if os.path.exists(os.path.join(OUT, f"{date}.json")) else {}).get("shotmap") or {}
+    payload["shotmap"] = dict(sm, teams={**osm.get("teams", {}), **sm["teams"]}, goalies={**osm.get("goalies", {}), **sm["goalies"]},
+                              shooters={**osm.get("shooters", {}), **sm["shooters"]})
     payload["lg_sv"] = round(float(gt.attrs.get("lg_sv", .9)), 3)
     starters = sorted({p for p in fut_goalies.values() if p is not None})
     payload["goalies"] = [dict(name=gname.get(p, str(p)), team=next((t for (gid, t), q in fut_goalies.items() if q == p), ""),
@@ -484,6 +488,94 @@ def head_to_head(games, shots, pairs):
     return out
 
 
+def shot_maps(games, shots, teams, goalie_ids, n_games=30, players=(), n_shots=50):
+    """Where each team shoots from (last `n_games`) and where it allows shots, relative to the league,
+    on a 5 ft grid of the attacking zone (net at the top: 17 lateral x 15 depth cells, from 10 ft behind
+    the goal line to the blue line). Unblocked, non-empty-net shots; lightly smoothed and pulled toward
+    average with 12 pseudo-games. Plus each starting goalie's save % by zone over the last two seasons.
+    Display only: in 2024-26 tests neither the zone overlay nor zone save % predicted goals beyond the
+    model's own team and goalie ratings."""
+    done = games[games.state.isin(["OFF", "FINAL"]) & games.game_type.isin([2, 3]) & games.game_id.isin(shots.game_id)][["game_id", "date", "home", "away"]]
+    s = shots[shots.game_id.isin(done.game_id) & (shots.kind != "blocked-shot") & (shots.empty_net == 0)
+              & shots.x.notna() & shots.dist.notna()].merge(done, on="game_id")
+    x, y = s.x.astype(float), s.y.fillna(0).astype(float)
+    pos = (np.hypot(89 - x, y) - s.dist).abs() <= (np.hypot(-89 - x, y) - s.dist).abs()     # attacking the +89 net
+    s["d"] = np.where(pos, 89 - x, x + 89)
+    s["l"] = np.where(pos, -y, y)
+    s["opp"] = np.where(s.team == s.home, s.away, s.home)
+    s = s[(s.d >= -10) & (s.d < 65) & (s.l.abs() < 42.5)]
+    s["r"] = ((s.d + 10) // 5).astype(int)
+    s["c"] = ((s.l + 42.5) // 5).astype(int)
+    R, C = 15, 17
+    lg_s = s[s.date >= s.date.max() - pd.Timedelta(days=365)]
+    lg_games = lg_s.groupby("game_id").ngroups * 2                       # team-games
+    def grid(df):
+        g = np.zeros((R, C))
+        np.add.at(g, (df.r.values, df.c.values), 1.0)
+        k = np.array([1.0, 2.0, 1.0]); k /= k.sum()
+        for _ in range(2):                                                # two passes ~ a 5x5 binomial blur
+            for ax in (0, 1):
+                g = np.apply_along_axis(lambda v: np.convolve(np.pad(v, 1, mode="edge"), k, mode="valid"), ax, g)
+        return g
+    lg = grid(lg_s) / max(lg_games, 1)
+    mask = lg < .02                                                       # cells where hardly anyone shoots
+    inner = (s.dist <= 22) & (s.angle <= 50)
+    s["inner"] = inner
+    K = 12.0
+    def rel(df, ng):
+        g = (grid(df) + K * lg) / ((ng + K) * np.where(lg > 0, lg, 1))
+        return [[None if mask[i, j] else int(round(g[i, j] * 100)) for j in range(C)] for i in range(R)]
+    out, summ = {}, {}
+    all_teams = sorted(set(done.home) | set(done.away))
+    for t in all_teams:
+        last = done[(done.home == t) | (done.away == t)].sort_values("date").tail(n_games).game_id
+        f, a = s[(s.team == t) & s.game_id.isin(last)], s[(s.opp == t) & s.game_id.isin(last)]
+        n = max(len(last), 1)
+        summ[t] = dict(n=int(len(last)), f=len(f) / n, a=len(a) / n, fi=float(f.inner.mean()) if len(f) else None,
+                       ai=float(a.inner.mean()) if len(a) else None, fdf=f, adf=a)
+    cur = {t for t in all_teams if t in set(teams)}
+    rk = lambda key, t, desc=True: 1 + sum(1 for u in summ if u in set(games[games.season == games.season.max()].home)
+                                           and summ[u][key] is not None and (summ[u][key] > summ[t][key] if desc else summ[u][key] < summ[t][key]))
+    for t in cur:
+        m = summ[t]
+        out[t] = dict(n=m["n"], off=rel(m["fdf"], m["n"]), dfn=rel(m["adf"], m["n"]),
+                      f=round(m["f"], 1), a=round(m["a"], 1), fi=round(m["fi"], 3), ai=round(m["ai"], 3),
+                      f_rk=rk("f", t), a_rk=rk("a", t), fi_rk=rk("fi", t), ai_rk=rk("ai", t))
+    # goalies: save % by zone, last two seasons (shots on goal only)
+    seas = sorted(games.season.unique())[-2:]
+    sg = shots[shots.game_id.isin(games[games.season.isin(seas)].game_id) & shots.kind.isin(["shot-on-goal", "goal"])
+               & (shots.empty_net == 0) & shots.goalie.notna() & shots.dist.notna()].copy()
+    ii = (sg.dist <= 22) & (sg.angle <= 50)
+    hh = ~ii & (sg.dist <= 45) & (sg.angle <= 35)
+    sg["zone"] = np.where(ii, "inner", np.where(hh, "high", "perim"))
+    lz = sg.groupby("zone").goal.agg(["size", "sum"])
+    gz = {}
+    for gid in {int(g) for g in goalie_ids if g is not None}:
+        x_ = sg[sg.goalie == gid].groupby("zone").goal.agg(["size", "sum"])
+        gz[str(gid)] = {z: dict(n=int(x_.loc[z, "size"]), sv=round(float(1 - x_.loc[z, "sum"] / x_.loc[z, "size"]), 3)) for z in x_.index if x_.loc[z, "size"] >= 20}
+    # shooters: each listed player's last `n_shots` unblocked attempts (any team), their zone mix vs his
+    # position group's and his usual shot types
+    s["zone"] = np.where(s.inner, "inner", np.where(~s.inner & (s.dist <= 45) & (s.angle <= 35), "high", "perim"))
+    ros = pd.read_sql("SELECT DISTINCT player_id, pos FROM rosters", __import__("sqlite3").connect(M.DB)).drop_duplicates("player_id")
+    pos = dict(zip(ros.player_id.astype("int64"), ros.pos))
+    s["grp"] = s.shooter.map(lambda x: "D" if pos.get(int(x)) == "D" else "F" if x == x else None)
+    rec = s[s.date >= s.date.max() - pd.Timedelta(days=365)]
+    pz = {gp: {z: round(float(v), 3) for z, v in x.zone.value_counts(normalize=True).items()} for gp, x in rec.groupby("grp")}
+    by = s[s.shooter.isin({int(x) for x in players})].sort_values(["date", "t"])
+    sh = {}
+    for pid, x in by.groupby("shooter"):
+        x = x.tail(n_shots)
+        if len(x) < 8:
+            continue
+        ty = x.shot_type.value_counts(normalize=True)
+        sh[str(int(pid))] = dict(n=int(len(x)), g=int(x.goal.sum()), grp="D" if pos.get(int(pid)) == "D" else "F",
+                                 z={z: round(float(v), 3) for z, v in x.zone.value_counts(normalize=True).items()},
+                                 ty=[[k, round(float(v), 2)] for k, v in ty.head(2).items()], dist=round(float(x.dist.mean()), 1),
+                                 xy=[v for d_, l_, gl in zip(x.d, x.l, x.goal) for v in (int(round(l_)), int(round(d_)), int(gl))])
+    return dict(teams=out, goalies=gz, shooters=sh, pos_zone=pz, lg_zone={z: round(float(1 - r["sum"] / r["size"]), 3) for z, r in lz.iterrows()},
+                lg_density=[[None if mask[i, j] else round(float(lg[i, j]), 3) for j in range(C)] for i in range(R)])
+
+
 def pos_defense(fr):
     """Each current team's defense by opposing position, relative to the league (1.10 = allows
     10% more): xG allowed at even strength and on the PK, and actual goals allowed. Recency-
@@ -506,6 +598,30 @@ TEMPLATE = r"""<meta charset="utf-8">
 __FONTS__<style>
 __CSS__
 .gcard{display:grid;gap:14px}
+.ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.smw{display:grid;gap:26px;grid-template-columns:minmax(0,1fr)}@media(min-width:900px){.smw{grid-template-columns:1fr 1fr}}
+.smb{display:grid;gap:10px;align-content:start;min-width:0}.smb h3{margin:0}.smb h3 small{font-family:var(--body);font-weight:400;font-size:13px;color:var(--muted);letter-spacing:0}
+.smchips{display:flex;flex-wrap:wrap;gap:5px}
+.smsvg{width:100%;max-width:400px;display:block;margin:0 auto;background:var(--sunk);border-radius:10px}
+.smsvg .rink path,.smsvg .rink rect,.smsvg .rink circle,.smsvg .rink line,.smsvg .rink polygon{stroke:var(--muted);stroke-width:1;opacity:.55}
+.smsvg .rink .gl{stroke:#e5484d;opacity:.6}.smsvg .rink .bl{stroke:#4c8dff;stroke-width:3;opacity:.6}.smsvg .rink .hp{stroke-dasharray:4 3;opacity:.7}.smsvg .rink .dot{fill:var(--muted)}
+.smkey{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;margin-bottom:12px}.smkey i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.smlist{margin:0;padding-left:0;list-style:none;display:grid;gap:4px;font-size:13.5px}.smlist b.up{color:#ff7a5c}.smlist b.dn{color:#5aa2ff}.smlist b{display:inline-block;min-width:44px}
+.smd{fill:#fff;fill-opacity:.85;stroke:#0b0f14;stroke-width:.8}.smd.g{fill:#F2C14E;fill-opacity:1}
+.smsh summary{cursor:pointer;font-weight:600;font-size:14px}.smsh[open] summary{margin-bottom:8px}
+.smzk{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;margin-bottom:6px}.smzk i,.smd-k{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.smd-k.g{background:#F2C14E;border-radius:50%;margin:0 0 0 2px}
+.zi{background:#ff6347}.zh{background:#f2a65a}.zp{background:color-mix(in srgb,var(--muted) 55%,transparent)}
+.smpl{display:grid;gap:2px}.smp{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(60px,1fr) auto;gap:10px;align-items:center;text-align:left;background:none;border:1px solid transparent;border-radius:7px;padding:6px 8px;color:var(--ink);cursor:pointer;font:inherit;font-size:13px}
+.smp:hover{background:var(--sunk)}.smp.fit{background:color-mix(in srgb,#ff6347 9%,transparent)}
+.smfit{display:inline-block;border:1px solid color-mix(in srgb,#ff6347 60%,transparent);color:#ff8a6e;border-radius:999px;padding:0 7px;font-size:11.5px;font-weight:600;background:none;font-family:inherit;cursor:pointer;white-space:nowrap}
+.smgood{display:flex;flex-wrap:wrap;gap:5px 6px;align-items:center;font-size:13px}.smgood .smfit{font-size:12.5px;padding:2px 9px}.smp[aria-pressed="true"]{border-color:var(--accent);background:var(--sunk)}
+.smpn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.smpn small{color:var(--muted)}
+.smzb{display:flex;height:8px;border-radius:4px;overflow:hidden;gap:1px}.smzb i{display:block}
+.smps{font-size:12px;color:var(--muted);white-space:nowrap}.smps b{color:var(--ink)}.smps b.up{color:#ff7a5c}.smps b.dn{color:#5aa2ff}
+.smsel{font-size:13px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}.smx{background:none;border:1px solid var(--faint);border-radius:999px;color:var(--muted);font:inherit;font-size:12px;padding:1px 9px;cursor:pointer}
+@media(max-width:520px){.smp{grid-template-columns:minmax(0,1fr) 70px;}.smps{grid-column:1/-1}}
+.smgl{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;align-items:baseline}.smg b{font-weight:600}
 .gh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px}
 .sides{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,1080px),1fr));gap:18px}
 @media (max-width:1500px){.sides .mkc{display:none}}   /* Best odds already shows the exchange prices */
@@ -927,9 +1043,131 @@ function gamePlayers(list, gid){
   if (state.bval) x = x.filter(p => isValue({...p, gid}));
   return x.sort((a, b) => state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : state.bsort === 'u' ? ulam(b) - ulam(a) : b.p - a.p);
 }
+// Games: NFL-style rail of games + one game at a time, with tabs (Projections / Shot map)
+const UI = (() => { try { return JSON.parse(localStorage.getItem('nhl-ui') || '{}'); } catch (e) { return {}; } })();
+const saveUI = () => { try { localStorage.setItem('nhl-ui', JSON.stringify({gtab: state.gtab, smode: state.smode})); } catch (e) {} };
+state.gtab = UI.gtab === 'map' ? 'map' : 'proj'; state.smode = ['ov', 'off', 'def'].includes(UI.smode) ? UI.smode : 'ov';
+{ const m = /^#g(\d+)$/.exec(location.hash), up = D.games.find(g => !g.start_utc || new Date(g.start_utc) > Date.now());
+  state.game = m && D.games.some(g => g.id === +m[1]) ? +m[1] : (up || D.games[0] || {}).id; }
+function gameList(){
+  return D.games.map(g => { const hw = g.ml ? g.ml.home : .5, fav = hw >= .5 ? g.home.team : g.away.team;
+    return `<button class="game-btn" data-game="${g.id}" aria-current="${g.id === state.game}">
+      <span class="m"><span class="teams">${esc(g.away.team)} @ ${esc(g.home.team)}</span><span class="line">${esc(String(g.start).replace(/^\w+ \w+ \d+ · /, '').replace(/ ET$/, ''))}</span></span>
+      ${g.ml ? `<span class="line">${esc(fav)} ${Math.round(Math.max(hw, 1 - hw) * 100)}% · total ${g.ml.total.toFixed(1)}</span>
+      <span class="mini" aria-hidden="true"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></span>` : ''}
+    </button>`; }).join('');
+}
+function gameCard(g){
+  return `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
+    ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`;
+}
 function games(){
-  return jumpBar() + picksKey() + playerChips() + D.games.map(g => `<section class="panel gcard" id="g${g.id}"><div class="gh"><h2>${esc(g.away.team)} at ${esc(g.home.team)}</h2><span class="small muted">${esc(g.start)} · goalies ${esc(g.away.goalie)} / ${esc(g.home.goalie)}</span></div>
-    ${mlBlock(g)}${window.MKT ? MKT.game(g.id) : ''}<div class="sides">${side(g.away, g.home, g.id)}${side(g.home, g.away, g.id)}</div></section>`).join('');
+  const g = D.games.find(x => x.id === state.game);
+  if (!g) return '<div class="empty">No games.</div>';
+  const gsw = `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ['map', 'Shot map']].map(([k, l]) =>
+    `<button data-gtab="${k}" aria-pressed="${state.gtab === k}">${l}</button>`).join('')}</div>`;
+  const body = state.gtab === 'map' ? shotMapPanel(g) : picksKey() + playerChips() + gameCard(g);
+  return `<div class="games"><nav class="rail" aria-label="Games">${gameList()}</nav><div class="detail">${gsw}${body}</div></div>`;
+}
+/* ---------------- shot map: where each team shoots vs where the other allows (display only) ---------------- */
+const SM_ZONE = [['inner', 'Net front & low slot'], ['high', 'High slot'], ['perim', 'Outside']];
+const ordn = n => { const s_ = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s_[(v - 20) % 10] || s_[v] || s_[0]); };
+function smRegion(r, c){
+  const d = r * 5 - 7.5, l = Math.abs(c * 5 - 40);
+  if (d < 0) return 'behind the net';
+  if (d <= 12 && l <= 10) return 'net front';
+  if (d <= 32 && l <= 12) return 'slot';
+  if (d <= 50 && l <= 15) return 'high slot';
+  if (d >= 50) return 'the points';
+  if (d <= 40 && l <= 32) return 'the circles';
+  return 'sharp angles';
+}
+function smFill(v, w){
+  if (v == null) return 'none';
+  return v >= 1 ? `rgba(255,99,71,${(Math.min(1, (v - 1) / .3) * .95 * w).toFixed(3)})` : `rgba(70,150,255,${(Math.min(1, (1 - v) / .25) * .85 * w).toFixed(3)})`;
+}
+function smSvg(vals, tipf, dots){
+  const DN = D.shotmap.lg_density, dmax = Math.max(...DN.flat().filter(x => x != null));
+  const P = (l, d) => `${(127.5 + l * 3).toFixed(1)},${((d + 10) * 3).toFixed(1)}`;
+  let cells = '';
+  for (let r = 0; r < 15; r++) for (let c = 0; c < 17; c++){
+    const v = vals[r][c]; if (v == null) continue;
+    const w = Math.max(.5, Math.min(1, Math.sqrt(DN[r][c] / dmax) * 1.3));
+    cells += `<rect x="${c * 15}" y="${r * 15}" width="15" height="15" fill="${smFill(v, w)}" data-tip="${esc(tipf(r, c))}"/>`;
+  }
+  return `<svg class="smsvg" viewBox="-2 -2 259 229" role="img" aria-label="Shot map">
+    <defs><filter id="smblur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="6"/></filter><clipPath id="smclip"><path d="M0,225 L0,84 Q0,0 84,0 L171,0 Q255,0 255,84 L255,225 Z"/></clipPath></defs>
+    <g clip-path="url(#smclip)"><g filter="url(#smblur)"${dots ? ' opacity=".35"' : ''}>${cells}</g>${dots || ''}</g>
+    <g class="rink" fill="none">
+      <path d="M0,225 L0,84 Q0,0 84,0 L171,0 Q255,0 255,84 L255,225"/>
+      <line x1="0" y1="30" x2="255" y2="30" class="gl"/><line x1="0" y1="222" x2="255" y2="222" class="bl"/>
+      <rect x="118.5" y="20" width="18" height="10" rx="2"/><path d="M109.5,30 A18,18 0 0 0 145.5,30" class="cr"/>
+      <circle cx="61.5" cy="90" r="45"/><circle cx="193.5" cy="90" r="45"/><circle cx="61.5" cy="90" r="2" class="dot"/><circle cx="193.5" cy="90" r="2" class="dot"/>
+      <polygon points="${P(-3, 0)} ${P(-22, 20)} ${P(-22, 35)} ${P(22, 35)} ${P(22, 20)} ${P(3, 0)}" class="hp"/>
+    </g></svg>`;
+}
+function smBlock(off, def){
+  const SM = D.shotmap, O = SM.teams[off.team], F = SM.teams[def.team];
+  if (!O || !F) return `<div class="smb"><h3>${esc(off.team)} attack</h3><div class="empty">No shot data yet.</div></div>`;
+  const ov = O.off.map((row, r) => row.map((v, c) => v == null || F.dfn[r][c] == null ? null : v * F.dfn[r][c] / 1e4));
+  const vals = state.smode === 'off' ? O.off.map(row => row.map(v => v == null ? null : v / 100))
+    : state.smode === 'def' ? F.dfn.map(row => row.map(v => v == null ? null : v / 100)) : ov;
+  const pc = v => (v >= 1 ? '+' : '−') + Math.abs(Math.round((v - 1) * 100)) + '%';
+  const tipf = (r, c) => `<b>${smRegion(r, c)}</b><br>${esc(off.team)} shoots here ${pc(O.off[r][c] / 100)} vs average<br>${esc(def.team)} allows ${pc(F.dfn[r][c] / 100)}<br>Together: ${pc(ov[r][c])}`;
+  // areas where the two meet, weighted by how often the league shoots there
+  const DN = SM.lg_density, agg = {};
+  O.off.forEach((row, r) => row.forEach((v, c) => { if (ov[r][c] == null) return; const k = smRegion(r, c), a = agg[k] = agg[k] || {w: 0, v: 0}; a.w += DN[r][c]; a.v += DN[r][c] * ov[r][c]; }));
+  const reg = Object.entries(agg).filter(([, a]) => a.w > .4).map(([k, a]) => ({k, v: a.v / a.w}));
+  const hot = reg.filter(x => x.v >= 1.08).sort((a, b) => b.v - a.v).slice(0, 2), cold = reg.filter(x => x.v <= .92).sort((a, b) => a.v - b.v).slice(0, 1);
+  const G = def.goalie_id != null && SM.goalies[def.goalie_id], LZ = SM.lg_zone || {};
+  const sv = x => x.toFixed(3).replace(/^0/, '');
+  const gz = G ? SM_ZONE.filter(([z]) => G[z]).map(([z, lab]) => { const d = G[z].sv - LZ[z];
+      return `<span class="smg" tabindex="0" data-tip="${esc(def.goalie)}: ${sv(G[z].sv)} save % on ${G[z].n} shots from here (league ${sv(LZ[z])}), last two seasons">${lab} <b class="${d <= -.03 ? 'g2' : d <= -.012 ? 'g1' : d >= .03 ? 'r2' : d >= .012 ? 'r1' : ''}">${sv(G[z].sv)}</b></span>`; }).join('') : '';
+  // shooters: tap one to plot his last shots on the map
+  const SH = SM.shooters || {}, PZ = SM.pos_zone || {};
+  const pl = (off.players || []).filter(p => SH[p.id]).sort((a, b) => (b.sog ?? 0) - (a.sog ?? 0));
+  const selId = (state.smp || {})[off.team], sel = pl.find(p => p.id === selId), S = sel && SH[sel.id];
+  let dots = '';
+  if (S){ for (let i = 0; i < S.xy.length; i += 3){ const [l, d, gl] = [S.xy[i], S.xy[i + 1], S.xy[i + 2]];
+    if (d < -10 || d > 64) continue;
+    dots += `<circle cx="${(127.5 + l * 3).toFixed(1)}" cy="${((d + 10) * 3).toFixed(1)}" r="${gl ? 5 : 3.2}" class="${gl ? 'smd g' : 'smd'}"/>`; } }
+  const zb = (z, grp) => { const a = PZ[grp] || {}; return `<span class="smzb" aria-hidden="true">${[['inner', 'zi'], ['high', 'zh'], ['perim', 'zp']].map(([k, c]) => `<i class="${c}" style="flex:${z[k] || 0}"></i>`).join('')}</span>`; };
+  const TY = {'tip-in': 'tips', 'wrap-around': 'wraps', 'between-legs': 'between-legs', deflected: 'deflections'};
+  const tyl = t => TY[t] || t;
+  // fit: how much more than average the opponent allows shots where this player shoots (his last shots)
+  const fit = id => { const x = SH[id]; let t = 0, n = 0;
+    for (let i = 0; i < x.xy.length; i += 3){ const r = Math.floor((x.xy[i + 1] + 10) / 5), c = Math.floor((x.xy[i] + 42.5) / 5);
+      const v = F.dfn[r] && F.dfn[r][c]; if (v != null){ t += v / 100; n++; } }
+    return n >= 8 ? t / n : null; };
+  pl.forEach(p => { p._fit = fit(p.id); });
+  const good = pl.filter(p => p._fit != null && p._fit >= 1.08).sort((a, b) => b._fit - a._fit);
+  const fitTip = p => `${esc(def.team)} allows ${Math.round((p._fit - 1) * 100)}% more shots than average in the spots ${esc(p.name)} shoots from (his last ${SH[p.id].n} shots). Not tested as a betting signal.`;
+  const srow = p => { const x = SH[p.id], a = (PZ[x.grp] || {}).inner || .25, d = (x.z.inner || 0) - a, gd = p._fit != null && p._fit >= 1.08;
+    return `<button type="button" class="smp${gd ? ' fit' : ''}" data-smp="${esc(off.team)}:${p.id}" aria-pressed="${p.id === selId}">
+      <span class="smpn"><b>${esc(p.name)}</b> <small>${esc(p.pos)}</small>${gd ? ` <span class="smfit" data-tip="${fitTip(p)}">fit +${Math.round((p._fit - 1) * 100)}%</span>` : ''}</span>${zb(x.z, x.grp)}
+      <span class="smps"><b class="${d >= .08 ? 'up' : d <= -.08 ? 'dn' : ''}">${Math.round((x.z.inner || 0) * 100)}%</b> in close · ${esc(tyl(x.ty[0][0]))} ${Math.round(x.ty[0][1] * 100)}%</span></button>`; };
+  const goodLine = good.length ? `<div class="smgood"><span class="small muted">Shoots where ${esc(def.team)} is soft:</span>${good.slice(0, 4).map(p =>
+      `<button type="button" class="smfit" data-smp="${esc(off.team)}:${p.id}" data-tip="${fitTip(p)}">${esc(p.name)} +${Math.round((p._fit - 1) * 100)}%</button>`).join('')}</div>` : '';
+  const shooters = pl.length ? `${goodLine}<details class="smsh"${selId ? ' open' : ''}><summary>Shooters <span class="small muted">· tap one to see his last shots</span></summary>
+      <div class="smzk"><span><i class="zi"></i>in close</span><span><i class="zh"></i>high slot</span><span><i class="zp"></i>outside</span><span class="muted">${esc(off.team)} forwards average ${Math.round(((PZ.F || {}).inner || 0) * 100)}% in close, D ${Math.round(((PZ.D || {}).inner || 0) * 100)}%</span></div>
+      <div class="smpl">${pl.filter((p, i) => i < 12 || good.includes(p)).map(srow).join('')}</div></details>` : '';
+  const selNote = S ? `<div class="smsel"><b>${esc(sel.name)}</b>: last ${S.n} shots, <i class="smd-k g"></i>${S.g} goal${S.g === 1 ? '' : 's'} · average ${S.dist} ft out · ${S.ty.map(t => `${esc(tyl(t[0]))} ${Math.round(t[1] * 100)}%`).join(', ')} <button type="button" class="smx" data-smp="${esc(off.team)}:0">clear</button></div>` : '';
+  return `<div class="smb"><h3>${esc(off.team)} attack <small>vs ${esc(def.team)} defense</small></h3>
+    <div class="smchips"><span class="ladc">${esc(off.team)} ${O.f} shots/gm (${ordn(O.f_rk)})</span><span class="ladc">${Math.round(O.fi * 100)}% from in close (${ordn(O.fi_rk)})</span>
+      <span class="ladc">${esc(def.team)} allows ${F.a}/gm (${ordn(F.a_rk)} most)</span><span class="ladc">${Math.round(F.ai * 100)}% in close (${ordn(F.ai_rk)} most)</span></div>
+    ${selNote}${smSvg(vals, tipf, dots)}
+    <ul class="smlist">${hot.map(x => `<li><b class="up">${pc(x.v)}</b> ${x.k}: ${esc(off.team)} goes there and ${esc(def.team)} gives it up</li>`).join('')}${cold.map(x => `<li><b class="dn">${pc(x.v)}</b> ${x.k}: little room for ${esc(off.team)}</li>`).join('')}${!hot.length && !cold.length ? '<li class="muted">No area stands out.</li>' : ''}</ul>
+    ${gz ? `<div class="smgl"><span class="small muted">${esc(def.goalie)} save %:</span>${gz}</div>` : ''}${shooters}</div>`;
+}
+function shotMapPanel(g){
+  if (!D.shotmap) return '<section class="panel"><div class="empty">No shot maps on this page yet.</div></section>';
+  const seg = `<div class="seg" role="group" aria-label="Map view">${[['ov', 'Overlay'], ['off', 'Where they shoot'], ['def', 'Where it’s allowed']].map(([k, l]) =>
+    `<button data-smode="${k}" aria-pressed="${state.smode === k}">${l}</button>`).join('')}</div>`;
+  const n = (D.shotmap.teams[g.home.team] || {}).n || 30;
+  return `<section class="panel"><div class="phead"><h2>${esc(g.away.team)} at ${esc(g.home.team)}: shot map</h2>${seg}</div>
+    <div class="smkey"><span><i style="background:rgba(255,99,71,.8)"></i>more than average</span><span><i style="background:rgba(70,150,255,.6)"></i>less</span><span class="muted">net at the top · last ${n} games · faded where few shots happen · tap a square</span></div>
+    <div class="smw">${smBlock(g.away, g.home)}${smBlock(g.home, g.away)}</div>
+    <p class="note">Overlay = where this team shoots more than average times where the other team allows more than average (unblocked shots, empty nets left out). Goalie save % by zone is from the last two seasons. Display only: in our 2024-26 tests neither the overlay nor zone save % predicted goals beyond what the model already uses (it rates every shot by location through expected goals, and goalies by goals saved above expected), so the maps don’t change any number on the page.</p></section>`;
 }
 const ulam = p => -Math.log(1 - Math.min(p.p, .999)) * (p.um ?? 1);
 // value play: the best anytime-goal price at the viewer's books beats our chance by 5%+ (not a low-trust pick)
@@ -999,6 +1237,14 @@ function render(){
 document.addEventListener('click', e => {
   const b = e.target.closest('button[data-view]');
   if (b){ state.view = b.dataset.view; history.replaceState(null, '', state.view === 'games' ? location.pathname : '#' + state.view); render(); return; }
+  const gb = e.target.closest('[data-game]');
+  if (gb){ state.game = +gb.dataset.game; history.replaceState(null, '', '#g' + state.game); render(); return; }
+  const gt = e.target.closest('[data-gtab]');
+  if (gt){ state.gtab = gt.dataset.gtab; saveUI(); render(); return; }
+  const sp = e.target.closest('[data-smp]');
+  if (sp){ const [t, id] = sp.dataset.smp.split(':'); state.smp = state.smp || {}; state.smp[t] = state.smp[t] === +id || +id === 0 ? null : +id; render(); return; }
+  const sm = e.target.closest('[data-smode]');
+  if (sm){ state.smode = sm.dataset.smode; saveUI(); render(); return; }
   if (e.target.closest('[data-shotsall]')){ state.shotsAll = true; render(); return; }
   if (e.target.closest('details.pfold > summary')){
     const d = e.target.closest('details.pfold');
