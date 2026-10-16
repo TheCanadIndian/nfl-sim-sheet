@@ -186,6 +186,11 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   }
   const spr = r => r.ya != null && r.yb != null && r.yb > 0 ? r.ya - r.yb : null;
   const isThin = r => { const s = spr(r); return s != null && s >= .015; };
+  // NFL yardage / catch props: only the side our median is on, our number 10+ pts from the market, and on exchanges a tight (3c or less), 15c+ market. Kalshi 2026 wk 1-5: the plain 5%-edge rule lost 5% in both halves; this cut it to about breakeven (-0.6% / +7.7%) by dropping far-side ladder rungs and thin markets.
+  const NFLP = new Set(['rec', 'rec_yds', 'rush_yds', 'pass_yds']);
+  const nflRuleOk = (r, p, side) => { if (!NFLP.has(r.k) || p == null) return true;
+    const ps = side === 'yes' ? p : 1 - p, m = r.yb != null && r.yb > 0 ? (r.ya + r.yb) / 2 : r.ya, s = spr(r), cost = side === 'yes' ? r.ya : (r.yb != null ? 1 - r.yb : null);
+    return ps >= .5 && (s == null || s <= .035) && (cost == null || cost >= .15) && (m == null || Math.abs(p - m) >= .10); };
 
   function poly(r){                                        // live Polymarket book (CORS-open)
     const now = Date.now();
@@ -220,7 +225,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     poly(r);
     const [yl, nl] = sides(r), p = ours(r, model), e = edges(r, p);
     const best = (e.y ?? -9) >= (e.n ?? -9) ? {v: e.y, lab: yl} : {v: e.n, lab: nl};
-    const weak = (D && D.weak && D.weak.includes(r.k)) || !!lost(r.k);
+    const weak = (D && D.weak && D.weak.includes(r.k)) || !!lost(r.k) || !nflRuleOk(r, p, (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no');
     const by = r.by ?? null, bn = r.bn ?? null, tot = (by || 0) + (bn || 0);
     const setBtn = slider && r.l != null && !['win', 'spread', 'anytime_td', 'first_td', 'first_goal'].includes(r.k) ? `<button class="mkx-set" data-mline="${r.l}" title="Move the slider to this line">use line</button>` : '';
     return `<div class="mkx-r${focus ? ' on' : ''}">
@@ -508,6 +513,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
             const pin = pinOk(e) ? (sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
             const w = (opts.wOurs || {})[k] ?? .5, m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
+            if (opts.sport === 'nfl' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(k) && (p < .5 || (m != null && Math.abs(p - m) < .10))) continue;
             const isSog = k.startsWith('sog');
             const leg = {gid, start: startOf[gid], kind: isSog ? 'sog' : k, side: sd, line: isSog ? +k.slice(3) / 10 : (e.l ?? .5), name: nm,
                          lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, p: +q.toFixed(4), price: b[1], book: b[0]};
@@ -589,7 +595,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         .filter(Boolean).sort((a, b) => (a.other - b.other) || ((b.ev ?? -9) - (a.ev ?? -9)));
       const c = opts[0]; if (!c) return '<span class="muted">–</span>';
       const url = `https://www.gambly.com/deeplink/odds/${c.path}?utm_campaign=${encodeURIComponent(PR.partner || '')}`;
-      const v = !c.other && !e.w && c.ev != null && c.ev >= (FL && FL.min_ev || .05);
+      const sideOk = sport !== 'nfl' || !['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(kind) || (c.p0 != null && c.p0 >= .5 && (c.m == null || Math.abs(c.p0 - c.m) >= .10));
+      const v = !c.other && !e.w && sideOk && c.ev != null && c.ev >= (FL && FL.min_ev || .05);
       const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
       const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · ${c.m != null ? `ours ${(c.p0 * 100).toFixed(1)}%, ${e.pin ? 'Pinnacle no-vig' : 'market'} ${(c.m * 100).toFixed(1)}%, blended ` : ''}edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
       const pinP = (sport === 'nfl' || sport === 'nhl') && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
@@ -674,7 +681,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       if (!r) return '<span class="muted">–</span>';
       poly(r);
       const p = ours(r, model), e = edges(r, p), v = Math.max(e.y ?? -9, e.n ?? -9), side = (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no';
-      const weak = (D.weak && D.weak.includes(r.k)) || !!lost(r.k);
+      const weak = (D.weak && D.weak.includes(r.k)) || !!lost(r.k) || !nflRuleOk(r, p, side);
       const fc = flowChips(r, e.y);
       return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)}${PXF === 'c' ? '' : ` = ${px(r.ya, r.s)} with fee`} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${px(r.ya, r.s)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${lost(r.k) && v >= .02 ? ` <small class="muted" title="${esc(lostTip(r.k))}">losing record</small>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;
     },
