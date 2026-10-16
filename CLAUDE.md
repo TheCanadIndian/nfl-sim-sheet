@@ -54,8 +54,8 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 - **Pinnacle de-vig:** multiplicative for two-way lines, power for one-way. Alt and mismatched lines are carried over with our distribution's shape (shown with ≈). Comparisons span **all** books, with the owner's books highlighted.
 
 ## Model rules that were tested (don't loosen without a new test)
-- **NFL props:** chance = 50% ours + 50% market no-vig (Pinnacle when available), with a 5%+ edge required. The gap matters more than percentage EV: tight markets need 5+ points, wider ones 8+. Projections run 50,000 sims per game; the build-your-own slip gets 5,000 draws.
-- **NHL anytime goal:** legs only from our top 3 per game by usage rank. Chance = 75% ours + 25% market, each leg at 30%+. Round robins cut droughts. Shots on goal use a negative binomial (`hockey/sog_params.json`).
+- **NFL props:** chance = 50% ours + 50% market no-vig (Pinnacle when available), with a 5%+ edge required. Yardage / catch props also need the side our median is on and our number 10+ points from the market (exchanges: spread 3¢ or less, price 15¢+); the plain rule lost 5% on Kalshi 2026 weeks 1-5. Track everything on /profit.html. The gap matters more than percentage EV: tight markets need 5+ points, wider ones 8+. Projections run 50,000 sims per game; the build-your-own slip gets 5,000 draws.
+- **NHL anytime goal:** legs only from our top 3 per game by usage rank. Chance = 50% ours + 50% market (Pinnacle no-vig when pulled, else the exchanges), each leg at 30%+. Game totals: `gamesim.REG_SCALE` 0.90. Round robins cut droughts. Shots on goal use a negative binomial (`hockey/sog_params.json`).
 - **MLB HR blend** (`mlb/blend.py`):
   - **How to test:** compare feature sets with 5-seed averaged fits. A single fit swings ±0.01 top-3 HR hitters per game.
   - **Bar:** top-3 capture up in every half of two test windows, and log-loss not worse.
