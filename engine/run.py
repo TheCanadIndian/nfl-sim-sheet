@@ -79,6 +79,7 @@ def nfl(news=False):
     sh(PY, "results.py")
     sh(PY, "markets.py", "nfl")
     sh(PY, "grade_markets.py", "nfl")
+    sh(PY, "profit.py", "rows", "nfl")          # Profit page: picks under the site's rules
     sh(PY, "patterns.py")                    # prop patterns: tracked record
 
 
@@ -93,6 +94,7 @@ def nhl(auto=False):
     sh(PY, "hockey/results.py")
     sh(PY, "markets.py", "nhl")
     sh(PY, "grade_markets.py", "nhl")
+    sh(PY, "profit.py", "rows", "nhl")
     sh(PY, "hockey/should_run.py", "--mark")
     return True
 
@@ -108,6 +110,7 @@ def nba():
     sh(PY, "nba/results.py")
     sh(PY, "markets.py", "nba")
     sh(PY, "grade_markets.py", "nba")
+    sh(PY, "profit.py", "rows", "nba")
     return True
 
 
@@ -117,6 +120,7 @@ def mlb():
     sh(PY, "mlb/results.py")
     sh(PY, "markets.py", "mlb")
     sh(PY, "grade_markets.py", "mlb")
+    sh(PY, "profit.py", "rows", "mlb")
     return True
 
 
