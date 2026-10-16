@@ -117,16 +117,26 @@ def freeze():
                     continue
                 p["first"] = min(starts).astimezone(dt.timezone.utc).isoformat()
                 by.setdefault(et_date(p["first"]), []).append(p)
-            for date, ps in by.items():
+            # Each parlay locks at its own first game: what counts is the last version the page showed before that
+            # game started (cards keep updating through the day, and drop games once they start). Parlays the page
+            # replaced before their first game don't count.
+            today = dt.datetime.now(ET).date()
+            dates = set(by) | {os.path.basename(f)[:10] for f in glob.glob(os.path.join(OUT, sport, "*.json"))
+                               if dt.date.fromisoformat(os.path.basename(f)[:10]) >= today - dt.timedelta(days=1)}
+            for date in sorted(dates):
                 fp = os.path.join(OUT, sport, f"{date}.json")
                 old = json.load(open(fp)) if os.path.exists(fp) else None
-                lock = min([p["first"] for p in ps] + ([old["lock"]] if old else []))
-                if when(lock) <= now:
-                    continue                                   # the day's first game has started: frozen
+                if old and old.get("graded"):
+                    continue
+                locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now]
+                pending = [p for p in by.get(date, []) if when(p["first"]) > now]
+                ps = locked + pending
+                if not ps or (old and ps == old["parlays"]):
+                    continue
                 os.makedirs(os.path.dirname(fp), exist_ok=True)
-                json.dump(dict(sport=sport, date=date, lock=lock, frozen_at=snap["generated"], books=snap["books"], parlays=ps, graded=False),
-                          open(fp, "w"), indent=0)
-                print(f"parlays {sport} {date}: {len(ps)} parlays saved (locks {lock})")
+                json.dump(dict(sport=sport, date=date, lock=min(p["first"] for p in ps), frozen_at=snap["generated"], books=snap["books"],
+                               parlays=ps, graded=False), open(fp, "w"), indent=0)
+                print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
     finally:
         srv.terminate()
 
