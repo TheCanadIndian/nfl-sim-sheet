@@ -89,9 +89,12 @@ def market_rows(sport):
             else:
                 continue                                   # first scorer etc.: not something the site recommends
             bet = None
-            if "YES" in sides and q / cy - 1 > need:
+            # NFL yardage / catch props: the side our median is on, our number 10+ pts from the mid, a tight 15c+ market
+            nflp = sport == "nfl" and k in ("rec", "rec_yds", "rush_yds", "pass_yds")
+            ok = lambda ps, c_: not nflp or (ps >= .5 and abs(p - m) >= .10 and (ya - (yb or ya)) <= .035 and c_ >= .15)
+            if "YES" in sides and q / cy - 1 > need and ok(p, ya):
                 bet, cost, win = "YES", cy, q
-            elif "NO" in sides and cn and (1 - q) / cn - 1 > need:
+            elif "NO" in sides and cn and (1 - q) / cn - 1 > need and ok(1 - p, na):
                 bet, cost, win = "NO", cn, 1 - q
             if not bet:
                 continue
