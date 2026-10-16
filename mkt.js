@@ -676,6 +676,19 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       top.sort(order); rest.sort(order);
       return `<div class="mkx">${head('Prediction markets')}${top.map(r => row(r, model)).join('')}${rest.length ? `${det('g|' + gid)}<summary>All ${rows.length} game lines</summary>${rest.map(r => row(r, model)).join('')}</details>` : ''}</div>`;
     },
+    // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
+    ladder(gid, pid, name){
+      const rows = forPlayer(gid, pid, name).filter(r => r.s === 'kalshi' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(r.k) && r.l != null && r.ya > 0 && r.yb != null);
+      const by = {}; rows.forEach(r => (by[r.k] = by[r.k] || []).push(r));
+      const out = [];
+      for (const [k, L] of Object.entries(by)){
+        L.sort((a, b) => a.l - b.l);
+        const mid = r => (r.ya + r.yb) / 2; let i0 = 0;
+        L.forEach((r, i) => { if (Math.abs(mid(r) - .5) < Math.abs(mid(L[i0]) - .5)) i0 = i; });
+        L.slice(i0 + 2).forEach((r, i) => out.push({k, i, l: r.l, ya: r.ya, mid: mid(r), p: ours(r, 'vegas'), price: px(r.ya, 'kalshi')}));
+      }
+      return out.sort((a, b) => a.i - b.i);                         // each stat's nearest high rung first
+    },
     cell(gid, pid, name, kind, model){                        // compact table cell: price · edge · money each side
       const r = forPlayer(gid, pid, name).filter(x => x.k === kind && (x.l == null || x.l < 1)).sort((a, b) => (a.s === 'kalshi' ? -1 : 1))[0];
       if (!r) return '<span class="muted">–</span>';
