@@ -182,6 +182,10 @@ input[type=search]{min-width:200px}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
 .sp-list{display:grid;gap:0}
+.exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
+.ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
 .fm-off{border-top:1px solid var(--faint);padding-top:14px;margin-top:14px}.fm-off:first-of-type{border-top:0;margin-top:4px;padding-top:0}
 .fm-off h3{margin:0 0 10px;font-family:var(--display);font-size:20px;letter-spacing:.02em;text-transform:uppercase}.fm-off h3 small{font-family:var(--body);font-size:13px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:500}
 .fm-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
@@ -397,7 +401,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <main id="main"></main>
   <footer>Every slate's projections are frozen at tip-off and graded against the box score, for both models. Players who didn't play are voided. A calibrated model puts about 80% of results inside its 8-in-10 range and about half above the median (a bit under for counts like threes, where landing exactly on the median is common).</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Oct 16, 2026 11:55 AM","void":0,"season":[],"nights":[]}</script>
+<script type="application/json" id="data">{"generated":"Oct 16, 2026 1:01 PM","void":0,"season":[],"nights":[]}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
