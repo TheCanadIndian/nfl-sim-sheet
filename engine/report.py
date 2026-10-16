@@ -498,6 +498,10 @@ input[type=search]{min-width:200px}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
 .sp-list{display:grid;gap:0}
+.exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
+.ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
 .fm-off{border-top:1px solid var(--faint);padding-top:14px;margin-top:14px}.fm-off:first-of-type{border-top:0;margin-top:4px;padding-top:0}
 .fm-off h3{margin:0 0 10px;font-family:var(--display);font-size:20px;letter-spacing:.02em;text-transform:uppercase}.fm-off h3 small{font-family:var(--body);font-size:13px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:500}
 .fm-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
@@ -926,7 +930,41 @@ function tierParlays(){
                        // Kalshi 2026 (17,517 graded props): 50/50 with the market and a 5%+ edge returned +8.4%; our projection alone lost
                        minEdge: .05});
 }
+// Ladder candidates (experimental): players facing one of the 8 defenses most generous to their position (defense vs
+// position, this season). Kalshi 2026 wk 1-5: their high rungs (2+ above the 50/50 rung) cleared 3-8 pts more often than
+// the price said, in both halves (z 1.9 / 2.5 per player); with a 2nd signal (underdog, team total 25+) similar. Tracked
+// on the Profit page; not proven.
+function ladderCard(){
+  if (!D.dvp) return '';
+  const KL = {rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds'};
+  const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
+  const now = Date.now(), cards = [];
+  for (const g of D.games){
+    if (g.sort && new Date(g.sort) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id)){
+      const v = (p.s.tgt && p.s.tgt[MEAN] >= 3) || (p.s.car && p.s.car[MEAN] >= 8) || (p.s.att && p.s.att[MEAN] >= 20);
+      if (!v) continue;
+      const k = posKey(p), r = dvpRow(k, p.o); if (!r || r.rank > 8) continue;
+      const T = (D.teams[g.id] || {})[p.t] || {};
+      const extra = [T.win_prob != null && T.win_prob <= .40 ? 'underdog' : null, T.vegas_implied >= 25 ? `team total ${T.vegas_implied}` : null].filter(Boolean);
+      const rungs = window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n) : [];
+      cards.push({g, p, r, k, extra, rungs});
+    }
+  }
+  if (!cards.length) return '';
+  cards.sort((a, b) => b.extra.length - a.extra.length || a.r.rank - b.r.rank);
+  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}</span>
+      <span class="ladc soft" title="${esc(c.p.o)} gives up the ${ord(c.r.rank)} most to ${c.k === 'WR' ? 'wide receivers' : c.k + 's'} this season (defense vs position)">soft: ${ord(c.r.rank)} most to ${c.k}s</span>${c.extra.map(x => `<span class="ladc">${esc(x)}</span>`).join('')}</div>
+    <div class="ladr">${c.rungs.slice(0, 3).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KL[u.k]}: price ${Math.round(u.mid * 100)}% · our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}"><b>${Math.round(u.l + .5)}+</b> ${KL[u.k]} <i>${u.price}</i></span>`).join('')}</div></div>`;
+  const on = cards.filter(c => c.rungs.length), off = cards.filter(c => !c.rungs.length);
+  const wait = off.length ? `<details class="ladw"><summary>${on.length ? `${off.length} more` : `${off.length} players`} · Kalshi ladders not posted yet</summary><div class="ladr">${off.map(c =>
+      `<span class="lru" title="${esc(c.p.o)}: ${ord(c.r.rank)} most to ${c.k}s${c.extra.length ? ' · ' + c.extra.join(' · ') : ''}"><b>${esc(c.p.n)}</b> <i>${esc(c.p.pos)} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
+  return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). In Kalshi’s 2026 markets (weeks 1-5), those higher rungs cleared 3-8 points more often than their price said, in both halves of the sample; a second signal (underdog, or a team total of 25+) pointed the same way. The market seems to price the average game against a bad defense but not the ceiling. That is a small sample from one season, so these are tracked on the Profit page to see if it holds, not a recommendation. Defense rankings early in the season rest on only a few games.</p></details>
+    <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
+}
 function renderParlays(){
+  const ladder = ladderCard();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays();
   if (window.MKT && MKT.reg){                                      // freeze mode: record every model parlay for the Results page
@@ -947,14 +985,14 @@ function renderParlays(){
           MKT.reg(lab, `${P.name} · ${r.k} legs`, legs, r.p, r.kalshi ? 1 / r.kalshi : null); } }
     }
   }
-  if (!C.length) return tiers + '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
+  if (!C.length) return ladder + tiers + '<section class="panel"><div class="empty">No cross-game parlays this week yet.</div></section>';
   const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
     <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${window.MKT && MKT.px ? MKT.px(L.price, 'kalshi') : Math.round(L.price * 100) + '¢'}` : ''}</span></li>`).join('')}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table>
     ${gamblyBtns(c.legs.map(L => ({lab: `${L.lab} (${L.game})`})), [c.legs.length], '')}
     ${window.SLIP ? `<div class="gbtns"><span class="small muted">My parlay:</span>${SLIP.allBtn(crossSlipLegs(c.legs), '+ add parlay')}</div>` : ''}</div>`;
-  return `<section class="panel"><div class="phead"><h2>Long parlays by kickoff window and day</h2><span class="small muted">each game's strongest legs, stacked</span></div>
+  return ladder + tiers + `<section class="panel"><div class="phead"><h2>Long parlays by kickoff window and day</h2><span class="small muted">each game's strongest legs, stacked</span></div>
     <p class="note">Built from each game's most likely same-game parlay: its first legs (kept together, so their link counts), as many from each game as it takes to reach 5+ legs. The full-day parlay covers every game that day. Games are simulated separately, so across games the chances multiply. These overlap with the per-game parlays on purpose.</p>
     <div class="sgp-grid">${C.map(card).join('')}</div></section>`;
 }
