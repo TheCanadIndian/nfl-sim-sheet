@@ -11,7 +11,7 @@ import nhl_backtest as B
 
 BASE = {k: getattr(M, k) for k in ("TOI_HL", "RATE_HL", "FIN_HL", "K_NP_HOURS", "K_PP_HOURS", "K_FIN_XG",
                                    "TEAM_HL", "K_GOALIE_XG", "PP_OPP_ONLY", "USE_LG_ENV", "LG_DAYS", "TOI_REG_ONLY", "TOI_RAMP", "BASE_CURVE",
-                                   "USE_POS_D", "K_POS_GAMES", "POS_D_ABS",
+                                   "USE_POS_D", "K_POS_GAMES", "POS_D_ABS", "USE_OPP_FA",
                                    "USE_H2H", "K_H2H", "K_H2H_TEAM", "GQ_MODE", "TOI_NORM", "NP_TEAM_SEC")}
 _games, _shots, _ = M.load()
 _shots["season"] = _shots.game_id.map(_games.set_index("game_id").season)
