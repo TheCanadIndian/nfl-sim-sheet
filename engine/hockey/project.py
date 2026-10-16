@@ -1141,7 +1141,7 @@ function smBlock(off, def){
     return n >= 8 ? t / n : null; };
   pl.forEach(p => { p._fit = fit(p.id); });
   const good = pl.filter(p => p._fit != null && p._fit >= 1.08).sort((a, b) => b._fit - a._fit);
-  const fitTip = p => `${esc(def.team)} allows ${Math.round((p._fit - 1) * 100)}% more shots than average in the spots ${esc(p.name)} shoots from (his last ${SH[p.id].n} shots). Not tested as a betting signal.`;
+  const fitTip = p => `${esc(def.team)} allows ${Math.round((p._fit - 1) * 100)}% more shots than average in the spots ${esc(p.name)} shoots from (his last ${SH[p.id].n} shots). Tested on 2024-26: this mostly reflects how many shots ${esc(def.team)} allows overall, which our shots projection already uses; the location part didn’t predict goals or extra shots.`;
   const srow = p => { const x = SH[p.id], a = (PZ[x.grp] || {}).inner || .25, d = (x.z.inner || 0) - a, gd = p._fit != null && p._fit >= 1.08;
     return `<button type="button" class="smp${gd ? ' fit' : ''}" data-smp="${esc(off.team)}:${p.id}" aria-pressed="${p.id === selId}">
       <span class="smpn"><b>${esc(p.name)}</b> <small>${esc(p.pos)}</small>${gd ? ` <span class="smfit" data-tip="${fitTip(p)}">fit +${Math.round((p._fit - 1) * 100)}%</span>` : ''}</span>${zb(x.z, x.grp)}
