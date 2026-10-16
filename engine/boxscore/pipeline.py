@@ -62,7 +62,7 @@ class Frames:
         tg[["w_wind", "w_cold", "w_rain"]] = tg[["w_wind", "w_cold", "w_rain"]].fillna(0.0)
         self.means = P.league_means(tg.dropna(subset=["plays"]))
         self.tp = P.team_priors(tg.sort_values(["gameday", "game_id", "team"]), self.means)
-        pf = P.player_frame(self.pg, actives, self.tp, self.pos)
+        pf = P.player_frame(self.pg, actives, self.tp, self.pos, erased=D.load_erased(con))
         self.base = P.position_baselines(pf.dropna(subset=["team_att"]))
         self.pp = P.player_priors(pf, self.base)
         self.starters = starters

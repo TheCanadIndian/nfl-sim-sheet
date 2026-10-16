@@ -24,6 +24,7 @@ VERIFY BEFORE TRUSTING
 """
 
 import argparse
+import re
 import sqlite3
 import sys
 import io
@@ -79,6 +80,53 @@ PBP_COLS = [
 
 HEADERS = {"User-Agent": "nfl-model-builder/1.0 (python-requests)"}
 
+# Penalty-erased targets: nflfastR files a play wiped out by a penalty as play_type 'no_play' and clears the player ids,
+# so the target counts for nobody. The intended receiver is in the play text ("pass short right to J.Smith-Njigba").
+# Study 2022-26 (~1,200 a season, ~5% of busy receivers' targets): share incl. erased targets predicts the next game's
+# official share better, 5/5 seasons; they weigh like real targets.
+_NAME = r"(?:\d+-)?([A-Z][A-Za-z'\-]*\.(?:[A-Z][A-Za-z'\-]*\.? ?)*[A-Za-z'\-]+)"
+_PASS_RE = re.compile(r"pass (?:incomplete )?(?:short|deep) (?:left|middle|right) (?:to|intended for) " + _NAME)
+
+
+def _clean_name(n):
+    """'R.Shaheed INTERCEPTED by' -> 'R.Shaheed'; keeps 'A.St. Brown' (a capitalized word after a dotted token)."""
+    if not isinstance(n, str):
+        return None
+    t = n.split()
+    out = [t[0]]
+    for w in t[1:]:
+        if out[-1].endswith(".") and w[:1].isupper() and not w.isupper():
+            out.append(w)
+        else:
+            break
+    return " ".join(out).rstrip(".")
+
+
+def erased_targets(df):
+    """(season, week, game_id, team, player_id, etgt) from a raw nflverse pbp frame (needs desc, play_type)."""
+    if "desc" not in df.columns:
+        return pd.DataFrame(columns=["season", "week", "game_id", "team", "player_id", "etgt"])
+    np_ = df[(df.play_type == "no_play") & df.desc.notna() & df.posteam.notna()].copy()
+    if "season_type" in np_.columns:
+        np_ = np_[np_.season_type == "REG"]
+    names = np_.desc.str.split("PENALTY").str[0].str.extract(_PASS_RE)[0].map(_clean_name)
+    np_ = np_.assign(name=names).dropna(subset=["name"])
+    # pbp abbreviations ("J.Smith-Njigba") -> the receiver id the same team used that season
+    ids = df[df.receiver_player_name.notna() & df.receiver_player_id.notna()] \
+        .groupby(["season", "posteam", "receiver_player_name"]).receiver_player_id.agg(lambda s: s.mode().iloc[0]).to_dict()
+    np_["player_id"] = [ids.get((s, t, n)) for s, t, n in zip(np_.season, np_.posteam, np_.name)]
+    np_ = np_.dropna(subset=["player_id"])
+    return np_.groupby(["season", "week", "game_id", "posteam", "player_id"]).size().rename("etgt").reset_index() \
+        .rename(columns={"posteam": "team"})
+
+
+def store_erased(con, season, df):
+    e = erased_targets(df)
+    if table_exists(con, "erased"):
+        con.execute("DELETE FROM erased WHERE season = ?", (season,))
+    e.to_sql("erased", con, if_exists="append", index=False)
+    return len(e)
+
 
 def fetch_parquet(url):
     r = requests.get(url, headers=HEADERS, timeout=180, allow_redirects=True)
@@ -96,6 +144,10 @@ def load_dataset(con, key, season, report):
         return
 
     if key == "pbp":
+        try:
+            report.append((f"erased {season}", "OK", f"{store_erased(con, season, df):,} player-games with penalty-erased targets"))
+        except Exception as e:                                           # noqa: BLE001
+            report.append((f"erased {season}", "FAILED", f"{type(e).__name__}: {str(e)[:80]}"))
         keep = [c for c in PBP_COLS if c in df.columns]
         missing = [c for c in PBP_COLS if c not in df.columns]
         df = df[keep]
@@ -301,6 +353,17 @@ def main():
                 continue
             print(f"  fetching {key} {season} ...", flush=True)
             load_dataset(con, key, season, report)
+
+    # one-time backfill: earlier seasons in the database that predate the erased-targets table
+    have = {r[0] for r in con.execute("SELECT DISTINCT season FROM erased")} if table_exists(con, "erased") else set()
+    for (s,) in con.execute("SELECT DISTINCT season FROM plays").fetchall() if table_exists(con, "plays") else []:
+        if s not in have and s not in args.seasons:
+            print(f"  backfilling erased targets {s} ...", flush=True)
+            try:
+                tag, tmpl, _, _ = FILES["pbp"]
+                report.append((f"erased {s}", "OK", f"{store_erased(con, s, fetch_parquet(f'{BASE}/{tag}/{tmpl.format(s=s)}')):,} player-games (backfill)"))
+            except Exception as e:                                       # noqa: BLE001
+                report.append((f"erased {s}", "FAILED", f"{type(e).__name__}: {str(e)[:80]}"))
 
     print("\nFetching game-time weather (Open-Meteo) ...")
     try:

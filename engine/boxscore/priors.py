@@ -33,6 +33,9 @@ K_RATE_TGT, K_RATE_CAR = 60, 40
 W_SNAP_TGT, W_SNAP_CAR = 0.0, 0.0
 REPL_SCALE = 0.5   # unproven players get half the early-career average share
 ROOKIE_PICK = 64   # draft slots counted as early-round
+USE_ERASED = False  # target share incl. penalty-erased targets. Backtest 2026-10-16 (train 22-24, test 25-26): no consistent gain (rec worse both seasons) -> off
+CATCH_DRIFT_HL = 0     # days; >0 scales catch rates by the league's recent / long-run catch rate at each position (as of
+                       # kickoff). Tested 2026-10-16 at 120 days: changes under 0.1%, rec yds worse in 2026 -> off.
 ROOKIE_USAGE = 0.15  # target/carry share boost for early-round rookies (their rookie season).
                      # Adopted 2026-09-30: they ran +14-17% over projection; tuned on 2024, confirmed 2025-26.
 ROOKIE_YPR = 0.0    # yards-per-catch boost for the same players
@@ -169,10 +172,11 @@ PLAYER_COLS = ["tgt", "rec", "rec_yds", "rec_td", "rz_tgt", "designed_car", "des
                "rush_td", "rz_car", "att", "cmp", "pass_yds", "pass_td", "ints", "sacks",
                "dropbacks", "scrambles", "scr_yds", "team_att", "team_designed_runs",
                "team_rz_tgt", "team_rz_car", "team_dropbacks", "team_pass_td", "team_rush_td",
-               "air_yds", "snap", "has_snap", "onfield_att", "onfield_runs", "tgt_on", "car_on", "one"]
+               "air_yds", "snap", "has_snap", "onfield_att", "onfield_runs", "tgt_on", "car_on", "one",
+               "tgt_u", "team_att_u"]
 
 
-def player_frame(pg, actives, tg, pos):
+def player_frame(pg, actives, tg, pos, erased=None):
     """All (game, team, player) rows where a player was active, with team denominators."""
     keys = ["game_id", "team", "player_id"]
     base = pd.concat([actives[keys], pg[keys]]).drop_duplicates()
@@ -203,6 +207,15 @@ def player_frame(pg, actives, tg, pos):
     f["snap"] = f.offense_pct.fillna(0) * f.has_snap
     f["onfield_att"] = f.team_att.fillna(0) * f.snap
     f["onfield_runs"] = f.team_designed_runs.fillna(0) * f.snap
+    # usage targets: official targets plus penalty-erased ones (same for the team's attempts); for target share only
+    e = erased if erased is not None and len(erased) else pd.DataFrame(columns=["game_id", "team", "player_id", "etgt"])
+    f = f.merge(e[keys + ["etgt"]], on=keys, how="left")
+    f["etgt"] = f.etgt.fillna(0).astype(float)
+    te = e.groupby(["game_id", "team"]).etgt.sum().rename("team_etgt").reset_index()
+    f = f.merge(te, on=["game_id", "team"], how="left")
+    f["team_etgt"] = f.team_etgt.fillna(0).astype(float)
+    f["tgt_u"] = f.tgt + f.etgt
+    f["team_att_u"] = f.team_att.fillna(0) + f.team_etgt
     f["tgt_on"] = f.tgt * f.has_snap            # usage counted only where snaps are known
     f["car_on"] = f.designed_car * f.has_snap
     return f[f.pos.isin(["QB", "RB", "WR", "TE"])].sort_values(["gameday", "game_id", "team"]) \
@@ -252,6 +265,27 @@ def _qb_rates(q):
     }
 
 
+def catch_drift(pf, hl):
+    """Per row: the league's recency-weighted catch rate at the player's position (games before this one, half-life hl
+    days) over its long-run rate (all earlier games), capped to +-10%. 1.0 where there is no history."""
+    out = pd.Series(1.0, index=pf.index)
+    day = pd.to_datetime(pf.gameday)
+    for pos_, x in pf.groupby("pos"):
+        d = x.assign(day=day[x.index]).groupby("day")[["rec", "tgt"]].sum().sort_index()
+        t = (d.index - d.index[0]).days.values.astype(float)
+        w = np.exp(np.log(2) * t / hl)                                    # later games weigh more (doubling every hl days)
+        rr, rt = np.cumsum(d.rec.values * w), np.cumsum(d.tgt.values * w)
+        lr, lt = np.cumsum(d.rec.values), np.cumsum(d.tgt.values)
+        # rates from games strictly before each day
+        prev = lambda a: np.concatenate([[0.0], a[:-1]])
+        recent = prev(rr) / np.maximum(prev(rt), 1e-9)
+        longr = prev(lr) / np.maximum(prev(lt), 1e-9)
+        ratio = np.where((prev(lt) > 500) & (prev(rt) > 0), recent / np.where(longr > 0, longr, 1), 1.0)
+        m = pd.Series(np.clip(ratio, .9, 1.1), index=d.index)
+        out[x.index] = m.reindex(day[x.index]).values
+    return out
+
+
 def player_priors(pf, base):
     pf = pf.sort_values(["gameday", "game_id", "team"]).reset_index(drop=True)
     s = decayed_sums(pf, "player_id", PLAYER_COLS, PLAYER_HL, PLAYER_CARRY,
@@ -260,7 +294,8 @@ def player_priors(pf, base):
     b.index = pf.index
     pr = pf.copy()
     pr["p_games"] = s["_s_one"]
-    pr["p_tgt_share"] = shrunk(s, "tgt", "team_att", K_TGT, b.repl_tgt_share)
+    pr["p_tgt_share"] = shrunk(s, "tgt_u", "team_att_u", K_TGT, b.repl_tgt_share) if USE_ERASED else \
+        shrunk(s, "tgt", "team_att", K_TGT, b.repl_tgt_share)
     pr["p_car_share"] = shrunk(s, "designed_car", "team_designed_runs", K_CAR, b.repl_car_share)
     if W_SNAP_TGT or W_SNAP_CAR:
         s2 = decayed_sums(pf, "player_id", ["snap", "has_snap"], SNAP_HL, SNAP_CARRY,
@@ -282,6 +317,8 @@ def player_priors(pf, base):
     pr["p_rec_td_share"] = shrunk(s, "rec_td", "team_pass_td", K_REC_TD, pr.p_rz_tgt_share)
     pr["p_rush_td_share"] = shrunk(s, "rush_td", "team_rush_td", K_RUSH_TD, pr.p_rz_car_share)
     pr["p_catch_rate"] = shrunk(s, "rec", "tgt", K_CATCH, b.catch_rate)
+    if CATCH_DRIFT_HL:
+        pr["p_catch_rate"] = pr.p_catch_rate * catch_drift(pf, CATCH_DRIFT_HL)
     pr["p_ypr"] = shrunk(s, "rec_yds", "rec", K_YPR, b.ypr)
     if ROOKIE_YPR and "rookie_year" in pr:
         pr["p_ypr"] = pr.p_ypr * (1 + ROOKIE_YPR * rk)

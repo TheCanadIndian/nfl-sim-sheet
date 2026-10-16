@@ -28,6 +28,14 @@ def load_games(con):
     return g.sort_values(["gameday", "game_id"]).reset_index(drop=True)
 
 
+def load_erased(con):
+    """Penalty-erased targets per player-game (build_nfl_db.erased_targets); empty if the table isn't built yet."""
+    try:
+        return pd.read_sql("SELECT game_id, team, player_id, etgt FROM erased", con)
+    except Exception:                                                    # noqa: BLE001
+        return pd.DataFrame(columns=["game_id", "team", "player_id", "etgt"])
+
+
 def load_plays(con):
     q = """
         SELECT game_id, season, week, posteam, defteam, qtr, down, ydstogo,
