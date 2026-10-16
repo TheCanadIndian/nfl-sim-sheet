@@ -183,6 +183,7 @@ First 35 games of 2026–27: projected 6.85 goals a game, actual 6.20.
   0.39067 (2025–26).
 - **Totals scale:** `gamesim.REG_SCALE` refit on 2024–25 + 2025–26 together: 0.95 → 0.94
   (over/under log-loss better pooled; moneylines unchanged).
+- **2026-10-16:** totals ran 7-8 pts high on the over in the first 107 live games (over 6.5 52.8% vs 45.8%). Cause: the live sheets' team expected goals sit ~4% above the backtest's (PP-unit and lineup handling; player goal chances themselves stay calibrated: 16.2% vs 15.6% actual, within noise). `REG_SCALE` 0.94 -> 0.90 (backtest best 0.92-0.94 / 1.04). Recheck at ~300 games.
 - **Remaining:** the goal model is ~3% high on 2026–27's real lineups (6.39 vs 6.17), as it was
   in 2025–26, but it was 1.5% low in 2024–25, so no fixed cut is applied. Recheck at 150 games.
 - A trailing "recent actual / projected" scaling was tested and rejected (2025–26 log-loss

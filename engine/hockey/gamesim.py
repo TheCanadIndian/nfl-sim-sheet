@@ -15,9 +15,12 @@ Parameters are fit in fit() on earlier seasons; see README "Moneylines".
 import numpy as np
 from scipy.stats import poisson
 
-# OT / empty-net from 2022-24 results; REG_SCALE and TIE_INFLATE fit on 2024-25 out-of-sample
-# expected goals, tested on 2025-26 (README "Moneylines").
-PARAMS = dict(REG_SCALE=0.940, TIE_INFLATE=0.20, EN_P1=0.453, EN_P2=0.631, OT_HOME=0.535)
+# OT / empty-net from 2022-24 results; TIE_INFLATE fit on 2024-25 out-of-sample expected goals (README "Moneylines").
+# REG_SCALE 0.94 -> 0.90 (2026-10-16): the live sheets' team expected goals run ~4% above the walk-forward backtest's
+# (power-play unit and lineup handling), and on the first 107 live games of 2026-27 the 0.94 scale put over 6.5 at 52.8%
+# vs 45.8% actual. Backtest-best scale is 0.92-0.94 (2025-26 / 2024-25); / 1.04 live inflation -> 0.90. Live 2026-27:
+# over-5.5 log-loss .6912 -> .6827, over-6.5 .6883 -> .6801, moneyline .6337 -> .6345 (flat).
+PARAMS = dict(REG_SCALE=0.900, TIE_INFLATE=0.20, EN_P1=0.453, EN_P2=0.631, OT_HOME=0.535)
 KMAX = 15
 
 
