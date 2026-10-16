@@ -472,6 +472,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     propMarket(gid, name, kind){
       if (!PR || !PR.props) return null;
       const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || !e.o) return null;
+      if (pinOk(e)) return e.pin.o;                     // Pinnacle's two-way no-vig when pulled (NHL anytime goals, ~2 h before puck drop)
       const q = Object.entries(e.o).filter(([k]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(k)).map(([, v]) => 1 / dec(v[0])).sort((a, b) => a - b);
       if (!q.length) return null;
       const med = q.length % 2 ? q[(q.length - 1) / 2] : (q[q.length / 2 - 1] + q[q.length / 2]) / 2;
@@ -591,7 +592,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const v = !c.other && !e.w && c.ev != null && c.ev >= (FL && FL.min_ev || .05);
       const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
       const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · ${c.m != null ? `ours ${(c.p0 * 100).toFixed(1)}%, ${e.pin ? 'Pinnacle no-vig' : 'market'} ${(c.m * 100).toFixed(1)}%, blended ` : ''}edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
-      const pinP = sport === 'nfl' && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
+      const pinP = (sport === 'nfl' || sport === 'nhl') && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
       // the bet that beats Pinnacle's no-vig by the most: any book, main or alt line
       const cands = [];
       const addC = (sd, line, q, prices, alt) => { if (q == null) return; for (const [k, v] of Object.entries(prices || {})){
