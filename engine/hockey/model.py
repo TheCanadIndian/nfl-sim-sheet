@@ -62,6 +62,7 @@ PP_OPP_ONLY = True
 POS = ["C", "L", "R", "D"]
 K_POS_GAMES = 20.0              # pseudo-games toward league for xG allowed by position
 USE_POS_D = False               # opponent's defense vs position as a goal-model input
+USE_OPP_FA = False              # opponent's unblocked shots allowed (volume, beyond its xG allowed) as a goal-model input
 USE_H2H = ""                    # "", "goals", "xg", "team": head-to-head vs this opponent as a goal-model input
 K_H2H, K_H2H_TEAM = 1.0, 5.0    # pseudo expected goals (player, team)
 POS_D_ABS = False              # True: raw rate vs league; False: relative to the team's overall rate
@@ -153,12 +154,14 @@ class Frames:
 
         # ---- team-game
         tt = s.groupby(["game_id", "team"]).agg(xgf=("xg", "sum"), gf=("goal", "sum")).reset_index()
+        ff = shots[(shots.kind != "blocked-shot") & (shots.empty_net == 0)].groupby(["game_id", "team"]).size().rename("ff").reset_index()
+        tt = tt.merge(ff, on=["game_id", "team"], how="outer")
         pp_time = toi.groupby(["game_id", "team"]).pp_toi.sum().div(5).rename("pp_time").reset_index()
         tg = g.melt(id_vars=["game_id", "season", "date", "neutral"], value_vars=["home", "away"],
                     var_name="side", value_name="team")
         tg = tg.merge(tt, on=["game_id", "team"], how="left").merge(pp_time, on=["game_id", "team"], how="left")
-        opp = tg[["game_id", "team", "xgf", "gf", "pp_time"]].rename(
-            columns={"team": "opp", "xgf": "xga", "gf": "ga", "pp_time": "pk_time"})
+        opp = tg[["game_id", "team", "xgf", "gf", "pp_time", "ff"]].rename(
+            columns={"team": "opp", "xgf": "xga", "gf": "ga", "pp_time": "pk_time", "ff": "fa"})
         tg["opp"] = tg.groupby("game_id").team.transform(lambda x: x.iloc[::-1].values)
         tg = tg.merge(opp, on=["game_id", "opp"], how="left")
         tg["played"] = tg.game_id.isin(final).astype(float)
@@ -240,17 +243,18 @@ class Frames:
 
         # team context
         tg["one"] = tg.played
-        for c in ("xgf", "xga", "gf", "ga", "pp_time", "pk_time"):
+        for c in ("xgf", "xga", "gf", "ga", "pp_time", "pk_time", "fa"):
             tg[c] = tg[c].where(tg.played == 1, 0.0).fillna(0.0)
-        lt = tg[tg.played == 1][["xgf", "xga", "pp_time"]].mean()
-        ts = decayed_sums(tg, "team", ["xgf", "xga", "pp_time", "pk_time", "one"], TEAM_HL, TEAM_CARRY)
+        lt = tg[tg.played == 1][["xgf", "xga", "pp_time", "fa"]].mean()
+        ts = decayed_sums(tg, "team", ["xgf", "xga", "pp_time", "pk_time", "fa", "one"], TEAM_HL, TEAM_CARRY)
         K = 5.0
         tg["t_xgf"] = (ts["_s_xgf"] + K * lt.xgf) / (ts["_s_one"] + K) / lt.xgf
         tg["t_xga"] = (ts["_s_xga"] + K * lt.xgf) / (ts["_s_one"] + K) / lt.xgf
         tg["t_pp_drawn"] = (ts["_s_pp_time"] + K * lt.pp_time) / (ts["_s_one"] + K) / lt.pp_time
         tg["t_pp_given"] = (ts["_s_pk_time"] + K * lt.pp_time) / (ts["_s_one"] + K) / lt.pp_time
-        o = tg[["game_id", "team", "t_xga", "t_pp_given", "b2b"]].rename(
-            columns={"team": "opp", "t_xga": "opp_xga", "t_pp_given": "opp_pp_given", "b2b": "opp_b2b"})
+        tg["t_fa"] = (ts["_s_fa"] + K * lt.fa) / (ts["_s_one"] + K) / lt.fa          # unblocked shots allowed vs league
+        o = tg[["game_id", "team", "t_xga", "t_pp_given", "b2b", "t_fa"]].rename(
+            columns={"team": "opp", "t_xga": "opp_xga", "t_pp_given": "opp_pp_given", "b2b": "opp_b2b", "t_fa": "opp_fa"})
         tg = tg.merge(o, on=["game_id", "opp"], how="left")
         tg = self._pos_defense(pg, tg)
 
@@ -280,7 +284,7 @@ class Frames:
         tg["opp_gq"] = tg.opp_gq.fillna(1.0)
         self.tg = tg
 
-        pg = pg.merge(tg[["game_id", "team", "t_xgf", "t_pp_drawn", "b2b", "opp_xga", "opp_pp_given", "opp_b2b", "opp_gq"]],
+        pg = pg.merge(tg[["game_id", "team", "t_xgf", "t_pp_drawn", "b2b", "opp_xga", "opp_pp_given", "opp_b2b", "opp_gq", "opp_fa"]],
                       on=["game_id", "team"], how="left")
         # opponent's defense against this player's position (C / L / R / D), even strength and PK
         pd_cols = tg[["game_id", "team"] + [f"pd_{p}_{s}" for p in POS for s in ("ev", "pk")]] \
@@ -375,7 +379,7 @@ class Frames:
 # ------------------------------------------------------------- goal model
 
 GLM_X = ["log_base", "log_opp_xga", "log_opp_gq", "log_pp_env", "is_home", "b2b", "opp_b2b", "F", "lg_env",
-         "log_base_sq", "log_opp_pos", "log_h2h"]
+         "log_base_sq", "log_opp_pos", "log_h2h", "log_opp_fa"]
 BASE_CURVE = True     # log_base^2 term lets the top end bend (elite scorers were over-projected)
 
 
@@ -399,6 +403,7 @@ def design(pg):
     d["log_base"] = np.log(norm_base(pg).clip(lower=1e-3))
     d["log_opp_xga"] = np.log(pg.opp_xga.fillna(1).clip(.5, 2))
     d["log_opp_gq"] = np.log(pg.opp_gq.fillna(1).clip(.6, 1.6))
+    d["log_opp_fa"] = np.log(pg.opp_fa.fillna(1).clip(.6, 1.6)) if USE_OPP_FA and "opp_fa" in pg else 0.0
     pp_share = (pg.e_pp_toi * pg.pp_rate) / (pg.e_np_toi * pg.np_rate + pg.e_pp_toi * pg.pp_rate).clip(lower=1e-6)
     # Own power-play volume is already in the player's PP ice time; the opponent's
     # penalty rate is the new information (more PP chances against undisciplined teams).
