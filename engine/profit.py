@@ -45,6 +45,48 @@ def dec(o):
 
 
 # ---------------------------------------------------------------- prediction-market picks (each sport's run)
+def _soft(week):
+    """{(game, pid)} for players whose opponent was top 8 most generous to their position, as frozen before that week."""
+    import pandas as pd
+    for stem in (f"projections/weeks/2026_wk{week:02d}", f"projections/2026_wk{week:02d}"):
+        if os.path.exists(stem + "_players.csv") and os.path.exists(stem + "_matchups.json"):
+            break
+    else:
+        return set()
+    M = json.load(open(stem + "_matchups.json"))
+    soft = {pos: {r["team"] for r in t.get("rows", []) if r.get("rank", 99) <= 8} for pos, t in M.get("dvp", {}).items()}
+    P = pd.read_csv(stem + "_players.csv", usecols=["game_id", "player_id", "pos", "opp"]).drop_duplicates()
+    return {(g, str(p)) for g, p, pos, o in zip(P.game_id, P.player_id, P.pos, P.opp) if o in soft.get(pos, set())}
+
+
+def ladder_rows(date, mk, R, GM):
+    """Ladder candidates (experimental): YES on Kalshi rungs 2+ above the ~50/50 rung for players facing a soft defense."""
+    by = {}
+    for r in mk:
+        if r.get("source") == "kalshi" and r.get("kind") in ("rec", "rec_yds", "rush_yds", "pass_yds") and r.get("line") is not None                 and r.get("yes_ask") and r.get("yes_bid") is not None:
+            by.setdefault((r["game"], str(r.get("pid")), r["kind"]), {})[float(r["line"])] = r      # last quote wins
+    soft, out = {}, []
+    for (g, pid, k), L in by.items():
+        wk = int(str(g)[5:7]) if str(g)[5:7].isdigit() else None
+        if wk is None:
+            continue
+        if wk not in soft:
+            soft[wk] = _soft(wk)
+        if (g, pid) not in soft[wk]:
+            continue
+        rs = [L[x] for x in sorted(L)]
+        mid = lambda r: (r["yes_ask"] + r["yes_bid"]) / 2
+        i0 = min(range(len(rs)), key=lambda i: abs(mid(rs[i]) - .5))
+        for r in rs[i0 + 2:]:
+            y = GM.outcome("nfl", r, R)
+            if y is None:
+                continue
+            ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
+            out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"),
+                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), won=int(y), pnl=round(y / cy - 1, 4)))
+    return out
+
+
 def market_rows(sport):
     import grade_markets as GM
     R = {"nfl": GM.nfl_results, "nhl": GM.nhl_results, "nba": GM.nba_results, "mlb": GM.mlb_results}[sport]()
@@ -104,6 +146,8 @@ def market_rows(sport):
             hit = y if bet == "YES" else 1 - y
             rows.append(dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
                              q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4)))
+        if sport == "nfl":
+            rows += ladder_rows(date, mk, R, GM)
     json.dump(dict(sport=sport, rows=rows), open(os.path.join(OUT, f"profit_{sport}.json"), "w"), separators=(",", ":"))
     print(f"profit {sport}: {len(rows)} graded market picks")
 
