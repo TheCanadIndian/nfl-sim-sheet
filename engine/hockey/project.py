@@ -352,6 +352,7 @@ def main():
     gq_now = fr.tg.set_index(["game_id", "opp"]).opp_gq.to_dict()
     h2h = head_to_head(games, shots, set(zip(pg.player_id.astype(int), pg.opp)))
     tg = fr.tg.set_index(["game_id", "team"])
+    lchg, lside = lineup_changes(games, todo, pg)
     payload = dict(date=date, generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                    coef={k: round(float(v), 3) for k, v in zip(["const"] + M.GLM_X, gm.b)}, games=[])
     for g in todo.sort_values("start_utc").itertuples():
@@ -362,13 +363,14 @@ def main():
                 team=t, exp_goals=round(float(x.lam.sum()), 2),
                 goalie=gname.get(fut_goalies.get((g.game_id, t)), "unknown"), goalie_id=None if fut_goalies.get((g.game_id, t)) is None else int(fut_goalies[(g.game_id, t)]),
                 goalie_status=goalie_status.get((g.game_id, t), ""), lineup=lineup_note.get((g.game_id, t), ""),
+                lchg=lside.get((g.game_id, t)),
                 gstats=dict(now=gstats(fut_goalies.get((g.game_id, t)), cur_season),
                             last=gstats(fut_goalies.get((g.game_id, t)), prev),
                             rating=round(float(gq_now.get((g.game_id, g.home if t == g.away else g.away), 1.0)), 3)),
                 players=[dict(id=int(r.player_id), name=r.name, pos=r.pos, p=round(float(r.p_goal), 4), fair=int(r.fair),
                               pf=round(float(r.p_first), 4), fair_first=int(r.fair_first), why=r.why,
                               lam=round(float(r.lam), 3), toi=round(float(r.e_np_toi + r.e_pp_toi) / 60, 1),
-                              pp=r.pp_role, line=r.line, new=bool(r.games_prior < 1),
+                              pp=r.pp_role, line=r.line, new=bool(r.games_prior < 1), chg=lchg.get((g.game_id, int(r.player_id))),
                               h2h=h2h.get((int(r.player_id), r.opp)),
                               ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3),
                               sog=round(float(r.sog), 2) if "sog" in x and pd.notna(r.sog) else None,
@@ -486,6 +488,54 @@ def head_to_head(games, shots, pairs):
                                last=[[d.strftime("%b %d, %Y").replace(" 0", " "), int(gg), int(aa), int(gt == 3)]
                                      for d, gg, aa, gt in zip(x.date, x.g, x.a, x.game_type)][::-1][:5])
     return out
+
+
+def lineup_changes(games, todo, pg):
+    """Tonight's lineup vs each team's previous game. Line and power-play moves come from that game's frozen
+    pregame rows (projections/<date>.csv); who dressed comes from the game's ice-time records. Returns
+    ({(game_id, player_id): [[kind, before], ...]}, {(game_id, team): dict(prev=label, out=[...])}).
+    kinds: "in" (didn't dress last game), "up" / "down" (forward line or D pair), "pp" (power-play unit changed)."""
+    import glob, sqlite3
+    con = sqlite3.connect(M.DB)
+    done = games[games.state.isin(["OFF", "FINAL"]) & games.game_type.isin([2, 3])]
+    toi = pd.read_sql("SELECT game_id, player_id, team, name, pos FROM toi", con).drop_duplicates(["game_id", "player_id"])
+    cols = ["game_id", "team", "player_id", "line", "pp_role"]
+    frames = [pd.read_csv(f, usecols=lambda c: c in cols).reindex(columns=cols)      # older files have no line column
+              for f in sorted(glob.glob(os.path.join(OUT, "20??-??-??.csv")))[-40:]]
+    old = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=["game_id", "team", "player_id", "line", "pp_role"])
+    norm = lambda v: v if isinstance(v, str) and v else None
+    chg, side = {}, {}
+    for g in todo.itertuples():
+        for t in (g.home, g.away):
+            prev = done[((done.home == t) | (done.away == t)) & (done.date < g.date)].sort_values("date").tail(1)
+            if prev.empty:
+                continue
+            pv = prev.iloc[0]
+            dressed = toi[(toi.game_id == pv.game_id) & (toi.team == t)]
+            if dressed.empty:
+                continue                                   # last game's records not in yet
+            was = old[(old.game_id == pv.game_id) & (old.team == t)].drop_duplicates("player_id", keep="last").set_index("player_id")
+            now = pg[(pg.game_id == g.game_id) & (pg.team == t)]
+            ids_now, ids_was = set(now.player_id.astype(int)), set(dressed.player_id.astype(int))
+            for r in now.itertuples():
+                pid, c = int(r.player_id), []
+                if pid not in ids_was:
+                    c.append(["in", None])
+                elif pid in was.index:
+                    l0, l1 = norm(was.at[pid, "line"]), norm(r.line)
+                    if l0 and l1 and l0 != l1 and l0[0] == l1[0]:
+                        c.append(["up" if l1 < l0 else "down", l0])
+                    p0, p1 = norm(was.at[pid, "pp_role"]), norm(r.pp_role)
+                    if p0 != p1:
+                        c.append(["pp", p0])
+                if c:
+                    chg[(g.game_id, pid)] = c
+            opp = pv.away if pv.home == t else pv.home
+            out = [dict(name=d.name, pos=d.pos, line=norm(was.at[int(d.player_id), "line"]) if int(d.player_id) in was.index else None)
+                   for d in dressed[~dressed.player_id.astype(int).isin(ids_now)].itertuples()]
+            side[(g.game_id, t)] = dict(prev=f"{'vs' if pv.home == t else 'at'} {opp} {pd.Timestamp(pv.date).strftime('%b %d').replace(' 0', ' ')}",
+                                        known=bool(len(was)), out=out)
+    return chg, side
 
 
 def shot_maps(games, shots, teams, goalie_ids, n_games=30, players=(), n_shots=50):
@@ -681,6 +731,10 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .mu{font-size:11px;font-weight:600;border-radius:4px;padding:0 4px;margin-left:6px;border:1px solid currentColor}
 .mu.soft{color:var(--good)} .mu.tough{color:var(--bad)}
 .pdline{margin:2px 0 4px}
+.lchg{display:inline-block;margin-left:6px;border:1px solid var(--faint);border-radius:999px;padding:0 7px;font-size:11px;font-weight:600;white-space:nowrap;vertical-align:1px}
+.lchg.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 55%,transparent)}.lchg.dn{color:#e5a03a;border-color:color-mix(in srgb,#e5a03a 55%,transparent)}
+.lchg.in{color:#7fb2ff;border-color:color-mix(in srgb,#7fb2ff 55%,transparent)}
+.lchgl{margin:2px 0 4px}.lchgl b{font-weight:600}
 .pdline b{font-weight:600}
 .pdline .up{color:var(--good)} .pdline .dn{color:var(--bad)}
 .hm{font-weight:500}
@@ -794,12 +848,29 @@ function urCell(p, gid){
   const m = MRANK[gid + '|' + p.id], d = m ? m - p.ur : 0;
   return `<span class="${p.ur <= 3 ? 'urtop' : ''}" title="Usage-adjusted rank ${p.ur} (model rank ${m}); usage multiplier ${p.um}">#${p.ur}</span>${d ? ` <span class="small ${d > 0 ? 'urup' : 'urdn'}">${d > 0 ? '▲' : '▼'}${Math.abs(d)}</span>` : ''}`;
 }
+// lineup changes vs the team's previous game (lineup_changes in project.py)
+const LN = l => l ? l.replace('F', 'L') : '';
+function chgChips(p){
+  if (!p.chg) return '';
+  return p.chg.map(([k, b]) => k === 'in' ? (p.new ? '' : `<span class="lchg in" title="Didn’t play last game">back in</span>`)
+    : k === 'up' ? `<span class="lchg up" title="Moved up: ${LN(b)} last game, ${LN(p.line)} tonight">▲ ${LN(b)} → ${LN(p.line)}</span>`
+    : k === 'down' ? `<span class="lchg dn" title="Moved down: ${LN(b)} last game, ${LN(p.line)} tonight">▼ ${LN(b)} → ${LN(p.line)}</span>`
+    : !b ? `<span class="lchg up" title="Not on a power-play unit last game">▲ new ${esc(p.pp)}</span>`
+    : !p.pp ? `<span class="lchg dn" title="Was on ${esc(b)} last game">▼ off ${esc(b)}</span>`
+    : `<span class="lchg ${p.pp < b ? 'up' : 'dn'}" title="${esc(b)} last game, ${esc(p.pp)} tonight">${p.pp < b ? '▲' : '▼'} ${esc(b)} → ${esc(p.pp)}</span>`).join('');
+}
+function chgLine(s){
+  const c = s.lchg; if (!c) return '';
+  const n = (s.players || []).filter(p => p.chg && p.chg.some(([k]) => k !== 'in' || !p.new)).length + (s.players || []).filter(p => p.new).length;
+  const out = c.out.length ? `<b>Out:</b> ${c.out.map(o => `${esc(o.name)}${o.line ? ` <span class="muted">(${LN(o.line)})</span>` : ''}`).join(', ')}` : 'nobody out';
+  return `<div class="small lchgl"><span class="muted">Since last game (${esc(c.prev)}):</span> ${n ? `${n} change${n === 1 ? '' : 's'} marked` : 'same lineup'}${c.known ? '' : ' <span class="muted">(no saved lines for that game; only who’s in and out)</span>'} · ${out}</div>`;
+}
 function side(s, opp, gid){
   const max = .5, mk = window.MKT && MKT.has(), bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(gid));
   return `<div><div class="sidehead"><span class="code">${esc(s.team)}</span><span class="small muted">${s.exp_goals} expected goals · vs ${esc(opp.goalie)}${opp.goalie_status ? ` (${esc(opp.goalie_status)})` : ''}</span></div>
-    ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${goalieLine(opp)}${pdline(opp.team)}
+    ${s.lineup ? `<div class="small muted src">${esc(s.lineup)}</div>` : ''}${chgLine(s)}${goalieLine(opp)}${pdline(opp.team)}
     <div class="tw"><table class="t pt"><thead><tr><th class="l">Player</th><th style="min-width:96px" title="Chance to score, and the fair (no-vig) odds">Goal · fair</th><th title="${UTIP}">Usage</th><th title="Chance to score the game's first goal, and its fair odds">1st goal · fair</th><th>TOI</th><th class="l" title="Expected shots on goal, and the chance of 2+ and 3+ (shots model: calibrated within ~1 pt on 2024-26)">Shots</th><th class="l" title="Goals-assists-points vs this opponent since 2022-23">H2H G-A-P</th>${bo ? '<th class="l pcd" title="Best anytime-goal price at your sportsbooks (choose them under the game bets). Green = our chance beats it by 5%+">Best odds</th>' : ''}${mk ? '<th class="l mkc" title="Kalshi / Polymarket anytime-goal price, our edge, and dollars to buy YES / NO within 3¢">Market</th>' : ''}</tr></thead><tbody>
-    ${gamePlayers(s.players, gid).map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="lp">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span><span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}${(() => { const m = MRANK[gid + '|' + p.id], d = m ? m - p.ur : 0; return d ? ` ${d > 0 ? '▲' : '▼'}${Math.abs(d)}` : ''; })()}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${tripleGreen(p, opp) ? `<span class="tg3" title="${esc(TG3_TIP)}">Triple green</span>` : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="big kp"><div class="kpv">${pct(p.p)}<small class="dk">${odds(p.fair)}</small></div><div class="dk">${bar(p.p, max)}</div>${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots<br>3+ ${pct(p.so[2])}</small>` : ''}</td><td>${urCell(p, gid)}</td><td style="white-space:nowrap">${p.pf != null ? `${pct(p.pf)}<span class="fo">${p.fair_first != null ? odds(p.fair_first) : ''}</span>` : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l mkc">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
+    ${gamePlayers(s.players, gid).map(p => `<tr class="${rowCls(p)}"><td class="l name">${pickMark(p)}${esc(p.name)}${nhlSlip(p, s.team)}${window.MKT && MKT.flag ? MKT.flag(gid, p.name) : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${chgChips(p)}<span class="lp">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)}</span><span class="mmeta">${esc(p.line ? p.line.replace('F', 'L') + ' · ' + p.pos : p.pos)} · fair ${odds(p.fair)}${p.ur ? ` · usage #${p.ur}${(() => { const m = MRANK[gid + '|' + p.id], d = m ? m - p.ur : 0; return d ? ` ${d > 0 ? '▲' : '▼'}${Math.abs(d)}` : ''; })()}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${bo ? `<span class="pcm">${MKT.prop(gid, p.name, 'goal')}</span>` : ''}${p.new ? '<span class="newp">no NHL history</span>' : ''}${tripleGreen(p, opp) ? `<span class="tg3" title="${esc(TG3_TIP)}">Triple green</span>` : ''}${mtag(p.pos, opp.team)}${whyLine(p)}</td><td class="big kp"><div class="kpv">${pct(p.p)}<small class="dk">${odds(p.fair)}</small></div><div class="dk">${bar(p.p, max)}</div>${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots<br>3+ ${pct(p.so[2])}</small>` : ''}</td><td>${urCell(p, gid)}</td><td style="white-space:nowrap">${p.pf != null ? `${pct(p.pf)}<span class="fo">${p.fair_first != null ? odds(p.fair_first) : ''}</span>` : '–'}</td><td class="muted">${p.toi}</td><td class="l">${p.sog != null ? `<b>${p.sog.toFixed(1)}</b> <small class="muted">2+ ${pct(p.so[1])} · 3+ ${pct(p.so[2])}</small>` : '<span class="muted">–</span>'}</td><td class="l">${h2hCell(p.h2h, opp.team)}</td>${bo ? `<td class="l pcd">${MKT.prop(gid, p.name, 'goal')}</td>` : ''}${mk ? `<td class="l mkc">${MKT.cell(gid, p.id, p.name, 'goal')}</td>` : ''}</tr>`).join('')}
     ${state.bval && !gamePlayers(s.players, gid).length ? '<tr><td colspan="9" class="l name muted small">No value plays on this team at your books.</td></tr>' : ''}
     </tbody></table></div></div>`;
 }
