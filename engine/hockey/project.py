@@ -82,6 +82,11 @@ def load_overrides(path):
 
 PAIR_MIN_PAYOUT = 15.0   # user rule (Oct 2026): 2-leg parlays only if they pay 15x or more
 PAIRS_PER_NIGHT = 5
+# Demotions vs the team's previous game (owner's call, 2026-10-17, on early evidence): in 2026-27 Oct 1-16, forwards
+# moved down a line scored 3.6 pts and players dropped a power-play unit 5.1 pts below our chance (n 161 / 89),
+# against 1.5 pts for players who didn't move; not yet significant (z about -1.2). Applied: about half of the
+# excess, as multipliers on the goal rate (they stack). {} turns it off. Recheck around 2026-12-01.
+DEMOTE = {"line": 0.94, "pp": 0.88}
 
 
 SLATES = (("Early slate", 0, 17), ("Middle slate", 17, 21), ("Late slate", 21, 24))   # Eastern start hour
@@ -325,6 +330,29 @@ def main():
     pg["pp_role"] = np.where(has_units, pg.unit, np.select(
         [(pp_rank <= 5) & (pg.e_pp_toi >= 45), (pp_rank <= 10) & (pg.e_pp_toi >= 20)], ["PP1", "PP2"], ""))
     pg["why"] = reasons(pg)
+    # lineup changes vs each team's previous game; demotions cut the goal chance (DEMOTE)
+    lchg, lside = lineup_changes(games, todo, pg)
+    ppr = lambda v: {"PP1": 1, "PP2": 2}.get(v if isinstance(v, str) else "", 3)
+    def demote(gid, pid, pos, pp_now):
+        m = 1.0
+        for k, before in lchg.get((gid, int(pid)), []):
+            if k == "down" and pos != "D":
+                m *= DEMOTE.get("line", 1.0)
+            elif k == "pp" and ppr(pp_now) > ppr(before):
+                m *= DEMOTE.get("pp", 1.0)
+        return m
+    pg["dm"] = [demote(g_, p_, po, pp_) for g_, p_, po, pp_ in zip(pg.game_id, pg.player_id, pg.pos, pg.pp_role)]
+    if (pg.dm < 1).any():
+        lam_c = -np.log(1 - pg.p_goal.clip(upper=.999)) * pg.dm
+        pg["lam"] = pg.lam * pg.dm
+        pg["p_goal"] = 1 - np.exp(-lam_c)
+        pg["fair"] = pg.p_goal.map(american)
+        tot = lam_c.groupby(pg.game_id).transform("sum")
+        pg["p_first"] = lam_c / tot * (1 - np.exp(-tot))
+        pg["fair_first"] = pg.p_first.map(american)
+        if pg.u_rank.notna().any():
+            pg["u_rank"] = (lam_c * pg.u_mult).groupby(pg.game_id).rank(ascending=False, method="first")
+        print(f"demotions: {(pg.dm < 1).sum()} players' goal chances cut")
     os.makedirs(OUT, exist_ok=True)
     cols = ["game_id", "team", "opp", "player_id", "name", "pos", "p_goal", "fair", "lam", "e_np_toi", "e_pp_toi", "pp_role",
             "np_rate", "pp_rate", "finish", "games_prior", "line", "src", "e_pp_hist", "p_first"]
@@ -352,7 +380,6 @@ def main():
     gq_now = fr.tg.set_index(["game_id", "opp"]).opp_gq.to_dict()
     h2h = head_to_head(games, shots, set(zip(pg.player_id.astype(int), pg.opp)))
     tg = fr.tg.set_index(["game_id", "team"])
-    lchg, lside = lineup_changes(games, todo, pg)
     payload = dict(date=date, generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                    coef={k: round(float(v), 3) for k, v in zip(["const"] + M.GLM_X, gm.b)}, games=[])
     for g in todo.sort_values("start_utc").itertuples():
@@ -371,6 +398,7 @@ def main():
                               pf=round(float(r.p_first), 4), fair_first=int(r.fair_first), why=r.why,
                               lam=round(float(r.lam), 3), toi=round(float(r.e_np_toi + r.e_pp_toi) / 60, 1),
                               pp=r.pp_role, line=r.line, new=bool(r.games_prior < 1), chg=lchg.get((g.game_id, int(r.player_id))),
+                              cut=round(1 - float(r.dm), 3) if r.dm < 1 else None,
                               h2h=h2h.get((int(r.player_id), r.opp)),
                               ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3),
                               sog=round(float(r.sog), 2) if "sog" in x and pd.notna(r.sog) else None,
@@ -852,12 +880,13 @@ function urCell(p, gid){
 const LN = l => l ? l.replace('F', 'L') : '';
 function chgChips(p){
   if (!p.chg) return '';
+  const cut = p.cut ? ` · −${Math.round(p.cut * 100)}%` : '', cutT = p.cut ? ` Our goal chance is cut ${Math.round(p.cut * 100)}% for this (early 2026-27 evidence: demoted players scored below our chance; not yet proven).` : '';
   return p.chg.map(([k, b]) => k === 'in' ? (p.new ? '' : `<span class="lchg in" title="Didn’t play last game">back in</span>`)
     : k === 'up' ? `<span class="lchg up" title="Moved up: ${LN(b)} last game, ${LN(p.line)} tonight">▲ ${LN(b)} → ${LN(p.line)}</span>`
-    : k === 'down' ? `<span class="lchg dn" title="Moved down: ${LN(b)} last game, ${LN(p.line)} tonight">▼ ${LN(b)} → ${LN(p.line)}</span>`
+    : k === 'down' ? `<span class="lchg dn" title="Moved down: ${LN(b)} last game, ${LN(p.line)} tonight.${p.pos !== 'D' ? cutT : ''}">▼ ${LN(b)} → ${LN(p.line)}${p.pos !== 'D' ? cut : ''}</span>`
     : !b ? `<span class="lchg up" title="Not on a power-play unit last game">▲ new ${esc(p.pp)}</span>`
-    : !p.pp ? `<span class="lchg dn" title="Was on ${esc(b)} last game">▼ off ${esc(b)}</span>`
-    : `<span class="lchg ${p.pp < b ? 'up' : 'dn'}" title="${esc(b)} last game, ${esc(p.pp)} tonight">${p.pp < b ? '▲' : '▼'} ${esc(b)} → ${esc(p.pp)}</span>`).join('');
+    : !p.pp ? `<span class="lchg dn" title="Was on ${esc(b)} last game.${cutT}">▼ off ${esc(b)}${cut}</span>`
+    : `<span class="lchg ${p.pp < b ? 'up' : 'dn'}" title="${esc(b)} last game, ${esc(p.pp)} tonight.${p.pp < b ? '' : cutT}">${p.pp < b ? '▲' : '▼'} ${esc(b)} → ${esc(p.pp)}${p.pp < b ? '' : cut}</span>`).join('');
 }
 function chgLine(s){
   const c = s.lchg; if (!c) return '';
