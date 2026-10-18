@@ -37,6 +37,9 @@ MARGIN_SD = 12.5        # NBA final-margin spread around the expected margin (po
 STATUS_OUT = {"Out", "Doubtful", "Suspension", "Suspended"}
 
 
+NBA_TEAMS = {"ATL", "BKN", "BOS", "CHA", "CHI", "CLE", "DAL", "DEN", "DET", "GS", "HOU", "IND", "LAC", "LAL", "MEM", "MIA",
+             "MIL", "MIN", "NO", "NY", "OKC", "ORL", "PHI", "PHX", "POR", "SA", "SAC", "TOR", "UTAH", "WSH"}
+
 def american(p):
     p = min(max(p, 1e-4), 1 - 1e-4)
     return round(-100 * p / (1 - p)) if p >= .5 else round(100 * (1 - p) / p)
@@ -190,6 +193,7 @@ def main():
                                for t in (gm.home, gm.away)}))
     # defense vs position: latest per defense
     dv = fr.dvp_hist.sort_values("date").groupby(["opp", "pg"]).tail(1)
+    dv = dv[dv.opp.isin(NBA_TEAMS)]                        # drop All-Star / exhibition teams (STRIPES, WORLD, ...)
     dvp = [dict(team=r.opp, pg=r.pg, pts=round(float(r.dvp_pts), 3), reb=round(float(r.dvp_reb), 3),
                 ast=round(float(r.dvp_ast), 3), fg3m=round(float(r.dvp_fg3m), 3)) for r in dv.itertuples()]
     os.makedirs(OUT, exist_ok=True)

@@ -44,6 +44,9 @@ __CSS__
 .gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
 .gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .cell b{font-weight:600}
+.cell{border-radius:6px}.t td.cell,.t td.hm{background-clip:padding-box;border:2px solid transparent}
+.mgkey{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);white-space:nowrap}
+.mgkey i{display:inline-block;width:84px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--bad) 55%,transparent),transparent 50%,color-mix(in srgb,var(--good) 55%,transparent))}
 .cell small{display:block;color:var(--muted);font-size:11.5px}
 .tag{font-size:10.5px;font-weight:700;border-radius:4px;padding:0 4px;margin-left:5px;border:1px solid currentColor;white-space:nowrap;cursor:help}
 .tag.q{color:#F2C14E} .tag.out{color:var(--r2)}
@@ -104,6 +107,11 @@ document.getElementById('sub').textContent = `${D.games.length} games · ${D.dat
 const shadeP = p => p >= .65 ? 'g3' : p >= .56 ? 'g2' : p >= .51 ? 'g1' : p <= .35 ? 'r3' : p <= .44 ? 'r2' : p <= .49 ? 'r1' : '';
 const shadeR = x => x >= 1.12 ? 'g3' : x >= 1.07 ? 'g2' : x >= 1.03 ? 'g1' : x <= 1/1.12 ? 'r3' : x <= 1/1.07 ? 'r2' : x <= 1/1.03 ? 'r1' : '';
 const mode = g => state.gm[g] || 'vegas';
+// matchup gradient: a continuous tint from red (this defense allows less to the position) through clear to green
+// (allows more), full strength at ±15% per minute vs the league
+const MGT = v => v == null ? 0 : Math.max(-1, Math.min(1, Math.log(v) / Math.log(1.15)));
+const MG = v => { const t = MGT(v), a = Math.round(Math.abs(t) * 46); return a < 4 ? '' : `background:color-mix(in srgb,var(${t > 0 ? '--good' : '--bad'}) ${a}%,transparent)`; };
+const mgKey = (lo, hi) => `<span class="mgkey"><span>${lo}</span><i></i><span>${hi}</span></span>`;
 const DVP = {}; (D.dvp || []).forEach(r => { DVP[r.team + '|' + r.pg] = r; });
 function probs(d, L){
   if (d.p){ let o = 0, u = 0; d.p.forEach((v,i) => { const k = d.o + i; if (k > L) o += v; else if (k < L) u += v; }); return {over:o, under:u, push:Math.max(0,1-o-u)}; }
@@ -129,8 +137,7 @@ function chips(p, g){
 function cell(p, st, g){
   const s = p.s[mode(g)] && p.s[mode(g)][st]; if (!s) return '<td>–</td>';
   const dv = st !== 'min' && DVP[p.o + '|' + p.pg] && DVP[p.o + '|' + p.pg][st];
-  const cls = dv ? shadeR(dv) : '';
-  return `<td class="cell"><b class="${cls}" ${dv ? `title="${esc(p.o)} allows ${Math.round((dv-1)*100)}% ${dv >= 1 ? 'more' : 'less'} ${LAB[st].toLowerCase()} per minute to ${p.pg}s"` : ''}>${st === 'min' ? f0(s[MED]) : f1(s[MED])}</b><small>${f0(s[P10])}–${f0(s[P90])}</small></td>`;
+  return `<td class="cell"${dv ? ` style="${MG(dv)}" title="${esc(p.o)} allows ${Math.abs(Math.round((dv-1)*100))}% ${dv >= 1 ? 'more' : 'less'} ${LAB[st].toLowerCase()} per minute to ${p.pg}s"` : ''}><b>${st === 'min' ? f0(s[MED]) : f1(s[MED])}</b><small>${f0(s[P10])}–${f0(s[P90])}</small></td>`;
 }
 function slider(p, g){
   const m = mode(g), stats = COLS.concat(['stl','blk','tov']).filter(s => p.d[m][s]);
@@ -201,7 +208,7 @@ function gameView(){
     <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div>
     ${nbaGameBets(g)}
     ${window.MKT ? MKT.game(g.id, mode(g.id)) : ''}</section>`;
-  const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small">Median, with 8-in-10 range below. Color = matchup vs this defense. Tap a name to slide a line.</span></div>${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
+  const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;
 }
 function board(){
@@ -216,10 +223,10 @@ function dvpView(){
   const today = new Set(D.games.flatMap(g => [g.home, g.away]));
   const rows = teams.map(t => ({t, v: ['G','F','C'].map(pg => (DVP[t + '|' + pg] || {})[st])})).sort((a,b) => (b.v[0]+b.v[1]+b.v[2]) - (a.v[0]+a.v[1]+a.v[2]));
   const rel = v => v == null ? '–' : (v >= 1 ? '+' : '−') + Math.abs(Math.round((v-1)*100)) + '%';
-  return `<section class="panel"><div class="phead"><div class="seg">${['pts','reb','ast','fg3m'].map(c => `<button data-dstat="${c}" aria-pressed="${c === st}">${LAB[c]}</button>`).join('')}</div><span class="muted small">Per minute allowed vs league average · bold = plays on this slate</span></div>
+  return `<section class="panel"><div class="phead"><div class="seg">${['pts','reb','ast','fg3m'].map(c => `<button data-dstat="${c}" aria-pressed="${c === st}">${LAB[c]}</button>`).join('')}</div><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Per minute allowed vs league average · bold = plays on this slate ${mgKey('allows less', 'allows more')}</span></div>
   <div class="tw"><table class="t"><thead><tr><th class="l">Defense</th><th>Guards</th><th>Forwards</th><th>Centers</th></tr></thead><tbody>
-  ${rows.map(r => `<tr><td class="l">${today.has(r.t) ? `<b>${esc(r.t)}</b>` : esc(r.t)}</td>${r.v.map(v => `<td class="hm ${v ? shadeR(v) : ''}">${rel(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-  <p class="note">Green = gives up more to that position (good for the player), red = less. Recent games count most; last season carries over early on; small samples are pulled toward average.</p></section>`;
+  ${rows.map(r => `<tr><td class="l">${today.has(r.t) ? `<b>${esc(r.t)}</b>` : esc(r.t)}</td>${r.v.map(v => `<td class="hm" style="${MG(v)}">${rel(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <p class="note">The deeper the green, the more that defense gives up to the position (good for the player); the deeper the red, the less (full color at ±15%). Recent games count most; last season carries over early on; small samples are pulled toward average.</p></section>`;
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
