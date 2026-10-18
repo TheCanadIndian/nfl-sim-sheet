@@ -673,7 +673,6 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
       <button role="tab" id="tab-board" data-view="board">Player board</button>
       <button role="tab" id="tab-dvp" data-view="dvp">Defense vs position</button>
       <button role="tab" id="tab-parlays" data-view="parlays">Parlays</button>
-      <button role="tab" id="tab-books" data-view="books">Book odds</button>
       <button role="tab" id="tab-wfair" data-view="wfair">Experimental</button>
       <button role="tab" id="tab-fair" data-view="fair">Fair odds</button>
       <button role="tab" id="tab-agree" data-view="agree">Model agreement</button>
@@ -708,7 +707,8 @@ const fmtTick = v => Math.abs(v) >= 10 || Number.isInteger(v) ? f0(v) : f1(v);
 const state = {view:'games', game:D.games[0]?.id, group:'receiving', bstat:'rec_yds', bpos:'All', q:'', bflag:false, dpos:'WR', rzscope:'two'};
 try { Object.assign(state, JSON.parse(localStorage.getItem('simsheet-ui') || '{}')); } catch (e) {}
 if (!D.games.some(g => g.id === state.game)) state.game = D.games[0]?.id;
-if (['games','board','dvp','fair','props','agree','parlays','books','wfair'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
+if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
+if (['games','board','dvp','fair','props','agree','parlays','wfair'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
 if (state.view === 'props' && !D.props.length) state.view = 'games';
 if (state.view === 'rz') { state.view = 'games'; state.group = 'td'; }
 const save = () => { try { localStorage.setItem('simsheet-ui', JSON.stringify({view:state.view, gtab:state.gtab, group:state.group, bstat:state.bstat, bpos:state.bpos, fo:state.fo, dpos:state.dpos, rzscope:state.rzscope})); } catch (e) {} };

@@ -384,8 +384,15 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     },
     // 'Book odds' tab: every game line and player prop with each book's price side by side.
     // games: [{id, label}] in page order. Filters (game / market / player search) work on the DOM, so typing keeps focus.
+    // games for pages without a schedule of their own (the Markets page): from the live rows, soonest first
+    games(){
+      const G = {};
+      for (const r of (D ? D.rows : [])) if (r.g != null && !G[r.g]) G[r.g] = {id: r.g, label: `${r.a} @ ${r.h}`, away: r.a, home: r.h, start: r.start};
+      return Object.values(G).sort((a, b) => String(a.start || '').localeCompare(String(b.start || '')));
+    },
     oddsView(games){
-      const KL = {goal: 'Anytime goal', td: 'Anytime TD', rec: 'Receptions', rec_yds: 'Receiving yds', rush_yds: 'Rushing yds', pass_yds: 'Passing yds', sog: 'Shots on goal'};
+      const KL = {goal: 'Anytime goal', td: 'Anytime TD', rec: 'Receptions', rec_yds: 'Receiving yds', rush_yds: 'Rushing yds', pass_yds: 'Passing yds', sog: 'Shots on goal',
+                  pts: 'Points', reb: 'Rebounds', ast: 'Assists', fg3m: 'Threes'};
       ['05', '15', '25', '35', '45'].forEach(x => { KL['sog' + x] = 'Shots'; });
       const mkey = k => k.startsWith('sog') ? 'sog' : k;
       const fresh = x => x && x.fetched && Date.now() - new Date(x.fetched) < 12 * 3600e3;
@@ -419,7 +426,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
                  add({gid: g.id, m: mkey(k), o: 10.5, who: name, what: `${KL[k] || k} u${e.l}`, p: e.p == null ? null : 1 - e.p, w: e.w, pin: pin == null ? null : 1 - pin, pw: pin != null ? e.pin.w : null, pl}, e.u, PR.partner); }
         }
       }
-      if (!rows.length) return `<section class="panel"><div class="phead"><h2>Book odds</h2></div><p class="note">No sportsbook prices yet for these games. Game lines appear about a day before each game; player props when Unabated's props feed is up (it retries every 15 minutes).</p></section>`;
+      if (!rows.length) return `<section class="panel"><div class="phead"><h2>Sportsbooks</h2></div><p class="note">No sportsbook prices yet for these games. Game lines appear about a day before each game; player props when Unabated's props feed is up (it retries every 15 minutes).</p></section>`;
       const PMG = ['Pinnacle', 'Kalshi', 'Polymarket', 'Poly US', 'Novig', 'ProphetX'];
       const ord = (a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99 || a.localeCompare(b);
       const groups = [['My books', MY.filter(k => used.has(k))], ['Sharp book & exchanges', PMG.filter(k => used.has(k) && !MY.includes(k))],
@@ -450,25 +457,26 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       // props where a bettable book (yours, if chosen) pays more than Pinnacle's no-vig price: best book per prop, by EV
       let pev = '';
       if (hasPin){
-        const its = rows.filter(r => r.pin != null).map(r => {
+        // alt lines only where the carried-over fair chance is 10-90% (our distribution's far tails aren't reliable)
+        const its = rows.filter(r => r.pin != null && (r.pw !== 3 || (r.pin >= .10 && r.pin <= .90))).map(r => {
           const c = Object.entries(r.P).filter(([k]) => !NOBET.has(k)).map(([k, x]) => ({k, x, ev: r.pin * dec(x.o) - 1})).sort((a, b) => b.ev - a.ev)[0];
           return c && c.ev > 0 ? {r, ...c} : null; }).filter(Boolean).sort((a, b) => b.ev - a.ev);
         const li = ({r, k, x, ev}) => {
-          const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)}${r.alt ? ' <span class="altb">alt</span>' : ''} · Pin ${r.pw === 3 ? '≈' : ''}${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} <span class="${MY.includes(k) ? 'mine' : ''}">${esc(BKS[k] || k)}</span><i>+${(ev * 100).toFixed(1)}%</i></span>`;
+          const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)}${r.alt ? ' <span class="altb">alt</span>' : ''} · fair ${r.pw === 3 ? '≈' : ''}${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} <span class="${MY.includes(k) ? 'mine' : ''}">${esc(BKS[k] || k)}</span><i>+${(ev * 100).toFixed(1)}%</i></span>`;
           return `<li data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}>${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener" title="${esc(FULL[k] || k)} pays ${(ev * 100).toFixed(1)}% more than Pinnacle’s fair price. Tap to open this bet.">${inner}</a>` : `<a>${inner}</a>`}</li>`; };
         const TOP = 12;
-        pev = `<div class="pev"><h3>Beats Pinnacle’s no-vig · all books${MY.length ? ' · <span class="mine">yours in green</span>' : ''}</h3>${its.length ? `<ol>${its.slice(0, TOP).map(li).join('')}</ol>${its.length > TOP ? `<details><summary>${its.length - TOP} more</summary><ol>${its.slice(TOP).map(li).join('')}</ol></details>` : ''}`
+        pev = `<div class="pev"><h3>Beats the sharp line · all books${MY.length ? ' · <span class="mine">yours in green</span>' : ''}</h3>${its.length ? `<ol>${its.slice(0, TOP).map(li).join('')}</ol>${its.length > TOP ? `<details><summary>${its.length - TOP} more</summary><ol>${its.slice(TOP).map(li).join('')}</ol></details>` : ''}`
           : `<p class="small muted" style="margin:0">No book pays more than Pinnacle’s fair price right now.</p>`}${its.some(i => i.r.pw === 3) ? `<p class="small muted" style="margin:6px 0 0">≈ Pinnacle doesn’t post this number (alt line, or a different main line), so its price is carried over with our distribution’s shape.</p>` : ''}</div>`;
       }
       const t = x => x && x.fetched ? new Date(x.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : null;
       const when = [t(fresh(BK) && BK) && `game lines ${t(BK)}`, t(fresh(PR) && PR) && `props ${t(PR)}`].filter(Boolean).join(' · ');
-      return `<section class="panel ov"><div class="phead"><h2>Book odds</h2><span class="small muted">${esc(when)}</span></div>
+      return `<section class="panel ov"><div class="phead"><h2>Sportsbooks</h2><span class="small muted">${esc(when)}</span></div>
         <div class="ovc"><select id="ov-g" aria-label="Game"><option value="all">All games</option>${games.filter(g => rows.some(r => String(r.gid) === String(g.id))).map(g => `<option value="${esc(String(g.id))}"${OV.g === String(g.id) ? ' selected' : ''}>${esc(g.label)}</option>`).join('')}</select>
         <div class="ovm" role="group" aria-label="Market">${['all', ...mkts].map(m => `<button type="button" data-ovm-pick="${esc(m)}" aria-pressed="${OV.m === m}">${m === 'all' ? 'All' : esc(mlab(m))}</button>`).join('')}${rows.some(r => r.alt) ? `<button type="button" class="ovalt" data-ovalt aria-pressed="${OV.alt}" title="Show alternate lines in the table">+ Alt lines</button>` : ''}</div>
         <input id="ov-q" type="search" placeholder="Player or team" value="${esc(OV.q)}" aria-label="Search players"></div>
-        <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props: NHL anytime goal and NFL anytime TD, added close to each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
+        <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props (anytime goal / TD, shots on goal, yardage and catches, NBA stats) are added in the last hours before each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
         ${bkOpen === 'ov' ? `<div class="bkpanel">${[...used].sort(ord).map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : ''}
-        ${pev}<div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${hasPin ? '<th title="Pinnacle no-vig: the sharp book’s chance with its margin removed">Pinnacle<br>no-vig</th>' : ''}${groups.map(([lab, ks]) => ks.map((k, i) =>
+        ${pev}<div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${hasPin ? '<th title="Sharp no-vig: Pinnacle, Novig and ProphetX averaged with their margins removed (Pinnacle alone when it’s the only one)">Sharp<br>no-vig</th>' : ''}${groups.map(([lab, ks]) => ks.map((k, i) =>
           `<th class="${MY.includes(k) ? 'my' : ''}${i === 0 ? ' g0' : ''}">${i === 0 ? `<small class="gl">${esc(lab)}</small>` : '<small class="gl">&nbsp;</small>'}${esc(BKS[k] || k)}</th>`).join('')).join('')}</tr></thead><tbody>${body.replace(/<td class="([^"]*)" title/g, (m, c) => m)}</tbody></table></div></section>`;
     },
     // best YES price for a player prop at the viewer's books (all books if none chosen): {k, o, u, mine} or null
