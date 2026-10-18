@@ -35,7 +35,10 @@
   let MY = [], bkOpen = null;
   const OV = {g: 'all', m: 'all', q: '', alt: false};
   const WV = {edge: true, mine: false, all: false, long: false};   // Weighted fair tab toggles          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
-  try { MY = JSON.parse(localStorage.getItem('simbooks-v1') || '[]') || []; } catch (e) {}
+  // the owner's books (Novig, Kalshi, Hard Rock) until this device saves its own choice ("all books" saves [] and is kept)
+  const OWNER = ['Novig', 'Kalshi', 'Hard Rock'];
+  MY = OWNER.slice();
+  try { const sv = localStorage.getItem('simbooks-v1'); if (sv != null) MY = JSON.parse(sv) || []; } catch (e) {}
   // ?freeze=1 (parlays.py, in the cloud): price at the owner's books and record every parlay the cards show, so the
   // Results page can grade them. Each leg: {gid, start, kind, side, line, name, lab, p, price, book}.
   const FREEZE = /[?&]freeze=1(&|$)/.test(location.search);
