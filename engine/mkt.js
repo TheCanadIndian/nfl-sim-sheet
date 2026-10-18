@@ -859,6 +859,31 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       top.sort(order); rest.sort(order);
       return `<div class="mkx">${head('Prediction markets')}${top.map(r => row(r, model)).join('')}${rest.length ? `${det('g|' + gid)}<summary>All ${rows.length} game lines</summary>${rest.map(r => row(r, model)).join('')}</details>` : ''}</div>`;
     },
+    // One player-stat's over ladder for the Game script tab: the main line, the books' alt lines and Kalshi's live rungs.
+    // Each rung: {l, main, p (ours), fair (sharp consensus no-vig, or the books' alt-line fair), mid (Kalshi mid when no
+    // fair), w (weight on ours), best: {k, name, o, u} at the viewer's books, any: best anywhere}. Pinnacle never a price.
+    altLadder(gid, name, kind){
+      const out = [], e = PR && PR.props && Date.now() - new Date(PR.fetched) < 12 * 3600e3 ? ((PR.props[String(gid)] || {})[norm(name)] || {})[kind] : null;
+      const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
+      const prices = o => Object.entries(o || {}).filter(([k]) => !SKIP.has(k) && !NOBET.has(k)).map(([k, v]) => ({k, name: FULL[k] || k, o: Array.isArray(v) ? v[0] : v, u: link(Array.isArray(v) ? v[1] : null)}))
+        .filter(x => x.o != null).sort((a, b) => dec(b.o) - dec(a.o));
+      const rung = (l, main, p, fair, o) => { const P = prices(o), M = P.filter(x => mine(x.k));
+        out.push({l, main, p: p ?? null, fair: fair ?? null, mid: null, w: fair != null ? wOf(sport, kind, true) : .5, best: M[0] || null, any: P[0] || null, n: P.length}); };
+      if (e && e.l != null) rung(+e.l, true, e.p, pinOk(e) ? e.pin.o : null, e.o);
+      if (e) for (const [al, x] of Object.entries(e.a || {})) if (!out.some(r => Math.abs(r.l - al) < 1e-9)) rung(+al, false, x.p, x.pin, x.o);
+      // Kalshi's live board has more rungs than the props feed; quotes wider than 10c say nothing about the price
+      for (const r of forPlayer(gid, null, name).filter(x => x.s === 'kalshi' && x.k === kind && x.l != null && x.ya > 0 && x.ya < 1 && x.yb != null && x.ya - x.yb <= .10)){
+        const q = Math.min(.999, r.ya + .07 * r.ya * (1 - r.ya)), o = q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+        const K = {k: 'Kalshi', name: 'Kalshi', o, u: null};
+        let R = out.find(x => Math.abs(x.l - r.l) < 1e-9);
+        if (!R){ out.push(R = {l: r.l, main: false, p: ours(r, 'vegas'), fair: null, w: .5, best: null, any: null, n: 0}); }
+        R.mid = (r.ya + r.yb) / 2;
+        if (mine('Kalshi') && (!R.best || dec(o) > dec(R.best.o))) R.best = K;
+        if (!R.any || dec(o) > dec(R.any.o)) R.any = K;
+        R.n = Math.max(R.n, 1);
+      }
+      return out.sort((a, b) => a.l - b.l);
+    },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
     ladder(gid, pid, name, kinds){
       kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];

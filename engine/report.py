@@ -499,6 +499,16 @@ input[type=search]{min-width:200px}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
 .sp-list{display:grid;gap:0}
 .exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.gsh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font-size:15px}.gsh .big{font-size:19px;font-weight:700}
+.scsw{margin:4px 0 2px}.scsw button small{opacity:.7;margin-left:5px;font-size:11.5px}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.scteam{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}.scteam h3{margin:0;font-size:16px}
+.scc{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:8px;align-content:start;min-width:0}
+.scc .ladh b{font-size:15px}.ladc.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.ladc.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.sct{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.sct th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.sct th:first-child,.sct td:first-child{text-align:left}
+.sct td{text-align:right;padding:4px;border-top:1px solid var(--faint);white-space:nowrap}.sct caption{text-align:left;font-size:12px;color:var(--muted);padding-bottom:2px}
+.sct td a{color:inherit}.sct small{display:block;font-size:10.5px;color:var(--muted)}.sct .mainl{font-size:10px;color:var(--muted);margin-left:4px}
+.sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
@@ -673,7 +683,6 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
       <button role="tab" id="tab-board" data-view="board">Player board</button>
       <button role="tab" id="tab-dvp" data-view="dvp">Defense vs position</button>
       <button role="tab" id="tab-parlays" data-view="parlays">Parlays</button>
-      <button role="tab" id="tab-wfair" data-view="wfair">Experimental</button>
       <button role="tab" id="tab-fair" data-view="fair">Fair odds</button>
       <button role="tab" id="tab-agree" data-view="agree">Model agreement</button>
       <button role="tab" id="tab-props" data-view="props">Your lines</button>
@@ -704,11 +713,12 @@ const american = p => { p = Math.min(Math.max(p,1e-4),1-1e-4); const o = p>=.5 ?
 const niceCeil = v => { if (v<=0) return 1; const e = 10**Math.floor(Math.log10(v)); for (const m of [1,1.2,1.5,2,2.5,3,4,5,6,8,10]) if (m*e >= v - 1e-9) return m*e; };
 const fmtTick = v => Math.abs(v) >= 10 || Number.isInteger(v) ? f0(v) : f1(v);
 
-const state = {view:'games', game:D.games[0]?.id, group:'receiving', bstat:'rec_yds', bpos:'All', q:'', bflag:false, dpos:'WR', rzscope:'two'};
+const state = {script:'all', view:'games', game:D.games[0]?.id, group:'receiving', bstat:'rec_yds', bpos:'All', q:'', bflag:false, dpos:'WR', rzscope:'two'};
 try { Object.assign(state, JSON.parse(localStorage.getItem('simsheet-ui') || '{}')); } catch (e) {}
 if (!D.games.some(g => g.id === state.game)) state.game = D.games[0]?.id;
 if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
-if (['games','board','dvp','fair','props','agree','parlays','wfair'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
+if (['games','board','dvp','fair','props','agree','parlays'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
+if (state.view === 'wfair') state.view = 'games';      // the Experimental tab is gone (graded in the background on the Profit page)
 if (state.view === 'props' && !D.props.length) state.view = 'games';
 if (state.view === 'rz') { state.view = 'games'; state.group = 'td'; }
 const save = () => { try { localStorage.setItem('simsheet-ui', JSON.stringify({view:state.view, gtab:state.gtab, group:state.group, bstat:state.bstat, bpos:state.bpos, fo:state.fo, dpos:state.dpos, rzscope:state.rzscope})); } catch (e) {} };
@@ -1074,10 +1084,131 @@ function mapPanel(g){
     ${block(g.away)}${block(g.home)}
     <p class="note">Names: who is likeliest to get the ball in each spot, from this week's projected targets and carries times where his targets and carries have gone (players with few looks lean toward their position's usual spread). Where the ball was thrown, not full route charts, which aren't published during the season. Success = a play that improved the offense's expected points. This season so far (last season counts a third as much); each defense's rates lean toward the league average until it has enough plays in a spot. Context only: the projections already include each defense's overall strength.</p></section>`;
 }
+// Game script tab: the game lines (who's favored, by how much, the total) and, for the high-usage players and the ones
+// facing a soft defense, each prop's over ladder (main line + alt lines + Kalshi rungs) at the viewer's books. Chance
+// = ours weighted with the market's fair at that line (MKT.altLadder: sharp consensus / the books' alt-line fair / Kalshi
+// mid), the same anchoring as everywhere else; "in script" scales it by how much our saved simulated games say that
+// line rises or falls when the chosen script happens (e.g. the favorite pulls away by 10+).
+const SCR = {};
+const SCR_ROOT = (() => { const el = document.querySelector('script[src*="slip.js"]'); return el ? el.src.replace(/slip\.js.*$/, '') : '../'; })();
+function scriptDraws(gid){
+  if (SCR[gid] === undefined){
+    SCR[gid] = 'load';
+    fetch(`${SCR_ROOT}nfl/draws/${gid}.json?t=${Math.floor(Date.now() / 6e5)}`).then(r => r.ok ? r.json() : null).catch(() => null)
+      .then(j => { SCR[gid] = j; if (state.gtab === 'script' && state.game === gid) render(); });
+  }
+  return SCR[gid];
+}
+function sdecode(a){
+  if (!a) return null;
+  const bin = atob(a.b), u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  return a.t === 'i16' ? new Int16Array(u8.buffer) : u8;
+}
+const SC_KIND = {pass_yds: 'pass yds', rush_yds: 'rush yds', rec_yds: 'rec yds', rec: 'catches'};
+const decO = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+const amS = o => (o > 0 ? '+' : '') + o;
+function scriptPanel(g){
+  SGP_G = g; SGP_BLIND = false;
+  const T = D.teams[g.id] || {}, H = T[g.home], A = T[g.away];
+  if (!H || H.spread_line == null) return '<section class="panel"><div class="empty">No Vegas lines for this game yet.</div></section>';
+  const L = H.spread_line, tl = H.total_line, homeFav = L > 0 || (L === 0 && H.win_prob >= .5);
+  const fav = homeFav ? g.home : g.away, dog = homeFav ? g.away : g.home, F = homeFav ? H : A, U = homeFav ? A : H;
+  const DW = scriptDraws(g.id), ready = !!(DW && DW !== 'load' && DW.g);
+  const M = ready ? sdecode(DW.g.margin) : null, TT = ready ? sdecode(DW.g.total) : null;
+  const SC = [['all', 'Expected', () => true, 'every simulated game'],
+              ['pull', `${fav} pulls away`, (m) => (homeFav ? m : -m) >= 10, `${fav} wins by 10+`],
+              ['close', 'Close game', (m) => Math.abs(m) <= 7, 'decided by 7 or fewer'],
+              ['upset', `${dog} wins`, (m) => homeFav ? m < 0 : m > 0, `the underdog ${dog} wins`],
+              ['shoot', 'Shootout', (m, t) => t > tl, `over ${tl} total points`],
+              ['low', 'Low-scoring', (m, t) => t < tl, `under ${tl} total points`]];
+  const sc = SC.find(x => x[0] === state.script) || SC[0];
+  const share = f => { if (!M) return null; let c = 0; for (let i = 0; i < M.length; i++) if (f(M[i], TT[i])) c++; return c / M.length; };
+  const mask = M && sc[0] !== 'all' ? Array.from(M, (m, i) => sc[2](m, TT[i])) : null, nIn = mask ? mask.filter(Boolean).length : 0;
+  const sw = `<div class="seg scsw" role="group" aria-label="Game script">${SC.map(x => { const s_ = x[0] === 'all' ? null : share(x[2]);
+    return `<button data-script="${x[0]}" aria-pressed="${sc[0] === x[0]}" title="${esc(x[3])}">${esc(x[1])}${s_ != null ? `<small>${pct(s_)}</small>` : ''}</button>`; }).join('')}</div>`;
+  const O = D.sgp && D.sgp.games && D.sgp.games[g.id] && D.sgp.games[g.id].outlook;
+  const head = `<div class="gsh"><span class="big">${esc(fav)} −${f1(Math.abs(L)).replace('.0', '')}</span>
+      <span>Win: ${esc(fav)} <b>${pct(F.win_prob)}</b> · ${esc(dog)} <b>${pct(U.win_prob)}</b></span>
+      <span>Total <b>${tl}</b> · over <b>${pct(H.p_over)}</b></span>
+      <span class="muted small">Vegas team totals: ${esc(fav)} ${f1(F.vegas_implied)} · ${esc(dog)} ${f1(U.vegas_implied)}</span></div>`;
+  // players: the starting QB, each team's top 3 by targets + carries, and anyone facing a top-8 soft defense for his position
+  const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
+  const mu = (p, s_) => p.s[s_] ? p.s[s_][MEAN] : 0;
+  const pool = D.players.filter(p => p.g === g.id), cards = {[fav]: [], [dog]: []}, waiting = [];
+  const lift = (x, l) => { if (!mask || !x) return 1; let a = 0, b = 0;
+    for (let i = 0; i < x.length; i++){ if (x[i] > l){ a++; if (mask[i]) b++; } }
+    return ((b + 1) / (nIn + 2)) / ((a + 1) / (x.length + 2)); };
+  for (const team of [fav, dog]){
+    const mine = pool.filter(p => p.t === team);
+    const qb = mine.filter(p => p.pos === 'QB').sort((a, b) => mu(b, 'att') - mu(a, 'att'))[0];
+    const top = mine.filter(p => p.pos !== 'QB').sort((a, b) => (mu(b, 'tgt') + mu(b, 'car')) - (mu(a, 'tgt') + mu(a, 'car'))).slice(0, 3);
+    for (const p of mine){
+      const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8);
+      const usage = p === qb || top.includes(p);
+      if (!usage && !(soft && (mu(p, 'tgt') >= 3 || mu(p, 'car') >= 8 || mu(p, 'att') >= 20))) continue;
+      const stats = p.pos === 'QB' ? ['pass_yds', ...(mu(p, 'car') >= 4 ? ['rush_yds'] : [])]
+        : p.pos === 'RB' ? ['rush_yds', ...(mu(p, 'tgt') >= 3 ? ['rec_yds', 'rec'] : [])] : ['rec_yds', 'rec'];
+      const ladders = [];
+      for (const st of stats){
+        const R = window.MKT && MKT.altLadder ? MKT.altLadder(g.id, p.n, st) : [];
+        const x = ready && DW.p && DW.p[p.k] ? sdecode(DW.p[p.k][st]) : null;
+        const main = R.find(r_ => r_.main);
+        // a rung no book prices two-way (Kalshi-only): the main line's sharp fair carried up the ladder by our
+        // distribution's shape (same log-odds gap to ours), never Kalshi's own mid (that made fake tail edges)
+        const lg = v => Math.log(v / (1 - v)), sgm = v => 1 / (1 + Math.exp(-v));
+        const gap = main && main.fair != null && main.p != null && main.p > 0 && main.p < 1 ? lg(main.fair) - lg(main.p) : null;
+        const rows = R.filter(r_ => (r_.best || r_.any) && (!main || r_.l >= main.l - 1e-9)).map(r_ => {
+          let fair = r_.fair, carried = false;
+          if (fair == null && gap != null && r_.p != null && r_.p > 0 && r_.p < 1){ fair = sgm(lg(r_.p) + gap); carried = true; }
+          const w = fair != null ? main.w : .5, m = fair ?? r_.mid, p0 = r_.p, q = p0 == null ? m : m == null ? p0 : w * p0 + (1 - w) * m;
+          const lf = lift(x, r_.l), qs = q == null ? null : Math.min(.99, q * lf), B = r_.best || r_.any, im = 1 / decO(B.o);
+          return {...r_, fair, carried, q, qs, lf, B, mineB: !!r_.best, ev: q != null ? q - im : null, evs: qs != null ? qs - im : null};
+        }).slice(0, 5);
+        if (rows.length) ladders.push({st, rows, lf: rows[0].lf});
+      }
+      const c = {p, r, soft, usage, ladders, vol: p.pos === 'QB' ? mu(p, 'att') : mu(p, 'tgt') + mu(p, 'car')};
+      if (ladders.length) cards[team].push(c); else waiting.push(c);
+    }
+    cards[team].sort((a, b) => sc[0] === 'all' ? b.vol - a.vol : Math.max(...b.ladders.map(l => l.lf)) - Math.max(...a.ladders.map(l => l.lf)) || b.vol - a.vol);
+  }
+  const showS = sc[0] !== 'all' && ready;
+  const ecls = e => e == null ? '' : e >= .05 ? 'e2' : e >= .03 ? 'e1' : e < 0 ? 'neg' : '';
+  const pts = e => e == null ? '–' : (e >= 0 ? '+' : '−') + Math.abs(Math.round(e * 100));
+  const sg = e => e == null ? '–' : (e >= 0 ? '+' : '−') + Math.abs(Math.round(e * 100)) + '%';
+  const lad = Lz => `<table class="sct"><caption>${SC_KIND[Lz.st]}${showS ? ` · <span class="${Lz.lf >= 1.05 ? 'good' : ''}">${sg(Lz.lf - 1)} at the main line in this script</span>` : ''}</caption>
+      <thead><tr><th>Over</th><th>Best price</th><th title="The market’s no-vig chance at this line">Fair</th><th title="Our chance weighted with the market’s fair">Chance</th>${showS ? '<th title="Chance if this script happens (our simulated games)">In script</th>' : ''}<th title="Chance minus the best price’s implied chance, in points${showS ? ', if the script happens' : ''}">Edge</th></tr></thead>
+      <tbody>${Lz.rows.map(u => { const e = showS ? u.evs : u.ev;
+        return `<tr class="${u.mineB ? '' : 'far'}"><td><b>${Math.ceil(u.l)}+</b>${u.main ? '<span class="mainl">main</span>' : ''}</td>
+        <td>${u.B.u ? `<a href="${esc(u.B.u)}" target="_blank" rel="noopener">${amS(u.B.o)}</a>` : amS(u.B.o)}<small>${esc(u.B.name)}${u.mineB ? '' : ' · not yours'}</small></td>
+        <td>${u.fair != null ? (u.carried ? '≈' : '') + pct(u.fair) : u.mid != null ? pct(u.mid) + '<small>Kalshi mid</small>' : '–'}</td>
+        <td>${u.q != null ? pct(u.q) : '–'}</td>${showS ? `<td><b>${u.qs != null ? pct(u.qs) : '–'}</b></td>` : ''}<td class="${ecls(e)}">${pts(e)}</td></tr>`; }).join('')}</tbody></table>`;
+  const card = c => { const k = posKey(c.p), best = Math.max(...c.ladders.map(l => l.lf));
+    const vol = c.p.pos === 'QB' ? `${f0(mu(c.p, 'att'))} pass att` : [mu(c.p, 'tgt') >= 2 ? `${f1(mu(c.p, 'tgt'))} tgt` : null, mu(c.p, 'car') >= 2 ? `${f1(mu(c.p, 'car'))} car` : null].filter(Boolean).join(' · ');
+    return `<div class="scc"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.pos)} · vs ${esc(c.p.o)}</span>
+      ${c.usage ? `<span class="ladc" title="Projected volume (top 3 on his team by targets + carries, or the starting QB)">${esc(vol)}</span>` : ''}
+      ${c.soft ? `<span class="ladc soft" title="${esc(c.p.o)} gives up the ${ord(c.r.rank)} most to ${k === 'WR' ? 'wide receivers' : k + 's'} (defense vs position)">soft: ${ord(c.r.rank)} most to ${k}s</span>` : ''}
+      ${showS ? `<span class="ladc ${best >= 1.05 ? 'up' : best <= .95 ? 'dn' : ''}">script ${sg(best - 1)}</span>` : ''}</div>
+      ${c.ladders.map(lad).join('')}</div>`; };
+  const team = (t, lab) => cards[t].length ? `<div class="scteam"><h3>${esc(t)}</h3><span class="small muted">${lab}</span></div><div class="scgrid">${cards[t].map(card).join('')}</div>` : '';
+  const wait = waiting.length ? `<details class="ladw"><summary>${waiting.length} more player${waiting.length === 1 ? '' : 's'} · no lines posted yet</summary><div class="ladr">${waiting.map(c => `<span class="lru"><b>${esc(c.p.n)}</b> <i>${esc(c.p.t)} ${esc(c.p.pos)}</i></span>`).join('')}</div></details>` : '';
+  const none = !cards[fav].length && !cards[dog].length;
+  return `<section class="panel" aria-label="Game script"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: game script</h2><span class="small muted">${esc(g.kickoff)} · Vegas model</span></div>
+    ${head}
+    ${O ? outlookBar(O) : ''}
+    ${gameBets(g)}
+    <div><span class="eyebrow">Props if the game goes this way</span>${sw}
+      <div class="small muted">${ready ? (sc[0] === 'all' ? 'All simulated games. Pick a script to see whose lines rise and fall with it.' : `${pct(nIn / M.length)} of our simulated games: ${esc(sc[3])}. Players sorted by how much their lines rise in it.`) : DW === 'load' ? 'Loading simulated games…' : 'Simulated games not available for this game; showing the expected view.'}</div></div>
+    ${none ? '<p class="note">No prop lines posted yet for this game’s high-usage or soft-matchup players. Books post them about a day out.</p>' : team(fav, `favored by ${f1(Math.abs(L)).replace('.0', '')}`) + team(dog, 'underdog')}
+    ${wait}
+    <details class="how"><summary>How to read this</summary><p class="note">Players: each team’s starting QB and top 3 by projected targets + carries, plus anyone facing one of the 8 defenses that give up the most to his position. Each ladder is the main line and the higher alt lines (books’ alt lines and Kalshi’s rungs). <b>Fair</b> = the market’s no-vig chance at that line (the sharp consensus at the main line; the books’ own two-way alt prices for alts; ≈ = the main line’s fair carried up the ladder by our distribution’s shape where only Kalshi prices the rung). <b>Chance</b> = ours weighted with the fair, the same anchoring tested for the rest of the site. <b>In script</b> = that chance scaled by how often the line clears in our simulated games where the script happens vs all of them. <b>Edge</b> = chance minus the best price’s implied chance, in points (green 3+, bold 5+; faded rows: only at other books). This view is for screening: the tested Value-tag rules are on the Markets page.</p></details>
+  </section>`;
+}
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
-  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.fmap && D.fmap[g.id] ? [['map', 'Matchup map']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.sgp ? [['script', 'Game script']] : []), ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.fmap && D.fmap[g.id] ? [['map', 'Matchup map']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
+  if (D.sgp && state.gtab === 'script') return gsw + scriptPanel(g);
   if (state.gtab === 'sum' && D.spot && g.id in D.spot) return gsw + summaryPanel(g);
   if (state.gtab === 'map' && D.fmap && D.fmap[g.id]) return gsw + mapPanel(g);
   return gsw + gameDetailMain(g);
@@ -1468,7 +1599,6 @@ function render(){
   const main = document.getElementById('main');
   main.innerHTML = state.view === 'board' ? renderBoard() : state.view === 'props' ? renderProps()
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, away: g.away, home: g.home}))) : '<div class="empty">Loading prices…</div>')
-    : state.view === 'wfair' ? (window.MKT && MKT.weightView ? MKT.weightView(D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, away: g.away, home: g.home}))) : '<div class="empty">Loading prices…</div>')
     : state.view === 'parlays' ? renderParlays() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
   save();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
@@ -1484,6 +1614,7 @@ document.addEventListener('click', e => {
   else if (t.dataset.line){ state.fo.line = +t.dataset.line; document.getElementById('fo-line').value = state.fo.line; refreshFair(); }
   else if (t.dataset.view){ state.view = t.dataset.view; render(); }
   else if (t.dataset.gtab){ state.gtab = t.dataset.gtab; render(); }
+  else if (t.dataset.script){ state.script = t.dataset.script; render(); }
   else if (t.dataset.game){ state.game = t.dataset.game; render(); }
   else if (t.dataset.gmodel){ state.gm[state.game] = t.dataset.gmodel; render(); }
   else if (t.dataset.group){ state.group = t.dataset.group; render(); }
