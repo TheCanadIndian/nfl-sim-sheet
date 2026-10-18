@@ -33,7 +33,9 @@
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
   const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'Polymarket', 'Poly US', 'ProphetX', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'Fliff', 'Bally Bet', 'betPARX'];
   let MY = [], bkOpen = null;
-  const OV = {g: 'all', m: 'all', q: '', alt: false};
+  const OV = {g: 'all', m: 'all', q: '', alt: false, view: 'cards', ref: 'sharp', edge: true};
+  try { Object.assign(OV, JSON.parse(localStorage.getItem('simov-v1') || '{}')); } catch (e) {}
+  const ovSave = () => { try { localStorage.setItem('simov-v1', JSON.stringify({view: OV.view, ref: OV.ref, edge: OV.edge})); } catch (e) {} };
   const WV = {edge: true, mine: false, all: false, long: false};   // Weighted fair tab toggles          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   // the owner's books (Novig, Kalshi, Hard Rock) until this device saves its own choice ("all books" saves [] and is kept)
   const OWNER = ['Novig', 'Kalshi', 'Hard Rock'];
@@ -125,6 +127,16 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .ovm button{flex:0 0 auto;white-space:nowrap;border:1px solid var(--faint);background:none;border-radius:999px;padding:5px 11px;cursor:pointer;font:inherit;font-size:13px;color:var(--ink)}
 .ovm button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .ovt td,.ovt th{white-space:nowrap}
+.ovsw{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0}.ovsw .seg{display:inline-flex;align-items:center;gap:4px}
+.pcards{display:grid;gap:8px;margin:10px 0}.pcard{border:1px solid var(--faint);border-radius:10px;background:var(--sunk)}
+.pcard>summary{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;list-style:none}
+.pcard>summary::-webkit-details-marker{display:none}.pcard[open]>summary{border-bottom:1px solid var(--faint)}
+.pcw{display:flex;flex-direction:column;min-width:0}.pcw small{color:var(--muted);font-size:12px}
+.pcb{text-align:right;white-space:nowrap;font-size:13.5px}.pcb a{color:inherit}.pcb i,.pct .pe,.pct .ne{font-style:normal;font-weight:700}
+.pcb .pe,.pct .pe{color:var(--good)}.pcb .ne,.pct .ne{color:var(--muted)}.pcb .mine,.pct .mine{color:var(--good)}
+.pct{margin:4px 0 8px;font-size:13px}.pct td,.pct th{white-space:nowrap;text-align:right;padding:5px 8px}.pct .l{text-align:left}.pct tr.top td{background:color-mix(in srgb,var(--good) 10%,transparent)}
+.pcmore{justify-self:start;background:none;border:1px solid var(--faint);border-radius:999px;color:var(--ink);font:inherit;font-size:13px;padding:4px 12px;cursor:pointer}
+@media(max-width:560px){.pcard>summary{flex-direction:column;align-items:flex-start}.pcb{text-align:left;white-space:normal}}
 .ovt th .gl{display:block;font-size:9.5px;letter-spacing:.06em;color:var(--accent);text-transform:uppercase;margin-bottom:2px;text-align:left}
 .ovt .g0{border-left:1px solid var(--faint)}
 .ovt td{text-align:right}
@@ -406,7 +418,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     // games for pages without a schedule of their own (the Markets page): from the live rows, soonest first
     games(){
       const G = {};
-      for (const r of (D ? D.rows : [])) if (r.g != null && !G[r.g]) G[r.g] = {id: r.g, label: `${r.a} @ ${r.h}`, away: r.a, home: r.h, start: r.start};
+      const now = Date.now();                                   // games not started yet
+      for (const r of (D ? D.rows : [])) if (r.g != null && !G[r.g] && !(r.start && new Date(r.start) <= now)) G[r.g] = {id: r.g, label: `${r.a} @ ${r.h}`, away: r.a, home: r.h, start: r.start};
       return Object.values(G).sort((a, b) => String(a.start || '').localeCompare(String(b.start || '')));
     },
     oddsView(games){
@@ -433,10 +446,11 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const X = fresh(PR) && PR.props && PR.props[String(g.id)];
         for (const [nm, kinds] of Object.entries(X || {})) for (const [k, e] of Object.entries(kinds)){
           const name = nm.replace(/\b\w/g, c => c.toUpperCase());
-          const pin = pinOk(e) ? e.pin.o : null;
+          const pinOnly = pinOk(e) ? (e.pin.pn ?? (e.pin.parts ? (e.pin.parts.Pinnacle ?? null) : e.pin.o)) : null;
+          const pin = pinOk(e) ? (OV.ref === 'pin' ? pinOnly : e.pin.o) : null;
           const pl = e.pin ? (e.pin.pl ?? e.pin.l) : null;
           for (const [al, x] of Object.entries(e.a || {}).sort((a, b) => a[0] - b[0])){
-            const ap = x.pin ?? null, base = {gid: g.id, m: mkey(k), who: name, w: e.w, pw: ap != null ? 3 : null, pl, alt: 1};
+            const ap = (OV.ref === 'pin' ? (x.pin_p ?? x.pin) : x.pin) ?? null, base = {gid: g.id, m: mkey(k), who: name, w: e.w, pw: ap != null ? 3 : null, pl, alt: 1};
             add({...base, o: 11, what: `${KL[k] || k} o${al}`, p: x.p, pin: ap}, x.o, PR.partner);
             add({...base, o: 11.5, what: `${KL[k] || k} u${al}`, p: x.p == null ? null : 1 - x.p, pin: ap == null ? null : 1 - ap}, x.u, PR.partner);
           }
@@ -484,8 +498,44 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)}${r.alt ? ' <span class="altb">alt</span>' : ''} · fair ${r.pw === 3 ? '≈' : ''}${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} <span class="${MY.includes(k) ? 'mine' : ''}">${esc(BKS[k] || k)}</span><i>+${(ev * 100).toFixed(1)}%</i></span>`;
           return `<li data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}>${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener" title="${esc(FULL[k] || k)} pays ${(ev * 100).toFixed(1)}% more than Pinnacle’s fair price. Tap to open this bet.">${inner}</a>` : `<a>${inner}</a>`}</li>`; };
         const TOP = 12;
-        pev = `<div class="pev"><h3>Beats the sharp line · all books${MY.length ? ' · <span class="mine">yours in green</span>' : ''}</h3>${its.length ? `<ol>${its.slice(0, TOP).map(li).join('')}</ol>${its.length > TOP ? `<details><summary>${its.length - TOP} more</summary><ol>${its.slice(TOP).map(li).join('')}</ol></details>` : ''}`
+        pev = `<div class="pev"><h3>${OV.ref === 'pin' ? 'Beats Pinnacle’s no-vig' : 'Beats the sharp line'} · all books${MY.length ? ' · <span class="mine">yours in green</span>' : ''}</h3>${its.length ? `<ol>${its.slice(0, TOP).map(li).join('')}</ol>${its.length > TOP ? `<details><summary>${its.length - TOP} more</summary><ol>${its.slice(TOP).map(li).join('')}</ol></details>` : ''}`
           : `<p class="small muted" style="margin:0">No book pays more than Pinnacle’s fair price right now.</p>`}${its.some(i => i.r.pw === 3) ? `<p class="small muted" style="margin:6px 0 0">≈ Pinnacle doesn’t post this number (alt line, or a different main line), so its price is carried over with our distribution’s shape.</p>` : ''}</div>`;
+      }
+
+      // Best lines: one card per player-stat, its best line on the face, the whole ladder inside (default view)
+      let cards = '';
+      if (OV.view === 'cards'){
+        const C = {};
+        for (const r of rows){
+          if (r.m === 'lines') continue;
+          const key = `${r.gid}|${r.who}|${r.m}`, c = C[key] = C[key] || {r, lines: []};
+          const q = r.pin;
+          const bk = Object.entries(r.P).filter(([k]) => !NOBET.has(k)).map(([k, x]) => ({k, x, d: dec(x.o)}));
+          const any = bk.slice().sort((a, b) => b.d - a.d)[0], mineB = bk.filter(b => MY.includes(b.k)).sort((a, b) => b.d - a.d)[0];
+          const pick = MY.length ? mineB : any;
+          const tail = r.pw === 3 && q != null && (q < .10 || q > .90);
+          const edge = q != null && pick && !tail ? q * pick.d - 1 : null;
+          c.lines.push({r, q, any, mineB, pick, edge: edge != null && r.pw === 3 && edge > .25 ? null : edge});
+        }
+        const L = Object.values(C).map(c => ({...c, best: c.lines.filter(x => x.edge != null).sort((a, b) => b.edge - a.edge)[0]}))
+          .sort((a, b) => (b.best ? b.best.edge : -9) - (a.best ? a.best.edge : -9));
+        const side = w => { const t = String(w).split(' ').pop(); return t[0] === 'o' ? 'over ' + t.slice(1) : t[0] === 'u' ? 'under ' + t.slice(1) : t; };
+        const bkl = b => b ? `${amS(b.x.o)} <span class="${MY.includes(b.k) ? 'mine' : ''}">${esc(BKS[b.k] || b.k)}</span>` : '<span class="muted">–</span>';
+        const lnk = (b, inner) => b && b.x.u ? `<a href="${esc(b.x.u)}" target="_blank" rel="noopener">${inner}</a>` : inner;
+        const card = (c, i) => {
+          const b = c.best, r = c.r, ed = b && b.edge > 0;
+          const face = b ? `<span class="pcb">${esc(side(b.r.what))}${b.r.alt ? ' <span class="altb">alt</span>' : ''} ${lnk(b.pick, `<b>${amS(b.pick.x.o)}</b> ${esc(BKS[b.pick.k] || b.pick.k)}`)} <i class="${b.edge > 0 ? 'pe' : 'ne'}">${b.edge > 0 ? '+' : ''}${(b.edge * 100).toFixed(1)}%</i></span>`
+            : '<span class="pcb muted">no sharp line to compare</span>';
+          const lines = c.lines.slice().sort((a, x) => parseFloat(String(a.r.what).split(' ').pop().slice(1)) - parseFloat(String(x.r.what).split(' ').pop().slice(1)) || a.r.o - x.r.o);
+          const tr = x => `<tr${x === b ? ' class="top"' : ''}><td class="l">${esc(side(x.r.what))}${x.r.alt ? ' <span class="altb">alt</span>' : ''}</td><td>${x.r.p != null ? Math.round(x.r.p * 100) + '%' : '–'}</td>
+            <td>${x.q != null ? `${x.r.pw === 3 ? '≈' : ''}${Math.round(x.q * 100)}%` : '–'}</td><td>${MY.length ? lnk(x.mineB, bkl(x.mineB)) : ''}</td><td>${lnk(x.any, bkl(x.any))}</td>
+            <td class="${x.edge > 0 ? 'pe' : 'ne'}">${x.edge != null ? (x.edge > 0 ? '+' : '') + (x.edge * 100).toFixed(1) + '%' : '–'}</td></tr>`;
+          return `<details class="pcard" data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${ed ? ' data-ed="1"' : ''}${i >= 15 ? ' data-more="1"' : ''}${(OV.edge && !ed) || i >= 15 || !show(r) ? ' hidden' : ''}>
+            <summary><span class="pcw"><b>${esc(r.who)}</b><small>${esc(mlab(r.m))} · ${esc(glab[String(r.gid)] || '')}</small></span>${face}</summary>
+            <div class="tw"><table class="t pct"><thead><tr><th class="l">Line</th><th>Ours</th><th>Fair</th>${MY.length ? '<th>Your best</th>' : '<th></th>'}<th>Best anywhere</th><th>Edge</th></tr></thead><tbody>${lines.map(tr).join('')}</tbody></table></div></details>`; };
+        const nEd = L.filter(c => c.best && c.best.edge > 0).length;
+        cards = `<div class="pcards">${L.length ? L.map(card).join('') : ''}<p class="small muted pcempty"${nEd || !OV.edge ? ' hidden' : ''}>No line beats the ${OV.ref === 'pin' ? 'Pinnacle' : 'sharp'} fair price${MY.length ? ' at your books' : ''} right now. Turn off “Edges only” to see every player.</p>
+          ${L.length > 15 ? `<button type="button" class="pcmore" data-pcmore>Show more</button>` : ''}</div>`;
       }
       const t = x => x && x.fetched ? new Date(x.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'}) : null;
       const when = [t(fresh(BK) && BK) && `game lines ${t(BK)}`, t(fresh(PR) && PR) && `props ${t(PR)}`].filter(Boolean).join(' · ');
@@ -493,9 +543,13 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <div class="ovc"><select id="ov-g" aria-label="Game"><option value="all">All games</option>${games.filter(g => rows.some(r => String(r.gid) === String(g.id))).map(g => `<option value="${esc(String(g.id))}"${OV.g === String(g.id) ? ' selected' : ''}>${esc(g.label)}</option>`).join('')}</select>
         <div class="ovm" role="group" aria-label="Market">${['all', ...mkts].map(m => `<button type="button" data-ovm-pick="${esc(m)}" aria-pressed="${OV.m === m}">${m === 'all' ? 'All' : esc(mlab(m))}</button>`).join('')}${rows.some(r => r.alt) ? `<button type="button" class="ovalt" data-ovalt aria-pressed="${OV.alt}" title="Show alternate lines in the table">+ Alt lines</button>` : ''}</div>
         <input id="ov-q" type="search" placeholder="Player or team" value="${esc(OV.q)}" aria-label="Search players"></div>
-        <p class="small muted">Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props (anytime goal / TD, shots on goal, yardage and catches, NBA stats) are added in the last hours before each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
+        <div class="ovsw"><span class="seg" role="group" aria-label="View"><button type="button" data-ovview="cards" aria-pressed="${OV.view === 'cards'}">Best lines</button><button type="button" data-ovview="table" aria-pressed="${OV.view === 'table'}">Full table</button></span>
+          <span class="seg" role="group" aria-label="Fair price from"><span class="small muted">Fair from</span><button type="button" data-ovref="sharp" aria-pressed="${OV.ref === 'sharp'}" title="Pinnacle, Novig and ProphetX averaged, each with its margin removed">Sharp consensus</button><button type="button" data-ovref="pin" aria-pressed="${OV.ref === 'pin'}" title="Pinnacle’s own no-vig price only">Pinnacle only</button></span>
+          ${OV.view === 'cards' ? `<button type="button" class="ovalt" data-ovedge aria-pressed="${OV.edge}">Edges only</button>` : ''}</div>
+        ${OV.view === 'cards' ? `<p class="small muted">Each card is one player and stat with its best line: the price ${MY.length ? 'at your books' : 'anywhere'} against the ${OV.ref === 'pin' ? 'Pinnacle' : 'sharp consensus'} fair chance (Kalshi includes its fee). Tap a card for every line, main and alternate. ≈ = a line the sharp books don’t post: its fair price comes from the other books’ own over / under prices at that number. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>` : ''}
+        <p class="small muted"${OV.view === 'cards' ? ' hidden' : ''}>Best price in each row is underlined; <span style="color:var(--good)">green</span> = our chance beats it by 5%+. Tap a price to open the bet. Kalshi includes its fee. Hard Rock props (anytime goal / TD, shots on goal, yardage and catches, NBA stats) are added in the last hours before each game. Your books: ${MY.length ? esc(MY.map(k => FULL[k] || k).join(', ')) : 'none chosen'} <button type="button" class="bkset" data-bkset="ov" aria-expanded="${bkOpen === 'ov'}">change ▾</button></p>
         ${bkOpen === 'ov' ? `<div class="bkpanel">${[...used].sort(ord).map(k => `<button type="button" data-bkpick="${esc(k)}" aria-pressed="${MY.includes(k)}">${esc(FULL[k] || k)}</button>`).join('')}<button type="button" data-bkpick="" class="bkall">All books</button></div>` : ''}
-        ${pev}<div class="tw ovw"><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${hasPin ? '<th title="Sharp no-vig: Pinnacle, Novig and ProphetX averaged with their margins removed (Pinnacle alone when it’s the only one)">Sharp<br>no-vig</th>' : ''}${groups.map(([lab, ks]) => ks.map((k, i) =>
+        ${OV.view === 'cards' ? cards : pev}<div class="tw ovw"${OV.view === 'cards' ? ' hidden' : ''}><table class="t ovt"><thead><tr><th class="l">Bet</th><th>Ours</th>${hasPin ? (OV.ref === 'pin' ? '<th title="Pinnacle’s own no-vig price">Pinnacle<br>no-vig</th>' : '<th title="Sharp no-vig: Pinnacle, Novig and ProphetX averaged with their margins removed (Pinnacle alone when it’s the only one)">Sharp<br>no-vig</th>') : ''}${groups.map(([lab, ks]) => ks.map((k, i) =>
           `<th class="${MY.includes(k) ? 'my' : ''}${i === 0 ? ' g0' : ''}">${i === 0 ? `<small class="gl">${esc(lab)}</small>` : '<small class="gl">&nbsp;</small>'}${esc(BKS[k] || k)}</th>`).join('')).join('')}</tr></thead><tbody>${body.replace(/<td class="([^"]*)" title/g, (m, c) => m)}</tbody></table></div></section>`;
     },
     // best YES price for a player prop at the viewer's books (all books if none chosen): {k, o, u, mine} or null
@@ -843,7 +897,9 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   // Book odds filters: hide/show rows in place (no redraw, so the search box keeps focus)
   const ovApply = () => {
     for (const tr of document.querySelectorAll('[data-ovr]'))
-      tr.hidden = !((OV.g === 'all' || tr.dataset.ovg === OV.g) && (OV.m === 'all' || tr.dataset.ovm === OV.m) && (!OV.q || tr.dataset.ovn.includes(norm(OV.q))) && (!tr.dataset.alt || OV.alt));
+      tr.hidden = !((OV.g === 'all' || tr.dataset.ovg === OV.g) && (OV.m === 'all' || tr.dataset.ovm === OV.m) && (!OV.q || tr.dataset.ovn.includes(norm(OV.q))) && (!tr.dataset.alt || OV.alt)
+                    && (!tr.classList.contains('pcard') || ((!OV.edge || tr.dataset.ed) && (!tr.dataset.more || OV.more || OV.q))));
+    const pe_ = document.querySelector('.pcempty'); if (pe_) pe_.hidden = !OV.edge || !!document.querySelector('.pcard[data-ed]:not([hidden])') || !!OV.q;
     for (const b of document.querySelectorAll('[data-ovalt]')) b.setAttribute('aria-pressed', OV.alt);
     for (const tr of document.querySelectorAll('tr.grp[data-ovg]'))
       tr.hidden = !document.querySelector(`tr[data-ovr][data-ovg="${CSS.escape(tr.dataset.ovg)}"]:not([hidden])`);
@@ -854,6 +910,12 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovm-pick]'); if (b){ OV.m = b.dataset.ovmPick; ovApply(); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-wv]'); if (b){ WV[b.dataset.wv] = !WV[b.dataset.wv]; rerender(); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovalt]'); if (b){ OV.alt = !OV.alt; ovApply(); } });
+  document.addEventListener('click', e => {
+    const v = e.target.closest && e.target.closest('[data-ovview]'); if (v){ OV.view = v.dataset.ovview; ovSave(); rerender(); return; }
+    const f = e.target.closest && e.target.closest('[data-ovref]'); if (f){ OV.ref = f.dataset.ovref; ovSave(); rerender(); return; }
+    const d = e.target.closest && e.target.closest('[data-ovedge]'); if (d){ OV.edge = !OV.edge; ovSave(); d.setAttribute('aria-pressed', OV.edge); ovApply(); return; }
+    const m = e.target.closest && e.target.closest('[data-pcmore]'); if (m){ OV.more = true; m.hidden = true; ovApply(); }
+  });
   document.addEventListener('click', e => {                 // choose your sportsbooks (saved on this device)
     const st = e.target.closest && e.target.closest('[data-bkset]');
     if (st){ bkOpen = bkOpen === st.dataset.bkset ? null : st.dataset.bkset; rerender(); return; }
