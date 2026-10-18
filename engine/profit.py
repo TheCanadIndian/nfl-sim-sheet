@@ -88,8 +88,9 @@ def ladder_rows(date, mk, R, GM):
 
 
 def nba_ladder_rows(date, mk, R, GM):
-    """NBA ladder candidates (experimental): YES on Kalshi pts/reb/ast/3pm rungs 2+ above the ~50/50 rung for players
-    whose stat faced a soft matchup (dvp >= 1.07 for his position) in that night's frozen page data."""
+    """NBA ladders (experimental), YES on Kalshi pts/reb/ast/3pm rungs 2+ above the ~50/50 rung, two versions:
+    'candidates' = his stat faced a soft matchup (dvp >= 1.07 for his position) in that night's frozen page data;
+    'edge' (what the page shows) = a 20+ minute player and our chance beats the price with the fee by 5%+."""
     f = os.path.join(HERE, "nba", "projections", f"{date}.json")
     if not os.path.exists(f):
         return []
@@ -109,20 +110,30 @@ def nba_ladder_rows(date, mk, R, GM):
         if r.get("source") == "kalshi" and r.get("kind") in ("pts", "reb", "ast", "fg3m") and r.get("line") is not None \
                 and r.get("yes_ask") and r.get("yes_bid") is not None:
             by.setdefault((str(r["game"]), str(r.get("pid")), r["kind"]), {})[float(r["line"])] = r
+    play = {(str(p["g"]), str(p["id"])) for p in P.get("players", [])
+            if (((p.get("s") or {}).get("vegas") or {}).get("min") or [0] * 4)[3] >= 20}
     out = []
     for key, L in by.items():
-        if key not in soft:
+        rs = [L[x] for x in sorted(L) if L[x]["yes_ask"] - L[x]["yes_bid"] <= .10]       # wide quotes left out, as on the page
+        if not rs:
             continue
-        rs = [L[x] for x in sorted(L)]
         mid = lambda r: (r["yes_ask"] + r["yes_bid"]) / 2
         i0 = min(range(len(rs)), key=lambda i: abs(mid(rs[i]) - .5))
         for r in rs[i0 + 2:]:
+            if mid(r) >= mid(rs[i0]):
+                continue
+            ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
+            p = (r.get("ours") or {}).get("vegas")
+            cats = (["NBA ladder candidates (experimental)"] if key in soft else []) + \
+                   (["NBA ladder edge (experimental)"] if key[:2] in play and p is not None and p / cy - 1 >= .05 else [])
+            if not cats:
+                continue
             y = GM.outcome("nba", r, R)
             if y is None:
                 continue
-            ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
-            out.append(dict(date=date, sport="nba", cat="NBA ladder candidates (experimental)", src="kalshi", kind=r["kind"], title=r.get("title"),
-                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), won=int(y), pnl=round(y / cy - 1, 4)))
+            for cat in cats:
+                out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"),
+                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), won=int(y), pnl=round(y / cy - 1, 4)))
     return out
 
 

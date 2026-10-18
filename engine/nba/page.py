@@ -49,6 +49,7 @@ __CSS__
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--ink);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
+.lru .ledge{color:var(--good);font-weight:700;margin-left:4px}
 .ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}
 .mgkey{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .mgkey i{display:inline-block;width:84px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--bad) 55%,transparent),transparent 50%,color-mix(in srgb,var(--good) 55%,transparent))}
@@ -236,34 +237,38 @@ function dvpView(){
 }
 /* ---------------- Parlays tab: ladder candidates + parlays by payout ---------------- */
 const KLAB = {pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes'};
-// Ladder candidates (experimental, untested for the NBA): a player whose stat faces a soft matchup (this defense allows
-// +7% or more per minute to his position) and who plays real minutes, with his higher Kalshi rungs for that stat (2+
-// above the rung priced nearest 50/50). The NFL version of this (soft defense vs position) cleared 3-8 pts above the
-// price on Kalshi 2026; NBA rungs are tracked on the Profit page.
+// Ladder edges (experimental): higher Kalshi rungs (2+ above the rung priced nearest 50/50) where our chance beats
+// the price, Kalshi's fee included, by 5%+, for players projected 20+ minutes. Why not "soft matchup" alone: in the
+// 2024-26 backtest (226,064 player-stat games) players facing soft defenses beat our top-10% projection no more often
+// than others (8.3-9.3% vs 8.7-9.1%), so the model already prices the matchup; the edge vs the price is what's left.
+// The soft-matchup chip stays as context. Both versions are tracked on the Profit page.
+const LEDGE = .05, kcost = y => y + .07 * y * (1 - y);
 function ladderCard(){
-  const now = Date.now(), cards = [];
+  const now = Date.now(), cards = []; let anyLadder = 0;
   for (const g of D.games){
     if (g.start_utc && new Date(g.start_utc) <= now) continue;
     for (const p of D.players.filter(x => x.g === g.id)){
       const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED];
       if (!(mins >= 20) || p.st === 'Out') continue;
-      const R = DVP[p.o + '|' + p.pg]; if (!R) continue;
-      const sts = Object.keys(KLAB).filter(st => R[st] >= 1.07); if (!sts.length) continue;
-      const rungs = window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n, sts) : [];
-      cards.push({g, p, sts, R, v: Math.max(...sts.map(st => R[st])), rungs});
+      const all = window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n, Object.keys(KLAB)) : [];
+      if (all.length) anyLadder++;
+      const rungs = all.map(u => ({...u, edge: u.p != null ? u.p / kcost(u.ya) - 1 : null})).filter(u => u.edge != null && u.edge >= LEDGE)
+        .sort((a, b) => b.edge - a.edge);
+      if (!rungs.length) continue;
+      const R = DVP[p.o + '|' + p.pg] || {};
+      cards.push({g, p, R, sts: [...new Set(rungs.map(u => u.k))].filter(st => R[st] >= 1.07), rungs, best: rungs[0].edge});
     }
   }
-  if (!cards.length) return '';
-  cards.sort((a, b) => b.v - a.v);
-  const on = cards.filter(c => c.rungs.length), off = cards.filter(c => !c.rungs.length);
-  const soft = c => c.sts.map(st => `<span class="ladc soft" style="${MG(c.R[st])}" title="${esc(c.p.o)} allows ${Math.round((c.R[st] - 1) * 100)}% more ${KLAB[st]} per minute to ${c.p.pg}s than the league">${esc(c.p.o)} +${Math.round((c.R[st] - 1) * 100)}% ${KLAB[st]} to ${c.p.pg}s</span>`).join('');
+  cards.sort((a, b) => b.best - a.best);
+  const soft = c => c.sts.map(st => `<span class="ladc soft" style="${MG(c.R[st])}" title="${esc(c.p.o)} allows ${Math.round((c.R[st] - 1) * 100)}% more ${KLAB[st]} per minute to ${c.p.pg}s than the league (context only: the model already uses it)">${esc(c.p.o)} +${Math.round((c.R[st] - 1) * 100)}% ${KLAB[st]} to ${c.p.pg}s</span>`).join('');
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${c.p.trend >= 3 ? '<span class="ladc">▲ minutes</span>' : ''}</div>
-    <div class="ladr">${c.rungs.slice(0, 4).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KLAB[u.k]}: price ${Math.round(u.mid * 100)}% · our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}"><b>${Math.round(u.l + .5)}+</b> ${KLAB[u.k]} <i>${u.price}</i></span>`).join('')}</div></div>`;
-  const wait = off.length ? `<details class="ladw"><summary>${on.length ? off.length + ' more' : off.length + ' players'} · no tight Kalshi ladder yet</summary><div class="ladr">${off.map(c =>
-      `<span class="lru"><b>${esc(c.p.n)}</b> <i>${c.sts.map(st => KLAB[st]).join(', ')} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
-  return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${on.length} with ladders</span></div>${!on.length ? '<p class="note" style="margin:0 0 6px">Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.</p>' : ''}
-    <details class="how"><summary>What this is</summary><p class="note">Players playing 20+ minutes whose stat faces a soft matchup: this defense allows 7% or more per minute to their position (the green on the gradient). Shown with their higher Kalshi rungs, two or more lines above the one priced near 50/50. The NFL version of this idea cleared 3-8 points more often than the price said on Kalshi this season; for the NBA it is untested, so every rung is tracked on the Profit page. Early in the season the defense numbers lean on last year.</p></details>
-    <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
+    <div class="ladr">${c.rungs.slice(0, 3).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KLAB[u.k]}: price ${Math.round(u.mid * 100)}% (${Math.round(kcost(u.ya) * 100)}% with the fee) · our chance ${Math.round(u.p * 100)}%"><b>${Math.round(u.l + .5)}+</b> ${KLAB[u.k]} <i>${u.price}</i> <b class="ledge">+${Math.round(u.edge * 100)}%</b></span>`).join('')}</div></div>`;
+  const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
+    : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.' : '';
+  return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
+    ${empty ? `<p class="note" style="margin:0 0 6px">${empty}</p>` : ''}
+    <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the price, Kalshi’s fee included, by 5% or more, for players projected for 20+ minutes. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page.</p></details>
+    <div class="ladg">${cards.slice(0, 8).map(row).join('')}</div>${cards.length > 8 ? `<details class="ladw"><summary>${cards.length - 8} more</summary><div class="ladg">${cards.slice(8).map(row).join('')}</div></details>` : ''}</section>`;
 }
 function tierParlays(){
   if (!(window.MKT && MKT.tierCard)) return '<section class="panel"><div class="empty">Loading prices…</div></section>';
