@@ -478,6 +478,7 @@ PIN_K = 1.04                          # power exponent when a game has no two-wa
 PIN_HOURS = 24.0                      # games within a day of kickoff (paid plan; was one pull 3.5 h out)
 PIN_REFRESH = 120                     # minutes between pulls of a game (Pinnacle's lines sharpen toward kickoff)
 PIN_CACHE = os.path.join(M.OUT, "pin_props_nfl.json")
+PIN_NFL_LOG = os.path.join(M.OUT, "pin_nfl_history.json")   # every pull kept (closing-line grading in profit.py)
 
 
 def pin_pull(now):
@@ -530,6 +531,12 @@ def pin_pull(now):
                         x[1 if side == "over" else 2] = int(o["price"])
         if P:
             cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+            try:
+                nlog = json.load(open(PIN_NFL_LOG))
+            except (OSError, ValueError):
+                nlog = []
+            nlog.append(dict(gid=str(g["id"]), fetched=now.isoformat(), start=str(g["start"]), props=P))
+            json.dump(nlog[-4000:], open(PIN_NFL_LOG, "w"), separators=(",", ":"))
             print(f"pinnacle nfl: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
         else:
             print(f"pinnacle nfl: {g['away']} @ {g['home']}: not posted yet (free, will retry)")

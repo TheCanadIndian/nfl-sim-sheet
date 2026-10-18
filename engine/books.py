@@ -214,8 +214,79 @@ def pull_oa(sport, st, now, games, force):
     st.setdefault("last", {})[sport] = now.isoformat()
     G = tidy(r.json(), sport, games)
     cache(sport, "oa", G, now)
+    log_pinnacle(sport, G, games, now)
     print(f"books {sport}: {len(G)} games from The Odds API, {used} credits, {st.get('remaining')} left")
     return True
+
+
+PIN_LINES_LOG = os.path.join(M.OUT, "pin_lines_{}.json")
+
+
+def log_pinnacle(sport, G, games, now):
+    """Append Pinnacle's game lines from this pull to markets/pin_lines_<sport>.json, so each pick can be graded
+    against Pinnacle's last price before the game (profit.py). Kept: games from the last 120 days."""
+    start = {str(g["id"]): str(g["start"]) for g in games}
+    f = PIN_LINES_LOG.format(sport)
+    try:
+        log = json.load(open(f))
+    except (OSError, ValueError):
+        log = []
+    n = 0
+    for gid, g in G.items():
+        pin = lambda d: {k: v["pinnacle"] for k, v in d.items() if isinstance(v, dict) and "pinnacle" in v}
+        e = dict(gid=gid, fetched=now.isoformat(), start=start.get(gid),
+                 ml=pin(g.get("ml", {})), spread={l: pin(v) for l, v in g.get("spread", {}).items() if pin(v)},
+                 total={l: pin(v) for l, v in g.get("total", {}).items() if pin(v)})
+        if e["ml"] or e["spread"] or e["total"]:
+            log.append(e); n += 1
+    cut = (now - pd.Timedelta(days=120)).isoformat()
+    log = [e for e in log if (e.get("start") or e["fetched"]) >= cut]
+    json.dump(log, open(f, "w"), separators=(",", ":"))
+    if n:
+        print(f"books {sport}: logged Pinnacle lines for {n} games")
+
+
+# ---------------------------------------------------------------- closing snapshots (which de-vig is sharpest)
+# Ten books, one call (= one region's cost): the sharp references, the owner's books (Novig, Kalshi, Hard Rock) and
+# the big US books. Each game is snapshotted once, in the last CLOSE_MIN minutes before it starts (markets.yml runs
+# every 15 min), 3 credits a call for every game in that window. Kept in markets/close_<sport>.json for close_study.py.
+CLOSE_BOOKS = ["pinnacle", "novig", "kalshi", "hardrockbet", "draftkings", "fanduel", "betmgm", "betfair_ex_eu", "prophetx", "polymarket"]
+CLOSE_MIN = 20
+CLOSE_LOG = os.path.join(M.OUT, "close_{}.json")
+
+
+def close_log(sport, now, st):
+    O = OURS[sport]() or {}
+    due = [g for g in O.get("games", []) if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(minutes=CLOSE_MIN)]
+    f = CLOSE_LOG.format(sport)
+    try:
+        log = json.load(open(f))
+    except (OSError, ValueError):
+        log = []
+    have = {e["gid"] for e in log}
+    due = [g for g in due if str(g["id"]) not in have]
+    k = key()
+    if not due or not k:
+        return
+    if not budget_ok(st, now):
+        print(f"close {sport}: credit budget used for today"); return
+    r = requests.get(API.format(KEYS[sport]), timeout=30, params=dict(apiKey=k, bookmakers=",".join(CLOSE_BOOKS),
+                                                                    markets="h2h,spreads,totals", oddsFormat="american"))
+    used = int(r.headers.get("x-requests-last") or COST)
+    st["spent_today"] = st.get("spent_today", 0) + used
+    if r.headers.get("x-requests-remaining"):
+        st["remaining"] = int(float(r.headers["x-requests-remaining"]))
+    if r.status_code != 200:
+        print(f"close {sport}: HTTP {r.status_code}"); return
+    G = tidy(r.json(), sport, due)
+    for g in due:
+        x = G.get(str(g["id"]))
+        if x:
+            log.append(dict(gid=str(g["id"]), start=str(g["start"]), fetched=now.isoformat(), home=g["home"], away=g["away"], lines=x))
+    cut = (now - pd.Timedelta(days=400)).isoformat()
+    log = [e for e in log if e["fetched"] >= cut]
+    json.dump(log, open(f, "w"), separators=(",", ":"))
+    print(f"close {sport}: snapshot of {sum(1 for g in due if str(g['id']) in G)} games ({used} credits, {st.get('remaining')} left)")
 
 
 def merge(sport, now):
@@ -271,6 +342,7 @@ def main(argv):
     for s in sorted(sports, key=first):
         try:
             pull(s, st, now, force=bool(argv))
+            close_log(s, now, st)
         except Exception as e:                       # never break the markets run
             print(f"books {s}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
