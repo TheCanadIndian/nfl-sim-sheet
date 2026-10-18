@@ -50,7 +50,7 @@
   const pinHow = (w, pl) => w === 1 ? 'one-way price, power de-vig' : w === 3 ? `carried from Pinnacle’s ${pl != null ? pl + ' ' : ''}line by our distribution’s shape` : 'both sides, multiplicative de-vig';
   const pinOk = e => !!(e && e.pin && e.pin.o != null && Math.abs(e.pin.l - (e.l ?? .5)) < 1e-9);
   // Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
-  const WPIN = {nhl: {goal: .2}, nba: {pts: .1, reb: .1, ast: .1, fg3m: .1}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
+  const WPIN = {nhl: {goal: .2}, nba: {pts: .05, reb: .05, ast: .05, fg3m: .05}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
   const wOf = (sp, kind, isPin) => isPin ? ((WPIN[sp] || {})[kind] ?? .5) : .5;
   // Sharp consensus (research/consensus_test.py): the log-odds mean of Pinnacle's, Novig's and ProphetX's no-vig at the same line beat Pinnacle alone on NBA props 2025-26 (-0.0023 log-loss, z -2.5, all 4 stats) and NFL 2026 (-0.0021, z -2.3), flat on NFL 2025; tight Kalshi added nothing beyond Novig, so Kalshi stays out. Leave-one-out: a bet at a book is judged against the consensus without that book.
   const lgt = p => Math.log(Math.min(Math.max(p, 1e-4), 1 - 1e-4) / (1 - Math.min(Math.max(p, 1e-4), 1 - 1e-4)));
@@ -189,6 +189,22 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   // market types where our flagged edges have lost 10%+ on settled games (markets.losing_kinds): edges still shown, muted + tagged
   const lost = k => (D && D.losing && D.losing[k]) || null;
   const lostTip = k => { const L = lost(k); return L ? `Our 3%+ edges on this market type have gone ${L.bets} bets at ${Math.round(L.roi * 100)}% ROI on settled games, so treat edges here with caution: the market price has been the better number.` : ''; };
+  // The chance an exchange row's edge is judged on: never our number alone. research/kalshi_pick.py (2026 NFL Kalshi props,
+  // 6,800 bets): edges from With Vegas or Market-blind alone lost 8% (+-4%); research/agreement_test.py: both lost ~3% at
+  // the sharp price at Hard Rock / Novig. Where a sharp line exists at this number: WPIN weights vs the consensus without
+  // this exchange; otherwise the 50/50 with the exchange's mid tested on Kalshi.
+  const PK = {anytime_td: 'td'};
+  function pq(r, model){
+    const p = ours(r, model); if (p == null) return p;
+    const kind = PK[r.k] || r.k;
+    const e = r.n && PR && PR.props ? ((PR.props[String(r.g)] || {})[norm(r.n)] || {})[kind] : null;
+    if (e && pinOk(e) && Math.abs((e.pin.l ?? .5) - (r.l ?? .5)) < 1e-9){
+      const w = wOf(sport, kind, true), sh = sharpO(e, r.s === 'kalshi' ? 'Kalshi' : 'Polymarket');
+      return w * p + (1 - w) * sh;
+    }
+    const m = r.ya != null && r.yb != null && r.yb > 0 ? (r.ya + r.yb) / 2 : r.ya;
+    return m != null ? .5 * p + .5 * m : p;
+  }
   function edges(r, p){
     const f = FEE[r.s] || 0, ya = r.ya, na = r.yb != null ? 1 - r.yb : null;
     return {y: p != null && ya > 0 && ya < 1 ? p - ya - f * ya * (1 - ya) : null, n: p != null && na > 0 && na < 1 ? (1 - p) - na - f * na * (1 - na) : null};
@@ -232,7 +248,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   }
   function row(r, model, focus, slider){
     poly(r);
-    const [yl, nl] = sides(r), p = ours(r, model), e = edges(r, p);
+    const [yl, nl] = sides(r), p = ours(r, model), e = edges(r, pq(r, model));
     const best = (e.y ?? -9) >= (e.n ?? -9) ? {v: e.y, lab: yl} : {v: e.n, lab: nl};
     const weak = (D && D.weak && D.weak.includes(r.k)) || !!lost(r.k) || !nflRuleOk(r, p, (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no');
     const by = r.by ?? null, bn = r.bn ?? null, tot = (by || 0) + (bn || 0);
@@ -271,7 +287,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     for (const r of forPlayer(gid, pid, name)) for (const id of (r.pat || [])) (by[id] = by[id] || []).push(r);
     return by;
   }
-  function best(r, model){ const [yl, nl] = sides(r), e = edges(r, ours(r, model)); return (e.y ?? -9) >= (e.n ?? -9) ? {v: e.y, lab: yl, side: 'yes'} : {v: e.n, lab: nl, side: 'no'}; }
+  function best(r, model){ const [yl, nl] = sides(r), e = edges(r, pq(r, model)); return (e.y ?? -9) >= (e.n ?? -9) ? {v: e.y, lab: yl, side: 'yes'} : {v: e.n, lab: nl, side: 'no'}; }
   function patBlock(gid, pid, name, focusKinds){
     const by = playerPats(gid, pid, name), ids = Object.keys(by);
     const T = (D && D.timing) || {}, f = (focusKinds || [])[0];
@@ -460,7 +476,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         // alt lines only where the carried-over fair chance is 10-90% (our distribution's far tails aren't reliable)
         const its = rows.filter(r => r.pin != null && (r.pw !== 3 || (r.pin >= .10 && r.pin <= .90))).map(r => {
           const c = Object.entries(r.P).filter(([k]) => !NOBET.has(k)).map(([k, x]) => ({k, x, ev: r.pin * dec(x.o) - 1})).sort((a, b) => b.ev - a.ev)[0];
-          return c && c.ev > 0 ? {r, ...c} : null; }).filter(Boolean).sort((a, b) => b.ev - a.ev);
+          return c && c.ev > 0 && (r.pw !== 3 || c.ev <= .25) ? {r, ...c} : null; }).filter(Boolean).sort((a, b) => b.ev - a.ev);   // carried-over (≈) lines: a 25%+ "edge" is our tail, not the book
         const li = ({r, k, x, ev}) => {
           const inner = `<b>${esc(r.who)}</b><span class="w">${esc(r.what)}${r.alt ? ' <span class="altb">alt</span>' : ''} · fair ${r.pw === 3 ? '≈' : ''}${(r.pin * 100).toFixed(0)}%</span><span class="px">${amS(x.o)} <span class="${MY.includes(k) ? 'mine' : ''}">${esc(BKS[k] || k)}</span><i>+${(ev * 100).toFixed(1)}%</i></span>`;
           return `<li data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${show(r) ? '' : ' hidden'}>${x.u ? `<a href="${esc(x.u)}" target="_blank" rel="noopener" title="${esc(FULL[k] || k)} pays ${(ev * 100).toFixed(1)}% more than Pinnacle’s fair price. Tap to open this bet.">${inner}</a>` : `<a>${inner}</a>`}</li>`; };
@@ -746,7 +762,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const r = forPlayer(gid, pid, name).filter(x => x.k === kind && (x.l == null || x.l < 1)).sort((a, b) => (a.s === 'kalshi' ? -1 : 1))[0];
       if (!r) return '<span class="muted">–</span>';
       poly(r);
-      const p = ours(r, model), e = edges(r, p), v = Math.max(e.y ?? -9, e.n ?? -9), side = (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no';
+      const p = ours(r, model), e = edges(r, pq(r, model)), v = Math.max(e.y ?? -9, e.n ?? -9), side = (e.y ?? -9) >= (e.n ?? -9) ? 'yes' : 'no';
       const weak = (D.weak && D.weak.includes(r.k)) || !!lost(r.k) || !nflRuleOk(r, p, side);
       const fc = flowChips(r, e.y);
       return `<span class="mkx-c" title="${r.s === 'kalshi' ? 'Kalshi' : 'Polymarket'}: price ${cents(r.ya)}${PXF === 'c' ? '' : ` = ${px(r.ya, r.s)} with fee`} · money to buy YES ${usd(r.by)} / NO ${usd(r.bn)} within 3¢${weak ? ' · market has been more accurate on this type so far' : ''}"><span><b>${px(r.ya, r.s)}</b>${v >= .02 ? ` <span class="${weak ? 'muted' : shade(v)}" style="font-weight:700">+${(v * 100).toFixed(0)}% ${side}</span>` : ''}${lost(r.k) && v >= .02 ? ` <small class="muted" title="${esc(lostTip(r.k))}">losing record</small>` : ''}${isThin(r) ? '<span class="mkx-thin">thin</span>' : ''}${fc}</span><small>${usd(r.by)} yes · ${usd(r.bn)} no</small></span>`;

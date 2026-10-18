@@ -211,7 +211,7 @@ def close_fair(sport, r, PP, PL):
 
 
 # Weight on ours when the market is Pinnacle's no-vig (research/blend_weights.py; same table as mkt.js / sharp.py)
-WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .1, "reb": .1, "ast": .1, "fg3m": .1},
+WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .05, "reb": .05, "ast": .05, "fg3m": .05},
         "nfl": {"rec": .25, "rec_yds": .25, "rush_yds": .25, "pass_yds": .25, "anytime_td": 0.0}}
 
 
@@ -239,6 +239,30 @@ def close_cons(sport, r, CL):
         if a_ and b_:
             q = a_ / (a_ + b_); lg.append(math.log(q / (1 - q)))
     return 1 / (1 + math.exp(-sum(lg) / len(lg))) if len(lg) >= 2 else None
+
+
+def experimental(date, sport, src, k, r, fy, cy, cn, R, GM):
+    """Tracked ideas from the 2026-10-18 research, graded on the same Kalshi quotes against the sharp closing line:
+    - NFL anytime TD: Kalshi YES when its price (fee in) is 5%+ under the sharp fair chance (historical: 18 of 85 props, +40%).
+    - NFL yardage / catches: NO when both models sit 5+ pts under the sharp line (2025: unders beat the market by 6.4 pts,
+      z 2.4, n 348; the NBA showed the opposite)."""
+    if sport != "nfl" or fy is None:
+        return []
+    o = r.get("ours") or {}
+    bet = cat = None
+    if k == "anytime_td" and fy / cy - 1 >= .05:
+        bet, cost, fair, cat = "YES", cy, fy, "NFL anytime TD: Kalshi under the sharp line (experimental)"
+    elif k in ("rec", "rec_yds", "rush_yds", "pass_yds") and cn and o.get("vegas") is not None and o.get("blind") is not None \
+            and o["vegas"] <= fy - .05 and o["blind"] <= fy - .05:
+        bet, cost, fair, cat = "NO", cn, 1 - fy, "NFL props: both models 5+ pts under the sharp line (experimental)"
+    if not bet:
+        return []
+    y = GM.outcome(sport, r, R)
+    if y is None:
+        return []
+    hit = y if bet == "YES" else 1 - y
+    return [dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
+                 q=round(fair, 4), won=int(hit), pnl=round(hit / cost - 1, 4), clv=round(fair - cost, 4))]
 
 
 def pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM, tag="Pinnacle-anchored"):
@@ -309,6 +333,7 @@ def market_rows(sport):
             fy = close_fair(sport, r, PP, PL)                      # Pinnacle's fair closing chance (YES side)
             if fy is not None and k in WPIN.get(sport, {}):          # the Pinnacle-anchored rule judges every quote on its own
                 rows += pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM)
+            rows += experimental(date, sport, src, k, r, fy, cy, cn, R, GM)
             fc = close_cons(sport, r, CL) if k in WPIN.get(sport, {}) else None
             if fc is not None:                                         # and its consensus twin (Pinnacle + Novig + ProphetX)
                 rows += pin_rule(date, sport, cat, src, k, r, p, fc, cy, cn, ya, na, need, sides, R, GM, tag="consensus-anchored")

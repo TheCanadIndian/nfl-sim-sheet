@@ -124,7 +124,7 @@ def two_sided(rows):
 
 
 # Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
-WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .1, "reb": .1, "ast": .1, "fg3m": .1},
+WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .05, "reb": .05, "ast": .05, "fg3m": .05},
         "nfl": {"rec": .25, "rec_yds": .25, "rush_yds": .25, "pass_yds": .25, "td": 0.0}}
 
 
