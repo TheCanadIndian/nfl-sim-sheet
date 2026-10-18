@@ -52,6 +52,12 @@
   // Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
   const WPIN = {nhl: {goal: .2}, nba: {pts: .1, reb: .1, ast: .1, fg3m: .1}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
   const wOf = (sp, kind, isPin) => isPin ? ((WPIN[sp] || {})[kind] ?? .5) : .5;
+  // Sharp consensus (research/consensus_test.py): the log-odds mean of Pinnacle's, Novig's and ProphetX's no-vig at the same line beat Pinnacle alone on NBA props 2025-26 (-0.0023 log-loss, z -2.5, all 4 stats) and NFL 2026 (-0.0021, z -2.3), flat on NFL 2025; tight Kalshi added nothing beyond Novig, so Kalshi stays out. Leave-one-out: a bet at a book is judged against the consensus without that book.
+  const lgt = p => Math.log(Math.min(Math.max(p, 1e-4), 1 - 1e-4) / (1 - Math.min(Math.max(p, 1e-4), 1 - 1e-4)));
+  const sharpO = (e, book) => { const P = e.pin && e.pin.parts; if (!P) return e.pin.o;
+    let xs = Object.entries(P).filter(([k]) => k !== book).map(([, v]) => v); if (!xs.length) xs = Object.values(P);
+    return 1 / (1 + Math.exp(-xs.reduce((s, v) => s + lgt(v), 0) / xs.length)); };
+  const sharpLab = e => e && e.pin && e.pin.parts && Object.keys(e.pin.parts).length > 1 ? 'Sharp consensus (' + Object.keys(e.pin.parts).join(' + ') + ')' : 'Pinnacle';
   const NOBET = new Set(['Pinnacle']);             // sharp reference only: never a 'best price' (not bettable from the US)
   const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
   const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
@@ -520,7 +526,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             if (opts.propOk && !opts.propOk(gid, nm, k, p)) continue;
             const b = pick(e[sd]); if (!b) continue;
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
-            const pin = pinOk(e) ? (sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
+            const pin = pinOk(e) ? (sd === 'o' ? sharpO(e, b[0]) : 1 - sharpO(e, b[0])) : null;
             const w = pin != null ? wOf(opts.sport, k, true) : ((opts.wOurs || {})[k] ?? .5), m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
             if ((opts.sport === 'nfl' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(k) || opts.sport === 'nba') && (p < .5 || (m != null && Math.abs(p - m) < .10))) continue;
             const isSog = k.startsWith('sog');
@@ -617,15 +623,15 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const L = all.filter(([k]) => mine(k)); return L.length ? [L[0], false] : all.length ? [all[0], true] : null; };
       // NFL props: our chance averaged 50/50 with the market's no-vig chance (books pricing both sides). On Kalshi 2026
       // that blend with a 5%+ edge returned +8.4%; our projection alone lost. NHL keeps our number (its top picks beat Kalshi).
-      const nvOf = sd => {
+      const nvOf = (sd, bk) => {
         if (sport === 'nhl' && kind === 'goal' && sd === 'o') return window.MKT.propMarket(gid, name, 'goal');   // 50/50 with the exchanges (Kalshi 2026)
         if (sport !== 'nfl') return null;
-        if (pinOk(e)) return sd === 'o' ? e.pin.o : 1 - e.pin.o;   // Pinnacle de-vig
+        if (pinOk(e)) return sd === 'o' ? sharpO(e, bk) : 1 - sharpO(e, bk);   // sharp consensus without the book being bet
         if (!e.o || !e.u) return null;
         const xs = Object.keys(e[sd] || {}).filter(k => (e[sd === 'o' ? 'u' : 'o'] || {})[k]).map(k => { const a = 1 / dec(e[sd][k][0]), b = 1 / dec(e[sd === 'o' ? 'u' : 'o'][k][0]); return a / (a + b); }).sort((x, y) => x - y);
         return xs.length ? xs[(xs.length - 1) >> 1] : null; };
       const opts = (e.u ? ['o', 'u'] : ['o']).map(sd => { const c = pick(sd); if (!c) return null;
-        const p0 = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p, m = nvOf(sd), w = wOf(sport, kind, pinOk(e)), p = p0 != null && m != null ? w * p0 + (1 - w) * m : p0;
+        const p0 = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p, m = nvOf(sd, c[0][0]), w = wOf(sport, kind, pinOk(e)), p = p0 != null && m != null ? w * p0 + (1 - w) * m : p0;
         return {sd, k: c[0][0], o: c[0][1][0], path: c[0][1][1], other: c[1], p0, m, ev: p == null ? null : p * dec(c[0][1][0]) - 1}; })
         .filter(Boolean).sort((a, b) => (a.other - b.other) || ((b.ev ?? -9) - (a.ev ?? -9)));
       const c = opts[0]; if (!c) return '<span class="muted">–</span>';
@@ -646,7 +652,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const pb = cands.sort((a, b) => b.pe - a.pe)[0];
       const pinChip = pb && pb.pe > 0
         ? ` <a class="pinv" href="${esc(lk(pb.path) || '#')}" target="_blank" rel="noopener" title="${esc(`${pb.line != null ? (pb.sd === 'o' ? 'Over ' : 'Under ') + pb.line + (pb.alt ? ' (alt line)' : '') + ': ' : ''}${FULL[pb.k] || pb.k} ${am(pb.o)} pays ${(pb.pe * 100).toFixed(1)}% more than Pinnacle's fair price (${(pb.q * 100).toFixed(1)}%: ${pinHow(pb.alt ? 3 : e.pin && e.pin.w, e.pin && (e.pin.pl ?? e.pin.l))}). Tap to open this bet.`)}">Pin <b>+${(pb.pe * 100).toFixed(1)}%</b> ${pb.line != null && (pb.alt || pb.sd !== c.sd) ? (pb.sd === 'o' ? 'O' : 'U') + pb.line + ' ' : ''}${esc(BKS[pb.k] || pb.k)}${pb.alt || pb.sd !== c.sd || pb.k !== c.k ? ' ' + am(pb.o) : ''}</a>`
-        : pinP != null ? ` <span class="pinv neg" title="Pinnacle's no-vig chance for this side (${pinHow(e.pin.w, e.pin.pl ?? e.pin.l)}); no book beats its fair price">Pin ${e.pin.w === 3 ? '≈' : ''}${(pinP * 100).toFixed(0)}%</span>` : '';
+        : pinP != null ? ` <span class="pinv neg" title="${esc(sharpLab(e))} no-vig chance for this side (${pinHow(e.pin.w, e.pin.pl ?? e.pin.l)}); no book beats its fair price">Pin ${e.pin.w === 3 ? '≈' : ''}${(pinP * 100).toFixed(0)}%</span>` : '';
       return `<${url ? 'a' : 'span'} class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}"${url ? ` href="${esc(url)}" target="_blank" rel="noopener"` : ''} title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</${url ? 'a' : 'span'}>${pinChip}`;
     },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price

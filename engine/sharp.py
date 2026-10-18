@@ -23,6 +23,7 @@ Keys: env UNABATED_API_KEY / SHARPAPI_KEY (GitHub secrets), else private/*_key.t
 
 import glob
 import json
+import math
 import os
 import re
 import sys
@@ -125,6 +126,82 @@ def two_sided(rows):
 # Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
 WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .1, "reb": .1, "ast": .1, "fg3m": .1},
         "nfl": {"rec": .25, "rec_yds": .25, "rush_yds": .25, "pass_yds": .25, "td": 0.0}}
+
+
+# Sharp consensus (research/consensus_test.py): the log-odds mean of Pinnacle's, Novig's and ProphetX's no-vig at the same line beat Pinnacle alone on NBA props 2025-26 (-0.0023 log-loss, z -2.5, all 4 stats) and NFL 2026 (-0.0021, z -2.3), flat on NFL 2025; tight Kalshi added nothing beyond Novig, so Kalshi stays out. Leave-one-out: a bet at a book is judged against the consensus without that book.
+SHARP_SRC = ("Novig", "ProphetX")      # two-way no-vig, alongside Pinnacle (e.pin)
+
+
+def _lg(p):
+    p = min(max(p, 1e-4), 1 - 1e-4)
+    return math.log(p / (1 - p))
+
+
+def cons_of(parts, exclude=None):
+    """Log-odds mean of the sources' over chances, without `exclude` (the book being bet) when others remain."""
+    xs = [v for k, v in parts.items() if k != exclude] or list(parts.values())
+    return 1 / (1 + math.exp(-sum(_lg(v) for v in xs) / len(xs)))
+
+
+def apply_consensus(sport, now):
+    """Turn each published prop's sharp reference (e.pin) into the consensus of Pinnacle, Novig and ProphetX at its line,
+    keeping the parts (the page drops the book being bet) and Pinnacle's own number (pn); then re-judge Value tags on it."""
+    fp, ff = os.path.join(M.SITE, "markets", f"props_{sport}.json"), os.path.join(M.SITE, "markets", f"flags_{sport}.json")
+    try:
+        PR = json.load(open(fp))
+    except (OSError, ValueError):
+        return
+    n = 0
+    for gid, g in PR.get("props", {}).items():
+        for nm, kinds in g.items():
+            for kind, e in kinds.items():
+                el = e.get("l", .5)
+                parts = {}
+                pin = e.get("pin")
+                if pin and pin.get("o") is not None and abs(float(pin.get("l", .5)) - float(el)) < 1e-9:
+                    parts["Pinnacle"] = pin.get("pn", pin["o"])
+                for bk in SHARP_SRC:
+                    o, u = (e.get("o") or {}).get(bk), (e.get("u") or {}).get(bk)
+                    if o and u:
+                        a_, b_ = 1 / dec(o[0]), 1 / dec(u[0])
+                        parts[bk] = a_ / (a_ + b_)
+                if "Pinnacle" not in parts and "Novig" not in parts:
+                    continue
+                c = cons_of(parts)
+                if pin and "Pinnacle" in parts:
+                    pin.update(pn=round(parts["Pinnacle"], 4), o=round(c, 4), parts={k: round(v, 4) for k, v in parts.items()})
+                else:
+                    e["pin"] = dict(l=float(el), o=round(c, 4), w=2, parts={k: round(v, 4) for k, v in parts.items()})
+                n += len(parts) > 1
+    json.dump(PR, open(fp, "w"), separators=(",", ":"))
+    try:
+        FL = json.load(open(ff))
+    except (OSError, ValueError):
+        FL = None
+    if FL:
+        LABK = {"rec yds": "rec_yds", "rush yds": "rush_yds", "pass yds": "pass_yds", "receptions": "rec"}
+        for gid, tags in list(FL.get("tags", {}).items()):
+            for nm, v in list(tags.items()):
+                if not isinstance(v, dict) or v.get("p") is None:
+                    continue
+                b = str(v.get("b") or "")
+                if b == "goal":
+                    kind, side = "goal", "over"
+                elif b == "TD":
+                    kind, side = "td", "over"
+                else:
+                    sp = b.split(" ", 2)
+                    if len(sp) < 3 or sp[2] not in LABK:
+                        continue
+                    kind, side = LABK[sp[2]], sp[0]
+                e = PR.get("props", {}).get(gid, {}).get(nm, {}).get(kind)
+                parts = ((e or {}).get("pin") or {}).get("parts")
+                if not parts:
+                    continue
+                po = cons_of(parts, exclude=v.get("k"))
+                rejudge(FL, gid, nm, v, WPIN.get(sport, {}).get(kind, .5), po if side == "over" else 1 - po)
+        json.dump(FL, open(ff, "w"), separators=(",", ":"))
+    print(f"sharp {sport}: consensus reference on {n} props")
 
 
 def rejudge(FL, gid, nm, v, w, pin):
@@ -1045,6 +1122,13 @@ def main(argv):
                 pin_merge_nhl(now)
         except Exception as e:
             print(f"hard rock {sport}: skipped ({type(e).__name__}: {e})")
+    for sport in ("nhl", "nfl", "nba"):                         # sharp consensus last, after every merge
+        if argv and sport not in argv:
+            continue
+        try:
+            apply_consensus(sport, now)
+        except Exception as e:
+            print(f"sharp {sport}: consensus skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=1)
 

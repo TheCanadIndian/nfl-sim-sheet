@@ -215,7 +215,33 @@ WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .1, "reb": .1, "ast": .1, "fg3m": .1
         "nfl": {"rec": .25, "rec_yds": .25, "rush_yds": .25, "pass_yds": .25, "anytime_td": 0.0}}
 
 
-def pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM):
+CLOSE_MKT = {"nfl": {"rec_yds": "player_reception_yds", "rec": "player_receptions", "rush_yds": "player_rush_yds",
+                     "pass_yds": "player_pass_yds"},
+             "nhl": {"goal": "player_goal_scorer_anytime"},
+             "nba": {"pts": "player_points", "reb": "player_rebounds", "ast": "player_assists", "fg3m": "player_threes"}}
+
+
+def close_cons(sport, r, CL):
+    """Consensus fair chance (YES side) at the close from markets/close_<sport>.json: log-odds mean of the two-way no-vig of
+    Pinnacle, Novig and ProphetX at the same player and line. None unless 2+ of them price it."""
+    e = CL.get(str(r["game"]))
+    mk = CLOSE_MKT.get(sport, {}).get(r.get("kind"))
+    if not e or not mk or not e.get("props"):
+        return None
+    name, line = _norm(str(r.get("title") or "").split(":")[0]), float(r.get("line") if r.get("line") is not None else .5)
+    lg = []
+    for bk in ("pinnacle", "novig", "prophetx"):
+        s_ = {}
+        for nm, side, pt, price in (e["props"].get(mk) or {}).get(bk, []):
+            if _norm(nm) == name and price is not None and abs(float(pt if pt is not None else .5) - line) < 1e-9:
+                s_[(side or "").lower()] = 1 / dec(price)
+        a_, b_ = s_.get("over", s_.get("yes")), s_.get("under", s_.get("no"))
+        if a_ and b_:
+            q = a_ / (a_ + b_); lg.append(math.log(q / (1 - q)))
+    return 1 / (1 + math.exp(-sum(lg) / len(lg))) if len(lg) >= 2 else None
+
+
+def pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM, tag="Pinnacle-anchored"):
     """The Pinnacle-anchored version of a rule, on the same quote: chance = w * ours + (1 - w) * Pinnacle's no-vig (its
     last pregame price), same edge bar. Tracked as '<category> · Pinnacle-anchored' next to the current rule."""
     w = WPIN[sport][k]
@@ -228,7 +254,7 @@ def pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R,
         return []
     hit, cost = (y, cy) if bet == "YES" else (1 - y, cn)
     fair = fy if bet == "YES" else 1 - fy
-    return [dict(date=date, sport=sport, cat=f"{cat} · Pinnacle-anchored", src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
+    return [dict(date=date, sport=sport, cat=f"{cat} · {tag}", src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
                  q=round(q if bet == "YES" else 1 - q, 4), won=int(hit), pnl=round(hit / cost - 1, 4), clv=round(fair - cost, 4))]
 
 
@@ -237,6 +263,10 @@ def market_rows(sport):
     R = {"nfl": GM.nfl_results, "nhl": GM.nhl_results, "nba": GM.nba_results, "mlb": GM.mlb_results}[sport]()
     rows = []
     PP, PL = pin_close(sport)
+    try:
+        CL = {str(e["gid"]): e for e in json.load(open(os.path.join(OUT, f"close_{sport}.json")))}
+    except (OSError, ValueError):
+        CL = {}
     for f in sorted(glob.glob(os.path.join(OUT, f"{sport}_20??-??-??.json"))):
         date = os.path.basename(f)[len(sport) + 1:len(sport) + 11]
         mk = json.load(open(f)).get("markets", [])
@@ -279,6 +309,9 @@ def market_rows(sport):
             fy = close_fair(sport, r, PP, PL)                      # Pinnacle's fair closing chance (YES side)
             if fy is not None and k in WPIN.get(sport, {}):          # the Pinnacle-anchored rule judges every quote on its own
                 rows += pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM)
+            fc = close_cons(sport, r, CL) if k in WPIN.get(sport, {}) else None
+            if fc is not None:                                         # and its consensus twin (Pinnacle + Novig + ProphetX)
+                rows += pin_rule(date, sport, cat, src, k, r, p, fc, cy, cn, ya, na, need, sides, R, GM, tag="consensus-anchored")
             bet = None
             # NFL yardage / catch props: the side our median is on, our number 10+ pts from the mid, a tight 15c+ market
             nflp = sport == "nfl" and k in ("rec", "rec_yds", "rush_yds", "pass_yds")
