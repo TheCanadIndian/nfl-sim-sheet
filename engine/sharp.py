@@ -613,8 +613,8 @@ def pin_pull(now):
                 kind = PIN_MKT.get(m["key"])
                 for o in m.get("outcomes", []):
                     nm, side = o.get("description"), (o.get("name") or "").lower()
-                    if kind == "td" and side == "yes":
-                        side, o = "over", dict(o, point=.5)
+                    if kind == "td" and side in ("yes", "no"):          # Pinnacle posts both sides: two-way de-vig, not the one-way curve
+                        side, o = ("over" if side == "yes" else "under"), dict(o, point=.5)
                     if not kind or not nm or side not in ("over", "under") or o.get("point") is None:
                         continue
                     x = P.setdefault(jsnorm(nm), {}).setdefault(kind, [float(o["point"]), None, None])

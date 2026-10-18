@@ -966,7 +966,8 @@ function ladderCard(){
 function renderParlays(){
   const ladder = ladderCard();
   const C = (D.sgp && D.sgp.cross) || [];
-  const tiers = tierParlays();
+  const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',
+    games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort}))}) : '');
   if (window.MKT && MKT.reg){                                      // freeze mode: record every model parlay for the Results page
     const byLab = Object.fromEntries(D.games.map(g => [`${g.away} @ ${g.home}`, g])), byId = Object.fromEntries(D.games.map(g => [g.id, g]));
     const PK = {anytime_td: 'td', rec: 'rec', rec_yds: 'rec_yds', rush_yds: 'rush_yds', pass_yds: 'pass_yds'};
