@@ -108,17 +108,21 @@ def _norm(n):
     return re.sub(r"\s+(jr|sr|ii|iii|iv|v)$", "", n).strip()
 
 
+ESPN_BAD = {"out", "doubtful", "injured reserve", "suspension", "physically unable to perform", "pup", "injured"}
+
+
 def espn_rosters(teams):
-    """{team: set of normalized names} from ESPN's live team rosters, for the teams playing. The weekly roster file
-    lags a midweek release or trade by days (2026 wk 6: Marquez Valdes-Scantling, released by LAC, still 'ACT').
-    Teams whose roster doesn't come back complete (under 40 players) are skipped, so a network hiccup never empties one."""
+    """({team: {normalized name: [status, injury designations...]}}, {team: QB1 normalized name}) from ESPN's live team
+    rosters and depth charts, for the teams playing. The weekly roster file lags moves by days (2026 wk 6: Marquez
+    Valdes-Scantling, released by LAC, still 'ACT'; Caleb Williams back from injury, still 'INA', so Tyson Bagent was
+    projected to start). Teams whose roster doesn't come back complete (under 40 players) are skipped."""
     import requests
-    H, out = {"User-Agent": "Mozilla/5.0"}, {}
+    H, out, qb1 = {"User-Agent": "Mozilla/5.0"}, {}, {}
     try:
         T = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams", headers=H, timeout=20).json()
         T = T["sports"][0]["leagues"][0]["teams"]
     except Exception:
-        return {}
+        return {}, {}
     for t in T:
         ab = ESPN_TEAM.get(t["team"]["abbreviation"], t["team"]["abbreviation"])
         if ab not in teams:
@@ -127,10 +131,21 @@ def espn_rosters(teams):
             r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{t['team']['id']}/roster", headers=H, timeout=20).json()
         except Exception:
             continue
-        names = {_norm(a.get("fullName")) for g in r.get("athletes", []) for a in g.get("items", [])}
+        names = {_norm(a.get("fullName")): [str((a.get("status") or {}).get("type") or "")] +
+                 [str(i.get("status") or "") for i in a.get("injuries", [])]
+                 for g in r.get("athletes", []) for a in g.get("items", [])}
         if len(names) >= 40:
             out[ab] = names
-    return out
+        try:
+            dc = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{t['team']['id']}/depthcharts", headers=H, timeout=20).json()
+            for d in dc.get("depthchart") or dc.get("items") or []:
+                q = (d.get("positions") or {}).get("qb")
+                if q and q.get("athletes"):
+                    a0 = q["athletes"][0]
+                    qb1[ab] = _norm(a0.get("displayName") or a0.get("fullName")); break
+        except Exception:
+            pass
+    return out, qb1
 
 
 def espn_out(todo):
@@ -239,12 +254,25 @@ def future_actives(con, todo, season, week, overrides):
                                ON r.team = m.team AND r.week = m.wk
                              WHERE r.season={season}""", con)
     active_roster = roster[roster.status == "ACT"]
-    live = espn_rosters(set(todo.home_team) | set(todo.away_team))
+    back_ids = set()
+    live, espn_qb1 = espn_rosters(set(todo.home_team) | set(todo.away_team))
+    healthy = lambda t, n: (lambda v: v is not None and not any(x.lower() in ESPN_BAD for x in v))(live.get(t, {}).get(_norm(n)))
     if live:
-        gone = active_roster[active_roster.team.isin(live) & ~[_norm(n) in live.get(t, set()) for t, n in zip(active_roster.team, active_roster.full_name)]]
+        gone = active_roster[active_roster.team.isin(live) & ~pd.Series([_norm(n) in live.get(t, {}) for t, n in zip(active_roster.team, active_roster.full_name)],
+                                                                         index=active_roster.index)]
         if len(gone):
             print(f"  not on ESPN's live roster (released / traded / moved), dropped: " + ", ".join(f"{n} ({t})" for t, n in zip(gone.team, gone.full_name)))
         active_roster = active_roster.drop(gone.index)
+        # back from injury: inactive / reserve / PUP in the weekly file, but active and healthy on ESPN now
+        # only injury-type statuses (INA, RES), only players who actually played for that team this season or last
+        # (ESPN lists practice-squad and reserve players as plain 'active', so ESPN alone can't decide)
+        played = set(zip(snaps[snaps.season >= season - 1].team, snaps[snaps.season >= season - 1].player_id))
+        back = roster[roster.status.isin(["INA", "RES"]) & roster.team.isin(live) & ~roster.player_id.isin(active_roster.player_id)]
+        back = back[[(t, p_) in played and healthy(t, n) for t, p_, n in zip(back.team, back.player_id, back.full_name)]]
+        if len(back):
+            print(f"  back from injury / reserve (active on ESPN now): " + ", ".join(f"{n} ({t})" for t, n in zip(back.team, back.full_name)))
+            active_roster = pd.concat([active_roster, back.assign(status="ACT")])
+            back_ids = set(back.player_id)            # in the lineup even when the last games and the weekly depth chart predate the return
     depth = pd.read_sql(f"""SELECT team, gsis_id AS player_id, pos_abb, pos_rank FROM depth_charts
                             WHERE season={season}
                               AND dt=(SELECT MAX(dt) FROM depth_charts WHERE season={season})""", con)
@@ -281,7 +309,7 @@ def future_actives(con, todo, season, week, overrides):
                 qb_id = d1
             ts = snaps[(snaps.team == team) & ((snaps.season < season) | (snaps.week < week))]
             recent = ts.drop_duplicates("game_id").sort_values(["season", "week"]).game_id.iloc[-RECENT_GAMES:]
-            cand = set(ts[ts.game_id.isin(recent)].player_id) | set(depth[depth.team == team].player_id)
+            cand = set(ts[ts.game_id.isin(recent)].player_id) | set(depth[depth.team == team].player_id) | (back_ids & set(roster[roster.team == team].player_id))
             cand &= set(active_roster[active_roster.team == team].player_id)
             dropped = cand & set(out_inj[out_inj.team == team].player_id)
             cand -= dropped
