@@ -407,7 +407,13 @@ def tags(rows):
 
 
 # ---------------------------------------------------------------- Hard Rock props (The Odds API; Unabated's free feed lacks Hard Rock)
-HR_MKT = {"nhl": ("icehockey_nhl", "player_goal_scorer_anytime", "goal", 2), "nfl": ("americanfootball_nfl", "player_anytime_td", "td", 3)}
+HR_MKT = {"nhl": ("icehockey_nhl", "player_goal_scorer_anytime", "goal", 6), "nfl": ("americanfootball_nfl", "player_anytime_td", "td", 6)}
+HR_REFRESH = 60                       # minutes: re-pull a game's Hard Rock prices this often (paid plan)
+
+
+def stale(c, now, minutes):
+    """True when a cached pull is missing or older than `minutes` (refresh within the credit pacing)."""
+    return not c or now - pd.Timestamp(c.get("fetched", "2000-01-01")).tz_convert("UTC") >= pd.Timedelta(minutes=minutes)
 HR_CACHE = os.path.join(M.OUT, "hr_props_{}.json")
 
 
@@ -426,7 +432,7 @@ def hr_pull(sport, now, st):
         cache = json.load(open(HR_CACHE.format(sport)))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in soon.items() if str(g["id"]) not in cache}
+    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, HR_REFRESH)}
     if not todo:
         return
     r = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events", params=dict(apiKey=k), timeout=30)   # free
@@ -469,7 +475,8 @@ def hr_pull(sport, now, st):
 PIN_MKT = {"player_reception_yds": "rec_yds", "player_rush_yds": "rush_yds", "player_pass_yds": "pass_yds", "player_receptions": "rec",
            "player_anytime_td": "td"}       # anytime TD is one-way (Yes only)
 PIN_K = 1.04                          # power exponent when a game has no two-way lines to solve it from
-PIN_HOURS = 3.5                       # one pull per game this close to kickoff (Pinnacle's lines are sharpest late)
+PIN_HOURS = 24.0                      # games within a day of kickoff (paid plan; was one pull 3.5 h out)
+PIN_REFRESH = 120                     # minutes between pulls of a game (Pinnacle's lines sharpen toward kickoff)
 PIN_CACHE = os.path.join(M.OUT, "pin_props_nfl.json")
 
 
@@ -487,7 +494,7 @@ def pin_pull(now):
         cache = json.load(open(PIN_CACHE))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in soon.items() if str(g["id"]) not in cache}
+    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, PIN_REFRESH)}
     if not todo:
         return
     r = requests.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events", params=dict(apiKey=k), timeout=30)
@@ -653,7 +660,8 @@ def pin_merge(now):
 
 
 # ---------------------------------------------------------------- Pinnacle anytime goals for the NHL (The Odds API)
-PIN_NHL_HOURS = 2.0                   # one pull per game in its last 2 hours before puck drop (1 credit when Pinnacle has it)
+PIN_NHL_HOURS = 8.0                   # games within 8 hours of puck drop (paid plan; 1 credit a pull when Pinnacle has it)
+PIN_NHL_REFRESH = 60                  # minutes between pulls; every pull is logged, so the drift to puck drop can be graded
 PIN_NHL_CACHE = os.path.join(M.OUT, "pin_props_nhl.json")
 PIN_NHL_LOG = os.path.join(M.OUT, "pin_nhl_history.json")   # every pull kept, so Pinnacle can be graded against goals later
 
@@ -671,7 +679,7 @@ def pin_pull_nhl(now):
         cache = json.load(open(PIN_NHL_CACHE))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in soon.items() if str(g["id"]) not in cache}
+    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, PIN_NHL_REFRESH)}
     if not todo:
         return
     r = requests.get("https://api.the-odds-api.com/v4/sports/icehockey_nhl/events", params=dict(apiKey=k), timeout=30)
