@@ -423,6 +423,29 @@ def apply_bias(res, R, rng):
         q["pass_yds"] = np.round(q["pass_yds"] * R["pass_yds"])
 
 
+# RB target split (research/rb_types.py, 1,375 RB games 2025-26): we overstated how different backs are as receivers.
+# Early-down backs (<15% of touches targets) beat our target / catch projections (x1.21 / x1.16, 64% above our median),
+# receiving backs (30%+) fell short (x0.84 / x0.89, 40%); rushing was right. Each RB's targets, catches and receiving
+# yards are scaled by exp(RB_TGT_B * (share - RB_TGT_C)); the 2025-only fit (-0.5) improved 2026 out of sample in 7 of 9
+# cells, the 2025-26 fit (-0.9) overcorrected 2025, so the midpoint: about x1.10 at an 8% share, x0.88 at 40%.
+RB_TGT_B, RB_TGT_C = -0.7, 0.21
+
+
+def rb_targets(res, players, rng):
+    pl = res["players"]
+    for j, p in enumerate(players):
+        if p.pos != "RB":
+            continue
+        t, c = pl["tgt"][:, j], pl["car"][:, j]
+        if t.mean() + c.mean() < 1:
+            continue
+        f = float(np.clip(np.exp(RB_TGT_B * (t.mean() / (t.mean() + c.mean()) - RB_TGT_C)), .8, 1.25))
+        u = rng.random(t.shape)
+        pl["tgt"][:, j] = np.floor(t * f + u)
+        pl["rec"][:, j] = np.minimum(np.floor(pl["rec"][:, j] * f + u), pl["tgt"][:, j])
+        pl["rec_yds"][:, j] = np.round(pl["rec_yds"][:, j] * f)
+
+
 DIST_STATS = ["pass_yds", "att", "cmp", "pass_td", "ints", "rush_yds", "car", "tgt", "rec",
               "rec_yds", "tds"]
 
@@ -570,7 +593,8 @@ def main():
         hi = PL.team_input(fr, g.game_id, g.home_team)
         ai = PL.team_input(fr, g.game_id, g.away_team)
         h, a = simulate_game(model, params, hi, ai, n=args.sims, seed=abs(hash(g.game_id)) % 2**32)
-        for res_ in (h, a):
+        for res_, t_ in ((h, hi), (a, ai)):
+            rb_targets(res_, t_.players, brng)
             apply_bias(res_, BIAS, brng)
         margin = h["points"] - a["points"]
         first = first_td(h, a, hi.team, ai.team, abs(hash(g.game_id)) % 2**32)
