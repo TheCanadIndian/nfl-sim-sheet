@@ -45,6 +45,11 @@ __CSS__
 .gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .cell b{font-weight:600}
 .cell{border-radius:6px}.t td.cell,.t td.hm{background-clip:padding-box;border:2px solid transparent}
+.exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--ink);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
+.ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
+.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}
 .mgkey{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .mgkey i{display:inline-block;width:84px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--bad) 55%,transparent),transparent 50%,color-mix(in srgb,var(--good) 55%,transparent))}
 .cell small{display:block;color:var(--muted);font-size:11.5px}
@@ -85,6 +90,7 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
       <button role="tab" data-view="games">Games</button>
       <button role="tab" data-view="board">Player board</button>
       <button role="tab" data-view="dvp">Defense vs position</button>
+      <button role="tab" data-view="parlays">Parlays</button>
     </div>
   </header>
   <main id="main"></main>
@@ -102,7 +108,7 @@ const american = p => { p = Math.min(Math.max(p,1e-4),1-1e-4); const o = p>=.5 ?
 const [MEAN, P10, P25, MED, P75, P90] = [0,1,2,3,4,5];
 const LAB = {min:'Minutes', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes', pra:'Pts+Reb+Ast', stl:'Steals', blk:'Blocks', tov:'Turnovers'};
 const COLS = ['min','pts','reb','ast','fg3m','pra'];
-const state = {view: ['#board','#dvp'].includes(location.hash) ? location.hash.slice(1) : 'games', game: D.games[0]?.id, gm: {}, bstat: 'pts', dstat: 'pts', open: null, ostat: 'pts', oline: null, okey: null};
+const state = {view: ['#board','#dvp','#parlays'].includes(location.hash) ? location.hash.slice(1) : 'games', game: D.games[0]?.id, gm: {}, bstat: 'pts', dstat: 'pts', open: null, ostat: 'pts', oline: null, okey: null};
 document.getElementById('sub').textContent = `${D.games.length} games · ${D.date} · built ${D.generated}`;
 const shadeP = p => p >= .65 ? 'g3' : p >= .56 ? 'g2' : p >= .51 ? 'g1' : p <= .35 ? 'r3' : p <= .44 ? 'r2' : p <= .49 ? 'r1' : '';
 const shadeR = x => x >= 1.12 ? 'g3' : x >= 1.07 ? 'g2' : x >= 1.03 ? 'g1' : x <= 1/1.12 ? 'r3' : x <= 1/1.07 ? 'r2' : x <= 1/1.03 ? 'r1' : '';
@@ -228,9 +234,58 @@ function dvpView(){
   ${rows.map(r => `<tr><td class="l">${today.has(r.t) ? `<b>${esc(r.t)}</b>` : esc(r.t)}</td>${r.v.map(v => `<td class="hm" style="${MG(v)}">${rel(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
   <p class="note">The deeper the green, the more that defense gives up to the position (good for the player); the deeper the red, the less (full color at ±15%). Recent games count most; last season carries over early on; small samples are pulled toward average.</p></section>`;
 }
+/* ---------------- Parlays tab: ladder candidates + parlays by payout ---------------- */
+const KLAB = {pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes'};
+// Ladder candidates (experimental, untested for the NBA): a player whose stat faces a soft matchup (this defense allows
+// +7% or more per minute to his position) and who plays real minutes, with his higher Kalshi rungs for that stat (2+
+// above the rung priced nearest 50/50). The NFL version of this (soft defense vs position) cleared 3-8 pts above the
+// price on Kalshi 2026; NBA rungs are tracked on the Profit page.
+function ladderCard(){
+  const now = Date.now(), cards = [];
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id)){
+      const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED];
+      if (!(mins >= 20) || p.st === 'Out') continue;
+      const R = DVP[p.o + '|' + p.pg]; if (!R) continue;
+      const sts = Object.keys(KLAB).filter(st => R[st] >= 1.07); if (!sts.length) continue;
+      const rungs = window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n, sts) : [];
+      cards.push({g, p, sts, R, v: Math.max(...sts.map(st => R[st])), rungs});
+    }
+  }
+  if (!cards.length) return '';
+  cards.sort((a, b) => b.v - a.v);
+  const on = cards.filter(c => c.rungs.length), off = cards.filter(c => !c.rungs.length);
+  const soft = c => c.sts.map(st => `<span class="ladc soft" style="${MG(c.R[st])}" title="${esc(c.p.o)} allows ${Math.round((c.R[st] - 1) * 100)}% more ${KLAB[st]} per minute to ${c.p.pg}s than the league">${esc(c.p.o)} +${Math.round((c.R[st] - 1) * 100)}% ${KLAB[st]} to ${c.p.pg}s</span>`).join('');
+  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${c.p.trend >= 3 ? '<span class="ladc">▲ minutes</span>' : ''}</div>
+    <div class="ladr">${c.rungs.slice(0, 4).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KLAB[u.k]}: price ${Math.round(u.mid * 100)}% · our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}"><b>${Math.round(u.l + .5)}+</b> ${KLAB[u.k]} <i>${u.price}</i></span>`).join('')}</div></div>`;
+  const wait = off.length ? `<details class="ladw"><summary>${on.length ? off.length + ' more' : off.length + ' players'} · no tight Kalshi ladder yet</summary><div class="ladr">${off.map(c =>
+      `<span class="lru"><b>${esc(c.p.n)}</b> <i>${c.sts.map(st => KLAB[st]).join(', ')} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
+  return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${on.length} with ladders</span></div>${!on.length ? '<p class="note" style="margin:0 0 6px">Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.</p>' : ''}
+    <details class="how"><summary>What this is</summary><p class="note">Players playing 20+ minutes whose stat faces a soft matchup: this defense allows 7% or more per minute to their position (the green on the gradient). Shown with their higher Kalshi rungs, two or more lines above the one priced near 50/50. The NFL version of this idea cleared 3-8 points more often than the price said on Kalshi this season; for the NBA it is untested, so every rung is tracked on the Profit page. Early in the season the defense numbers lean on last year.</p></details>
+    <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
+}
+function tierParlays(){
+  if (!(window.MKT && MKT.tierCard)) return '<section class="panel"><div class="empty">Loading prices…</div></section>';
+  const gameLegs = [];
+  for (const g of D.games){
+    const M = g.models.vegas; if (!M || !g.has_line) continue;
+    const m = M.home_pts - M.away_pts, tot = M.home_pts + M.away_pts, ph = 1 - ncdf((-g.spread - m) / MSD), po = 1 - ncdf((g.total - tot) / TSD);
+    const sp = v => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+    gameLegs.push({gid: g.id, kind: 'ml', side: 'away', p: 1 - M.home_win, lab: `${g.away} moneyline`}, {gid: g.id, kind: 'ml', side: 'home', p: M.home_win, lab: `${g.home} moneyline`},
+                  {gid: g.id, kind: 'spread', side: 'away', line: g.spread, p: 1 - ph, lab: `${g.away} ${sp(-g.spread)}`}, {gid: g.id, kind: 'spread', side: 'home', line: g.spread, p: ph, lab: `${g.home} ${sp(g.spread)}`},
+                  {gid: g.id, kind: 'total', side: 'over', line: g.total, p: po, lab: `${g.away}-${g.home} over ${g.total}`}, {gid: g.id, kind: 'total', side: 'under', line: g.total, p: 1 - po, lab: `${g.away}-${g.home} under ${g.total}`});
+  }
+  const card = MKT.tierCard({sport: 'nba', title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.start_utc})),
+                       gameLegs, propKinds: {}, kalshiKinds: KLAB, minEdge: .05});
+  return card || `<section class="panel"><div class="phead"><h2>Parlays by payout (your books)</h2></div><p class="note">No parlay with an edge on every leg yet. Legs come from Kalshi player ladders (our chance blended 50/50 with Kalshi’s, the side we lean, a tight market, 5%+ edge after fees) and sportsbook game lines, which post about 8 hours before tip-off. Kalshi’s NBA markets are thin until game day.</p></section>`;
+}
+function parlaysView(){
+  return ladderCard() + tierParlays();
+}
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
-  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : gameView();
+  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : gameView();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; }
 }

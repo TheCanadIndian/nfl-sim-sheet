@@ -87,6 +87,45 @@ def ladder_rows(date, mk, R, GM):
     return out
 
 
+def nba_ladder_rows(date, mk, R, GM):
+    """NBA ladder candidates (experimental): YES on Kalshi pts/reb/ast/3pm rungs 2+ above the ~50/50 rung for players
+    whose stat faced a soft matchup (dvp >= 1.07 for his position) in that night's frozen page data."""
+    f = os.path.join(HERE, "nba", "projections", f"{date}.json")
+    if not os.path.exists(f):
+        return []
+    P = json.load(open(f, encoding="utf-8"))
+    dv = {(r["team"], r["pg"]): r for r in P.get("dvp", [])}
+    soft = {}
+    for p in P.get("players", []):
+        mins = ((p.get("s") or {}).get("vegas") or {}).get("min")
+        if not mins or mins[3] < 20:
+            continue
+        r = dv.get((p["o"], p.get("pg")))
+        for st in ("pts", "reb", "ast", "fg3m"):
+            if r and (r.get(st) or 0) >= 1.07:
+                soft[(str(p["g"]), str(p["id"]), st)] = True
+    by = {}
+    for r in mk:
+        if r.get("source") == "kalshi" and r.get("kind") in ("pts", "reb", "ast", "fg3m") and r.get("line") is not None \
+                and r.get("yes_ask") and r.get("yes_bid") is not None:
+            by.setdefault((str(r["game"]), str(r.get("pid")), r["kind"]), {})[float(r["line"])] = r
+    out = []
+    for key, L in by.items():
+        if key not in soft:
+            continue
+        rs = [L[x] for x in sorted(L)]
+        mid = lambda r: (r["yes_ask"] + r["yes_bid"]) / 2
+        i0 = min(range(len(rs)), key=lambda i: abs(mid(rs[i]) - .5))
+        for r in rs[i0 + 2:]:
+            y = GM.outcome("nba", r, R)
+            if y is None:
+                continue
+            ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
+            out.append(dict(date=date, sport="nba", cat="NBA ladder candidates (experimental)", src="kalshi", kind=r["kind"], title=r.get("title"),
+                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), won=int(y), pnl=round(y / cy - 1, 4)))
+    return out
+
+
 def market_rows(sport):
     import grade_markets as GM
     R = {"nfl": GM.nfl_results, "nhl": GM.nhl_results, "nba": GM.nba_results, "mlb": GM.mlb_results}[sport]()
@@ -148,6 +187,8 @@ def market_rows(sport):
                              q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4)))
         if sport == "nfl":
             rows += ladder_rows(date, mk, R, GM)
+        if sport == "nba":
+            rows += nba_ladder_rows(date, mk, R, GM)
     json.dump(dict(sport=sport, rows=rows), open(os.path.join(OUT, f"profit_{sport}.json"), "w"), separators=(",", ":"))
     print(f"profit {sport}: {len(rows)} graded market picks")
 
