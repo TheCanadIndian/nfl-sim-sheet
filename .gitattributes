@@ -1,0 +1,4 @@
+# The cloud workflows commit with `git pull --rebase -X theirs`. A line-by-line merge of two jobs' edits to the same
+# JSON file splices them into invalid JSON (2026-10-17: parlays/nhl broke the Profit page). Treat JSON as a whole:
+# on a clash the replayed commit's complete file wins, so every file stays valid.
+*.json merge=binary
