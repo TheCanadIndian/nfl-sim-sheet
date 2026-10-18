@@ -542,6 +542,30 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         legs.push({gid: String(L.gid), leg, kind: L.kind, lab: L.lab, q, p: L.p, m, b, u: link(b[2]), ev: q * dec(b[1]) - 1,
                    slip: {id: `${opts.sport}|${L.gid}|tier|${L.kind}|${L.side}|${L.line}`, sport: opts.sport, g: L.gid, glab: glab[String(L.gid)], lab: L.lab, p: q, side: 'over'}});
       }
+      // prediction-market legs (opts.kalshiKinds, e.g. NBA ladders): our chance blended 50/50 with Kalshi's mid, under
+      // the NFL props rule (the side our median is on, our number 10+ pts from the mid, spread 3c or less, price 15c+).
+      // One leg per player-stat (its best rung). Untested for the NBA: tracked on the Profit page.
+      if (opts.kalshiKinds && D && D.rows && (opts.anyBook || mine('Kalshi'))) {
+        const bestBy = {};
+        for (const r of D.rows) {
+          if (r.s !== 'kalshi' || !opts.kalshiKinds[r.k] || !live.has(String(r.g)) || !(r.ya > 0) || r.yb == null || r.l == null) continue;
+          const p = ours(r, 'vegas'); if (p == null || r.ya - r.yb > .035) continue;
+          const m = (r.ya + r.yb) / 2;
+          for (const sd of ['o', 'u']) {
+            const ps = sd === 'o' ? p : 1 - p, ms = sd === 'o' ? m : 1 - m, c = sd === 'o' ? r.ya : 1 - r.yb;
+            if (ps < .5 || Math.abs(p - m) < .10 || c < .15 || c > .95) continue;
+            const cost = c + .07 * c * (1 - c), q = .5 * ps + .5 * ms, ev = q / cost - 1;
+            const key = r.g + '|' + (r.pid || r.n) + '|' + r.k;
+            if (ev <= (opts.minEdge || 0) || (bestBy[key] && bestBy[key].ev >= ev)) continue;
+            const o = cost >= .5 ? -Math.round(100 * cost / (1 - cost)) : Math.round(100 * (1 - cost) / cost);
+            const n = Math.round(r.l + .5), lab = `${r.n} ${sd === 'o' ? n + '+' : 'under ' + n} ${opts.kalshiKinds[r.k]}`;
+            const leg = {gid: String(r.g), start: startOf[String(r.g)], kind: r.k, side: sd, line: r.l, name: norm(r.n), lab, p: +q.toFixed(4), price: o, book: 'Kalshi'};
+            bestBy[key] = {gid: String(r.g), leg, kind: r.k, lab, q, p: ps, m: ms, b: ['Kalshi', o, null], u: null, ev,
+                           slip: {id: `${opts.sport}|${r.g}|tier|${r.t}|${sd}`, sport: opts.sport, g: r.g, glab: glab[String(r.g)], lab, p: q, side: 'over'}};
+          }
+        }
+        legs.push(...Object.values(bestBy));
+      }
       const good = legs.filter(L => L.ev > (opts.minEdge || 0));
       if (!MY.length && !opts.anyBook) return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">Choose your sportsbooks first (the "all books ▾" button under any game's bets): these parlays are priced only at the books you can bet.</p></section>`;
       // per game: the 3 best-edge legs
@@ -677,15 +701,17 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return `<div class="mkx">${head('Prediction markets')}${top.map(r => row(r, model)).join('')}${rest.length ? `${det('g|' + gid)}<summary>All ${rows.length} game lines</summary>${rest.map(r => row(r, model)).join('')}</details>` : ''}</div>`;
     },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
-    ladder(gid, pid, name){
-      const rows = forPlayer(gid, pid, name).filter(r => r.s === 'kalshi' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(r.k) && r.l != null && r.ya > 0 && r.yb != null);
+    ladder(gid, pid, name, kinds){
+      kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
+      // wide quotes (spread over 10c) say nothing about the price: left out
+      const rows = forPlayer(gid, pid, name).filter(r => r.s === 'kalshi' && kinds.includes(r.k) && r.l != null && r.ya > 0 && r.yb != null && r.ya - r.yb <= .10);
       const by = {}; rows.forEach(r => (by[r.k] = by[r.k] || []).push(r));
       const out = [];
       for (const [k, L] of Object.entries(by)){
         L.sort((a, b) => a.l - b.l);
         const mid = r => (r.ya + r.yb) / 2; let i0 = 0;
         L.forEach((r, i) => { if (Math.abs(mid(r) - .5) < Math.abs(mid(L[i0]) - .5)) i0 = i; });
-        L.slice(i0 + 2).forEach((r, i) => out.push({k, i, l: r.l, ya: r.ya, mid: mid(r), p: ours(r, 'vegas'), price: px(r.ya, 'kalshi')}));
+        L.slice(i0 + 2).forEach((r, i) => { if (mid(r) < mid(L[i0])) out.push({k, i, l: r.l, ya: r.ya, mid: mid(r), p: ours(r, 'vegas'), price: px(r.ya, 'kalshi')}); });
       }
       return out.sort((a, b) => a.i - b.i);                         // each stat's nearest high rung first
     },
