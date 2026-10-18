@@ -944,7 +944,8 @@ function atgParlays(){
       if (!(p.ur && p.ur <= 3) || p.p < .30) continue;              // our top 3, and 30%+ (shorter droughts, same calibration)
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b) continue;
       const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null;
-      const q = m != null ? .5 * p.p + .5 * m : p.p;                 // 50/50 ours and exchanges: on Kalshi 2026 (3,822 graded legs) a 50/50 blend was more accurate than our number alone and our top-3 legs returned +10% (vs +6% at 75/25)
+      // 50/50 ours and the exchanges (Kalshi 2026: 3,822 graded legs, top-3 legs +10%); 20/80 with Pinnacle when pulled (2025-26 closing props)
+      const q = MKT.blend ? MKT.blend(g.id, p.name, 'goal', p.p) : m != null ? .5 * p.p + .5 * m : p.p;
       const ev = q * dec(b.o) - 1;
       if (ev <= 0) continue;                                         // every leg needs its own edge
       legs.push({g, p, team: side.team, b, q, m, ev});
@@ -1067,7 +1068,7 @@ function pricedLongshots(){
     for (const side of [g.away, g.home]) for (const p of side.players){
       if (p.p < .15 || p.p > .35 || !(p.ur && p.ur <= 3)) continue;  // our top 3 per game only: everyone else has lost on Kalshi
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b || !b.mine) continue;
-      const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null, q = m != null ? .5 * p.p + .5 * m : p.p;
+      const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null, q = MKT.blend ? MKT.blend(g.id, p.name, 'goal', p.p) : m != null ? .5 * p.p + .5 * m : p.p;
       if (q * dec(b.o) - 1 <= 0) continue;
       legs.push({g, p, team: side.team, b, q, m});
     }

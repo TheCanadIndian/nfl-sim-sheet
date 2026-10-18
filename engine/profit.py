@@ -210,6 +210,28 @@ def close_fair(sport, r, PP, PL):
     return None
 
 
+# Weight on ours when the market is Pinnacle's no-vig (research/blend_weights.py; same table as mkt.js / sharp.py)
+WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .1, "reb": .1, "ast": .1, "fg3m": .1},
+        "nfl": {"rec": .25, "rec_yds": .25, "rush_yds": .25, "pass_yds": .25, "anytime_td": 0.0}}
+
+
+def pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM):
+    """The Pinnacle-anchored version of a rule, on the same quote: chance = w * ours + (1 - w) * Pinnacle's no-vig (its
+    last pregame price), same edge bar. Tracked as '<category> · Pinnacle-anchored' next to the current rule."""
+    w = WPIN[sport][k]
+    q = w * p + (1 - w) * fy
+    bet = "YES" if "YES" in sides and q / cy - 1 > need else "NO" if "NO" in sides and cn and (1 - q) / cn - 1 > need else None
+    if not bet:
+        return []
+    y = GM.outcome(sport, r, R)
+    if y is None:
+        return []
+    hit, cost = (y, cy) if bet == "YES" else (1 - y, cn)
+    fair = fy if bet == "YES" else 1 - fy
+    return [dict(date=date, sport=sport, cat=f"{cat} · Pinnacle-anchored", src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
+                 q=round(q if bet == "YES" else 1 - q, 4), won=int(hit), pnl=round(hit / cost - 1, 4), clv=round(fair - cost, 4))]
+
+
 def market_rows(sport):
     import grade_markets as GM
     R = {"nfl": GM.nfl_results, "nhl": GM.nhl_results, "nba": GM.nba_results, "mlb": GM.mlb_results}[sport]()
@@ -254,6 +276,9 @@ def market_rows(sport):
                 cat, q, need, sides = f"{sport.upper()} player props", .5 * p + .5 * m, .05, ("YES", "NO")
             else:
                 continue                                   # first scorer etc.: not something the site recommends
+            fy = close_fair(sport, r, PP, PL)                      # Pinnacle's fair closing chance (YES side)
+            if fy is not None and k in WPIN.get(sport, {}):          # the Pinnacle-anchored rule judges every quote on its own
+                rows += pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R, GM)
             bet = None
             # NFL yardage / catch props: the side our median is on, our number 10+ pts from the mid, a tight 15c+ market
             nflp = sport == "nfl" and k in ("rec", "rec_yds", "rush_yds", "pass_yds")
@@ -268,7 +293,6 @@ def market_rows(sport):
             if y is None:
                 continue
             hit = y if bet == "YES" else 1 - y
-            fy = close_fair(sport, r, PP, PL)                      # Pinnacle's fair closing chance (YES side)
             fair = None if fy is None else (fy if bet == "YES" else 1 - fy)
             rows.append(dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
                              q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4),
