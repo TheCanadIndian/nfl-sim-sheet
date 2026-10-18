@@ -635,8 +635,11 @@ def markets_page():
 
 MARKETS_BODY = """
   <header class="hero"><div class="eyebrow" id="msub">Loading live prices…</div><h1>__SPORT__ markets</h1>
-    <p class="sub">Every Kalshi and Polymarket price we can match, game by game and player by player, next to our chance
-      and how much money is on each side. Prices update while this page is open.</p></header>
+    <p class="sub">Prediction markets (Kalshi, Polymarket) and sportsbooks in one place: every price we can match next to our
+      chance and the sharp line, with your books highlighted. Prices update while this page is open.</p></header>
+  <div class="seg mk-view" style="margin:4px 0 14px" role="tablist" aria-label="Markets" id="mview"></div>
+  <div id="mbk" hidden></div>
+  <div id="mpm">
   <div class="mk-bar">
     <div class="seg" role="group" aria-label="Show" id="mshow"></div>
     <div class="seg" role="group" aria-label="Source" id="msrc"></div>
@@ -648,6 +651,7 @@ MARKETS_BODY = """
   <details class="card mk-score" id="scorebox" data-sport="__KEY__"><summary id="scoresum"></summary><div id="score"></div></details>
   <details class="card mk-score" id="patbox" hidden><summary id="patsum"></summary><div id="pat"></div></details>
   <div id="mtree" class="mt"></div>
+  </div>
   <section class="card" style="gap:8px">
     <h2 style="font-size:20px">How to read this</h2>
     <dl class="mk-help">
@@ -663,8 +667,9 @@ const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KIND = {hr:'Home run', win:'Winner', total:'Total', spread:'Spread', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
 const GAMEK = new Set(['win', 'total', 'spread']);
-let st = {show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
+let st = {view: 'pm', show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
 try { Object.assign(st, JSON.parse(localStorage.getItem('mk-tree') || '{}'), {q: ''}); } catch (e) {}
+if (location.hash === '#books') st.view = 'bk'; else if (location.hash === '#pm') st.view = 'pm';
 const money = r => (r.by || 0) + (r.bn || 0);
 const bestV = r => { const b = MKT.best(r, 'vegas'); return b.v ?? -9; };
 const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}); };
@@ -712,6 +717,16 @@ function patterns(){
 }
 function render(){
   const seg = (id, key, opts) => { document.getElementById(id).innerHTML = opts.map(([k, l]) => `<button data-sk="${key}" data-v="${k}" aria-pressed="${st[key] === k}">${l}</button>`).join(''); };
+  seg('mview', 'view', [['pm', 'Prediction markets'], ['bk', 'Sportsbooks']]);
+  const bk = st.view === 'bk', BKV = document.getElementById('mbk');
+  document.getElementById('mpm').hidden = bk; BKV.hidden = !bk;
+  history.replaceState(null, '', bk ? '#books' : location.pathname);
+  if (bk){
+    try { const {q, ...keepSt} = st; localStorage.setItem('mk-tree', JSON.stringify(keepSt)); } catch (e) {}
+    document.getElementById('msub').textContent = 'Sportsbook prices · your books highlighted';
+    BKV.innerHTML = window.MKT && MKT.oddsView && MKT.loaded() ? MKT.oddsView(MKT.games()) : '<p class="muted">Loading prices…</p>';
+    return;
+  }
   seg('mshow', 'show', [['all', 'Everything'], ['edge', 'Edges 3%+'], ['long', 'Longshots']]);
   seg('msrc', 'src', [['all', 'Both'], ['kalshi', 'Kalshi'], ['polymarket', 'Polymarket']]);
   seg('mspr', 'spr', [['all', 'Any spread'], ['thin', 'Thin 2¢+'], ['tight', 'Tight 1¢']]);

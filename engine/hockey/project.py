@@ -780,7 +780,6 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
       <button role="tab" data-view="board">All players</button>
       <button role="tab" data-view="posdef">Defense vs position</button>
       <button role="tab" data-view="goalies">Goalies</button>
-      <button role="tab" data-view="books">Book odds</button>
       <button role="tab" data-view="wfair">Experimental</button>
     </div>
   </header>
@@ -794,7 +793,8 @@ const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pct = p => (p*100).toFixed(1) + '%';
 const odds = o => (o > 0 ? '+' : '') + o;
-const state = {view: ['#board', '#posdef', '#goalies', '#books', '#shots', '#plays', '#wfair'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
+if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
+const state = {view: ['#board', '#posdef', '#goalies', '#shots', '#plays', '#wfair'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
 // Highlights: tonight's top 5 by goal chance (backtest 2024-26: scored 38%, average skater 15%)
 // and the best option in each game (38%). The model's probability already includes every factor
 // that tested as useful, so the ranking is the selection rule; reasons explain it.
