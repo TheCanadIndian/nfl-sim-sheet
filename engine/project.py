@@ -296,6 +296,47 @@ def rb_boost(pos, s):
         s["rush_yds"] = np.round(s["rush_yds"] * RB_BOOST)
 
 
+# Season-to-date bias fix (research/bias_correction_test.py, 2026 wk 2-5 walk-forward on 7,060 Kalshi rungs: our receiving
+# yards / receptions / passing yards ran 4-5 pts low, rushing fine). Each run scales those draws by actual / projected
+# so far this season (raw projections: earlier weeks' applied ratios are divided back out), shrunk toward 1 with
+# BIAS_K units; receptions by randomized rounding (3 catches x 1.04 -> 4 about 4% x 3 of the time). Log-loss -0.0019 in
+# both halves vs raw, no stat worse. Rushing yards untouched.
+BIAS_STATS = {"rec": "receptions", "rec_yds": "receiving_yards", "pass_yds": "passing_yards"}
+BIAS_K = 3000.0
+
+
+def season_bias(con, season, week, wdir):
+    """{stat: ratio} from the frozen pregame projections of earlier weeks this season vs their box scores."""
+    import glob as _g
+    pw = pd.read_sql("SELECT player_id, week, receptions, receiving_yards, passing_yards FROM player_week WHERE season = ?",
+                     con, params=(int(season),))
+    num = {k: 0.0 for k in BIAS_STATS}; den = {k: 0.0 for k in BIAS_STATS}
+    for f in sorted(_g.glob(os.path.join(wdir, f"{season}_wk??_players.csv"))):
+        w = int(os.path.basename(f)[7:9])
+        if w >= int(week):
+            continue
+        bf = f.replace("_players.csv", "_bias.json")
+        used = json.load(open(bf)) if os.path.exists(bf) else {}
+        P = pd.read_csv(f, usecols=["player_id", "stat", "mean"])
+        a = pw[pw.week == w]
+        for k, col in BIAS_STATS.items():
+            x = P[P.stat == k].merge(a[["player_id", col]], on="player_id")
+            num[k] += x[col].astype(float).sum()
+            den[k] += x["mean"].sum() / used.get(k, 1.0)
+    return {k: round((num[k] + BIAS_K) / (den[k] + BIAS_K), 4) if den[k] else 1.0 for k in BIAS_STATS}
+
+
+def apply_bias(res, R, rng):
+    pl = res["players"]
+    if R.get("rec_yds", 1) != 1:
+        pl["rec_yds"] = np.round(pl["rec_yds"] * R["rec_yds"])
+    if R.get("rec", 1) != 1:
+        pl["rec"] = np.minimum(np.floor(pl["rec"] * R["rec"] + rng.random(pl["rec"].shape)), pl["tgt"])
+    q = res.get("qb_line") or {}
+    if "pass_yds" in q and R.get("pass_yds", 1) != 1:
+        q["pass_yds"] = np.round(q["pass_yds"] * R["pass_yds"])
+
+
 DIST_STATS = ["pass_yds", "att", "cmp", "pass_td", "ints", "rush_yds", "car", "tgt", "rec",
               "rec_yds", "tds"]
 
@@ -433,10 +474,18 @@ def main():
 
     prow, trow, box, dists, keyrows = [], [], {}, {}, []
     sgps, draws = {}, {}
+    try:
+        BIAS = season_bias(con, season, week, os.path.join(args.out, "weeks"))
+    except Exception as e:                                       # never block a projection run
+        print(f"  bias fix skipped ({type(e).__name__}: {e})"); BIAS = {}
+    print(f"  season-to-date bias fix (actual / projected): {BIAS}")
+    brng = np.random.default_rng(int(week) * 7919)
     for g in todo.itertuples():
         hi = PL.team_input(fr, g.game_id, g.home_team)
         ai = PL.team_input(fr, g.game_id, g.away_team)
         h, a = simulate_game(model, params, hi, ai, n=args.sims, seed=abs(hash(g.game_id)) % 2**32)
+        for res_ in (h, a):
+            apply_bias(res_, BIAS, brng)
         margin = h["points"] - a["points"]
         first = first_td(h, a, hi.team, ai.team, abs(hash(g.game_id)) % 2**32)
         if not args.played:                                     # same-game parlays by game script (sgp.py), both models
@@ -493,6 +542,7 @@ def main():
         players, teams = add_actuals(players, teams, fr, con)
         print_actuals(players, teams)
     players.to_csv(f"{stem}_players.csv", index=False)
+    json.dump(BIAS, open(f"{stem}_bias.json", "w"))                 # ratios applied this run (later weeks divide them back out)
     teams.to_csv(f"{stem}_teams.csv", index=False)
     with open(f"{stem}_dist.json", "w") as f:
         json.dump(dists, f, separators=(",", ":"))

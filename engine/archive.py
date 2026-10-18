@@ -10,6 +10,7 @@ results.py grades these files once games are final.
 
 import datetime as dt
 import json
+import shutil
 import os
 
 import pandas as pd
@@ -62,6 +63,9 @@ def update(stem, season, week, game_ids, source="live", sims=None, db="nfl.db", 
     json.dump({"players": players, "dvp": m_new.get("dvp") or m_old.get("dvp", {}),
                "rz": m_new.get("rz") or m_old.get("rz")},
               open(f"{ws}_matchups.json", "w"), separators=(",", ":"))
+
+    if os.path.exists(f"{stem}_bias.json"):                       # the season-to-date bias fix this week used (project.py)
+        shutil.copyfile(f"{stem}_bias.json", f"{ws}_bias.json")
 
     stamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M")
     for g in game_ids:
