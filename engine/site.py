@@ -667,7 +667,7 @@ const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const KIND = {hr:'Home run', win:'Winner', total:'Total', spread:'Spread', anytime_td:'Anytime TD', first_td:'First TD', rec_yds:'Rec yds', rush_yds:'Rush yds', pass_yds:'Pass yds', rec:'Receptions', goal:'Goalscorer', first_goal:'First goal', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes'};
 const GAMEK = new Set(['win', 'total', 'spread']);
-let st = {view: 'pm', show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
+let st = {view: 'bk', show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
 try { Object.assign(st, JSON.parse(localStorage.getItem('mk-tree') || '{}'), {q: ''}); } catch (e) {}
 if (location.hash === '#books') st.view = 'bk'; else if (location.hash === '#pm') st.view = 'pm';
 const money = r => (r.by || 0) + (r.bn || 0);
