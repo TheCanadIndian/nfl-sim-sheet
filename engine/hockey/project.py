@@ -780,7 +780,6 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
       <button role="tab" data-view="board">All players</button>
       <button role="tab" data-view="posdef">Defense vs position</button>
       <button role="tab" data-view="goalies">Goalies</button>
-      <button role="tab" data-view="wfair">Experimental</button>
     </div>
   </header>
   <main id="main"></main>
@@ -794,7 +793,7 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 const pct = p => (p*100).toFixed(1) + '%';
 const odds = o => (o > 0 ? '+' : '') + o;
 if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
-const state = {view: ['#board', '#posdef', '#goalies', '#shots', '#plays', '#wfair'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
+const state = {view: ['#board', '#posdef', '#goalies', '#shots', '#plays'].includes(location.hash) ? location.hash.slice(1) : 'games', sort: 'team', dir: 1};
 // Highlights: tonight's top 5 by goal chance (backtest 2024-26: scored 38%, average skater 15%)
 // and the best option in each game (38%). The model's probability already includes every factor
 // that tested as useful, so the ranking is the selection rule; reasons explain it.
@@ -1333,7 +1332,7 @@ function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'posdef' ? posdef() : state.view === 'goalies' ? goaliesView() : state.view === 'shots' ? shotsView() : state.view === 'plays' ? playsView()
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, away: g.away.team, home: g.home.team}))) : '<div class="empty">Loading prices…</div>')
-    : state.view === 'wfair' ? (window.MKT && MKT.weightView ? MKT.weightView(D.games.map(g => ({id: g.id, label: `${g.away.team} @ ${g.home.team}`, away: g.away.team, home: g.home.team}))) : '<div class="empty">Loading prices…</div>') : games();
+ : games();
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('button[data-view]');

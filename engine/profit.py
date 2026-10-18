@@ -383,6 +383,94 @@ def _tag_leg(sport, b):
     return None
 
 
+# ---------------------------------------------------------------- book-weighted fair (the old Experimental tab)
+# Tracked in the background since 2026-10-18 (the tab was removed): fair = the owner's book weights over each book's no-vig
+# chance, the book being bet left out (two-way multiplicative; one-way power, each book's exponent from its own two-way
+# pairs on the slate). A bet = a main-line prop side at Novig / Kalshi / Hard Rock with a 2%+ edge vs that fair, fair 8%+,
+# 2+ weighted books. First sighting's price is the bet; the book's last pregame price is the close. Surfaced on the
+# Profit page only once it reads Proven or Promising.
+W_PROPS = {"Novig": 7, "Kalshi": 7, "DK": 1.4, "ProphetX": 1.4, "Pinnacle": 1.4, "FD": 1, "Caesars": .5, "Fliff": .5, "bet365": .3, "Hard Rock": .1}
+WF_KINDS = {"goal", "td", "rec", "rec_yds", "rush_yds", "pass_yds"}
+WF_BOOKS = ("Novig", "Kalshi", "Hard Rock")
+WF_CAT = "Book-weighted fair (old Experimental tab)"
+
+
+def _wfair_bets(PR, every=False):
+    """[(gid, name, kind, side, line, book, odds, fair)] for the current props file (every: all sides, edge or not)."""
+    P0 = lambda v: v[0] if isinstance(v, list) else v
+    mk = []
+    for gid, pl in (PR.get("props") or {}).items():
+        for nm, kinds in pl.items():
+            for k, e in kinds.items():
+                if k not in WF_KINDS or not e.get("o"):
+                    continue
+                mk.append((gid, nm, k, "o", e.get("l"), e.get("o") or {}, e.get("u") or {}))
+                if e.get("u"):
+                    mk.append((gid, nm, k, "u", e.get("l"), e.get("u") or {}, e.get("o") or {}))
+    ks = {}
+    for *_, A, B in mk:
+        for b, v in A.items():
+            if b in B and P0(v) is not None and P0(B[b]) is not None:
+                a, c = 1 / dec(P0(v)), 1 / dec(P0(B[b]))
+                if a + c > 1:
+                    lo, hi = 1.0, 3.0
+                    for _ in range(40):
+                        kk = (lo + hi) / 2
+                        lo, hi = (kk, hi) if a ** kk + c ** kk > 1 else (lo, kk)
+                    ks.setdefault(b, []).append((lo + hi) / 2)
+    K = {b: float(np.median(v)) for b, v in ks.items()}
+    out = []
+    for gid, nm, k, sd, line, A, B in mk:
+        ch = {}
+        for b, v in A.items():
+            if P0(v) is None:
+                continue
+            a = 1 / dec(P0(v))
+            ch[b] = a / (a + 1 / dec(P0(B[b]))) if b in B and P0(B[b]) is not None else min(a ** K.get(b, 1.05), .999)
+        for b in WF_BOOKS:
+            if b not in A or P0(A[b]) is None:
+                continue
+            ws = [(W_PROPS[x], q) for x, q in ch.items() if x != b and x in W_PROPS]
+            if len(ws) < 2:
+                continue
+            f = sum(w * q for w, q in ws) / sum(w for w, _ in ws)
+            if every or (f >= .08 and f * dec(P0(A[b])) - 1 >= .02):
+                out.append((gid, nm, k, sd, line, b, P0(A[b]), round(f, 4)))
+    return out
+
+
+def wfair(sport, PR, starts, now, PL):
+    fp = os.path.join(OUT, "profit_wfair.json")
+    try:
+        log = json.load(open(fp))
+    except (OSError, ValueError):
+        log = {}
+    for gid, nm, k, sd, line, b, o, f in _wfair_bets(PR):
+        st = starts.get(str(gid))
+        if st and PL.when(st) <= now:
+            continue
+        key = f"{sport}|{gid}|{nm}|{k}|{sd}|{line}|{b}"
+        e = log.setdefault(key, dict(sport=sport, gid=gid, name=nm, kind=k, side=sd, line=line, book=b, o=o, f=f, first=now.isoformat(), start=st))
+    # every run until the start: the book's latest price and the weighted fair now (the close)
+    cur = {f"{sport}|{gid}|{nm}|{k}|{sd}|{line}|{b}": (o, f) for gid, nm, k, sd, line, b, o, f in _wfair_bets(PR, every=True)}
+    for key, e in log.items():
+        if key in cur and e.get("res") is None and not (e.get("start") and PL.when(e["start"]) <= now):
+            e["close"], e["close_f"] = cur[key]
+    for key, e in log.items():
+        if e["sport"] != sport or e.get("res") is not None or not e.get("start") or PL.when(e["start"]) > now - dt.timedelta(hours=3):
+            continue
+        try:
+            g = PL.nhl_game(e["gid"]) if sport == "nhl" else PL.nfl_game(e["gid"], PL.et_date(e["start"]))
+        except Exception:                                                       # noqa: BLE001
+            g = None
+        if g:
+            e["res"] = PL.settle(dict(kind=e["kind"], side=e["side"], line=e["line"] if e["line"] is not None else .5, name=e["name"]), g)
+    json.dump(log, open(fp, "w"), separators=(",", ":"))
+    done = [e for e in log.values() if e["sport"] == sport and e.get("res") in ("W", "L")]
+    print(f"book-weighted fair ({sport}): {sum(1 for e in log.values() if e['sport'] == sport)} logged, {len(done)} settled, "
+          f"{sum((dec(e['o']) - 1) if e['res'] == 'W' else -1 for e in done):+.1f}u")
+
+
 def tags():
     import parlays as PL
     site = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")
@@ -396,6 +484,10 @@ def tags():
             PR = json.load(open(os.path.join(site, "markets", f"props_{sport}.json")))
         except (OSError, ValueError):
             continue
+        try:
+            wfair(sport, PR, starts, now, PL)
+        except Exception as e:                                                  # noqa: BLE001
+            print(f"book-weighted fair ({sport}): failed ({type(e).__name__}: {e})")
         # every live tag: first sighting keeps its price; later runs refresh the book's latest price (the close)
         for gid, tg in FL.get("tags", {}).items():
             st = starts.get(str(gid))
@@ -474,7 +566,7 @@ TRACK_SINCE = "Oct 18"
 def page_data():
     rows = []                                          # (sport, category, date, pnl, clv)
     for f in glob.glob(os.path.join(OUT, "profit_*.json")):
-        if f.endswith("profit_tags.json"):
+        if f.endswith(("profit_tags.json", "profit_wfair.json")):
             continue
         try:
             rs = json.load(open(f)).get("rows", [])
@@ -490,6 +582,20 @@ def page_data():
         clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
         rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} Value tags", date=(e.get("start") or e["first"])[:10],
                          pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
+    # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
+    try:
+        wl = [e for e in json.load(open(os.path.join(OUT, "profit_wfair.json"))).values() if e.get("res") in ("W", "L")]
+    except (OSError, ValueError):
+        wl = []
+    for sp_ in {e["sport"] for e in wl}:
+        y = [e for e in wl if e["sport"] == sp_]
+        pnl = [(dec(e["o"]) - 1) if e["res"] == "W" else -1.0 for e in y]
+        clv = [(e["close_f"] - 1 / dec(e["o"])) if e.get("close_f") is not None else None for e in y]
+        st = _stats(pnl, clv)
+        print(f"book-weighted fair ({sp_}): {st['n']} bets, {st['roi']:+.1%}, verdict {st['verdict']}")
+        if st["verdict"] in ("proven", "promising"):
+            for e, p_, c_ in zip(y, pnl, clv):
+                rows.append(dict(sport=sp_, cat=WF_CAT, date=(e.get("start") or e["first"])[:10], pnl=p_, clv=c_))
     for f in glob.glob(os.path.join(HERE, "parlays", "*", "*.json")):
         try:
             d = json.load(open(f))
