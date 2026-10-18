@@ -170,9 +170,66 @@ def apply_consensus(sport, now):
                 c = cons_of(parts)
                 if pin and "Pinnacle" in parts:
                     pin.update(pn=round(parts["Pinnacle"], 4), o=round(c, 4), parts={k: round(v, 4) for k, v in parts.items()})
+                    dl = _lg(c) - _lg(parts["Pinnacle"])              # alt lines carried from Pinnacle move with the consensus
+                    for x in (e.get("a") or {}).values():
+                        if x.get("pin") is not None and "pin_p" not in x:
+                            x["pin_p"] = x["pin"]
+                            x["pin"] = round(1 / (1 + math.exp(-(_lg(x["pin"]) + dl))), 4)
                 else:
                     e["pin"] = dict(l=float(el), o=round(c, 4), w=2, parts={k: round(v, 4) for k, v in parts.items()})
                 n += len(parts) > 1
+    # alt lines (and a books' main line that differs from Pinnacle's): the books' own two-way prices at that number beat
+    # carrying Pinnacle over by our distribution, which breaks when we sit far from the market (2026 wk 6: Cyrus Allen
+    # receiving yards, carried fair ~100% at 11.5 vs 48% at 12.5). 2+ books posting both sides: their no-vig median;
+    # 1 book: averaged with the carried number; none: the carried number only within 15% of Pinnacle's line.
+    for gid, g in PR.get("props", {}).items():
+        for nm, kinds in g.items():
+            for kind, e in kinds.items():
+                pin = e.get("pin") or {}
+                pl = pin.get("pl", pin.get("l"))
+                spots = [(float(l), x, False) for l, x in (e.get("a") or {}).items()]
+                if pin.get("w") == 3 and e.get("l") is not None:
+                    spots.append((float(e["l"]), e, True))
+                for line, x, is_main in spots:
+                    o, u = x.get("o") or {}, x.get("u") or {}
+                    nv = sorted(1 / dec(o[k][0]) / (1 / dec(o[k][0]) + 1 / dec(u[k][0])) for k in set(o) & set(u)
+                                if k not in ("Pinnacle", "Kalshi") and isinstance(o[k], list) and isinstance(u[k], list))
+                    carried = (pin.get("o") if is_main else x.get("pin"))
+                    near = pl is not None and abs(line - float(pl)) <= max(1.0, .15 * abs(float(pl)))
+                    if len(nv) >= 2:
+                        fair = nv[len(nv) // 2] if len(nv) % 2 else (nv[len(nv) // 2 - 1] + nv[len(nv) // 2]) / 2
+                    elif len(nv) == 1 and carried is not None:
+                        fair = 1 / (1 + math.exp(-(_lg(nv[0]) + _lg(carried)) / 2))
+                    elif len(nv) == 1:
+                        fair = nv[0]
+                    else:
+                        fair = carried if near else None
+                    if is_main:
+                        if fair is None:
+                            e.pop("pin", None)
+                        else:                                         # the carried number no longer feeds the consensus
+                            pin.update(o=round(fair, 4), parts={"Books": round(fair, 4)})
+                            if not near:
+                                pin.pop("pn", None)
+                    else:
+                        if fair is None:
+                            x.pop("pin", None)
+                        else:
+                            x["pin"] = round(fair, 4)
+                # a fair over chance can't rise with the line: pool adjacent out-of-order lines (isotonic, falling)
+                lad = sorted([(float(e["l"]), e["pin"], "o")] if e.get("pin") and e.get("l") is not None and e["pin"].get("l") == e.get("l") else [], key=lambda t: t[0])
+                lad += [(float(l), x, "pin") for l, x in (e.get("a") or {}).items() if x.get("pin") is not None]
+                lad.sort(key=lambda t: t[0])
+                if len(lad) >= 2:
+                    blocks = []
+                    for i, (_, obj, key) in enumerate(lad):
+                        blocks.append([obj[key], 1, [i]])
+                        while len(blocks) > 1 and blocks[-2][0] < blocks[-1][0]:
+                            v2, n2, ix2 = blocks.pop(); v1, n1, ix1 = blocks.pop()
+                            blocks.append([(v1 * n1 + v2 * n2) / (n1 + n2), n1 + n2, ix1 + ix2])
+                    for v, _, ix in blocks:
+                        for i in ix:
+                            lad[i][1][lad[i][2]] = round(v, 4)
     json.dump(PR, open(fp, "w"), separators=(",", ":"))
     try:
         FL = json.load(open(ff))
@@ -931,6 +988,10 @@ def hr_ou_merge(sport, now):
     except (OSError, ValueError):
         return
     n = 0
+    dist = {}
+    if sport == "nfl":
+        _, by = nfl_ours()
+        dist = {(str(g_), jsnorm(me["name"])): me["d"] for (g_, _n), me in (by or {}).items()}
     for gid, c in cache.items():
         if pd.Timestamp(c["start"]).tz_convert("UTC") <= now:
             continue
@@ -954,6 +1015,11 @@ def hr_ou_merge(sport, now):
                         continue
                     for sd, v in sides.items():
                         tgt.setdefault(sd, {})["Hard Rock"] = v
+                    if tgt.get("p") is None and kind != "sog":
+                        d = dist.get((gid, nm), {}).get(kind)
+                        po = p_over(d, float(line)) if d else None
+                        if po is not None:
+                            tgt["p"] = round(po, 4)
                     n += 1
     json.dump(PR, open(fp, "w"), separators=(",", ":"))
     print(f"hard rock {sport} o/u: merged {n} prices")
