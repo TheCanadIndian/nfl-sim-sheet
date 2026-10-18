@@ -137,10 +137,84 @@ def nba_ladder_rows(date, mk, R, GM):
     return out
 
 
+import re as _re
+import unicodedata as _ud
+
+
+def _norm(s):
+    """Same as sharp.jsnorm / mkt.js norm()."""
+    s = _ud.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
+    s = _re.sub(r"[^a-z ]", "", s)
+    s = _re.sub(r"\b(jr|sr|ii|iii|iv)\b", "", s)
+    return _re.sub(r"\s+", " ", s).strip()
+
+
+def pin_close(sport):
+    """Pinnacle's last logged price before each game: (props {gid: props}, lines {gid: entry}), from
+    markets/pin_<sport>_history.json (player props) and markets/pin_lines_<sport>.json (game lines)."""
+    def last(f):
+        try:
+            log = json.load(open(os.path.join(OUT, f)))
+        except (OSError, ValueError):
+            return {}
+        out = {}
+        ts = lambda x: pd.Timestamp(x).tz_convert("UTC") if pd.Timestamp(x).tzinfo else pd.Timestamp(x).tz_localize("UTC")
+        for e in log:
+            f_ = ts(e["fetched"])
+            if e.get("start") and f_ > ts(e["start"]):
+                continue
+            g = str(e["gid"])
+            if g not in out or f_ > out[g]["_t"]:
+                out[g] = dict(e, _t=f_)
+        return out
+    return last(f"pin_{sport}_history.json"), last(f"pin_lines_{sport}.json")
+
+
+def _nv2(a, b):
+    """Two-way multiplicative de-vig of American odds a / b: the a side's fair chance."""
+    if a is None or b is None:
+        return None
+    x, y = 1 / dec(a), 1 / dec(b)
+    return x / (x + y)
+
+
+PIN_PROP = {"rec": "rec", "rec_yds": "rec_yds", "rush_yds": "rush_yds", "pass_yds": "pass_yds", "anytime_td": "td"}
+
+
+def close_fair(sport, r, PP, PL):
+    """Pinnacle's fair (no-vig) closing chance that the YES side of market row r wins, or None if it can't be matched
+    exactly (same player and line). Anytime TD is one-way: power de-vig with k = 1.04."""
+    gid, k, line = str(r["game"]), r.get("kind"), r.get("line")
+    name = _norm(str(r.get("title") or "").split(":")[0])
+    if sport == "nhl" and k == "goal" and (line or .5) < 1:
+        x = ((PP.get(gid) or {}).get("props") or {}).get(name)
+        return _nv2(x[0], x[1]) if x else None
+    if sport == "nfl" and k in PIN_PROP:
+        x = (((PP.get(gid) or {}).get("props") or {}).get(name) or {}).get(PIN_PROP[k])
+        if not x:
+            return None
+        if k == "anytime_td":
+            return min(.99, (1 / dec(x[1])) ** 1.04) if x[1] is not None else None
+        return _nv2(x[1], x[2]) if line is not None and abs(float(x[0]) - float(line)) < 1e-9 else None
+    L = PL.get(gid)
+    if not L:
+        return None
+    if k == "win":
+        team = str(r.get("ticker") or "").rsplit("-", 1)[-1]
+        side = "home" if team == r.get("home") else "away" if team == r.get("away") else None
+        m = L.get("ml") or {}
+        return _nv2(m.get(side), m.get("away" if side == "home" else "home")) if side else None
+    if k == "total" and line is not None and "over" in str(r.get("title") or "").lower():
+        t = (L.get("total") or {}).get(f"{float(line):g}") or {}
+        return _nv2(t.get("over"), t.get("under"))
+    return None
+
+
 def market_rows(sport):
     import grade_markets as GM
     R = {"nfl": GM.nfl_results, "nhl": GM.nhl_results, "nba": GM.nba_results, "mlb": GM.mlb_results}[sport]()
     rows = []
+    PP, PL = pin_close(sport)
     for f in sorted(glob.glob(os.path.join(OUT, f"{sport}_20??-??-??.json"))):
         date = os.path.basename(f)[len(sport) + 1:len(sport) + 11]
         mk = json.load(open(f)).get("markets", [])
@@ -194,8 +268,11 @@ def market_rows(sport):
             if y is None:
                 continue
             hit = y if bet == "YES" else 1 - y
+            fy = close_fair(sport, r, PP, PL)                      # Pinnacle's fair closing chance (YES side)
+            fair = None if fy is None else (fy if bet == "YES" else 1 - fy)
             rows.append(dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
-                             q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4)))
+                             q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4),
+                             clv=None if fair is None else round(fair - cost, 4)))
         if sport == "nfl":
             rows += ladder_rows(date, mk, R, GM)
         if sport == "nba":
@@ -314,7 +391,7 @@ def page_data():
         if f.endswith("profit_tags.json"):
             continue
         for r in json.load(open(f)).get("rows", []):
-            rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=None))
+            rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=r.get("clv")))
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         if e.get("res") not in ("W", "L"):
@@ -370,7 +447,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 </style></head><body><div class="wrap">
 <header><div><div class="eyebrow">All sports</div><h1>Profit</h1></div></header>
 <main id="main"></main>
-<footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and CLV compares it with that book's last price before the game (positive = you beat the closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets); Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets.</footer>
+<footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets); Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets.</footer>
 </div><script>
 const D = __DATA__;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
