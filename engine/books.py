@@ -252,6 +252,9 @@ def log_pinnacle(sport, G, games, now):
 # every 15 min), 3 credits a call for every game in that window. Kept in markets/close_<sport>.json for close_study.py.
 CLOSE_BOOKS = ["pinnacle", "novig", "kalshi", "hardrockbet", "draftkings", "fanduel", "betmgm", "betfair_ex_eu", "prophetx", "polymarket"]
 CLOSE_MIN = 20
+CLOSE_PROPS = {"nhl": ["player_goal_scorer_anytime", "player_shots_on_goal"],
+               "nba": ["player_points", "player_rebounds", "player_assists", "player_threes"],
+               "nfl": ["player_reception_yds", "player_receptions", "player_rush_yds", "player_pass_yds", "player_anytime_td"]}
 CLOSE_LOG = os.path.join(M.OUT, "close_{}.json")
 
 
@@ -283,10 +286,33 @@ def close_log(sport, now, st):
         x = G.get(str(g["id"]))
         if x:
             log.append(dict(gid=str(g["id"]), start=str(g["start"]), fetched=now.isoformat(), home=g["home"], away=g["away"], lines=x))
+    # player props for the same games, same ten books: one event call each (about 1 credit per market with data)
+    ev = requests.get(f"https://api.the-odds-api.com/v4/sports/{KEYS[sport]}/events", params=dict(apiKey=k), timeout=30)   # free
+    evs = {(NAMES[sport].get(e["away_team"]), NAMES[sport].get(e["home_team"])): e["id"] for e in (ev.json() if ev.status_code == 200 else [])}
+    np_ = 0
+    for g in due:
+        e = next((x for x in log if x["gid"] == str(g["id"])), None)
+        eid = evs.get((g["away"], g["home"]))
+        if not e or not eid or not budget_ok(st, now):
+            continue
+        q = requests.get(f"https://api.the-odds-api.com/v4/sports/{KEYS[sport]}/events/{eid}/odds", timeout=30,
+                         params=dict(apiKey=k, bookmakers=",".join(CLOSE_BOOKS), markets=",".join(CLOSE_PROPS[sport]), oddsFormat="american"))
+        u = int(q.headers.get("x-requests-last") or 0)
+        st["spent_today"] = st.get("spent_today", 0) + u
+        if q.headers.get("x-requests-remaining"):
+            st["remaining"] = int(float(q.headers["x-requests-remaining"]))
+        if q.status_code != 200:
+            continue
+        P = {}                                          # {market: {book: [[player, side, point, price], ...]}}
+        for b in q.json().get("bookmakers", []):
+            for m in b.get("markets", []):
+                P.setdefault(m["key"], {})[b["key"]] = [[o.get("description"), o.get("name"), o.get("point"), o.get("price")] for o in m.get("outcomes", [])]
+        e["props"] = P
+        np_ += 1
     cut = (now - pd.Timedelta(days=400)).isoformat()
     log = [e for e in log if e["fetched"] >= cut]
     json.dump(log, open(f, "w"), separators=(",", ":"))
-    print(f"close {sport}: snapshot of {sum(1 for g in due if str(g['id']) in G)} games ({used} credits, {st.get('remaining')} left)")
+    print(f"close {sport}: snapshot of {sum(1 for g in due if str(g['id']) in G)} games, props for {np_} ({st.get('remaining')} credits left)")
 
 
 def merge(sport, now):
