@@ -148,6 +148,9 @@ def espn_rosters(teams):
     return out, qb1
 
 
+_ESPN_QB = {}        # team -> starting QB's full name from ESPN's official game roster (filled by espn_out)
+
+
 def espn_out(todo):
     """Game-day Out / Doubtful from ESPN for these games: {(team, normalized name): status}. The weekly
     practice report never shows game-day decisions (a Questionable player ruled out at inactives), so
@@ -185,6 +188,14 @@ def espn_out(todo):
                                       f"/competitors/{c['team']['id']}/roster", headers=H, timeout=20).json()
                 except Exception:
                     continue
+                # the official starting QB (game roster 'starter', position 8 = QB): beats the schedule and depth chart
+                # (2026 wk 6: Caleb Williams back from injury, Tanner McKee for Jalen Hurts)
+                sq = [x for x in ro.get("entries", []) if x.get("starter") and not x.get("didNotPlay")
+                      and str((x.get("position") or {}).get("$ref", "")).split("/positions/")[-1].split("?")[0] == "8"]
+                if len(sq) == 1:
+                    nm = _espn_name(sq[0])
+                    if nm:
+                        _ESPN_QB[team] = nm
                 dnp = [x for x in ro.get("entries", []) if x.get("didNotPlay")]
                 if not 1 <= len(dnp) <= 15:                       # not posted yet (or not the inactives list)
                     continue
@@ -288,6 +299,15 @@ def future_actives(con, todo, season, week, overrides):
         late = late[~late.player_id.isin(inj[inj.report_status.isin(["Out", "Doubtful"])].player_id)]
         inj = pd.concat([inj, pd.DataFrame(dict(team=late.team, player_id=late.player_id, full_name=late.full_name,
                                                 report_status=[game_day[k] + " (ESPN game day)" for k in late.k]))])
+    # ESPN's live roster also marks players Out / Doubtful / Injured Reserve / suspended / PUP: they're out even when the
+    # weekly roster and injury files lag (2026 wk 6: Jalen Hurts on IR on ESPN, 'ACT' in the weekly roster)
+    if live:
+        eb = active_roster[[t in live and not healthy(t, n) and _norm(n) in live[t] for t, n in zip(active_roster.team, active_roster.full_name)]]
+        eb = eb[~eb.player_id.isin(inj[inj.report_status.astype(str).str.match(r"(Out|Doubtful)")].player_id)]
+        if len(eb):
+            st = [next((x for x in live[t][_norm(n)][1:] + live[t][_norm(n)][:1] if x.lower() in ESPN_BAD), "Out") for t, n in zip(eb.team, eb.full_name)]
+            inj = pd.concat([inj, pd.DataFrame(dict(team=eb.team, player_id=eb.player_id, full_name=eb.full_name,
+                                                    report_status=[f"Out ({x}, ESPN)" for x in st]))])
     out_inj = inj[inj.report_status.astype(str).str.match(r"(Out|Doubtful)")]
 
     rows, qbs, notes = [], {}, []
@@ -303,6 +323,13 @@ def future_actives(con, todo, season, week, overrides):
     for g in todo.itertuples():
         for team, qb_id in ((g.home_team, g.home_qb_id), (g.away_team, g.away_qb_id)):
             d1, ls = qb1.get(team), last_starter.get(team)
+            if team in _ESPN_QB:                                    # ESPN's official starter, posted ~90 min before kickoff
+                m = roster[(roster.team == team) & (roster.full_name.map(_norm) == _norm(_ESPN_QB[team]))]
+                if len(m) and m.player_id.iloc[0] != qb_id:
+                    notes.append(f"{team}: starting QB -> {m.full_name.iloc[0]} (ESPN official starter; schedule had {qb_id})")
+                    qb_id = m.player_id.iloc[0]
+                    if qb_id not in set(active_roster.player_id):
+                        active_roster = pd.concat([active_roster, m.assign(status="ACT")])
             if d1 is not None and d1 == ls and d1 != qb_id and d1 not in set(out_inj.player_id):
                 nm = names.loc[names.player_id == d1, "full_name"]
                 notes.append(f"{team}: starting QB -> {nm.iloc[0] if len(nm) else d1} (depth chart QB1 and last game's starter; schedule had {qb_id})")
