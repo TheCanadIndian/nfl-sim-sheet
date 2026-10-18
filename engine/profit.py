@@ -424,7 +424,7 @@ def _stats(pnl, clv=None):
     roi, sd = float(a.mean()), float(a.std(ddof=1)) if n > 1 else 0.0
     moe = 1.96 * sd / math.sqrt(n) if n > 1 else None
     out = dict(n=n, won=int((a > 0).sum()), units=round(float(a.sum()), 2), roi=round(roi, 4), moe=None if moe is None else round(moe, 4))
-    c = None if clv is None else np.asarray([x for x in clv if x is not None], float)
+    c = None if clv is None else np.asarray([x for x in clv if x is not None and x == x], float)    # x == x drops NaN
     if c is not None and len(c):
         out.update(clv=round(float(c.mean()), 4), clv_beat=round(float((c > 0).mean()), 3), clv_n=int(len(c)),
                    clv_z=round(float(c.mean() / (c.std(ddof=1) / math.sqrt(len(c)))), 2) if len(c) > 1 and c.std(ddof=1) > 0 else None)
@@ -551,7 +551,8 @@ function render(){
       <td>${pc(c.roi)}<small>± ${c.moe != null ? (c.moe * 100).toFixed(0) : '–'}%</small></td><td>${c.clv != null ? `${pc(c.clv, 1)}<small>${Math.round(c.clv_beat * 100)}% of ${c.clv_n}</small>` : '<span class="muted">–</span>'}</td>
       <td>${c.n30 ? pc(c.roi30, 0) + `<small>${c.n30} bets</small>` : '<span class="muted">–</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
   const T = D.track || [], by = {}; T.forEach(t => (by[t.base] = by[t.base] || []).push(t));
-  const tcell = t => t.n ? `${pc(t.roi)}<small> ± ${t.moe != null ? (t.moe * 100).toFixed(0) : '–'}%</small>` : '<span class="wait">waiting for results</span>';
+  const tcell = t => !t.n ? '<span class="wait">waiting for results</span>'
+    : t.n < 30 ? `<span class="wait" title="Fewer than 30 bets: too early to read">${pc(t.roi)} · too early</span>` : `${pc(t.roi)}<small> ± ${t.moe != null ? (t.moe * 100).toFixed(0) : '–'}%</small>`;
   const ccell = t => t.clv != null ? `${pc(t.clv, 1)}<small> on ${t.clv_n}</small>` : '<span class="wait">–</span>';
   const track = T.length ? `<section class="panel"><div class="phead"><h2>New rules being tested <span class="tag3">since ${esc(D.since || '')}</span></h2></div>
     <p class="note" style="margin:0 0 10px">Each current rule is graded next to two versions that use the sharp market as the main input: our number weighted 10-25% against Pinnacle’s no-vig line, or against the consensus of Pinnacle, Novig and ProphetX. Same Kalshi quotes, same edge bar. Beat close = the sharp closing chance minus the price paid (positive = real value); it settles in weeks, the return takes months.</p>
