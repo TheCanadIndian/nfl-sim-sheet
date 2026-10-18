@@ -108,6 +108,31 @@ def _norm(n):
     return re.sub(r"\s+(jr|sr|ii|iii|iv|v)$", "", n).strip()
 
 
+def espn_rosters(teams):
+    """{team: set of normalized names} from ESPN's live team rosters, for the teams playing. The weekly roster file
+    lags a midweek release or trade by days (2026 wk 6: Marquez Valdes-Scantling, released by LAC, still 'ACT').
+    Teams whose roster doesn't come back complete (under 40 players) are skipped, so a network hiccup never empties one."""
+    import requests
+    H, out = {"User-Agent": "Mozilla/5.0"}, {}
+    try:
+        T = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams", headers=H, timeout=20).json()
+        T = T["sports"][0]["leagues"][0]["teams"]
+    except Exception:
+        return {}
+    for t in T:
+        ab = ESPN_TEAM.get(t["team"]["abbreviation"], t["team"]["abbreviation"])
+        if ab not in teams:
+            continue
+        try:
+            r = requests.get(f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/{t['team']['id']}/roster", headers=H, timeout=20).json()
+        except Exception:
+            continue
+        names = {_norm(a.get("fullName")) for g in r.get("athletes", []) for a in g.get("items", [])}
+        if len(names) >= 40:
+            out[ab] = names
+    return out
+
+
 def espn_out(todo):
     """Game-day Out / Doubtful from ESPN for these games: {(team, normalized name): status}. The weekly
     practice report never shows game-day decisions (a Questionable player ruled out at inactives), so
@@ -214,6 +239,12 @@ def future_actives(con, todo, season, week, overrides):
                                ON r.team = m.team AND r.week = m.wk
                              WHERE r.season={season}""", con)
     active_roster = roster[roster.status == "ACT"]
+    live = espn_rosters(set(todo.home_team) | set(todo.away_team))
+    if live:
+        gone = active_roster[active_roster.team.isin(live) & ~[_norm(n) in live.get(t, set()) for t, n in zip(active_roster.team, active_roster.full_name)]]
+        if len(gone):
+            print(f"  not on ESPN's live roster (released / traded / moved), dropped: " + ", ".join(f"{n} ({t})" for t, n in zip(gone.team, gone.full_name)))
+        active_roster = active_roster.drop(gone.index)
     depth = pd.read_sql(f"""SELECT team, gsis_id AS player_id, pos_abb, pos_rank FROM depth_charts
                             WHERE season={season}
                               AND dt=(SELECT MAX(dt) FROM depth_charts WHERE season={season})""", con)
