@@ -513,7 +513,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
             const pin = pinOk(e) ? (sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
             const w = (opts.wOurs || {})[k] ?? .5, m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
-            if (opts.sport === 'nfl' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(k) && (p < .5 || (m != null && Math.abs(p - m) < .10))) continue;
+            if ((opts.sport === 'nfl' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(k) || opts.sport === 'nba') && (p < .5 || (m != null && Math.abs(p - m) < .10))) continue;
             const isSog = k.startsWith('sog');
             const leg = {gid, start: startOf[gid], kind: isSog ? 'sog' : k, side: sd, line: isSog ? +k.slice(3) / 10 : (e.l ?? .5), name: nm,
                          lab: `${name} ${e.l != null ? (sd === 'o' ? 'over ' : 'under ') + e.l + ' ' : ''}${opts.propKinds[k]}`, p: +q.toFixed(4), price: b[1], book: b[0]};
@@ -618,23 +618,25 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         return {sd, k: c[0][0], o: c[0][1][0], path: c[0][1][1], other: c[1], p0, m, ev: p == null ? null : p * dec(c[0][1][0]) - 1}; })
         .filter(Boolean).sort((a, b) => (a.other - b.other) || ((b.ev ?? -9) - (a.ev ?? -9)));
       const c = opts[0]; if (!c) return '<span class="muted">–</span>';
-      const url = `https://www.gambly.com/deeplink/odds/${c.path}?utm_campaign=${encodeURIComponent(PR.partner || '')}`;
+      // Gambly path (Unabated: partner code required) or a direct sportsbook link (The Odds API); none = plain text
+      const lk = p_ => !p_ ? null : String(p_).startsWith('http') ? p_ : `https://www.gambly.com/deeplink/odds/${p_}?utm_campaign=${encodeURIComponent(PR.partner || '')}`;
+      const url = lk(c.path);
       const sideOk = sport !== 'nfl' || !['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(kind) || (c.p0 != null && c.p0 >= .5 && (c.m == null || Math.abs(c.p0 - c.m) >= .10));
       const v = !c.other && !e.w && sideOk && c.ev != null && c.ev >= (FL && FL.min_ev || .05);
       const lab = e.l != null ? `${c.sd === 'o' ? 'O' : 'U'} ${e.l} ` : '';
       const tip = `${c.other ? 'None of your books has this; best elsewhere. ' : ''}${lab ? (c.sd === 'o' ? 'Over ' : 'Under ') + e.l + ': ' : ''}${esc(FULL[c.k] || c.k)} ${am(c.o)}${c.ev != null ? ` · ${c.m != null ? `ours ${(c.p0 * 100).toFixed(1)}%, ${e.pin ? 'Pinnacle no-vig' : 'market'} ${(c.m * 100).toFixed(1)}%, blended ` : ''}edge ${c.ev >= 0 ? '+' : ''}${(c.ev * 100).toFixed(1)}%` : ''}${e.w ? ' (not highlighted: outside our top 3 in this game, or far enough from the market to suggest news; those picks have lost)' : ''}. Tap to open this bet.`;
-      const pinP = (sport === 'nfl' || sport === 'nhl') && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
+      const pinP = ['nfl', 'nhl', 'nba'].includes(sport) && pinOk(e) ? (c.sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
       // the bet that beats Pinnacle's no-vig by the most: any book, main or alt line
       const cands = [];
       const addC = (sd, line, q, prices, alt) => { if (q == null) return; for (const [k, v] of Object.entries(prices || {})){
         if (NOBET.has(k) || SKIP.has(k) || !Array.isArray(v)) continue; const qq = sd === 'o' ? q : 1 - q; cands.push({sd, line, q: qq, k, o: v[0], path: v[1], alt, pe: qq * dec(v[0]) - 1}); } };
       if (pinP != null){ addC('o', e.l, e.pin.o, e.o, 0); addC('u', e.l, e.pin.o, e.u, 0); }
-      if (sport === 'nfl') for (const [al, x] of Object.entries(e.a || {})){ addC('o', +al, x.pin, x.o, 1); addC('u', +al, x.pin, x.u, 1); }
+      if (sport === 'nfl' || sport === 'nba') for (const [al, x] of Object.entries(e.a || {})){ addC('o', +al, x.pin, x.o, 1); addC('u', +al, x.pin, x.u, 1); }
       const pb = cands.sort((a, b) => b.pe - a.pe)[0];
       const pinChip = pb && pb.pe > 0
-        ? ` <a class="pinv" href="${esc(`https://www.gambly.com/deeplink/odds/${pb.path}?utm_campaign=${encodeURIComponent(PR.partner || '')}`)}" target="_blank" rel="noopener" title="${esc(`${pb.line != null ? (pb.sd === 'o' ? 'Over ' : 'Under ') + pb.line + (pb.alt ? ' (alt line)' : '') + ': ' : ''}${FULL[pb.k] || pb.k} ${am(pb.o)} pays ${(pb.pe * 100).toFixed(1)}% more than Pinnacle's fair price (${(pb.q * 100).toFixed(1)}%: ${pinHow(pb.alt ? 3 : e.pin && e.pin.w, e.pin && (e.pin.pl ?? e.pin.l))}). Tap to open this bet.`)}">Pin <b>+${(pb.pe * 100).toFixed(1)}%</b> ${pb.line != null && (pb.alt || pb.sd !== c.sd) ? (pb.sd === 'o' ? 'O' : 'U') + pb.line + ' ' : ''}${esc(BKS[pb.k] || pb.k)}${pb.alt || pb.sd !== c.sd || pb.k !== c.k ? ' ' + am(pb.o) : ''}</a>`
+        ? ` <a class="pinv" href="${esc(lk(pb.path) || '#')}" target="_blank" rel="noopener" title="${esc(`${pb.line != null ? (pb.sd === 'o' ? 'Over ' : 'Under ') + pb.line + (pb.alt ? ' (alt line)' : '') + ': ' : ''}${FULL[pb.k] || pb.k} ${am(pb.o)} pays ${(pb.pe * 100).toFixed(1)}% more than Pinnacle's fair price (${(pb.q * 100).toFixed(1)}%: ${pinHow(pb.alt ? 3 : e.pin && e.pin.w, e.pin && (e.pin.pl ?? e.pin.l))}). Tap to open this bet.`)}">Pin <b>+${(pb.pe * 100).toFixed(1)}%</b> ${pb.line != null && (pb.alt || pb.sd !== c.sd) ? (pb.sd === 'o' ? 'O' : 'U') + pb.line + ' ' : ''}${esc(BKS[pb.k] || pb.k)}${pb.alt || pb.sd !== c.sd || pb.k !== c.k ? ' ' + am(pb.o) : ''}</a>`
         : pinP != null ? ` <span class="pinv neg" title="Pinnacle's no-vig chance for this side (${pinHow(e.pin.w, e.pin.pl ?? e.pin.l)}); no book beats its fair price">Pin ${e.pin.w === 3 ? '≈' : ''}${(pinP * 100).toFixed(0)}%</span>` : '';
-      return `<a class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}" href="${esc(url)}" target="_blank" rel="noopener" title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</a>${pinChip}`;
+      return `<${url ? 'a' : 'span'} class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}"${url ? ` href="${esc(url)}" target="_blank" rel="noopener"` : ''} title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</${url ? 'a' : 'span'}>${pinChip}`;
     },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
     flag(gid, name){

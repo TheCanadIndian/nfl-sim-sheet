@@ -839,6 +839,104 @@ def hr_merge(sport, now):
     print(f"hard rock {sport}: merged {sum(len(c['prices']) for c in cache.values())} prices, {nt} new Value tags")
 
 
+# ---------------------------------------------------------------- NBA player props (The Odds API; Unabated has none yet)
+NBA_MKT = {"player_points": "pts", "player_rebounds": "reb", "player_assists": "ast", "player_threes": "fg3m"}
+NBA_BOOKS = ["pinnacle", "novig", "hardrockbet", "draftkings", "fanduel", "betmgm", "williamhill_us", "fanatics", "espnbet", "betrivers"]
+NBA_SHORT = {"draftkings": "DK", "fanduel": "FD", "betmgm": "MGM", "williamhill_us": "Caesars", "fanatics": "Fanatics", "novig": "Novig",
+             "hardrockbet": "Hard Rock", "espnbet": "ESPN BET", "betrivers": "BetRivers", "pinnacle": "Pinnacle"}
+NBA_HOURS, NBA_REFRESH = 8.0, 120       # games within 8 h of tip-off, re-pulled every 2 h (4 credits a game: one per market)
+NBA_CACHE = os.path.join(M.OUT, "oa_props_nba.json")
+
+
+def _link(u):
+    """A bet link we can publish: direct and complete (links with a {state} / {wagerAmount} placeholder are dropped)."""
+    return u if u and str(u).startswith("http") and "{" not in str(u) else None
+
+
+def oa_nba(now):
+    """NBA points / rebounds / assists / threes from ten books (one region's cost), Pinnacle de-vigged as the reference
+    (multiplicative; the 2025-26 study found methods within 0.001 log-loss). Published as props_nba.json for the page:
+    main line = the line most books price on both sides; our over chance from the With-Vegas distribution."""
+    k = B.key()
+    O = M.ours_nba() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=NBA_HOURS)}
+    try:
+        cache = json.load(open(NBA_CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    todo = {ga: g for ga, g in games.items() if stale(cache.get(str(g["id"])), now, NBA_REFRESH)}
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
+        bst = B.load_state()
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nba"].get(e["away_team"]), B.NAMES["nba"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nba props: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/basketball_nba/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers=",".join(NBA_BOOKS), markets=",".join(NBA_MKT), oddsFormat="american", includeLinks="true"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}                                   # {player: {kind: {line: {o|u: {book: [odds, link]}}}}}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    kind = NBA_MKT.get(m["key"])
+                    for o in m.get("outcomes", []):
+                        side = {"over": "o", "under": "u"}.get((o.get("name") or "").lower())
+                        if not kind or not side or o.get("point") is None or not o.get("description"):
+                            continue
+                        P.setdefault(jsnorm(o["description"]), {}).setdefault(kind, {}).setdefault(f"{float(o['point']):g}", {}) \
+                         .setdefault(side, {})[NBA_SHORT.get(b["key"], b["key"])] = [int(o["price"]), _link(o.get("link") or b.get("link"))]
+            if P:
+                cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+                print(f"odds api nba props: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+            else:
+                print(f"odds api nba props: {g['away']} @ {g['home']}: not posted yet")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(NBA_CACHE, "w"), separators=(",", ":"))
+    # publish: one main line per player-stat
+    dist = {(int(p["g"]), jsnorm(p["n"])): p.get("d", {}).get("vegas", {}) for p in O.get("players", [])}
+    out = {}
+    for gid, c in cache.items():
+        if pd.Timestamp(c["start"]).tz_convert("UTC") <= now:
+            continue
+        for nm, kinds in c["props"].items():
+            for kind, lines in kinds.items():
+                two = {l: x for l, x in lines.items() if x.get("o") and x.get("u")}
+                if not two:
+                    continue
+                main = max(two, key=lambda l: len(set(two[l]["o"]) & set(two[l]["u"])))
+                x = two[main]
+                e = dict(l=float(main), o=x["o"], u=x["u"])
+                d = dist.get((int(gid), nm), {}).get(kind)
+                po = M.p_over(d, float(main)) if d else None
+                if po is not None:
+                    e["p"] = round(po, 4)
+                pn = (x["o"].get("Pinnacle"), x["u"].get("Pinnacle"))
+                if pn[0] and pn[1]:
+                    a_, b_ = 1 / dec(pn[0][0]), 1 / dec(pn[1][0])
+                    e["pin"] = dict(l=float(main), o=round(a_ / (a_ + b_), 4), w=2)
+                alts = {l: dict(o=v.get("o", {}), u=v.get("u", {}), **({"p": round(M.p_over(d, float(l)), 4)} if d and M.p_over(d, float(l)) is not None else {}))
+                        for l, v in lines.items() if l != main}
+                if alts:
+                    e["a"] = alts
+                out.setdefault(gid, {}).setdefault(nm, {})[kind] = e
+    if out:
+        PROPS["nba"] = out
+        write_props("nba", now)
+        print(f"odds api nba props: published {sum(len(v) for v in out.values())} players")
+
+
 def write_props(sport, now):
     """Publish PROPS[sport] as <site>/markets/props_<sport>.json, keeping kinds this pull didn't get (< 12 h old)."""
     fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
@@ -861,6 +959,11 @@ def write_props(sport, now):
 
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
+    if not argv or "nba" in argv:
+        try:
+            oa_nba(now)
+        except Exception as e:                       # never break the markets run
+            print(f"odds api nba props: skipped ({type(e).__name__}: {e})")
     try:
         st = json.load(open(STATE))
     except (OSError, ValueError):
