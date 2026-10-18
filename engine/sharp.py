@@ -861,6 +861,104 @@ def pin_merge_nhl(now):
     print(f"pinnacle nhl: no-vig attached to {n} anytime-goal props")
 
 
+# ---------------------------------------------------------------- Hard Rock over/under props (The Odds API)
+HR_OU = {"nfl": ("americanfootball_nfl", {"player_reception_yds": "rec_yds", "player_receptions": "rec", "player_rush_yds": "rush_yds",
+                                          "player_pass_yds": "pass_yds"}),
+         "nhl": ("icehockey_nhl", {"player_shots_on_goal": "sog"})}
+HR_OU_CACHE = os.path.join(M.OUT, "hr_ou_{}.json")
+
+
+def hr_ou_pull(sport, now):
+    """Hard Rock's over/under player props (NFL yardage and catches, NHL shots on goal), games within 6 h, hourly; about
+    1 credit per market per game. Cache: {gid: {fetched, start, props: {player: {kind: {line: {o: [odds, link], u: [...]}}}}}}."""
+    k = B.key()
+    if not k or sport not in HR_OU:
+        return
+    key, mkts = HR_OU[sport]
+    O = (M.ours_nhl if sport == "nhl" else M.ours_nfl)() or {}
+    soon = {(g["away"], g["home"]): g for g in O.get("games", [])
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=6)}
+    f = HR_OU_CACHE.format(sport)
+    try:
+        cache = json.load(open(f))
+    except (OSError, ValueError):
+        cache = {}
+    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, HR_REFRESH)}
+    if todo:
+        r = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events", params=dict(apiKey=k), timeout=30)   # free
+        bst = B.load_state()
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES[sport].get(e["away_team"]), B.NAMES[sport].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print(f"hard rock {sport} o/u: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers="hardrockbet", markets=",".join(mkts), oddsFormat="american", includeLinks="true"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    kind = mkts.get(m["key"])
+                    for o in m.get("outcomes", []):
+                        side = {"over": "o", "under": "u"}.get((o.get("name") or "").lower())
+                        if kind and side and o.get("point") is not None and o.get("description"):
+                            P.setdefault(jsnorm(o["description"]), {}).setdefault(kind, {}).setdefault(f"{float(o['point']):g}", {})[side] = \
+                                [int(o["price"]), _link(o.get("link") or b.get("link"))]
+            cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+            print(f"hard rock {sport} o/u: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(f, "w"), separators=(",", ":"))
+
+
+def hr_ou_merge(sport, now):
+    """Put Hard Rock's over/under prices on the published props: the main line when it matches, else that line's alt entry
+    (NHL shots: each line is its own kind, sog05 / sog15 / ...)."""
+    try:
+        cache = json.load(open(HR_OU_CACHE.format(sport)))
+    except (OSError, ValueError):
+        return
+    fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
+    try:
+        PR = json.load(open(fp))
+    except (OSError, ValueError):
+        return
+    n = 0
+    for gid, c in cache.items():
+        if pd.Timestamp(c["start"]).tz_convert("UTC") <= now:
+            continue
+        G = PR.get("props", {}).get(gid, {})
+        for nm, kinds in c["props"].items():
+            pl = G.get(nm)
+            if not pl:
+                continue
+            for kind, lines in kinds.items():
+                for line, sides in lines.items():
+                    if kind == "sog":
+                        e = pl.get(f"sog{int(round(float(line) * 10)):02d}")
+                        tgt = e
+                    else:
+                        e = pl.get(kind)
+                        if not e:
+                            continue
+                        tgt = e if e.get("l") is not None and abs(float(e["l"]) - float(line)) < 1e-9 else \
+                            e.setdefault("a", {}).setdefault(line, {})
+                    if tgt is None:
+                        continue
+                    for sd, v in sides.items():
+                        tgt.setdefault(sd, {})["Hard Rock"] = v
+                    n += 1
+    json.dump(PR, open(fp, "w"), separators=(",", ":"))
+    print(f"hard rock {sport} o/u: merged {n} prices")
+
+
 def hr_merge(sport, now):
     """Add Hard Rock's prices to the published prices (props_<sport>.json) and Value tags (flags_<sport>.json)."""
     try:
@@ -1114,6 +1212,8 @@ def main(argv):
         try:
             hr_pull(sport, now, st)
             hr_merge(sport, now)
+            hr_ou_pull(sport, now)
+            hr_ou_merge(sport, now)
             if sport == "nfl":
                 pin_pull(now)
                 pin_merge(now)
