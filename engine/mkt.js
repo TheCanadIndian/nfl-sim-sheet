@@ -868,7 +868,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const prices = o => Object.entries(o || {}).filter(([k]) => !SKIP.has(k) && !NOBET.has(k)).map(([k, v]) => ({k, name: FULL[k] || k, o: Array.isArray(v) ? v[0] : v, u: link(Array.isArray(v) ? v[1] : null)}))
         .filter(x => x.o != null).sort((a, b) => dec(b.o) - dec(a.o));
       const rung = (l, main, p, fair, o) => { const P = prices(o), M = P.filter(x => mine(x.k));
-        out.push({l, main, p: p ?? null, fair: fair ?? null, mid: null, w: fair != null ? wOf(sport, kind, true) : .5, best: M[0] || null, any: P[0] || null, n: P.length}); };
+        out.push({l, main, p: p ?? null, fair: fair ?? null, mid: null, w: fair != null ? wOf(sport, kind, true) : .5, best: M[0] || null, any: P[0] || null, n: P.length, all: P.map(x => ({...x, mine: mine(x.k)}))}); };
       if (e && e.l != null) rung(+e.l, true, e.p, pinOk(e) ? e.pin.o : null, e.o);
       if (e) for (const [al, x] of Object.entries(e.a || {})) if (!out.some(r => Math.abs(r.l - al) < 1e-9)) rung(+al, false, x.p, x.pin, x.o);
       // Kalshi's live board has more rungs than the props feed; quotes wider than 10c say nothing about the price
@@ -876,7 +876,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const q = Math.min(.999, r.ya + .07 * r.ya * (1 - r.ya)), o = q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
         const K = {k: 'Kalshi', name: 'Kalshi', o, u: null};
         let R = out.find(x => Math.abs(x.l - r.l) < 1e-9);
-        if (!R){ out.push(R = {l: r.l, main: false, p: ours(r, 'vegas'), fair: null, w: .5, best: null, any: null, n: 0}); }
+        if (!R){ out.push(R = {l: r.l, main: false, p: ours(r, 'vegas'), fair: null, w: .5, best: null, any: null, n: 0, all: []}); }
+        if (!R.all.some(x => x.k === 'Kalshi')) R.all.push({...K, mine: mine('Kalshi')});
         R.mid = (r.ya + r.yb) / 2;
         if (mine('Kalshi') && (!R.best || dec(o) > dec(R.best.o))) R.best = K;
         if (!R.any || dec(o) > dec(R.any.o)) R.any = K;

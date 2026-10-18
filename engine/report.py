@@ -508,6 +508,10 @@ input[type=search]{min-width:200px}
 .sct{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.sct th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.sct th:first-child,.sct td:first-child{text-align:left}
 .sct td{text-align:right;padding:4px;border-top:1px solid var(--faint);white-space:nowrap}.sct caption{text-align:left;font-size:12px;color:var(--muted);padding-bottom:2px}
 .sct td a{color:inherit}.sct small{display:block;font-size:10.5px;color:var(--muted)}.sct .mainl{font-size:10px;color:var(--muted);margin-left:4px}
+.offm{display:inline-block;font-size:10px;font-weight:700;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-top:2px}
+.offbox{display:grid;gap:6px;margin-top:10px}.offl{display:flex;flex-wrap:wrap;gap:6px}
+.offc{border:1px solid var(--faint);border-radius:999px;padding:3px 10px;font-size:12.5px}.offc a{color:inherit;text-decoration:none}.offc i{font-style:normal;color:var(--muted);margin-left:4px}
+.offc.cheap{border-color:color-mix(in srgb,var(--good) 45%,transparent)}.offc.cheap b{color:var(--good)}.offc.rich b{color:var(--bad)}.offc.mine{border-width:2px}
 .sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
@@ -1135,7 +1139,7 @@ function scriptPanel(g){
   // players: the starting QB, each team's top 3 by targets + carries, and anyone facing a top-8 soft defense for his position
   const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
   const mu = (p, s_) => p.s[s_] ? p.s[s_][MEAN] : 0;
-  const pool = D.players.filter(p => p.g === g.id), cards = {[fav]: [], [dog]: []}, waiting = [];
+  const pool = D.players.filter(p => p.g === g.id), cards = {[fav]: [], [dog]: []}, waiting = [], offs = [];
   const lift = (x, l) => { if (!mask || !x) return 1; let a = 0, b = 0;
     for (let i = 0; i < x.length; i++){ if (x[i] > l){ a++; if (mask[i]) b++; } }
     return ((b + 1) / (nIn + 2)) / ((a + 1) / (x.length + 2)); };
@@ -1163,8 +1167,11 @@ function scriptPanel(g){
           if (fair == null && gap != null && r_.p != null && r_.p > 0 && r_.p < 1){ fair = sgm(lg(r_.p) + gap); carried = true; }
           const w = fair != null ? main.w : .5, m = fair ?? r_.mid, p0 = r_.p, q = p0 == null ? m : m == null ? p0 : w * p0 + (1 - w) * m;
           const lf = lift(x, r_.l), qs = q == null ? null : Math.min(.99, q * lf), B = r_.best || r_.any, im = 1 / decO(B.o);
-          return {...r_, fair, carried, q, qs, lf, B, mineB: !!r_.best, ev: q != null ? q - im : null, evs: qs != null ? qs - im : null};
+          // way off market: a book whose price says 8+ pts more or less than the fair (stale or mispriced line)
+          const off = fair == null ? [] : (r_.all || []).map(z => ({...z, im: 1 / decO(z.o)})).filter(z => Math.abs(z.im - fair) >= .08);
+          return {...r_, fair, carried, q, qs, lf, B, mineB: !!r_.best, off, ev: q != null ? q * decO(B.o) - 1 : null, evs: qs != null ? qs * decO(B.o) - 1 : null};
         }).slice(0, 5);
+        rows.forEach(u => u.off.forEach(z => offs.push({p, st, u, z})));
         if (rows.length) ladders.push({st, rows, lf: rows[0].lf});
       }
       const c = {p, r, soft, usage, ladders, vol: p.pos === 'QB' ? mu(p, 'att') : mu(p, 'tgt') + mu(p, 'car')};
@@ -1174,15 +1181,15 @@ function scriptPanel(g){
   }
   const showS = sc[0] !== 'all' && ready;
   const ecls = e => e == null ? '' : e >= .05 ? 'e2' : e >= .03 ? 'e1' : e < 0 ? 'neg' : '';
-  const pts = e => e == null ? '–' : (e >= 0 ? '+' : '−') + Math.abs(Math.round(e * 100));
+  const evp = e => e == null ? '–' : (e >= 0 ? '+' : '−') + Math.abs(e * 100).toFixed(Math.abs(e) < .1 ? 1 : 0) + '%';
   const sg = e => e == null ? '–' : (e >= 0 ? '+' : '−') + Math.abs(Math.round(e * 100)) + '%';
   const lad = Lz => `<table class="sct"><caption>${SC_KIND[Lz.st]}${showS ? ` · <span class="${Lz.lf >= 1.05 ? 'good' : ''}">${sg(Lz.lf - 1)} at the main line in this script</span>` : ''}</caption>
-      <thead><tr><th>Over</th><th>Best price</th><th title="The market’s no-vig chance at this line">Fair</th><th title="Our chance weighted with the market’s fair">Chance</th>${showS ? '<th title="Chance if this script happens (our simulated games)">In script</th>' : ''}<th title="Chance minus the best price’s implied chance, in points${showS ? ', if the script happens' : ''}">Edge</th></tr></thead>
+      <thead><tr><th>Over</th><th>Best price</th><th title="The market’s no-vig chance at this line">Fair</th><th title="Our chance weighted with the market’s fair">Chance</th>${showS ? '<th title="Chance if this script happens (our simulated games)">In script</th>' : ''}<th title="Expected return per bet at the best price${showS ? ', if the script happens' : ''}">Edge</th></tr></thead>
       <tbody>${Lz.rows.map(u => { const e = showS ? u.evs : u.ev;
         return `<tr class="${u.mineB ? '' : 'far'}"><td><b>${Math.ceil(u.l)}+</b>${u.main ? '<span class="mainl">main</span>' : ''}</td>
-        <td>${u.B.u ? `<a href="${esc(u.B.u)}" target="_blank" rel="noopener">${amS(u.B.o)}</a>` : amS(u.B.o)}<small>${esc(u.B.name)}${u.mineB ? '' : ' · not yours'}</small></td>
+        <td>${u.B.u ? `<a href="${esc(u.B.u)}" target="_blank" rel="noopener">${amS(u.B.o)}</a>` : amS(u.B.o)}<small>${esc(u.B.name)}${u.mineB ? '' : ' · not yours'}</small>${u.off.length ? `<span class="offm" title="${esc(u.off.map(z => `${z.name} ${amS(z.o)} says ${pct(z.im)} vs fair ${pct(u.fair)}`).join(' · '))}">off market</span>` : ''}</td>
         <td>${u.fair != null ? (u.carried ? '≈' : '') + pct(u.fair) : u.mid != null ? pct(u.mid) + '<small>Kalshi mid</small>' : '–'}</td>
-        <td>${u.q != null ? pct(u.q) : '–'}</td>${showS ? `<td><b>${u.qs != null ? pct(u.qs) : '–'}</b></td>` : ''}<td class="${ecls(e)}">${pts(e)}</td></tr>`; }).join('')}</tbody></table>`;
+        <td>${u.q != null ? pct(u.q) : '–'}</td>${showS ? `<td><b>${u.qs != null ? pct(u.qs) : '–'}</b></td>` : ''}<td class="${ecls(e)}">${evp(e)}</td></tr>`; }).join('')}</tbody></table>`;
   const card = c => { const k = posKey(c.p), best = Math.max(...c.ladders.map(l => l.lf));
     const vol = c.p.pos === 'QB' ? `${f0(mu(c.p, 'att'))} pass att` : [mu(c.p, 'tgt') >= 2 ? `${f1(mu(c.p, 'tgt'))} tgt` : null, mu(c.p, 'car') >= 2 ? `${f1(mu(c.p, 'car'))} car` : null].filter(Boolean).join(' · ');
     return `<div class="scc"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.pos)} · vs ${esc(c.p.o)}</span>
@@ -1193,15 +1200,21 @@ function scriptPanel(g){
   const team = (t, lab) => cards[t].length ? `<div class="scteam"><h3>${esc(t)}</h3><span class="small muted">${lab}</span></div><div class="scgrid">${cards[t].map(card).join('')}</div>` : '';
   const wait = waiting.length ? `<details class="ladw"><summary>${waiting.length} more player${waiting.length === 1 ? '' : 's'} · no lines posted yet</summary><div class="ladr">${waiting.map(c => `<span class="lru"><b>${esc(c.p.n)}</b> <i>${esc(c.p.t)} ${esc(c.p.pos)}</i></span>`).join('')}</div></details>` : '';
   const none = !cards[fav].length && !cards[dog].length;
+  // every book price 8+ pts from the fair, biggest gap first: green = the over is cheap there, red = priced too high (its under may be the value)
+  offs.sort((a, b) => Math.abs(b.z.im - b.u.fair) - Math.abs(a.z.im - a.u.fair));
+  const offBox = offs.length ? `<div class="offbox"><span class="eyebrow">Way off market</span><div class="offl">${offs.slice(0, 12).map(({p, st, u, z}) => { const cheap = z.im < u.fair;
+      return `<span class="offc ${cheap ? 'cheap' : 'rich'}${z.mine ? ' mine' : ''}" title="${esc(z.name)} prices ${esc(p.n)} ${Math.ceil(u.l)}+ ${SC_KIND[st]} at ${amS(z.o)} (${pct(z.im)}); the market’s fair is ${u.carried ? 'about ' : ''}${pct(u.fair)}. ${cheap ? 'The over is cheap here: check the line hasn’t moved before betting.' : 'The over is priced too high here; the under at this book may be the value.'}">${z.u ? `<a href="${esc(z.u)}" target="_blank" rel="noopener">` : ''}<b>${esc(p.n)}</b> ${Math.ceil(u.l)}+ ${SC_KIND[st]} · ${esc(z.name)} ${amS(z.o)} <i>${pct(z.im)} vs fair ${u.carried ? '≈' : ''}${pct(u.fair)}</i>${z.u ? '</a>' : ''}</span>`; }).join('')}${offs.length > 12 ? `<span class="small muted">+${offs.length - 12} more</span>` : ''}</div>
+    <div class="small muted">Green: the over is cheap at that book. Red: priced too high there (the under may be the value). Your books outlined.</div></div>` : '';
   return `<section class="panel" aria-label="Game script"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: game script</h2><span class="small muted">${esc(g.kickoff)} · Vegas model</span></div>
     ${head}
     ${O ? outlookBar(O) : ''}
     ${gameBets(g)}
     <div><span class="eyebrow">Props if the game goes this way</span>${sw}
       <div class="small muted">${ready ? (sc[0] === 'all' ? 'All simulated games. Pick a script to see whose lines rise and fall with it.' : `${pct(nIn / M.length)} of our simulated games: ${esc(sc[3])}. Players sorted by how much their lines rise in it.`) : DW === 'load' ? 'Loading simulated games…' : 'Simulated games not available for this game; showing the expected view.'}</div></div>
+    ${offBox}
     ${none ? '<p class="note">No prop lines posted yet for this game’s high-usage or soft-matchup players. Books post them about a day out.</p>' : team(fav, `favored by ${f1(Math.abs(L)).replace('.0', '')}`) + team(dog, 'underdog')}
     ${wait}
-    <details class="how"><summary>How to read this</summary><p class="note">Players: each team’s starting QB and top 3 by projected targets + carries, plus anyone facing one of the 8 defenses that give up the most to his position. Each ladder is the main line and the higher alt lines (books’ alt lines and Kalshi’s rungs). <b>Fair</b> = the market’s no-vig chance at that line (the sharp consensus at the main line; the books’ own two-way alt prices for alts; ≈ = the main line’s fair carried up the ladder by our distribution’s shape where only Kalshi prices the rung). <b>Chance</b> = ours weighted with the fair, the same anchoring tested for the rest of the site. <b>In script</b> = that chance scaled by how often the line clears in our simulated games where the script happens vs all of them. <b>Edge</b> = chance minus the best price’s implied chance, in points (green 3+, bold 5+; faded rows: only at other books). This view is for screening: the tested Value-tag rules are on the Markets page.</p></details>
+    <details class="how"><summary>How to read this</summary><p class="note">Players: each team’s starting QB and top 3 by projected targets + carries, plus anyone facing one of the 8 defenses that give up the most to his position. Each ladder is the main line and the higher alt lines (books’ alt lines and Kalshi’s rungs). <b>Fair</b> = the market’s no-vig chance at that line (the sharp consensus at the main line; the books’ own two-way alt prices for alts; ≈ = the main line’s fair carried up the ladder by our distribution’s shape where only Kalshi prices the rung). <b>Chance</b> = ours weighted with the fair, the same anchoring tested for the rest of the site. <b>In script</b> = that chance scaled by how often the line clears in our simulated games where the script happens vs all of them. <b>Edge</b> = expected return per bet at the best price at your books (green 3%+, bold 5%+; faded rows: only at other books). <b>Off market</b> = a book whose price implies 8+ points more or less than the fair. This view is for screening: the tested Value-tag rules are on the Markets page.</p></details>
   </section>`;
 }
 function gameDetail(){
