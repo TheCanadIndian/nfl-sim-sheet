@@ -44,7 +44,7 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 - **Unabated (free tier):** every published Gambly link must end `?utm_campaign=thecanadindian`. `books.py` and `sharp.py` refuse to publish otherwise.
 - **SharpAPI:** publish only our own inference (Value tags), never its odds or book names.
 - **Never automate clicks** on affiliate or bet links.
-- **The Odds API:** paid base plan since 2026-10-18, 20,000 credits/month (`books.PLAN`). `books.budget_ok` paces each day to its share of what's left (Sunday ×2.5, Mon/Thu ×1.2). Game lines: games within 24 h, every 90 min. Hard Rock anytime goal/TD: last 6 h, hourly. Pinnacle NFL props: last 24 h, every 2 h (~5 credits/game). Pinnacle NHL anytime goal: last 8 h, hourly, every pull logged.
+- **The Odds API:** paid base plan since 2026-10-18, 20,000 credits/month (`books.PLAN`). `books.budget_ok` paces each day to its share of what's left (Sunday ×2.5, Mon/Thu ×1.2). Game lines: games within 24 h, every 90 min. Hard Rock anytime goal/TD and over/unders (NFL yardage + receptions, NHL shots on goal; `sharp.hr_ou_pull`): last 6 h, hourly. Pinnacle NFL props: last 24 h, every 2 h (~5 credits/game). Pinnacle NHL anytime goal: last 8 h, hourly, every pull logged.
 - **UX first:** every site change is checked on phone (~500 px) and desktop before shipping. Prefer clean chips over text clutter.
 - **JS inside Python templates:** a straight apostrophe inside a JS string breaks the page. Use ’ in display text.
 
