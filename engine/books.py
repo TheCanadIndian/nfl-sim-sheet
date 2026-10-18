@@ -11,7 +11,7 @@ for sports with a game within 24 h. Backup when Unabated fails: The Odds API (be
     python books.py nfl        # one sport now (still budget-checked)
 
 Key: env ODDS_API_KEY (GitHub secret), else private/oddsapi_key.txt (this PC; never published).
-Credits: one pull = 3 credits (3 markets x up to 10 named books). The free plan has 500 a month,
+Credits: one pull = 3 credits (3 markets x up to 10 named books). The paid base plan has 20,000 a month (was 500 free),
 so pulls are paced: a sport is pulled only when one of its games starts within PULL_WINDOW hours,
 it wasn't pulled in the last MIN_GAP hours, and today's spend stays within what is left for the
 month divided by the days left. State: markets/books_state.json.
@@ -38,7 +38,8 @@ BOOKS = ["hardrockbet", "betrivers", "espnbet", "fliff", "ballybet", "betparx", 
 SHORT = {"hardrockbet": "Hard Rock", "novig": "Novig", "draftkings": "DraftKings", "fanduel": "FanDuel", "betmgm": "BetMGM",
          "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet", "betparx": "betPARX", "pinnacle": "Pinnacle"}
 COST = 3
-PULL_WINDOW, MIN_GAP = 8, 8       # hours (The Odds API: credit-limited; leaves room for Hard Rock props in sharp.py)
+PULL_WINDOW, MIN_GAP = 24, 1.5    # hours: games within a day, refreshed every 90 min (paid plan, 2026-10-18: 20,000 credits a month)
+PLAN = 20000                      # monthly credits (The Odds API base paid tier); the live count comes from the response headers
 UA_WINDOW, UA_GAP = 24, 20        # Unabated (primary): games within 24 h, at most every 20 minutes
 OA_FRESH = 3                      # hours an Odds API price is shown (pulled far less often)
 
@@ -85,14 +86,16 @@ def budget_ok(st, now):
     """Pace the month: today's spend may not pass (credits left at the start of today) / (days left incl. today)."""
     day = now.strftime("%Y-%m-%d")
     if st.get("day") != day:
-        st.update(day=day, spent_today=0, left_at_day_start=st.get("remaining", 500) if st.get("month") == now.strftime("%Y-%m") else 500)
+        st.update(day=day, spent_today=0, left_at_day_start=st.get("remaining", PLAN) if st.get("month") == now.strftime("%Y-%m") else PLAN)
     st["month"] = now.strftime("%Y-%m")
+    if st.get("remaining", 0) > st.get("left_at_day_start", 0):        # more credits than this morning: new plan or a monthly reset
+        st["left_at_day_start"] = st["remaining"]
     nxt = (now.replace(day=1) + pd.DateOffset(months=1)).date()
     days_left = (nxt - now.date()).days
-    W = {6: 5.0, 0: 1.5, 3: 1.5}                       # Sunday (NFL slate), Monday/Thursday nights; other days 1
+    W = {6: 2.5, 0: 1.2, 3: 1.2}                       # Sunday (NFL slate), Monday/Thursday nights; other days 1 (NBA/NHL nightly)
     days = pd.date_range(now.date(), periods=max(days_left, 1), freq="D")
     allow = max(COST, st["left_at_day_start"] * W.get(now.weekday(), 1.0) / sum(W.get(d.weekday(), 1.0) for d in days))
-    return st["spent_today"] + COST <= allow and st.get("remaining", 500) >= COST
+    return st["spent_today"] + COST <= allow and st.get("remaining", PLAN) >= COST
 
 
 def tidy(events, sport, games):
