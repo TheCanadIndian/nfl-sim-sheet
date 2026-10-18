@@ -122,6 +122,20 @@ def two_sided(rows):
     return out
 
 
+# Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
+WPIN = {"nhl": {"goal": .2}, "nba": {"pts": .1, "reb": .1, "ast": .1, "fg3m": .1},
+        "nfl": {"rec": .25, "rec_yds": .25, "rush_yds": .25, "pass_yds": .25, "td": 0.0}}
+
+
+def rejudge(FL, gid, nm, v, w, pin):
+    """A Value tag with Pinnacle's no-vig as the market half at weight w on ours: keep it only if it still clears the bar."""
+    v["m"], v["pin"], v["wp"] = round(pin, 4), round(pin, 4), w
+    if v.get("p") is None or v.get("o") is None:
+        return
+    if (w * v["p"] + (1 - w) * pin) * dec(v["o"]) - 1 < FL.get("min_ev", .05):
+        FL["tags"][gid].pop(nm, None)
+
+
 def judge(p, odds, nv=None, blend=False):
     """(EV, check) for our chance p at these odds. blend: judge the edge on (ours + market no-vig) / 2 (NFL props:
     on Kalshi 2026 that blend with a 5%+ edge returned +8.4%, our projection alone lost)."""
@@ -659,7 +673,7 @@ def pin_merge(now):
                         other = u if sd == "over" else o
                         bet = "TD" if kind == "td" else f"{sd} {line:g} {LAB[kind]}"
                         if mine is not None and v.get("b") == bet:
-                            v["pin"] = round(pin_nv(mine, other, k), 4)   # shown next to our tag; the tag's own rule is unchanged
+                            rejudge(FL, gid, nm, v, WPIN["nfl"].get(kind, .5), pin_nv(mine, other, k))
         json.dump(FL, open(ff, "w"), separators=(",", ":"))
     except (OSError, ValueError):
         pass
@@ -763,9 +777,7 @@ def pin_merge_nhl(now):
             for nm, (yes, no) in c["props"].items():
                 v = FL.get("tags", {}).get(gid, {}).get(nm)
                 if isinstance(v, dict) and v.get("b") == "goal" and yes is not None:
-                    nv = pin_nv(yes, no, 1.05)
-                    v["m"] = round(nv, 4)                      # Pinnacle replaces the exchange median as the market half
-                    v["pin"] = round(nv, 4)
+                    rejudge(FL, gid, nm, v, WPIN["nhl"]["goal"], pin_nv(yes, no, 1.05))
         json.dump(FL, open(ff, "w"), separators=(",", ":"))
     except (OSError, ValueError):
         pass

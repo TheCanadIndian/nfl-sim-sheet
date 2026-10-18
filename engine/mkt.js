@@ -49,6 +49,9 @@
   // Pinnacle's no-vig is on the prop when its line matches ours (TD props have no line: .5). w: 2 two-way (multiplicative), 1 one-way (power)
   const pinHow = (w, pl) => w === 1 ? 'one-way price, power de-vig' : w === 3 ? `carried from Pinnacle’s ${pl != null ? pl + ' ' : ''}line by our distribution’s shape` : 'both sides, multiplicative de-vig';
   const pinOk = e => !!(e && e.pin && e.pin.o != null && Math.abs(e.pin.l - (e.l ?? .5)) < 1e-9);
+  // Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
+  const WPIN = {nhl: {goal: .2}, nba: {pts: .1, reb: .1, ast: .1, fg3m: .1}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
+  const wOf = (sp, kind, isPin) => isPin ? ((WPIN[sp] || {})[kind] ?? .5) : .5;
   const NOBET = new Set(['Pinnacle']);             // sharp reference only: never a 'best price' (not bettable from the US)
   const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
   const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
@@ -474,6 +477,12 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     myBooks: () => MY.slice(),
     // the market's chance for a player prop: median implied chance at the exchanges / prediction markets (low margin;
     // Kalshi already fee-adjusted), less ~3% for their margin. null when no exchange prices it.
+    // our chance p blended with the market's for a prop: Pinnacle at WPIN weights, else 50/50 with the exchanges
+    blend(gid, name, kind, p){
+      const e = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind];
+      const m = window.MKT.propMarket(gid, name, kind); if (m == null) return p;
+      const w = wOf(sport, kind, pinOk(e)); return w * p + (1 - w) * m;
+    },
     propMarket(gid, name, kind){
       if (!PR || !PR.props) return null;
       const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || !e.o) return null;
@@ -512,7 +521,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             const b = pick(e[sd]); if (!b) continue;
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
             const pin = pinOk(e) ? (sd === 'o' ? e.pin.o : 1 - e.pin.o) : null;
-            const w = (opts.wOurs || {})[k] ?? .5, m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
+            const w = pin != null ? wOf(opts.sport, k, true) : ((opts.wOurs || {})[k] ?? .5), m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
             if ((opts.sport === 'nfl' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(k) || opts.sport === 'nba') && (p < .5 || (m != null && Math.abs(p - m) < .10))) continue;
             const isSog = k.startsWith('sog');
             const leg = {gid, start: startOf[gid], kind: isSog ? 'sog' : k, side: sd, line: isSog ? +k.slice(3) / 10 : (e.l ?? .5), name: nm,
@@ -550,11 +559,13 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         for (const r of D.rows) {
           if (r.s !== 'kalshi' || !opts.kalshiKinds[r.k] || !live.has(String(r.g)) || !(r.ya > 0) || r.yb == null || r.l == null) continue;
           const p = ours(r, 'vegas'); if (p == null || r.ya - r.yb > .035) continue;
-          const m = (r.ya + r.yb) / 2;
+          const pe = PR && PR.props && ((PR.props[String(r.g)] || {})[norm(r.n)] || {})[r.k];
+          const pin = pe && pinOk(pe) && Math.abs(pe.pin.l - r.l) < 1e-9 ? pe.pin.o : null;
+          const m = pin != null ? pin : (r.ya + r.yb) / 2, wk = wOf(opts.sport, r.k, pin != null);
           for (const sd of ['o', 'u']) {
             const ps = sd === 'o' ? p : 1 - p, ms = sd === 'o' ? m : 1 - m, c = sd === 'o' ? r.ya : 1 - r.yb;
-            if (ps < .5 || Math.abs(p - m) < .10 || c < .15 || c > .95) continue;
-            const cost = c + .07 * c * (1 - c), q = .5 * ps + .5 * ms, ev = q / cost - 1;
+            if (ps < .5 || (pin == null && Math.abs(p - m) < .10) || c < .15 || c > .95) continue;
+            const cost = c + .07 * c * (1 - c), q = wk * ps + (1 - wk) * ms, ev = q / cost - 1;
             const key = r.g + '|' + (r.pid || r.n) + '|' + r.k;
             if (ev <= (opts.minEdge || 0) || (bestBy[key] && bestBy[key].ev >= ev)) continue;
             const o = cost >= .5 ? -Math.round(100 * cost / (1 - cost)) : Math.round(100 * (1 - cost) / cost);
@@ -614,7 +625,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const xs = Object.keys(e[sd] || {}).filter(k => (e[sd === 'o' ? 'u' : 'o'] || {})[k]).map(k => { const a = 1 / dec(e[sd][k][0]), b = 1 / dec(e[sd === 'o' ? 'u' : 'o'][k][0]); return a / (a + b); }).sort((x, y) => x - y);
         return xs.length ? xs[(xs.length - 1) >> 1] : null; };
       const opts = (e.u ? ['o', 'u'] : ['o']).map(sd => { const c = pick(sd); if (!c) return null;
-        const p0 = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p, m = nvOf(sd), p = p0 != null && m != null ? (p0 + m) / 2 : p0;
+        const p0 = e.p == null ? null : sd === 'o' ? e.p : 1 - e.p, m = nvOf(sd), w = wOf(sport, kind, pinOk(e)), p = p0 != null && m != null ? w * p0 + (1 - w) * m : p0;
         return {sd, k: c[0][0], o: c[0][1][0], path: c[0][1][1], other: c[1], p0, m, ev: p == null ? null : p * dec(c[0][1][0]) - 1}; })
         .filter(Boolean).sort((a, b) => (a.other - b.other) || ((b.ev ?? -9) - (a.ev ?? -9)));
       const c = opts[0]; if (!c) return '<span class="muted">–</span>';
@@ -647,7 +658,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       let o = typeof v === 'string' ? null : {k: v.k, o: v.o, u: v.u};
       if (o && MY.length && v.all && v.p != null){             // only the viewer's books: best of those, and only if it still clears the bar
         const c = Object.entries(v.all).filter(([k]) => mine(k)).map(([k, x]) => ({k, o: x[0], u: x[1]})).sort((x, y) => dec(y.o) - dec(x.o))[0];
-        const q = v.m != null ? (v.p + v.m) / 2 : v.p;       // NFL props: 50/50 with the market, as the cloud judged it
+        const q = v.m != null ? (v.wp != null ? v.wp * v.p + (1 - v.wp) * v.m : (v.p + v.m) / 2) : v.p;   // the cloud's weights (wp: Pinnacle-anchored)
         if (!c || q * dec(c.o) - 1 < min) return '';
         o = c;
       }
