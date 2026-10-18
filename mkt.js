@@ -639,6 +639,65 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are built</summary><p class="note">Every leg beats its price ${opts.anyBook ? 'at the best book for it' : 'at your books'}: its chance is our number blended with the market's (NHL goals and NFL props 50/50, where that's what made money, NFL props also needing a 5%+ edge; game lines 50/50 with the books' no-vig line). One leg per game, so the legs are independent; for each payout range these are the combinations most likely to cash. Because every leg has an edge, they should cash more often than the payout implies, but only by the edge column: a +600 parlay still loses most of the time.</p></details>
         ${TIERS.map(([lab], t) => rows[t].length ? `<div class="eyebrow" style="margin-top:10px">Pays ${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rows[t].map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
     },
+    // Value-tag parlays (higher odds, experimental): legs = Value tags that still clear the bar at the viewer's books (a book
+    // pays 5%+ more than the market-anchored chance: since 2026-10-18 tags are judged against the sharp consensus), one per
+    // game so legs are independent; chance = product of the legs' anchored chances; tiers +300..+1000 and +1000..+3000.
+    tagParlays(opts){
+      if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
+      const now = Date.now(), min = FL.min_ev || .05, amS = o => (o > 0 ? '+' : '') + o;
+      const start = Object.fromEntries(opts.games.map(g => [String(g.id), g.start || null]));
+      const glab = Object.fromEntries(opts.games.map(g => [String(g.id), g.label]));
+      const LK = {'rec yds': 'rec_yds', 'rush yds': 'rush_yds', 'pass yds': 'pass_yds', receptions: 'rec'};
+      const by = {};
+      for (const [gid, T] of Object.entries(FL.tags)){
+        if (!(gid in start) || (start[gid] && new Date(start[gid]) <= now)) continue;
+        for (const [nm, v] of Object.entries(T)){
+          if (!v || typeof v === 'string' || v.p == null || !v.all) continue;
+          const c = Object.entries(v.all).filter(([k]) => mine(k)).map(([k, x]) => ({k, o: x[0], u: x[1]})).sort((a, b) => dec(b.o) - dec(a.o))[0];
+          if (!c) continue;
+          const q = v.m != null ? (v.wp != null ? v.wp * v.p + (1 - v.wp) * v.m : (v.p + v.m) / 2) : v.p;
+          const ev = q * dec(c.o) - 1;
+          if (ev < min || ev > .40) continue;                 // 40%+ "edges" are almost always a stale or mismatched quote
+          const b = String(v.b || ''), sp = b.split(' ');
+          const kind = b === 'TD' ? 'td' : b === 'goal' ? 'goal' : LK[sp.slice(2).join(' ')] || null;
+          if (!kind) continue;
+          const side = sp[0] === 'under' ? 'u' : 'o', line = kind === 'td' || kind === 'goal' ? .5 : +sp[1];
+          const name = nm.replace(/\b\w/g, x => x.toUpperCase()), lab = `${name} ${b === 'TD' ? 'anytime TD' : b}`;
+          (by[gid] = by[gid] || []).push({gid, q, ev, c, lab,
+            leg: {gid, start: start[gid], kind, side, line, name: nm, lab, p: +q.toFixed(4), price: c.o, book: c.k},
+            slip: {id: `${opts.sport}|${gid}|tag|${nm}|${kind}|${side}|${line}`, sport: opts.sport, g: gid, glab: glab[gid], lab, p: q, side: 'over'}});
+        }
+      }
+      const gids = Object.keys(by);
+      gids.forEach(g => by[g] = by[g].sort((a, b) => b.ev - a.ev).slice(0, 2));
+      const TIERS = [['+300 to +1000', 4, 11], ['+1000 to +3000', 11, 31]], best = TIERS.map(() => []);
+      const walk = (i, pk, pr, d) => {
+        if (pk.length >= 2) TIERS.forEach(([, lo, hi], t) => { if (d >= lo && d < hi) best[t].push({legs: pk, p: pr, d}); });
+        if (pk.length === 5 || d >= 31) return;
+        for (let j = i; j < gids.length; j++) for (const L of by[gids[j]]) walk(j + 1, [...pk, L], pr * L.q, d * dec(L.c.o));
+      };
+      walk(0, [], 1, 1);
+      const rows = best.map(list => list.sort((a, b) => b.p - a.p).slice(0, 3));
+      rows.forEach((list, t) => list.forEach(c => reg(opts.title, TIERS[t][0], c.legs.map(L => L.leg), c.p, c.d)));
+      const n = gids.reduce((s, g) => s + by[g].length, 0);
+      const head = `<div class="phead"><h2>${esc(opts.title)} <span class="exp3">experimental</span></h2><span class="small muted">${n} tag leg${n === 1 ? '' : 's'} at your books</span></div>
+        <details class="how"><summary>How these are built</summary><p class="note">Every leg is a Value tag that still clears its bar at your books: the book pays 5%+ more than our chance blended with the sharp consensus (Pinnacle, Novig, ProphetX). One leg per game, so the legs are independent and the parlay’s chance is their product. Higher-odds tiers, the likeliest combinations first. New on Oct 18 and tracked on the Profit page; a +1500 parlay still loses about 15 times in 16 even with an edge.</p></details>`;
+      if (!rows.some(r => r.length)) return `<section class="panel">${head}<p class="note">No combination of tags reaches these payouts yet (${n} leg${n === 1 ? '' : 's'} so far). Tags fill in as books post props, mostly on game day.</p></section>`;
+      const leg = L => `<b>${esc(L.lab)}</b> <span class="small muted">${esc(glab[L.gid] || '')} · ${pc(L.q)} · ${L.c.u ? `<a href="${esc(L.c.u)}" target="_blank" rel="noopener">${amS(L.c.o)} ${esc(BKS[L.c.k] || L.c.k)}</a>` : `${amS(L.c.o)} ${esc(BKS[L.c.k] || L.c.k)}`}</span>`;
+      const row = c => `<tr><td class="l">${c.legs.map(leg).join('<br>')}</td><td class="big">${pc(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="edge ${c.p * c.d - 1 >= .1 ? 'pos-d' : ''}" style="font-weight:700">+${((c.p * c.d - 1) * 100).toFixed(0)}%</td>
+        <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => L.slip), '+ add parlay') : ''}</td></tr>`;
+      return `<section class="panel">${head}${TIERS.map(([lab], t) => rows[t].length ? `<div class="eyebrow" style="margin-top:10px">Pays ${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rows[t].map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
+    },
+    // the market's over / yes chance for one parlay leg at its own line: the sharp consensus (weight w on ours), else
+    // Kalshi's mid at that rung (50/50); null when nothing prices that line
+    legMarket(gid, name, kind, line){
+      const kk = kind === 'anytime_td' ? 'td' : kind, ln = line ?? .5;
+      const e = PR && PR.props ? ((PR.props[String(gid)] || {})[norm(name)] || {})[kk] : null;
+      if (e && pinOk(e) && Math.abs((e.pin.l ?? .5) - ln) < 1e-9) return {m: e.pin.o, w: wOf(sport, kk, true), src: sharpLab(e)};
+      const r = forPlayer(gid, null, name).find(x => x.s === 'kalshi' && (x.k === kind || (kk === 'td' && x.k === 'anytime_td'))
+        && Math.abs((x.l ?? .5) - ln) < 1e-9 && x.ya > 0 && x.yb != null && x.ya - x.yb <= .10);
+      return r ? {m: (r.ya + r.yb) / 2, w: .5, src: 'Kalshi'} : null;
+    },
     norm, reg, FREEZE,
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
