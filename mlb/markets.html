@@ -182,6 +182,16 @@ input[type=search]{min-width:200px}
 .gbtn:hover{border-color:var(--accent);color:var(--accent)}
 .sp-list{display:grid;gap:0}
 .exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.gsh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font-size:15px}.gsh .big{font-size:19px;font-weight:700}
+.scsw{margin:4px 0 2px}.scsw button small{opacity:.7;margin-left:5px;font-size:11.5px}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.scteam{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}.scteam h3{margin:0;font-size:16px}
+.scc{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:8px;align-content:start;min-width:0}
+.scc .ladh b{font-size:15px}.ladc.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.ladc.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.sct{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.sct th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.sct th:first-child,.sct td:first-child{text-align:left}
+.sct td{text-align:right;padding:4px;border-top:1px solid var(--faint);white-space:nowrap}.sct caption{text-align:left;font-size:12px;color:var(--muted);padding-bottom:2px}
+.sct td a{color:inherit}.sct small{display:block;font-size:10.5px;color:var(--muted)}.sct .mainl{font-size:10px;color:var(--muted);margin-left:4px}
+.sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
@@ -542,7 +552,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"mlb","groups":[{"sport":"mlb","source":"kalshi","kind":"all","n":446,"hit":0.045,"model_ll":0.1684,"market_ll":0.169,"model_brier":0.043,"market_brier":0.0427,"bets":12,"bets_won":4,"roi":0.038},{"sport":"mlb","source":"kalshi","kind":"hr","n":446,"hit":0.045,"model_ll":0.1684,"market_ll":0.169,"model_brier":0.043,"market_brier":0.0427,"bets":12,"bets_won":4,"roi":0.038}],"flow":{"nfl":{"value + NO flow":{"bets":86,"won":18,"roi":-0.317},"value, YES-heavy flow":{"bets":320,"won":78,"roi":-0.136},"crowded YES (buying YES)":{"bets":328,"won":92,"roi":0.062}},"nhl":{"value + NO flow":{"bets":22,"won":4,"roi":-0.16},"value, YES-heavy flow":{"bets":143,"won":29,"roi":0.013},"crowded YES (buying YES)":{"bets":1848,"won":300,"roi":-0.092}},"mlb":{"value + NO flow":{"bets":1,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":8,"won":1,"roi":-0.084}}}}</script>
+<script type="application/json" id="grdata">{"sport":"mlb","groups":[{"sport":"mlb","source":"kalshi","kind":"all","n":446,"hit":0.045,"model_ll":0.1684,"market_ll":0.169,"model_brier":0.043,"market_brier":0.0427,"bets":12,"bets_won":4,"roi":0.038},{"sport":"mlb","source":"kalshi","kind":"hr","n":446,"hit":0.045,"model_ll":0.1684,"market_ll":0.169,"model_brier":0.043,"market_brier":0.0427,"bets":12,"bets_won":4,"roi":0.038}],"flow":{"nfl":{"value + NO flow":{"bets":86,"won":18,"roi":-0.317},"value, YES-heavy flow":{"bets":320,"won":78,"roi":-0.136},"crowded YES (buying YES)":{"bets":328,"won":92,"roi":0.062}},"mlb":{"value + NO flow":{"bets":1,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":8,"won":1,"roi":-0.084}},"nhl":{"value + NO flow":{"bets":22,"won":4,"roi":-0.16},"value, YES-heavy flow":{"bets":143,"won":29,"roi":0.013},"crowded YES (buying YES)":{"bets":1848,"won":300,"roi":-0.092}}}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
