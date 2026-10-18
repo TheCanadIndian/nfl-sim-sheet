@@ -49,7 +49,7 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 - **JS inside Python templates:** a straight apostrophe inside a JS string breaks the page. Use ’ in display text.
 
 ## Owner's context
-- Bets at **Novig, Kalshi, Hard Rock** (the page's "my books" setting, `localStorage simbooks-v1`). Mostly overs, small edges, parlays. Wants fewer long droughts.
+- Bets at **Novig, Kalshi, Hard Rock**: the default "my books" on every page (`mkt.js OWNER`) until a device saves its own choice (`localStorage simbooks-v1`). Mostly overs, small edges, parlays. Wants fewer long droughts.
 - **Prices:** Unabated is primary, with partner links. The Odds API fills in books Unabated lacks (Hard Rock, Pinnacle, …). Pinnacle is a reference only: never shown as a "best price".
 - **Pinnacle de-vig:** multiplicative for two-way lines, power for one-way. Alt and mismatched lines are carried over with our distribution's shape (shown with ≈). Comparisons span **all** books, with the owner's books highlighted.
 
