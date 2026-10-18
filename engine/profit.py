@@ -442,12 +442,20 @@ def _stats(pnl, clv=None):
     return out
 
 
+TRACKED = ["NHL anytime goals (top 3)", "NFL player props", "NBA player props"]
+TRACK_SINCE = "Oct 18"
+
+
 def page_data():
     rows = []                                          # (sport, category, date, pnl, clv)
     for f in glob.glob(os.path.join(OUT, "profit_*.json")):
         if f.endswith("profit_tags.json"):
             continue
-        for r in json.load(open(f)).get("rows", []):
+        try:
+            rs = json.load(open(f)).get("rows", [])
+        except (OSError, ValueError):
+            print(f"profit page: skipped {os.path.basename(f)}"); continue
+        for r in rs:
             rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=r.get("clv")))
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
@@ -458,7 +466,10 @@ def page_data():
         rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} Value tags", date=(e.get("start") or e["first"])[:10],
                          pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
     for f in glob.glob(os.path.join(HERE, "parlays", "*", "*.json")):
-        d = json.load(open(f))
+        try:
+            d = json.load(open(f))
+        except (OSError, ValueError) as e:              # one bad file must not take the whole page down
+            print(f"profit page: skipped {os.path.basename(f)} ({type(e).__name__})"); continue
         for p in d.get("parlays", []):
             if p.get("res") not in ("W", "L"):
                 continue
@@ -486,12 +497,24 @@ def page_data():
     sports.sort(key=lambda s: order.get(s["sport"], 9))
     o = _stats(df.pnl.values)
     o30 = _stats(df[df.date >= last30].pnl.values)
-    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports)
+    # rules under test (2026-10-18): each current rule next to its Pinnacle- and consensus-anchored twins, always listed
+    track = []
+    for base in TRACKED:
+        for tag in ("", " · Pinnacle-anchored", " · consensus-anchored"):
+            y = df[df.cat == f"{base}{tag} (Kalshi)"]
+            st = _stats(y.pnl.values, y.clv.values if len(y) and y.clv.notna().any() else None) if len(y) else None
+            track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),
+                              roi=st["roi"] if st else None, moe=st["moe"] if st else None,
+                              clv=st.get("clv") if st else None, clv_n=st.get("clv_n") if st else 0))
+    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE)
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Profit</title>__FONTS__<style>__CSS__
 .rec{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:6px 0 14px}
+.trk{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.trk .tb{border:1px solid var(--faint);border-radius:10px;padding:10px 12px}
+.trk h3{margin:0 0 6px;font-size:15px}.trk table{width:100%;border-collapse:collapse;font-size:13px}.trk td{padding:4px 0;border-top:1px solid var(--faint)}
+.trk td.r{text-align:right;white-space:nowrap}.trk .wait{color:var(--muted)}.trk .tag3{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:0 5px;margin-left:6px}
 .rec div{background:var(--sunk);border-radius:8px;padding:10px 12px}.rec b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}.rec span{font-size:12px;color:var(--muted)}.rec b span{font-size:inherit}.rec b span.rp{color:var(--good)}.rec b span.rn{color:var(--bad)}
 .rp{color:var(--good)}.rn{color:var(--bad)}
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
@@ -527,7 +550,13 @@ function render(){
     ${s.cats.map(c => `<tr><td class="l"><b>${esc(c.cat)}</b><small>${c.n} bets · ${un(c.units)}</small></td><td>${vd(c.verdict)}</td><td>${c.won}-${c.n - c.won}</td>
       <td>${pc(c.roi)}<small>± ${c.moe != null ? (c.moe * 100).toFixed(0) : '–'}%</small></td><td>${c.clv != null ? `${pc(c.clv, 1)}<small>${Math.round(c.clv_beat * 100)}% of ${c.clv_n}</small>` : '<span class="muted">–</span>'}</td>
       <td>${c.n30 ? pc(c.roi30, 0) + `<small>${c.n30} bets</small>` : '<span class="muted">–</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
-  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>` + D.sports.map(sp).join('');
+  const T = D.track || [], by = {}; T.forEach(t => (by[t.base] = by[t.base] || []).push(t));
+  const tcell = t => t.n ? `${pc(t.roi)}<small> ± ${t.moe != null ? (t.moe * 100).toFixed(0) : '–'}%</small>` : '<span class="wait">waiting for results</span>';
+  const ccell = t => t.clv != null ? `${pc(t.clv, 1)}<small> on ${t.clv_n}</small>` : '<span class="wait">–</span>';
+  const track = T.length ? `<section class="panel"><div class="phead"><h2>New rules being tested <span class="tag3">since ${esc(D.since || '')}</span></h2></div>
+    <p class="note" style="margin:0 0 10px">Each current rule is graded next to two versions that use the sharp market as the main input: our number weighted 10-25% against Pinnacle’s no-vig line, or against the consensus of Pinnacle, Novig and ProphetX. Same Kalshi quotes, same edge bar. Beat close = the sharp closing chance minus the price paid (positive = real value); it settles in weeks, the return takes months.</p>
+    <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
+  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>` + track + D.sports.map(sp).join('');
 }
 render();
 </script></body></html>"""
