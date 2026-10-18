@@ -877,14 +877,30 @@ function cardSlipLegs(legs, gid){
   }).filter(Boolean);
 }
 const gamblyBtns = (legs, ks, game) => `<div class="gbtns"><span class="small muted">Build in Gambly:</span>${ks.map(k => `<a class="gbtn" href="${esc(gamblyLink(legs, k, game))}" target="_blank" rel="noopener" title="Opens Gambly's chat with these ${k} legs typed in; pick your book there">${k} legs ↗</a>`).join('')}</div>`;
+// Parlay chance = (each leg's market-anchored chance) x the sims' correlation lift (joint / legs multiplied).
+// research/sgp_pairs_test.py, 2026 wk 5-6 (8,966 same-game Kalshi pairs): where the sims saw legs rise together
+// (lift 1.15+) both hit 19.6% vs 19.6% married, 15.7% multiplying the market, 14.4% sims alone; anti-correlated
+// (lift <= 0.87): 7.2% vs 8.5% married, 10.4% market, 5.1% sims. Legs no market prices at their line keep our chance.
+const PLAYER_OF = lab => { const m = /^(.*?) (over|under|anytime|to score)\b/i.exec(lab || ''); return m ? m[1] : null; };
+function legQ(L, gid){
+  const name = PLAYER_OF(L.lab), M = name && window.MKT && MKT.legMarket ? MKT.legMarket(gid, name, L.kind, L.line) : null;
+  return M ? {q: M.w * L.p + (1 - M.w) * M.m, src: M.src} : {q: L.p, src: null};
+}
+function married(legs, gid, pSim, pInd){
+  const Q = legs.map(L => legQ(L, gid || L.gid));
+  const prod = Q.reduce((s, x) => s * x.q, 1), lift = pInd > 0 ? pSim / pInd : 1;
+  return {p: Math.min(prod * lift, ...Q.map(x => x.q)), n: Q.filter(x => x.src).length, of: Q.length};
+}
 function sgpCard(P){
   const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
-  const rows = P.rows.map(r => `<tr><td>${r.k} legs</td><td><b>${pct1(r.p)}</b></td><td>${esc(r.fair)}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.indep)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`).join('');
+  const gid = SGP_G && SGP_G.id;
+  const rows = P.rows.map(r => { const M = married(P.legs.slice(0, r.k), gid, r.p, r.indep);
+    return `<tr><td>${r.k} legs<small class="muted" style="display:block">${M.n}/${M.of} priced</small></td><td><b title="Each leg’s market-anchored chance (${M.n} of ${M.of} legs have a market line) times our sims’ correlation lift">${pct1(M.p)}</b></td><td>${esc(american(M.p))}</td>${any ? '' : `<td>${pct1(r.p_script)}</td>`}<td>${pct1(r.p)}</td><td>${r.kalshi ? american(r.kalshi) : '–'}</td></tr>`; }).join('');
   const legs = P.legs.map((L, i) => (i === cut && i < P.legs.length ? `<li class="after">+ ${P.legs.length - cut === 1 ? 'this' : 'these'} for the longer version${P.legs.length - cut === 1 ? '' : 's'}</li>` : '') + legLine(L, !any, i === cut ? cut + 1 : 0)).join('');
   return `<div class="sgp${P.expected ? ' exp' : ''}"><h3>${esc(P.name)} <small>${P.name === 'Higher lines' ? 'fewer legs, bumped lines' : any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
     <div class="small muted">${esc(P.desc)}</div>
     <ol>${legs}</ol>
-    <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="What multiplying the legs as if unrelated would say">If unrelated</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table>
+    <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="Our simulated games alone (before the market's leg chances)">Sims only</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table>
     ${gamblyBtns(P.legs, P.rows.map(r => r.k), SGP_G ? `${SGP_G.away} @ ${SGP_G.home}` : '')}
     ${window.SLIP && SGP_G ? `<div class="gbtns"><span class="small muted">My parlay:</span>${P.rows.map(r => SLIP.allBtn(cardSlipLegs(P.legs.slice(0, r.k), SGP_G.id), `+ ${r.k} legs`)).join('')}</div>` : ''}</div>`;
 }
@@ -893,7 +909,7 @@ function sgpPanel(g){
   const S = SGP_BLIND ? (D.alt.sgp && D.alt.sgp.games[g.id]) : (D.sgp && D.sgp.games[g.id]);
   if (!S || !S.parlays.length) return '<section class="panel"><div class="empty">No parlays for this game yet: it needs 5+ main-line legs that clear 35%.</div></section>';
   return `<section class="panel" aria-label="Same-game parlays"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: same-game parlays</h2>${modelSwitch(g)}<span class="small muted">${SGP_BLIND ? 'market-blind model' : 'Vegas model'} · leg chance overall → inside the script · Kalshi ask</span></div>
-    <p class="note">Every leg is judged in the same simulated games, so legs that rise together (a QB's yards and his receivers') are priced together; that's why "hits" beats "if unrelated". Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Hit chances are calibrated to 2025-26 backtests (335 games). Each leg is adjusted for the player's depth role: backup RBs, QB yards on our own lines, WR2 yards and WR3+ catches ran low and are marked down; RB1 rushing yards and TDs ran high and are marked up. Legs 6 and 7 must be 50%+ alone and a reliable type (a Kalshi line, game leg, RB1 rushing/TD, WR1 or TE1), so some parlays stop at 6. The "Expected" parlay only appears when the model makes a clear close-game or blowout call (in backtests those hit above their shown chance; slight leans didn't). "Higher lines" (3-4 overs set at or above the player's average) backtested right on its numbers. Fair is the no-vig price: a book's parlay is only worth it if it pays more. Switch models above: each leg shows the other model's chance, and "both ✓" when the other model has it at least as high (up to 50%). In the Model agreement backtest, legs where the market-blind model leans the same way hit more often.</p>
+    <p class="note"><b>Hits</b> = each leg's market chance (the sharp consensus or Kalshi at that line, our number weighted in lightly) times how much our simulated games say the legs rise or fall together (a QB's yards and his receivers' rise together). On 8,966 same-game pairs (weeks 5-6) that matched the real hit rate, where multiplying the market's prices missed correlated pairs by about 4 points and our sims alone ran low. <b>Sims only</b> = our simulated games alone; "priced" = legs with a market line. Main lines only (the Kalshi rung nearest 50/50, or our own median line until Kalshi lists one), no unders, every leg 35%+ on its own. Hit chances are calibrated to 2025-26 backtests (335 games). Each leg is adjusted for the player's depth role: backup RBs, QB yards on our own lines, WR2 yards and WR3+ catches ran low and are marked down; RB1 rushing yards and TDs ran high and are marked up. Legs 6 and 7 must be 50%+ alone and a reliable type (a Kalshi line, game leg, RB1 rushing/TD, WR1 or TE1), so some parlays stop at 6. The "Expected" parlay only appears when the model makes a clear close-game or blowout call (in backtests those hit above their shown chance; slight leans didn't). "Higher lines" (3-4 overs set at or above the player's average) backtested right on its numbers. Fair is the no-vig price: a book's parlay is only worth it if it pays more. Switch models above: each leg shows the other model's chance, and "both ✓" when the other model has it at least as high (up to 50%). In the Model agreement backtest, legs where the market-blind model leans the same way hit more often.</p>
     ${outlookBar(S.outlook)}
     <div class="sgp-grid">${S.parlays.map(sgpCard).join('')}</div></section>`;
 }
@@ -990,7 +1006,9 @@ function renderParlays(){
   const day = s => { const d = new Date(String(s).slice(0, 10) + 'T12:00:00'); return isNaN(d) ? s : d.toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'}); };
   const card = c => `<div class="sgp"><h3>${esc(c.title)} <small>${day(c.when)} · ${c.games} game${c.games === 1 ? '' : 's'} · ${c.legs.length} legs</small></h3>
     <ol>${c.legs.map(L => `<li>${esc(L.lab)} <span class="small muted">${esc(L.game)}</span>${srcTag(L)}<span class="r">${pct(L.p)}${L.price ? ` · ${window.MKT && MKT.px ? MKT.px(L.price, 'kalshi') : Math.round(L.price * 100) + '¢'}` : ''}</span></li>`).join('')}</ol>
-    <table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs</td><td><b>${pct1(c.p)}</b></td><td>${esc(c.fair)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table>
+    ${(() => { const byG = Object.fromEntries(D.games.map(x => [`${x.away} @ ${x.home}`, x.id]));
+      const M = married(c.legs.map(L => ({...L, gid: byG[L.game]})), null, c.p, c.legs.reduce((s, L) => s * L.p, 1));
+      return `<table><thead><tr><th></th><th>Hits</th><th>Fair</th><th>Sims only</th><th>Kalshi</th></tr></thead><tbody><tr><td>all ${c.legs.length} legs<small class="muted" style="display:block">${M.n}/${M.of} priced</small></td><td><b title="Market-anchored leg chances times our sims’ correlation lift">${pct1(M.p)}</b></td><td>${esc(american(M.p))}</td><td>${pct1(c.p)}</td><td>${c.kalshi ? american(c.kalshi) : '–'}</td></tr></tbody></table>`; })()}
     ${gamblyBtns(c.legs.map(L => ({lab: `${L.lab} (${L.game})`})), [c.legs.length], '')}
     ${window.SLIP ? `<div class="gbtns"><span class="small muted">My parlay:</span>${SLIP.allBtn(crossSlipLegs(c.legs), '+ add parlay')}</div>` : ''}</div>`;
   return ladder + tiers + `<section class="panel"><div class="phead"><h2>Long parlays by kickoff window and day</h2><span class="small muted">each game's strongest legs, stacked</span></div>

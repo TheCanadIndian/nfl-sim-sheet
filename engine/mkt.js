@@ -688,6 +688,16 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(L => L.slip), '+ add parlay') : ''}</td></tr>`;
       return `<section class="panel">${head}${TIERS.map(([lab], t) => rows[t].length ? `<div class="eyebrow" style="margin-top:10px">Pays ${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${rows[t].map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
     },
+    // the market's over / yes chance for one parlay leg at its own line: the sharp consensus (weight w on ours), else
+    // Kalshi's mid at that rung (50/50); null when nothing prices that line
+    legMarket(gid, name, kind, line){
+      const kk = kind === 'anytime_td' ? 'td' : kind, ln = line ?? .5;
+      const e = PR && PR.props ? ((PR.props[String(gid)] || {})[norm(name)] || {})[kk] : null;
+      if (e && pinOk(e) && Math.abs((e.pin.l ?? .5) - ln) < 1e-9) return {m: e.pin.o, w: wOf(sport, kk, true), src: sharpLab(e)};
+      const r = forPlayer(gid, null, name).find(x => x.s === 'kalshi' && (x.k === kind || (kk === 'td' && x.k === 'anytime_td'))
+        && Math.abs((x.l ?? .5) - ln) < 1e-9 && x.ya > 0 && x.yb != null && x.ya - x.yb <= .10);
+      return r ? {m: (r.ya + r.yb) / 2, w: .5, src: 'Kalshi'} : null;
+    },
     norm, reg, FREEZE,
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
