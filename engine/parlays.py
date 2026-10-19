@@ -35,9 +35,10 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 SITE = os.environ.get("SIM_SITE") or (os.path.join(HERE, "site") if os.path.isdir(os.path.join(HERE, "site")) else os.path.dirname(HERE))
 OUT = os.path.join(HERE, "parlays")
 ET = ZoneInfo("America/New_York")
-PAGES = {"nhl": "plays", "nfl": "parlays"}           # sport -> the page tab that renders every parlay card
+PAGES = {"nhl": "plays", "nfl": "parlays", "nba": "parlays"}   # sport -> the page tab that renders every parlay card
 NHL_API = "https://api-web.nhle.com/v1"
 ESPN = "https://site.api.espn.com/apis/site/v2/sports/football/nfl"
+ESPN_NBA = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba"
 ESPN_TEAM = {"LA": "LAR", "WAS": "WSH"}               # our codes -> ESPN's where they differ
 
 
@@ -130,7 +131,7 @@ def freeze():
                     continue
                 locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now]
                 pending = [p for p in by.get(date, []) if when(p["first"]) > now]
-                ps = locked + pending
+                ps = pick_card(sport, locked + pending, now)
                 if not ps or (old and ps == old["parlays"]):
                     continue
                 os.makedirs(os.path.dirname(fp), exist_ok=True)
@@ -139,6 +140,110 @@ def freeze():
                 print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
     finally:
         srv.terminate()
+
+
+# ---------------------------------------------------------------- the daily card
+# Not every parlay: 4 a day per sport, $5 each (owner's stake: half his $10 straight unit). From the graded record
+# (335 parlays to 2026-10-18): 5+ legs / 15x+ went 0-101 vs ~10 expected, 2-4 legs at 3-15x matched our chances, claimed
+# edges over 50% went 0-33 (the model, not the market, was wrong), NHL parlays hit ~70% of our chance, and the same leg sat
+# in up to 13 parlays a day. So: 3 core picks + 1 all-day longshot (the owner likes them), every leg priced at his books,
+# legs from different games (books' payouts multiply only then), edge 5-40% on a market-anchored chance, a leg in at most
+# 2 picks. Same-game cards are out: no book prices them as the product of their legs.
+CARD_N, CARD_STAKE, CARD_CORE = 4, 5, 3
+CARD_BOOKS = {"Novig", "Kalshi", "Hard Rock"}           # the owner's books: every leg must be bettable there
+# NHL parlays won 19 vs 27 expected (z about -1.6, not settled): the chance shown is cut 15% (half-way), but picking uses
+# the anchored edge itself; cutting 25% left almost no NHL parlay with an edge
+CARD_DISCOUNT = {"nhl": .85}
+
+
+def _legkey(L):
+    return f"{L.get('gid')}|{L.get('name') or L.get('lab')}|{L.get('kind')}|{L.get('side')}|{L.get('line')}"
+
+
+def card_slot(sport, p):
+    """('core' | 'longshot' | None, edge on the parlay's market-anchored chance) for one parlay."""
+    legs, d = p.get("legs") or [], p.get("d")
+    if not d or p.get("p") is None or str(p.get("card", "")).startswith("Same-game") or len(legs) < 2:
+        return None, None
+    if any(L.get("price") is None or L.get("book") not in CARD_BOOKS for L in legs) or len({str(L.get("gid")) for L in legs}) < len(legs):
+        return None, None
+    ev = p["p"] * d - 1
+    if not .05 <= ev <= .40:
+        return None, ev
+    if len(legs) <= 4 and 3 <= d <= 15:
+        return "core", ev
+    if len(legs) <= 5 and 15 < d <= 100:
+        return "longshot", ev
+    return None, ev
+
+
+def pick_card(sport, ps, now):
+    """Mark the day's card (p['pick'] = 'core' / 'longshot'). Picks whose first game started stay; the rest are chosen
+    again from what the page shows now (best edge first, a leg in at most 2 picks)."""
+    keep = [p for p in ps if p.get("pick") and when(p["first"]) <= now]
+    for p in ps:
+        if p.get("pick") and not any(p is k for k in keep):
+            p.pop("pick", None)
+    used, sets = {}, {tuple(sorted(_legkey(L) for L in p["legs"])) for p in keep}
+    for p in keep:
+        for L in p["legs"]:
+            used[_legkey(L)] = used.get(_legkey(L), 0) + 1
+    cands = []
+    for p in ps:
+        if p.get("pick") or when(p["first"]) <= now:
+            continue
+        slot, ev = card_slot(sport, p)
+        if slot:
+            cands.append((slot, ev, p))
+    cands.sort(key=lambda c: -c[1])
+    count = lambda f: sum(1 for p in ps if p.get("pick") and f(p["pick"]))
+
+    def take(ok, cap):
+        for slot, ev, p in cands:
+            if cap() <= 0:
+                return
+            k = tuple(sorted(_legkey(L) for L in p["legs"]))
+            if not ok(slot) or p.get("pick") or k in sets or any(used.get(_legkey(L), 0) >= 2 for L in p["legs"]):
+                continue
+            p["pick"] = slot
+            sets.add(k)
+            for L in p["legs"]:
+                used[_legkey(L)] = used.get(_legkey(L), 0) + 1
+    take(lambda x: x == "longshot", lambda: 1 - count(lambda x: x == "longshot"))
+    take(lambda x: x == "core", lambda: CARD_CORE - count(lambda x: x == "core"))
+    take(lambda x: x == "core", lambda: CARD_N - count(lambda x: True))     # no longshot today: a 4th core pick
+    return ps
+
+
+def write_card(sport):
+    """markets/card_<sport>.json for the pages: today's (or the next day's) picks and the card's record in dollars."""
+    today = dt.datetime.now(ET).date().isoformat()
+    days, rec = [], dict(n=0, w=0, l=0, net=0.0)
+    for fp in sorted(glob.glob(os.path.join(OUT, sport, "*.json"))):
+        try:
+            d = json.load(open(fp))
+        except (OSError, ValueError):
+            continue
+        picks = [p for p in d.get("parlays", []) if p.get("pick")]
+        for p in picks:
+            if p.get("res") in ("W", "L"):
+                win = p["res"] == "W"
+                rec["n"] += 1
+                rec["w"] += win
+                rec["l"] += not win
+                rec["net"] += CARD_STAKE * (((p.get("paid") or p["d"]) - 1) if win else -1)
+        if picks:
+            days.append((d["date"], picks))
+    show = next(((dd, ps) for dd, ps in days if dd >= today), days[-1] if days else (None, []))
+    out = dict(sport=sport, stake=CARD_STAKE, date=show[0], updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+               record=dict(rec, net=round(rec["net"], 2)),
+               picks=[dict(slot=p["pick"], card=p["card"], tier=p.get("tier"), p=round(p["p"] * CARD_DISCOUNT.get(sport, 1), 4), d=p["d"],
+                           first=p["first"], res=p.get("res"), paid=p.get("paid"),
+                           legs=[dict(lab=L.get("lab"), price=L.get("price"), book=L.get("book"), p=L.get("p"), res=L.get("res")) for L in p["legs"]])
+                      for p in sorted(show[1], key=lambda p: (p["pick"] != "core", p["first"]))])
+    os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
+    json.dump(out, open(os.path.join(SITE, "markets", f"card_{sport}.json"), "w"), separators=(",", ":"))
+    return out
 
 
 # ---------------------------------------------------------------- grade
@@ -213,6 +318,35 @@ def nfl_game(gid, date):
     return dict(home=sc["home"], away=sc["away"], players=pl, zero_missing=True)
 
 
+def nba_game(gid):
+    """gid = ESPN event id. Players who didn't play aren't in the box (their legs void)."""
+    s = get(f"{ESPN_NBA}/summary?event={gid}")
+    c = ((s or {}).get("header") or {}).get("competitions", [{}])[0]
+    if not c or not ((c.get("status") or {}).get("type") or {}).get("completed"):
+        return None
+    sc = {x["homeAway"]: int(x["score"]) for x in c["competitors"]}
+    pl = {}
+    for team in (s.get("boxscore") or {}).get("players", []):
+        for cat in team.get("statistics", []):
+            keys = cat.get("keys") or []
+            for a in cat.get("athletes", []):
+                v = a.get("stats") or []
+                if len(v) != len(keys):
+                    continue                                    # did not play
+                x = dict(zip(keys, v))
+                try:
+                    pl[jsnorm(a["athlete"]["displayName"])] = dict(
+                        pts=float(x.get("points", 0)), reb=float(x.get("rebounds", 0)), ast=float(x.get("assists", 0)),
+                        fg3m=float(str(x.get("threePointFieldGoalsMade-threePointFieldGoalsAttempted", "0-0")).split("-")[0]))
+                except ValueError:
+                    pass
+    return dict(home=sc["home"], away=sc["away"], players=pl, zero_missing=False)
+
+
+def game_for(sport, gid, start):
+    return nhl_game(gid) if sport == "nhl" else nba_game(gid) if sport == "nba" else nfl_game(gid, et_date(start))
+
+
 def settle(L, g):
     if L["kind"] in ("ml", "spread", "total"):
         h, a = g["home"], g["away"]
@@ -250,7 +384,7 @@ def grade():
                 gid = L.get("gid")
                 if gid not in games:
                     try:
-                        games[gid] = nhl_game(gid) if sport == "nhl" else nfl_game(gid, et_date(L["start"]))
+                        games[gid] = game_for(sport, gid, L["start"])
                     except Exception as e:                                     # noqa: BLE001
                         print(f"parlays {sport}: {gid} not graded ({type(e).__name__})")
                         games[gid] = None
@@ -396,6 +530,10 @@ def page():
     S = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(S)
     for sport in PAGES:
+        c = write_card(sport)
+        print(f"parlays {sport}: card {c['date']} {len(c['picks'])} picks, record {c['record']['w']}-{c['record']['l']} ${c['record']['net']:+.2f}")
+        if sport not in ("nhl", "nfl"):
+            continue                                    # NBA: the card only (no Parlays results page yet)
         d = page_data(sport)
         name = {"nhl": "NHL", "nfl": "NFL"}[sport]
         s = (PAGE.replace("__TITLE__", f"{name} parlay results").replace("__H1__", f"{name} parlays").replace("__SPORT__", name)

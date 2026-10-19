@@ -609,6 +609,9 @@ def page_data():
                 continue
             rows.append(dict(sport=d["sport"], cat=f"{d['sport'].upper()} parlays: {p['card']}", date=d["date"],
                              pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None))
+            if p.get("pick"):                               # the daily card (parlays.pick_card): 4 a day, $5 each
+                rows.append(dict(sport=d["sport"], cat=f"{d['sport'].upper()} Today's card ($5 a parlay)", date=d["date"],
+                                 pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None))
     if not rows:
         return dict(rows=[], overall=None, sports=[])
     df = pd.DataFrame(rows)

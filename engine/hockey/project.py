@@ -1053,7 +1053,7 @@ function tripleCard(){
     ${top.length ? `<div class="eyebrow">Pairs paying 12x+ (fair)</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Two-man</th><th>Chance</th><th>Pays</th><th class="l">My parlay</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="small muted">No pair from two different games in the 15-35% range tonight.</p>'}</section>`;
 }
 function playsView(){
-  const h = foldable(atgParlays() + tierParlays() + pairsCard() + tripleCard());
+  const h = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + foldable(atgParlays() + tierParlays() + pairsCard() + tripleCard());
   return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
 // Longshot two-mans priced at the viewer's books: legs 15-35% to score, chance blended with the exchanges', every

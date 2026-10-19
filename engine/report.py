@@ -994,7 +994,7 @@ function ladderCard(){
     <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
 }
 function renderParlays(){
-  const ladder = ladderCard();
+  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',
     games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort}))}) : '');
