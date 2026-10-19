@@ -28,7 +28,7 @@
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
   let D = null, stamp = null, timer = null;
-  let BK = null, FL = null, PR = null;            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
+  let BK = null, FL = null, PR = null, CARD = null;            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
   const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'Polymarket', 'Poly US', 'ProphetX', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'Fliff', 'Bally Bet', 'betPARX'];
@@ -169,6 +169,16 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .bestshot{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);background:color-mix(in srgb,var(--good) 7%,transparent);border-radius:10px;padding:10px 12px;margin:8px 0 12px}
 .bestshot ul{list-style:none;margin:6px 0;padding:0;display:grid;gap:4px}.bestshot li{display:flex;flex-wrap:wrap;gap:2px 8px;align-items:baseline}.bestshot li a{margin-left:auto;color:inherit;white-space:nowrap}
 .bestshot .bsum{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;border-top:1px solid var(--faint);padding-top:8px;font-size:13.5px}.bestshot .bsum button{margin-left:auto}
+.dcard{border:1px solid color-mix(in srgb,var(--accent) 45%,transparent)}.dcard .phead{align-items:baseline}
+.dcrec{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--muted)}.dcrec b{color:var(--ink)}
+.dcg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:10px}
+.dcp{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:6px;align-content:start}
+.dcp.W{border-color:color-mix(in srgb,var(--good) 60%,transparent)}.dcp.L{opacity:.7}
+.dch{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}.dch .slot{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:1px 6px;background:color-mix(in srgb,var(--accent) 18%,transparent);color:var(--accent)}
+.dch .slot.ls{background:color-mix(in srgb,#F2C14E 20%,transparent);color:#F2C14E}.dch .st{margin-left:auto;font-weight:700}.dch .st.W{color:var(--good)}.dch .st.L{color:var(--bad)}
+.dcp ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13.5px}.dcp li{display:flex;gap:8px;align-items:baseline}.dcp li span{margin-left:auto;white-space:nowrap;font-size:12.5px;color:var(--muted)}
+.dcp li i{font-style:normal;width:12px;font-weight:800}.dcp li i.W{color:var(--good)}.dcp li i.L{color:var(--bad)}
+.dcs{display:flex;flex-wrap:wrap;gap:4px 12px;border-top:1px solid var(--faint);padding-top:6px;font-size:13px}.dcs b{font-family:var(--display);font-size:16px}
 .pinv b{color:var(--good);font-weight:800}.pinv.neg b{color:var(--muted);font-weight:600}
 .pev .mine{color:var(--good);font-weight:700}.pev h3 .mine{font-weight:600}
 .altb{display:inline-block;padding:0 5px;border-radius:4px;border:1px solid var(--faint);font-size:10px;line-height:14px;text-transform:uppercase;letter-spacing:.05em}
@@ -885,6 +895,25 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       }
       return out.sort((a, b) => a.l - b.l);
     },
+    // Today's card (parlays.py pick_card): 4 parlays a day per sport, $5 each, chosen from every card the page shows:
+    // 3 core (2-4 legs, 3-15x) + 1 all-day longshot (15-100x), every leg at the owner's books, legs from different games,
+    // edge 5-40% on the market-anchored chance, a leg in at most 2 picks. Frozen at each pick's first game; graded.
+    dailyCard(){
+      const C = CARD; if (!C || !C.picks || !C.picks.length) return '';
+      const amS = o => (o > 0 ? '+' : '') + o, R = C.record || {}, stake = C.stake || 5;
+      const day = C.date ? new Date(C.date + 'T12:00:00').toLocaleDateString([], {weekday: 'long', month: 'short', day: 'numeric'}) : '';
+      const tm = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+      const money = v => (v >= 0 ? '+$' : '−$') + Math.abs(v).toFixed(2);
+      const pick = P => { const st = P.res === 'W' ? `<span class="st W">Won ${money(stake * ((P.paid || P.d) - 1))}</span>` : P.res === 'L' ? '<span class="st L">Lost</span>'
+          : P.res === 'V' ? '<span class="st">Void</span>' : new Date(P.first) <= Date.now() ? '<span class="st">Live</span>' : `<span class="st" title="The pick can still change until its first game">locks ${tm(P.first)}</span>`;
+        return `<div class="dcp ${P.res || ''}"><div class="dch"><span class="slot${P.slot === 'longshot' ? ' ls' : ''}">${P.slot === 'longshot' ? 'Longshot' : 'Core'}</span>${P.legs.length} legs${st}</div>
+          <ul>${P.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i><b>${esc(L.lab)}</b><span>${esc(FULL[L.book] || L.book || '')} ${L.price != null ? amS(L.price) : ''}</span></li>`).join('')}</ul>
+          <div class="dcs"><span>pays <b>${P.d.toFixed(1)}x</b></span><span>$${stake} → <b>$${(stake * P.d).toFixed(2)}</b></span><span>hits <b>${pc(P.p)}</b></span><span class="${P.p * P.d - 1 >= .05 ? 'good' : 'muted'}">edge ${P.p * P.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((P.p * P.d - 1) * 100))}%</span></div></div>`; };
+      return `<section class="panel dcard"><div class="phead"><h2>Today’s card</h2><span class="small muted">${esc(day)} · ${C.picks.length} parlay${C.picks.length === 1 ? '' : 's'} · $${stake} each</span></div>
+        <div class="dcrec">${R.n ? `<span>Card record <b>${R.w}-${R.l}</b></span><span><b class="${R.net >= 0 ? 'good' : ''}">${money(R.net)}</b> at $${stake} a parlay</span>` : '<span>First graded picks still to come.</span>'}<span>Prices at your books when picked</span></div>
+        <div class="dcg">${C.picks.map(pick).join('')}</div>
+        <details class="how"><summary>How these are picked</summary><p class="note">Four a day from every parlay on this tab: three core parlays (2-4 legs, paying 3x to 15x) and one all-day longshot (15x to 100x). Every leg is priced at your books and comes from a different game; the parlay’s chance uses each leg’s market-anchored chance and needs a 5-40% edge (bigger claimed edges have been the model being wrong); a leg is in at most two picks. Our record so far: 5+ leg parlays went 0 for 101, while 2-4 leg ones matched our chances.${sport === 'nhl' ? ' NHL chances shown are cut 15%: our NHL parlays have hit less often than we said.' : ''} Picks can change until their first game, then lock and are graded on the Profit page.</p></details></section>`;
+    },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
     ladder(gid, pid, name, kinds){
       kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
@@ -980,6 +1009,10 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     fetch(base + 'markets/flags_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
       if (!d || (FL && d.fetched === FL.fetched)) return;
       FL = d; rerender();
+    }).catch(() => {});
+    if (!FREEZE) fetch(base + 'markets/card_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
+      if (!d || (CARD && d.updated === CARD.updated)) return;
+      CARD = d; rerender();
     }).catch(() => {});
   }
   if (sport){ load(); loadBooks(); timer = setInterval(() => { load(); loadBooks(); }, 120000); }
