@@ -1016,6 +1016,18 @@ function ladderCard(){
     <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). In Kalshi’s 2026 markets (weeks 1-5), those higher rungs cleared 3-8 points more often than their price said, in both halves of the sample; a second signal (underdog, or a team total of 25+) pointed the same way. The market seems to price the average game against a bad defense but not the ceiling. That is a small sample from one season, so these are tracked on the Profit page to see if it holds, not a recommendation. Defense rankings early in the season rest on only a few games.</p></details>
     <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
 }
+// A near-maxed rung our projection backs (Ladder longshots / Primetime ladders): 1-2 below the top of the Kalshi ladder,
+// mid 5-30c, spread 5c or less, our chance at least 5% and no more than 2 pts under Kalshi's mid, and real volume for
+// the stat (targets 4+ for receiving, carries 10+ for rushing, attempts 25+ for passing). research/top_rungs.py
+// (Kalshi 2026 wk 1-6, one rung per player-stat): with our chance required, soft-matchup players +31% vs +22% without,
+// everyone -7% vs -11% (both within the noise; our projection agreeing never made it worse).
+const LAD_VOL = {rec: ['tgt', 4], rec_yds: ['tgt', 4], rush_yds: ['car', 10], pass_yds: ['att', 25]};
+function rungOk(p, u){
+  const v = LAD_VOL[u.k], vol = v && p.s[v[0]] ? p.s[v[0]][MEAN] : 0;
+  return (u.top === 1 || u.top === 2) && u.mid >= .05 && u.mid <= .30 && u.yb > 0 && u.ya - u.yb <= .05
+    && u.p != null && u.p >= Math.max(.05, u.mid - .02) && (!v || vol >= v[1]);
+}
+const projChip = (p, u) => { const d = p.s[u.k]; return `<span class="ladc" title="Our projection: median ${d ? f1(d[MED]) : '–'}, 9 in 10 games under ${d ? f1(d[P90]) : '–'}; our chance of ${Math.round(u.l + .5)}+ ${pct(u.p)} vs Kalshi ${pct(u.mid)}">proj ${d ? f0(d[MED]) : '–'} · us ${pct(u.p)} vs ${pct(u.mid)}</span>`; };
 // Ladder longshots (experimental, owner's idea 2026-10-19): parlays of near-maxed Kalshi rungs (1-2 below the top rung
 // and 2+ above the one priced near 50/50) for players with a soft matchup (defense top 8 most allowed to the position)
 // or a live over Value tag. research/top_rungs.py (Kalshi 2026 wk 1-6, 13,985 graded rungs): for everyone, top rungs lost
@@ -1032,7 +1044,7 @@ function ladderLongshots(){
       if (!((p.s.tgt && p.s.tgt[MEAN] >= 3) || (p.s.car && p.s.car[MEAN] >= 8) || (p.s.att && p.s.att[MEAN] >= 20))) continue;
       const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
       if (!soft && !tk) continue;
-      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => (u.top === 1 || u.top === 2) && u.mid >= .05 && u.mid <= .30 && u.yb > 0 && u.ya - u.yb <= .05);
+      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u));
       if (!rungs.length) continue;
       const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || b.top - a.top || b.mid - a.mid)[0];
       const why = [soft ? `soft: ${ord(r.rank)} most to ${k}s` : null, tk && tk === u.k ? 'Value tag' : tk ? 'Value tag (other stat)' : null].filter(Boolean);
@@ -1061,10 +1073,10 @@ function ladderLongshots(){
   const legOf = L => ({gid: L.g.id, start: L.g.sort, kind: L.u.k, side: 'o', line: L.u.l, name: MKT.norm(L.p.n), lab: `${L.p.n} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}`, p: +L.u.mid.toFixed(4), price: amO(L.u.cost), book: 'Kalshi'});
   if (MKT.reg) [...two, ...three].forEach(x => MKT.reg('Ladder longshots (experimental)', `${x.c.length}-leg`, x.c.map(legOf), x.p, x.d));
   const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} legs</span>Kalshi</div>
-      <ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}</b><span>${esc(L.p.t)} vs ${esc(L.p.o)} · ${L.u.price}</span></li><li class="lwhy">${L.why.map(w => `<span class="ladc${/soft/.test(w) ? ' soft' : ''}">${esc(w)}</span>`).join('')}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span></li>`).join('')}</ul>
+      <ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}</b><span>${esc(L.p.t)} vs ${esc(L.p.o)} · ${L.u.price}</span></li><li class="lwhy">${L.why.map(w => `<span class="ladc${/soft/.test(w) ? ' soft' : ''}">${esc(w)}</span>`).join('')}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span>${projChip(L.p, L.u)}</li>`).join('')}</ul>
       <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>market chance <b>${pct1(x.p)}</b></span></div></div>`;
   return `<section class="panel"><div class="phead"><h2>Ladder longshots <span class="exp3">experimental</span></h2><span class="small muted">near-maxed Kalshi rungs · one per game</span></div>
-    <details class="how"><summary>What this is</summary><p class="note">Parlays of rungs one or two below the top of a player’s Kalshi ladder, only for players with a soft matchup (a defense in the 8 that allow the most to his position) or a live Value tag. On Kalshi’s 2026 ladders (weeks 1-6, 13,985 graded rungs) the very top rungs lost 33% for everyone and the next two lost 9-16%: longshots are overpriced. For soft-matchup players the rungs one and two below the top returned +13% and +18%, but with a wide margin of error (about ±40%), so this is a test, not a proven edge. The chance shown is the market’s own (Kalshi’s mid prices), and every parlay is tracked on the Profit page.</p></details>
+    <details class="how"><summary>What this is</summary><p class="note">Parlays of rungs one or two below the top of a player’s Kalshi ladder, only for players with a soft matchup (a defense in the 8 that allow the most to his position) or a live Value tag. On Kalshi’s 2026 ladders (weeks 1-6, 13,985 graded rungs) the very top rungs lost 33% for everyone and the next two lost 9-16%: longshots are overpriced. For soft-matchup players the rungs one and two below the top returned +13% and +18%, but with a wide margin of error (about ±40%), so this is a test, not a proven edge. Each rung must also fit our projection for the game: our chance at least 5% and no more than 2 points under Kalshi’s, and enough volume for the stat (4+ targets, 10+ carries or 25+ passes); the chip shows our median and our chance against Kalshi’s. The chance shown is the market’s own (Kalshi’s mid prices), and every parlay is tracked on the Profit page.</p></details>
     <div class="dcg">${[...two, ...three].map(card).join('')}</div></section>`;
 }
 // Primetime ladders (experimental, owner's call 2026-10-19): a primetime game (7 PM ET or later: TNF / SNF / MNF) stands
@@ -1087,7 +1099,7 @@ function primetimeLadders(){
     for (const p of pool){
       const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null, use = top.has(p);
       if (!soft && !tk && !use) continue;
-      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => (u.top === 1 || u.top === 2) && u.mid >= .05 && u.mid <= .30 && u.yb > 0 && u.ya - u.yb <= .05);
+      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u));
       if (!rungs.length) continue;
       const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || b.top - a.top || b.mid - a.mid)[0];
       const why = [soft ? `soft: ${ord(r.rank)} most to ${k}s` : null, tk && tk === u.k ? 'Value tag' : null, !soft && !(tk && tk === u.k) ? 'high usage' : null].filter(Boolean);
@@ -1120,10 +1132,10 @@ function primetimeLadders(){
   const legOf = L => ({gid: L.g.id, start: L.g.sort, kind: L.u.k, side: 'o', line: L.u.l, name: MKT.norm(L.p.n), lab: `${L.p.n} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}`, p: +L.u.mid.toFixed(4), price: amO(L.u.cost), book: 'Kalshi'});
   if (MKT.reg) out.forEach(G => G.P.forEach(x => MKT.reg('Primetime ladders (experimental)', `${x.c.length}-leg`, x.c.map(legOf), x.p, x.kd)));
   const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} legs</span>same game${x.lf != null ? ` · <span class="${x.lf >= 1.1 ? 'good' : x.lf < .95 ? 'bad' : ''}" title="How much more often our simulated games see these legs hit together than if they were unrelated">legs move together ×${x.lf.toFixed(2)}</span>` : ''}</div>
-      <ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}</b><span>${esc(L.p.t)} · Kalshi ${L.u.price}</span></li><li class="lwhy">${L.why.map(w => `<span class="ladc${/soft/.test(w) ? ' soft' : ''}">${esc(w)}</span>`).join('')}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span></li>`).join('')}</ul>
+      <ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}</b><span>${esc(L.p.t)} · Kalshi ${L.u.price}</span></li><li class="lwhy">${L.why.map(w => `<span class="ladc${/soft/.test(w) ? ' soft' : ''}">${esc(w)}</span>`).join('')}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span>${projChip(L.p, L.u)}</li>`).join('')}</ul>
       <div class="dcs"><span>hits <b>${pct1(x.p)}</b></span><span title="The least a same-game parlay should pay for this to break even">fair <b>${american(x.p)}</b></span><span class="muted" title="The legs’ Kalshi prices multiplied: what separate legs would pay if they were unrelated">legs multiplied ${x.kd.toFixed(0)}x</span></div></div>`;
   return `<section class="panel"><div class="phead"><h2>Primetime ladders <span class="exp3">experimental</span></h2><span class="small muted">same-game · 2-3 near-maxed rungs</span></div>
-    <details class="how"><summary>What this is</summary><p class="note">A primetime game stands alone, so its ladder parlay is a same-game parlay: two or three rungs one or two below the top of each player’s Kalshi ladder, for players with a soft matchup, a Value tag or the most volume in the game. <b>Hits</b> = Kalshi’s prices for the legs multiplied, times how much more often our simulated games see them hit together (a QB’s yards and his top receiver’s rise together), the method that matched real results on 8,966 same-game pairs. <b>Fair</b> is the price to beat: books price same-game parlays with their own correlation, so take one only where your book pays more than Fair. Tracked on the Profit page.</p></details>
+    <details class="how"><summary>What this is</summary><p class="note">A primetime game stands alone, so its ladder parlay is a same-game parlay: two or three rungs one or two below the top of each player’s Kalshi ladder, for players with a soft matchup, a Value tag or the most volume in the game, and only where our projection backs the rung (our chance at least 5% and within 2 points of Kalshi’s or above it). <b>Hits</b> = Kalshi’s prices for the legs multiplied, times how much more often our simulated games see them hit together (a QB’s yards and his top receiver’s rise together), the method that matched real results on 8,966 same-game pairs. <b>Fair</b> is the price to beat: books price same-game parlays with their own correlation, so take one only where your book pays more than Fair. Tracked on the Profit page.</p></details>
     ${out.map(G => `<div class="scteam"><h3>${esc(G.g.away)} @ ${esc(G.g.home)}</h3><span class="small muted">${esc(G.g.kickoff)}${G.ready ? '' : ' · loading simulated games…'}</span></div><div class="dcg">${G.P.map(card).join('')}</div>`).join('')}</section>`;
 }
 function renderParlays(){
