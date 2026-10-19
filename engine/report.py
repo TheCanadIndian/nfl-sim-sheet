@@ -493,6 +493,7 @@ input[type=search]{min-width:200px}
 .sgp td:first-child{white-space:nowrap}
 .outlook{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:13.5px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
 .outlook .good{color:var(--good)}
+.dch .good,.dcs .good{color:var(--good)}.dch .bad{color:var(--bad)}
 .sgp.exp{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--band)}
 .gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
@@ -1066,8 +1067,67 @@ function ladderLongshots(){
     <details class="how"><summary>What this is</summary><p class="note">Parlays of rungs one or two below the top of a player’s Kalshi ladder, only for players with a soft matchup (a defense in the 8 that allow the most to his position) or a live Value tag. On Kalshi’s 2026 ladders (weeks 1-6, 13,985 graded rungs) the very top rungs lost 33% for everyone and the next two lost 9-16%: longshots are overpriced. For soft-matchup players the rungs one and two below the top returned +13% and +18%, but with a wide margin of error (about ±40%), so this is a test, not a proven edge. The chance shown is the market’s own (Kalshi’s mid prices), and every parlay is tracked on the Profit page.</p></details>
     <div class="dcg">${[...two, ...three].map(card).join('')}</div></section>`;
 }
+// Primetime ladders (experimental, owner's call 2026-10-19): a primetime game (7 PM ET or later: TNF / SNF / MNF) stands
+// alone, so its ladder parlay is same-game: 2-3 near-maxed Kalshi rungs (as Ladder longshots: 1-2 below the top, mid
+// 5-30c) for soft-matchup / Value-tag players, else the game's high-usage players. Chance = the Kalshi mids multiplied x
+// our sims' correlation lift (saved draws), the married chance tested on 8,966 same-game pairs. Books price same-game
+// parlays with their own correlation, so the card's Fair is the price to beat, not the Kalshi product.
+function primetimeLadders(){
+  if (!D.dvp || !(window.MKT && MKT.ladder)) return '';
+  const KL = {rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds'};
+  const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
+  const mu = (p, s_) => p.s[s_] ? p.s[s_][MEAN] : 0;
+  const now = Date.now(), out = [];
+  const amO = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+  for (const g of D.games){
+    if (!g.sort || new Date(g.sort) <= now || +String(g.sort).slice(11, 13) < 19) continue;
+    const pool = D.players.filter(x => x.g === g.id && ((x.s.tgt && x.s.tgt[MEAN] >= 3) || (x.s.car && x.s.car[MEAN] >= 8) || (x.s.att && x.s.att[MEAN] >= 20)));
+    const top = new Set([g.home, g.away].flatMap(t => pool.filter(p => p.t === t).sort((a, b) => (mu(b, 'tgt') + mu(b, 'car') + mu(b, 'att') / 4) - (mu(a, 'tgt') + mu(a, 'car') + mu(a, 'att') / 4)).slice(0, 3)));
+    const cands = [];
+    for (const p of pool){
+      const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null, use = top.has(p);
+      if (!soft && !tk && !use) continue;
+      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => (u.top === 1 || u.top === 2) && u.mid >= .05 && u.mid <= .30 && u.yb > 0 && u.ya - u.yb <= .05);
+      if (!rungs.length) continue;
+      const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || b.top - a.top || b.mid - a.mid)[0];
+      const why = [soft ? `soft: ${ord(r.rank)} most to ${k}s` : null, tk && tk === u.k ? 'Value tag' : null, !soft && !(tk && tk === u.k) ? 'high usage' : null].filter(Boolean);
+      cands.push({g, p, u, why, sc: (soft ? 2 : 0) + (tk === u.k ? 2 : 0)});
+    }
+    if (cands.length < 2) continue;
+    const DW = scriptDraws(g.id), ready = DW && DW !== 'load' && DW.p;
+    const hits = L => { const a = ready && DW.p[L.p.k] ? sdecode(DW.p[L.p.k][L.u.k]) : null; return a ? Array.from(a, v => v > L.u.l) : null; };
+    const H = new Map(cands.map(L => [L, hits(L)]));
+    const lift = c => { const hs = c.map(L => H.get(L)); if (hs.some(h => !h)) return null;
+      const n = hs[0].length; let j = 0; for (let i = 0; i < n; i++) if (hs.every(h => h[i])) j++;
+      const ind = hs.reduce((s, h) => s * (h.filter(Boolean).length + .5) / (n + 1), 1); return ((j + .5) / (n + 1)) / ind; };
+    const combos = [];
+    for (let i = 0; i < cands.length; i++) for (let j = i + 1; j < cands.length; j++){
+      combos.push([cands[i], cands[j]]); for (let k = j + 1; k < cands.length; k++) combos.push([cands[i], cands[j], cands[k]]); }
+    const val = c => { const m = c.reduce((s, L) => s * L.u.mid, 1), lf = lift(c);
+      return {c, m, lf, p: lf != null ? Math.min(m * lf, ...c.map(L => L.u.mid)) : m, kd: c.reduce((s, L) => s / L.u.cost, 1), sc: c.reduce((s, L) => s + L.sc, 0)}; };
+    // rank: the most signals, then legs that rise together (lift), then the likeliest; a player in at most 2 shown
+    const used = {}, rank = (a, b) => b.sc - a.sc || (b.lf ?? 1) - (a.lf ?? 1) || b.p - a.p;
+    const pick = (n, k) => { const o = [];
+      for (const x of combos.filter(c => c.length === n).map(val).filter(x => x.p >= .004).sort(rank)){   // 250-1 or shorter
+        if (o.length >= k) break;
+        if (x.c.some(L => (used[L.p.k] || 0) >= 2)) continue;
+        x.c.forEach(L => { used[L.p.k] = (used[L.p.k] || 0) + 1; }); o.push(x); }
+      return o; };
+    const P = [...pick(2, 2), ...pick(3, 1)];
+    if (P.length) out.push({g, P, ready});
+  }
+  if (!out.length) return '';
+  const legOf = L => ({gid: L.g.id, start: L.g.sort, kind: L.u.k, side: 'o', line: L.u.l, name: MKT.norm(L.p.n), lab: `${L.p.n} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}`, p: +L.u.mid.toFixed(4), price: amO(L.u.cost), book: 'Kalshi'});
+  if (MKT.reg) out.forEach(G => G.P.forEach(x => MKT.reg('Primetime ladders (experimental)', `${x.c.length}-leg`, x.c.map(legOf), x.p, x.kd)));
+  const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} legs</span>same game${x.lf != null ? ` · <span class="${x.lf >= 1.1 ? 'good' : x.lf < .95 ? 'bad' : ''}" title="How much more often our simulated games see these legs hit together than if they were unrelated">legs move together ×${x.lf.toFixed(2)}</span>` : ''}</div>
+      <ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}</b><span>${esc(L.p.t)} · Kalshi ${L.u.price}</span></li><li class="lwhy">${L.why.map(w => `<span class="ladc${/soft/.test(w) ? ' soft' : ''}">${esc(w)}</span>`).join('')}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span></li>`).join('')}</ul>
+      <div class="dcs"><span>hits <b>${pct1(x.p)}</b></span><span title="The least a same-game parlay should pay for this to break even">fair <b>${american(x.p)}</b></span><span class="muted" title="The legs’ Kalshi prices multiplied: what separate legs would pay if they were unrelated">legs multiplied ${x.kd.toFixed(0)}x</span></div></div>`;
+  return `<section class="panel"><div class="phead"><h2>Primetime ladders <span class="exp3">experimental</span></h2><span class="small muted">same-game · 2-3 near-maxed rungs</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">A primetime game stands alone, so its ladder parlay is a same-game parlay: two or three rungs one or two below the top of each player’s Kalshi ladder, for players with a soft matchup, a Value tag or the most volume in the game. <b>Hits</b> = Kalshi’s prices for the legs multiplied, times how much more often our simulated games see them hit together (a QB’s yards and his top receiver’s rise together), the method that matched real results on 8,966 same-game pairs. <b>Fair</b> is the price to beat: books price same-game parlays with their own correlation, so take one only where your book pays more than Fair. Tracked on the Profit page.</p></details>
+    ${out.map(G => `<div class="scteam"><h3>${esc(G.g.away)} @ ${esc(G.g.home)}</h3><span class="small muted">${esc(G.g.kickoff)}${G.ready ? '' : ' · loading simulated games…'}</span></div><div class="dcg">${G.P.map(card).join('')}</div>`).join('')}</section>`;
+}
 function renderParlays(){
-  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard() + ladderLongshots();
+  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard() + primetimeLadders() + ladderLongshots();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',
     games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort}))}) : '');
@@ -1172,7 +1232,7 @@ function scriptDraws(gid){
   if (SCR[gid] === undefined){
     SCR[gid] = 'load';
     fetch(`${SCR_ROOT}nfl/draws/${gid}.json?t=${Math.floor(Date.now() / 6e5)}`).then(r => r.ok ? r.json() : null).catch(() => null)
-      .then(j => { SCR[gid] = j; if (state.gtab === 'script' && state.game === gid) render(); });
+      .then(j => { SCR[gid] = j; if ((state.gtab === 'script' && state.game === gid) || state.view === 'parlays') render(); });
   }
   return SCR[gid];
 }
