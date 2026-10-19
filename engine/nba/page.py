@@ -286,7 +286,7 @@ function tierParlays(){
   return card || `<section class="panel"><div class="phead"><h2>Parlays by payout (your books)</h2></div><p class="note">No parlay with an edge on every leg yet. Legs are player props at your books (Kalshi ladders, plus Novig and Hard Rock once they post) and game lines: our chance blended 50/50 with the market (Pinnacle’s no-vig line when it has one), only the side we lean, our number 10+ points from the market, and a 5%+ edge after fees. Props mostly post on game day.</p></section>`;
 }
 function parlaysView(){
-  return ladderCard() + tierParlays();
+  return (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard() + tierParlays();
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
