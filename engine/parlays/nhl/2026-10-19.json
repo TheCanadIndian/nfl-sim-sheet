@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-19",
 "lock": "2026-10-19T23:00:00+00:00",
-"frozen_at": "2026-10-19T14:24:21.012Z",
+"frozen_at": "2026-10-19T14:40:19.264Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -41,7 +41,6 @@
 "p": 0.12613,
 "d": 8.658,
 "first": "2026-10-19T23:30:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -273,8 +272,8 @@
 "line": 6.5,
 "name": null,
 "lab": "COL-PHI under 6.5",
-"p": 0.5738,
-"price": -125,
+"p": 0.5726,
+"price": -127,
 "book": "Novig"
 },
 {
@@ -286,12 +285,12 @@
 "name": null,
 "lab": "PIT-UTA under 6.5",
 "p": 0.4773,
-"price": 120,
+"price": 117,
 "book": "Novig"
 }
 ],
-"p": 0.27388,
-"d": 3.96,
+"p": 0.27331,
+"d": 3.879,
 "first": "2026-10-19T23:00:00+00:00",
 "res": null
 },
@@ -308,7 +307,7 @@
 "name": null,
 "lab": "TOR moneyline",
 "p": 0.5698,
-"price": -127,
+"price": -125,
 "book": "Novig"
 },
 {
@@ -320,13 +319,14 @@
 "name": null,
 "lab": "PIT-UTA under 6.5",
 "p": 0.4773,
-"price": 120,
+"price": 117,
 "book": "Novig"
 }
 ],
 "p": 0.27196,
-"d": 3.932,
+"d": 3.906,
 "first": "2026-10-19T23:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -334,32 +334,32 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026020137",
+"gid": "2026020138",
 "start": "2026-10-19T23:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
+"kind": "total",
+"side": "under",
+"line": 6.5,
 "name": null,
-"lab": "NYR moneyline",
-"p": 0.5601,
+"lab": "COL-PHI under 6.5",
+"p": 0.5726,
 "price": -127,
 "book": "Novig"
 },
 {
 "gid": "2026020140",
 "start": "2026-10-20T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
+"kind": "spread",
+"side": "home",
+"line": -1.5,
 "name": null,
-"lab": "PIT-UTA under 6.5",
-"p": 0.4773,
-"price": 120,
+"lab": "UTA \u22121.5",
+"p": 0.4153,
+"price": 147,
 "book": "Novig"
 }
 ],
-"p": 0.26736,
-"d": 3.932,
+"p": 0.23781,
+"d": 4.415,
 "first": "2026-10-19T23:00:00+00:00",
 "res": null
 },
@@ -368,45 +368,33 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026020138",
-"start": "2026-10-19T23:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
-"name": null,
-"lab": "COL-PHI under 6.5",
-"p": 0.5738,
-"price": -125,
-"book": "Novig"
-},
-{
 "gid": "2026020139",
 "start": "2026-10-19T23:30:00Z",
-"kind": "ml",
+"kind": "spread",
 "side": "home",
-"line": null,
+"line": -1.5,
 "name": null,
-"lab": "TOR moneyline",
-"p": 0.5698,
-"price": -127,
+"lab": "TOR \u22121.5",
+"p": 0.3713,
+"price": 186,
 "book": "Novig"
 },
 {
 "gid": "2026020140",
 "start": "2026-10-20T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
+"kind": "spread",
+"side": "home",
+"line": -1.5,
 "name": null,
-"lab": "PIT-UTA under 6.5",
-"p": 0.4773,
-"price": 120,
+"lab": "UTA \u22121.5",
+"p": 0.4153,
+"price": 147,
 "book": "Novig"
 }
 ],
-"p": 0.15605,
-"d": 7.078,
-"first": "2026-10-19T23:00:00+00:00",
+"p": 0.15422,
+"d": 7.064,
+"first": "2026-10-19T23:30:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -417,44 +405,31 @@
 {
 "gid": "2026020137",
 "start": "2026-10-19T23:00:00Z",
-"kind": "ml",
+"kind": "spread",
 "side": "home",
-"line": null,
+"line": -1.5,
 "name": null,
-"lab": "NYR moneyline",
-"p": 0.5601,
-"price": -127,
-"book": "Novig"
-},
-{
-"gid": "2026020138",
-"start": "2026-10-19T23:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
-"name": null,
-"lab": "COL-PHI under 6.5",
-"p": 0.5738,
-"price": -125,
+"lab": "NYR \u22121.5",
+"p": 0.3559,
+"price": 190,
 "book": "Novig"
 },
 {
 "gid": "2026020140",
 "start": "2026-10-20T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
+"kind": "spread",
+"side": "home",
+"line": -1.5,
 "name": null,
-"lab": "PIT-UTA under 6.5",
-"p": 0.4773,
-"price": 120,
+"lab": "UTA \u22121.5",
+"p": 0.4153,
+"price": 147,
 "book": "Novig"
 }
 ],
-"p": 0.15341,
-"d": 7.078,
+"p": 0.14781,
+"d": 7.163,
 "first": "2026-10-19T23:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -464,43 +439,32 @@
 {
 "gid": "2026020137",
 "start": "2026-10-19T23:00:00Z",
-"kind": "ml",
+"kind": "spread",
 "side": "home",
-"line": null,
+"line": -1.5,
 "name": null,
-"lab": "NYR moneyline",
-"p": 0.5601,
-"price": -127,
+"lab": "NYR \u22121.5",
+"p": 0.3559,
+"price": 190,
 "book": "Novig"
 },
 {
 "gid": "2026020139",
 "start": "2026-10-19T23:30:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "TOR moneyline",
-"p": 0.5698,
-"price": -127,
-"book": "Novig"
-},
-{
-"gid": "2026020140",
-"start": "2026-10-20T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
-"name": null,
-"lab": "PIT-UTA under 6.5",
-"p": 0.4773,
-"price": 120,
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "william nylander",
+"lab": "William Nylander to score",
+"p": 0.4076,
+"price": 160,
 "book": "Novig"
 }
 ],
-"p": 0.15233,
-"d": 7.029,
+"p": 0.14507,
+"d": 7.54,
 "first": "2026-10-19T23:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
