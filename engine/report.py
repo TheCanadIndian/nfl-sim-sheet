@@ -504,7 +504,7 @@ input[type=search]{min-width:200px}
 .scgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
 .scteam{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}.scteam h3{margin:0;font-size:16px}
 .scc{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:8px;align-content:start;min-width:0}
-.scc .ladh b{font-size:15px}.ladc.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.ladc.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.sck{margin:2px 0;justify-self:start;width:fit-content}.dcp li.lwhy{gap:4px;flex-wrap:wrap;margin:-2px 0 2px 0}.dcp li.lwhy span{margin-left:0;font-size:11px}.scc .ladh b{font-size:15px}.ladc.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.ladc.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
 .sct{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.sct th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.sct th:first-child,.sct td:first-child{text-align:left}
 .sct td{text-align:right;padding:4px;border-top:1px solid var(--faint);white-space:nowrap}.sct caption{text-align:left;font-size:12px;color:var(--muted);padding-bottom:2px}
 .sct td a{color:inherit}.sct small{display:block;font-size:10.5px;color:var(--muted)}.sct .mainl{font-size:10px;color:var(--muted);margin-left:4px}
@@ -905,6 +905,27 @@ function married(legs, gid, pSim, pInd){
   const prod = Q.reduce((s, x) => s * x.q, 1), lift = pInd > 0 ? pSim / pInd : 1;
   return {p: Math.min(prod * lift, ...Q.map(x => x.q)), n: Q.filter(x => x.src).length, of: Q.length};
 }
+// Game script check: our simulated chance of a script vs the prediction markets' (MKT.scriptMarket: Kalshi total
+// ladders, Polymarket winning-margin ladders). Same-game parlays live or die on the script, and a script the market
+// already prices as likely gives no reason to play.
+function scriptSpec(P, g){
+  const n = P.name || '', d = P.desc || '', m = /^(.+?) pulls away/.exec(n);
+  if (m) return {kind: 'margin', team: m[1], min: (/wins by (\d+)\+/.exec(d) || [0, 8])[1] * 1};
+  if (/blowout/.test(n)){ const t = /: (\S+) blowout/.exec(n); return t ? {kind: 'margin', team: t[1], min: 14} : null; }
+  if (/close game/.test(n)) return {kind: 'close', max: 7};
+  if (n === 'Close finish') return {kind: 'close', max: 3};
+  if (n === 'Shootout'){ const x = /^(\d+)\+ combined/.exec(d); return x ? {kind: 'over', at: x[1] - .5} : null; }
+  if (/^Grind/.test(n)){ const x = /^(\d+) or fewer combined/.exec(d); return x ? {kind: 'under', at: +x[1] + .5} : null; }
+  return null;
+}
+function scriptCheck(g, spec, ours){
+  if (!spec || ours == null || !(window.MKT && MKT.scriptMarket)) return '';
+  const T = (D.teams[g.id] || {})[g.home] || {}, fav = (T.spread_line ?? 0) >= 0 ? g.home : g.away;
+  const M = MKT.scriptMarket(g.id, spec, {home: g.home, away: g.away, fav}); if (!M) return '';
+  const d = ours - M.m, cls = d >= .05 ? 'up' : d <= -.05 ? 'dn' : '';
+  const verdict = d >= .05 ? 'we see it more than the market' : d <= -.05 ? 'the market sees it more: no reason to play it' : 'in line with the market';
+  return `<span class="ladc sck ${cls}" title="Our simulated games: ${pct(ours)}. ${esc(M.src)}’s ladder: ${pct(M.m)}. ${verdict}.">script: us ${pct(ours)} · market ${pct(M.m)}</span>`;
+}
 function sgpCard(P){
   const any = P.any ?? P.name === 'Most likely', cut = P.rows.length ? P.rows[0].k : 5;
   const gid = SGP_G && SGP_G.id;
@@ -913,6 +934,7 @@ function sgpCard(P){
   const legs = P.legs.map((L, i) => (i === cut && i < P.legs.length ? `<li class="after">+ ${P.legs.length - cut === 1 ? 'this' : 'these'} for the longer version${P.legs.length - cut === 1 ? '' : 's'}</li>` : '') + legLine(L, !any, i === cut ? cut + 1 : 0)).join('');
   return `<div class="sgp${P.expected ? ' exp' : ''}"><h3>${esc(P.name)} <small>${P.name === 'Higher lines' ? 'fewer legs, bumped lines' : any ? 'any script' : `happens in ${pct(P.happens)} of sims`}</small></h3>
     <div class="small muted">${esc(P.desc)}</div>
+    ${SGP_G ? scriptCheck(SGP_G, scriptSpec(P, SGP_G), P.happens) : ''}
     <ol>${legs}</ol>
     <table><thead><tr><th></th><th>Hits</th><th>Fair</th>${any ? '' : '<th title="Chance the parlay hits if this script happens">In script</th>'}<th title="Our simulated games alone (before the market's leg chances)">Sims only</th><th title="Kalshi asks multiplied (when every leg has one)">Kalshi</th></tr></thead><tbody>${rows}</tbody></table>
     ${gamblyBtns(P.legs, P.rows.map(r => r.k), SGP_G ? `${SGP_G.away} @ ${SGP_G.home}` : '')}
@@ -993,8 +1015,59 @@ function ladderCard(){
     <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). In Kalshi’s 2026 markets (weeks 1-5), those higher rungs cleared 3-8 points more often than their price said, in both halves of the sample; a second signal (underdog, or a team total of 25+) pointed the same way. The market seems to price the average game against a bad defense but not the ceiling. That is a small sample from one season, so these are tracked on the Profit page to see if it holds, not a recommendation. Defense rankings early in the season rest on only a few games.</p></details>
     <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
 }
+// Ladder longshots (experimental, owner's idea 2026-10-19): parlays of near-maxed Kalshi rungs (1-2 below the top rung
+// and 2+ above the one priced near 50/50) for players with a soft matchup (defense top 8 most allowed to the position)
+// or a live over Value tag. research/top_rungs.py (Kalshi 2026 wk 1-6, 13,985 graded rungs): for everyone, top rungs lost
+// 33% and the next two 9-16% (longshot bias); for soft-matchup players 1-2 below the top returned +13% / +18% (wide
+// error, +-40%). One leg per game; the chance shown is the market's (Kalshi mids), no model edge claimed. Tracked.
+function ladderLongshots(){
+  if (!D.dvp || !(window.MKT && MKT.ladder)) return '';
+  const KL = {rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds'};
+  const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
+  const now = Date.now(), best = {};
+  for (const g of D.games){
+    if (g.sort && new Date(g.sort) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id)){
+      if (!((p.s.tgt && p.s.tgt[MEAN] >= 3) || (p.s.car && p.s.car[MEAN] >= 8) || (p.s.att && p.s.att[MEAN] >= 20))) continue;
+      const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
+      if (!soft && !tk) continue;
+      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => (u.top === 1 || u.top === 2) && u.mid >= .05 && u.mid <= .30 && u.yb > 0 && u.ya - u.yb <= .05);
+      if (!rungs.length) continue;
+      const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || b.top - a.top || b.mid - a.mid)[0];
+      const why = [soft ? `soft: ${ord(r.rank)} most to ${k}s` : null, tk && tk === u.k ? 'Value tag' : tk ? 'Value tag (other stat)' : null].filter(Boolean);
+      const sc = (soft ? 2 : 0) + (tk === u.k ? 2 : tk ? 1 : 0);
+      const cand = {g, p, u, why, sc};
+      if (!best[g.id] || sc > best[g.id].sc || (sc === best[g.id].sc && u.mid > best[g.id].u.mid)) best[g.id] = cand;
+    }
+  }
+  const legs = Object.values(best).sort((a, b) => b.sc - a.sc || b.u.mid - a.u.mid);
+  if (legs.length < 2) return '';
+  const combos = [];
+  for (let i = 0; i < legs.length; i++) for (let j = i + 1; j < legs.length; j++){
+    combos.push([legs[i], legs[j]]);
+    for (let k = j + 1; k < legs.length; k++) combos.push([legs[i], legs[j], legs[k]]);
+  }
+  const val = c => ({c, p: c.reduce((s, L) => s * L.u.mid, 1), d: c.reduce((s, L) => s / L.u.cost, 1), sc: c.reduce((s, L) => s + L.sc, 0)});
+  const used = {};                                   // no player in more than two of the shown parlays
+  const pick = (n, k) => { const out = [];
+    for (const x of combos.filter(c => c.length === n).map(val).sort((a, b) => b.sc - a.sc || b.p - a.p)){
+      if (out.length >= k) break;
+      if (x.c.some(L => (used[L.p.k] || 0) >= 2)) continue;
+      x.c.forEach(L => { used[L.p.k] = (used[L.p.k] || 0) + 1; }); out.push(x); }
+    return out; };
+  const two = pick(2, 3), three = pick(3, 2);
+  const amO = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+  const legOf = L => ({gid: L.g.id, start: L.g.sort, kind: L.u.k, side: 'o', line: L.u.l, name: MKT.norm(L.p.n), lab: `${L.p.n} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}`, p: +L.u.mid.toFixed(4), price: amO(L.u.cost), book: 'Kalshi'});
+  if (MKT.reg) [...two, ...three].forEach(x => MKT.reg('Ladder longshots (experimental)', `${x.c.length}-leg`, x.c.map(legOf), x.p, x.d));
+  const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} legs</span>Kalshi</div>
+      <ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${KL[L.u.k]}</b><span>${esc(L.p.t)} vs ${esc(L.p.o)} · ${L.u.price}</span></li><li class="lwhy">${L.why.map(w => `<span class="ladc${/soft/.test(w) ? ' soft' : ''}">${esc(w)}</span>`).join('')}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span></li>`).join('')}</ul>
+      <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>market chance <b>${pct1(x.p)}</b></span></div></div>`;
+  return `<section class="panel"><div class="phead"><h2>Ladder longshots <span class="exp3">experimental</span></h2><span class="small muted">near-maxed Kalshi rungs · one per game</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">Parlays of rungs one or two below the top of a player’s Kalshi ladder, only for players with a soft matchup (a defense in the 8 that allow the most to his position) or a live Value tag. On Kalshi’s 2026 ladders (weeks 1-6, 13,985 graded rungs) the very top rungs lost 33% for everyone and the next two lost 9-16%: longshots are overpriced. For soft-matchup players the rungs one and two below the top returned +13% and +18%, but with a wide margin of error (about ±40%), so this is a test, not a proven edge. The chance shown is the market’s own (Kalshi’s mid prices), and every parlay is tracked on the Profit page.</p></details>
+    <div class="dcg">${[...two, ...three].map(card).join('')}</div></section>`;
+}
 function renderParlays(){
-  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard();
+  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard() + ladderLongshots();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',
     games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort}))}) : '');
@@ -1120,12 +1193,12 @@ function scriptPanel(g){
   const fav = homeFav ? g.home : g.away, dog = homeFav ? g.away : g.home, F = homeFav ? H : A, U = homeFav ? A : H;
   const DW = scriptDraws(g.id), ready = !!(DW && DW !== 'load' && DW.g);
   const M = ready ? sdecode(DW.g.margin) : null, TT = ready ? sdecode(DW.g.total) : null;
-  const SC = [['all', 'Expected', () => true, 'every simulated game'],
-              ['pull', `${fav} pulls away`, (m) => (homeFav ? m : -m) >= 10, `${fav} wins by 10+`],
-              ['close', 'Close game', (m) => Math.abs(m) <= 7, 'decided by 7 or fewer'],
-              ['upset', `${dog} wins`, (m) => homeFav ? m < 0 : m > 0, `the underdog ${dog} wins`],
-              ['shoot', 'Shootout', (m, t) => t > tl, `over ${tl} total points`],
-              ['low', 'Low-scoring', (m, t) => t < tl, `under ${tl} total points`]];
+  const SC = [['all', 'Expected', () => true, 'every simulated game', null],
+              ['pull', `${fav} pulls away`, (m) => (homeFav ? m : -m) >= 10, `${fav} wins by 10+`, {kind: 'margin', team: fav, min: 10}],
+              ['close', 'Close game', (m) => Math.abs(m) <= 7, 'decided by 7 or fewer', {kind: 'close', max: 7}],
+              ['upset', `${dog} wins`, (m) => homeFav ? m < 0 : m > 0, `the underdog ${dog} wins`, {kind: 'win', team: dog}],
+              ['shoot', 'Shootout', (m, t) => t > tl, `over ${tl} total points`, {kind: 'over', at: tl}],
+              ['low', 'Low-scoring', (m, t) => t < tl, `under ${tl} total points`, {kind: 'under', at: tl}]];
   const sc = SC.find(x => x[0] === state.script) || SC[0];
   const share = f => { if (!M) return null; let c = 0; for (let i = 0; i < M.length; i++) if (f(M[i], TT[i])) c++; return c / M.length; };
   const mask = M && sc[0] !== 'all' ? Array.from(M, (m, i) => sc[2](m, TT[i])) : null, nIn = mask ? mask.filter(Boolean).length : 0;
@@ -1210,7 +1283,7 @@ function scriptPanel(g){
     ${O ? outlookBar(O) : ''}
     ${gameBets(g)}
     <div><span class="eyebrow">Props if the game goes this way</span>${sw}
-      <div class="small muted">${ready ? (sc[0] === 'all' ? 'All simulated games. Pick a script to see whose lines rise and fall with it.' : `${pct(nIn / M.length)} of our simulated games: ${esc(sc[3])}. Players sorted by how much their lines rise in it.`) : DW === 'load' ? 'Loading simulated games…' : 'Simulated games not available for this game; showing the expected view.'}</div></div>
+      <div class="small muted">${ready ? (sc[0] === 'all' ? 'All simulated games. Pick a script to see whose lines rise and fall with it.' : `${pct(nIn / M.length)} of our simulated games: ${esc(sc[3])}. Players sorted by how much their lines rise in it.` + ` ${scriptCheck(g, sc[4], nIn / M.length)}`) : DW === 'load' ? 'Loading simulated games…' : 'Simulated games not available for this game; showing the expected view.'}</div></div>
     ${offBox}
     ${none ? '<p class="note">No prop lines posted yet for this game’s high-usage or soft-matchup players. Books post them about a day out.</p>' : team(fav, `favored by ${f1(Math.abs(L)).replace('.0', '')}`) + team(dog, 'underdog')}
     ${wait}

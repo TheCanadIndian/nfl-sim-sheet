@@ -805,6 +805,15 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         : pinP != null ? ` <span class="pinv neg" title="${esc(sharpLab(e))} no-vig chance for this side (${pinHow(e.pin.w, e.pin.pl ?? e.pin.l)}); no book beats its fair price">Pin ${e.pin.w === 3 ? '≈' : ''}${(pinP * 100).toFixed(0)}%</span>` : '';
       return `<${url ? 'a' : 'span'} class="pc${v ? ' v' : ''}${c.other ? ' nm' : ''}"${url ? ` href="${esc(url)}" target="_blank" rel="noopener"` : ''} title="${tip}">${lab}<b>${am(c.o)}</b> ${esc(BKS[c.k] || c.k)}${v ? ` <i>+${(c.ev * 100).toFixed(0)}%</i>` : ''}</${url ? 'a' : 'span'}>${pinChip}`;
     },
+    // the stat of a player's live over Value tag ('rec_yds', 'td', ...), or null
+    tagKind(gid, name){
+      if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return null;
+      const v = (FL.tags[String(gid)] || {})[norm(name)]; if (!v) return null;
+      const b = String(typeof v === 'string' ? v : v.b || '');
+      if (/^TD$|anytime|goal/i.test(b)) return /goal/i.test(b) ? 'goal' : 'td';
+      const m = /^over [\d.]+ (.+)$/.exec(b); if (!m) return null;
+      return {'rec yds': 'rec_yds', 'rush yds': 'rush_yds', 'pass yds': 'pass_yds', receptions: 'rec'}[m[1]] || null;
+    },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
     flag(gid, name){
       if (!FL || !FL.tags || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
@@ -914,6 +923,44 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         <div class="dcg">${C.picks.map(pick).join('')}</div>
         <details class="how"><summary>How these are picked</summary><p class="note">Four a day from every parlay on this tab: three core parlays (2-4 legs, paying 3x to 15x) and one all-day longshot (15x to 100x). Every leg is priced at your books and comes from a different game; the parlay’s chance uses each leg’s market-anchored chance and needs a 5-40% edge (bigger claimed edges have been the model being wrong); a leg is in at most two picks. Our record so far: 5+ leg parlays went 0 for 101, while 2-4 leg ones matched our chances.${sport === 'nhl' ? ' NHL chances shown are cut 15%: our NHL parlays have hit less often than we said.' : ''} Picks can change until their first game, then lock and are graded on the Profit page.</p></details></section>`;
     },
+    // The market's chance of a game script, from the prediction markets' full ladders: game totals (Kalshi first, then
+    // Polymarket: over X at every few points) and winning margins (Polymarket: each team -X). Mid prices, quotes wider than
+    // 5c dropped, made monotone, read between rungs (never past the end of a ladder). spec: {kind: 'margin', team, min}
+    // (team wins by min+), {kind: 'close', max} (decided by max or fewer), {kind: 'over' | 'under', at} (total), {kind: 'win', team};
+    // g: {home, away, fav}. Returns {m, src} or null.
+    scriptMarket(gid, spec, g){
+      const rows = forGame(gid).filter(r => r.ya > 0 && r.yb != null && r.yb > 0 && r.ya - r.yb <= .05);
+      const mid = r => (r.ya + r.yb) / 2;
+      // P(X > x) from rungs [(x, p)]: monotone (non-increasing in x), linear between rungs, null outside them
+      const curve = pts => { pts = pts.sort((a, b) => a[0] - b[0]); for (let i = 1; i < pts.length; i++) pts[i][1] = Math.min(pts[i][1], pts[i - 1][1]);
+        return x => { if (pts.length < 2 || x < pts[0][0] - 1e-9 || x > pts[pts.length - 1][0] + 1e-9) return null;
+          for (let i = 1; i < pts.length; i++) if (x <= pts[i][0] + 1e-9){ const [x0, p0] = pts[i - 1], [x1, p1] = pts[i]; return x1 === x0 ? p1 : p0 + (p1 - p0) * (x - x0) / (x1 - x0); }
+          return pts[pts.length - 1][1]; }; };
+      const tot = src => curve(rows.filter(r => r.k === 'total' && r.l != null && r.s === src && !/under/i.test(r.ti || '')).map(r => [r.l, mid(r)]));
+      const over = x => { for (const s of ['kalshi', 'polymarket']){ const v = tot(s)(x); if (v != null) return {m: v, src: s === 'kalshi' ? 'Kalshi' : 'Polymarket'}; } return null; };
+      // winning-margin ladders by team nickname; nickname -> code from the markets' winner rows ("Commanders win (WAS)")
+      const groups = {}; rows.filter(r => r.k === 'spread' && r.o && r.l != null && r.l < 0).forEach(r => (groups[r.o] = groups[r.o] || []).push([-r.l, mid(r)]));
+      const nick = {}; forGame(gid).filter(r => r.k === 'win' && r.o && /\(([A-Z]{2,3})\)/.test(r.ti || '')).forEach(r => { nick[/\(([A-Z]{2,3})\)/.exec(r.ti)[1]] = r.o; });
+      const names = Object.keys(groups);
+      const codeOf = n => Object.keys(nick).find(c => nick[c] === n);
+      const teamGroup = t => { if (nick[t] && groups[nick[t]]) return groups[nick[t]];
+        const other = t === g.home ? g.away : g.home;
+        if (names.length === 2 && nick[other] && groups[nick[other]]) return groups[names.find(n => n !== nick[other])];
+        if (names.length === 2 && !Object.keys(nick).length){                     // no names: the group pricing a 1.5-point win higher is the favorite
+          const at = n => curve(groups[n].map(x => [...x]))(1.5) ?? 0; const fn = at(names[0]) >= at(names[1]) ? names[0] : names[1];
+          return groups[t === g.fav ? fn : names.find(n => n !== fn)]; }
+        return null; };
+      const by = (t, n) => { const G = teamGroup(t); if (!G) return null; const v = curve(G.map(x => [...x]))(n - .5); return v == null ? null : {m: v, src: 'Polymarket'}; };
+      if (spec.kind === 'over') return over(spec.at);
+      if (spec.kind === 'under'){ const v = over(spec.at); return v ? {m: 1 - v.m, src: v.src} : null; }
+      if (spec.kind === 'margin') return by(spec.team, spec.min);
+      if (spec.kind === 'close'){ const a = by(g.home, spec.max + 1), b = by(g.away, spec.max + 1); return a && b ? {m: Math.max(0, 1 - a.m - b.m), src: 'Polymarket'} : null; }
+      if (spec.kind === 'win'){                          // the winner market that names its team ("Commanders win (WAS)")
+        const w = rows.find(r => r.k === 'win' && /\(([A-Z]{2,3})\)/.test(r.ti || ''));
+        if (!w) return null; const c = /\(([A-Z]{2,3})\)/.exec(w.ti)[1];
+        return c === spec.team ? {m: mid(w), src: 'Polymarket'} : (c === g.home || c === g.away) ? {m: 1 - mid(w), src: 'Polymarket'} : null; }
+      return null;
+    },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
     ladder(gid, pid, name, kinds){
       kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
@@ -925,7 +972,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         L.sort((a, b) => a.l - b.l);
         const mid = r => (r.ya + r.yb) / 2; let i0 = 0;
         L.forEach((r, i) => { if (Math.abs(mid(r) - .5) < Math.abs(mid(L[i0]) - .5)) i0 = i; });
-        L.slice(i0 + 2).forEach((r, i) => { if (mid(r) < mid(L[i0])) out.push({k, i, l: r.l, ya: r.ya, mid: mid(r), p: ours(r, 'vegas'), price: px(r.ya, 'kalshi')}); });
+        L.slice(i0 + 2).forEach((r, i) => { if (mid(r) < mid(L[i0])) out.push({k, i, l: r.l, ya: r.ya, yb: r.yb, mid: mid(r), p: ours(r, 'vegas'), price: px(r.ya, 'kalshi'),
+          top: L.length - 1 - (i0 + 2 + i), cost: r.ya + .07 * r.ya * (1 - r.ya)}); });   // top: rungs above this one (0 = the top rung)
       }
       return out.sort((a, b) => a.i - b.i);                         // each stat's nearest high rung first
     },
