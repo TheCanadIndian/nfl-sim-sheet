@@ -148,7 +148,7 @@ def freeze():
 # edges over 50% went 0-33 (the model, not the market, was wrong), NHL parlays hit ~70% of our chance, and the same leg sat
 # in up to 13 parlays a day. So: 3 core picks + 1 all-day longshot (the owner likes them), every leg priced at his books,
 # legs from different games (books' payouts multiply only then), edge 5-40% on a market-anchored chance, a leg in at most
-# 2 picks. Same-game cards are out: no book prices them as the product of their legs.
+# 2 picks, overs only (no under legs). Same-game cards are out: no book prices them as the product of their legs.
 CARD_N, CARD_STAKE, CARD_CORE = 4, 5, 3
 CARD_BOOKS = {"Novig", "Kalshi", "Hard Rock"}           # the owner's books: every leg must be bettable there
 # NHL parlays won 19 vs 27 expected (z about -1.6, not settled): the chance shown is cut 15% (half-way), but picking uses
@@ -166,6 +166,8 @@ def card_slot(sport, p):
     if not d or p.get("p") is None or str(p.get("card", "")).startswith("Same-game") or len(legs) < 2:
         return None, None
     if any(L.get("price") is None or L.get("book") not in CARD_BOOKS for L in legs) or len({str(L.get("gid")) for L in legs}) < len(legs):
+        return None, None
+    if any(str(L.get("side")).lower() in ("u", "under") for L in legs):  # overs only (owner, 2026-10-20): no unders, props or totals
         return None, None
     ev = p["p"] * d - 1
     if not .05 <= ev <= .40:
