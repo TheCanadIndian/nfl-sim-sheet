@@ -8,7 +8,9 @@ NBA player box-score model.
                up); blind: the team's own offense vs the opponent's defense (points per game,
                recency-weighted), league average otherwise
     opponent = defense vs position (G / F / C): what each defense allows per minute to the
-               position, relative to league, shrunk
+               position, relative to league, shrunk; for points and threes also defense vs archetype
+               (8 playstyles from each player's rates as of tip-off, nba/archetypes.json), blended 50/50
+               in log terms with the position number
     simulate = minutes ~ normal(sd from history), stats | minutes ~ negative binomial
 
 Everything is as of tip-off (only earlier games count), so one frame serves backtests and live.
@@ -35,6 +37,14 @@ TEAM_HL, K_TEAM = 15.0, 6.0
 DVP_HL, K_DVP = 20.0, 600.0                       # minutes of evidence toward neutral
 USE_DVP = True
 DVP_BETA = 0.5                                    # how much of the matchup to apply (tuned in backtest)
+# Defense vs archetype (owner's idea 2026-10-19; research/nba_archetypes.py): players in the same position play very
+# differently, and defenses give different things to each style. 8 archetypes from per-minute style (k-means on 2023-24).
+# Walk-forward 2025 + 2026 regular seasons, Poisson deviance vs the current defense vs position: points better in all 4
+# season halves (z -4.0 overall; k 10: -3.8), threes in all 4 (z -3.3; k 10: -3.7); rebounds and assists no better
+# (z -0.1 / +0.1), so they keep the position number.
+USE_DVA = True
+DVA_STATS = ("pts", "fg3m")
+ARCH = os.path.join(HERE, "archetypes.json")
 TEAM_SCALE = "vegas"                              # "vegas" | "blind"
 DISP_GAMMA = 1.5    # dispersion grows with projection size; tuned 2024-26 (in80 by tier .77/.82/.83)
 DISP_REF = {"pts": 8.0, "fga": 8.0, "reb": 4.0, "ast": 3.0}
@@ -168,6 +178,33 @@ class Frames:
         for c in ("pts", "reb", "ast", "fg3m"):
             base = x.pg.map(lg[c])
             x["dvp_" + c] = ((dv[c + "_x"] + K_DVP * base) / (dv.min_x + K_DVP)) / base
+        # archetype as of each game, and defense vs archetype (same method as defense vs position)
+        self.arch = None
+        if USE_DVA and os.path.exists(ARCH):
+            import json
+            A = json.load(open(ARCH))
+            X = p[[c for c in A["cols"] if c.startswith("r_")]].copy()
+            X["ft_rate"] = p.r_fta / p.r_fga.clip(lower=1e-3)
+            X["three_share"] = p.r_fg3m / p.r_fga.clip(lower=1e-3)
+            Z = ((X[A["cols"]].to_numpy() - np.array(A["mu"])) / np.array(A["sd"]))
+            Z = np.nan_to_num(Z)
+            p["arch"] = ((Z[:, None, :] - np.array(A["centers"])[None]) ** 2).sum(-1).argmin(1)
+            self.arch = A
+            pa = p[p.one == 1]
+            lga = {c: pa.groupby("arch")[c + "_x"].sum() / pa.groupby("arch").min_x.sum() for c in DVA_STATS}
+            xa = pa.groupby(["game_id", "opp", "arch"])[["min_x"] + [c + "_x" for c in DVA_STATS]].sum().reset_index()
+            xa = xa.merge(self.games[["game_id", "season", "date"]], on="game_id").sort_values(["date", "game_id"]).reset_index(drop=True)
+            da = decayed(xa, ["opp", "arch"], ["min_x"] + [c + "_x" for c in DVA_STATS], DVP_HL, CARRY)
+            for c in DVA_STATS:
+                base = xa.arch.map(lga[c])
+                xa["dva_" + c] = ((da[c + "_x"] + K_DVP * base) / (da.min_x + K_DVP)) / base
+            self.dva_hist = xa[["date", "opp", "arch"] + [f"dva_{c}" for c in DVA_STATS]]
+            ka = p[["date", "opp", "arch"]].copy()
+            ka["_i"] = np.arange(len(p))
+            ma = pd.merge_asof(ka.sort_values("date"), self.dva_hist.sort_values("date"), on="date", by=["opp", "arch"],
+                               allow_exact_matches=False).sort_values("_i")
+            for c in DVA_STATS:
+                p["dva_" + c] = ma["dva_" + c].fillna(1.0).to_numpy()
         # latest value before each game for every (defense, position), including future games
         dvp_cols = [f"dvp_{c}" for c in ("pts", "reb", "ast", "fg3m")]
         self.dvp_hist = x[["date", "opp", "pg"] + dvp_cols]
@@ -228,7 +265,10 @@ def project(fr, rows, mode="vegas", n=4000, seed=7, live=False):
     for c in STATS:
         r = x["r_" + c].to_numpy()
         if USE_DVP and c in ("pts", "reb", "ast", "fg3m"):
-            r = r * x["dvp_" + c].to_numpy() ** DVP_BETA
+            mt = x["dvp_" + c].to_numpy()
+            if USE_DVA and c in DVA_STATS and "dva_" + c in x:
+                mt = np.sqrt(mt * x["dva_" + c].fillna(1.0).to_numpy())      # position and archetype, 50/50 in log terms
+            r = r * mt ** DVP_BETA
         mu[c] = r * em
     # team scale: points from players add up to the team target; other stats follow pace partially
     target = x.vegas_pts if mode == "vegas" else x.blind_pts
