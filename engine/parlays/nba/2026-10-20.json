@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-20",
 "lock": "2026-10-20T19:00:00+00:00",
-"frozen_at": "2026-10-20T10:23:25.636Z",
+"frozen_at": "2026-10-20T10:39:04.076Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -21,7 +21,7 @@
 "line": 3.5,
 "name": "og anunoby",
 "lab": "OG Anunoby 4+ threes",
-"p": 0.2183,
+"p": 0.2208,
 "price": 398,
 "book": "Kalshi",
 "f": [
@@ -34,13 +34,13 @@
 {
 "gid": "401909090",
 "start": "2026-10-21T01:30Z",
-"kind": "pts",
+"kind": "ast",
 "side": "o",
-"line": 19.5,
+"line": 7.5,
 "name": "deaaron fox",
-"lab": "De'Aaron Fox 20+ pts",
-"p": 0.2845,
-"price": 280,
+"lab": "De'Aaron Fox 8+ ast",
+"p": 0.2378,
+"price": 425,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -50,8 +50,8 @@
 ]
 }
 ],
-"p": 0.06211,
-"d": 18.924,
+"p": 0.0525,
+"d": 26.145,
 "first": "2026-10-20T23:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -61,6 +61,69 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 10+ reb",
+"p": 0.4493,
+"price": 129,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909090",
+"start": "2026-10-21T01:30Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 8+ ast",
+"p": 0.2378,
+"price": 425,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.10682,
+"d": 12.023,
+"first": "2026-10-20T19:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 10+ reb",
+"p": 0.4493,
+"price": 129,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
 "gid": "401909089",
 "start": "2026-10-20T23:00Z",
 "kind": "fg3m",
@@ -68,7 +131,7 @@
 "line": 3.5,
 "name": "og anunoby",
 "lab": "OG Anunoby 4+ threes",
-"p": 0.2183,
+"p": 0.2208,
 "price": 398,
 "book": "Kalshi",
 "f": [
@@ -86,8 +149,8 @@
 "line": 14.5,
 "name": "chet holmgren",
 "lab": "Chet Holmgren 15+ pts",
-"p": 0.4478,
-"price": 146,
+"p": 0.4453,
+"price": 152,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -96,71 +159,8 @@
 ]
 }
 ],
-"p": 0.09775,
-"d": 12.251,
-"first": "2026-10-20T23:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909088",
-"start": "2026-10-20T19:00Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 10+ reb",
-"p": 0.4493,
-"price": 129,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909089",
-"start": "2026-10-20T23:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "karlanthony towns",
-"lab": "Karl-Anthony Towns 2+ threes",
-"p": 0.4093,
-"price": 134,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"game"
-]
-},
-{
-"gid": "401909090",
-"start": "2026-10-21T01:30Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 20+ pts",
-"p": 0.2845,
-"price": 280,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.05233,
-"d": 20.363,
+"p": 0.04418,
+"d": 28.739,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 },
@@ -171,13 +171,13 @@
 {
 "gid": "401909088",
 "start": "2026-10-20T19:00Z",
-"kind": "reb",
+"kind": "pts",
 "side": "o",
-"line": 9.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 10+ reb",
-"p": 0.4493,
-"price": 129,
+"line": 19.5,
+"name": "paul george",
+"lab": "Paul George 20+ pts",
+"p": 0.342,
+"price": 198,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -193,8 +193,8 @@
 "line": 1.5,
 "name": "karlanthony towns",
 "lab": "Karl-Anthony Towns 2+ threes",
-"p": 0.4093,
-"price": 134,
+"p": 0.4194,
+"price": 119,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -210,8 +210,8 @@
 "line": 14.5,
 "name": "chet holmgren",
 "lab": "Chet Holmgren 15+ pts",
-"p": 0.4478,
-"price": 146,
+"p": 0.4453,
+"price": 152,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -220,10 +220,9 @@
 ]
 }
 ],
-"p": 0.08236,
-"d": 13.182,
+"p": 0.06386,
+"d": 16.446,
 "first": "2026-10-20T19:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
