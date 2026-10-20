@@ -172,7 +172,10 @@ def main():
         if mode == "vegas":                       # saved simulations for the page's build-your-own parlay slip
             save_draws(out, sims)
     tab = pd.concat(tabs, ignore_index=True)
-    meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play"]].copy()
+    meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play"]
+                + [c for c in ("arch", "dva_pts", "dva_fg3m") if c in rows]].copy()
+    if fr.arch is not None and "arch" in meta:                         # archetype name for the page
+        meta["arch_name"] = meta.arch.map(lambda a: fr.arch["names"][int(a)] if pd.notna(a) else None)
     meta["e_min"] = M.team_minutes(rows, live=True)
     # per-game team view
     games = []

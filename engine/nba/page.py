@@ -26,6 +26,8 @@ def player_payload(tab, meta, dists):
                         note=None if mm is None else (mm.note or ""), start=None if mm is None else bool(mm.starter == 1),
                         trend=None if mm is None or pd.isna(mm.min_trend) else round(float(mm.min_trend), 1),
                         gp=None if mm is None else int(mm.games_prior or 0), s=s,
+                        ar=None if mm is None or "arch_name" not in mm.index else mm.arch_name,
+                        va=None if mm is None or "dva_pts" not in mm.index else {c: round(float(mm["dva_" + c]), 3) for c in ("pts", "fg3m") if pd.notna(mm["dva_" + c])},
                         d={mode: dists[mode].get(k, {}) for mode in ("vegas", "blind")}))
     return out
 
@@ -55,6 +57,7 @@ __CSS__
 .mgkey i{display:inline-block;width:84px;height:8px;border-radius:4px;background:linear-gradient(90deg,color-mix(in srgb,var(--bad) 55%,transparent),transparent 50%,color-mix(in srgb,var(--good) 55%,transparent))}
 .cell small{display:block;color:var(--muted);font-size:11.5px}
 .tag{font-size:10.5px;font-weight:700;border-radius:4px;padding:0 4px;margin-left:5px;border:1px solid currentColor;white-space:nowrap;cursor:help}
+.tag.arch{color:var(--muted);font-weight:600;border-color:var(--faint)}
 .tag.q{color:#F2C14E} .tag.out{color:var(--r2)}
 .lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
 .g1{color:var(--g1)!important} .g2{color:var(--g2)!important} .g3{color:var(--g3)!important}
@@ -139,12 +142,17 @@ function chips(p, g){
   const l = lean(p, 'pts');
   if (l && Math.abs(l.edge) >= .03) h += `<span class="lean ${shadeP(.5 + l.edge * 2)}" title="Market-blind model ${l.edge > 0 ? 'higher' : 'lower'} on points at ${l.L}">${l.edge > 0 ? '▲' : '▼'} blind</span>`;
   if (p.gp === 0) h += '<span class="tag" style="color:var(--muted)" title="No NBA games yet: league-average role assumed">new</span>';
+  if (p.ar) h += `<span class="tag arch" title="Playstyle archetype from his per-minute production (points, threes, free-throw rate, assists, rebounds, blocks). Points and threes matchups use what this defense allows to this archetype as well as to his position.">${esc(p.ar)}</span>`;
   return h;
 }
 function cell(p, st, g){
   const s = p.s[mode(g)] && p.s[mode(g)][st]; if (!s) return '<td>–</td>';
-  const dv = st !== 'min' && DVP[p.o + '|' + p.pg] && DVP[p.o + '|' + p.pg][st];
-  return `<td class="cell"${dv ? ` style="${MG(dv)}" title="${esc(p.o)} allows ${Math.abs(Math.round((dv-1)*100))}% ${dv >= 1 ? 'more' : 'less'} ${LAB[st].toLowerCase()} per minute to ${p.pg}s"` : ''}><b>${st === 'min' ? f0(s[MED]) : f1(s[MED])}</b><small>${f0(s[P10])}–${f0(s[P90])}</small></td>`;
+  const dp = st !== 'min' && DVP[p.o + '|' + p.pg] && DVP[p.o + '|' + p.pg][st];
+  const da = p.va && p.va[st], dv = dp && da ? Math.sqrt(dp * da) : dp;      // points / threes: position and archetype, as the model blends them
+  const pct_ = v => `${Math.abs(Math.round((v - 1) * 100))}% ${v >= 1 ? 'more' : 'less'}`;
+  const tip = dv ? (da ? `${esc(p.o)} matchup: ${pct_(dv)} ${LAB[st].toLowerCase()} per minute (to ${p.pg}s ${pct_(dp)}; to ${esc(p.ar || 'his archetype')}s ${pct_(da)})`
+    : `${esc(p.o)} allows ${pct_(dv)} ${LAB[st].toLowerCase()} per minute to ${p.pg}s`) : '';
+  return `<td class="cell"${dv ? ` style="${MG(dv)}" title="${tip}"` : ''}><b>${st === 'min' ? f0(s[MED]) : f1(s[MED])}</b><small>${f0(s[P10])}–${f0(s[P90])}</small></td>`;
 }
 function slider(p, g){
   const m = mode(g), stats = COLS.concat(['stl','blk','tov']).filter(s => p.d[m][s]);
