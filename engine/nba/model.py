@@ -43,7 +43,12 @@ DVP_BETA = 0.5                                    # how much of the matchup to a
 # season halves (z -4.0 overall; k 10: -3.8), threes in all 4 (z -3.3; k 10: -3.7); rebounds and assists no better
 # (z -0.1 / +0.1), so they keep the position number.
 USE_DVA = True
-DVA_STATS = ("pts", "fg3m")
+DVA_STATS = ("pts", "fg3m", "stl")              # stats the model blends with the archetype number
+DVA_ALL = ("pts", "reb", "ast", "fg3m", "stl", "blk")   # computed for every one (the page shows them all)
+# Steals and blocks had no matchup at all until 2026-10-20 (research/nba_arch_stlblk.py, same walk-forward test): the
+# position matchup improved both in all 4 season halves (steals z -2.1..-4.4, blocks -1.2..-4.5); for steals the
+# position x archetype blend was best (z -2.7..-4.8), for blocks position alone (the blend was worse in 2 halves).
+MATCH_STATS = ("pts", "reb", "ast", "fg3m", "stl", "blk")
 ARCH = os.path.join(HERE, "archetypes.json")
 TEAM_SCALE = "vegas"                              # "vegas" | "blind"
 DISP_GAMMA = 1.5    # dispersion grows with projection size; tuned 2024-26 (in80 by tier .77/.82/.83)
@@ -172,10 +177,10 @@ class Frames:
             p["r_" + c] = (r[c + "_x"] + K_SCALE * K_MIN[c] * base) / (r.min_x + K_SCALE * K_MIN[c])
         self.lg_rate = lg
         # defense vs position (per minute allowed, relative to league), as of each game
-        x = p[p.one == 1].groupby(["game_id", "opp", "pg"])[["min_x"] + [c + "_x" for c in ("pts", "reb", "ast", "fg3m")]].sum().reset_index()
+        x = p[p.one == 1].groupby(["game_id", "opp", "pg"])[["min_x"] + [c + "_x" for c in MATCH_STATS]].sum().reset_index()
         x = x.merge(self.games[["game_id", "season", "date"]], on="game_id").sort_values(["date", "game_id"]).reset_index(drop=True)
-        dv = decayed(x, ["opp", "pg"], ["min_x", "pts_x", "reb_x", "ast_x", "fg3m_x"], DVP_HL, CARRY)
-        for c in ("pts", "reb", "ast", "fg3m"):
+        dv = decayed(x, ["opp", "pg"], ["min_x"] + [c + "_x" for c in MATCH_STATS], DVP_HL, CARRY)
+        for c in MATCH_STATS:
             base = x.pg.map(lg[c])
             x["dvp_" + c] = ((dv[c + "_x"] + K_DVP * base) / (dv.min_x + K_DVP)) / base
         # archetype as of each game, and defense vs archetype (same method as defense vs position)
@@ -191,22 +196,22 @@ class Frames:
             p["arch"] = ((Z[:, None, :] - np.array(A["centers"])[None]) ** 2).sum(-1).argmin(1)
             self.arch = A
             pa = p[p.one == 1]
-            lga = {c: pa.groupby("arch")[c + "_x"].sum() / pa.groupby("arch").min_x.sum() for c in DVA_STATS}
-            xa = pa.groupby(["game_id", "opp", "arch"])[["min_x"] + [c + "_x" for c in DVA_STATS]].sum().reset_index()
+            lga = {c: pa.groupby("arch")[c + "_x"].sum() / pa.groupby("arch").min_x.sum() for c in DVA_ALL}
+            xa = pa.groupby(["game_id", "opp", "arch"])[["min_x"] + [c + "_x" for c in DVA_ALL]].sum().reset_index()
             xa = xa.merge(self.games[["game_id", "season", "date"]], on="game_id").sort_values(["date", "game_id"]).reset_index(drop=True)
-            da = decayed(xa, ["opp", "arch"], ["min_x"] + [c + "_x" for c in DVA_STATS], DVP_HL, CARRY)
-            for c in DVA_STATS:
+            da = decayed(xa, ["opp", "arch"], ["min_x"] + [c + "_x" for c in DVA_ALL], DVP_HL, CARRY)
+            for c in DVA_ALL:
                 base = xa.arch.map(lga[c])
                 xa["dva_" + c] = ((da[c + "_x"] + K_DVP * base) / (da.min_x + K_DVP)) / base
-            self.dva_hist = xa[["date", "opp", "arch"] + [f"dva_{c}" for c in DVA_STATS]]
+            self.dva_hist = xa[["date", "opp", "arch"] + [f"dva_{c}" for c in DVA_ALL]]
             ka = p[["date", "opp", "arch"]].copy()
             ka["_i"] = np.arange(len(p))
             ma = pd.merge_asof(ka.sort_values("date"), self.dva_hist.sort_values("date"), on="date", by=["opp", "arch"],
                                allow_exact_matches=False).sort_values("_i")
-            for c in DVA_STATS:
+            for c in DVA_ALL:
                 p["dva_" + c] = ma["dva_" + c].fillna(1.0).to_numpy()
         # latest value before each game for every (defense, position), including future games
-        dvp_cols = [f"dvp_{c}" for c in ("pts", "reb", "ast", "fg3m")]
+        dvp_cols = [f"dvp_{c}" for c in MATCH_STATS]
         self.dvp_hist = x[["date", "opp", "pg"] + dvp_cols]
         key = p[["date", "opp", "pg"]].copy()
         key["_i"] = np.arange(len(p))
@@ -264,7 +269,7 @@ def project(fr, rows, mode="vegas", n=4000, seed=7, live=False):
     mu = {}
     for c in STATS:
         r = x["r_" + c].to_numpy()
-        if USE_DVP and c in ("pts", "reb", "ast", "fg3m"):
+        if USE_DVP and c in MATCH_STATS:
             mt = x["dvp_" + c].to_numpy()
             if USE_DVA and c in DVA_STATS and "dva_" + c in x:
                 mt = np.sqrt(mt * x["dva_" + c].fillna(1.0).to_numpy())      # position and archetype, 50/50 in log terms

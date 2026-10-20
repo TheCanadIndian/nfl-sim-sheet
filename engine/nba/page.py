@@ -27,7 +27,7 @@ def player_payload(tab, meta, dists):
                         trend=None if mm is None or pd.isna(mm.min_trend) else round(float(mm.min_trend), 1),
                         gp=None if mm is None else int(mm.games_prior or 0), s=s,
                         ar=None if mm is None or "arch_name" not in mm.index else mm.arch_name,
-                        va=None if mm is None or "dva_pts" not in mm.index else {c: round(float(mm["dva_" + c]), 3) for c in ("pts", "fg3m") if pd.notna(mm["dva_" + c])},
+                        va=None if mm is None or "dva_pts" not in mm.index else {c: round(float(mm["dva_" + c]), 3) for c in ("pts", "fg3m", "stl") if "dva_" + c in mm.index and pd.notna(mm["dva_" + c])},
                         d={mode: dists[mode].get(k, {}) for mode in ("vegas", "blind")}))
     return out
 
@@ -239,7 +239,7 @@ const ARCH_SHORT = {'Interior big': 'Interior big', '3-and-D role player': '3-an
                     'Primary creator': 'Creator', 'Versatile forward': 'Forward', 'Pass-first guard': 'Pass-first', 'Scoring guard/wing': 'Scorer'};
 const ARCH_ORDER = ['Primary creator', 'Scoring guard/wing', 'Pass-first guard', 'Spot-up shooter', '3-and-D role player', 'Versatile forward', 'Interior big', 'Rim protector'];
 function dvaView(){
-  const st = state.dstat === 'fg3m' ? 'fg3m' : 'pts', names = D.arch || [];
+  const st = state.dstat, names = D.arch || [], used = (D.dva_used || ['pts', 'fg3m']).includes(st);
   const idx = ARCH_ORDER.map(n => names.indexOf(n)).filter(i => i >= 0);
   const V = {}; (D.dva || []).forEach(r => { V[r.team + '|' + r.a] = r; });
   const teams = [...new Set((D.dva || []).map(r => r.team))].sort();
@@ -251,7 +251,7 @@ function dvaView(){
   const ex = a => { const ps = [...new Set(D.players.filter(p => p.ar === names[a]).map(p => p.n))].slice(0, 3); return ps.length ? ` e.g. ${ps.join(', ')}` : ''; };
   return `<div class="tw"><table class="t dva"><thead><tr><th class="l">Defense</th>${idx.map(a => `<th><button type="button" class="dvs${col != null && idx[col] === a ? ' on' : ''}" data-dsort="${a}" title="${esc(names[a])}:${esc(ex(a))}. Tap to sort.">${esc(ARCH_SHORT[names[a]] || names[a])}</button></th>`).join('')}</tr></thead><tbody>
   ${rows.map(r => `<tr><td class="l">${today.has(r.t) ? `<b>${esc(r.t)}</b>` : esc(r.t)}</td>${r.v.map(v => `<td class="hm" style="${MG(v)}">${rel(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
-  <p class="note">What each defense allows per minute to each playstyle, against that playstyle’s league average. Archetypes come from a player’s own production (points, threes, free-throw rate, assists, rebounds, blocks), so two guards can land in different columns. Tap a column to sort. Points and threes only: there it projected games better than position alone in every half of the last two seasons; rebounds and assists stay by position.</p>`;
+  <p class="note">${used ? `<b>Used by the model</b> for ${LAB[st].toLowerCase()}: blended with the position number, it projected games better than position alone in every half of the last two seasons.` : `<b>Context only</b> for ${LAB[st].toLowerCase()}: the archetype number didn’t project ${LAB[st].toLowerCase()} better than position, so the model uses the position number (By position).`} What each defense allows per minute to each playstyle, against that playstyle’s league average. Archetypes come from a player’s own production (points, threes, free-throw rate, assists, rebounds, blocks), so two guards can land in different columns. Tap a column to sort.</p>`;
 }
 function dvpView(){
   const st = state.dstat, teams = [...new Set((D.dvp || []).map(r => r.team))].sort();
@@ -260,8 +260,8 @@ function dvpView(){
   const rel = v => v == null ? '–' : (v >= 1 ? '+' : '−') + Math.abs(Math.round((v-1)*100)) + '%';
   const byA = state.dgrp === 'arch' && (D.dva || []).length;
   const grp = (D.dva || []).length ? `<div class="seg" role="group" aria-label="Group by">${[['pos', 'By position'], ['arch', 'By archetype']].map(([k, l]) => `<button data-dgrp="${k}" aria-pressed="${(byA ? 'arch' : 'pos') === k}">${l}</button>`).join('')}</div>` : '';
-  const stats = byA ? ['pts', 'fg3m'] : ['pts','reb','ast','fg3m'];
-  const head = `<section class="panel"><div class="phead" style="flex-wrap:wrap;gap:8px 12px">${grp}<div class="seg">${stats.map(c => `<button data-dstat="${c}" aria-pressed="${c === (byA && !stats.includes(st) ? 'pts' : st)}">${LAB[c]}</button>`).join('')}</div><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Per minute allowed vs league average · bold = plays on this slate ${mgKey('allows less', 'allows more')}</span></div>`;
+  const stats = ['pts', 'reb', 'ast', 'fg3m', 'stl', 'blk'].filter(c => byA ? (D.dva || []).some(r => r[c] != null) : (D.dvp || []).some(r => r[c] != null));
+  const head = `<section class="panel"><div class="phead" style="flex-wrap:wrap;gap:8px 12px">${grp}<div class="seg">${stats.map(c => `<button data-dstat="${c}" aria-pressed="${c === st}">${LAB[c]}${byA && (D.dva_used || []).includes(c) ? ' <small title="Used by the model">●</small>' : ''}</button>`).join('')}</div><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Per minute allowed vs league average · bold = plays on this slate ${mgKey('allows less', 'allows more')}</span></div>`;
   if (byA) return head + dvaView() + '</section>';
   return head + `
   <div class="tw"><table class="t"><thead><tr><th class="l">Defense</th><th>Guards</th><th>Forwards</th><th>Centers</th></tr></thead><tbody>
