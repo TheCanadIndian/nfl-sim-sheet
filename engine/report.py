@@ -1197,7 +1197,8 @@ function pathLegs(g){
         if (dO < 2.0 || dO > 6) continue;                                          // achievable legs: about +100 to +500                                          // longshot legs: +150 to +900
         let fair = u.fair; if (fair == null && gap != null && u.p > 0 && u.p < 1) fair = sg(lg(u.p) + gap);
         const m = fair ?? u.mid, w = fair != null ? (main ? main.w : .25) : .5;
-        const q = u.p == null ? m : m == null ? u.p : w * u.p + (1 - w) * m;
+        if (m == null) continue;                                                    // never our number alone
+        const q = u.p == null ? m : w * u.p + (1 - w) * m;
         if (q == null || q < .20 || q > .45) continue;                             // inside our projection's realistic range                                         //
         let a = 0; for (const z of x) if (z > u.l) a++;
         for (const s of scripts){
@@ -1422,7 +1423,7 @@ function scriptPanel(g){
         const rows = R.filter(r_ => (r_.best || r_.any) && (!main || r_.l >= main.l - 1e-9)).map(r_ => {
           let fair = r_.fair, carried = false;
           if (fair == null && gap != null && r_.p != null && r_.p > 0 && r_.p < 1){ fair = sgm(lg(r_.p) + gap); carried = true; }
-          const w = fair != null ? main.w : .5, m = fair ?? r_.mid, p0 = r_.p, q = p0 == null ? m : m == null ? p0 : w * p0 + (1 - w) * m;
+          const w = fair != null ? main.w : .5, m = fair ?? r_.mid, p0 = r_.p, q = m == null ? null : p0 == null ? m : w * p0 + (1 - w) * m;   // no market reference: no chance or edge shown
           const lf = lift(x, r_.l), qs = q == null ? null : Math.min(.99, q * lf), B = r_.best || r_.any, im = 1 / decO(B.o);
           // way off market: a book whose price says 8+ pts more or less than the fair (stale or mispriced line)
           const off = fair == null ? [] : (r_.all || []).map(z => ({...z, im: 1 / decO(z.o)})).filter(z => Math.abs(z.im - fair) >= .08);
