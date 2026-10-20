@@ -493,7 +493,7 @@ input[type=search]{min-width:200px}
 .sgp td:first-child{white-space:nowrap}
 .outlook{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:13.5px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
 .outlook .good{color:var(--good)}
-.dch .good,.dcs .good{color:var(--good)}.dch .bad{color:var(--bad)}
+.dch .good,.dcs .good{color:var(--good)}.dcp li.pth{margin-top:4px}.dcp li.pth:first-child{margin-top:0}.psc{font-size:12px;color:var(--muted);margin-left:0!important}.psc i{font-style:normal;margin-left:4px}.dch .bad{color:var(--bad)}
 .sgp.exp{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--band)}
 .gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
@@ -1138,8 +1138,116 @@ function primetimeLadders(){
     <details class="how"><summary>What this is</summary><p class="note">A primetime game stands alone, so its ladder parlay is a same-game parlay: two or three rungs one or two below the top of each player’s Kalshi ladder, for players with a soft matchup, a Value tag or the most volume in the game, and only where our projection backs the rung (our chance at least 5% and within 2 points of Kalshi’s or above it). <b>Hits</b> = Kalshi’s prices for the legs multiplied, times how much more often our simulated games see them hit together (a QB’s yards and his top receiver’s rise together), the method that matched real results on 8,966 same-game pairs. <b>Fair</b> is the price to beat: books price same-game parlays with their own correlation, so take one only where your book pays more than Fair. Tracked on the Profit page.</p></details>
     ${out.map(G => `<div class="scteam"><h3>${esc(G.g.away)} @ ${esc(G.g.home)}</h3><span class="small muted">${esc(G.g.kickoff)}${G.ready ? '' : ' · loading simulated games…'}</span></div><div class="dcg">${G.P.map(card).join('')}</div>`).join('')}</section>`;
 }
+// Path longshots (owner's idea 2026-10-19): "a combination of outcomes with actual paths to happening based on usage,
+// matchups, rotations, game scripts and odds discrepancies." Per game: a script our sims rate 3+ pts above the
+// prediction markets (MKT.scriptMarket); the legs it feeds (rung lift 1.15+ in that script, from the saved draws); each
+// leg scored on five factors: usage (team top 3 by volume / starting QB), matchup (defense top 8 most allowed to the
+// position), rotation (a teammate out or a snap jump, from the Summary tab), script, price (our market-anchored chance
+// beats the best price at the owner's books by 5%+, or a Value tag). 3+ factors including the script. One leg per game
+// so books pay the legs multiplied; 2-3 games. Every leg records its factors so the Profit page can learn which matter.
+const PATH_KL = {rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds'};
+function roleOf(g, p){
+  const e = ((D.spot || {})[g.id] || []).find(x => x.name === p.n); if (!e) return null;
+  const out = (e.reasons || []).map(r => /^(.+?) OUT -- (\d+)% of .+? (targets|carries)/.exec(r)).find(Boolean);
+  if (out) return `${out[1]} out: ${out[2]}% of ${out[3]} open`;
+  const sn = (e.facts || []).map(f => /snaps jumped to (\d+)%/.exec(f)).find(Boolean);
+  return sn ? `snaps up to ${sn[1]}%` : null;
+}
+function pathLegs(g){
+  const T = D.teams[g.id] || {}, H = T[g.home], A = T[g.away];
+  if (!H || H.spread_line == null || !(window.MKT && MKT.altLadder && MKT.scriptMarket)) return [];
+  const DW = scriptDraws(g.id); if (!DW || DW === 'load' || !DW.g) return [];
+  const L = H.spread_line, tl = H.total_line, homeFav = L > 0 || (L === 0 && H.win_prob >= .5);
+  const fav = homeFav ? g.home : g.away, dog = homeFav ? g.away : g.home;
+  const M = sdecode(DW.g.margin), TT = sdecode(DW.g.total);
+  const SC = [[`${fav} pulls away`, (m) => (homeFav ? m : -m) >= 10, {kind: 'margin', team: fav, min: 10}],
+              ['Close game', (m) => Math.abs(m) <= 7, {kind: 'close', max: 7}],
+              [`${dog} wins`, (m) => homeFav ? m < 0 : m > 0, {kind: 'win', team: dog}],
+              ['Shootout', (m, t) => t > tl, {kind: 'over', at: tl}],
+              ['Low-scoring', (m, t) => t < tl, {kind: 'under', at: tl}]];
+  const scripts = SC.map(([name, f, spec]) => { const mask = Array.from(M, (m, i) => f(m, TT[i])), n = mask.filter(Boolean).length;
+    const mk = MKT.scriptMarket(g.id, spec, {home: g.home, away: g.away, fav}); return {name, mask, n, ours: n / M.length, mk: mk ? mk.m : null}; })
+    .filter(s => s.mk != null && s.ours - s.mk >= .03);
+  if (!scripts.length) return [];
+  const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
+  const mu = (p, s_) => p.s[s_] ? p.s[s_][MEAN] : 0;
+  const pool = D.players.filter(p => p.g === g.id);
+  const usage = new Set([g.home, g.away].flatMap(t => { const tp = pool.filter(p => p.t === t);
+    const qb = tp.filter(p => p.pos === 'QB').sort((a, b) => mu(b, 'att') - mu(a, 'att'))[0];
+    return [qb, ...tp.filter(p => p.pos !== 'QB').sort((a, b) => (mu(b, 'tgt') + mu(b, 'car')) - (mu(a, 'tgt') + mu(a, 'car'))).slice(0, 3)].filter(Boolean); }));
+  const lg = v => Math.log(v / (1 - v)), sg = v => 1 / (1 + Math.exp(-v));
+  const legs = [];
+  for (const p of pool){
+    const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), role = roleOf(g, p), use = usage.has(p);
+    if (!use && !soft && !role) continue;
+    const tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
+    const stats = p.pos === 'QB' ? ['pass_yds'] : p.pos === 'RB' ? ['rush_yds', 'rec_yds'] : ['rec_yds', 'rec'];
+    for (const st of stats){
+      const v = LAD_VOL[st]; if (v && mu(p, v[0]) < v[1]) continue;
+      const x = DW.p && DW.p[p.k] ? sdecode(DW.p[p.k][st]) : null; if (!x) continue;
+      const R = MKT.altLadder(g.id, p.n, st), main = R.find(u => u.main);
+      const gap = main && main.fair != null && main.p > 0 && main.p < 1 ? lg(main.fair) - lg(main.p) : null;
+      for (const u of R){
+        if (!u.best || (main && u.l < main.l - 1e-9)) continue;                     // overs at or above the main line, at the owner's books
+        const dO = u.best.o > 0 ? 1 + u.best.o / 100 : 1 + 100 / -u.best.o;
+        if (dO < 2.5 || dO > 10) continue;                                          // longshot legs: +150 to +900
+        let fair = u.fair; if (fair == null && gap != null && u.p > 0 && u.p < 1) fair = sg(lg(u.p) + gap);
+        const m = fair ?? u.mid, w = fair != null ? (main ? main.w : .25) : .5;
+        const q = u.p == null ? m : m == null ? u.p : w * u.p + (1 - w) * m;
+        if (q == null || q < .08) continue;                                         // a real path: 8%+ even before the script
+        let a = 0; for (const z of x) if (z > u.l) a++;
+        for (const s of scripts){
+          let b = 0; for (let i = 0; i < x.length; i++) if (s.mask[i] && x[i] > u.l) b++;
+          const lift = ((b + 1) / (s.n + 2)) / ((a + 1) / (x.length + 2)); if (lift < 1.15) continue;
+          const ev = q * dO - 1, F = {usage: use, matchup: soft, rotation: !!role, script: true, price: ev >= .05 || tk === st};
+          const nf = Object.values(F).filter(Boolean).length; if (nf < 3) continue;
+          legs.push({g, p, st, u, q, dO, ev, lift, s, F, nf, role, r, k, tk});
+        }
+      }
+    }
+  }
+  // per player-stat: its best rung (most factors, then the most in-script value)
+  const best = {};
+  for (const L of legs){ const key = L.p.k + '|' + L.st, sc = L.nf * 10 + L.q * L.lift * L.dO;
+    if (!best[key] || sc > best[key].sc) best[key] = {...L, sc}; }
+  return Object.values(best).sort((a, b) => b.sc - a.sc);
+}
+function pathLongshots(){
+  if (!D.dvp || !(window.MKT && MKT.altLadder)) return '';
+  const now = Date.now(), per = [];
+  for (const g of D.games){ if (g.sort && new Date(g.sort) <= now) continue; const L = pathLegs(g); if (L.length) per.push(L.slice(0, 3)); }
+  if (per.length < 2) return per.length || D.games.every(g => g.sort && new Date(g.sort) <= now) ? '' : `<section class="panel"><div class="phead"><h2>Path longshots</h2></div><p class="note">Building paths: needs two games with a script our sims rate above the market and legs it feeds. ${D.games.some(g => SCR[g.id] === undefined || SCR[g.id] === 'load') ? 'Loading simulated games…' : 'None today yet.'}</p></section>`;
+  const combos = [], walk = (i, pk) => { if (pk.length >= 2) combos.push(pk); if (pk.length === 3) return;
+    for (let j = i; j < per.length; j++) for (const L of per[j]) walk(j + 1, [...pk, L]); };
+  walk(0, []);
+  const val = c => ({c, p: c.reduce((s, L) => s * L.q, 1), d: c.reduce((s, L) => s * L.dO, 1), nf: c.reduce((s, L) => s + L.nf, 0)});
+  const used = {}, pick = (n, k) => { const o = [];
+    for (const x of combos.filter(c => c.length === n).map(val).filter(x => x.p * x.d - 1 >= 0).sort((a, b) => b.nf / b.c.length - a.nf / a.c.length || (b.p * b.d) - (a.p * a.d))){
+      if (o.length >= k) break; if (x.c.some(L => (used[L.p.k] || 0) >= 2)) continue;
+      x.c.forEach(L => { used[L.p.k] = (used[L.p.k] || 0) + 1; }); o.push(x); }
+    return o; };
+  const P = [...pick(2, 2), ...pick(3, 2)];
+  if (!P.length) return '';
+  const FL = {usage: 'usage', matchup: 'matchup', rotation: 'rotation', script: 'script', price: 'price'};
+  const legOf = L => ({gid: L.g.id, start: L.g.sort, kind: L.st, side: 'o', line: L.u.l, name: MKT.norm(L.p.n), lab: `${L.p.n} ${Math.ceil(L.u.l)}+ ${PATH_KL[L.st]}`,
+                       p: +L.q.toFixed(4), price: L.u.best.o, book: L.u.best.k, sc: L.s.name, f: Object.keys(L.F).filter(k => L.F[k])});
+  if (MKT.reg) P.forEach(x => MKT.reg('Path longshots', `${x.c.length}-leg`, x.c.map(legOf), x.p, x.d));
+  const chip = (L, k) => { if (!L.F[k]) return '';
+    const t = k === 'usage' ? (L.p.pos === 'QB' ? `QB · ${f0(L.p.s.att ? L.p.s.att[MEAN] : 0)} att` : `usage · ${f1((L.p.s.tgt ? L.p.s.tgt[MEAN] : 0) + (L.p.s.car ? L.p.s.car[MEAN] : 0))} touches`)
+      : k === 'matchup' ? `matchup · ${ord(L.r.rank)} most to ${L.k}s` : k === 'rotation' ? L.role : k === 'script' ? `script · +${Math.round((L.lift - 1) * 100)}% if it happens`
+      : L.ev >= .05 ? `price · +${Math.round(L.ev * 100)}% vs our chance` : 'price · Value tag';
+    return `<span class="ladc ${k === 'matchup' || k === 'price' ? 'soft' : ''}">${esc(t)}</span>`; };
+  const legHtml = L => `<li class="pth"><span class="psc">${esc(L.g.away)} @ ${esc(L.g.home)} · <b>${esc(L.s.name)}</b> <i title="Our simulated games vs the prediction markets">us ${pct(L.s.ours)} · market ${pct(L.s.mk)}</i></span></li>
+      <li><b>${esc(L.p.n)} ${Math.ceil(L.u.l)}+ ${PATH_KL[L.st]}</b><span>${L.u.best.u ? `<a href="${esc(L.u.best.u)}" target="_blank" rel="noopener">${esc(L.u.best.name)} ${L.u.best.o > 0 ? '+' : ''}${L.u.best.o}</a>` : `${esc(L.u.best.name)} ${L.u.best.o > 0 ? '+' : ''}${L.u.best.o}`}</span></li>
+      <li class="lwhy">${Object.keys(FL).map(k => chip(L, k)).join('')}<span class="ladc">us ${pct(L.q)}</span></li>`;
+  const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} games</span>${x.nf} of ${x.c.length * 5} factors</div><ul>${x.c.map(legHtml).join('')}</ul>
+      <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>hits <b>${pct1(x.p)}</b></span><span class="${x.p * x.d - 1 >= .05 ? 'good' : 'muted'}">edge ${x.p * x.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((x.p * x.d - 1) * 100))}%</span></div></div>`;
+  return `<section class="panel"><div class="phead"><h2>Path longshots</h2><span class="small muted">usage · matchups · rotations · game scripts · odds</span></div>
+    <details class="how"><summary>How these are built</summary><p class="note">Each leg needs a path. First a game script our simulated games rate at least 3 points more likely than the prediction markets do (shown as us vs market). Then a rung that script feeds: the line clears 15%+ more often when it happens. The player needs at least three of five reasons: <b>usage</b> (his team’s top three by touches, or the starting QB), <b>matchup</b> (a defense in the 8 that allow the most to his position), <b>rotation</b> (a teammate out or a snap jump), <b>script</b>, and <b>price</b> (our market-anchored chance beats the best price at your books by 5%+, or a Value tag). Legs pay +150 to +900 and come from different games, so the book pays them multiplied. <b>Hits</b> uses each leg’s market-anchored chance (not the script-boosted one). Every leg records its reasons, so the Profit page will show which ones actually matter.</p></details>
+    <div class="dcg">${P.map(card).join('')}</div></section>`;
+}
 function renderParlays(){
-  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard() + primetimeLadders() + ladderLongshots();
+  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + pathLongshots() + ladderCard() + primetimeLadders() + ladderLongshots();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',
     games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort}))}) : '');
