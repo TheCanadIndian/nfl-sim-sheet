@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-20",
 "lock": "2026-10-20T19:00:00+00:00",
-"frozen_at": "2026-10-19T22:45:48.377Z",
+"frozen_at": "2026-10-20T07:08:54.503Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,38 +10,155 @@
 ],
 "parlays": [
 {
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909089",
+"start": "2026-10-20T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "og anunoby",
+"lab": "OG Anunoby 3+ threes",
+"p": 0.4329,
+"price": 140,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"game"
+]
+},
+{
+"gid": "401909090",
+"start": "2026-10-21T01:30Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "chet holmgren",
+"lab": "Chet Holmgren 20+ pts",
+"p": 0.2192,
+"price": 425,
+"book": "Kalshi",
+"f": [
+"usage",
+"game",
+"price"
+]
+}
+],
+"p": 0.09489,
+"d": 12.6,
+"first": "2026-10-20T23:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "401909088",
 "start": "2026-10-20T19:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 10+ reb",
+"p": 0.4493,
+"price": 129,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909090",
+"start": "2026-10-21T01:30Z",
 "kind": "pts",
-"side": "u",
-"line": 24.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham under 25 points",
-"p": 0.5707,
-"price": -107,
-"book": "Kalshi"
+"side": "o",
+"line": 19.5,
+"name": "chet holmgren",
+"lab": "Chet Holmgren 20+ pts",
+"p": 0.2192,
+"price": 425,
+"book": "Kalshi",
+"f": [
+"usage",
+"game",
+"price"
+]
+}
+],
+"p": 0.09849,
+"d": 12.023,
+"first": "2026-10-20T19:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 10+ reb",
+"p": 0.4493,
+"price": 129,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game"
+]
 },
 {
 "gid": "401909089",
 "start": "2026-10-20T23:00Z",
-"kind": "reb",
-"side": "u",
-"line": 7.5,
-"name": "joel embiid",
-"lab": "Joel Embiid under 8 rebounds",
-"p": 0.5794,
-"price": 101,
-"book": "Kalshi"
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "og anunoby",
+"lab": "OG Anunoby 3+ threes",
+"p": 0.4329,
+"price": 140,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"game"
+]
+},
+{
+"gid": "401909090",
+"start": "2026-10-21T01:30Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 20+ pts",
+"p": 0.2995,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.33069,
-"d": 3.889,
+"p": 0.05825,
+"d": 18.082,
 "first": "2026-10-20T19:00:00+00:00",
-"pick": "core",
+"pick": "longshot",
 "res": null
 },
 {
@@ -56,27 +173,26 @@
 "line": 9.5,
 "name": "ausar thompson",
 "lab": "Ausar Thompson under 10 points",
-"p": 0.5429,
-"price": 109,
+"p": 0.5495,
+"price": 105,
 "book": "Kalshi"
 },
 {
 "gid": "401909089",
 "start": "2026-10-20T23:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "u",
 "line": 7.5,
-"name": "joel embiid",
-"lab": "Joel Embiid under 8 rebounds",
-"p": 0.5794,
+"name": "lebron james",
+"lab": "LeBron James under 8 assists",
+"p": 0.6039,
 "price": 101,
 "book": "Kalshi"
 }
 ],
-"p": 0.31456,
-"d": 4.201,
+"p": 0.33187,
+"d": 4.12,
 "first": "2026-10-20T19:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -86,82 +202,36 @@
 {
 "gid": "401909089",
 "start": "2026-10-20T23:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "u",
 "line": 7.5,
-"name": "joel embiid",
-"lab": "Joel Embiid under 8 rebounds",
-"p": 0.5794,
+"name": "lebron james",
+"lab": "LeBron James under 8 assists",
+"p": 0.6039,
 "price": 101,
 "book": "Kalshi"
 },
 {
 "gid": "401909090",
 "start": "2026-10-21T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 6+ assists",
-"p": 0.5009,
-"price": 119,
+"kind": "fg3m",
+"side": "u",
+"line": 1.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander under 2 threes",
+"p": 0.546,
+"price": -107,
 "book": "Kalshi"
 }
 ],
-"p": 0.29019,
-"d": 4.402,
+"p": 0.32976,
+"d": 3.889,
 "first": "2026-10-20T23:00:00+00:00",
 "res": null
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909088",
-"start": "2026-10-20T19:00Z",
-"kind": "pts",
-"side": "u",
-"line": 24.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham under 25 points",
-"p": 0.5707,
-"price": -107,
-"book": "Kalshi"
-},
-{
-"gid": "401909089",
-"start": "2026-10-20T23:00Z",
-"kind": "reb",
-"side": "u",
-"line": 7.5,
-"name": "joel embiid",
-"lab": "Joel Embiid under 8 rebounds",
-"p": 0.5794,
-"price": 101,
-"book": "Kalshi"
-},
-{
-"gid": "401909090",
-"start": "2026-10-21T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 6+ assists",
-"p": 0.5009,
-"price": 119,
-"book": "Kalshi"
-}
-],
-"p": 0.16563,
-"d": 8.516,
-"first": "2026-10-20T19:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "401909088",
@@ -171,8 +241,8 @@
 "line": 9.5,
 "name": "ausar thompson",
 "lab": "Ausar Thompson under 10 points",
-"p": 0.5429,
-"price": 109,
+"p": 0.5495,
+"price": 105,
 "book": "Kalshi"
 },
 {
@@ -183,25 +253,13 @@
 "line": 7.5,
 "name": "joel embiid",
 "lab": "Joel Embiid under 8 rebounds",
-"p": 0.5794,
+"p": 0.5882,
 "price": 101,
-"book": "Kalshi"
-},
-{
-"gid": "401909090",
-"start": "2026-10-21T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 6+ assists",
-"p": 0.5009,
-"price": 119,
 "book": "Kalshi"
 }
 ],
-"p": 0.15755,
-"d": 9.2,
+"p": 0.32322,
+"d": 4.12,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 },
@@ -215,10 +273,10 @@
 "kind": "pts",
 "side": "u",
 "line": 24.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham under 25 points",
-"p": 0.5707,
-"price": -107,
+"name": "jayson tatum",
+"lab": "Jayson Tatum under 25 points",
+"p": 0.4473,
+"price": 152,
 "book": "Kalshi"
 },
 {
@@ -227,27 +285,95 @@
 "kind": "pts",
 "side": "u",
 "line": 19.5,
-"name": "tyrese maxey",
-"lab": "Tyrese Maxey under 20 points",
-"p": 0.4983,
-"price": 134,
+"name": "joel embiid",
+"lab": "Joel Embiid under 20 points",
+"p": 0.4178,
+"price": 189,
+"book": "Kalshi"
+}
+],
+"p": 0.18686,
+"d": 7.283,
+"first": "2026-10-20T19:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "pts",
+"side": "u",
+"line": 9.5,
+"name": "ausar thompson",
+"lab": "Ausar Thompson under 10 points",
+"p": 0.5495,
+"price": 105,
+"book": "Kalshi"
+},
+{
+"gid": "401909089",
+"start": "2026-10-20T23:00Z",
+"kind": "ast",
+"side": "u",
+"line": 7.5,
+"name": "lebron james",
+"lab": "LeBron James under 8 assists",
+"p": 0.6039,
+"price": 101,
 "book": "Kalshi"
 },
 {
 "gid": "401909090",
 "start": "2026-10-21T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 6+ assists",
-"p": 0.5009,
-"price": 119,
+"kind": "fg3m",
+"side": "u",
+"line": 1.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander under 2 threes",
+"p": 0.546,
+"price": -107,
 "book": "Kalshi"
 }
 ],
-"p": 0.14246,
-"d": 9.914,
+"p": 0.1812,
+"d": 7.971,
+"first": "2026-10-20T19:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "pts",
+"side": "u",
+"line": 14.5,
+"name": "jalen duren",
+"lab": "Jalen Duren under 15 points",
+"p": 0.4305,
+"price": 173,
+"book": "Kalshi"
+},
+{
+"gid": "401909089",
+"start": "2026-10-20T23:00Z",
+"kind": "pts",
+"side": "u",
+"line": 19.5,
+"name": "joel embiid",
+"lab": "Joel Embiid under 20 points",
+"p": 0.4178,
+"price": 189,
+"book": "Kalshi"
+}
+],
+"p": 0.17986,
+"d": 7.89,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 }
