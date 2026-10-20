@@ -978,7 +978,7 @@ function tierParlays(){
                   {gid: g.id, kind: 'spread', side: 'away', line: -L, p: A.p_cover, lab: `${g.away} ${sp(L)}`}, {gid: g.id, kind: 'spread', side: 'home', line: -L, p: H.p_cover, lab: `${g.home} ${sp(-L)}`},
                   {gid: g.id, kind: 'total', side: 'over', line: tl, p: H.p_over, lab: `${g.away}-${g.home} over ${tl}`}, {gid: g.id, kind: 'total', side: 'under', line: tl, p: H.p_under, lab: `${g.away}-${g.home} under ${tl}`});
   }
-  return MKT.tierCard({sport: 'nfl', title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort})),
+  return MKT.tierCard({sport: 'nfl', overOnly: true, title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort})),
                        gameLegs, propKinds: {td: 'TD', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', rec: 'receptions'},
                        // Kalshi 2026 (17,517 graded props): 50/50 with the market and a 5%+ edge returned +8.4%; our projection alone lost
                        minEdge: .05});

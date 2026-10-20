@@ -138,6 +138,7 @@ def freeze():
                 json.dump(dict(sport=sport, date=date, lock=min(p["first"] for p in ps), frozen_at=snap["generated"], books=snap["books"],
                                parlays=ps, graded=False), open(fp, "w"), indent=0)
                 print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
+        freeze_multi(now)
     finally:
         srv.terminate()
 
@@ -214,6 +215,7 @@ def pick_card(sport, ps, now):
     take(lambda x: x == "longshot", lambda: 1 - count(lambda x: x == "longshot"))
     take(lambda x: x == "core", lambda: CARD_CORE - count(lambda x: x == "core"))
     take(lambda x: x == "core", lambda: CARD_N - count(lambda x: True))     # no longshot today: a 4th core pick
+    take(lambda x: True, lambda: CARD_N - count(lambda x: True))            # still short of 4 (few core parlays): more longshots
     return ps
 
 
@@ -246,6 +248,181 @@ def write_card(sport):
     os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
     json.dump(out, open(os.path.join(SITE, "markets", f"card_{sport}.json"), "w"), separators=(",", ":"))
     return out
+
+
+# ---------------------------------------------------------------- multisport all-day longshots
+# One leg per game across sports (owner 2026-10-20: "multisport all day longshots"), from each sport's strongest legs at
+# the owner's books: NFL / NBA Path-longshot legs (each with 3+ reasons, our chance 20-45%) and NHL anytime-goal legs
+# (top-3-usage scorers with an edge). 3-4 legs, 2+ sports, paying 15-300x, edge >= 0 on the legs' market-anchored
+# chances, a leg in at most 2 parlays. Frozen and graded like the rest (each leg carries its sport).
+MULTI_SRC = {"nfl": ("Path longshots",), "nba": ("Path longshots",), "nhl": ("Anytime-goal parlays", "Longshot two-mans")}
+
+
+def multi_parlays(date):
+    pool = {}
+    for sport, cards in MULTI_SRC.items():
+        fp = os.path.join(OUT, sport, f"{date}.json")
+        if not os.path.exists(fp):
+            continue
+        for q in json.load(open(fp)).get("parlays", []):
+            if q.get("card") not in cards:
+                continue
+            for L in q["legs"]:
+                if L.get("price") is None or L.get("book") not in CARD_BOOKS or str(L.get("side")).lower() in ("u", "under") or not L.get("p"):
+                    continue
+                k = (sport, str(L.get("gid")), L.get("name"), L.get("kind"), L.get("line"))
+                nf = len(L.get("f") or []) or 3                                  # NHL goal legs: usage + edge + price
+                if k not in pool or nf > pool[k]["nf"]:
+                    pool[k] = dict(L, sport=sport, nf=nf)
+    # each game's best leg
+    best = {}
+    for L in pool.values():
+        g = (L["sport"], str(L["gid"]))
+        sc = L["nf"] * 10 + L["p"] * dec(L["price"])
+        if g not in best or sc > best[g][0]:
+            best[g] = (sc, L)
+    legs = sorted((L for _, L in best.values()), key=lambda L: -(L["nf"] * 10 + L["p"] * dec(L["price"])))[:14]
+    import itertools
+    cands = []
+    for n in (3, 4):
+        for c in itertools.combinations(legs, n):
+            if len({L["sport"] for L in c}) < 2:
+                continue
+            pr, d = math.prod(L["p"] for L in c), math.prod(dec(L["price"]) for L in c)
+            if not 15 <= d <= 300 or pr * d - 1 < 0:
+                continue
+            cands.append((sum(L["nf"] for L in c) / n, pr * d - 1, n, c, pr, d))
+    cands.sort(key=lambda x: (-x[0], -x[1]))
+    out, used = [], {}
+    for want_n, k in ((3, 2), (4, 1)):
+        got = 0
+        for avg, ev, n, c, pr, d in cands:
+            if n != want_n or got >= k:
+                continue
+            keys = [(L["sport"], L["gid"], L["name"]) for L in c]
+            if any(used.get(x, 0) >= 2 for x in keys):
+                continue
+            for x in keys:
+                used[x] = used.get(x, 0) + 1
+            legs_ = [{k_: v for k_, v in L.items() if k_ != "nf"} for L in c]
+            first = min(when(L["start"]) for L in c).astimezone(dt.timezone.utc).isoformat()
+            out.append(dict(card="Multisport longshots", tier=f"{n} legs · {' + '.join(sorted({L['sport'].upper() for L in c}))}",
+                            legs=legs_, p=round(pr, 5), d=round(d, 3), first=first))
+            got += 1
+    return out
+
+
+def freeze_multi(now):
+    today = dt.datetime.now(ET).date()
+    dates = {os.path.basename(f)[:10] for sp in MULTI_SRC for f in glob.glob(os.path.join(OUT, sp, "*.json"))}
+    for date in sorted(x for x in dates if dt.date.fromisoformat(x) >= today):
+        fp = os.path.join(OUT, "multi", f"{date}.json")
+        old = json.load(open(fp)) if os.path.exists(fp) else None
+        if old and old.get("graded"):
+            continue
+        locked = [dict(q, locked=True) for q in (old["parlays"] if old else []) if q.get("locked") or when(q["first"]) <= now]
+        lk = {tuple(sorted((L["sport"], L["gid"], L["name"]) for L in q["legs"])) for q in locked}
+        pending = [q for q in multi_parlays(date) if when(q["first"]) > now and tuple(sorted((L["sport"], L["gid"], L["name"]) for L in q["legs"])) not in lk]
+        ps = locked + pending[:max(0, 3 - len(locked))]
+        if not ps or (old and ps == old["parlays"]):
+            continue
+        os.makedirs(os.path.dirname(fp), exist_ok=True)
+        json.dump(dict(sport="multi", date=date, lock=min(q["first"] for q in ps), frozen_at=now.isoformat(), books=sorted(CARD_BOOKS),
+                       parlays=ps, graded=False), open(fp, "w"), indent=0)
+        print(f"parlays multi {date}: {len(locked)} locked, {len(ps) - len(locked)} still updating")
+
+
+# ---------------------------------------------------------------- one page for every parlay (/parlays.html)
+HUB_SKIP = ("Same-game",)                                 # same-game cards stay on each game's page (no book pays their product)
+
+
+def hub_data():
+    today = dt.datetime.now(ET).date().isoformat()
+    sports = []
+    for sport in ("nfl", "nhl", "nba", "multi"):
+        fs = sorted(f for f in glob.glob(os.path.join(OUT, sport, "*.json")) if os.path.basename(f)[:10] >= today)
+        if not fs:
+            continue
+        d = json.load(open(fs[0]))
+        cards = {}
+        for q in d["parlays"]:
+            if str(q.get("card", "")).startswith(HUB_SKIP):
+                continue
+            cards.setdefault(q["card"], []).append(dict(tier=q.get("tier"), p=q.get("p"), d=q.get("d"), first=q.get("first"), res=q.get("res"),
+                                                         paid=q.get("paid"), pick=q.get("pick"),
+                                                         legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
+                                                                    sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
+        sports.append(dict(sport=sport, date=d["date"], cards=[dict(card=c, parlays=v) for c, v in cards.items()]))
+    return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports)
+
+
+HUB = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parlays</title>__FONTS__<style>__CSS__
+.hsw{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}.hsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:5px 14px;font:600 13.5px var(--body);cursor:pointer}
+.hsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin:8px 0 4px}
+.hp{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:6px;align-content:start}
+.hp.pick{border-color:color-mix(in srgb,var(--accent) 55%,transparent)}.hp.W{border-color:color-mix(in srgb,var(--good) 60%,transparent)}.hp.L{opacity:.65}
+.hh{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.hh .st{margin-left:auto;font-weight:700}.hh .st.W{color:var(--good)}.hh .st.L{color:var(--bad)}
+.tg{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:1px 6px;background:var(--faint);color:var(--ink)}
+.tg.card{background:color-mix(in srgb,var(--accent) 20%,transparent);color:var(--accent)}.tg.ls{background:color-mix(in srgb,#F2C14E 20%,transparent);color:#F2C14E}
+.hp ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13.5px}.hp li{display:flex;gap:7px;align-items:baseline}
+.hp li .sp{font-size:10px;font-weight:800;color:var(--muted);width:28px;flex:none}.hp li .bk{margin-left:auto;white-space:nowrap;font-size:12.5px;color:var(--muted)}
+.hp li i{font-style:normal;font-weight:800;width:12px;flex:none}.hp li i.W{color:var(--good)}.hp li i.L{color:var(--bad)}
+.hs{display:flex;flex-wrap:wrap;gap:4px 12px;border-top:1px solid var(--faint);padding-top:6px;font-size:13px}.hs b{font-family:var(--display);font-size:16px}.hs .good{color:var(--good)}
+.hsec h2 small{font-family:var(--body);font-size:12.5px;color:var(--muted);font-weight:500;margin-left:8px;letter-spacing:0;text-transform:none}
+details.hc{border-top:1px solid var(--faint);padding:8px 0}details.hc summary{cursor:pointer;font-weight:700}details.hc summary span{color:var(--muted);font-weight:500;font-size:12.5px;margin-left:6px}
+</style></head><body><div class="wrap">
+<header><div><div class="eyebrow">All sports · $5 a parlay</div><h1>Parlays</h1></div></header>
+<main id="main"></main>
+<footer>Every parlay the site builds, in one place: each sport’s Today’s card (4 a day: 3 core + 1 longshot, overs only, every leg at your books and from a different game), the multisport all-day longshots, and every card from the sport pages. Frozen at each parlay’s first game and graded on the Profit page. Same-game parlays stay on each game’s page (books don’t pay them as the legs multiplied). Updated about every 15 minutes before games.</footer>
+</div><script>
+const D = __DATA__;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const pc = p => p == null ? '–' : p < .1 ? (Math.round(p * 1000) / 10).toFixed(1) + '%' : Math.round(p * 100) + '%';
+const am = o => o == null ? '' : (o > 0 ? '+' : '') + o;
+const tm = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+const day = d => new Date(d + 'T12:00:00').toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
+const SP = {nfl: 'NFL', nhl: 'NHL', nba: 'NBA', multi: 'Multi'};
+let F = 'all'; try { F = localStorage.getItem('simhub-v1') || 'all'; } catch (e) {}
+function card(q, sport, lab){
+  const st = q.res === 'W' ? `<span class="st W">Won +$${(D.stake * ((q.paid || q.d) - 1)).toFixed(2)}</span>` : q.res === 'L' ? '<span class="st L">Lost</span>' : q.res === 'V' ? '<span class="st">Void</span>'
+    : new Date(q.first) <= Date.now() ? '<span class="st">Live</span>' : `<span class="st">locks ${tm(q.first)}</span>`;
+  const ev = q.p && q.d ? q.p * q.d - 1 : null;
+  return `<div class="hp ${q.pick ? 'pick' : ''} ${q.res || ''}"><div class="hh">${q.pick ? `<span class="tg card">Today’s card</span>` : ''}${lab ? `<span class="tg ${/long/i.test(lab) ? 'ls' : ''}">${esc(lab)}</span>` : ''}<span>${esc(q.tier || '')}</span>${st}</div>
+    <ul>${q.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i>${sport === 'multi' ? `<span class="sp">${SP[L.sport] || ''}</span>` : ''}<b>${esc(L.lab)}</b><span class="bk">${esc(L.book || '')} ${am(L.price)}</span></li>`).join('')}</ul>
+    <div class="hs">${q.d ? `<span>pays <b>${q.d.toFixed(q.d < 10 ? 1 : 0)}x</b></span><span>$${D.stake} → <b>$${(D.stake * q.d).toFixed(q.d < 10 ? 2 : 0)}</b></span>` : ''}<span>hits <b>${pc(q.p)}</b></span>${ev != null ? `<span class="${ev >= .05 ? 'good' : 'muted'}">edge ${ev >= 0 ? '+' : '−'}${Math.abs(Math.round(ev * 100))}%</span>` : ''}</div></div>`;
+}
+function render(){
+  const S = D.sports.filter(s => F === 'all' || s.sport === F);
+  const sw = `<div class="hsw">${['all', ...D.sports.map(s => s.sport)].map(k => `<button data-f="${k}" aria-pressed="${F === k}">${k === 'all' ? 'All' : SP[k]}</button>`).join('')}</div>`;
+  const picks = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.flatMap(c => c.parlays.filter(q => q.pick).map(q => ({q, s, c}))));
+  const multi = S.find(s => s.sport === 'multi');
+  const sec = (h, sub, body) => `<section class="panel hsec"><div class="phead"><h2>${h}<small>${sub}</small></h2></div>${body}</section>`;
+  let html = sw;
+  const today = new Date().toLocaleDateString('en-CA');
+  if (picks.length) html += sec('Today’s cards', `${picks.length} parlays · $${D.stake} each`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
+  if (multi && multi.cards.length) html += sec('Multisport all-day longshots', `${day(multi.date)} · one leg per game, 2+ sports`, `<div class="hg">${multi.cards.flatMap(c => c.parlays).map(q => card(q, 'multi', '')).join('')}</div>
+    <p class="note" style="margin:6px 0 0">Legs are each sport’s strongest at your books: NFL and NBA path legs (three or more of usage, matchup, rotation, game script and price, with our chance 20-45%) and NHL anytime-goal legs from our top three per game. One leg per game, 3-4 legs, paying 15x to 300x.</p>`);
+  for (const s of S.filter(s => s.sport !== 'multi')){
+    const body = s.cards.map(c => `<details class="hc"${/Path|Ladder|Primetime/.test(c.card) ? ' open' : ''}><summary>${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`).join('');
+    html += sec(SP[s.sport], day(s.date), body || '<p class="note">No parlays yet.</p>');
+  }
+  if (!D.sports.length) html += '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>';
+  document.getElementById('main').innerHTML = html;
+}
+document.addEventListener('click', e => { const b = e.target.closest('button[data-f]'); if (!b) return; F = b.dataset.f; try { localStorage.setItem('simhub-v1', F); } catch (x) {} render(); });
+render();
+</script></body></html>"""
+
+
+def write_hub(S):
+    import report
+    d = hub_data()
+    src = os.path.join(OUT, "hub.html")
+    open(src, "w", encoding="utf-8").write(HUB.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS).replace("__DATA__", json.dumps(d, separators=(",", ":"))))
+    S.inject(src, os.path.join(SITE, "parlays.html"), 0, "parlays")
+    print(f"parlays hub: {sum(len(c['parlays']) for s in d['sports'] for c in s['cards'])} parlays across {len(d['sports'])} sports")
 
 
 # ---------------------------------------------------------------- grade
@@ -384,13 +561,14 @@ def grade():
                 if L.get("res") in ("W", "L", "P", "V"):
                     continue
                 gid = L.get("gid")
-                if gid not in games:
+                lsp = L.get("sport") or sport
+                if (lsp, gid) not in games:
                     try:
-                        games[gid] = game_for(sport, gid, L["start"])
+                        games[(lsp, gid)] = game_for(lsp, gid, L["start"])
                     except Exception as e:                                     # noqa: BLE001
                         print(f"parlays {sport}: {gid} not graded ({type(e).__name__})")
-                        games[gid] = None
-                g = games[gid]
+                        games[(lsp, gid)] = None
+                g = games[(lsp, gid)]
                 if g is None:
                     pending += 1
                     continue
@@ -545,11 +723,21 @@ def page():
         open(src, "w", encoding="utf-8").write(s)
         S.inject(src, os.path.join(SITE, sport, "parlays.html"), 1, f"{sport}:results")
         print(f"parlays {sport}: page {d['overall']['w']}-{d['overall']['l']}")
+    write_hub(S)                                        # /parlays.html: every sport in one place
+
+
+def hub():
+    import importlib.util
+    sys.path.insert(0, HERE)
+    spec = importlib.util.spec_from_file_location("sim_site", os.path.join(HERE, "site.py"))
+    S = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(S)
+    write_hub(S)
 
 
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "all"
-    for step, fn in (("freeze", freeze), ("grade", grade), ("page", page)):
+    for step, fn in (("freeze", freeze), ("grade", grade), ("page", page), ("hub", hub)):
         if cmd in (step, "all"):
             try:
                 fn()
