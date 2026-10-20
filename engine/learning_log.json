@@ -762,5 +762,209 @@
   "next": 1,
   "minutes": 5.3,
   "dry": false
+ },
+ {
+  "date": "2026-10-20T10:10",
+  "sport": "nfl",
+  "windows": [
+   2025,
+   2026
+  ],
+  "tried": [
+   {
+    "change": {
+     "boxscore.sim.TD_GAMMA": 0.8
+    },
+    "ok": false,
+    "score": 0.00013,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00013,
+      "worst": 0.00146,
+      "in80": 0.802
+     },
+     "2026": {
+      "avg_change": -0.00063,
+      "worst": 0.00275,
+      "in80": 0.779
+     }
+    },
+    "what": "TD share compression",
+    "was": 0.85
+   },
+   {
+    "change": {
+     "boxscore.sim.TD_GAMMA": 0.9
+    },
+    "ok": false,
+    "score": 0.00048,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00048,
+      "worst": 0.00121,
+      "in80": 0.797
+     },
+     "2026": {
+      "avg_change": -0.00041,
+      "worst": 0.002,
+      "in80": 0.787
+     }
+    },
+    "what": "TD share compression",
+    "was": 0.85
+   },
+   {
+    "change": {
+     "boxscore.sim.QB_TD_MULT": 2.8
+    },
+    "ok": false,
+    "score": 0.00045,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00045,
+      "worst": 0.00141,
+      "in80": 0.799
+     },
+     "2026": {
+      "avg_change": -0.00125,
+      "worst": 0.0003,
+      "in80": 0.784
+     }
+    },
+    "what": "QB goal-line weight",
+    "was": 3.0
+   },
+   {
+    "change": {
+     "boxscore.sim.QB_TD_MULT": 3.2
+    },
+    "ok": false,
+    "score": 0.00034,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00034,
+      "worst": 0.00159,
+      "in80": 0.801
+     },
+     "2026": {
+      "avg_change": -0.00052,
+      "worst": 0.00051,
+      "in80": 0.791
+     }
+    },
+    "what": "QB goal-line weight",
+    "was": 3.0
+   },
+   {
+    "change": {
+     "boxscore.pipeline.FUNNEL_BETA": 0.15
+    },
+    "ok": false,
+    "score": -8e-05,
+    "windows": {
+     "2025": {
+      "avg_change": -8e-05,
+      "worst": 0.00121,
+      "in80": 0.799
+     },
+     "2026": {
+      "avg_change": -0.00035,
+      "worst": 0.00204,
+      "in80": 0.789
+     }
+    },
+    "what": "defense target-funnel strength",
+    "was": 0.25
+   },
+   {
+    "change": {
+     "boxscore.pipeline.FUNNEL_BETA": 0.35
+    },
+    "ok": false,
+    "score": 0.00035,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00035,
+      "worst": 0.00146,
+      "in80": 0.802
+     },
+     "2026": {
+      "avg_change": -0.00015,
+      "worst": 0.00121,
+      "in80": 0.78
+     }
+    },
+    "what": "defense target-funnel strength",
+    "was": 0.25
+   },
+   {
+    "change": {
+     "boxscore.priors.K_TGT": 15
+    },
+    "ok": false,
+    "score": 0.00062,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00062,
+      "worst": 0.00262,
+      "in80": 0.798
+     },
+     "2026": {
+      "avg_change": -0.00096,
+      "worst": 0.00176,
+      "in80": 0.782
+     }
+    },
+    "what": "target-share shrinkage (games of evidence toward role average)",
+    "was": 20
+   },
+   {
+    "change": {
+     "boxscore.priors.K_TGT": 25
+    },
+    "ok": false,
+    "score": -0.00108,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00108,
+      "worst": 0.00061,
+      "in80": 0.804
+     },
+     "2026": {
+      "avg_change": -0.00194,
+      "worst": 0.00024,
+      "in80": 0.791
+     }
+    },
+    "what": "target-share shrinkage (games of evidence toward role average)",
+    "was": 20
+   }
+  ],
+  "adopted": null,
+  "baseline": {
+   "2025": {
+    "qs_tgt": 0.4958,
+    "qs_rec": 0.3756,
+    "qs_rec_yds": 4.8257,
+    "qs_car": 0.9088,
+    "qs_rush_yds": 2.7008,
+    "qs_pass_yds": 20.7254,
+    "td_logloss": 0.3977,
+    "in80": 0.8011
+   },
+   "2026": {
+    "qs_tgt": 0.5356,
+    "qs_rec": 0.4003,
+    "qs_rec_yds": 5.0573,
+    "qs_car": 0.9034,
+    "qs_rush_yds": 2.5279,
+    "qs_pass_yds": 22.5776,
+    "td_logloss": 0.3918,
+    "in80": 0.7824
+   }
+  },
+  "next": 1,
+  "minutes": 9.1,
+  "dry": false
  }
 ]
