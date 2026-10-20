@@ -199,6 +199,13 @@ def main():
     dv = dv[dv.opp.isin(NBA_TEAMS)]                        # drop All-Star / exhibition teams (STRIPES, WORLD, ...)
     dvp = [dict(team=r.opp, pg=r.pg, pts=round(float(r.dvp_pts), 3), reb=round(float(r.dvp_reb), 3),
                 ast=round(float(r.dvp_ast), 3), fg3m=round(float(r.dvp_fg3m), 3)) for r in dv.itertuples()]
+    # defense vs archetype: latest per defense (points and threes; Defense tab "By archetype")
+    dva, arch_names = [], None
+    if fr.arch is not None and hasattr(fr, "dva_hist"):
+        arch_names = fr.arch["names"]
+        da = fr.dva_hist.sort_values("date").groupby(["opp", "arch"]).tail(1)
+        da = da[da.opp.isin(NBA_TEAMS)]
+        dva = [dict(team=r.opp, a=int(r.arch), pts=round(float(r.dva_pts), 3), fg3m=round(float(r.dva_fg3m), 3)) for r in da.itertuples()]
     os.makedirs(OUT, exist_ok=True)
     # freeze games that already started: keep their earlier rows
     csv = os.path.join(OUT, f"{date}.csv")
@@ -209,7 +216,7 @@ def main():
     tab.round(3).to_csv(csv, index=False)
     import page
     payload = dict(date=date, generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
-                   games=games, players=page.player_payload(tab, meta, dists), dvp=dvp)
+                   games=games, players=page.player_payload(tab, meta, dists), dvp=dvp, dva=dva, arch=arch_names)
     jp = os.path.join(OUT, f"{date}.json")
     if os.path.exists(jp):
         old = json.load(open(jp))

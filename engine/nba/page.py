@@ -58,6 +58,7 @@ __CSS__
 .cell small{display:block;color:var(--muted);font-size:11.5px}
 .tag{font-size:10.5px;font-weight:700;border-radius:4px;padding:0 4px;margin-left:5px;border:1px solid currentColor;white-space:nowrap;cursor:help}
 .tag.arch{color:var(--muted);font-weight:600;border-color:var(--faint)}
+.dva th{padding:4px 2px}.dvs{border:0;background:none;color:inherit;font:inherit;font-size:12px;font-weight:600;cursor:pointer;padding:2px 4px;border-radius:4px;white-space:normal;line-height:1.15}.dvs.on{background:var(--ink);color:var(--bg)}
 .tag.q{color:#F2C14E} .tag.out{color:var(--r2)}
 .lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
 .g1{color:var(--g1)!important} .g2{color:var(--g2)!important} .g3{color:var(--g3)!important}
@@ -233,12 +234,36 @@ function board(){
   <div class="tw"><table class="t"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Game</th>${COLS.map(c => `<th>${c === 'fg3m' ? '3PM' : c === 'pra' ? 'PRA' : c.toUpperCase()}</th>`).join('')}</tr></thead><tbody>
   ${rows.slice(0, 150).map((p,i) => `<tr><td class="muted">${i+1}</td><td class="l name">${esc(p.n)}${chips(p, p.g)}</td><td class="l">${esc(p.t)} <span class="small muted">vs ${esc(p.o)}</span></td>${COLS.map(c => cell(p, c, p.g)).join('')}</tr>`).join('')}</tbody></table></div></section>`;
 }
+// By archetype: what each defense allows per minute to each playstyle (points, threes: the stats where it beat position)
+const ARCH_SHORT = {'Interior big': 'Interior big', '3-and-D role player': '3-and-D', 'Spot-up shooter': 'Spot-up', 'Rim protector': 'Rim protector',
+                    'Primary creator': 'Creator', 'Versatile forward': 'Forward', 'Pass-first guard': 'Pass-first', 'Scoring guard/wing': 'Scorer'};
+const ARCH_ORDER = ['Primary creator', 'Scoring guard/wing', 'Pass-first guard', 'Spot-up shooter', '3-and-D role player', 'Versatile forward', 'Interior big', 'Rim protector'];
+function dvaView(){
+  const st = state.dstat === 'fg3m' ? 'fg3m' : 'pts', names = D.arch || [];
+  const idx = ARCH_ORDER.map(n => names.indexOf(n)).filter(i => i >= 0);
+  const V = {}; (D.dva || []).forEach(r => { V[r.team + '|' + r.a] = r; });
+  const teams = [...new Set((D.dva || []).map(r => r.team))].sort();
+  const today = new Set(D.games.flatMap(g => [g.home, g.away]));
+  const rows = teams.map(t => ({t, v: idx.map(a => (V[t + '|' + a] || {})[st])}));
+  const col = state.dsort != null && idx.includes(+state.dsort) ? idx.indexOf(+state.dsort) : null;
+  rows.sort((a, b) => col != null ? (b.v[col] ?? 0) - (a.v[col] ?? 0) : b.v.reduce((s, x) => s + (x ?? 1), 0) - a.v.reduce((s, x) => s + (x ?? 1), 0));
+  const rel = v => v == null ? '–' : (v >= 1 ? '+' : '−') + Math.abs(Math.round((v-1)*100)) + '%';
+  const ex = a => { const ps = [...new Set(D.players.filter(p => p.ar === names[a]).map(p => p.n))].slice(0, 3); return ps.length ? ` e.g. ${ps.join(', ')}` : ''; };
+  return `<div class="tw"><table class="t dva"><thead><tr><th class="l">Defense</th>${idx.map(a => `<th><button type="button" class="dvs${col != null && idx[col] === a ? ' on' : ''}" data-dsort="${a}" title="${esc(names[a])}:${esc(ex(a))}. Tap to sort.">${esc(ARCH_SHORT[names[a]] || names[a])}</button></th>`).join('')}</tr></thead><tbody>
+  ${rows.map(r => `<tr><td class="l">${today.has(r.t) ? `<b>${esc(r.t)}</b>` : esc(r.t)}</td>${r.v.map(v => `<td class="hm" style="${MG(v)}">${rel(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
+  <p class="note">What each defense allows per minute to each playstyle, against that playstyle’s league average. Archetypes come from a player’s own production (points, threes, free-throw rate, assists, rebounds, blocks), so two guards can land in different columns. Tap a column to sort. Points and threes only: there it projected games better than position alone in every half of the last two seasons; rebounds and assists stay by position.</p>`;
+}
 function dvpView(){
   const st = state.dstat, teams = [...new Set((D.dvp || []).map(r => r.team))].sort();
   const today = new Set(D.games.flatMap(g => [g.home, g.away]));
   const rows = teams.map(t => ({t, v: ['G','F','C'].map(pg => (DVP[t + '|' + pg] || {})[st])})).sort((a,b) => (b.v[0]+b.v[1]+b.v[2]) - (a.v[0]+a.v[1]+a.v[2]));
   const rel = v => v == null ? '–' : (v >= 1 ? '+' : '−') + Math.abs(Math.round((v-1)*100)) + '%';
-  return `<section class="panel"><div class="phead"><div class="seg">${['pts','reb','ast','fg3m'].map(c => `<button data-dstat="${c}" aria-pressed="${c === st}">${LAB[c]}</button>`).join('')}</div><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Per minute allowed vs league average · bold = plays on this slate ${mgKey('allows less', 'allows more')}</span></div>
+  const byA = state.dgrp === 'arch' && (D.dva || []).length;
+  const grp = (D.dva || []).length ? `<div class="seg" role="group" aria-label="Group by">${[['pos', 'By position'], ['arch', 'By archetype']].map(([k, l]) => `<button data-dgrp="${k}" aria-pressed="${(byA ? 'arch' : 'pos') === k}">${l}</button>`).join('')}</div>` : '';
+  const stats = byA ? ['pts', 'fg3m'] : ['pts','reb','ast','fg3m'];
+  const head = `<section class="panel"><div class="phead" style="flex-wrap:wrap;gap:8px 12px">${grp}<div class="seg">${stats.map(c => `<button data-dstat="${c}" aria-pressed="${c === (byA && !stats.includes(st) ? 'pts' : st)}">${LAB[c]}</button>`).join('')}</div><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Per minute allowed vs league average · bold = plays on this slate ${mgKey('allows less', 'allows more')}</span></div>`;
+  if (byA) return head + dvaView() + '</section>';
+  return head + `
   <div class="tw"><table class="t"><thead><tr><th class="l">Defense</th><th>Guards</th><th>Forwards</th><th>Centers</th></tr></thead><tbody>
   ${rows.map(r => `<tr><td class="l">${today.has(r.t) ? `<b>${esc(r.t)}</b>` : esc(r.t)}</td>${r.v.map(v => `<td class="hm" style="${MG(v)}">${rel(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>
   <p class="note">The deeper the green, the more that defense gives up to the position (good for the player); the deeper the red, the less (full color at ±15%). Recent games count most; last season carries over early on; small samples are pulled toward average.</p></section>`;
@@ -312,6 +337,8 @@ document.addEventListener('click', e => {
   else if (t.dataset.ostep){ const i = document.getElementById('sl-in'); if (i){ i.value = Math.min(+i.max, Math.max(+i.min, +i.value + (+t.dataset.ostep))); i.dispatchEvent(new Event('input', {bubbles: true})); } }
   else if (t.dataset.bstat){ state.bstat = t.dataset.bstat; render(); }
   else if (t.dataset.dstat){ state.dstat = t.dataset.dstat; render(); }
+  else if (t.dataset.dgrp){ state.dgrp = t.dataset.dgrp; render(); }
+  else if (t.dataset.dsort != null){ state.dsort = state.dsort === t.dataset.dsort ? null : t.dataset.dsort; render(); }
 });
 document.addEventListener('input', e => {
   if (e.target.id !== 'sl-in') return;
