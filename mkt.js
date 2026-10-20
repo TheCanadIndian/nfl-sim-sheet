@@ -630,7 +630,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       }
       // game lines
       for (const L of opts.gameLegs || []) {
-        if (!live.has(String(L.gid)) || L.p == null) continue;
+        if (!live.has(String(L.gid)) || L.p == null || (opts.overOnly && L.side === 'under')) continue;
         const G = BK && BK.games && BK.games[String(L.gid)]; if (!G) continue;
         let o = G[L.kind]; if (L.kind !== 'ml') o = o && o[String(+L.line)];
         if (!o || !o[L.side]) continue;
@@ -659,7 +659,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           const pe = PR && PR.props && ((PR.props[String(r.g)] || {})[norm(r.n)] || {})[r.k];
           const pin = pe && pinOk(pe) && Math.abs(pe.pin.l - r.l) < 1e-9 ? pe.pin.o : null;
           const m = pin != null ? pin : (r.ya + r.yb) / 2, wk = wOf(opts.sport, r.k, pin != null);
-          for (const sd of ['o', 'u']) {
+          for (const sd of opts.overOnly ? ['o'] : ['o', 'u']) {
             const ps = sd === 'o' ? p : 1 - p, ms = sd === 'o' ? m : 1 - m, c = sd === 'o' ? r.ya : 1 - r.yb;
             if (ps < .5 || (pin == null && Math.abs(p - m) < .10) || c < .15 || c > .95) continue;
             const cost = c + .07 * c * (1 - c), q = wk * ps + (1 - wk) * ms, ev = q / cost - 1;

@@ -375,7 +375,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 .topbar .soon{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-left:5px;opacity:.75}
 .topbar .sp[aria-current="true"] .soon{opacity:.85}
 .topbar .grow{flex:1}
-@media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}}
+@media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}.topbar .help.guide{display:none}}
 .topbar .help{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:5px 9px;border-radius:6px}
 .topbar .help:hover,.topbar .help[aria-current="page"]{color:var(--ink);background:var(--sunk)}
 .topbar a.lnk{color:var(--muted);text-decoration:none;font-weight:500;font-size:14px;padding:5px 10px;border-radius:6px}
@@ -410,13 +410,13 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 .mtoggle .seg a[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .mtoggle .why{max-width:70ch}
 </style>
-<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="../index.html">Sim Sheet</a><a class="sp" href="../nfl/index.html">NFL</a><a class="sp" href="../nhl/index.html">NHL</a><a class="sp" href="../nba/index.html" aria-current="true">NBA</a><a class="sp" href="../mlb/index.html">MLB</a><span class="grow"></span><a class="help" href="../profit.html">Profit</a><a class="help" href="../guide.html">How to read</a></div><div class="row r2"><a class="lnk" href="../nba/index.html" title="Every player&#x27;s projection for the next slate, both models">Next slate</a><a class="lnk" href="../nba/results.html" title="Every night graded against the box scores, both models" aria-current="page">Results</a><a class="lnk" href="../nba/markets.html" title="Live Kalshi and Polymarket prices by game and player, with money on each side">Markets</a><a class="lnk" href="../updates.html#nba" title="What the model learned and changed">Model updates</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="../guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
+<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="../index.html">Sim Sheet</a><a class="sp" href="../nfl/index.html">NFL</a><a class="sp" href="../nhl/index.html">NHL</a><a class="sp" href="../nba/index.html" aria-current="true">NBA</a><a class="sp" href="../mlb/index.html">MLB</a><span class="grow"></span><a class="help" href="../parlays.html">Parlays</a><a class="help" href="../profit.html">Profit</a><a class="help guide" href="../guide.html">How to read</a></div><div class="row r2"><a class="lnk" href="../nba/index.html" title="Every player&#x27;s projection for the next slate, both models">Next slate</a><a class="lnk" href="../nba/results.html" title="Every night graded against the box scores, both models" aria-current="page">Results</a><a class="lnk" href="../nba/markets.html" title="Live Kalshi and Polymarket prices by game and player, with money on each side">Markets</a><a class="lnk" href="../updates.html#nba" title="What the model learned and changed">Model updates</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="../guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
 <div class="wrap">
   <header><div><div class="eyebrow" id="sub"></div><h1>NBA Results</h1></div></header>
   <main id="main"></main>
   <footer>Every slate's projections are frozen at tip-off and graded against the box score, for both models. Players who didn't play are voided. A calibrated model puts about 80% of results inside its 8-in-10 range and about half above the median (a bit under for counts like threes, where landing exactly on the median is common).</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Oct 20, 2026 1:01 PM","void":0,"season":[],"nights":[]}</script>
+<script type="application/json" id="data">{"generated":"Oct 20, 2026 1:37 PM","void":0,"season":[],"nights":[]}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
