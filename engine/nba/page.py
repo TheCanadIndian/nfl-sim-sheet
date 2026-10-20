@@ -58,6 +58,7 @@ __CSS__
 .cell small{display:block;color:var(--muted);font-size:11.5px}
 .tag{font-size:10.5px;font-weight:700;border-radius:4px;padding:0 4px;margin-left:5px;border:1px solid currentColor;white-space:nowrap;cursor:help}
 .tag.arch{color:var(--muted);font-weight:600;border-color:var(--faint)}
+.dcp li.lwhy{gap:4px;flex-wrap:wrap;margin:-2px 0 2px 0}.dcp li.lwhy span{margin-left:0;font-size:11px}
 .mxw{display:flex;flex-wrap:wrap;gap:3px 6px;margin:2px 0 0 18px}.mxl{font-size:11px;font-weight:700;white-space:nowrap;cursor:help}.mxl i{font-style:normal;font-weight:500;color:var(--muted)}
 .mxl.up{color:var(--good)}.mxl.dn{color:var(--bad)}
 .mxstrip{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 10px;padding:8px 10px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
@@ -369,8 +370,122 @@ function tierParlays(){
                        gameLegs, propKinds: KLAB, kalshiKinds: KLAB, minEdge: .05});
   return card || `<section class="panel"><div class="phead"><h2>Parlays by payout (your books)</h2></div><p class="note">No parlay with an edge on every leg yet. Legs are player props at your books (Kalshi ladders, plus Novig and Hard Rock once they post) and game lines: our chance blended 50/50 with the market (Pinnacle’s no-vig line when it has one), only the side we lean, our number 10+ points from the market, and a 5%+ edge after fees. Props mostly post on game day.</p></section>`;
 }
+// ---------------- NBA longshots (owner 2026-10-20: "similar parlays for the NBA as the NFL") ----------------
+// Path longshots: one leg per game, 2-3 games, each leg needs 3+ of 5 reasons -- usage (30+ projected minutes or a
+// team top-3 scorer), matchup (the model's blended position x archetype number 6%+ for that stat), rotation (a teammate
+// out or minutes trending up), game (the market's game lines favor it: total 228+ or a spread within 5, so starters
+// play full minutes; NBA sims have no shared game state, so the game factor comes from the lines), price (our
+// market-anchored chance beats the price at the owner's books by 5%+). Legs: rungs at +150..+900 with our chance 8%+
+// and no more than 2 pts under the market. Ladder longshots: near-maxed Kalshi rungs (1-2 below the top) for players
+// with a 6%+ matchup or a Value tag, our projection backing the rung, 24+ minutes. Both tracked on the Profit page.
+const pct1 = p => p == null ? '–' : p < .1 ? (Math.round(p * 1000) / 10).toFixed(1) + '%' : Math.round(p * 100) + '%';
+const NKL = {pts: 'pts', reb: 'reb', ast: 'ast', fg3m: 'threes'};
+const ordN = n => { const s = ['th','st','nd','rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); };
+function nbaFactors(g, p, st){
+  const team = D.players.filter(x => x.g === g.id && x.t === p.t);
+  const med = (x, s_) => x.s.vegas && x.s.vegas[s_] ? x.s.vegas[s_][MED] : 0;
+  const top3 = team.slice().sort((a, b) => med(b, 'pts') - med(a, 'pts')).slice(0, 3).includes(p);
+  const mins = med(p, 'min'), m = mx(p, st), outs = ((g.out || {})[p.t] || []).filter(o => o.m >= 20);   // a rotation player out (20+ usual minutes)
+  const close = g.has_line && Math.abs(g.spread) <= 5, fast = g.has_line && g.total >= 228;
+  return {
+    usage: mins >= 30 || top3 ? (mins >= 30 ? `${f0(mins)} min` : 'top-3 scorer') : null,
+    matchup: m && m.v >= 1.06 ? `${esc(p.o)} ${sgn(m.v)} vs ${m.da ? (ARCH_PL[p.ar] || PG_PL[p.pg]) : PG_PL[p.pg]}` : null,
+    rotation: outs.length && mins >= 24 ? `${outs[0].n.split(' ').slice(-1)[0]} out (${f0(outs[0].m)} min)` : p.trend >= 3 ? 'minutes up' : null,
+    game: fast ? `total ${g.total}` : close ? `close game (${g.spread > 0 ? '+' : ''}${g.spread})` : null,
+  };
+}
+function nbaPathLegs(g){
+  if (!(window.MKT && MKT.altLadder)) return [];
+  const out = [];
+  for (const p of D.players.filter(x => x.g === g.id && x.st !== 'Out')){
+    const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED]; if (!(mins >= 20)) continue;
+    const tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
+    for (const st of ['pts', 'reb', 'ast', 'fg3m']){
+      if (!vol(p, st)) continue;
+      const F0 = nbaFactors(g, p, st);
+      for (const u of MKT.altLadder(g.id, p.n, st)){
+        if (!u.best) continue;
+        const dO = u.best.o > 0 ? 1 + u.best.o / 100 : 1 + 100 / -u.best.o;
+        if (dO < 2.5 || dO > 10) continue;
+        const mk = u.fair ?? u.mid, w = u.fair != null ? u.w : .5;
+        const q = u.p == null ? mk : mk == null ? u.p : w * u.p + (1 - w) * mk;
+        if (q == null || q < .08 || (u.p != null && mk != null && u.p < mk - .02)) continue;
+        const ev = q * dO - 1, F = {...F0, price: ev >= .05 ? `+${Math.round(ev * 100)}% vs our chance` : tk === st ? 'Value tag' : null};
+        const nf = Object.values(F).filter(Boolean).length; if (nf < 3) continue;
+        out.push({g, p, st, u, q, dO, ev, F, nf, sc: nf * 10 + q * dO});
+      }
+    }
+  }
+  const best = {};                                       // the player's best rung
+  for (const L of out) if (!best[L.p.k] || L.sc > best[L.p.k].sc) best[L.p.k] = L;
+  return Object.values(best).sort((a, b) => b.sc - a.sc);
+}
+function nbaCombos(per, maxLegs){
+  const combos = [], walk = (i, pk) => { if (pk.length >= 2) combos.push(pk); if (pk.length === maxLegs) return;
+    for (let j = i; j < per.length; j++) for (const L of per[j]) walk(j + 1, [...pk, L]); };
+  walk(0, []);
+  return combos;
+}
+function nbaPick(combos, val, rank, n, k, used){
+  const o = [];
+  for (const x of combos.filter(c => c.length === n).map(val).filter(x => x.ok).sort(rank)){
+    if (o.length >= k) break; if (x.c.some(L => (used[L.p.k] || 0) >= 2)) continue;
+    x.c.forEach(L => { used[L.p.k] = (used[L.p.k] || 0) + 1; }); o.push(x); }
+  return o;
+}
+const nbaLeg = (L, extra) => ({gid: String(L.g.id), start: L.g.start_utc, kind: L.st, side: 'o', line: L.u.l, name: MKT.norm(L.p.n),
+  lab: `${L.p.n} ${Math.ceil(L.u.l)}+ ${NKL[L.st]}`, p: +L.q.toFixed(4), price: L.u.best ? L.u.best.o : L.price, book: L.u.best ? L.u.best.k : 'Kalshi', ...(extra || {})});
+function nbaPathLongshots(){
+  const now = Date.now(), per = [];
+  for (const g of D.games){ if (g.start_utc && new Date(g.start_utc) <= now) continue; const L = nbaPathLegs(g); if (L.length) per.push(L.slice(0, 3)); }
+  if (per.length < 2) return '';
+  const val = c => { const p = c.reduce((s, L) => s * L.q, 1), d = c.reduce((s, L) => s * L.dO, 1); return {c, p, d, nf: c.reduce((s, L) => s + L.nf, 0), ok: p * d - 1 >= 0}; };
+  const used = {}, rank = (a, b) => b.nf / b.c.length - a.nf / a.c.length || b.p * b.d - a.p * a.d, combos = nbaCombos(per, 3);
+  const P = [...nbaPick(combos, val, rank, 2, 2, used), ...nbaPick(combos, val, rank, 3, 2, used)];
+  if (!P.length) return '';
+  if (MKT.reg) P.forEach(x => MKT.reg('Path longshots', `${x.c.length}-leg`, x.c.map(L => nbaLeg(L, {f: Object.keys(L.F).filter(k => L.F[k])})), x.p, x.d));
+  const chip = (k, t) => t ? `<span class="ladc${k === 'matchup' || k === 'price' ? ' soft' : ''}">${k} · ${esc(t)}</span>` : '';
+  const legHtml = L => `<li><b>${esc(L.p.n)} ${Math.ceil(L.u.l)}+ ${NKL[L.st]}</b><span>${L.u.best.u ? `<a href="${esc(L.u.best.u)}" target="_blank" rel="noopener">${esc(L.u.best.name)} ${L.u.best.o > 0 ? '+' : ''}${L.u.best.o}</a>` : `${esc(L.u.best.name)} ${L.u.best.o > 0 ? '+' : ''}${L.u.best.o}`}</span></li>
+    <li class="lwhy"><span class="ladc">${esc(L.p.t)} vs ${esc(L.p.o)}</span>${Object.entries(L.F).map(([k, t]) => chip(k, t)).join('')}<span class="ladc">us ${pct(L.q)}</span></li>`;
+  const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} games</span>${x.nf} of ${x.c.length * 5} reasons</div><ul>${x.c.map(legHtml).join('')}</ul>
+    <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>hits <b>${pct1(x.p)}</b></span><span class="${x.p * x.d - 1 >= .05 ? 'good' : 'muted'}">edge ${x.p * x.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((x.p * x.d - 1) * 100))}%</span></div></div>`;
+  return `<section class="panel"><div class="phead"><h2>Path longshots</h2><span class="small muted">usage · matchups · rotations · game lines · odds</span></div>
+    <details class="how"><summary>How these are built</summary><p class="note">Each leg needs at least three of five reasons: <b>usage</b> (30+ projected minutes or one of his team’s top three scorers), <b>matchup</b> (the defense allows 6%+ more of that stat to his position and archetype, the number the model uses), <b>rotation</b> (a teammate who plays 20+ minutes is out, or his minutes are trending up), <b>game</b> (a high total, 228+, or a close spread, so starters play full minutes), and <b>price</b> (our market-anchored chance beats the best price at your books by 5%+, or a Value tag). Rungs pay +150 to +900, our chance is at least 8% and no more than 2 points under the market’s. One leg per game, so books pay the legs multiplied. <b>Hits</b> uses each leg’s market-anchored chance. Tracked on the Profit page.</p></details>
+    <div class="dcg">${P.map(card).join('')}</div></section>`;
+}
+function nbaLadderLongshots(){
+  if (!(window.MKT && MKT.ladder)) return '';
+  const now = Date.now(), best = {};
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id && x.st !== 'Out')){
+      const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED]; if (!(mins >= 24)) continue;
+      const tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
+      for (const u of MKT.ladder(g.id, p.id, p.n, Object.keys(NKL))){
+        if (!(u.top === 1 || u.top === 2) || !(u.mid >= .05 && u.mid <= .30) || !(u.yb > 0) || u.ya - u.yb > .05) continue;
+        if (u.p == null || u.p < Math.max(.05, u.mid - .02) || !vol(p, u.k)) continue;
+        const m = mx(p, u.k), soft = m && m.v >= 1.06; if (!soft && tk !== u.k) continue;
+        const sc = (soft ? 2 : 0) + (tk === u.k ? 2 : 0), L = {g, p, st: u.k, u: {...u, best: null}, q: u.mid, cost: u.cost, price: amO(u.cost), sc, m, tag: tk === u.k};
+        if (!best[g.id] || sc > best[g.id].sc || (sc === best[g.id].sc && u.mid > best[g.id].q)) best[g.id] = L;
+      }
+    }
+  }
+  const per = Object.values(best).map(L => [L]); if (per.length < 2) return '';
+  const val = c => ({c, p: c.reduce((s, L) => s * L.q, 1), d: c.reduce((s, L) => s / L.cost, 1), nf: c.reduce((s, L) => s + L.sc, 0), ok: c.reduce((s, L) => s * L.q, 1) >= .004});
+  const used = {}, rank = (a, b) => b.nf - a.nf || b.p - a.p, combos = nbaCombos(per, 3);
+  const P = [...nbaPick(combos, val, rank, 2, 3, used), ...nbaPick(combos, val, rank, 3, 2, used)];
+  if (!P.length) return '';
+  if (MKT.reg) P.forEach(x => MKT.reg('Ladder longshots (experimental)', `${x.c.length}-leg`, x.c.map(L => nbaLeg(L)), x.p, x.d));
+  const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} legs</span>Kalshi</div><ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${NKL[L.st]}</b><span>${esc(L.p.t)} vs ${esc(L.p.o)} · ${L.u.price}</span></li>
+      <li class="lwhy">${L.m && L.m.v >= 1.06 ? `<span class="ladc soft">${esc(L.p.o)} ${sgn(L.m.v)} vs ${esc(L.m.da ? (ARCH_PL[L.p.ar] || PG_PL[L.p.pg]) : PG_PL[L.p.pg])}</span>` : ''}${L.tag ? '<span class="ladc soft">Value tag</span>' : ''}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span><span class="ladc">us ${pct(L.u.p)} vs ${pct(L.u.mid)}</span></li>`).join('')}</ul>
+      <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>market chance <b>${pct1(x.p)}</b></span></div></div>`;
+  return `<section class="panel"><div class="phead"><h2>Ladder longshots <span class="exp3">experimental</span></h2><span class="small muted">near-maxed Kalshi rungs · one per game</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">Rungs one or two below the top of a player’s Kalshi ladder, for players with a soft matchup (the defense allows 6%+ more of that stat to his position and archetype) or a Value tag, where our projection backs the rung (our chance at least 5% and no more than 2 points under Kalshi’s) and he plays 24+ minutes. One per game, two or three games. The chance shown is Kalshi’s own; the NFL version of this idea is a test too, and both are tracked on the Profit page.</p></details>
+    <div class="dcg">${P.map(card).join('')}</div></section>`;
+}
+const amO = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
 function parlaysView(){
-  return (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + ladderCard() + tierParlays();
+  return (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + ladderCard() + nbaLadderLongshots() + tierParlays();
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
