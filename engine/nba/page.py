@@ -58,6 +58,12 @@ __CSS__
 .cell small{display:block;color:var(--muted);font-size:11.5px}
 .tag{font-size:10.5px;font-weight:700;border-radius:4px;padding:0 4px;margin-left:5px;border:1px solid currentColor;white-space:nowrap;cursor:help}
 .tag.arch{color:var(--muted);font-weight:600;border-color:var(--faint)}
+.mxw{display:flex;flex-wrap:wrap;gap:3px 6px;margin:2px 0 0 18px}.mxl{font-size:11px;font-weight:700;white-space:nowrap;cursor:help}.mxl i{font-style:normal;font-weight:500;color:var(--muted)}
+.mxl.up{color:var(--good)}.mxl.dn{color:var(--bad)}
+.mxstrip{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 10px;padding:8px 10px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
+.mxstrip .eyebrow{margin-right:2px}.mxstrip .eyebrow:not(:first-child){margin-left:6px}
+.mxs{border:1px solid var(--faint);border-radius:999px;padding:2px 9px;font-size:12.5px;cursor:help}.mxs i{font-style:normal;color:var(--muted);font-size:11.5px;margin-left:3px}
+.mxs.up{border-color:color-mix(in srgb,var(--good) 50%,transparent)}.mxs.up b{color:var(--good)}.mxs.dn{border-color:color-mix(in srgb,var(--bad) 45%,transparent)}.mxs.dn b{color:var(--bad)}
 .dva th{padding:4px 2px}.dvs{border:0;background:none;color:inherit;font:inherit;font-size:12px;font-weight:600;cursor:pointer;padding:2px 4px;border-radius:4px;white-space:normal;line-height:1.15}.dvs.on{background:var(--ink);color:var(--bg)}
 .tag.q{color:#F2C14E} .tag.out{color:var(--r2)}
 .lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
@@ -182,9 +188,53 @@ function readout(d, L, p, st){
     <div class="sl-meter"><i class="f-${so||'n'}" style="width:${r.over*100}%"></i><i class="f-${su||'n'}" style="width:${r.under*100}%"></i></div>
     <div class="sl-side under"><span>Under ${L}</span><b class="${su}">${pct(r.under)}</b><em>${american(un)}</em></div></div>${slipBtns(p, st, L, r)}`;
 }
+// The matchup the model uses for a player-stat: defense vs position, blended 50/50 (log terms) with defense vs
+// archetype for points, threes and steals. {v, dp, da}; v = per-minute multiplier vs league (1.12 = +12%).
+const PG_PL = {G: 'guards', F: 'forwards', C: 'centers'};
+const ARCH_PL = {'Interior big': 'interior bigs', '3-and-D role player': '3-and-D players', 'Spot-up shooter': 'spot-up shooters', 'Rim protector': 'rim protectors',
+                 'Primary creator': 'primary creators', 'Versatile forward': 'versatile forwards', 'Pass-first guard': 'pass-first guards', 'Scoring guard/wing': 'scoring guards/wings'};
+const SL = {pts: 'Pts', reb: 'Reb', ast: 'Ast', fg3m: '3PM'};
+// only where he has real volume (a % on a tiny number is noise): projected median points 8+, rebounds 3+, assists 2+, threes 1+
+const MX_MIN = {pts: 8, reb: 3, ast: 2, fg3m: 1};
+const vol = (p, st) => { const s = p.s.vegas && p.s.vegas[st]; return !!(s && s[MED] >= MX_MIN[st]); };
+function mx(p, st){
+  const dp = (DVP[p.o + '|' + p.pg] || {})[st]; if (dp == null) return null;
+  const da = p.va && p.va[st];
+  return {v: da ? Math.sqrt(dp * da) : dp, dp, da};
+}
+const sgn = v => (v >= 1 ? '+' : '−') + Math.abs(Math.round((v - 1) * 100)) + '%';
+function mxWhy(p, st, m){
+  return m.da ? `${esc(p.o)} matchup for ${KLAB[st]}: ${sgn(m.v)} per minute (vs ${PG_PL[p.pg]} ${sgn(m.dp)}, vs ${ARCH_PL[p.ar] || 'his archetype'} ${sgn(m.da)}; the model blends the two)`
+              : `${esc(p.o)} allows ${sgn(m.v)} ${KLAB[st]} per minute to ${PG_PL[p.pg]}`;
+}
+// one or two big matchups (8%+ either way) under a player's name
+function mxLine(p){
+  const L = ['pts', 'reb', 'ast', 'fg3m'].filter(st => vol(p, st)).map(st => ({st, m: mx(p, st)})).filter(x => x.m && Math.abs(x.m.v - 1) >= .08)
+    .sort((a, b) => Math.abs(b.m.v - 1) - Math.abs(a.m.v - 1)).slice(0, 2);
+  if (!L.length) return '';
+  return `<div class="mxw">${L.map(x => `<span class="mxl ${x.m.v > 1 ? 'up' : 'dn'}" title="${mxWhy(p, x.st, x.m)}">${SL[x.st]} ${sgn(x.m.v)} <i>vs ${esc(x.m.da && x.m.da !== x.m.dp ? (ARCH_PL[p.ar] || PG_PL[p.pg]) : PG_PL[p.pg])}</i></span>`).join('')}</div>`;
+}
+// Where this game is soft / tough: players in the rotation (20+ projected minutes) grouped by team, archetype and
+// stat; the biggest blended matchups, 8%+ either way
+function softStrip(g){
+  const G = {};
+  for (const p of D.players.filter(x => x.g === g.id && x.st !== 'Out')){
+    const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED]; if (!(mins >= 20)) continue;
+    for (const st of ['pts', 'reb', 'ast', 'fg3m']){
+      const m = vol(p, st) ? mx(p, st) : null; if (!m) continue;
+      const lab = m.da ? (ARCH_PL[p.ar] || PG_PL[p.pg]) : PG_PL[p.pg], k = `${p.t}|${lab}|${st}`;
+      (G[k] = G[k] || {t: p.t, o: p.o, lab, st, v: [], ps: []}).v.push(m.v); G[k].ps.push(p.n.split(' ').slice(-1)[0]);
+    }
+  }
+  const all = Object.values(G).map(x => ({...x, m: x.v.reduce((s, v) => s + v, 0) / x.v.length}));
+  const soft = all.filter(x => x.m >= 1.08).sort((a, b) => b.m - a.m).slice(0, 3), tough = all.filter(x => x.m <= .92).sort((a, b) => a.m - b.m).slice(0, 2);
+  if (!soft.length && !tough.length) return '';
+  const chip = (x, up) => `<span class="mxs ${up ? 'up' : 'dn'}" title="${esc(x.o)} defense, per minute vs league: ${esc(x.ps.join(', '))}"><b>${esc(x.t)} ${esc(x.lab)}</b> ${sgn(x.m)} ${KLAB[x.st]} <i>${esc(x.ps.slice(0, 3).join(', '))}</i></span>`;
+  return `<div class="mxstrip">${soft.length ? `<span class="eyebrow">Where this game is soft</span>${soft.map(x => chip(x, true)).join('')}` : ''}${tough.length ? `<span class="eyebrow">Tough</span>${tough.map(x => chip(x, false)).join('')}` : ''}</div>`;
+}
 function teamTable(g, team){
   const ps = D.players.filter(p => p.g === g.id && p.t === team).sort((a,b) => (b.s[mode(g.id)]?.min?.[MED] ?? 0) - (a.s[mode(g.id)]?.min?.[MED] ?? 0));
-  const rows = ps.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-open="${esc(p.k)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${chips(p, g.id)}</td><td class="l"><span class="pos">${esc(p.pos)}${p.start ? '' : ''}</span></td>${COLS.map(c => cell(p, c, g.id)).join('')}</tr>`
+  const rows = ps.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-open="${esc(p.k)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${chips(p, g.id)}${mxLine(p)}</td><td class="l"><span class="pos">${esc(p.pos)}${p.start ? '' : ''}</span></td>${COLS.map(c => cell(p, c, g.id)).join('')}</tr>`
     + (state.open === p.k ? `<tr class="xrow"><td colspan="${COLS.length + 2}">${slider(p, g.id)}</td></tr>` : '')).join('');
   const outs = (g.out && g.out[team]) || [];
   const outLine = outs.length ? `<p class="muted small" style="margin:6px 0 0"><b style="color:var(--r2)">Out:</b> ${outs.map(o => `${esc(o.n)}${o.note ? ` <span title="${esc(o.note)}">(${esc(o.st)})</span>` : ''}`).join(', ')}. Their minutes are shared among the players below.</p>` : '';
@@ -224,7 +274,7 @@ function gameView(){
     <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div>
     ${nbaGameBets(g)}
     ${window.MKT ? MKT.game(g.id, mode(g.id)) : ''}</section>`;
-  const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
+  const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;
 }
 function board(){
@@ -289,11 +339,12 @@ function ladderCard(){
         .sort((a, b) => b.edge - a.edge);
       if (!rungs.length) continue;
       const R = DVP[p.o + '|' + p.pg] || {};
-      cards.push({g, p, R, sts: [...new Set(rungs.map(u => u.k))].filter(st => R[st] >= 1.07), rungs, best: rungs[0].edge});
+      cards.push({g, p, R, sts: [...new Set(rungs.map(u => u.k))].filter(st => (mx(p, st) || {}).v >= 1.07), rungs, best: rungs[0].edge});
     }
   }
   cards.sort((a, b) => b.best - a.best);
-  const soft = c => c.sts.map(st => `<span class="ladc soft" style="${MG(c.R[st])}" title="${esc(c.p.o)} allows ${Math.round((c.R[st] - 1) * 100)}% more ${KLAB[st]} per minute to ${c.p.pg}s than the league (context only: the model already uses it)">${esc(c.p.o)} +${Math.round((c.R[st] - 1) * 100)}% ${KLAB[st]} to ${c.p.pg}s</span>`).join('');
+  const soft = c => c.sts.map(st => { const m = mx(c.p, st);
+    return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${c.p.trend >= 3 ? '<span class="ladc">▲ minutes</span>' : ''}</div>
     <div class="ladr">${c.rungs.slice(0, 3).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KLAB[u.k]}: price ${Math.round(u.mid * 100)}% (${Math.round(kcost(u.ya) * 100)}% with the fee) · our chance ${Math.round(u.p * 100)}%"><b>${Math.round(u.l + .5)}+</b> ${KLAB[u.k]} <i>${u.price}</i> <b class="ledge">+${Math.round(u.edge * 100)}%</b></span>`).join('')}</div></div>`;
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
