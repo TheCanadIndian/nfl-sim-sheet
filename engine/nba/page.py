@@ -403,11 +403,18 @@ function nbaPathLegs(g){
     for (const st of ['pts', 'reb', 'ast', 'fg3m']){
       if (!vol(p, st)) continue;
       const F0 = nbaFactors(g, p, st);
-      for (const u of MKT.altLadder(g.id, p.n, st)){
+      // never our number alone: a rung no book prices two-way takes the main line's sharp fair carried up the ladder by
+      // our distribution's shape (same log-odds gap); no market reference at all -> no leg
+      const R = MKT.altLadder(g.id, p.n, st), main = R.find(r_ => r_.main);
+      const lg = v => Math.log(v / (1 - v)), sg = v => 1 / (1 + Math.exp(-v));
+      const gap = main && main.fair != null && main.p > 0 && main.p < 1 ? lg(main.fair) - lg(main.p) : null;
+      for (const u of R){
         if (!u.best) continue;
         const dO = u.best.o > 0 ? 1 + u.best.o / 100 : 1 + 100 / -u.best.o;
         if (dO < 2.0 || dO > 6) continue;                                          // achievable legs: about +100 to +500
-        const mk = u.fair ?? u.mid, w = u.fair != null ? u.w : .5;
+        let fair = u.fair; if (fair == null && gap != null && u.p > 0 && u.p < 1) fair = sg(lg(u.p) + gap);
+        const mk = fair ?? u.mid, w = fair != null ? (main ? main.w : u.w) : .5;
+        if (mk == null) continue;
         const q = u.p == null ? mk : mk == null ? u.p : w * u.p + (1 - w) * mk;
         if (q == null || q < .20 || q > .45 || (u.p != null && mk != null && u.p < mk - .02)) continue;   // achievable: 20-45%
         const ev = q * dO - 1, F = {...F0, price: ev >= .05 ? `+${Math.round(ev * 100)}% vs our chance` : tk === st ? 'Value tag' : null};
