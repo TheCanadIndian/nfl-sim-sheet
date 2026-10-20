@@ -173,7 +173,7 @@ def main():
             save_draws(out, sims)
     tab = pd.concat(tabs, ignore_index=True)
     meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play"]
-                + [c for c in ("arch", "dva_pts", "dva_fg3m") if c in rows]].copy()
+                + [c for c in ["arch"] + [f"dva_{s}" for s in M.DVA_STATS] if c in rows]].copy()
     if fr.arch is not None and "arch" in meta:                         # archetype name for the page
         meta["arch_name"] = meta.arch.map(lambda a: fr.arch["names"][int(a)] if pd.notna(a) else None)
     meta["e_min"] = M.team_minutes(rows, live=True)
@@ -197,15 +197,14 @@ def main():
     # defense vs position: latest per defense
     dv = fr.dvp_hist.sort_values("date").groupby(["opp", "pg"]).tail(1)
     dv = dv[dv.opp.isin(NBA_TEAMS)]                        # drop All-Star / exhibition teams (STRIPES, WORLD, ...)
-    dvp = [dict(team=r.opp, pg=r.pg, pts=round(float(r.dvp_pts), 3), reb=round(float(r.dvp_reb), 3),
-                ast=round(float(r.dvp_ast), 3), fg3m=round(float(r.dvp_fg3m), 3)) for r in dv.itertuples()]
+    dvp = [dict(team=r.opp, pg=r.pg, **{c: round(float(getattr(r, "dvp_" + c)), 3) for c in M.MATCH_STATS}) for r in dv.itertuples()]
     # defense vs archetype: latest per defense (points and threes; Defense tab "By archetype")
     dva, arch_names = [], None
     if fr.arch is not None and hasattr(fr, "dva_hist"):
         arch_names = fr.arch["names"]
         da = fr.dva_hist.sort_values("date").groupby(["opp", "arch"]).tail(1)
         da = da[da.opp.isin(NBA_TEAMS)]
-        dva = [dict(team=r.opp, a=int(r.arch), pts=round(float(r.dva_pts), 3), fg3m=round(float(r.dva_fg3m), 3)) for r in da.itertuples()]
+        dva = [dict(team=r.opp, a=int(r.arch), **{c: round(float(getattr(r, "dva_" + c)), 3) for c in M.DVA_ALL}) for r in da.itertuples()]
     os.makedirs(OUT, exist_ok=True)
     # freeze games that already started: keep their earlier rows
     csv = os.path.join(OUT, f"{date}.csv")
@@ -216,7 +215,7 @@ def main():
     tab.round(3).to_csv(csv, index=False)
     import page
     payload = dict(date=date, generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
-                   games=games, players=page.player_payload(tab, meta, dists), dvp=dvp, dva=dva, arch=arch_names)
+                   games=games, players=page.player_payload(tab, meta, dists), dvp=dvp, dva=dva, arch=arch_names, dva_used=list(M.DVA_STATS))
     jp = os.path.join(OUT, f"{date}.json")
     if os.path.exists(jp):
         old = json.load(open(jp))
