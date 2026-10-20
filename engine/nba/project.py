@@ -179,6 +179,8 @@ def main():
     meta["e_min"] = M.team_minutes(rows, live=True)
     # per-game team view
     games = []
+    # each out player's usual minutes (his latest expected minutes before this game): a teammate out matters when he plays
+    lastmin = {pid: round(float(m), 1) for pid, m in fr.p[fr.p.played == 1].sort_values("date").groupby("player_id").e_min.last().items()}
     for gm in fut.sort_values("start_utc").itertuples():
         tv = fr.team[fr.team.game_id == gm.game_id].set_index("team")
         side = {}
@@ -192,7 +194,7 @@ def main():
                           start=pd.Timestamp(gm.start_utc).tz_convert("America/New_York").strftime("%a %b %d · %I:%M %p ET").replace(" 0", " "),
                           spread=None if pd.isna(gm.spread) else float(gm.spread), total=None if pd.isna(gm.total) else float(gm.total),
                           has_line=bool(pd.notna(gm.spread)), models=side,
-                          out={t: [dict(n=r.name, st=r.status, note=r.note) for r in ro[(ro.team == t) & ro.status.isin(STATUS_OUT)].itertuples()]
+                          out={t: [dict(n=r.name, st=r.status, note=r.note, m=lastmin.get(r.player_id)) for r in ro[(ro.team == t) & ro.status.isin(STATUS_OUT)].itertuples()]
                                for t in (gm.home, gm.away)}))
     # defense vs position: latest per defense
     dv = fr.dvp_hist.sort_values("date").groupby(["opp", "pg"]).tail(1)
