@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-20",
 "lock": "2026-10-20T19:00:00+00:00",
-"frozen_at": "2026-10-20T15:42:33.110Z",
+"frozen_at": "2026-10-20T15:57:16.871Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -18,17 +18,17 @@
 "start": "2026-10-20T19:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 4.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 5+ threes",
-"p": 0.2145,
-"price": 400,
+"line": 1.5,
+"name": "john collins",
+"lab": "John Collins 2+ threes",
+"p": 0.2965,
+"price": 239,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
@@ -39,8 +39,8 @@
 "line": 7.5,
 "name": "deaaron fox",
 "lab": "De'Aaron Fox 8+ ast",
-"p": 0.2429,
-"price": 425,
+"p": 0.2354,
+"price": 456,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -50,9 +50,10 @@
 ]
 }
 ],
-"p": 0.05209,
-"d": 26.25,
+"p": 0.06979,
+"d": 18.848,
 "first": "2026-10-20T19:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -80,13 +81,75 @@
 {
 "gid": "401909090",
 "start": "2026-10-21T01:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 8+ reb",
+"p": 0.2246,
+"price": 373,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.06657,
+"d": 16.035,
+"first": "2026-10-20T19:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 4+ threes",
+"p": 0.3367,
+"price": 245,
+"book": "Novig",
+"f": [
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909089",
+"start": "2026-10-20T23:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 4+ ast",
+"p": 0.3878,
+"price": 213,
+"book": "Novig",
+"f": [
+"usage",
+"game",
+"price"
+]
+},
+{
+"gid": "401909090",
+"start": "2026-10-21T01:30Z",
 "kind": "ast",
 "side": "o",
 "line": 7.5,
 "name": "deaaron fox",
 "lab": "De'Aaron Fox 8+ ast",
-"p": 0.2429,
-"price": 425,
+"p": 0.2354,
+"price": 456,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -96,8 +159,8 @@
 ]
 }
 ],
-"p": 0.07201,
-"d": 17.797,
+"p": 0.03074,
+"d": 60.04,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 },
@@ -110,14 +173,13 @@
 "start": "2026-10-20T19:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 4.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 5+ threes",
-"p": 0.2145,
-"price": 400,
+"line": 3.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 4+ threes",
+"p": 0.3367,
+"price": 245,
 "book": "Novig",
 "f": [
-"usage",
 "rotation",
 "game",
 "price"
@@ -159,72 +221,76 @@
 ]
 }
 ],
-"p": 0.01867,
-"d": 74.025,
+"p": 0.02932,
+"d": 51.077,
 "first": "2026-10-20T19:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "401909088",
 "start": "2026-10-20T19:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "john collins",
-"lab": "John Collins 2+ threes",
-"p": 0.2965,
-"price": 239,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
+"kind": "pts",
+"side": "u",
+"line": 9.5,
+"name": "ausar thompson",
+"lab": "Ausar Thompson under 10 points",
+"p": 0.5282,
+"price": 109,
+"book": "Kalshi"
 },
 {
 "gid": "401909089",
 "start": "2026-10-20T23:00Z",
+"kind": "pts",
+"side": "u",
+"line": 19.5,
+"name": "tyrese maxey",
+"lab": "Tyrese Maxey under 20 points",
+"p": 0.5002,
+"price": 129,
+"book": "Kalshi"
+}
+],
+"p": 0.26423,
+"d": 4.786,
+"first": "2026-10-20T19:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909088",
+"start": "2026-10-20T19:00Z",
+"kind": "pts",
+"side": "u",
+"line": 9.5,
+"name": "ausar thompson",
+"lab": "Ausar Thompson under 10 points",
+"p": 0.5282,
+"price": 109,
+"book": "Kalshi"
+},
+{
+"gid": "401909090",
+"start": "2026-10-21T01:30Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "vj edgecombe",
-"lab": "VJ Edgecombe 4+ ast",
-"p": 0.3878,
-"price": 213,
-"book": "Novig",
-"f": [
-"usage",
-"game",
-"price"
-]
-},
-{
-"gid": "401909090",
-"start": "2026-10-21T01:30Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "stephon castle",
-"lab": "Stephon Castle 8+ reb",
-"p": 0.2246,
-"price": 373,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
+"line": 5.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 6+ assists",
+"p": 0.4937,
+"price": 124,
+"book": "Kalshi"
 }
 ],
-"p": 0.02582,
-"d": 50.189,
+"p": 0.26075,
+"d": 4.682,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 },
@@ -240,76 +306,8 @@
 "line": 9.5,
 "name": "ausar thompson",
 "lab": "Ausar Thompson under 10 points",
-"p": 0.5307,
-"price": 105,
-"book": "Kalshi"
-},
-{
-"gid": "401909090",
-"start": "2026-10-21T01:30Z",
-"kind": "fg3m",
-"side": "u",
-"line": 1.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander under 2 threes",
-"p": 0.5491,
-"price": -107,
-"book": "Kalshi"
-}
-],
-"p": 0.29141,
-"d": 3.966,
-"first": "2026-10-20T19:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909089",
-"start": "2026-10-20T23:00Z",
-"kind": "pts",
-"side": "u",
-"line": 19.5,
-"name": "tyrese maxey",
-"lab": "Tyrese Maxey under 20 points",
-"p": 0.5002,
-"price": 129,
-"book": "Kalshi"
-},
-{
-"gid": "401909090",
-"start": "2026-10-21T01:30Z",
-"kind": "fg3m",
-"side": "u",
-"line": 1.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander under 2 threes",
-"p": 0.5491,
-"price": -107,
-"book": "Kalshi"
-}
-],
-"p": 0.27469,
-"d": 4.43,
-"first": "2026-10-20T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909088",
-"start": "2026-10-20T19:00Z",
-"kind": "pts",
-"side": "u",
-"line": 9.5,
-"name": "ausar thompson",
-"lab": "Ausar Thompson under 10 points",
-"p": 0.5307,
-"price": 105,
+"p": 0.5282,
+"price": 109,
 "book": "Kalshi"
 },
 {
@@ -318,15 +316,15 @@
 "kind": "pts",
 "side": "u",
 "line": 19.5,
-"name": "tyrese maxey",
-"lab": "Tyrese Maxey under 20 points",
-"p": 0.5002,
+"name": "jaylen brown",
+"lab": "Jaylen Brown under 20 points",
+"p": 0.4794,
 "price": 129,
 "book": "Kalshi"
 }
 ],
-"p": 0.26548,
-"d": 4.694,
+"p": 0.25319,
+"d": 4.786,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 },
@@ -354,13 +352,13 @@
 "line": 14.5,
 "name": "chet holmgren",
 "lab": "Chet Holmgren 15+ points",
-"p": 0.4377,
-"price": 152,
+"p": 0.4327,
+"price": 166,
 "book": "Kalshi"
 }
 ],
-"p": 0.18434,
-"d": 7.081,
+"p": 0.18223,
+"d": 7.475,
 "first": "2026-10-20T23:00:00+00:00",
 "res": null
 },
@@ -376,8 +374,8 @@
 "line": 9.5,
 "name": "ausar thompson",
 "lab": "Ausar Thompson under 10 points",
-"p": 0.5307,
-"price": 105,
+"p": 0.5282,
+"price": 109,
 "book": "Kalshi"
 },
 {
@@ -395,18 +393,18 @@
 {
 "gid": "401909090",
 "start": "2026-10-21T01:30Z",
-"kind": "fg3m",
-"side": "u",
-"line": 1.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander under 2 threes",
-"p": 0.5491,
-"price": -107,
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 6+ assists",
+"p": 0.4937,
+"price": 124,
 "book": "Kalshi"
 }
 ],
-"p": 0.14578,
-"d": 9.082,
+"p": 0.13044,
+"d": 10.721,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 },
@@ -422,8 +420,8 @@
 "line": 9.5,
 "name": "ausar thompson",
 "lab": "Ausar Thompson under 10 points",
-"p": 0.5307,
-"price": 105,
+"p": 0.5282,
+"price": 109,
 "book": "Kalshi"
 },
 {
@@ -441,18 +439,18 @@
 {
 "gid": "401909090",
 "start": "2026-10-21T01:30Z",
-"kind": "fg3m",
-"side": "u",
-"line": 1.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander under 2 threes",
-"p": 0.5491,
-"price": -107,
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 6+ assists",
+"p": 0.4937,
+"price": 124,
 "book": "Kalshi"
 }
 ],
-"p": 0.13969,
-"d": 9.082,
+"p": 0.12499,
+"d": 10.721,
 "first": "2026-10-20T19:00:00+00:00",
 "res": null
 }
