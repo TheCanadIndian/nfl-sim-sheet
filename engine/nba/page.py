@@ -375,8 +375,8 @@ function tierParlays(){
 // team top-3 scorer), matchup (the model's blended position x archetype number 6%+ for that stat), rotation (a teammate
 // out or minutes trending up), game (the market's game lines favor it: total 228+ or a spread within 5, so starters
 // play full minutes; NBA sims have no shared game state, so the game factor comes from the lines), price (our
-// market-anchored chance beats the price at the owner's books by 5%+). Legs: rungs at +150..+900 with our chance 8%+
-// and no more than 2 pts under the market. Ladder longshots: near-maxed Kalshi rungs (1-2 below the top) for players
+// market-anchored chance beats the price at the owner's books by 5%+). Legs: rungs at about +100..+500 with our chance 20-45%
+// and no more than 2 pts under the market. Ladder longshots: achievable Kalshi rungs (our chance 20-45%) for players
 // with a 6%+ matchup or a Value tag, our projection backing the rung, 24+ minutes. Both tracked on the Profit page.
 const pct1 = p => p == null ? '–' : p < .1 ? (Math.round(p * 1000) / 10).toFixed(1) + '%' : Math.round(p * 100) + '%';
 const NKL = {pts: 'pts', reb: 'reb', ast: 'ast', fg3m: 'threes'};
@@ -406,10 +406,10 @@ function nbaPathLegs(g){
       for (const u of MKT.altLadder(g.id, p.n, st)){
         if (!u.best) continue;
         const dO = u.best.o > 0 ? 1 + u.best.o / 100 : 1 + 100 / -u.best.o;
-        if (dO < 2.5 || dO > 10) continue;
+        if (dO < 2.0 || dO > 6) continue;                                          // achievable legs: about +100 to +500
         const mk = u.fair ?? u.mid, w = u.fair != null ? u.w : .5;
         const q = u.p == null ? mk : mk == null ? u.p : w * u.p + (1 - w) * mk;
-        if (q == null || q < .08 || (u.p != null && mk != null && u.p < mk - .02)) continue;
+        if (q == null || q < .20 || q > .45 || (u.p != null && mk != null && u.p < mk - .02)) continue;   // achievable: 20-45%
         const ev = q * dO - 1, F = {...F0, price: ev >= .05 ? `+${Math.round(ev * 100)}% vs our chance` : tk === st ? 'Value tag' : null};
         const nf = Object.values(F).filter(Boolean).length; if (nf < 3) continue;
         out.push({g, p, st, u, q, dO, ev, F, nf, sc: nf * 10 + q * dO});
@@ -450,7 +450,7 @@ function nbaPathLongshots(){
   const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} games</span>${x.nf} of ${x.c.length * 5} reasons</div><ul>${x.c.map(legHtml).join('')}</ul>
     <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>hits <b>${pct1(x.p)}</b></span><span class="${x.p * x.d - 1 >= .05 ? 'good' : 'muted'}">edge ${x.p * x.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((x.p * x.d - 1) * 100))}%</span></div></div>`;
   return `<section class="panel"><div class="phead"><h2>Path longshots</h2><span class="small muted">usage · matchups · rotations · game lines · odds</span></div>
-    <details class="how"><summary>How these are built</summary><p class="note">Each leg needs at least three of five reasons: <b>usage</b> (30+ projected minutes or one of his team’s top three scorers), <b>matchup</b> (the defense allows 6%+ more of that stat to his position and archetype, the number the model uses), <b>rotation</b> (a teammate who plays 20+ minutes is out, or his minutes are trending up), <b>game</b> (a high total, 228+, or a close spread, so starters play full minutes), and <b>price</b> (our market-anchored chance beats the best price at your books by 5%+, or a Value tag). Rungs pay +150 to +900, our chance is at least 8% and no more than 2 points under the market’s. One leg per game, so books pay the legs multiplied. <b>Hits</b> uses each leg’s market-anchored chance. Tracked on the Profit page.</p></details>
+    <details class="how"><summary>How these are built</summary><p class="note">Each leg needs at least three of five reasons: <b>usage</b> (30+ projected minutes or one of his team’s top three scorers), <b>matchup</b> (the defense allows 6%+ more of that stat to his position and archetype, the number the model uses), <b>rotation</b> (a teammate who plays 20+ minutes is out, or his minutes are trending up), <b>game</b> (a high total, 228+, or a close spread, so starters play full minutes), and <b>price</b> (our market-anchored chance beats the best price at your books by 5%+, or a Value tag). Each rung sits inside our projection’s realistic range (our chance 20-45%, paying about +100 to +500) and no more than 2 points under the market’s. One leg per game, so books pay the legs multiplied. <b>Hits</b> uses each leg’s market-anchored chance. Tracked on the Profit page.</p></details>
     <div class="dcg">${P.map(card).join('')}</div></section>`;
 }
 function nbaLadderLongshots(){
@@ -462,11 +462,11 @@ function nbaLadderLongshots(){
       const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED]; if (!(mins >= 24)) continue;
       const tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
       for (const u of MKT.ladder(g.id, p.id, p.n, Object.keys(NKL))){
-        if (!(u.top === 1 || u.top === 2) || !(u.mid >= .05 && u.mid <= .30) || !(u.yb > 0) || u.ya - u.yb > .05) continue;
-        if (u.p == null || u.p < Math.max(.05, u.mid - .02) || !vol(p, u.k)) continue;
+        if (!(u.mid >= .15 && u.mid <= .45) || !(u.yb > 0) || u.ya - u.yb > .05) continue;           // achievable: our chance 20-45%
+        if (u.p == null || u.p < .20 || u.p > .45 || u.p < u.mid - .02 || !vol(p, u.k)) continue;
         const m = mx(p, u.k), soft = m && m.v >= 1.06; if (!soft && tk !== u.k) continue;
         const sc = (soft ? 2 : 0) + (tk === u.k ? 2 : 0), L = {g, p, st: u.k, u: {...u, best: null}, q: u.mid, cost: u.cost, price: amO(u.cost), sc, m, tag: tk === u.k};
-        if (!best[g.id] || sc > best[g.id].sc || (sc === best[g.id].sc && u.mid > best[g.id].q)) best[g.id] = L;
+        if (!best[g.id] || sc > best[g.id].sc || (sc === best[g.id].sc && Math.abs(u.p - .30) < Math.abs(best[g.id].u.p - .30))) best[g.id] = L;
       }
     }
   }
@@ -477,10 +477,10 @@ function nbaLadderLongshots(){
   if (!P.length) return '';
   if (MKT.reg) P.forEach(x => MKT.reg('Ladder longshots (experimental)', `${x.c.length}-leg`, x.c.map(L => nbaLeg(L)), x.p, x.d));
   const card = x => `<div class="dcp"><div class="dch"><span class="slot ls">${x.c.length} legs</span>Kalshi</div><ul>${x.c.map(L => `<li><b>${esc(L.p.n)} ${Math.round(L.u.l + .5)}+ ${NKL[L.st]}</b><span>${esc(L.p.t)} vs ${esc(L.p.o)} · ${L.u.price}</span></li>
-      <li class="lwhy">${L.m && L.m.v >= 1.06 ? `<span class="ladc soft">${esc(L.p.o)} ${sgn(L.m.v)} vs ${esc(L.m.da ? (ARCH_PL[L.p.ar] || PG_PL[L.p.pg]) : PG_PL[L.p.pg])}</span>` : ''}${L.tag ? '<span class="ladc soft">Value tag</span>' : ''}<span class="ladc">${L.u.top === 1 ? '1 below the top rung' : '2 below the top rung'}</span><span class="ladc">us ${pct(L.u.p)} vs ${pct(L.u.mid)}</span></li>`).join('')}</ul>
+      <li class="lwhy">${L.m && L.m.v >= 1.06 ? `<span class="ladc soft">${esc(L.p.o)} ${sgn(L.m.v)} vs ${esc(L.m.da ? (ARCH_PL[L.p.ar] || PG_PL[L.p.pg]) : PG_PL[L.p.pg])}</span>` : ''}${L.tag ? '<span class="ladc soft">Value tag</span>' : ''}<span class="ladc">proj ${f1(L.p.s.vegas[L.st][MED])} · us ${pct(L.u.p)} vs ${pct(L.u.mid)}</span></li>`).join('')}</ul>
       <div class="dcs"><span>pays <b>${x.d.toFixed(0)}x</b></span><span>$5 → <b>$${(5 * x.d).toFixed(0)}</b></span><span>market chance <b>${pct1(x.p)}</b></span></div></div>`;
-  return `<section class="panel"><div class="phead"><h2>Ladder longshots <span class="exp3">experimental</span></h2><span class="small muted">near-maxed Kalshi rungs · one per game</span></div>
-    <details class="how"><summary>What this is</summary><p class="note">Rungs one or two below the top of a player’s Kalshi ladder, for players with a soft matchup (the defense allows 6%+ more of that stat to his position and archetype) or a Value tag, where our projection backs the rung (our chance at least 5% and no more than 2 points under Kalshi’s) and he plays 24+ minutes. One per game, two or three games. The chance shown is Kalshi’s own; the NFL version of this idea is a test too, and both are tracked on the Profit page.</p></details>
+  return `<section class="panel"><div class="phead"><h2>Ladder longshots <span class="exp3">experimental</span></h2><span class="small muted">achievable Kalshi rungs · one per game</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">Rungs inside our projection’s realistic range (our chance 20-45%, about +120 to +400) on a player’s Kalshi ladder, for players with a soft matchup (the defense allows 6%+ more of that stat to his position and archetype) or a Value tag, where our projection backs the rung (no more than 2 points under Kalshi’s) and he plays 24+ minutes. One per game, two or three games. The chance shown is Kalshi’s own; the NFL version of this idea is a test too, and both are tracked on the Profit page.</p></details>
     <div class="dcg">${P.map(card).join('')}</div></section>`;
 }
 const amO = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
