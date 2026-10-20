@@ -366,7 +366,7 @@ function tierParlays(){
                   {gid: g.id, kind: 'spread', side: 'away', line: g.spread, p: 1 - ph, lab: `${g.away} ${sp(-g.spread)}`}, {gid: g.id, kind: 'spread', side: 'home', line: g.spread, p: ph, lab: `${g.home} ${sp(g.spread)}`},
                   {gid: g.id, kind: 'total', side: 'over', line: g.total, p: po, lab: `${g.away}-${g.home} over ${g.total}`}, {gid: g.id, kind: 'total', side: 'under', line: g.total, p: 1 - po, lab: `${g.away}-${g.home} under ${g.total}`});
   }
-  const card = MKT.tierCard({sport: 'nba', title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.start_utc})),
+  const card = MKT.tierCard({sport: 'nba', overOnly: true, title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.start_utc})),
                        gameLegs, propKinds: KLAB, kalshiKinds: KLAB, minEdge: .05});
   return card || `<section class="panel"><div class="phead"><h2>Parlays by payout (your books)</h2></div><p class="note">No parlay with an edge on every leg yet. Legs are player props at your books (Kalshi ladders, plus Novig and Hard Rock once they post) and game lines: our chance blended 50/50 with the market (Pinnacle’s no-vig line when it has one), only the side we lean, our number 10+ points from the market, and a 5%+ edge after fees. Props mostly post on game day.</p></section>`;
 }

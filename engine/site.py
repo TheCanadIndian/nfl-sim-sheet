@@ -76,7 +76,7 @@ BAR_CSS = """
 .topbar .soon{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-left:5px;opacity:.75}
 .topbar .sp[aria-current="true"] .soon{opacity:.85}
 .topbar .grow{flex:1}
-@media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}}
+@media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}.topbar .help.guide{display:none}}
 .topbar .help{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:5px 9px;border-radius:6px}
 .topbar .help:hover,.topbar .help[aria-current="page"]{color:var(--ink);background:var(--sunk)}
 .topbar a.lnk{color:var(--muted);text-decoration:none;font-weight:500;font-size:14px;padding:5px 10px;border-radius:6px}
@@ -127,9 +127,10 @@ def bar(depth, active):
         tabs.append(f'<a class="sp" href="{pre}{s["pages"][0][2]}"{cur}>{s["name"]}{soon}</a>')
     help_cur = ' aria-current="page"' if active == "guide" else ""
     prof_cur = ' aria-current="page"' if active == "profit" else ""
+    parl_cur = ' aria-current="page"' if active == "parlays" else ""
     r1 = (f'<div class="row r1"><a class="brand" href="{pre}index.html">Sim Sheet</a>{"".join(tabs)}'
-          f'<span class="grow"></span><a class="help" href="{pre}profit.html"{prof_cur}>Profit</a>'
-          f'<a class="help" href="{pre}guide.html"{help_cur}>How to read</a></div>')
+          f'<span class="grow"></span><a class="help" href="{pre}parlays.html"{parl_cur}>Parlays</a><a class="help" href="{pre}profit.html"{prof_cur}>Profit</a>'
+          f'<a class="help guide" href="{pre}guide.html"{help_cur}>How to read</a></div>')
     r2 = ""
     if sport in SPORT and SPORT[sport]["status"] == "live":
         links = "".join(f'<a class="lnk" href="{pre}{path}" title="{html.escape(desc)}"'
