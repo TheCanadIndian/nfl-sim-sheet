@@ -36,6 +36,10 @@ K_MIN = {"pts": 250, "reb": 250, "ast": 250, "fg3m": 400, "stl": 500, "blk": 500
 TEAM_HL, K_TEAM = 15.0, 6.0
 DVP_HL, K_DVP = 20.0, 600.0                       # minutes of evidence toward neutral
 USE_DVP = True
+# Within-team tilt (2026-10-21, research: per-stat gamma fit on 2025 by Poisson deviance, 2026 better in both halves):
+# points +0.05 (top-2 scorers' bias +3.5% -> +1.1%), assists +0.025, steals -0.10, blocks -0.05; turnovers mixed (off),
+# rebounds / threes fit 0.
+TILT = {"pts": 0.05, "ast": 0.025, "stl": -0.10, "blk": -0.05}
 DVP_BETA = 0.5                                    # how much of the matchup to apply (tuned in backtest)
 # Defense vs archetype (owner's idea 2026-10-19; research/nba_archetypes.py): players in the same position play very
 # differently, and defenses give different things to each style. 8 archetypes from per-minute style (k-means on 2023-24).
@@ -275,6 +279,16 @@ def project(fr, rows, mode="vegas", n=4000, seed=7, live=False):
                 mt = np.sqrt(mt * x["dva_" + c].fillna(1.0).to_numpy())      # position and archetype, 50/50 in log terms
             r = r * mt ** DVP_BETA
         mu[c] = r * em
+    # within-team tilt (TILT): stars' per-minute rates were shrunk too evenly toward the team (2025-26 walk-forward: top-2
+    # scorers +3% actual vs projected, the deep bench -6%); each player x (his projection / team average)^gamma, team total kept
+    w_t = x.p_play.to_numpy() if live and "p_play" in x else np.ones(len(x))
+    keys = [x.game_id.to_numpy(), x.team.to_numpy()]
+    for c, gm in TILT.items():
+        v = pd.Series(np.maximum(mu[c], 1e-6), index=x.index)
+        wv = pd.Series(w_t, index=x.index)
+        avg = (v * wv).groupby(keys).transform("sum") / wv.groupby(keys).transform("sum").clip(lower=1e-9)
+        t = v * (v / avg) ** gm
+        mu[c] = (t * (v * wv).groupby(keys).transform("sum") / (t * wv).groupby(keys).transform("sum").clip(lower=1e-9)).to_numpy()
     # team scale: points from players add up to the team target; other stats follow pace partially
     target = x.vegas_pts if mode == "vegas" else x.blind_pts
     target = target.fillna(x.blind_pts).fillna(fr.lg_pts)
