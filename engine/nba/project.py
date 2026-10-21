@@ -170,7 +170,18 @@ def main():
         tabs.append(tab)
         dists[mode] = d
         if mode == "vegas":                       # saved simulations for the page's build-your-own parlay slip
-            save_draws(out, sims)
+            # with each game's shared state (gamestate.py: pace / team factors, blowout minutes); means unchanged
+            sv = {c: np.asarray(v)[:, :1000].copy() for c, v in sims.items()}
+            try:
+                import gamestate as GSt
+                o_, r_ = out.reset_index(drop=True), rows.reset_index(drop=True)
+                for k_, (gid, idx) in enumerate(o_.groupby("game_id").groups.items()):
+                    idx = np.asarray(idx)
+                    for c, v in GSt.draws(o_.iloc[idx].reset_index(drop=True), r_.iloc[idx].reset_index(drop=True), n=1000, seed=k_).items():
+                        sv[c][idx] = v
+            except Exception as e:
+                print("game-state draws skipped:", type(e).__name__, e)
+            save_draws(out, sv)
     tab = pd.concat(tabs, ignore_index=True)
     meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play"]
                 + [c for c in ["arch"] + [f"dva_{s}" for s in M.DVA_STATS] if c in rows]].copy()
