@@ -367,6 +367,15 @@ def market_rows(sport):
             fc = close_cons(sport, r, CL) if k in WPIN.get(sport, {}) else None
             if fc is not None:                                         # and its consensus twin (Pinnacle + Novig + ProphetX)
                 rows += pin_rule(date, sport, cat, src, k, r, p, fc, cy, cn, ya, na, need, sides, R, GM, tag="consensus-anchored")
+                # liquidity consensus (owner 2026-10-21; research/pm_liquidity_consensus.py, Oct 18-21, 1,050 quotes: Kalshi's
+                # deep mid -0.0026 log-loss vs the consensus, z -1.5; NBA / NFL for Kalshi, NHL against): the consensus and
+                # Kalshi's mid in log-odds, Kalshi weighted 2 x depth / (depth + $200) (depth = dollars to buy within 3c)
+                dep = float((r.get("book") or {}).get("ask_3c") or 0)
+                if dep > 0 and yb and ya - yb <= .035:
+                    wl = 2 * dep / (dep + 200)
+                    lo = lambda v: math.log(min(max(v, 1e-4), 1 - 1e-4) / (1 - min(max(v, 1e-4), 1 - 1e-4)))
+                    flc = 1 / (1 + math.exp(-(lo(fc) + wl * lo(m)) / (1 + wl)))
+                    rows += pin_rule(date, sport, cat, src, k, r, p, flc, cy, cn, ya, na, need, sides, R, GM, tag="liquidity consensus")
             bet = None
             # NFL yardage / catch props: the side our median is on, our number 10+ pts from the mid, a tight 15c+ market
             nflp = sport == "nfl" and k in ("rec", "rec_yds", "rush_yds", "pass_yds")
@@ -664,7 +673,7 @@ def page_data():
     # rules under test (2026-10-18): each current rule next to its Pinnacle- and consensus-anchored twins, always listed
     track = []
     for base in TRACKED:
-        for tag in (("", " · market-anchored") if base.startswith("MLB") else ("", " · Pinnacle-anchored", " · consensus-anchored")):
+        for tag in (("", " · market-anchored") if base.startswith("MLB") else ("", " · Pinnacle-anchored", " · consensus-anchored", " · liquidity consensus")):
             y = df[df.cat == f"{base}{tag} (Kalshi)"]
             st = _stats(y.pnl.values, y.clv.values if len(y) and y.clv.notna().any() else None) if len(y) else None
             track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),
