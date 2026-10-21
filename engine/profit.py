@@ -320,6 +320,15 @@ def market_rows(sport):
                 if k != "hr" or (r.get("line") or .5) >= 1:
                     continue
                 cat, q, need, sides = "MLB home runs (VALUE)", p, .06, ("YES",)
+                # twin (2026-10-21, research/mlb_hr_anchor.py: Aug-Oct 2026 the blend's log-loss .3455 ~ Kalshi .3452 and the
+                # 50/50 mix .3447 beat both; VALUE +21% on 98 bets, 25/75-anchored 5%+ edge +16% on 45, neither proven):
+                # the market-anchored version, graded on the same quotes so next season decides
+                qa = .25 * p + .75 * m
+                if qa / cy - 1 >= .05:
+                    ya_ = GM.outcome(sport, r, R)
+                    if ya_ is not None:
+                        rows.append(dict(date=date, sport=sport, cat="MLB home runs (VALUE) · market-anchored", src=src, kind=k, title=r.get("title"),
+                                         bet="YES", cost=round(cy, 4), q=round(qa, 4), won=int(ya_), pnl=round(ya_ / cy - 1, 4), clv=None))
             elif sport == "nhl" and k == "goal":
                 if (r.get("line") or .5) >= 1 or rank.get((r["game"], r.get("pid")), 99) > 3:
                     continue
@@ -559,7 +568,7 @@ def _stats(pnl, clv=None):
     return out
 
 
-TRACKED = ["NHL anytime goals (top 3)", "NFL player props", "NBA player props"]
+TRACKED = ["NHL anytime goals (top 3)", "NFL player props", "NBA player props", "MLB home runs (VALUE)"]
 TRACK_SINCE = "Oct 18"
 
 
@@ -634,7 +643,7 @@ def page_data():
     # rules under test (2026-10-18): each current rule next to its Pinnacle- and consensus-anchored twins, always listed
     track = []
     for base in TRACKED:
-        for tag in ("", " · Pinnacle-anchored", " · consensus-anchored"):
+        for tag in (("", " · market-anchored") if base.startswith("MLB") else ("", " · Pinnacle-anchored", " · consensus-anchored")):
             y = df[df.cat == f"{base}{tag} (Kalshi)"]
             st = _stats(y.pnl.values, y.clv.values if len(y) and y.clv.notna().any() else None) if len(y) else None
             track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),

@@ -137,6 +137,7 @@ def evaluate():
     ek = epa_table(df[df.date < cut])
     bg = batter_games(df, coef, ek)
     bg = bg[bg.slot.notna() & (bg.n_pa >= 2)]                 # starters (a sub inherits a slot but bats once or twice)
+    bg = attach_swing(bg, swing_tables(sqlite3.connect(os.path.join(HERE, "mlb.db")), 2025))   # the live blend's swing-plane inputs
     tr, te = bg[bg.date < cut], bg[(bg.date >= cut)].copy()
     gb = fit(tr)
     te["blend"] = gb.predict_proba(te[FEATS])[:, 1]
