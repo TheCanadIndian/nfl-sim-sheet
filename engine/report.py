@@ -1357,7 +1357,7 @@ function scriptDraws(gid){
   if (SCR[gid] === undefined){
     SCR[gid] = 'load';
     fetch(`${SCR_ROOT}nfl/draws/${gid}.json?t=${Math.floor(Date.now() / 6e5)}`).then(r => r.ok ? r.json() : null).catch(() => null)
-      .then(j => { SCR[gid] = j; if ((state.gtab === 'script' && state.game === gid) || state.view === 'parlays') render(); });
+      .then(j => { SCR[gid] = j; if ((state.gtab === 'script' && state.game === gid) || state.view === 'parlays' || state.view === 'games' || state.view === 'board') render(); });
   }
   return SCR[gid];
 }
@@ -1791,7 +1791,54 @@ function openFair(key, stat){
   state.fo = {key, stat, line: defaultLine(stat, p.d[stat])};
   state.view = 'fair'; render(); window.scrollTo({top: 0});
 }
-const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${chips(p)}</td>`;
+// Why a flagged price might hit (owner 2026-10-21: "flag any price that is possible cause of dvp or game script or any
+// of the other rules set forth for path"): for players with a Value, LC or off-market price, the path reasons that
+// apply -- usage (team top 3 by touches / starting QB), matchup (defense top 8 most allowed to the position), rotation
+// (a teammate out or a snap jump), script (a game script our sims rate 3+ pts above the markets lifts his line 15%+ at
+// his median). "No clear reason" says the price has no path behind it.
+const WHY_ST = {td: 'tds'};
+function gameScriptsOf(g){
+  const T = D.teams[g.id] || {}, H = T[g.home]; if (!H || H.spread_line == null || !(window.MKT && MKT.scriptMarket)) return null;
+  const DW = scriptDraws(g.id); if (!DW || DW === 'load' || !DW.g) return null;
+  if (DW._scr) return DW._scr;
+  const L = H.spread_line, tl = H.total_line, homeFav = L > 0 || (L === 0 && H.win_prob >= .5), fav = homeFav ? g.home : g.away, dog = homeFav ? g.away : g.home;
+  const M = sdecode(DW.g.margin), TT = sdecode(DW.g.total);
+  const SC = [[`${fav} pulls away`, m => (homeFav ? m : -m) >= 10, {kind: 'margin', team: fav, min: 10}], ['close game', m => Math.abs(m) <= 7, {kind: 'close', max: 7}],
+              [`${dog} wins`, m => homeFav ? m < 0 : m > 0, {kind: 'win', team: dog}], ['shootout', (m, t) => t > tl, {kind: 'over', at: tl}], ['low-scoring', (m, t) => t < tl, {kind: 'under', at: tl}]];
+  DW._scr = SC.map(([name, f, spec]) => { const mask = Array.from(M, (m, i) => f(m, TT[i])), n = mask.filter(Boolean).length;
+    const mk = MKT.scriptMarket(g.id, spec, {home: g.home, away: g.away, fav}); return {name, mask, n, edge: mk ? n / M.length - mk.m : null}; })
+    .filter(s => s.edge != null && s.edge >= .03);
+  return DW._scr;
+}
+function whyNFL(p){
+  if (!(window.MKT && MKT.tagStats)) return '';
+  const sts = MKT.tagStats(p.g, p.n); if (!sts.length) return '';
+  const g = D.games.find(x => x.id === p.g); if (!g) return '';
+  const mu = (q, s_) => q.s[s_] ? q.s[s_][MEAN] : 0, team = D.players.filter(q => q.g === p.g && q.t === p.t);
+  const qb = team.filter(q => q.pos === 'QB').sort((a, b) => mu(b, 'att') - mu(a, 'att'))[0];
+  const top = team.filter(q => q.pos !== 'QB').sort((a, b) => (mu(b, 'tgt') + mu(b, 'car')) - (mu(a, 'tgt') + mu(a, 'car'))).slice(0, 3);
+  const k = p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR', r = dvpRow(k, p.o), role = roleOf(g, p);
+  const R = [];
+  if (p === qb || top.includes(p)) R.push('usage');
+  if (r && r.rank <= 8) R.push(`matchup (${ord(r.rank)} most to ${k}s)`);
+  if (role) R.push(role);
+  const sc = gameScriptsOf(g);
+  if (sc && sc.length){
+    const DW = SCR[g.id];
+    for (const st of sts){
+      const x = DW && DW.p && DW.p[p.k] ? sdecode(DW.p[p.k][WHY_ST[st] || st]) : null; if (!x) continue;
+      const med = (p.s[WHY_ST[st] || st] || [])[MED] ?? 0;
+      let a = 0; for (const z of x) if (z > med) a++;
+      for (const s of sc){ let b = 0; for (let i = 0; i < x.length; i++) if (s.mask[i] && x[i] > med) b++;
+        const lift = ((b + 1) / (s.n + 2)) / ((a + 1) / (x.length + 2));
+        if (lift >= 1.15){ R.push(`script (${s.name} +${Math.round((lift - 1) * 100)}%)`); break; } }
+      if (R.some(x => x.startsWith('script'))) break;
+    }
+  }
+  return R.length ? `<span class="why" title="Path reasons behind this flagged price (the Path longshot rules)">why: <b>${esc(R.join(' · '))}</b></span>`
+    : `<span class="why none" title="None of the path reasons (usage, matchup, rotation, game script) applies: the price has no clear reason behind it">no clear reason</span>`;
+}
+const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${chips(p)}</td>`;
 // Market-blind lean, inline (same rule as the Model agreement tab)
 const AGK = Object.fromEntries((D.agree || []).map(r => [r.k + '|' + r.stat, r]));
 function agChip(p, stat){
