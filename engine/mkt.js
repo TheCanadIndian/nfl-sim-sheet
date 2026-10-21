@@ -985,7 +985,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           <ul>${P.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i><b>${esc(L.lab)}</b><span>${esc(FULL[L.book] || L.book || '')} ${L.price != null ? amS(L.price) : ''}</span></li>`).join('')}</ul>
           <div class="dcs"><span>pays <b>${P.d.toFixed(1)}x</b></span><span>$${stake} → <b>$${(stake * P.d).toFixed(2)}</b></span><span>hits <b>${pc(P.p)}</b></span><span class="${P.p * P.d - 1 >= .05 ? 'good' : 'muted'}">edge ${P.p * P.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((P.p * P.d - 1) * 100))}%</span></div></div>`; };
       // NFL core picks lock by slate (60 min before their first kickoff, after inactives + our rerun); others lock with the card
-      const locks = C.picks.map(P => P.lock).filter(Boolean), byPick = new Set(locks).size > 1;
+      const locks = C.picks.map(P => P.lock).filter(Boolean), byPick = locks.some(t => new Date(t).getTime() !== new Date(C.final_at).getTime());
       const next = locks.map(t => new Date(t)).filter(t => t > Date.now()).sort((a, b) => a - b)[0];
       const fin = byPick ? next || null : C.final_at ? new Date(C.final_at) : null, isFinal = byPick ? !next : fin && fin <= Date.now();
       const finTag = byPick || fin ? `<span class="dfin${isFinal ? ' on' : ''}" title="${isFinal ? 'These picks are set: they won’t change, and they’re graded at these prices. Place them any time before their first game.' : byPick ? 'Each pick locks at its own time (shown on the pick); until then it can still change.' : 'Picks can still change until then; after that they’re set for the day.'}">${isFinal ? 'Final · place any time' : (byPick ? 'Next lock ' : 'Final at ') + tm(fin)}</span>` : '';
