@@ -291,9 +291,17 @@ def market_rows(sport):
         CL = {str(e["gid"]): e for e in json.load(open(os.path.join(OUT, f"close_{sport}.json")))}
     except (OSError, ValueError):
         CL = {}
-    for f in sorted(glob.glob(os.path.join(OUT, f"{sport}_20??-??-??.json"))):
+    files = sorted(glob.glob(os.path.join(OUT, f"{sport}_20??-??-??.json")))
+    # one quote per market: a market can sit in several daily files (Thursday's file carries Sunday's games at Thursday's
+    # price); only its last file counts (fix 2026-10-21: NFL had 6,156 markets graded 2+ times, partly at stale prices)
+    last = {}
+    for f in files:
+        for r in json.load(open(f)).get("markets", []):
+            if r.get("ticker"):
+                last[r["ticker"]] = f
+    for f in files:
         date = os.path.basename(f)[len(sport) + 1:len(sport) + 11]
-        mk = json.load(open(f)).get("markets", [])
+        mk = [r for r in json.load(open(f)).get("markets", []) if not r.get("ticker") or last.get(r["ticker"]) == f]
         # NHL: our top 3 per game among the listed scorers
         rank = {}
         if sport == "nhl":
@@ -336,7 +344,20 @@ def market_rows(sport):
             elif k in LINE_KINDS:
                 cat, q, need, sides = f"{sport.upper()} game lines", .5 * p + .5 * m, .03, ("YES", "NO")
             elif k in PROP_KINDS:
-                cat, q, need, sides = f"{sport.upper()} player props", .5 * p + .5 * m, .05, ("YES", "NO")
+                # props judged like mkt.js pq since 2026-10-21: our weight by Kalshi depth (10% at $1,000+ within 3c, 25% at
+                # $100+, else 50%), no edge at a 4c+ spread; the old 50/50 rule is graded beside it
+                dep = float((r.get("book") or {}).get("ask_3c") or 0) if r.get("book") else 1000.0
+                wk = .10 if dep >= 1000 else .25 if dep >= 100 else .5
+                if (ya - (yb or 0)) <= .035 and yb:
+                    q50 = .5 * p + .5 * m
+                    if q50 / cy - 1 > .05 and (sport != "nfl" or k not in ("rec", "rec_yds", "rush_yds", "pass_yds") or (p >= .5 and abs(p - m) >= .10 and cy >= .15)):
+                        yo = GM.outcome(sport, r, R)
+                        if yo is not None:
+                            rows.append(dict(date=date, sport=sport, cat=f"{sport.upper()} player props · old 50/50", src=src, kind=k, title=r.get("title"),
+                                             bet="YES", cost=round(cy, 4), q=round(q50, 4), won=int(yo), pnl=round(yo / cy - 1, 4), clv=None))
+                    cat, q, need, sides = f"{sport.upper()} player props", wk * p + (1 - wk) * m, .05, ("YES", "NO")
+                else:
+                    continue
             else:
                 continue                                   # first scorer etc.: not something the site recommends
             fy = close_fair(sport, r, PP, PL)                      # Pinnacle's fair closing chance (YES side)

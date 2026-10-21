@@ -228,7 +228,14 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return w * p + (1 - w) * sh;
     }
     const m = r.ya != null && r.yb != null && r.yb > 0 ? (r.ya + r.yb) / 2 : r.ya;
-    return m != null ? .5 * p + .5 * m : p;
+    if (m == null) return p;
+    if (['win', 'total', 'spread'].includes(r.k)) return .5 * p + .5 * m;       // game lines: the 50/50 held up (+21%, 165 bets)
+    // props: trust Kalshi's mid by how deep it is (research/kalshi_liquidity_rule.py, 2026-10-21: every Kalshi prop YES
+    // returned -10.8%, the 50/50 rule -12.9% on 2,015 bets; Kalshi's mid out-predicted ours where deep). Our weight:
+    // 10% with $1,000+ to buy within 3c, 25% with $100+, else 50%. A spread of 4c+ (-38%) means the mid can't be read: no edge.
+    if (r.yb == null || r.ya - r.yb > .035) return m;
+    const w = r.by >= 1000 ? .10 : r.by >= 100 ? .25 : .5;
+    return w * p + (1 - w) * m;
   }
   function edges(r, p){
     const f = FEE[r.s] || 0, ya = r.ya, na = r.yb != null ? 1 - r.yb : null;
@@ -658,7 +665,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           const p = ours(r, 'vegas'); if (p == null || r.ya - r.yb > .035) continue;
           const pe = PR && PR.props && ((PR.props[String(r.g)] || {})[norm(r.n)] || {})[r.k];
           const pin = pe && pinOk(pe) && Math.abs(pe.pin.l - r.l) < 1e-9 ? pe.pin.o : null;
-          const m = pin != null ? pin : (r.ya + r.yb) / 2, wk = wOf(opts.sport, r.k, pin != null);
+          const m = pin != null ? pin : (r.ya + r.yb) / 2, wk = pin != null ? wOf(opts.sport, r.k, true) : r.by >= 1000 ? .10 : r.by >= 100 ? .25 : .5;   // depth-weighted, as pq
           for (const sd of opts.overOnly ? ['o'] : ['o', 'u']) {
             const ps = sd === 'o' ? p : 1 - p, ms = sd === 'o' ? m : 1 - m, c = sd === 'o' ? r.ya : 1 - r.yb;
             if (ps < .5 || (pin == null && Math.abs(p - m) < .10) || c < .15 || c > .95) continue;
