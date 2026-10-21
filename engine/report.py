@@ -1791,7 +1791,7 @@ function openFair(key, stat){
   state.fo = {key, stat, line: defaultLine(stat, p.d[stat])};
   state.view = 'fair'; render(); window.scrollTo({top: 0});
 }
-const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${chips(p)}</td>`;
+const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${chips(p)}</td>`;
 // Market-blind lean, inline (same rule as the Model agreement tab)
 const AGK = Object.fromEntries((D.agree || []).map(r => [r.k + '|' + r.stat, r]));
 function agChip(p, stat){
