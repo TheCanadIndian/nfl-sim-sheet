@@ -194,8 +194,8 @@ CARD_FINAL_HOUR, CARD_FINAL_BEFORE = 12, dt.timedelta(hours=2)
 NFL_SLATE_LOCK = dt.timedelta(minutes=60)
 # NHL / NBA cards lock after the first game's lineups (owner 2026-10-21): NHL official rosters post 15-45 min before puck
 # drop and the NHL run at :40 picks them up (2026-10-20: 8 of 22 teams official in the 6:45 PM run, none at 6:15); the NBA
-# runs 30 min before 7 PM tips. Cards are re-picked by the markets run (~every 15 min), so 10 min before the first game.
-LINEUP_LOCK = {"nhl": dt.timedelta(minutes=10), "nba": dt.timedelta(minutes=10)}
+# runs 30 min before 7 PM tips. Owner 2026-10-21 (later): lock 1 hour before the first game (was 10 min).
+LINEUP_LOCK = {"nhl": dt.timedelta(minutes=60), "nba": dt.timedelta(minutes=60)}
 
 
 def pick_lock(sport, slot, p, card_fin):
