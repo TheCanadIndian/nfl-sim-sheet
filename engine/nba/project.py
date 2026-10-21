@@ -222,7 +222,16 @@ def main():
     if os.path.exists(jp):
         old = json.load(open(jp))
         payload["games"] = sorted([x for x in old["games"] if x["id"] not in keep_ids] + payload["games"], key=lambda x: x["start_utc"])
-        payload["players"] = [x for x in old["players"] if x["g"] not in keep_ids] + payload["players"]
+        # started games keep their earlier players (frozen); this run adds only the upcoming games' players. The new
+        # payload is built from `tab`, which also carries the started games' old rows, so those are dropped here (they
+        # stacked one copy per run before 2026-10-21); each player key appears once
+        keep = {int(g) for g in keep_ids}
+        new = [x for x in payload["players"] if int(x["g"]) in keep]
+        seen, merged = set(), []
+        for x in [x for x in old["players"] if int(x["g"]) not in keep] + new:
+            if x["k"] not in seen:
+                seen.add(x["k"]); merged.append(x)
+        payload["players"] = merged
     json.dump(payload, open(jp, "w"), separators=(",", ":"))
     html = page.render(payload)
     for f in (f"{date}.html", "index.html"):

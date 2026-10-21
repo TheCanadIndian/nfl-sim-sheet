@@ -640,7 +640,92 @@ def page_data():
             track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),
                               roi=st["roi"] if st else None, moe=st["moe"] if st else None,
                               clv=st.get("clv") if st else None, clv_n=st.get("clv_n") if st else 0))
-    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE)
+    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data())
+
+
+# ---------------------------------------------------------------- what actually worked (owner 2026-10-21)
+# The bets themselves, not just rates: every graded straight bet the site recommends (Kalshi rule picks on the current
+# rule, Value tags) and every parlay worth tracking (Today's card, multisport, path / ladder / primetime, Value-tag
+# parlays), last 14 days, with each leg's result and the owner's stakes ($10 straight, $5 parlay).
+FEED_DAYS, STRAIGHT, PARLAY = 14, 10.0, 5.0
+FEED_CARDS = ("Multisport longshots", "Path longshots", "Ladder longshots (experimental)", "Primetime ladders (experimental)",
+              "Value-tag parlays (higher odds)")
+
+
+def _is_current_rule(cat):
+    return "·" not in cat and "experimental" not in cat and "ladder" not in cat.lower()
+
+
+def feed_data():
+    import glob as _g
+    since = (dt.datetime.now(ET).date() - dt.timedelta(days=FEED_DAYS)).isoformat()
+    items, seen = [], set()
+    for f in _g.glob(os.path.join(OUT, "profit_*.json")):
+        if f.endswith(("profit_tags.json", "profit_wfair.json")):
+            continue
+        try:
+            rs = json.load(open(f)).get("rows", [])
+        except (OSError, ValueError):
+            continue
+        for r in rs:
+            if r["date"] < since or not _is_current_rule(r["cat"]):
+                continue
+            k = (r["date"], r.get("title"), r.get("bet"))
+            if k in seen:
+                continue
+            seen.add(k)
+            items.append(dict(date=r["date"], sport=r["sport"], t="bet", cat=r["cat"], title=f"{r.get('title') or ''} {r.get('bet') or ''}".strip(),
+                              book="Kalshi" if r.get("src") == "kalshi" else "Polymarket", pay=round(1 / r["cost"], 2) if r.get("cost") else None,
+                              q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2)))
+    tp = os.path.join(OUT, "profit_tags.json")
+    for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
+        d0 = (e.get("start") or e["first"])[:10]
+        if e.get("res") not in ("W", "L") or d0 < since:
+            continue
+        dd = dec(e["o"])
+        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} Value tags", title=f"{e['name'].title()} {e['bet']}",
+                          book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
+    legs = []
+    for f in _g.glob(os.path.join(HERE, "parlays", "*", "*.json")):
+        try:
+            d = json.load(open(f))
+        except (OSError, ValueError):
+            continue
+        for q in d.get("parlays", []):
+            if q.get("res") not in ("W", "L") or not (q.get("pick") or q.get("card") in FEED_CARDS):
+                continue
+            pay = q.get("paid") or q.get("d")
+            if not pay:
+                continue
+            for L in q["legs"]:                                  # leg-level hit rates (each leg counted once per day)
+                if L.get("res") in ("W", "L"):
+                    legs.append(dict(sport=L.get("sport") or d["sport"], kind=L.get("kind"), p=L.get("p"), y=L["res"] == "W", date=d["date"],
+                                     key=f"{d['date']}|{L.get('gid')}|{L.get('name') or L.get('lab')}|{L.get('kind')}|{L.get('line')}", f=L.get("f")))
+            if d["date"] < since:
+                continue
+            items.append(dict(date=d["date"], sport=d["sport"], t="parlay", cat="Today’s card" if q.get("pick") else q["card"], tier=q.get("tier"),
+                              legs=[dict(lab=L.get("lab"), res=L.get("res"), sport=L.get("sport")) for L in q["legs"]], pay=round(pay, 2), q=q.get("p"),
+                              res=q["res"], net=round(PARLAY * ((pay - 1) if q["res"] == "W" else -1), 2)))
+    items.sort(key=lambda x: (x["date"], x["res"] == "W", x["net"]), reverse=True)
+    # what's working: each bet type over the last 30 days, in dollars at the owner's stakes
+    since30 = (dt.datetime.now(ET).date() - dt.timedelta(days=30)).isoformat()
+    by = {}
+    for x in items:
+        if x["date"] >= since30:
+            b = by.setdefault((x["sport"], x["cat"]), dict(sport=x["sport"], cat=x["cat"], n=0, w=0, net=0.0))
+            b["n"] += 1; b["w"] += x["res"] == "W"; b["net"] += x["net"]
+    types = sorted((dict(b, net=round(b["net"], 2)) for b in by.values() if b["n"] >= 5), key=lambda b: -b["net"])
+    # parlay legs: hit rate vs our chance, by sport and stat (and by path reason)
+    uniq = {L["key"]: L for L in legs}.values()
+    lt = {}
+    for L in uniq:
+        k = (L["sport"], {"anytime_td": "td"}.get(L["kind"], L["kind"]))
+        t = lt.setdefault(k, dict(sport=k[0], kind=k[1], n=0, hit=0, exp=0.0)); t["n"] += 1; t["hit"] += L["y"]; t["exp"] += L["p"] or 0
+        for r in L.get("f") or []:
+            t = lt.setdefault(("reason", r), dict(sport="path", kind=r, n=0, hit=0, exp=0.0)); t["n"] += 1; t["hit"] += L["y"]; t["exp"] += L["p"] or 0
+    legt = sorted((dict(t, exp=round(t["exp"], 1)) for t in lt.values() if t["n"] >= 5), key=lambda t: (t["sport"] == "path", t["sport"], -t["n"]))
+    # every graded bet of the window (a cap cut older days' losers: they sort after winners), compact keys
+    return dict(items=items, types=types, legs=legt, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -650,6 +735,17 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .trk h3{margin:0 0 6px;font-size:15px}.trk table{width:100%;border-collapse:collapse;font-size:13px}.trk td{padding:4px 0;border-top:1px solid var(--faint)}
 .trk td.r{text-align:right;white-space:nowrap}.trk .wait{color:var(--muted)}.trk .tag3{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:0 5px;margin-left:6px}
 .rec div{background:var(--sunk);border-radius:8px;padding:10px 12px}.rec b{display:block;font-family:var(--display);font-size:26px;line-height:1.1}.rec span{font-size:12px;color:var(--muted)}.rec b span{font-size:inherit}.rec b span.rp{color:var(--good)}.rec b span.rn{color:var(--bad)}
+.wk{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.wk .tb{border:1px solid var(--faint);border-radius:10px;padding:10px 12px}
+.wk h3{margin:0 0 6px;font-size:14px}.wk li{display:flex;gap:8px;align-items:baseline;padding:3px 0;border-top:1px solid var(--faint);font-size:13.5px}.wk ul{list-style:none;margin:0;padding:0}
+.wk li .n{margin-left:auto;white-space:nowrap;font-weight:700}.wk li small{color:var(--muted)}
+.fsw{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.fsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px var(--body);cursor:pointer}
+.fsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.fd h3{display:inline;font-size:13px;color:var(--muted);margin:0;font-family:var(--body);letter-spacing:.04em;text-transform:uppercase}.fday{border-top:1px solid var(--faint);padding:8px 0}.fday>summary{cursor:pointer;list-style-position:outside}.fday .fi:first-of-type{border-top:0}
+.fi{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--faint);font-size:13.5px}
+.fi .m{font-weight:800}.fi.W .m{color:var(--good)}.fi.L .m{color:var(--bad)}.fi.L{opacity:.8}.fi .c{font-size:11.5px;color:var(--muted)}
+.fi .net{font-weight:800;white-space:nowrap;text-align:right}.fi.W .net{color:var(--good)}.fi.L .net{color:var(--muted)}
+.fi .lg{grid-column:2/4;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12.5px}.fi .lg span.W{color:var(--good)}.fi .lg span.L{color:var(--bad)}.fi .lg span.V{color:var(--muted)}
+.lt table{width:100%;border-collapse:collapse;font-size:13px}.lt td,.lt th{padding:4px 6px;border-top:1px solid var(--faint);text-align:right}.lt td:first-child,.lt th:first-child{text-align:left}
 .rp{color:var(--good)}.rn{color:var(--bad)}
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .vd.proven{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}.vd.promising{background:color-mix(in srgb,#6CB4FF 22%,transparent);color:#6CB4FF}
@@ -675,6 +771,47 @@ function spark(c){
   const last = ys[ys.length - 1];
   return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Units over time"><line x1="0" x2="${W}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--faint)" stroke-dasharray="4 4"/><polyline fill="none" stroke="${last >= 0 ? 'var(--good)' : 'var(--bad)'}" stroke-width="2.5" points="${c.map((p, i) => X(i) + ',' + Y(p[1])).join(' ')}"/></svg>`;
 }
+
+// ---- what actually worked
+const FE = D.feed || {items: [], types: [], legs: []};
+let FF = {w: true, s: 'all'}; try { Object.assign(FF, JSON.parse(localStorage.getItem('simfeed-v1') || '{}')); } catch (e) {}
+const usd = v => `<span class="${v >= 0 ? 'rp' : 'rn'}">${v >= 0 ? '+' : '−'}$${Math.abs(v).toFixed(2)}</span>`;
+const dayL = d => new Date(d + 'T12:00:00').toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
+function working(){
+  const T = FE.types || []; if (!T.length) return '';
+  const up = T.filter(t => t.net > 0).slice(0, 4), dn = T.filter(t => t.net < 0).slice(-4).reverse();
+  const lab = t => t.cat.toUpperCase().startsWith(t.sport.toUpperCase()) ? esc(t.cat) : `${esc(t.sport.toUpperCase())} ${esc(t.cat)}`;
+  const li = t => `<li><span><b>${lab(t)}</b><small> · won ${t.w} of ${t.n}</small></span><span class="n">${usd(t.net)}</span></li>`;
+  return `<section class="panel"><div class="phead"><h2>What’s working</h2><span class="small muted">last 30 days · $${FE.stake.straight} a straight bet, $${FE.stake.parlay} a parlay</span></div>
+    <div class="wk"><div class="tb"><h3>Making money</h3><ul>${up.map(li).join('') || '<li class="muted">Nothing in profit yet.</li>'}</ul></div>
+    <div class="tb"><h3>Losing money</h3><ul>${dn.map(li).join('') || '<li class="muted">Nothing losing.</li>'}</ul></div></div></section>`;
+}
+function feed(){
+  const sports = [...new Set(FE.items.map(x => x.sport))];
+  const A = FE.items.filter(x => FF.s === 'all' || x.sport === FF.s), I = A.filter(x => !FF.w || x.res === 'W');   // totals always count every bet
+  const sw = `<div class="fsw"><button data-fw="1" aria-pressed="${FF.w}">Winners only</button>${['all', ...sports].map(k => `<button data-fs="${k}" aria-pressed="${FF.s === k}">${k === 'all' ? 'All sports' : k.toUpperCase()}</button>`).join('')}</div>`;
+  const days = [...new Set(I.map(x => x.date))];
+  const tip = x => esc(`${x.t === 'bet' ? x.cat + ' · ' + (x.book || '') : x.cat}${x.q ? ' · our chance ' + Math.round(x.q * 100) + '%' : ''}`);
+  const row = x => `<div class="fi ${x.res}" title="${tip(x)}"><span class="m">${x.res === 'W' ? '✓' : '✗'}</span><span><b>${x.t === 'parlay' ? `${esc(x.cat)}${x.tier ? ` · ${esc(x.tier)}` : ''}` : esc(x.title)}</b>
+      <span class="c"> · ${esc(x.sport.toUpperCase())}${x.pay ? ` · ${x.pay.toFixed(x.pay < 10 ? 2 : 0)}x` : ''}</span></span>
+      <span class="net">${usd(x.net)}</span>${x.t === 'parlay' ? `<span class="lg">${x.legs.map(L => `<span class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'} ${esc(L.lab)}${L.sport ? ` <small>${esc(L.sport.toUpperCase())}</small>` : ''}</span>`).join('')}</span>` : ''}</div>`;
+  const tot = A.reduce((s, x) => s + x.net, 0), w = A.filter(x => x.res === 'W').length;
+  return `<section class="panel fd"><div class="phead"><h2>Results</h2><span class="small muted">last ${FE.days} days · ${w} of ${A.length} won · net ${usd(tot)}</span></div>${sw}
+    ${days.map((d, i) => { const X = I.filter(x => x.date === d), XA = A.filter(x => x.date === d), n = XA.reduce((s, x) => s + x.net, 0);
+      const top = X.slice(0, 10).map(row).join(''), more = X.length > 10 ? `<details><summary class="small muted" style="cursor:pointer;padding:6px 0">${X.length - 10} more</summary>${X.slice(10).map(row).join('')}</details>` : '';
+      return `<details class="fday"${i === 0 ? ' open' : ''}><summary><h3>${dayL(d)} · ${XA.filter(x => x.res === 'W').length}-${XA.filter(x => x.res === 'L').length} · net ${usd(n)}</h3></summary>${top}${more}</details>`; }).join('') || '<p class="note">Nothing graded in this view yet.</p>'}</section>`;
+}
+function legTable(){
+  const L = FE.legs || []; if (!L.length) return '';
+  const KL = {rec_yds: 'receiving yds', rush_yds: 'rushing yds', pass_yds: 'passing yds', rec: 'catches', td: 'anytime TD', goal: 'anytime goal', sog: 'shots on goal', pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes', ml: 'moneyline', spread: 'spread', total: 'total'};
+  const tr = t => `<tr><td>${t.sport === 'path' ? `reason: <b>${esc(t.kind)}</b>` : `<b>${esc(t.sport.toUpperCase())}</b> ${esc(KL[t.kind] || t.kind)}`}</td><td>${t.n}</td><td>${t.hit} <small class="muted">(${Math.round(t.hit / t.n * 100)}%)</small></td><td>${t.exp}</td><td class="${t.hit - t.exp >= 0 ? 'rp' : 'rn'}">${t.hit - t.exp >= 0 ? '+' : '−'}${Math.abs(t.hit - t.exp).toFixed(1)}</td></tr>`;
+  return `<section class="panel lt"><details><summary style="cursor:pointer"><h2 style="display:inline">Which parlay legs hit</h2> <span class="small muted">by leg type and reason</span></summary>
+    <div class="tw" style="margin-top:8px"><table><thead><tr><th>Leg type</th><th>Legs</th><th>Hit</th><th>Expected</th><th>vs expected</th></tr></thead><tbody>${L.map(tr).join('')}</tbody></table></div>
+    <p class="note" style="margin:6px 0 0">Expected = the sum of our chances for those legs. Hitting more than expected means that kind of leg has been underpriced; reasons are the path factors (usage, matchup, rotation, script / game, price) each leg had.</p></details></section>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('button[data-fw],button[data-fs]'); if (!b) return;
+  if (b.dataset.fw) FF.w = !FF.w; else FF.s = b.dataset.fs;
+  try { localStorage.setItem('simfeed-v1', JSON.stringify(FF)); } catch (x) {} render(); });
 function render(){
   const O = D.overall;
   if (!O){ document.getElementById('main').innerHTML = '<section class="panel"><p class="note">Nothing graded yet.</p></section>'; return; }
@@ -691,7 +828,7 @@ function render(){
   const track = T.length ? `<section class="panel"><div class="phead"><h2>New rules being tested <span class="tag3">since ${esc(D.since || '')}</span></h2></div>
     <p class="note" style="margin:0 0 10px">Each current rule is graded next to two versions that use the sharp market as the main input: our number weighted 10-25% against Pinnacle’s no-vig line, or against the consensus of Pinnacle, Novig and ProphetX. Same Kalshi quotes, same edge bar. Beat close = the sharp closing chance minus the price paid (positive = real value); it settles in weeks, the return takes months.</p>
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
-  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>` + track + D.sports.map(sp).join('');
+  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>` + working() + feed() + legTable() + track + D.sports.map(sp).join('');
 }
 render();
 </script></body></html>"""
