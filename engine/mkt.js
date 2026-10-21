@@ -586,6 +586,37 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length, w: !!e.w};
     },
     myBooks: () => MY.slice(),
+    // one leg of a same-game combo, market-anchored like the payout cards: game lines ('ml' side home|away, 'total' side
+    // over at line) = ours averaged with Pinnacle's no-vig (else the books' median no-vig); props ('sog25', ...) = ours 50/50
+    // with the books' two-way no-vig median (Pinnacle at WPIN weights when pulled), 'goal' = blend(). Returns {q, m, b}
+    // (b = best price at the viewer's books, else anywhere) or null with no market reference.
+    sgLeg(gid, kind, side, line, p, name){
+      if (p == null) return null;
+      const med = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
+      if (kind === 'goal'){
+        const m = window.MKT.propMarket(gid, name, 'goal'); if (m == null) return null;
+        return {q: window.MKT.blend(gid, name, 'goal', p), m, b: window.MKT.propBest(gid, name, 'goal')};
+      }
+      if (kind !== 'ml' && kind !== 'total'){
+        const e = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || !e.o) return null;
+        let m = null, w = .5;
+        if (pinOk(e)) { m = e.pin.o; w = wOf(sport, kind, true); }
+        else m = med(Object.keys(e.o).filter(k => e.u && e.u[k] && !SKIP.has(k)).map(k => { const a = 1 / dec(e.o[k][0]), c = 1 / dec(e.u[k][0]); return a / (a + c); }));
+        if (m == null) return null;
+        return {q: w * p + (1 - w) * m, m, b: window.MKT.propBest(gid, name, kind)};
+      }
+      const G = BK && BK.games && BK.games[String(gid)]; if (!G) return null;
+      let o = G[kind]; if (kind !== 'ml') o = o && o[String(+line)]; if (!o || !o[side]) return null;
+      const other = {home: 'away', away: 'home', over: 'under', under: 'over'}[side];
+      const v = (sd, k) => { const x = o[sd] && o[sd][k]; return x == null ? null : Array.isArray(x) ? x[0] : x; };
+      const pa = v(side, 'Pinnacle'), pb = v(other, 'Pinnacle');
+      const m = pa != null && pb != null ? (1 / dec(pa)) / (1 / dec(pa) + 1 / dec(pb))
+        : med(Object.keys(o[side]).filter(k => !SKIP.has(k) && v(other, k) != null).map(k => { const a = 1 / dec(v(side, k)), c = 1 / dec(v(other, k)); return a / (a + c); }));
+      if (m == null) return null;
+      const all = Object.entries(o[side]).filter(([k]) => !SKIP.has(k) && !NOBET.has(k)).map(([k, x]) => [k, Array.isArray(x) ? x[0] : x, Array.isArray(x) ? x[1] : null]).sort((a, c) => dec(c[1]) - dec(a[1]));
+      const L = all.filter(([k]) => mine(k)), c = (L.length ? L : all)[0];
+      return {q: (p + m) / 2, m, b: c ? {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1], u: c[2], mine: !!L.length} : null};
+    },
     // the market's chance for a player prop: median implied chance at the exchanges / prediction markets (low margin;
     // Kalshi already fee-adjusted), less ~3% for their margin. null when no exchange prices it.
     // our chance p blended with the market's for a prop: Pinnacle at WPIN weights, else 50/50 with the exchanges

@@ -250,6 +250,60 @@ def simulate(H, A, n=10000, seed=0, P=None, calibrate=True):
     return res
 
 
+def sog_pp_share(con, rows):
+    """Each player's power-play share of his shots tonight: his even-strength / PP shot rates over his last 60 games
+    (shrunk toward the league: 3 h / 1 h of prior) times tonight's expected ice time. rows: player_id, e_np_toi, e_pp_toi."""
+    ids = sorted({int(x) for x in rows.player_id.dropna()})
+    if not ids:
+        return np.zeros(len(rows))
+    q = ",".join(map(str, ids))
+    t = pd.read_sql(f"SELECT t.game_id, t.player_id, t.toi, t.pp_toi, g.date FROM toi t JOIN games g USING (game_id) "
+                    f"WHERE t.player_id IN ({q}) AND t.toi > 0", con).sort_values("date")
+    t = t.groupby("player_id").tail(60)
+    sh = pd.read_sql(f"SELECT game_id, shooter AS player_id, pp FROM shots WHERE kind IN ('shot-on-goal', 'goal') AND shooter IN ({q})", con)
+    sh = sh.merge(t[["game_id", "player_id"]], on=["game_id", "player_id"])
+    sh["player_id"] = sh.player_id.astype("int64")
+    c = sh.groupby("player_id").pp.agg(["sum", "count"])
+    tm = t.groupby("player_id")[["toi", "pp_toi"]].sum()
+    d = tm.join(c, how="left").fillna(0)
+    lg_np = (d["count"] - d["sum"]).sum() / max((d.toi - d.pp_toi).sum() / 3600, 1)
+    lg_pp = d["sum"].sum() / max(d.pp_toi.sum() / 3600, 1)
+    rnp = ((d["count"] - d["sum"]) + 3 * lg_np) / ((d.toi - d.pp_toi) / 3600 + 3)
+    rpp = (d["sum"] + 1 * lg_pp) / (d.pp_toi / 3600 + 1)
+    pid = rows.player_id.astype("int64")
+    a_np = rows.e_np_toi.to_numpy() * pid.map(rnp).fillna(lg_np).to_numpy()
+    a_pp = rows.e_pp_toi.to_numpy() * pid.map(rpp).fillna(lg_pp).to_numpy()
+    return np.where(a_np + a_pp > 0, a_pp / np.maximum(a_np + a_pp, 1e-9), 0)
+
+
+COMBOS = ("win", "o55", "s3")    # goal + his team wins, goal + game over 5.5, 3+ shots + goal (tested 2025-26, see CLAUDE.md)
+
+
+def game_lifts(home, away, who, n=10000, seed=0, P=None):
+    """home / away: DataFrames (player_id, lam, e_np_toi, e_pp_toi, np_rate, pp_rate, sog, sog_ppf). who: player ids to
+    report. Returns {player_id: {combo: lift}} with lift = P(both) / (P(a) P(b)) in the simulated games."""
+    T = []
+    for x in (home, away):
+        bn, bp = x.e_np_toi / 3600 * x.np_rate, x.e_pp_toi / 3600 * x.pp_rate
+        gpp = (bp / (bn + bp)).fillna(0).to_numpy()
+        lam, sg, sp = x.lam.to_numpy(), x.sog.fillna(0).to_numpy(), x.sog_ppf.fillna(0).to_numpy()
+        T.append(Team(lam * (1 - gpp), lam * gpp, sg * (1 - sp), sg * sp, x.e_pp_toi.sum() / 5))
+    r = simulate(T[0], T[1], n=n, seed=seed, P=P)
+    f = r["final"]
+    win = {"home": f[:, 0] > f[:, 1], "away": f[:, 1] > f[:, 0]}
+    o55 = f.sum(1) > 5.5
+    out = {}
+    for nm, x in (("home", home), ("away", away)):
+        G, S = r[nm]["goals"] >= 1, r[nm]["sog"] > 2.5
+        for j, pid in enumerate(x.player_id.astype(int)):
+            if pid not in who:
+                continue
+            g = G[:, j]
+            lift = lambda b: float((g & b).mean() / max(g.mean() * b.mean(), 1e-9))
+            out[pid] = dict(win=round(lift(win[nm]), 3), o55=round(lift(o55), 3), s3=round(lift(S[:, j]), 3))
+    return out
+
+
 if __name__ == "__main__":
     if (sys.argv[1] if len(sys.argv) > 1 else "") == "fit":
         P = fit(sqlite3.connect(DB))
