@@ -130,9 +130,8 @@ def freeze():
                 if old and old.get("graded"):
                     continue
                 fin = card_final_at(date, (old["parlays"] if old else []) + by.get(date, []))
-                final = now >= fin and old and any(p.get("pick") for p in old["parlays"])
                 locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now
-                          or (final and p.get("pick"))]
+                          or (p.get("pick") and now >= pick_lock(sport, p["pick"], p, fin))]
                 lk = {tuple(sorted(_legkey(L) for L in p["legs"])) for p in locked}
                 pending = [p for p in by.get(date, []) if when(p["first"]) > now and tuple(sorted(_legkey(L) for L in p["legs"])) not in lk]
                 ps = pick_card(sport, locked + pending, now, fin)
@@ -188,6 +187,18 @@ def card_slot(sport, p):
 # bets at the last minute): 2 hours before the day's first game (owner 2026-10-21; was noon Eastern or that, if
 # earlier); noon Eastern only when no game time is known. After that the picks never change and are graded at those prices.
 CARD_FINAL_HOUR, CARD_FINAL_BEFORE = 12, dt.timedelta(hours=2)
+# NFL core picks lock per slate instead (owner 2026-10-21: "after each slate confirms lineups and we rerun our data"):
+# 60 min before the parlay's first kickoff -- inactives / ESPN's official starters post ~90 min before, and the NFL run
+# after them lands ~75 min before. The all-day longshot keeps the day's lock (2 h before the first game: 7:30 AM ET on a
+# London Sunday; owner: "the long all day parlay can lock at 7:30").
+NFL_SLATE_LOCK = dt.timedelta(minutes=60)
+
+
+def pick_lock(sport, slot, p, card_fin):
+    """When a pick (or a candidate for a slot) stops changing."""
+    if sport == "nfl" and slot == "core":
+        return when(p["first"]) - NFL_SLATE_LOCK
+    return card_fin
 
 
 def card_final_at(date, ps):
@@ -197,15 +208,16 @@ def card_final_at(date, ps):
 
 
 def pick_card(sport, ps, now, final_at=None):
-    """Mark the day's card (p['pick'] = 'core' / 'longshot'). Picks stay once their first game starts or once the card is
-    final (final_at); before that the rest are chosen again from what the page shows now (best edge first, a leg in at
-    most 2 picks). A card with no picks at its final time is picked once, then stays."""
-    if final_at is not None and now >= final_at and any(p.get("pick") for p in ps):
-        for p in ps:
-            if p.get("pick"):
-                p["final"] = True
-        return ps
+    """Mark the day's card (p['pick'] = 'core' / 'longshot'). A pick stays once its first game starts or its lock passes
+    (pick_lock: the card's final_at; NFL core picks 60 min before their first kickoff); before that the rest are chosen
+    again from what the page shows now (best edge first, a leg in at most 2 picks). A slot whose lock passed is filled
+    only if the card has no picks at all (picked once, then it stays)."""
+    lock = lambda p, slot: pick_lock(sport, slot, p, final_at) if final_at is not None else when(p["first"])
+    for p in ps:
+        if p.get("pick") and now >= lock(p, p["pick"]):
+            p["final"] = True
     keep = [p for p in ps if p.get("pick") and (when(p["first"]) <= now or p.get("final"))]
+    none_yet = not keep
     for p in ps:
         if p.get("pick") and not any(p is k for k in keep):
             p.pop("pick", None)
@@ -218,7 +230,7 @@ def pick_card(sport, ps, now, final_at=None):
         if p.get("pick") or when(p["first"]) <= now:
             continue
         slot, ev = card_slot(sport, p)
-        if slot:
+        if slot and (now < lock(p, slot) or none_yet):
             cands.append((slot, ev, p))
     cands.sort(key=lambda c: -c[1])
     count = lambda f: sum(1 for p in ps if p.get("pick") and f(p["pick"]))
@@ -231,6 +243,8 @@ def pick_card(sport, ps, now, final_at=None):
             if not ok(slot) or p.get("pick") or k in sets or any(used.get(_legkey(L), 0) >= 2 for L in p["legs"]):
                 continue
             p["pick"] = slot
+            if now >= lock(p, slot):
+                p["final"] = True
             sets.add(k)
             for L in p["legs"]:
                 used[_legkey(L)] = used.get(_legkey(L), 0) + 1
@@ -265,6 +279,7 @@ def write_card(sport):
                record=dict(rec, net=round(rec["net"], 2)),
                picks=[dict(slot=p["pick"], card=p["card"], tier=p.get("tier"), p=round(p["p"] * CARD_DISCOUNT.get(sport, 1), 4), d=p["d"],
                            first=p["first"], res=p.get("res"), paid=p.get("paid"),
+                           lock=pick_lock(sport, p["pick"], p, when(show[2])).astimezone(dt.timezone.utc).isoformat() if show[2] else None,
                            legs=[dict(lab=L.get("lab"), price=L.get("price"), book=L.get("book"), p=L.get("p"), res=L.get("res")) for L in p["legs"]])
                       for p in sorted(show[1], key=lambda p: (p["pick"] != "core", p["first"]))])
     os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
