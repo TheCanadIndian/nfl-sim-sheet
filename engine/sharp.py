@@ -233,8 +233,8 @@ def apply_consensus(sport, now):
     json.dump(PR, open(fp, "w"), separators=(",", ":"))
     try:
         FL = json.load(open(ff))
-    except (OSError, ValueError):
-        FL = None
+    except (OSError, ValueError):                             # no Value-tag file (NBA): one for the LC tags
+        FL = dict(sport=sport, fetched=now.isoformat() if hasattr(now, "isoformat") else str(now), tags={})
     if FL:
         LABK = {"rec yds": "rec_yds", "rush yds": "rush_yds", "pass yds": "pass_yds", "receptions": "rec"}
         for gid, tags in list(FL.get("tags", {}).items()):
@@ -257,8 +257,81 @@ def apply_consensus(sport, now):
                     continue
                 po = cons_of(parts, exclude=v.get("k"))
                 rejudge(FL, gid, nm, v, WPIN.get(sport, {}).get(kind, .5), po if side == "over" else 1 - po)
+    if FL is not None:
+        try:
+            FL["lc"] = lc_tags(sport, PR)
+        except Exception as e:                                                  # noqa: BLE001
+            print(f"sharp {sport}: liquidity-consensus tags failed ({type(e).__name__}: {e})")
         json.dump(FL, open(ff, "w"), separators=(",", ":"))
+        print(f"sharp {sport}: {sum(len(v) for v in FL.get('lc', {}).values())} liquidity-consensus tags")
     print(f"sharp {sport}: consensus reference on {n} props")
+
+
+# Liquidity-consensus tags (owner 2026-10-21: "apply tags to the props when they beat our consensus weight"; experimental,
+# graded as "LC tags" on /profit.html). Fair over chance = the sharp consensus (Pinnacle / Novig / ProphetX, without the
+# book being bet) and Kalshi's mid at the same line in log-odds, Kalshi weighted 2 x depth / (depth + $200) (depth =
+# dollars to buy within 3c; research/pm_liquidity_consensus.py: deep Kalshi out-predicted the consensus Oct 18-21, z -1.5).
+# Chance = WPIN weight on ours, the rest that fair. Tag: the best over price at any book except Kalshi / Pinnacle beats
+# the chance by 5-40%. Overs only (the owner plays overs); never on Kalshi itself (its price is in the fair).
+LC_KIND = {"anytime_td": "td"}
+
+
+def lc_tags(sport, PR):
+    """{gid: {name: tag}} -- the owner's books only (Hard Rock, Kalshi, Novig; he bets Hard Rock / Kalshi most). The fair
+    for a bet never includes the book being bet: at Kalshi it's the consensus with Polymarket (depth-weighted), at a
+    sportsbook the consensus with Kalshi and Polymarket (each weighted 2 x depth / (depth + $200))."""
+    try:
+        L = json.load(open(os.path.join(M.SITE, "markets", f"live_{sport}.json")))
+    except (OSError, ValueError):
+        return {}
+    pm = {}                                                   # (gid, name, kind, line) -> {source: (mid, depth, row)}
+    for r in L.get("rows", []):
+        if r.get("s") not in ("kalshi", "polymarket") or not r.get("n") or r.get("ya") is None or not r.get("yb") or r["ya"] - r["yb"] > .035 or not r.get("by"):
+            continue
+        k = LC_KIND.get(r.get("k"), r.get("k"))
+        key = (str(r.get("g")), jsnorm(r["n"]), k, round(float(r["l"] if r.get("l") is not None else .5), 2))
+        pm.setdefault(key, {})[r["s"]] = ((r["ya"] + r["yb"]) / 2, float(r["by"]), r)
+    out = {}
+    for gid, g in PR.get("props", {}).items():
+        for nm, kinds in g.items():
+            for kind, e in kinds.items():
+                pin, line = e.get("pin") or {}, round(float(e["l"] if e.get("l") is not None else .5), 2)
+                parts = pin.get("parts")
+                if not parts or e.get("p") is None or (pin.get("l") is not None and abs(float(pin["l"]) - line) > 1e-9):
+                    continue
+                P = pm.get((str(gid), nm, kind, line), {})
+                if not P:
+                    continue
+                w = WPIN.get(sport, {}).get(kind, .5)
+                def fair(skip):
+                    lo, wt = _lg(cons_of(parts, exclude=skip)), 1.0
+                    for src, (mid, dep, _) in P.items():
+                        if src != skip.lower():
+                            wk = 2 * dep / (dep + 200); lo += wk * _lg(mid); wt += wk
+                    return 1 / (1 + math.exp(-lo / wt))
+                cands = []
+                for bk in ("Hard Rock", "Novig"):                     # sportsbook / exchange prices from the props feed
+                    v = (e.get("o") or {}).get(bk)
+                    if isinstance(v, list) and v[0] is not None:
+                        f = fair(bk); q = w * e["p"] + (1 - w) * f
+                        cands.append(dict(k=bk, o=v[0], u=v[1] if len(v) > 1 else None, m=round(f, 4), q=round(q, 4), ev=round(q * dec(v[0]) - 1, 4)))
+                if "kalshi" in P:                                      # Kalshi: its ask plus the 7% fee
+                    mid, dep, r = P["kalshi"]
+                    f = fair("Kalshi"); q = w * e["p"] + (1 - w) * f
+                    cost = r["ya"] + .07 * r["ya"] * (1 - r["ya"])
+                    o = -round(100 * cost / (1 - cost)) if cost >= .5 else round(100 * (1 - cost) / cost)
+                    cands.append(dict(k="Kalshi", o=o, u=None, m=round(f, 4), q=round(q, 4), ev=round(q / cost - 1, 4)))
+                cands = [c for c in cands if .05 <= c["ev"] <= .40]
+                if cands:
+                    best = max(cands, key=lambda c: c["ev"])
+                    best.update(p=round(e["p"], 4), b="TD" if kind == "td" else "goal" if kind == "goal" else f"over {line:g} {LC_LAB.get(kind, kind)}",
+                                all={c["k"]: [c["o"], round(c["ev"], 4)] for c in cands})
+                    out.setdefault(gid, {})[nm] = best
+    return out
+
+
+LC_LAB = {"rec_yds": "rec yds", "rush_yds": "rush yds", "pass_yds": "pass yds", "rec": "receptions", "pts": "points", "reb": "rebounds",
+          "ast": "assists", "fg3m": "threes"}
 
 
 def rejudge(FL, gid, nm, v, w, pin):

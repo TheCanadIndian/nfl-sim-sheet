@@ -36,7 +36,8 @@ ET = ZoneInfo("America/New_York")
 FEE = {"kalshi": .07, "polymarket": 0.0}
 PROP_KINDS = {"anytime_td", "rec", "rec_yds", "rush_yds", "pass_yds", "pts", "reb", "ast", "fg3m"}
 LINE_KINDS = {"win", "total", "spread"}
-LAB = {"rec yds": "rec_yds", "rush yds": "rush_yds", "pass yds": "pass_yds", "receptions": "rec"}
+LAB = {"rec yds": "rec_yds", "rush yds": "rush_yds", "pass yds": "pass_yds", "receptions": "rec", "points": "pts", "rebounds": "reb",
+       "assists": "ast", "threes": "fg3m"}
 
 
 def dec(o):
@@ -517,7 +518,7 @@ def tags():
     log = json.load(open(fp)) if os.path.exists(fp) else {}
     now = dt.datetime.now(dt.timezone.utc)
     starts = _starts()
-    for sport in ("nfl", "nhl"):
+    for sport in ("nfl", "nhl", "nba"):
         try:
             FL = json.load(open(os.path.join(site, "markets", f"flags_{sport}.json")))
             PR = json.load(open(os.path.join(site, "markets", f"props_{sport}.json")))
@@ -538,6 +539,17 @@ def tags():
                 key = f"{sport}|{gid}|{nm}|{v['b']}"
                 e = log.setdefault(key, dict(sport=sport, gid=gid, name=nm, bet=v["b"], book=v["k"], o=v["o"], first=now.isoformat(),
                                              p=v.get("p"), m=v.get("m"), start=st))
+                e.setdefault("start", st)
+        # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
+        for gid, tg in (FL.get("lc") or {}).items():
+            st = starts.get(str(gid))
+            if st and PL.when(st) <= now:
+                continue
+            for nm, v in tg.items():
+                if not isinstance(v, dict) or v.get("o") is None:
+                    continue
+                e = log.setdefault(f"lc|{sport}|{gid}|{nm}|{v['b']}", dict(sport=sport, src="lc", gid=gid, name=nm, bet=v["b"], book=v["k"], o=v["o"],
+                                                                         first=now.isoformat(), p=v.get("q"), m=v.get("m"), start=st))
                 e.setdefault("start", st)
         # closing price: the tagged book's current price for that bet, until the game starts
         for key, e in log.items():
@@ -562,7 +574,7 @@ def tags():
                 e["res"] = "V"
                 continue
             try:
-                g = PL.nhl_game(e["gid"]) if sport == "nhl" else PL.nfl_game(e["gid"], PL.et_date(e["start"]))
+                g = PL.game_for(sport, e["gid"], e["start"])
             except Exception:                                                   # noqa: BLE001
                 g = None
             if g:
@@ -619,7 +631,7 @@ def page_data():
             continue
         d_ = dec(e["o"])
         clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
-        rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} Value tags", date=(e.get("start") or e["first"])[:10],
+        rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {'LC tags (experimental)' if e.get('src') == 'lc' else 'Value tags'}", date=(e.get("start") or e["first"])[:10],
                          pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
@@ -728,7 +740,7 @@ def feed_data():
         if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under"):
             continue
         dd = dec(e["o"])
-        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} Value tags", title=f"{e['name'].title()} {e['bet']}",
+        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {'LC tags (experimental)' if e.get('src') == 'lc' else 'Value tags'}", title=f"{e['name'].title()} {e['bet']}",
                           book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
     legs = []
     for f in _g.glob(os.path.join(HERE, "parlays", "*", "*.json")):
