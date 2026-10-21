@@ -657,17 +657,23 @@ def page_data():
 # rule, Value tags) and every parlay worth tracking (Today's card, multisport, path / ladder / primetime, Value-tag
 # parlays), last 14 days, with each leg's result and the owner's stakes ($10 straight, $5 parlay).
 FEED_DAYS, STRAIGHT, PARLAY = 14, 10.0, 5.0
-FEED_CARDS = ("Multisport longshots", "Path longshots", "Ladder longshots (experimental)", "Primetime ladders (experimental)",
-              "Value-tag parlays (higher odds)")
+# owner 2026-10-21: "I don't want to see under legs since I don't play them. I want to see the experimental ladder
+# candidates and parlays along with the value legs" -> YES / over bets only (rule picks incl. the experimental ladders,
+# Value tags), every priced parlay with no under leg (same-game cards excluded: no book pays their product)
 
 
-def _is_current_rule(cat):
-    return "·" not in cat and "experimental" not in cat and "ladder" not in cat.lower()
+def _plays(cat, bet):
+    return "·" not in cat and str(bet).upper() == "YES"
+
+
+def _over_leg(L):
+    return str(L.get("side", "o")).lower() not in ("u", "under") and not str(L.get("lab", "")).lower().startswith(("under ", "no "))
 
 
 def feed_data():
     import glob as _g
     since = (dt.datetime.now(ET).date() - dt.timedelta(days=FEED_DAYS)).isoformat()
+    since30 = (dt.datetime.now(ET).date() - dt.timedelta(days=30)).isoformat()
     items, seen = [], set()
     for f in _g.glob(os.path.join(OUT, "profit_*.json")):
         if f.endswith(("profit_tags.json", "profit_wfair.json")):
@@ -677,7 +683,7 @@ def feed_data():
         except (OSError, ValueError):
             continue
         for r in rs:
-            if r["date"] < since or not _is_current_rule(r["cat"]):
+            if r["date"] < since30 or not _plays(r["cat"], r.get("bet")):
                 continue
             k = (r["date"], r.get("title"), r.get("bet"))
             if k in seen:
@@ -689,7 +695,7 @@ def feed_data():
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         d0 = (e.get("start") or e["first"])[:10]
-        if e.get("res") not in ("W", "L") or d0 < since:
+        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under"):
             continue
         dd = dec(e["o"])
         items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} Value tags", title=f"{e['name'].title()} {e['bet']}",
@@ -701,7 +707,7 @@ def feed_data():
         except (OSError, ValueError):
             continue
         for q in d.get("parlays", []):
-            if q.get("res") not in ("W", "L") or not (q.get("pick") or q.get("card") in FEED_CARDS):
+            if q.get("res") not in ("W", "L") or str(q.get("card", "")).startswith("Same-game") or not all(_over_leg(L) for L in q["legs"]):
                 continue
             pay = q.get("paid") or q.get("d")
             if not pay:
@@ -710,14 +716,16 @@ def feed_data():
                 if L.get("res") in ("W", "L"):
                     legs.append(dict(sport=L.get("sport") or d["sport"], kind=L.get("kind"), p=L.get("p"), y=L["res"] == "W", date=d["date"],
                                      key=f"{d['date']}|{L.get('gid')}|{L.get('name') or L.get('lab')}|{L.get('kind')}|{L.get('line')}", f=L.get("f")))
-            if d["date"] < since:
+            if d["date"] < since30:
                 continue
             items.append(dict(date=d["date"], sport=d["sport"], t="parlay", cat="Today’s card" if q.get("pick") else q["card"], tier=q.get("tier"),
                               legs=[dict(lab=L.get("lab"), res=L.get("res"), sport=L.get("sport")) for L in q["legs"]], pay=round(pay, 2), q=q.get("p"),
                               res=q["res"], net=round(PARLAY * ((pay - 1) if q["res"] == "W" else -1), 2)))
     items.sort(key=lambda x: (x["date"], x["res"] == "W", x["net"]), reverse=True)
+    # your bets, last 30 days (the record at the top of the page)
+    staked = sum(STRAIGHT if x["t"] == "bet" else PARLAY for x in items)
+    you = dict(n=len(items), w=sum(x["res"] == "W" for x in items), net=round(sum(x["net"] for x in items), 2), staked=staked)
     # what's working: each bet type over the last 30 days, in dollars at the owner's stakes
-    since30 = (dt.datetime.now(ET).date() - dt.timedelta(days=30)).isoformat()
     by = {}
     for x in items:
         if x["date"] >= since30:
@@ -734,7 +742,8 @@ def feed_data():
             t = lt.setdefault(("reason", r), dict(sport="path", kind=r, n=0, hit=0, exp=0.0)); t["n"] += 1; t["hit"] += L["y"]; t["exp"] += L["p"] or 0
     legt = sorted((dict(t, exp=round(t["exp"], 1)) for t in lt.values() if t["n"] >= 5), key=lambda t: (t["sport"] == "path", t["sport"], -t["n"]))
     # every graded bet of the window (a cap cut older days' losers: they sort after winners), compact keys
-    return dict(items=items, types=types, legs=legt, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
+    items = [x for x in items if x["date"] >= since]          # the day-by-day list: last 14 days
+    return dict(items=items, you=you, types=types, legs=legt, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -749,7 +758,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .wk li .n{margin-left:auto;white-space:nowrap;font-weight:700}.wk li small{color:var(--muted)}
 .fsw{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.fsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px var(--body);cursor:pointer}
 .fsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
-.fd h3{display:inline;font-size:13px;color:var(--muted);margin:0;font-family:var(--body);letter-spacing:.04em;text-transform:uppercase}.fday{border-top:1px solid var(--faint);padding:8px 0}.fday>summary{cursor:pointer;list-style-position:outside}.fday .fi:first-of-type{border-top:0}
+.fd h3{display:inline;font-size:13px;color:var(--muted);margin:0;font-family:var(--body);letter-spacing:.04em;text-transform:uppercase}.fday{border-top:1px solid var(--faint);padding:8px 0}.fgrp{border-top:1px solid var(--faint);padding:6px 0 6px 14px}.fgrp>summary{display:flex;align-items:baseline;gap:8px;cursor:pointer;font-size:13.5px}.fgrp>summary .gl{flex:1}.fgrp>summary .net{font-weight:800;white-space:nowrap}.fgrp .fi{padding-left:4px}.fgrp .c{font-size:11.5px;color:var(--muted)}.fday>summary{cursor:pointer;list-style-position:outside}.fday .fi:first-of-type{border-top:0}
 .fi{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--faint);font-size:13.5px}
 .fi .m{font-weight:800}.fi.W .m{color:var(--good)}.fi.L .m{color:var(--bad)}.fi.L{opacity:.8}.fi .c{font-size:11.5px;color:var(--muted)}
 .fi .net{font-weight:800;white-space:nowrap;text-align:right}.fi.W .net{color:var(--good)}.fi.L .net{color:var(--muted)}
@@ -795,10 +804,15 @@ function working(){
     <div class="wk"><div class="tb"><h3>Making money</h3><ul>${up.map(li).join('') || '<li class="muted">Nothing in profit yet.</li>'}</ul></div>
     <div class="tb"><h3>Losing money</h3><ul>${dn.map(li).join('') || '<li class="muted">Nothing losing.</li>'}</ul></div></div></section>`;
 }
+function you(){
+  const Y = FE.you; if (!Y || !Y.n) return '';
+  return `<section class="panel"><div class="phead"><h2>Your bets</h2><span class="small muted">last 30 days · overs, ladders and parlays you’d play · $${FE.stake.straight} straight, $${FE.stake.parlay} parlay</span></div>
+    <div class="rec"><div><b>${usd(Y.net)}</b><span>net</span></div><div><b>${Y.w}-${Y.n - Y.w}</b><span>won-lost</span></div><div><b>${pc(Y.net / Y.staked)}</b><span>return on $${Math.round(Y.staked).toLocaleString()} staked</span></div></div></section>`;
+}
 function feed(){
   const sports = [...new Set(FE.items.map(x => x.sport))];
   const A = FE.items.filter(x => FF.s === 'all' || x.sport === FF.s), I = A.filter(x => !FF.w || x.res === 'W');   // totals always count every bet
-  const sw = `<div class="fsw"><button data-fw="1" aria-pressed="${FF.w}">Winners only</button>${['all', ...sports].map(k => `<button data-fs="${k}" aria-pressed="${FF.s === k}">${k === 'all' ? 'All sports' : k.toUpperCase()}</button>`).join('')}</div>`;
+  const sw = `<div class="fsw"><button data-fw="1" aria-pressed="${FF.w}" title="Inside each bet type, list only the winners">Winners only</button>${['all', ...sports].map(k => `<button data-fs="${k}" aria-pressed="${FF.s === k}">${k === 'all' ? 'All sports' : k.toUpperCase()}</button>`).join('')}</div>`;
   const days = [...new Set(I.map(x => x.date))];
   const tip = x => esc(`${x.t === 'bet' ? x.cat + ' · ' + (x.book || '') : x.cat}${x.q ? ' · our chance ' + Math.round(x.q * 100) + '%' : ''}`);
   const row = x => `<div class="fi ${x.res}" title="${tip(x)}"><span class="m">${x.res === 'W' ? '✓' : '✗'}</span><span><b>${x.t === 'parlay' ? `${esc(x.cat)}${x.tier ? ` · ${esc(x.tier)}` : ''}` : esc(x.title)}</b>
@@ -806,9 +820,14 @@ function feed(){
       <span class="net">${usd(x.net)}</span>${x.t === 'parlay' ? `<span class="lg">${x.legs.map(L => `<span class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'} ${esc(L.lab)}${L.sport ? ` <small>${esc(L.sport.toUpperCase())}</small>` : ''}</span>`).join('')}</span>` : ''}</div>`;
   const tot = A.reduce((s, x) => s + x.net, 0), w = A.filter(x => x.res === 'W').length;
   return `<section class="panel fd"><div class="phead"><h2>Results</h2><span class="small muted">last ${FE.days} days · ${w} of ${A.length} won · net ${usd(tot)}</span></div>${sw}
-    ${days.map((d, i) => { const X = I.filter(x => x.date === d), XA = A.filter(x => x.date === d), n = XA.reduce((s, x) => s + x.net, 0);
-      const top = X.slice(0, 10).map(row).join(''), more = X.length > 10 ? `<details><summary class="small muted" style="cursor:pointer;padding:6px 0">${X.length - 10} more</summary>${X.slice(10).map(row).join('')}</details>` : '';
-      return `<details class="fday"${i === 0 ? ' open' : ''}><summary><h3>${dayL(d)} · ${XA.filter(x => x.res === 'W').length}-${XA.filter(x => x.res === 'L').length} · net ${usd(n)}</h3></summary>${top}${more}</details>`; }).join('') || '<p class="note">Nothing graded in this view yet.</p>'}</section>`;
+    ${days.map((d, i) => { const XA = A.filter(x => x.date === d), n = XA.reduce((s, x) => s + x.net, 0);
+      // one line per bet type that day (record and net), its bets inside
+      const G = {}; XA.forEach(x => { const k = x.sport + '|' + x.cat; (G[k] = G[k] || []).push(x); });
+      const grp = Object.values(G).sort((a, b) => b.reduce((s, x) => s + x.net, 0) - a.reduce((s, x) => s + x.net, 0)).map(L => {
+        const w = L.filter(x => x.res === 'W'), nn = L.reduce((s, x) => s + x.net, 0), show = FF.w ? w : L;
+        const lab = L[0].cat.toUpperCase().startsWith(L[0].sport.toUpperCase()) ? L[0].cat : `${L[0].sport.toUpperCase()} ${L[0].cat}`;
+        return `<details class="fgrp"><summary><span class="gl"><b>${esc(lab)}</b> <span class="c">won ${w.length} of ${L.length}</span></span><span class="net">${usd(nn)}</span></summary>${show.map(row).join('') || '<p class="small muted" style="margin:4px 0">No winners.</p>'}</details>`; }).join('');
+      return `<details class="fday"${i === 0 ? ' open' : ''}><summary><h3>${dayL(d)} · ${XA.filter(x => x.res === 'W').length}-${XA.filter(x => x.res === 'L').length} · net ${usd(n)}</h3></summary>${grp}</details>`; }).join('') || '<p class="note">Nothing graded in this view yet.</p>'}</section>`;
 }
 function legTable(){
   const L = FE.legs || []; if (!L.length) return '';
@@ -837,7 +856,9 @@ function render(){
   const track = T.length ? `<section class="panel"><div class="phead"><h2>New rules being tested <span class="tag3">since ${esc(D.since || '')}</span></h2></div>
     <p class="note" style="margin:0 0 10px">Each current rule is graded next to two versions that use the sharp market as the main input: our number weighted 10-25% against Pinnacle’s no-vig line, or against the consensus of Pinnacle, Novig and ProphetX. Same Kalshi quotes, same edge bar. Beat close = the sharp closing chance minus the price paid (positive = real value); it settles in weeks, the return takes months.</p>
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
-  document.getElementById('main').innerHTML = `<section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>` + working() + feed() + legTable() + track + D.sports.map(sp).join('');
+  const all = `<details class="panel"><summary style="cursor:pointer"><h2 style="display:inline">Every tracked rule</h2> <span class="small muted">all bets incl. unders and the test versions</span></summary>
+    <section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>${track}${D.sports.map(sp).join('')}</details>`;
+  document.getElementById('main').innerHTML = you() + working() + feed() + legTable() + all;
 }
 render();
 </script></body></html>"""
