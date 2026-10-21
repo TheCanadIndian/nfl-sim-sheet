@@ -194,6 +194,7 @@ a.pinv{color:var(--muted)}a.pinv:hover{border-color:var(--good)}
 .pev li .w{color:var(--muted);font-size:12.5px}.pev li .px{margin-left:auto;white-space:nowrap}.pev li .px i{font-style:normal;color:var(--good);font-weight:800;margin-left:6px}
 .pinv{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;border:1px solid var(--faint);color:var(--muted);font-size:10.5px;font-weight:600;line-height:16px;white-space:nowrap;text-decoration:none}
 a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--good) 12%,transparent)}
+.vtag.lct{border-color:color-mix(in srgb,#6CB4FF 60%,transparent);color:#6CB4FF}.vtag.lct i{font-style:normal;font-weight:700;margin-left:2px}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
@@ -820,6 +821,16 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       if (/^TD$|anytime|goal/i.test(b)) return /goal/i.test(b) ? 'goal' : 'td';
       const m = /^over [\d.]+ (.+)$/.exec(b); if (!m) return null;
       return {'rec yds': 'rec_yds', 'rush yds': 'rush_yds', 'pass yds': 'pass_yds', receptions: 'rec'}[m[1]] || null;
+    },
+    // 'LC' tag (experimental): the price at one of the owner's books beats the liquidity-weighted fair (sharp consensus
+    // + Kalshi / Polymarket weighted by depth, never the book being bet; sharp.lc_tags) by 5%+. Tracked on the Profit page.
+    lcFlag(gid, name){
+      if (!FL || !FL.lc || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
+      const v = (FL.lc[String(gid)] || {})[norm(name)]; if (!v || (MY.length && !MY.includes(v.k))) return '';
+      const u = v.u ? (String(v.u).startsWith('http') ? v.u : `https://www.gambly.com/deeplink/odds/${v.u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`) : null;
+      const tip = `Liquidity consensus (experimental): ${esc(FULL[v.k] || v.k)} pays ${Math.round(v.ev * 100)}% more than our chance ${(v.q * 100).toFixed(1)}% for ${esc(name)} ${esc(v.b)}. Fair ${(v.m * 100).toFixed(1)}% = the sharp books’ consensus with the prediction markets, deeper markets counting more (never the book being bet). Tracked on the Profit page.`;
+      const body = `LC · ${esc(v.b)} <b>${v.o > 0 ? '+' : ''}${v.o}</b> ${esc(BKS[v.k] || v.k)} <i>+${Math.round(v.ev * 100)}%</i>`;
+      return u ? `<a class="vtag lct" href="${esc(u)}" target="_blank" rel="noopener" title="${tip}">${body} ↗</a>` : `<span class="vtag lct" title="${tip}">${body}</span>`;
     },
     // 'Value' tag next to a player: a sportsbook (one of the viewer's, if chosen) pays clearly more than our fair price
     flag(gid, name){
