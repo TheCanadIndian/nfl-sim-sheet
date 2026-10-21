@@ -185,15 +185,15 @@ def card_slot(sport, p):
 
 
 # The card goes final at a fixed time (owner 2026-10-21: "they change from the morning to the evening" and he can't place
-# bets at the last minute): noon Eastern on the day, or 2 hours before the day's first game if earlier. After that the
-# picks never change and are graded at the prices they had then.
+# bets at the last minute): 2 hours before the day's first game (owner 2026-10-21; was noon Eastern or that, if
+# earlier); noon Eastern only when no game time is known. After that the picks never change and are graded at those prices.
 CARD_FINAL_HOUR, CARD_FINAL_BEFORE = 12, dt.timedelta(hours=2)
 
 
 def card_final_at(date, ps):
     noon = dt.datetime.combine(dt.date.fromisoformat(date), dt.time(CARD_FINAL_HOUR), ET)
     firsts = [when(p["first"]) for p in ps if p.get("first")]
-    return min([noon] + [f - CARD_FINAL_BEFORE for f in firsts]).astimezone(dt.timezone.utc)
+    return (min(f - CARD_FINAL_BEFORE for f in firsts) if firsts else noon).astimezone(dt.timezone.utc)
 
 
 def pick_card(sport, ps, now, final_at=None):
