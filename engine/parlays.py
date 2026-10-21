@@ -129,7 +129,7 @@ def freeze():
                 old = json.load(open(fp)) if os.path.exists(fp) else None
                 if old and old.get("graded"):
                     continue
-                fin = card_final_at(date, (old["parlays"] if old else []) + by.get(date, []))
+                fin = card_final_at(date, (old["parlays"] if old else []) + by.get(date, []), sport)
                 locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now
                           or (p.get("pick") and now >= pick_lock(sport, p["pick"], p, fin))]
                 lk = {tuple(sorted(_legkey(L) for L in p["legs"])) for p in locked}
@@ -192,6 +192,10 @@ CARD_FINAL_HOUR, CARD_FINAL_BEFORE = 12, dt.timedelta(hours=2)
 # after them lands ~75 min before. The all-day longshot keeps the day's lock (2 h before the first game: 7:30 AM ET on a
 # London Sunday; owner: "the long all day parlay can lock at 7:30").
 NFL_SLATE_LOCK = dt.timedelta(minutes=60)
+# NHL / NBA cards lock after the first game's lineups (owner 2026-10-21): NHL official rosters post 15-45 min before puck
+# drop and the NHL run at :40 picks them up (2026-10-20: 8 of 22 teams official in the 6:45 PM run, none at 6:15); the NBA
+# runs 30 min before 7 PM tips. Cards are re-picked by the markets run (~every 15 min), so 10 min before the first game.
+LINEUP_LOCK = {"nhl": dt.timedelta(minutes=10), "nba": dt.timedelta(minutes=10)}
 
 
 def pick_lock(sport, slot, p, card_fin):
@@ -201,10 +205,11 @@ def pick_lock(sport, slot, p, card_fin):
     return card_fin
 
 
-def card_final_at(date, ps):
+def card_final_at(date, ps, sport=None):
     noon = dt.datetime.combine(dt.date.fromisoformat(date), dt.time(CARD_FINAL_HOUR), ET)
     firsts = [when(p["first"]) for p in ps if p.get("first")]
-    return (min(f - CARD_FINAL_BEFORE for f in firsts) if firsts else noon).astimezone(dt.timezone.utc)
+    before = LINEUP_LOCK.get(sport, CARD_FINAL_BEFORE)
+    return (min(f - before for f in firsts) if firsts else noon).astimezone(dt.timezone.utc)
 
 
 def pick_card(sport, ps, now, final_at=None):
