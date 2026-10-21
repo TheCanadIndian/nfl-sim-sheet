@@ -198,6 +198,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
 .offr.mine .offn b{color:var(--good)}.offn small,.offp small{display:block;font-size:11.5px;color:var(--muted)}.offn i{font-style:normal;font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px}
 .offp{text-align:right;white-space:nowrap}.offp a{color:inherit}.offg{text-align:right;white-space:nowrap;color:var(--muted);font-size:12.5px}.offg b{display:block;color:var(--good);font-size:14px}
 @media (max-width:640px){.offr{grid-template-columns:1fr auto}.offg{grid-column:1/-1;text-align:left}.offg b{display:inline;margin-left:6px}}
+.vtag.offt{border-color:color-mix(in srgb,#F2C14E 60%,transparent);color:#F2C14E}.vtag.offt i{font-style:normal;font-weight:700;margin-left:2px}
+.why{display:inline-block;font-size:11px;color:var(--muted);border:1px dashed var(--faint);border-radius:999px;padding:0 8px;margin:2px 4px 0 0;white-space:nowrap}.why b{color:var(--ink);font-weight:600}.why.none{opacity:.75}
 .vtag.lct{border-color:color-mix(in srgb,#6CB4FF 60%,transparent);color:#6CB4FF}.vtag.lct i{font-style:normal;font-weight:700;margin-left:2px}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
@@ -845,6 +847,27 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         ${L.length ? `${mineF.length ? `<div class="eyebrow" style="margin:4px 0">At your books</div>${mineF.map(row).join('')}` : ''}${rest.length ? `<div class="eyebrow" style="margin:12px 0 4px">Other books and markets</div>${rest.map(row).join('')}` : ''}`
           : '<p class="note">Nothing far off right now: every over is within 8 points of its fair price.</p>'}
         <details class="how"><summary>How this works</summary><p class="note">Every over price at every book, Kalshi and Polymarket, main and alt lines, against the fair chance at that exact line: the sharp consensus at the main line, the books’ own two-way price at an alt line, and where no book prices both sides (most prediction-market rungs) the main line’s fair carried along our projection (shown with ≈, less certain). Listed when the price implies 8+ points less than fair, or 35%+ less on longshots; Kalshi includes its fee. A price this far off is sometimes a stale or wrong line, so check it before betting. Tracked on the Profit page as Off-market prices.</p></details></section>`;
+    },
+    // the player's off-market price on the sport pages (best one; the owner's books first)
+    offFlag(gid, name){
+      if (!FL || !FL.off || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
+      const L = FL.off.filter(x => String(x.g) === String(gid) && x.n === norm(name)); if (!L.length) return '';
+      const x = L.filter(z => mine(z.bk))[0] || L[0];
+      const u = x.u ? (String(x.u).startsWith('http') ? x.u : `https://www.gambly.com/deeplink/odds/${x.u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`) : null;
+      const tip = `Off market: ${esc(FULL[x.bk] || BKS[x.bk] || x.bk)} prices ${esc(name)} ${esc(x.b)} at ${pc(x.imp)}; fair ${x.carried ? 'about ' : ''}${pc(x.fair)}. A price this far off is sometimes a stale or wrong line: check it before betting.`;
+      const body = `Off · ${esc(x.b)} <b>${x.o > 0 ? '+' : ''}${x.o}</b> ${esc(BKS[x.bk] || x.bk)} <i>+${Math.round((x.fair - x.imp) * 100)} pts</i>`;
+      return u ? `<a class="vtag offt" href="${esc(u)}" target="_blank" rel="noopener" title="${tip}">${body} ↗</a>` : `<span class="vtag offt" title="${tip}">${body}</span>`;
+    },
+    // the stats a player's flagged prices are on (Value, LC, off-market): ['rec_yds', 'td', ...]
+    tagStats(gid, name){
+      if (!FL) return [];
+      const K = {'rec yds': 'rec_yds', 'rush yds': 'rush_yds', 'pass yds': 'pass_yds', receptions: 'rec', points: 'pts', rebounds: 'reb', assists: 'ast', threes: 'fg3m'};
+      const of = b => { b = String(b || ''); if (/^TD$/i.test(b)) return 'td'; if (/^goal$/i.test(b)) return 'goal'; const m = /^over [\d.]+ (.+)$/.exec(b); return m ? (K[m[1]] || m[1]) : null; };
+      const n = norm(name), out = new Set();
+      const v = ((FL.tags || {})[String(gid)] || {})[n]; if (v && typeof v === 'object') out.add(of(v.b));
+      const l = ((FL.lc || {})[String(gid)] || {})[n]; if (l) out.add(of(l.b));
+      (FL.off || []).filter(x => String(x.g) === String(gid) && x.n === n).forEach(x => out.add(x.k));
+      out.delete(null); return [...out];
     },
     // 'LC' tag (experimental): the price at one of the owner's books beats the liquidity-weighted fair (sharp consensus
     // + Kalshi / Polymarket weighted by depth, never the book being bet; sharp.lc_tags) by 5%+. Tracked on the Profit page.

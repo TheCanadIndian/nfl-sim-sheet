@@ -142,6 +142,16 @@ function lean(p, st){
   const L = Math.floor(dmed(dv)) + .5, a = probs(dv, L), b = probs(db, L);
   return {edge: b.over - a.over, L};
 }
+// why a flagged price might hit: the NBA path reasons for the stats of the player's Value / LC / off-market prices
+function whyNBA(p, gid){
+  if (!(window.MKT && MKT.tagStats)) return '';
+  const sts = MKT.tagStats(gid, p.n).filter(s => ['pts', 'reb', 'ast', 'fg3m'].includes(s)); if (!sts.length) return '';
+  const g = D.games.find(x => String(x.id) === String(gid)); if (!g) return '';
+  const R = new Set();
+  for (const st of sts){ const F = nbaFactors(g, p, st); for (const [k, v] of Object.entries(F)) if (v) R.add(k === 'matchup' ? `matchup (${v})` : k === 'rotation' ? v : k === 'game' ? v : k); }
+  return R.size ? `<span class="why" title="Path reasons behind this flagged price (the Path longshot rules)">why: <b>${esc([...R].join(' · '))}</b></span>`
+    : `<span class="why none" title="None of the path reasons (usage, matchup, rotation, game) applies: the price has no clear reason behind it">no clear reason</span>`;
+}
 function chips(p, g){
   let h = '';
   if (p.st && p.st !== 'Active') h += `<span class="tag q" title="${esc(p.st + (p.note ? ': ' + p.note : ''))}">${p.st === 'Day-To-Day' ? 'DTD' : p.st === 'Questionable' ? 'Q' : esc(p.st)}</span>`;
@@ -150,7 +160,7 @@ function chips(p, g){
   const l = lean(p, 'pts');
   if (l && Math.abs(l.edge) >= .03) h += `<span class="lean ${shadeP(.5 + l.edge * 2)}" title="Market-blind model ${l.edge > 0 ? 'higher' : 'lower'} on points at ${l.L}">${l.edge > 0 ? '▲' : '▼'} blind</span>`;
   if (p.gp === 0) h += '<span class="tag" style="color:var(--muted)" title="No NBA games yet: league-average role assumed">new</span>';
-  if (window.MKT && MKT.lcFlag) h += MKT.lcFlag(g, p.n);
+  if (window.MKT && MKT.lcFlag) h += MKT.lcFlag(g, p.n) + (MKT.offFlag ? MKT.offFlag(g, p.n) : '') + whyNBA(p, g);
   if (p.ar) h += `<span class="tag arch" title="Playstyle archetype from his per-minute production (points, threes, free-throw rate, assists, rebounds, blocks). Points and threes matchups use what this defense allows to this archetype as well as to his position.">${esc(p.ar)}</span>`;
   return h;
 }
