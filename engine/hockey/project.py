@@ -353,6 +353,26 @@ def main():
         if pg.u_rank.notna().any():
             pg["u_rank"] = (lam_c * pg.u_mult).groupby(pg.game_id).rank(ascending=False, method="first")
         print(f"demotions: {(pg.dm < 1).sum()} players' goal chances cut")
+    # same-game combos (shiftsim.py, game-state sim on these chances): each game's top 3 by usage rank gets the sims' lift
+    # for goal + team wins, goal + game over 5.5, 3+ shots + goal (2025-26 backtest: married beat legs multiplied)
+    lifts = {}
+    if "sog" in pg:
+        try:
+            import sqlite3
+            import shiftsim as SSIM
+            pg["sog_ppf"] = SSIM.sog_pp_share(sqlite3.connect(M.DB), pg)
+            for k, g in enumerate(todo.itertuples()):
+                x = pg[pg.game_id == g.game_id].assign(lam=lambda d: -np.log(1 - d.p_goal.clip(upper=.999)))
+                h, a_ = x[x.team == g.home], x[x.team == g.away]
+                if len(h) < 15 or len(a_) < 15 or x.sog.isna().any():
+                    continue
+                r_ = x.assign(rk=x.groupby("team").p_goal.rank(ascending=False, method="first") if x.u_rank.isna().any() else x.u_rank)
+                who = set(r_[r_.rk <= 3].player_id.astype(int))
+                for pid, v in SSIM.game_lifts(h, a_, who, seed=k).items():
+                    lifts[(g.game_id, pid)] = v
+            print(f"same-game lifts: {len(lifts)} players")
+        except Exception as e:
+            print("same-game lifts skipped:", type(e).__name__, e)
     os.makedirs(OUT, exist_ok=True)
     cols = ["game_id", "team", "opp", "player_id", "name", "pos", "p_goal", "fair", "lam", "e_np_toi", "e_pp_toi", "pp_role",
             "np_rate", "pp_rate", "finish", "games_prior", "line", "src", "e_pp_hist", "p_first"]
@@ -402,7 +422,8 @@ def main():
                               h2h=h2h.get((int(r.player_id), r.opp)),
                               ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3),
                               sog=round(float(r.sog), 2) if "sog" in x and pd.notna(r.sog) else None,
-                              so=[round(float(getattr(r, f"sog_o{k}")), 3) for k in ("05", "15", "25", "35", "45")] if "sog" in x and pd.notna(r.sog) else None)
+                              so=[round(float(getattr(r, f"sog_o{k}")), 3) for k in ("05", "15", "25", "35", "45")] if "sog" in x and pd.notna(r.sog) else None,
+                              sg=lifts.get((g.game_id, int(r.player_id))))
                          for r in x.itertuples()])
         lam_t = {t: float(-np.log(1 - pg[(pg.game_id == g.game_id) & (pg.team == t)].p_goal.clip(upper=.999)).sum())
                  for t in (g.away, g.home)}
@@ -753,6 +774,8 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .sides .t td,.sides .t th{padding-left:6px;padding-right:6px}
 .h2h{white-space:nowrap;cursor:default}
 .tg3{display:inline-block;margin-left:6px;padding:0 6px;border-radius:9px;font-size:10.5px;font-weight:700;line-height:16px;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);background:color-mix(in srgb,var(--good) 10%,transparent);white-space:nowrap;cursor:help;vertical-align:1px}
+@media (max-width:640px){.sgc td.pay::after{content:none}.sgc td.pay b::after{content:" fair";font-weight:400;color:var(--muted)}}
+.sgl{display:inline-block;font-size:12px;font-weight:700;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:1px 8px;white-space:nowrap}
 .exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
 .h2h b{font-weight:600}
 .h2h .hot{color:var(--good)}
@@ -1052,8 +1075,52 @@ function tripleCard(){
     <div class="eyebrow" style="margin-top:8px">Tonight's triple-green players</div><p style="margin:6px 0 10px;line-height:1.7">${who}</p>
     ${top.length ? `<div class="eyebrow">Pairs paying 12x+ (fair)</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Two-man</th><th>Chance</th><th>Pays</th><th class="l">My parlay</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="small muted">No pair from two different games in the 15-35% range tonight.</p>'}</section>`;
 }
+// Same-game combos (experimental, 2026-10-21): goal + his team wins, goal + game over 5.5, 3+ shots + goal, for each game's
+// top 3 by usage rank. Chance = each leg's market-anchored chance x the game-state sims' lift (shiftsim.py; 2025-26
+// backtest, 1,312 games: legs multiplied ran 20-35% low on these, the lift fixed it in both halves). Fair = what a
+// same-game parlay must pay. Tracked at fair odds (no book same-game price to grade against).
+function sameGameCard(){
+  if (!(window.MKT && MKT.sgLeg)) return '';
+  const now = Date.now(), am = o => (o > 0 ? '+' : '') + o, dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+  const fairAm = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+  const out = [];
+  for (const g of D.games){
+    if ((g.start_utc && new Date(g.start_utc) <= now) || !g.ml) continue;
+    const combos = [], gl0 = {gid: String(g.id), start: g.start_utc};
+    for (const [s, home] of [[g.away, false], [g.home, true]]) for (const p of s.players){
+      if (!p.sg) continue;
+      const goal = MKT.sgLeg(g.id, 'goal', 'o', .5, p.p, p.name); if (!goal) continue;
+      const G = {lab: `${p.name} to score`, L: goal, leg: {...gl0, kind: 'goal', side: 'o', line: .5, name: MKT.norm(p.name), lab: `${p.name} to score`}};
+      const opts = [
+        ['win', {lab: `${s.team} wins`, L: MKT.sgLeg(g.id, 'ml', home ? 'home' : 'away', null, home ? g.ml.home : g.ml.away), leg: {...gl0, kind: 'ml', side: home ? 'home' : 'away', line: null, name: null, lab: `${s.team} moneyline`}}],
+        ['o55', {lab: 'Game over 5.5', L: g.ml.totals && g.ml.totals['5.5'] != null ? MKT.sgLeg(g.id, 'total', 'over', 5.5, g.ml.totals['5.5']) : null, leg: {...gl0, kind: 'total', side: 'over', line: 5.5, name: null, lab: `${g.away.team}-${g.home.team} over 5.5`}}],
+        ['s3', {lab: `${p.name} 3+ shots`, L: p.so ? MKT.sgLeg(g.id, 'sog25', 'o', 2.5, p.so[2], p.name) : null, leg: {...gl0, kind: 'sog', side: 'o', line: 2.5, name: MKT.norm(p.name), lab: `${p.name} 3+ shots`}}]];
+      for (const [k, o] of opts){
+        if (!o.L || !p.sg[k]) continue;
+        const pr = Math.min(G.L.q * o.L.q * p.sg[k], G.L.q, o.L.q);
+        combos.push({k, legs: [G, o], pr, lift: p.sg[k], mult: G.L.b && o.L.b ? dec(G.L.b.o) * dec(o.L.b.o) : null});
+      }
+    }
+    combos.sort((a, b) => b.pr - a.pr);
+    if (combos.length) out.push({g, c: combos.slice(0, 4)});
+  }
+  if (!out.length) return '';
+  const KL = {win: 'Goal + win', o55: 'Goal + over 5.5', s3: '3+ shots + goal'};
+  if (MKT.reg) out.forEach(G => G.c.forEach(c => MKT.reg('Same-game combos (experimental)', KL[c.k],
+    c.legs.map(x => ({...x.leg, p: +x.L.q.toFixed(4), price: x.L.b ? x.L.b.o : null, book: x.L.b ? x.L.b.k : null})), c.pr, 1 / c.pr)));
+  const price = b => !b ? '<span class="muted">no price</span>' : b.u ? `<a href="${esc(b.u)}" target="_blank" rel="noopener">${am(b.o)} ${esc(b.name)} ↗</a>` : `${am(b.o)} ${esc(b.name)}`;
+  const slip = (g, c) => c.legs.map((x, i) => ({id: `nhl|${g.id}|sg|${c.k}|${MKT.norm(x.lab)}`, sport: 'nhl', g: g.id, glab: `${g.away.team} @ ${g.home.team}`, lab: x.lab, p: x.L.q, side: 'over'}));
+  const row = (g, c) => `<tr><td class="l">${c.legs.map(x => `<b>${esc(x.lab)}</b> <span class="small muted">${pct(x.L.q)} · ${price(x.L.b)}</span>`).join('<br>')}</td>
+    <td class="big">${pct(c.pr)}</td><td class="pay" title="${c.mult ? 'The legs bet separately at these prices would pay ' + c.mult.toFixed(1) + 'x; a book’s same-game price pays less than that' : ''}"><b>${am(fairAm(c.pr))}</b></td>
+    <td><span class="sgl" title="In our simulated games these two happen together ${c.lift.toFixed(2)}x as often as if they were unrelated">×${c.lift.toFixed(2)}</span></td>
+    <td class="l add">${window.SLIP ? SLIP.allBtn(slip(g, c), '+ add') : ''}</td></tr>`;
+  const body = out.map(G => `<tr class="slate"><td class="l" colspan="5"><b>${esc(G.g.away.team)} @ ${esc(G.g.home.team)}</b> <span class="small muted">${esc(G.g.start || '')}</span></td></tr>` + G.c.map(c => row(G.g, c)).join('')).join('');
+  return `<section class="panel"><div class="phead"><h2>Same-game combos <span class="exp3">experimental</span></h2><span class="small muted">take one only if your book’s same-game price beats Fair</span></div>
+    <details class="how"><summary>How these work</summary><p class="note">Two legs from the same game that tend to happen together: a goal and his team winning, a goal and the game going over 5.5, or 3+ shots and a goal. Each leg’s chance is market-anchored (anytime goal: our number blended with the market; moneyline and total: ours averaged with the books’ no-vig line; shots: ours 50/50 with the books’ no-vig), then multiplied by how much more often the two happen together in our game simulations (power plays, score effects, empty nets, overtime, shared to players by their even-strength and power-play roles). Tested on 1,312 games of 2025-26: multiplying the legs as if unrelated ran 20-35% low on these combos, and the simulated link fixed it in both halves of the season. Fair is the price a same-game parlay must pay to break even; books build in their own correlation, so most same-game prices will be below Fair. Leaders: each game’s top 3 by usage rank. Tracked on the Profit page at fair odds.</p></details>
+    <div class="tw"><table class="t pairs atgp sgc"><thead><tr><th class="l">Combo</th><th>Chance</th><th>Fair</th><th>Together</th><th class="l">My parlay</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
+}
 function playsView(){
-  const h = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + foldable(atgParlays() + tierParlays() + pairsCard() + tripleCard());
+  const h = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + foldable(atgParlays() + sameGameCard() + tierParlays() + pairsCard() + tripleCard());
   return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
 // Longshot two-mans priced at the viewer's books: legs 15-35% to score, chance blended with the exchanges', every
