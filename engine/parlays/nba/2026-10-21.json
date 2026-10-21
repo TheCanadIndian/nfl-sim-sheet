@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-21",
 "lock": "2026-10-21T23:00:00+00:00",
-"frozen_at": "2026-10-21T18:59:55.052Z",
+"frozen_at": "2026-10-21T19:15:14.371Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -63,15 +63,15 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909838",
-"start": "2026-10-22T00:00Z",
-"kind": "fg3m",
+"gid": "401909835",
+"start": "2026-10-21T23:00Z",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "jaren jackson",
-"lab": "Jaren Jackson Jr. 3+ threes",
-"p": 0.2998,
-"price": 252,
+"line": 3.5,
+"name": "anthony davis",
+"lab": "Anthony Davis 4+ ast",
+"p": 0.3997,
+"price": 166,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -101,16 +101,34 @@
 ]
 }
 ],
-"p": 0.08377,
-"d": 16.65,
-"first": "2026-10-22T00:00:00+00:00",
-"pick": "longshot",
+"p": 0.1117,
+"d": 12.582,
+"first": "2026-10-21T23:00:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "401909835",
+"start": "2026-10-21T23:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "anthony davis",
+"lab": "Anthony Davis 4+ ast",
+"p": 0.3997,
+"price": 166,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
 {
 "gid": "401909836",
 "start": "2026-10-21T23:30Z",
@@ -124,6 +142,54 @@
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909842",
+"start": "2026-10-22T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "rui hachimura",
+"lab": "Rui Hachimura 4+ threes",
+"p": 0.2886,
+"price": 313,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.03989,
+"d": 34.386,
+"first": "2026-10-21T23:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909834",
+"start": "2026-10-21T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "nikola vucevic",
+"lab": "Nikola Vucevic 8+ reb",
+"p": 0.298,
+"price": 398,
+"book": "Kalshi",
+"f": [
 "matchup",
 "rotation",
 "game",
@@ -169,73 +235,8 @@
 ]
 }
 ],
-"p": 0.02992,
-"d": 45.503,
-"first": "2026-10-21T23:30:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909834",
-"start": "2026-10-21T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "nikola vucevic",
-"lab": "Nikola Vucevic 8+ reb",
-"p": 0.2955,
-"price": 425,
-"book": "Kalshi",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909838",
-"start": "2026-10-22T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "jerami grant",
-"lab": "Jerami Grant 3+ threes",
-"p": 0.2919,
-"price": 456,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"game",
-"price"
-]
-},
-{
-"gid": "401909842",
-"start": "2026-10-22T02:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "rui hachimura",
-"lab": "Rui Hachimura 4+ threes",
-"p": 0.2886,
-"price": 313,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.0249,
-"d": 120.555,
+"p": 0.02579,
+"d": 72.397,
 "first": "2026-10-21T23:00:00+00:00",
 "res": null
 },
@@ -263,13 +264,13 @@
 "line": 29.5,
 "name": "lauri markkanen",
 "lab": "Lauri Markkanen 30+ pts",
-"p": 0.165,
-"price": 456,
+"p": 0.17,
+"price": 425,
 "book": "Kalshi"
 }
 ],
-"p": 0.0264,
-"d": 30.906,
+"p": 0.0272,
+"d": 29.209,
 "first": "2026-10-21T23:30:00+00:00",
 "res": null
 },
@@ -305,7 +306,6 @@
 "p": 0.33671,
 "d": 3.905,
 "first": "2026-10-21T23:30:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -315,31 +315,32 @@
 {
 "gid": "401909837",
 "start": "2026-10-21T23:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 0.5,
-"name": "tre jones",
-"lab": "Tre Jones over 0.5 threes",
-"p": 0.4953,
-"price": 130,
-"book": "Novig"
-},
-{
-"gid": "401909839",
-"start": "2026-10-22T00:00Z",
 "kind": "pts",
 "side": "o",
-"line": 9.5,
-"name": "saddiq bey",
-"lab": "Saddiq Bey 10+ points",
-"p": 0.6662,
-"price": -168,
+"line": 14.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 15+ points",
+"p": 0.5043,
+"price": 114,
 "book": "Kalshi"
+},
+{
+"gid": "401909841",
+"start": "2026-10-22T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 11.5,
+"name": "scoot henderson",
+"lab": "Scoot Henderson over 11.5 points",
+"p": 0.6654,
+"price": -120,
+"book": "Hard Rock"
 }
 ],
-"p": 0.32998,
-"d": 3.669,
+"p": 0.33554,
+"d": 3.923,
 "first": "2026-10-21T23:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -435,12 +436,12 @@
 "line": 14.5,
 "name": "naji marshall",
 "lab": "Naji Marshall 15+ points",
-"p": 0.3691,
+"p": 0.3654,
 "price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.18284,
+"p": 0.18099,
 "d": 7.084,
 "first": "2026-10-21T23:30:00+00:00",
 "pick": "core",
@@ -451,33 +452,33 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "401909837",
-"start": "2026-10-21T23:30Z",
-"kind": "reb",
+"gid": "401909840",
+"start": "2026-10-22T00:30Z",
+"kind": "pts",
 "side": "o",
-"line": 5.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis over 5.5 rebounds",
-"p": 0.506,
-"price": 113,
-"book": "Novig"
+"line": 14.5,
+"name": "naji marshall",
+"lab": "Naji Marshall 15+ points",
+"p": 0.3654,
+"price": 208,
+"book": "Kalshi"
 },
 {
-"gid": "401909838",
-"start": "2026-10-22T00:00Z",
+"gid": "401909842",
+"start": "2026-10-22T02:30Z",
 "kind": "pts",
 "side": "o",
 "line": 9.5,
-"name": "isaiah collier",
-"lab": "Isaiah Collier 10+ points",
-"p": 0.3337,
-"price": 296,
+"name": "precious achiuwa",
+"lab": "Precious Achiuwa 10+ points",
+"p": 0.4864,
+"price": 134,
 "book": "Kalshi"
 }
 ],
-"p": 0.16885,
-"d": 8.435,
-"first": "2026-10-21T23:30:00+00:00",
+"p": 0.17773,
+"d": 7.207,
+"first": "2026-10-22T00:30:00+00:00",
 "res": null
 }
 ],
