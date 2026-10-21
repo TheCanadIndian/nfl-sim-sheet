@@ -129,14 +129,18 @@ def freeze():
                 old = json.load(open(fp)) if os.path.exists(fp) else None
                 if old and old.get("graded"):
                     continue
-                locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now]
-                pending = [p for p in by.get(date, []) if when(p["first"]) > now]
-                ps = pick_card(sport, locked + pending, now)
+                fin = card_final_at(date, (old["parlays"] if old else []) + by.get(date, []))
+                final = now >= fin and old and any(p.get("pick") for p in old["parlays"])
+                locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now
+                          or (final and p.get("pick"))]
+                lk = {tuple(sorted(_legkey(L) for L in p["legs"])) for p in locked}
+                pending = [p for p in by.get(date, []) if when(p["first"]) > now and tuple(sorted(_legkey(L) for L in p["legs"])) not in lk]
+                ps = pick_card(sport, locked + pending, now, fin)
                 if not ps or (old and ps == old["parlays"]):
                     continue
                 os.makedirs(os.path.dirname(fp), exist_ok=True)
                 json.dump(dict(sport=sport, date=date, lock=min(p["first"] for p in ps), frozen_at=snap["generated"], books=snap["books"],
-                               parlays=ps, graded=False), open(fp, "w"), indent=0)
+                               final_at=fin.isoformat(), parlays=ps, graded=False), open(fp, "w"), indent=0)
                 print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
         freeze_multi(now)
     finally:
@@ -180,10 +184,28 @@ def card_slot(sport, p):
     return None, ev
 
 
-def pick_card(sport, ps, now):
-    """Mark the day's card (p['pick'] = 'core' / 'longshot'). Picks whose first game started stay; the rest are chosen
-    again from what the page shows now (best edge first, a leg in at most 2 picks)."""
-    keep = [p for p in ps if p.get("pick") and when(p["first"]) <= now]
+# The card goes final at a fixed time (owner 2026-10-21: "they change from the morning to the evening" and he can't place
+# bets at the last minute): noon Eastern on the day, or 2 hours before the day's first game if earlier. After that the
+# picks never change and are graded at the prices they had then.
+CARD_FINAL_HOUR, CARD_FINAL_BEFORE = 12, dt.timedelta(hours=2)
+
+
+def card_final_at(date, ps):
+    noon = dt.datetime.combine(dt.date.fromisoformat(date), dt.time(CARD_FINAL_HOUR), ET)
+    firsts = [when(p["first"]) for p in ps if p.get("first")]
+    return min([noon] + [f - CARD_FINAL_BEFORE for f in firsts]).astimezone(dt.timezone.utc)
+
+
+def pick_card(sport, ps, now, final_at=None):
+    """Mark the day's card (p['pick'] = 'core' / 'longshot'). Picks stay once their first game starts or once the card is
+    final (final_at); before that the rest are chosen again from what the page shows now (best edge first, a leg in at
+    most 2 picks). A card with no picks at its final time is picked once, then stays."""
+    if final_at is not None and now >= final_at and any(p.get("pick") for p in ps):
+        for p in ps:
+            if p.get("pick"):
+                p["final"] = True
+        return ps
+    keep = [p for p in ps if p.get("pick") and (when(p["first"]) <= now or p.get("final"))]
     for p in ps:
         if p.get("pick") and not any(p is k for k in keep):
             p.pop("pick", None)
@@ -237,9 +259,9 @@ def write_card(sport):
                 rec["l"] += not win
                 rec["net"] += CARD_STAKE * (((p.get("paid") or p["d"]) - 1) if win else -1)
         if picks:
-            days.append((d["date"], picks))
-    show = next(((dd, ps) for dd, ps in days if dd >= today), days[-1] if days else (None, []))
-    out = dict(sport=sport, stake=CARD_STAKE, date=show[0], updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+            days.append((d["date"], picks, d.get("final_at")))
+    show = next(((dd, ps, fa) for dd, ps, fa in days if dd >= today), days[-1] if days else (None, [], None))
+    out = dict(sport=sport, stake=CARD_STAKE, date=show[0], final_at=show[2], updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
                record=dict(rec, net=round(rec["net"], 2)),
                picks=[dict(slot=p["pick"], card=p["card"], tier=p.get("tier"), p=round(p["p"] * CARD_DISCOUNT.get(sport, 1), 4), d=p["d"],
                            first=p["first"], res=p.get("res"), paid=p.get("paid"),
@@ -320,15 +342,18 @@ def freeze_multi(now):
         old = json.load(open(fp)) if os.path.exists(fp) else None
         if old and old.get("graded"):
             continue
-        locked = [dict(q, locked=True) for q in (old["parlays"] if old else []) if q.get("locked") or when(q["first"]) <= now]
+        new = multi_parlays(date)
+        fin = card_final_at(date, (old["parlays"] if old else []) + new)
+        final = now >= fin and old and old.get("parlays")
+        locked = [dict(q, locked=True) for q in (old["parlays"] if old else []) if q.get("locked") or when(q["first"]) <= now or final]
         lk = {tuple(sorted((L["sport"], L["gid"], L["name"]) for L in q["legs"])) for q in locked}
-        pending = [q for q in multi_parlays(date) if when(q["first"]) > now and tuple(sorted((L["sport"], L["gid"], L["name"]) for L in q["legs"])) not in lk]
+        pending = [] if final else [q for q in new if when(q["first"]) > now and tuple(sorted((L["sport"], L["gid"], L["name"]) for L in q["legs"])) not in lk]
         ps = locked + pending[:max(0, 3 - len(locked))]
         if not ps or (old and ps == old["parlays"]):
             continue
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         json.dump(dict(sport="multi", date=date, lock=min(q["first"] for q in ps), frozen_at=now.isoformat(), books=sorted(CARD_BOOKS),
-                       parlays=ps, graded=False), open(fp, "w"), indent=0)
+                       final_at=fin.isoformat(), parlays=ps, graded=False), open(fp, "w"), indent=0)
         print(f"parlays multi {date}: {len(locked)} locked, {len(ps) - len(locked)} still updating")
 
 
@@ -352,7 +377,7 @@ def hub_data():
                                                          paid=q.get("paid"), pick=q.get("pick"),
                                                          legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
                                                                     sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
-        sports.append(dict(sport=sport, date=d["date"], cards=[dict(card=c, parlays=v) for c, v in cards.items()]))
+        sports.append(dict(sport=sport, date=d["date"], final_at=d.get("final_at"), cards=[dict(card=c, parlays=v) for c, v in cards.items()]))
     return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports)
 
 
@@ -401,7 +426,8 @@ function render(){
   const sec = (h, sub, body) => `<section class="panel hsec"><div class="phead"><h2>${h}<small>${sub}</small></h2></div>${body}</section>`;
   let html = sw;
   const today = new Date().toLocaleDateString('en-CA');
-  if (picks.length) html += sec('Today’s cards', `${picks.length} parlays · $${D.stake} each`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
+  const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
+  if (picks.length) html += sec('Today’s cards', `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
   if (multi && multi.cards.length) html += sec('Multisport all-day longshots', `${day(multi.date)} · one leg per game, 2+ sports`, `<div class="hg">${multi.cards.flatMap(c => c.parlays).map(q => card(q, 'multi', '')).join('')}</div>
     <p class="note" style="margin:6px 0 0">Legs are each sport’s strongest at your books: NFL and NBA path legs (three or more of usage, matchup, rotation, game script and price, with our chance 20-45%) and NHL anytime-goal legs from our top three per game. One leg per game, 3-4 legs, paying 15x to 300x.</p>`);
   for (const s of S.filter(s => s.sport !== 'multi')){
