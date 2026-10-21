@@ -87,14 +87,12 @@ def onice():
         team, pid = S.team.to_numpy(), S.player_id.to_numpy()
         isg = np.array([pos.get(p) == "G" for p in pid])
         xp, xt, xtm = X.period.to_numpy(), X.t.to_numpy(float), X.team.to_numpy()
-        blk = (X.kind == "blocked-shot").to_numpy()                            # the NHL credits blocked shots to the blocking team
+
         ts = np.where(xt < 1200, xt, xt - 1200 * (xp - 1))
         on = (per[None, :] == xp[:, None]) & (st[None, :] < ts[:, None]) & (en[None, :] >= ts[:, None])
         for k, ev in enumerate(X.event_id.to_numpy()):
             m = on[k]
             mine = m & (team == xtm[k]); oth = m & (team != xtm[k])
-            if blk[k]:
-                mine, oth = oth, mine                                         # team_on = the shooting side
             a = pid[mine & ~isg]; b = pid[oth & ~isg]; g = pid[oth & isg]
             out.append((int(gid), int(ev), ",".join(map(str, a)), ",".join(map(str, b)), ",".join(map(str, g)), int(len(a)), int(len(b))))
         n += 1

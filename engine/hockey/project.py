@@ -303,7 +303,7 @@ def main():
     pg["p_first"] = lam_c / tot * (1 - np.exp(-tot))
     pg["fair_first"] = pg.p_first.map(american)
     # usage ranking (display only; P(goal) and its tiers stay as above): live expected goals x exp(beta . usage),
-    # usage from this season's shift charts (usage.py). Backtest 2025-26: top 3 caught 1.045 scorers/game vs 1.032.
+    # usage from this season's shift charts (usage.py). Backtest 2025-26: top 3 caught 1.046 scorers/game vs 1.032 (refit 2026-10-21).
     pg["u_mult"], pg["u_rank"] = 1.0, np.nan
     try:
         import sqlite3
