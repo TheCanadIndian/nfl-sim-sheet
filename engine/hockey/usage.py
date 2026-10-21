@@ -20,7 +20,7 @@ import pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PARAMS = json.load(open(os.path.join(HERE, "usage_params.json")))
-ROWS = os.path.join(HERE, "raw", "usage_rows.csv")
+ROWS = os.path.join(HERE, "raw", "usage_rows_v2.csv")   # v2 (2026-10-21): rebuilt after the blocked-shot / period-time fixes
 COLS = ["game_id", "player_id", "team", "icf", "oncf", "blk", "shifts", "toi_s", "ot_s", "ot_team", "late_s", "late_team", "x6_s", "x6_team"]
 _sec = lambda t: int(str(t).split(":")[0]) * 60 + int(str(t).split(":")[1])
 
@@ -46,7 +46,7 @@ def game_usage(gid, pos, shots, shift_rows):
         on[t], ids[t] = m, pl
     sc = {t: np.zeros(end, int) for t in teams}
     for r in shots[shots.goal == 1].itertuples():
-        s_ = int((r.period - 1) * 1200 + r.t)
+        s_ = int(r.t)                                          # shots.t is seconds into the game (fix 2026-10-21: was + (period-1)*1200 again)
         if r.team in sc and s_ < end:
             sc[r.team][s_:] += 1
     tsec = np.arange(end)
@@ -57,7 +57,7 @@ def game_usage(gid, pos, shots, shift_rows):
         m = on[t]
         x6 = m.sum(1) >= 6
         att = shots[shots.team == t]
-        aidx = np.clip(((att.period - 1) * 1200 + att.t).astype(int).to_numpy(), 0, end - 1)
+        aidx = np.clip(att.t.astype(int).to_numpy(), 0, end - 1)
         onc = m[aidx].sum(0)
         for i, q in enumerate(ids[t]):
             mine = att[att.shooter == q]
@@ -67,7 +67,7 @@ def game_usage(gid, pos, shots, shift_rows):
 
 
 def update(con, season):
-    """Usage rows for every completed game of the season not yet in raw/usage_rows.csv (fetches shift charts)."""
+    """Usage rows for every completed game of the season not yet in ROWS (fetches shift charts)."""
     import linecheck as LC
     have = pd.read_csv(ROWS) if os.path.exists(ROWS) else pd.DataFrame(columns=COLS)
     done = set(have.game_id)

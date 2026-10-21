@@ -7,19 +7,19 @@
   "l_late"
  ],
  "beta": [
-  0.201,
-  0.4509,
-  0.1624,
-  0.0381,
-  0.0486
+  0.2352,
+  0.4952,
+  0.2294,
+  0.0467,
+  0.0149
  ],
  "mu": {
-  "l_att": -0.04302,
-  "l_len": 0.04403,
-  "l_spg": 0.01592,
-  "l_x6": -1.63308,
-  "l_late": -1.3649
+  "l_att": -0.02795,
+  "l_len": 0.04363,
+  "l_spg": 0.02167,
+  "l_x6": -1.63323,
+  "l_late": -1.40542
  },
- "lg_att": 0.21888,
- "note": "NHL usage ranking (display only; P(goal) stays the live model). Fit 2023-26 inside the live GLM design. Backtest 2025-26 (fit 23-25): ranking by live lam x exp(beta . usage) caught 1.045 scorers/game in top 3 vs 1.032 live."
+ "lg_att": 0.20149,
+ "note": "NHL usage ranking (display only; P(goal) stays the live model). Fit 2023-26 inside the live GLM design, refit 2026-10-21 after two input fixes (blocked shots had been credited to the blocking team; usage.py double-counted period time). Backtest 2025-26 (fit 23-25): ranking by live lam x exp(beta . usage) caught 1.046 scorers/game in top 3 (halves 1.053 / 1.039) vs 1.032 live; the old inputs gave 1.045 (1.057 / 1.033)."
 }

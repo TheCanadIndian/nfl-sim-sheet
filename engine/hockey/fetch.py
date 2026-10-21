@@ -116,9 +116,8 @@ def parse_pbp(pbp):
         kind = p["typeDescKey"]
         d = p.get("details", {}) or {}
         if kind in ("shot-on-goal", "goal", "missed-shot", "blocked-shot") and ptype != "SO":
-            team = d.get("eventOwnerTeamId")
-            if kind == "blocked-shot":        # owner is the blocking team; shooter is the other one
-                team = home_id if team == away_id else away_id
+            team = d.get("eventOwnerTeamId")   # the shooting team, blocked shots included (checked 2026-10-21: the
+                                               # API credits a blocked shot to the shooter's team; the old flip here was wrong)
             is_home = team == home_id
             sc = p.get("situationCode") or "1551"
             a_g, a_s, h_s, h_g = int(sc[0]), int(sc[1]), int(sc[2]), int(sc[3])
@@ -166,6 +165,7 @@ def main():
     ap.add_argument("--seasons", nargs="+", required=True)
     a = ap.parse_args()
     con = sqlite3.connect(DB)
+    fix_blocked(con)
     for season in a.seasons:
         games = season_games(season)
         print(f"{season}: {len(games)} games on the schedule", flush=True)
@@ -205,6 +205,19 @@ def main():
                 shots, rosters, tois = [], [], []
                 print(f"  {season}: {i}/{len(todo)} games", flush=True)
     con.close()
+
+
+def fix_blocked(con):
+    """One-time fix (2026-10-21): blocked shots fetched before then carry the blocking team (team, is_home, own / opp
+    skaters swapped) because of a wrong flip in parse_pbp. Swap them back once; a marker table records it."""
+    con.execute("CREATE TABLE IF NOT EXISTS fixes (name PRIMARY KEY, at)")
+    if con.execute("SELECT 1 FROM fixes WHERE name = 'blocked_team'").fetchone() or not _has(con, "shots"):
+        return
+    con.execute("""UPDATE shots SET team = (SELECT CASE WHEN g.home = shots.team THEN g.away ELSE g.home END FROM games g WHERE g.game_id = shots.game_id),
+                   is_home = 1 - is_home, own_sk = opp_sk, opp_sk = own_sk WHERE kind = 'blocked-shot'""")
+    con.execute("INSERT INTO fixes VALUES ('blocked_team', datetime('now'))")
+    con.commit()
+    print("fetch: blocked shots moved to the shooting team (one-time fix)")
 
 
 def _has(con, t):
