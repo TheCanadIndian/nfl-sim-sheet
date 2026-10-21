@@ -540,6 +540,14 @@ def tags():
                 e = log.setdefault(key, dict(sport=sport, gid=gid, name=nm, bet=v["b"], book=v["k"], o=v["o"], first=now.isoformat(),
                                              p=v.get("p"), m=v.get("m"), start=st))
                 e.setdefault("start", st)
+        # off-market prices (sharp.off_market): each first sighting, graded like tags
+        for x in FL.get("off") or []:
+            st = starts.get(str(x["g"]))
+            if (st and PL.when(st) <= now) or x.get("o") is None:
+                continue
+            e = log.setdefault(f"off|{sport}|{x['g']}|{x['n']}|{x['b']}|{x['bk']}", dict(sport=sport, src="off", gid=x["g"], name=x["n"], bet=x["b"], book=x["bk"],
+                                                                                    o=x["o"], first=now.isoformat(), p=x.get("fair"), m=x.get("fair"), start=st))
+            e.setdefault("start", st)
         # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
         for gid, tg in (FL.get("lc") or {}).items():
             st = starts.get(str(gid))
@@ -631,7 +639,7 @@ def page_data():
             continue
         d_ = dec(e["o"])
         clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
-        rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {'LC tags (experimental)' if e.get('src') == 'lc' else 'Value tags'}", date=(e.get("start") or e["first"])[:10],
+        rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {'LC tags (experimental)' if e.get('src') == 'lc' else 'Off-market prices (experimental)' if e.get('src') == 'off' else 'Value tags'}", date=(e.get("start") or e["first"])[:10],
                          pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
@@ -740,7 +748,7 @@ def feed_data():
         if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under"):
             continue
         dd = dec(e["o"])
-        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {'LC tags (experimental)' if e.get('src') == 'lc' else 'Value tags'}", title=f"{e['name'].title()} {e['bet']}",
+        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {'LC tags (experimental)' if e.get('src') == 'lc' else 'Off-market prices (experimental)' if e.get('src') == 'off' else 'Value tags'}", title=f"{e['name'].title()} {e['bet']}",
                           book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
     legs = []
     for f in _g.glob(os.path.join(HERE, "parlays", "*", "*.json")):

@@ -194,6 +194,10 @@ a.pinv{color:var(--muted)}a.pinv:hover{border-color:var(--good)}
 .pev li .w{color:var(--muted);font-size:12.5px}.pev li .px{margin-left:auto;white-space:nowrap}.pev li .px i{font-style:normal;color:var(--good);font-weight:800;margin-left:6px}
 .pinv{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;border:1px solid var(--faint);color:var(--muted);font-size:10.5px;font-weight:600;line-height:16px;white-space:nowrap;text-decoration:none}
 a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--good) 12%,transparent)}
+.offr{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;align-items:baseline;padding:7px 0;border-top:1px solid var(--faint);font-size:13.5px}
+.offr.mine .offn b{color:var(--good)}.offn small,.offp small{display:block;font-size:11.5px;color:var(--muted)}.offn i{font-style:normal;font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px}
+.offp{text-align:right;white-space:nowrap}.offp a{color:inherit}.offg{text-align:right;white-space:nowrap;color:var(--muted);font-size:12.5px}.offg b{display:block;color:var(--good);font-size:14px}
+@media (max-width:640px){.offr{grid-template-columns:1fr auto}.offg{grid-column:1/-1;text-align:left}.offg b{display:inline;margin-left:6px}}
 .vtag.lct{border-color:color-mix(in srgb,#6CB4FF 60%,transparent);color:#6CB4FF}.vtag.lct i{font-style:normal;font-weight:700;margin-left:2px}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
@@ -821,6 +825,26 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       if (/^TD$|anytime|goal/i.test(b)) return /goal/i.test(b) ? 'goal' : 'td';
       const m = /^over [\d.]+ (.+)$/.exec(b); if (!m) return null;
       return {'rec yds': 'rec_yds', 'rush yds': 'rush_yds', 'pass yds': 'pass_yds', receptions: 'rec'}[m[1]] || null;
+    },
+    // Off-market prices (sharp.off_market -> flags_<sport>.json "off"): every over price at every book and prediction
+    // market, main and alt lines, 8+ pts under the fair at that line (or 35%+ under on longshots). Your books first.
+    offView(games){
+      if (!FL || !FL.off || !FL.fetched) return '<section class="panel"><p class="note">No off-market scan yet: it runs with the sportsbook prices (about every 15 minutes before games).</p></section>';
+      const glab = Object.fromEntries((games || []).map(g => [String(g.id), g.label]));
+      const now = Date.now(), start = Object.fromEntries((games || []).map(g => [String(g.id), g.start]));
+      const L = FL.off.filter(x => !start[String(x.g)] || new Date(start[String(x.g)]) > now);
+      const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
+      const mineF = L.filter(x => mine(x.bk)), rest = L.filter(x => !mine(x.bk));
+      const t = new Date(FL.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+      const row = x => { const u = link(x.u), nm = x.n.replace(/\b\w/g, c => c.toUpperCase()), gap = Math.round((x.fair - x.imp) * 100);
+        const price = `${x.o > 0 ? '+' : ''}${x.o} ${esc(FULL[x.bk] || BKS[x.bk] || x.bk)}`;
+        return `<div class="offr${mine(x.bk) ? ' mine' : ''}"><span class="offn"><b>${esc(nm)}</b> ${esc(x.b)}${x.main ? '' : ' <i>alt</i>'}<small>${esc(glab[String(x.g)] || '')}</small></span>
+          <span class="offp">${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${price} ↗</a>` : price}<small>${x.dep ? usd(x.dep) + ' within 3¢' : ''}</small></span>
+          <span class="offg" title="Price implies ${pc(x.imp)}; fair ${x.carried ? '(carried from the main line by our projection) ' : ''}${pc(x.fair)}">${pc(x.imp)} vs ${x.carried ? '≈' : ''}${pc(x.fair)}<b>+${gap} pts</b></span></div>`; };
+      return `<section class="panel"><div class="phead"><h2>Off market</h2><span class="small muted">overs priced far under fair · checked ${esc(t)}</span></div>
+        ${L.length ? `${mineF.length ? `<div class="eyebrow" style="margin:4px 0">At your books</div>${mineF.map(row).join('')}` : ''}${rest.length ? `<div class="eyebrow" style="margin:12px 0 4px">Other books and markets</div>${rest.map(row).join('')}` : ''}`
+          : '<p class="note">Nothing far off right now: every over is within 8 points of its fair price.</p>'}
+        <details class="how"><summary>How this works</summary><p class="note">Every over price at every book, Kalshi and Polymarket, main and alt lines, against the fair chance at that exact line: the sharp consensus at the main line, the books’ own two-way price at an alt line, and where no book prices both sides (most prediction-market rungs) the main line’s fair carried along our projection (shown with ≈, less certain). Listed when the price implies 8+ points less than fair, or 35%+ less on longshots; Kalshi includes its fee. A price this far off is sometimes a stale or wrong line, so check it before betting. Tracked on the Profit page as Off-market prices.</p></details></section>`;
     },
     // 'LC' tag (experimental): the price at one of the owner's books beats the liquidity-weighted fair (sharp consensus
     // + Kalshi / Polymarket weighted by depth, never the book being bet; sharp.lc_tags) by 5%+. Tracked on the Profit page.

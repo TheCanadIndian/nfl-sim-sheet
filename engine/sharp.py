@@ -262,6 +262,11 @@ def apply_consensus(sport, now):
             FL["lc"] = lc_tags(sport, PR)
         except Exception as e:                                                  # noqa: BLE001
             print(f"sharp {sport}: liquidity-consensus tags failed ({type(e).__name__}: {e})")
+        try:
+            FL["off"] = off_market(sport, PR)
+            print(f"sharp {sport}: {len(FL['off'])} off-market prices")
+        except Exception as e:                                                  # noqa: BLE001
+            print(f"sharp {sport}: off-market scan failed ({type(e).__name__}: {e})")
         json.dump(FL, open(ff, "w"), separators=(",", ":"))
         print(f"sharp {sport}: {sum(len(v) for v in FL.get('lc', {}).values())} liquidity-consensus tags")
     print(f"sharp {sport}: consensus reference on {n} props")
@@ -332,6 +337,72 @@ def lc_tags(sport, PR):
 
 LC_LAB = {"rec_yds": "rec yds", "rush_yds": "rush yds", "pass_yds": "pass yds", "rec": "receptions", "pts": "points", "reb": "rebounds",
           "ast": "assists", "fg3m": "threes"}
+
+
+# Off-market prices (owner 2026-10-21: "any props way off market, alt props across all books and prediction markets").
+# Every over price -- every book, Kalshi, Polymarket, main and alt lines -- against the fair at that exact line: main line
+# = the sharp consensus; alt line = the books' own two-way fair there; a rung no book prices two-way = the main fair
+# carried along our projection (same log-odds gap between our chance and the fair as at the main line). Flagged when the
+# price's implied chance (Kalshi with its fee) is 8+ pts under the fair, or 35%+ under it and 4+ pts (longshots).
+# Overs only (the owner plays overs). Tracked on /profit.html as "Off-market prices (experimental)": a price this far
+# off is sometimes a stale or wrong line, so check it before betting.
+OFF_GAP, OFF_REL, OFF_MIN = .08, .35, .04
+
+
+def off_market(sport, PR):
+    try:
+        L = json.load(open(os.path.join(M.SITE, "markets", f"live_{sport}.json")))
+    except (OSError, ValueError):
+        L = {}
+    pm = {}
+    for r in L.get("rows", []):
+        if r.get("s") in ("kalshi", "polymarket") and r.get("n") and r.get("ya") and 0 < r["ya"] < 1 and r.get("l", 0) is not None:
+            k = LC_KIND.get(r.get("k"), r.get("k"))
+            pm.setdefault((str(r.get("g")), jsnorm(r["n"]), k), []).append(r)
+    out = []
+    for gid, g in PR.get("props", {}).items():
+        for nm, kinds in g.items():
+            for kind, e in kinds.items():
+                pin = e.get("pin") or {}
+                ml = round(float(e["l"] if e.get("l") is not None else .5), 2)
+                fm = pin.get("o") if pin.get("o") is not None and (pin.get("l") is None or abs(float(pin["l"]) - ml) < 1e-9) else None
+                if fm is None:
+                    continue
+                gap = _lg(fm) - _lg(e["p"]) if e.get("p") and 0 < e["p"] < 1 else None
+                ladder = {ml: dict(fair=fm, carried=False, prices=e.get("o") or {})}
+                for al, x in (e.get("a") or {}).items():
+                    f = x.get("pin")
+                    carried = f is None
+                    if f is None and gap is not None and x.get("p") and 0 < x["p"] < 1:
+                        f = 1 / (1 + math.exp(-(_lg(x["p"]) + gap)))
+                    if f is not None:
+                        ladder[round(float(al), 2)] = dict(fair=f, carried=carried, prices=x.get("o") or {})
+                for r in pm.get((str(gid), nm, kind), []):
+                    ln = round(float(r["l"] if r.get("l") is not None else .5), 2)
+                    if ln not in ladder:
+                        po = (r.get("p") or {}).get("vegas")
+                        if gap is None or not po or not 0 < po < 1:
+                            continue
+                        ladder[ln] = dict(fair=1 / (1 + math.exp(-(_lg(po) + gap))), carried=True, prices={})
+                    src = "Kalshi" if r["s"] == "kalshi" else "Polymarket"
+                    cost = r["ya"] + (.07 * r["ya"] * (1 - r["ya"]) if r["s"] == "kalshi" else 0)
+                    o = -round(100 * cost / (1 - cost)) if cost >= .5 else round(100 * (1 - cost) / cost)
+                    ladder[ln]["prices"] = dict(ladder[ln]["prices"], **{src: [o, None, round(float(r.get("by") or 0))]})
+                for ln, spot in ladder.items():
+                    f = spot["fair"]
+                    if not .03 <= f <= .97:
+                        continue
+                    for bk, v in spot["prices"].items():
+                        if bk == "Pinnacle" or not isinstance(v, list) or v[0] is None:
+                            continue
+                        imp = 1 / dec(v[0])
+                        d = f - imp
+                        if d >= OFF_GAP or (f / imp - 1 >= OFF_REL and d >= OFF_MIN):
+                            out.append(dict(g=gid, n=nm, k=kind, l=ln, main=ln == ml, bk=bk, o=v[0], u=v[1] if len(v) > 1 else None,
+                                            dep=v[2] if len(v) > 2 else None, imp=round(imp, 4), fair=round(f, 4), carried=spot["carried"],
+                                            ev=round(f / imp - 1, 4), b="TD" if kind == "td" else "goal" if kind == "goal" else f"over {ln:g} {LC_LAB.get(kind, kind)}"))
+    out.sort(key=lambda x: -(x["fair"] - x["imp"]))
+    return out[:80]
 
 
 def rejudge(FL, gid, nm, v, w, pin):

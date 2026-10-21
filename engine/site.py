@@ -670,7 +670,7 @@ const KIND = {hr:'Home run', win:'Winner', total:'Total', spread:'Spread', anyti
 const GAMEK = new Set(['win', 'total', 'spread']);
 let st = {view: 'bk', show: 'all', src: 'all', spr: 'all', sort: 'edge', q: ''}, open = new Set(), first = true;
 try { Object.assign(st, JSON.parse(localStorage.getItem('mk-tree') || '{}'), {q: ''}); } catch (e) {}
-if (location.hash === '#books') st.view = 'bk'; else if (location.hash === '#pm') st.view = 'pm';
+if (location.hash === '#books') st.view = 'bk'; else if (location.hash === '#pm') st.view = 'pm'; else if (location.hash === '#off') st.view = 'off';
 const money = r => (r.by || 0) + (r.bn || 0);
 const bestV = r => { const b = MKT.best(r, 'vegas'); return b.v ?? -9; };
 const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}); };
@@ -718,10 +718,16 @@ function patterns(){
 }
 function render(){
   const seg = (id, key, opts) => { document.getElementById(id).innerHTML = opts.map(([k, l]) => `<button data-sk="${key}" data-v="${k}" aria-pressed="${st[key] === k}">${l}</button>`).join(''); };
-  seg('mview', 'view', [['pm', 'Prediction markets'], ['bk', 'Sportsbooks']]);
-  const bk = st.view === 'bk', BKV = document.getElementById('mbk');
+  seg('mview', 'view', [['pm', 'Prediction markets'], ['bk', 'Sportsbooks'], ['off', 'Off market']]);
+  const bk = st.view === 'bk' || st.view === 'off', BKV = document.getElementById('mbk');
   document.getElementById('mpm').hidden = bk; BKV.hidden = !bk;
-  history.replaceState(null, '', bk ? '#books' : location.pathname);
+  history.replaceState(null, '', st.view === 'off' ? '#off' : bk ? '#books' : location.pathname);
+  if (st.view === 'off'){
+    try { const {q, ...keepSt} = st; localStorage.setItem('mk-tree', JSON.stringify(keepSt)); } catch (e) {}
+    document.getElementById('msub').textContent = 'Overs priced far under fair · every book and prediction market';
+    BKV.innerHTML = window.MKT && MKT.offView && MKT.loaded() ? MKT.offView(MKT.games()) : '<p class="muted">Loading prices…</p>';
+    return;
+  }
   if (bk){
     try { const {q, ...keepSt} = st; localStorage.setItem('mk-tree', JSON.stringify(keepSt)); } catch (e) {}
     document.getElementById('msub').textContent = 'Sportsbook prices · your books highlighted';
