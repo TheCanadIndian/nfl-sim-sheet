@@ -96,7 +96,7 @@ def fit(con, seasons=FIT_SEASONS):
                 sel = np.zeros_like(enw); sel[:, lo:hi] = view[:, lo:hi] == -dfc      # this side trails by dfc
                 T += sel.sum() * DT
                 c += [gl[:, :, side][sel].sum(), gl[:, :, 1 - side][sel].sum(), sg[:, :, side][sel].sum(), sg[:, :, 1 - side][sel].sum()]
-            en[f"{dfc}_{mb}"] = dict(trail_goal=c[0] / T, lead_goal=c[1] / T, trail_sog=c[2] / T, lead_sog=c[3] / T, sec=T)
+            en[f"{dfc}_{mb}"] = dict(trail_goal=float(c[0] / T), lead_goal=float(c[1] / T), trail_sog=float(c[2] / T), lead_sog=float(c[3] / T), sec=int(T))
     # shorthanded goals / shots per PK second (league)
     toi = pd.read_sql(f"SELECT game_id, team, pp_toi FROM toi WHERE game_id IN (SELECT game_id FROM games WHERE game_type = 2 AND season IN ({q}))", con)
     pk_sec = toi.pp_toi.sum() / 5
@@ -110,10 +110,13 @@ def fit(con, seasons=FIT_SEASONS):
     so = tied[~tied.game_id.isin(p4g.index)]
     P = dict(
         fit=f"regular seasons {seasons}", dt=DT,
-        score_sog=score_sog.round(4).tolist(), score_goal=score_goal.round(4).tolist(),   # [down2+, down1, tied, up1, up2+] x [P1-2, P3]
+        score_sog=score_sog.round(4).tolist(),          # [down2+, down1, tied, up1, up2+] x [P1-2, P3]
+        # goals: sqrt of the shot effect (trailing teams shoot more, convert a bit less). The raw goal-rate ratios are
+        # distorted by high-event games spending more time not tied (tied < every other state); kept for reference.
+        score_goal=np.sqrt(score_sog).round(4).tolist(), score_goal_raw=score_goal.round(4).tolist(),
         en=en,
         sh_goal=float((shs.goal == 1).sum() / pk_sec), sh_sog=float(len(shs) / pk_sec),
-        ot_goal=float(-np.log(1 - p_ot) / 300), ot_sog=float(len(p4) / ot_sec / 2), p_ot_goal=p_ot,
+        ot_goal=float(-np.log(1 - p_ot) / 300), ot_sog=float(len(p4) / ot_sec / 2), p_ot_goal=float(p_ot),
         so_home=float((so.home_score > so.away_score).mean()),
         league_goals=float(gl.sum() / G / 2), league_sog=float(sg.sum() / G / 2),
         pen_len=112.0, frailty=0.06,
@@ -150,16 +153,17 @@ class Team:
 
 
 def _run(rng, P, H, A, n, scale):
-    """Team-level game flow. scale: [g_h, g_a, s_h, s_a] multipliers on even-strength / PP rates (calibration)."""
+    """Team-level game flow. scale (calibration multipliers): [even-strength goals h, a, PP goals h, a, even-strength
+    shots h, a, PP shots h, a]."""
     sg, ss = np.array(P["score_goal"]), np.array(P["score_sog"])
     lg = P["league_goals"]
     out = {}
     T = [H, A]
     ev_sec = [REG - H.pp_sec - A.pp_sec] * 2
     r_ev_g = [T[i].g_np.sum() / ev_sec[i] * scale[i] for i in (0, 1)]
-    r_pp_g = [T[i].g_pp.sum() / T[i].pp_sec * scale[i] for i in (0, 1)]
-    r_ev_s = [T[i].s_np.sum() / ev_sec[i] * scale[2 + i] for i in (0, 1)]
-    r_pp_s = [T[i].s_pp.sum() / T[i].pp_sec * scale[2 + i] for i in (0, 1)]
+    r_pp_g = [T[i].g_pp.sum() / T[i].pp_sec * scale[2 + i] for i in (0, 1)]
+    r_ev_s = [T[i].s_np.sum() / ev_sec[i] * scale[4 + i] for i in (0, 1)]
+    r_pp_s = [T[i].s_pp.sum() / T[i].pp_sec * scale[6 + i] for i in (0, 1)]
     pen = [T[1 - i].pp_sec / P["pen_len"] / REG for i in (0, 1)]       # penalties taken by side i per second
     strength = [np.sqrt(max(T[i].goals, .3) / lg) for i in (0, 1)]
     score = np.zeros((n, 2), np.int16)
@@ -223,13 +227,14 @@ def simulate(H, A, n=10000, seed=0, P=None, calibrate=True):
     reg_tie. Team means are calibrated to the players' expected goals / shots."""
     P = P or json.load(open(PFILE))
     rng = np.random.default_rng(seed)
-    scale = np.ones(4)
-    if calibrate:
-        for _ in range(2):
+    scale = np.ones(8)
+    tgt = np.array([H.g_np.sum(), A.g_np.sum(), H.g_pp.sum(), A.g_pp.sum(), H.s_np.sum(), A.s_np.sum(), H.s_pp.sum(), A.s_pp.sum()])
+    if calibrate:                     # each team's even-strength / PP goal and shot means -> its players' sums
+        for _ in range(3):
             o = _run(rng, P, H, A, 3000, scale)
-            mg = (o["G"]["ev"] + o["G"]["pp"]).mean(0)
-            ms = (o["G"]["ev"] + o["G"]["pp"]).mean(0) + (o["S"]["ev"] + o["S"]["pp"]).mean(0)
-            scale *= np.r_[np.array([H.goals, A.goals]) / np.maximum(mg, 1e-6), np.array([H.sog, A.sog]) / np.maximum(ms, 1e-6)]
+            ge, gp = o["G"]["ev"].mean(0), o["G"]["pp"].mean(0)
+            got = np.r_[ge, gp, ge + o["S"]["ev"].mean(0), gp + o["S"]["pp"].mean(0)]
+            scale *= np.where(tgt > 1e-6, tgt / np.maximum(got, 1e-6), 1)
     o = _run(rng, P, H, A, n, scale)
     res = dict(final=o["final"], reg_tie=o["reg_tie"])
     for i, (side, Tm) in enumerate((("home", H), ("away", A))):
