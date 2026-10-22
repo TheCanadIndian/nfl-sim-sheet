@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-10-22",
 "lock": "2026-10-22T23:00:00+00:00",
-"frozen_at": "2026-10-22T20:27:01.524044+00:00",
+"frozen_at": "2026-10-22T20:39:40.450525+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -12,8 +12,96 @@
 "parlays": [
 {
 "card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NHL",
+"tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
+{
+"gid": "2026_07_NE_CHI",
+"start": "2026-10-22T20:15:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 89.5,
+"name": "dandre swift",
+"lab": "D'Andre Swift 90+ rush yds",
+"p": 0.2573,
+"price": 313,
+"book": "Kalshi",
+"sc": "CHI pulls away",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "401909093",
+"start": "2026-10-22T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "evan mobley",
+"lab": "Evan Mobley 2+ threes",
+"p": 0.3157,
+"price": 233,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026_07_MIA_NYJ",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 79.5,
+"name": "ollie gordon",
+"lab": "Ollie Gordon II 80+ rush yds",
+"p": 0.2025,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script"
+],
+"sport": "nfl"
+}
+],
+"p": 0.01645,
+"d": 68.489,
+"first": "2026-10-22T23:00:00+00:00"
+},
+{
+"card": "Multisport longshots",
+"tier": "3 legs \u00b7 NBA + NFL + NHL",
+"legs": [
+{
+"gid": "2026_07_NE_CHI",
+"start": "2026-10-22T20:15:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 89.5,
+"name": "dandre swift",
+"lab": "D'Andre Swift 90+ rush yds",
+"p": 0.2573,
+"price": 313,
+"book": "Kalshi",
+"sc": "CHI pulls away",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
 {
 "gid": "401909093",
 "start": "2026-10-22T23:00Z",
@@ -41,56 +129,39 @@
 "line": 0.5,
 "name": "viktor arvidsson",
 "lab": "Viktor Arvidsson to score",
-"p": 0.3671,
+"p": 0.3649,
 "price": 228,
 "book": "Novig",
 "sport": "nhl"
-},
-{
-"gid": "401909094",
-"start": "2026-10-23T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "jalen williams",
-"lab": "Jalen Williams 6+ ast",
-"p": 0.3751,
-"price": 198,
-"book": "Kalshi",
-"f": [
-"usage",
-"game",
-"price"
-],
-"sport": "nba"
 }
 ],
-"p": 0.04347,
-"d": 32.549,
+"p": 0.02964,
+"d": 45.11,
 "first": "2026-10-22T23:00:00+00:00"
 },
 {
 "card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NHL",
+"tier": "4 legs \u00b7 NBA + NFL + NHL",
 "legs": [
 {
-"gid": "401909093",
-"start": "2026-10-22T23:00Z",
-"kind": "fg3m",
+"gid": "2026_07_MIA_NYJ",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
 "side": "o",
-"line": 1.5,
-"name": "evan mobley",
-"lab": "Evan Mobley 2+ threes",
-"p": 0.3157,
-"price": 233,
-"book": "Novig",
+"line": 79.5,
+"name": "ollie gordon",
+"lab": "Ollie Gordon II 80+ rush yds",
+"p": 0.2025,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"game",
-"price"
+"rotation",
+"script"
 ],
-"sport": "nba"
+"sport": "nfl"
 },
 {
 "gid": "2026020165",
@@ -100,33 +171,11 @@
 "line": 0.5,
 "name": "viktor arvidsson",
 "lab": "Viktor Arvidsson to score",
-"p": 0.3671,
+"p": 0.3649,
 "price": 228,
 "book": "Novig",
 "sport": "nhl"
 },
-{
-"gid": "2026020160",
-"start": "2026-10-23T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "jimmy snuggerud",
-"lab": "Jimmy Snuggerud to score",
-"p": 0.3141,
-"price": 239,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.0364,
-"d": 37.027,
-"first": "2026-10-22T23:00:00+00:00"
-},
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
 {
 "gid": "401909094",
 "start": "2026-10-23T01:30Z",
@@ -135,8 +184,8 @@
 "line": 5.5,
 "name": "jalen williams",
 "lab": "Jalen Williams 6+ ast",
-"p": 0.3751,
-"price": 198,
+"p": 0.369,
+"price": 208,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -157,37 +206,11 @@
 "price": 239,
 "book": "Novig",
 "sport": "nhl"
-},
-{
-"gid": "2026020161",
-"start": "2026-10-23T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "jason robertson",
-"lab": "Jason Robertson to score",
-"p": 0.4066,
-"price": 156,
-"book": "Novig",
-"sport": "nhl"
-},
-{
-"gid": "2026020158",
-"start": "2026-10-22T23:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "sam reinhart",
-"lab": "Sam Reinhart to score",
-"p": 0.3564,
-"price": 190,
-"book": "Novig",
-"sport": "nhl"
 }
 ],
-"p": 0.01707,
-"d": 74.999,
-"first": "2026-10-22T23:00:00+00:00"
+"p": 0.00856,
+"d": 170.551,
+"first": "2026-10-23T00:00:00+00:00"
 }
 ],
 "graded": false
