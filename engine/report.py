@@ -450,6 +450,8 @@ table.t{width:100%;border-collapse:collapse;font-size:14px}
 .t .grp td{border-bottom:0;padding-top:16px;text-align:left;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.04em}
 .t td.big{font-weight:600}
 .t th.sc{width:32%;min-width:130px}
+.tag.arch{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 6px;margin:3px 4px 0 0;cursor:help}
+.mxw{display:flex;flex-wrap:wrap;gap:3px 6px;margin:2px 0 0 18px}.mxl{font-size:11px;font-weight:700;white-space:nowrap;cursor:help}.mxl i{font-style:normal;font-weight:500;color:var(--muted)}.mxl.up{color:var(--good)}.mxl.dn{color:var(--bad)}
 .pos{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px}
 .strip{position:relative;height:20px;min-width:130px;cursor:default}
 .strip .g{position:absolute;top:0;bottom:0;width:1px;background:var(--faint)}
@@ -1838,7 +1840,48 @@ function whyNFL(p){
   return R.length ? `<span class="why" title="Path reasons behind this flagged price (the Path longshot rules)">why: <b>${esc(R.join(' · '))}</b></span>`
     : `<span class="why none" title="None of the path reasons (usage, matchup, rotation, game script) applies: the price has no clear reason behind it">no clear reason</span>`;
 }
-const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${chips(p)}</td>`;
+// Role chip + matchup lines under each name (the NBA page's archetype chip / matchup lines, NFL version; owner 2026-10-21).
+// Role: from his alignment (depth chart) and projected usage. Matchup: what tonight's defense allowed per game this season
+// to his group (slot / outside WRs, TEs, RBs, QBs) vs the league average; 15%+ either way, only where he has volume; when it
+// shows, it replaces the older one-number matchup chip (same row, kept for the Matchup flags filter).
+// Display only: in our 2025-26 test, extra position / archetype matchups on top of the projection added nothing (the model
+// has its own defense terms).
+function roleOf2(p){
+  const m = (k, i) => p.s[k] ? p.s[k][i] : 0;          // WRs: alignment is already in the position column (WR1 · X)
+  if (p.pos === 'RB'){ const t = m('tgt', MEAN), c = m('car', MEAN); if (t + c < 6) return null; const r = t / (t + c);
+    return r >= .3 ? ['Receiving back', `${Math.round(r * 100)}% of his projected touches are targets`] : r <= .17 ? ['Early-down back', `${Math.round(r * 100)}% of his projected touches are targets`] : ['Three-down back', `${Math.round(r * 100)}% of his projected touches are targets`]; }
+  if (p.pos === 'TE') return m('tgt', MEAN) >= 5 ? ['Pass-catching TE', `${f1(m('tgt', MEAN))} projected targets`] : null;
+  if (p.pos === 'QB' && m('att', MEAN) >= 20) return m('rush_yds', MEAN) >= 25 ? ['Dual-threat QB', `${f0(m('rush_yds', MEAN))} projected rushing yards`] : ['Pocket passer', `${f0(m('rush_yds', MEAN))} projected rushing yards`];
+  return null;
+}
+const MXG = {QB: 'QBs', RB: 'RBs', TE: 'TEs', WR: 'WRs', SLOT: 'slot WRs', OUT: 'outside WRs'};
+// [page stat, DvP column, label, volume floor on his projected median]
+const MXS = {QB: [['pass_yds', 'Pass yds', 'Pass yds', 150], ['rush_yds', 'Rush yds', 'Rush yds', 20]],
+             RB: [['rush_yds', 'Rush yds', 'Rush yds', 30], ['rec_yds', 'Rec yds', 'Rec yds', 20]],
+             WR: [['rec_yds', 'Rec yds', 'Rec yds', 25], ['rec', 'Rec', 'Catches', 3]], TE: [['rec_yds', 'Rec yds', 'Rec yds', 25], ['rec', 'Rec', 'Catches', 3]]};
+function mxNFL(p){
+  if (!D.dvp) return '';
+  const al = (p.lab || '').split(' · ')[1] || '';
+  const key = p.pos === 'WR' ? (al === 'Slot' ? 'SLOT' : al === 'X' || al === 'Z' ? 'OUT' : 'WR') : p.pos;
+  const T = D.dvp[key], spec = MXS[p.pos]; if (!T || !spec) return '';
+  const row = T.rows.find(r => r.team === p.o); if (!row || !row.season_stats || (row.season_games || 0) < 3) return '';
+  const L = [];
+  for (const [st, col, lab, floor] of spec){
+    const i = T.cols.indexOf(col); if (i < 0 || !p.s[st] || p.s[st][MED] < floor) continue;
+    const xs = T.rows.filter(r => r.season_stats).map(r => r.season_stats[i]), lg = xs.reduce((a, b) => a + b, 0) / xs.length;
+    if (!(lg > 0)) continue;
+    const v = row.season_stats[i] / lg; if (Math.abs(v - 1) < .15) continue;
+    L.push({lab, v, tip: `${p.o} allowed ${f1(row.season_stats[i])} ${lab.toLowerCase()} a game to ${MXG[key]} this season (${row.season_games} games) vs ${f1(lg)} league average. Context only: the projection uses its own defense terms.`});
+  }
+  if (!L.length) return '';
+  const sg = v => (v >= 1 ? '+' : '−') + Math.abs(Math.round((v - 1) * 100)) + '%';
+  L.sort((a, b) => Math.abs(b.v - 1) - Math.abs(a.v - 1));
+  // two stats the same way share one line ("Rec yds +33% · Catches +30% vs outside WRs")
+  const groups = L.length === 2 && (L[0].v > 1) === (L[1].v > 1) ? [L] : L.map(x => [x]);
+  return `<div class="mxw">${groups.map(G => `<span class="mxl ${G[0].v > 1 ? 'up' : 'dn'}" title="${esc(G.map(x => x.tip).join(' '))}">${G.map(x => `${x.lab} ${sg(x.v)}`).join(' · ')} <i>vs ${MXG[key]}</i></span>`).join('')}</div>`;
+}
+const roleChip = p => { const r = roleOf2(p); return r ? `<span class="tag arch" title="${esc(r[1])} (display only)">${esc(r[0])}</span>` : ''; };
+const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${roleChip(p)}${(() => { const mx = mxNFL(p); return mx || chips(p); })()}</td>`;
 // Market-blind lean, inline (same rule as the Model agreement tab)
 const AGK = Object.fromEntries((D.agree || []).map(r => [r.k + '|' + r.stat, r]));
 function agChip(p, stat){
