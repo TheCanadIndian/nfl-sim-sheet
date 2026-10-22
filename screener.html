@@ -1,0 +1,560 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Odds screener · Sim Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0A0F12; --surface:#111A1F; --sunk:#18242B; --ink:#EAF1F4; --muted:#95A6B0;
+  --faint:#22313A; --accent:#36D399; --band:rgba(54,211,153,.26); --whisker:#6D808B;
+  --away:#6CB4FF; --tip-bg:#EAF1F4; --tip-ink:#0A0F12; --good:#34D27A; --bad:#F04848; --sel:#6CB4FF;
+  --g1:#9ED9B6; --g2:#4FD08A; --g3:#1EE06E; --r1:#E9A3A3; --r2:#F26464; --r3:#FF2E2E;
+  --c-qb:#B4BCC2; --c-rb:#36D399; --c-wr:#6CB4FF; --c-te:#F2C14E;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
+.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
+h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:6px 0 0;letter-spacing:.005em;text-transform:uppercase;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+/* games view */
+.games{display:grid;grid-template-columns:228px minmax(0,1fr);gap:20px;align-items:start}
+.rail{display:grid;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px)}
+.game-btn{display:grid;gap:4px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:9px 12px;cursor:pointer}
+.game-btn:hover{background:var(--sunk)}
+.game-btn[aria-current="true"]{background:var(--surface);border-color:var(--faint)}
+.game-btn .m{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.game-btn .teams{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.02em}
+.game-btn .line{font-size:12.5px;color:var(--muted)}
+.mini{display:flex;height:4px;gap:2px}
+.mini i{display:block;border-radius:1px}
+.detail{display:grid;gap:18px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--faint);border-radius:9px;padding:20px;display:grid;gap:18px;min-width:0}
+.score{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:12px}
+.side{display:grid;gap:2px}
+.side.home{text-align:right}
+.code{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.03em;line-height:1}
+.pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
+.at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
+.winbar{display:grid;gap:6px}
+.plink .caret{display:inline-block;width:12px;color:var(--muted);font-size:11px}
+.plink.open{color:var(--sel)}
+tr.opened td{background:color-mix(in srgb,var(--sel) 8%,transparent)}
+tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 14px 16px;white-space:normal}
+.slider{display:grid;gap:12px;max-width:860px}
+.sl-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.sl-row{display:flex;align-items:center;gap:10px}
+.sl-row label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sl-row input[type=range]{flex:1;accent-color:var(--sel);height:28px;min-width:120px}
+.sl-step{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px}
+.sl-val{font-family:var(--display);font-size:26px;min-width:64px;text-align:right}
+.sl-out{display:grid;grid-template-columns:auto minmax(80px,1fr) auto;gap:14px;align-items:center}
+.sl-side{display:grid;gap:0}
+.sl-side span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.sl-side b{font-family:var(--display);font-size:34px;line-height:1}
+.sl-side em{font-style:normal;color:var(--muted);font-size:14px}
+.sl-side.under{text-align:right} .sl-side b{color:var(--ink)}
+.sl-meter{height:12px;border-radius:6px;background:color-mix(in srgb,var(--bad) 55%,transparent);overflow:hidden}
+.sl-meter i{display:block;height:100%;background:var(--good)}
+.lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
+/* degree shades: text */
+.g1{color:var(--g1)!important} .g2{color:var(--g2)!important} .g3{color:var(--g3)!important}
+.r1{color:var(--r1)!important} .r2{color:var(--r2)!important} .r3{color:var(--r3)!important}
+.g3,.r3{font-weight:700}
+/* degree shades: fills and row tints */
+.sl-meter{display:flex;gap:2px;background:var(--sunk)!important}
+.sl-meter i{display:block;height:100%}
+.sl-meter .f-g1{background:var(--g1)} .sl-meter .f-g2{background:var(--g2)} .sl-meter .f-g3{background:var(--g3)}
+.sl-meter .f-r1{background:var(--r1)} .sl-meter .f-r2{background:var(--r2)} .sl-meter .f-r3{background:var(--r3)} .sl-meter .f-n{background:var(--whisker)}
+tr.bg-g1 td{background:color-mix(in srgb,var(--g1) 6%,transparent)} tr.bg-g2 td{background:color-mix(in srgb,var(--g2) 10%,transparent)} tr.bg-g3 td{background:color-mix(in srgb,var(--g3) 15%,transparent)}
+tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)} tr.bg-r2 td{background:color-mix(in srgb,var(--r2) 10%,transparent)} tr.bg-r3 td{background:color-mix(in srgb,var(--r3) 15%,transparent)}
+.gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
+.gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
+.gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.ag{font-size:12px;font-weight:600;white-space:nowrap}
+.ag.up,.ag.up2{color:var(--good)} .ag.dn,.ag.dn2{color:var(--bad)} .ag.ok{color:var(--muted);font-weight:500}
+tr.agover td{background:color-mix(in srgb,var(--good) 11%,transparent)}
+tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.pos-d{color:var(--good)} .neg-d{color:var(--bad)}
+.agbar{position:relative;height:10px;min-width:120px;background:var(--sunk);border-radius:2px}
+.agbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.agbar b{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--ink)}
+.ftd{display:grid;gap:2px;border-top:1px solid var(--faint);padding-top:12px}
+.ftd-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.ftd-r{display:grid;grid-template-columns:minmax(0,1fr) 90px 46px 52px 36px;gap:10px;align-items:center;font-size:14px;padding:3px 0}
+.ftd-r .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ftd-r .pbar{min-width:0;height:8px}
+.ftd-r b{text-align:right;font-weight:600} .ftd-r > span:nth-child(4),.ftd-r > span:nth-child(5){text-align:right}
+.ftd-r.top .n{font-weight:600}
+.star{color:var(--accent);margin-right:5px}
+.winbar .bar{display:flex;height:10px;gap:2px}
+.winbar .bar i{display:block;border-radius:2px}
+.winbar .lbl{display:flex;justify-content:space-between;font-size:13px}
+.box{width:100%;border-collapse:collapse}
+.box td{padding:6px 4px;border-bottom:1px solid var(--faint)}
+.box tr:last-child td{border-bottom:0}
+.box td:first-child{text-align:left;font-weight:500}
+.box td:nth-child(2){text-align:center;color:var(--muted);font-size:13px}
+.box td:last-child{text-align:right;font-weight:500}
+.boxhead{display:grid;grid-template-columns:1fr auto 1fr;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.04em}
+.boxhead span:last-child{text-align:right}
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+.phead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.key{display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--muted);align-items:center}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key .kw{width:22px;height:2px;background:var(--whisker)}
+.key .kb{width:22px;height:10px;background:var(--band);border-radius:2px}
+.key .km{width:2px;height:14px;background:var(--ink)}
+
+/* tables */
+.tw{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+.t th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--faint);white-space:nowrap;vertical-align:bottom}
+.t td{padding:7px 8px;border-bottom:1px solid var(--faint);text-align:right;white-space:nowrap}
+.t th.l,.t td.l{text-align:left}
+.t td.name{font-weight:500;width:1%;padding-right:10px}   /* shrink to the longest name so the position tag sits beside it */
+.t td.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.t .grp td{border-bottom:0;padding-top:16px;text-align:left;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.04em}
+.t td.big{font-weight:600}
+.t th.sc{width:32%;min-width:130px}
+.tag.arch{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 6px;margin:3px 4px 0 0;cursor:help}
+.mxw{display:flex;flex-wrap:wrap;gap:3px 6px;margin:2px 0 0 18px}.mxl{font-size:11px;font-weight:700;white-space:nowrap;cursor:help}.mxl i{font-style:normal;font-weight:500;color:var(--muted)}.mxl.up{color:var(--good)}.mxl.dn{color:var(--bad)}
+.pos{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px}
+.strip{position:relative;height:20px;min-width:130px;cursor:default}
+.strip .g{position:absolute;top:0;bottom:0;width:1px;background:var(--faint)}
+.strip .w{position:absolute;top:9px;height:2px;background:var(--whisker)}
+.strip .b{position:absolute;top:4px;height:12px;background:var(--band);border-radius:2px}
+.strip .m{position:absolute;top:2px;width:2px;height:16px;background:var(--ink);transform:translateX(-1px)}
+.axis{position:relative;height:14px;min-width:130px;font-size:11px;letter-spacing:0;text-transform:none}
+.axis span{position:absolute;bottom:0}
+.pbar{position:relative;height:10px;min-width:100px;background:var(--sunk);border-radius:2px}
+.pbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.dv{position:relative;height:12px;min-width:150px;background:var(--sunk);border-radius:2px}
+.dv i{position:absolute;top:0;bottom:0;border-radius:2px}
+.dv .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.controls label{font-size:13px;color:var(--muted)}
+select,input[type=search]{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px}
+input[type=search]{min-width:200px}
+.empty{padding:28px 8px;color:var(--muted)}
+.betgrid{display:grid;gap:8px}
+.betrow{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center}
+.bets{display:flex;flex-wrap:wrap;gap:6px}
+.bet{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px}
+.bet b{font-family:var(--display);font-size:17px;font-weight:700}
+.bet small{color:var(--muted);font-size:12px}
+.bet i{font-style:normal;color:var(--accent);font-weight:700;margin-left:2px}
+.bet.on{border-color:var(--accent);background:rgba(54,211,153,.12)}
+.bet:disabled{cursor:default}
+.bet:disabled i{display:none}
+@media (max-width:520px){.betrow{grid-template-columns:1fr;gap:4px}.bets{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bet{justify-content:space-between;gap:4px;padding:5px 8px;font-size:12.5px;min-width:0}.bet b{font-size:15px}.bet small{display:none}.bet span{white-space:nowrap}}
+.sgp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.sgp{border:1px solid var(--faint);border-radius:9px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--bg)}
+.sgp h3{font-family:var(--display);font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
+.sgp h3 small{font-family:var(--body);font-size:12px;text-transform:none;letter-spacing:0;color:var(--muted);font-weight:400}
+.sgp ol{margin:0;padding-left:22px;display:grid;gap:3px;font-size:14px}
+.sgp li .r{float:right;color:var(--muted);font-size:12.5px;margin-left:8px}
+.sgp li.after{list-style:none;margin-left:-22px;border-top:1px dashed var(--faint);padding-top:4px;margin-top:2px;font-size:12px;color:var(--muted)}
+.sgp table{width:100%;border-collapse:collapse;font-size:13.5px}
+.sgp td,.sgp th{padding:4px 6px;text-align:right;border-top:1px solid var(--faint)}
+.sgp th{font-weight:500;color:var(--muted);font-size:12px}
+.sgp td:first-child,.sgp th:first-child{text-align:left}
+.sgp td:first-child{white-space:nowrap}
+.outlook{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:13.5px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
+.outlook .good{color:var(--good)}
+.dch .good,.dcs .good{color:var(--good)}.dcp li.pth{margin-top:4px}.dcp li.pth:first-child{margin-top:0}.psc{font-size:12px;color:var(--muted);margin-left:0!important}.psc i{font-style:normal;margin-left:4px}.dch .bad{color:var(--bad)}
+.sgp.exp{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--band)}
+.gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
+.gbtn:hover{border-color:var(--accent);color:var(--accent)}
+.sp-list{display:grid;gap:0}
+.exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.gsh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font-size:15px}.gsh .big{font-size:19px;font-weight:700}
+.scsw{margin:4px 0 2px}.scsw button small{opacity:.7;margin-left:5px;font-size:11.5px}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.scteam{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}.scteam h3{margin:0;font-size:16px}
+.scc{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:8px;align-content:start;min-width:0}
+.sck{margin:2px 0;justify-self:start;width:fit-content}.dcp li.lwhy{gap:4px;flex-wrap:wrap;margin:-2px 0 2px 0}.dcp li.lwhy span{margin-left:0;font-size:11px}.scc .ladh b{font-size:15px}.ladc.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.ladc.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.sct{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.sct th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.sct th:first-child,.sct td:first-child{text-align:left}
+.sct td{text-align:right;padding:4px;border-top:1px solid var(--faint);white-space:nowrap}.sct caption{text-align:left;font-size:12px;color:var(--muted);padding-bottom:2px}
+.sct td a{color:inherit}.sct small{display:block;font-size:10.5px;color:var(--muted)}.sct .mainl{font-size:10px;color:var(--muted);margin-left:4px}
+.offm{display:inline-block;font-size:10px;font-weight:700;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-top:2px}
+.offbox{display:grid;gap:6px;margin-top:10px}.offl{display:flex;flex-wrap:wrap;gap:6px}
+.offc{border:1px solid var(--faint);border-radius:999px;padding:3px 10px;font-size:12.5px}.offc a{color:inherit;text-decoration:none}.offc i{font-style:normal;color:var(--muted);margin-left:4px}
+.offc.cheap{border-color:color-mix(in srgb,var(--good) 45%,transparent)}.offc.cheap b{color:var(--good)}.offc.rich b{color:var(--bad)}.offc.mine{border-width:2px}
+.sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
+.lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
+.ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
+.fm-off{border-top:1px solid var(--faint);padding-top:14px;margin-top:14px}.fm-off:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.fm-off h3{margin:0 0 10px;font-family:var(--display);font-size:20px;letter-spacing:.02em;text-transform:uppercase}.fm-off h3 small{font-family:var(--body);font-size:13px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:500}
+.fm-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.fm-grid{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:5px;align-items:stretch}
+.fm-grid .rl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);align-self:center;padding-right:4px;max-width:92px;line-height:1.25}
+.fm-grid .cl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center}
+.fm-c{border-radius:8px;padding:8px 6px;text-align:center;border:1px solid var(--faint);background:var(--sunk);min-height:58px;display:flex;flex-direction:column;justify-content:center}
+.fm-c b{font-family:var(--display);font-size:22px;line-height:1}.fm-c small{display:block;font-size:11.5px;margin-top:3px;color:var(--ink);opacity:.85}
+.fm-c.out{outline:2px dashed #F2C14E;outline-offset:-2px}.fm-c .ob{display:block;font-size:10px;font-weight:700;color:#F2C14E;margin-top:2px;letter-spacing:.02em}
+.fm-miss{font-size:13px;margin:0 0 10px;padding:8px 10px;border:1px dashed #F2C14E;border-radius:8px;color:var(--ink)}.fm-miss small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.fm-c .wh{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--ink);opacity:.92;overflow:hidden;text-overflow:ellipsis}.fm-c .wh em{font-style:normal;color:var(--muted)}
+.fm-run .fm-c .wh{font-size:10px}
+@media (max-width:760px){.fm-c .wh{font-size:10px}.fm-c .wh span:nth-child(n+2){display:none}}
+.fm-c.thin{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(127,127,127,.12) 6px 12px)}
+.fm-los{grid-column:1/-1;border-top:2px solid var(--accent);margin:2px 0;position:relative}.fm-los span{position:absolute;right:0;top:-9px;font-size:10px;color:var(--accent);background:var(--surface);padding:0 4px;letter-spacing:.06em}
+.fm-run{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}.fm-run .cl{grid-row:2}
+.fm-run .fm-c{min-height:52px;padding:6px 2px}.fm-run .fm-c b{font-size:18px}
+.fm-sub{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:2px 0 6px}
+.fm-list{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:14px}.fm-list li{line-height:1.4}.fm-list li b{font-weight:700}
+.fm-list .up{color:var(--good);font-weight:800}.fm-list .dn{color:var(--bad);font-weight:800}
+.fm-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}.fm-key i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+@media (max-width:760px){.fm-wrap{grid-template-columns:minmax(0,1fr)}.fm-run{gap:3px}.fm-run .fm-c b{font-size:15px}.fm-run .fm-c small{font-size:10px}.fm-grid .rl{max-width:64px;font-size:10px}}
+.sp-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--faint)}
+.sp-row:first-child{border-top:0}
+.tierb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;white-space:nowrap;margin-top:3px}
+.tierb.t1{background:var(--accent);color:var(--bg)}
+.tierb.t2{background:#F2C14E;color:var(--bg)}
+.tierb.t3{background:var(--sunk);color:var(--muted);border:1px solid var(--faint)}
+.sp-name{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sp-name b{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:.01em}
+.sp-name span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sp-facts{font-size:13.5px;margin-top:3px}
+.sp-why{font-size:13.5px;color:#F2C14E;margin-top:2px}
+.sp-why.neg{color:var(--r2)}
+.gsw{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.gsw::-webkit-scrollbar{display:none}
+.gsw button{white-space:nowrap}
+@media (max-width:520px){.sp-row{grid-template-columns:1fr;gap:4px}.tierb{justify-self:start;margin-top:0}.sp-name b{font-size:19px}}
+.legsrc.both{color:var(--good);border-color:var(--good)}
+.legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
+@media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
+.plink{border:0;background:none;padding:0;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
+.plink:hover{text-decoration-color:var(--accent)}
+.fo-res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fo-side{display:grid;gap:2px;background:var(--sunk);border-radius:8px;padding:14px 16px}
+.fo-p{font-family:var(--display);font-weight:700;font-size:52px;line-height:1}
+.fo-o{font-family:var(--display);font-weight:600;font-size:24px;color:var(--muted)}
+.t tr.cur td{background:var(--sunk)}
+#fo-player{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;width:min(340px,100%)}
+#fo-line{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;width:90px}
+.mm{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:500;border:1px solid currentColor;border-radius:4px;padding:0 5px;margin:2px 4px 0 0;white-space:nowrap;cursor:help}
+.mm.up{color:var(--good)} .mm.down{color:var(--bad)} .mm.strong{font-weight:700}
+.chips{display:flex;flex-wrap:wrap}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.mcell{background:var(--sunk);border-radius:7px;padding:8px 10px;display:grid;gap:1px}
+.mcell .v{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.1}
+.mcell .v.up{color:var(--good)} .mcell .v.down{color:var(--bad)}
+.dmiss{margin:0;font-size:13px;color:var(--ink)} .dmiss b{color:var(--r2);font-weight:600}
+.mlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.mlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.mlist .who{font-weight:600;min-width:170px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
+.mmeta{display:none}
+.pchips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+details.pfold{margin-bottom:14px}
+details.pfold > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:1px solid var(--faint);border-radius:12px;background:var(--surface)}
+details.pfold > summary::-webkit-details-marker{display:none}
+details.pfold > summary h2{margin:0}
+details.pfold > summary .chev{color:var(--muted);transition:transform .15s}
+details.pfold[open] > summary{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+details.pfold:not([open]) > summary .chev{transform:rotate(-90deg)}
+details.pfold > section.panel{border-top-left-radius:0;border-top-right-radius:0;border-top:0;margin-top:0}
+.kps{display:none}
+.atgp td a{color:var(--accent);text-decoration:none;white-space:nowrap}
+.atgp td a:hover{text-decoration:underline}
+.rr{border:1px solid var(--faint);border-radius:9px;padding:10px 12px;margin:6px 0 12px;background:var(--bg)}
+details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:pointer;color:var(--ink);font-size:13px;margin-bottom:4px}
+@media (max-width:640px){
+  /* player tables become two-line rows: name + chips + a small details line on the left, the key number big on the right */
+  .pt,.pt tbody{display:block;width:100%}
+  .pt thead{display:none}
+  .pt tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pt tbody tr.grp,.pt tbody tr.xrow{display:block;padding:0;border:0}
+  .pt tbody tr.grp td,.pt tbody tr.xrow td{display:block;padding:10px 2px 4px!important}
+  .pt td{display:none;border:0!important;padding:0!important;text-align:left}
+  .pt td.name{display:block;grid-column:1;min-width:0;width:auto;white-space:normal}
+  .pt td.kp{display:block;grid-column:2;grid-row:1;text-align:right;font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
+  .pt td.kp b{font-weight:700}
+  .pt td.kp .kps{display:block;font-family:var(--body);font-size:11.5px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.3}
+  .pt .mmeta{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;line-height:1.35}
+  .pt .mmeta b{color:var(--ink);font-weight:600}
+  .tw:has(> .pt){overflow:visible}
+  /* pairs: stacked cards */
+  .pairs,.pairs tbody{display:block;width:100%}
+  .pairs thead{display:none}
+  .pairs tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pairs td{border:0!important;padding:0!important;white-space:normal!important}
+  .pairs td:first-child{grid-column:1 / -1}
+  .pairs td.big{grid-column:1;font-size:14px;text-align:left}
+  .pairs td.big::after{content:" chance";color:var(--muted);font-weight:400;font-size:12px}
+  .pairs td.pay{grid-column:1;grid-row:3;text-align:left;color:var(--muted);font-size:12.5px}
+  .pairs td.pay::after{content:" fair payout"}
+  .pairs td.add{grid-column:2;grid-row:2 / span 2;align-self:center}
+  .pairs tr.slate td{grid-column:1 / -1}
+  .tw:has(> .pairs){overflow:visible}
+  .atgp td.pay::after{content:" payout"}
+  .atgp td.edge{grid-column:1;text-align:left;font-size:12.5px}
+  .atgp td.edge::after{content:" edge";font-weight:400;color:var(--muted)}
+  .atgp td.add{grid-row:2 / span 3}
+  /* chips wrap instead of running off the edge; Kalshi pattern chips live in the tap-open panel on phones */
+  .pt td.name .pat-high_total,.pt td.name .pat-cheap_over,.pt td.name .pat-low_rung,.pt td.name .pat-low_total{display:none}
+  .pt td.name .vtag{white-space:normal;line-height:1.35;margin:3px 4px 0 0}
+  /* first-TD list: full names, no bar */
+  .ftd-r{grid-template-columns:minmax(0,1fr) 46px 52px 36px;gap:8px}
+  .ftd-r .pbar{display:none}
+  .ftd-r .n{white-space:normal}
+  .ftd-r .n .small{display:block}
+}
+.dvbar{position:relative;height:10px;min-width:150px;background:var(--sunk);border-radius:2px}
+.dvbar i{position:absolute;top:0;bottom:0;border-radius:2px}
+.dvbar .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.flagbtn{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px}
+.flagbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.wx-flag{color:var(--bad);font-weight:600}
+.sitenav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13.5px}
+.sitenav a{color:var(--muted);text-decoration:none;font-weight:500}
+.sitenav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.sitenav a[aria-current="page"]{color:var(--ink)}
+.mix{display:flex;height:12px;gap:2px;min-width:150px}
+.mix i{display:block;border-radius:2px}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.mm.tagn{color:var(--muted);cursor:help}
+.t td .rzchips{min-width:240px;max-width:360px;white-space:normal;justify-content:flex-start}
+.t td,.t th{padding-inline:6px}
+.rzline{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;margin-left:12px;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;color:var(--muted)}
+.rzline .mm{margin:0}
+footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
+#tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
+#tip b{font-weight:600}
+@media (max-width:980px){.two{grid-template-columns:1fr}}
+@media (max-width:1100px) and (min-width:861px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px;width:auto;flex:0 0 auto}}
+@media (max-width:860px){
+  .games{grid-template-columns:1fr}
+  /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
+  .rail{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail::-webkit-scrollbar{display:none}
+  .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
+  .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
+  .game-btn .teams{font-size:15px}
+  .game-btn .m{gap:6px}
+  .game-btn > .line, .game-btn .mini{display:none}
+  .pts{font-size:48px}
+  h1{font-size:34px}
+}
+@media (prefers-reduced-motion:no-preference){.game-btn,.tabs button,.seg button{transition:background .15s,color .15s}}
+
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--faint);margin-inline:-20px;padding-inline:20px;margin-bottom:6px}
+.topbar .row{max-width:1560px;margin:0 auto;display:flex;align-items:center;gap:4px 6px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.topbar .row::-webkit-scrollbar{display:none}
+.topbar .r1{padding-block:9px 7px}
+.topbar .r2{padding-block:0 8px}
+.topbar .brand{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;margin-right:14px}
+.topbar .sp{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.05em;color:var(--muted);text-decoration:none;padding:4px 11px;border-radius:7px}
+.topbar .sp:hover{color:var(--ink);background:var(--sunk)}
+.topbar .sp[aria-current="true"]{color:var(--bg);background:var(--ink)}
+.topbar .soon{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-left:5px;opacity:.75}
+.topbar .sp[aria-current="true"] .soon{opacity:.85}
+.topbar .grow{flex:1}
+@media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}.topbar .help.guide{display:none}}
+.topbar .help{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:5px 9px;border-radius:6px}
+@media (max-width:520px){.topbar .help{padding:5px 5px;font-size:12.5px}.topbar .sp{padding:4px 5px;font-size:15px}}   /* after the base rule so it applies; fits Screener / Parlays / Profit */
+.topbar .help:hover,.topbar .help[aria-current="page"]{color:var(--ink);background:var(--sunk)}
+.topbar a.lnk{color:var(--muted);text-decoration:none;font-weight:500;font-size:14px;padding:5px 10px;border-radius:6px}
+.topbar a.lnk:hover{color:var(--ink);background:var(--sunk)}
+.topbar a.lnk[aria-current="page"]{color:var(--ink);background:var(--sunk);box-shadow:inset 0 -2px 0 var(--accent)}
+.newbie{max-width:1560px;margin:0 auto 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sunk);border-radius:8px;padding:9px 14px;font-size:14px}
+.newbie a{color:var(--accent);font-weight:600;text-decoration:none}
+.newbie button{margin-left:auto;border:0;background:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 6px}
+#sitenav{display:none}
+/* phones: keep every page inside the screen; wide tables scroll inside their own box */
+.wrap,main,.panel,.gcard,.sides>div,.detail,.card{min-width:0}
+.wrap,.panel,.detail,.gcard{grid-template-columns:minmax(0,1fr)}
+@media (max-width:760px){
+  header{align-items:flex-start}
+  header .tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  header .tabs button{white-space:nowrap;flex:0 0 auto}
+  .games{grid-template-columns:minmax(0,1fr)!important}
+  .rail{position:static!important;display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .rail .game-btn{flex:0 0 auto;min-width:168px;border-color:var(--faint)}
+  .two,.fo-res{grid-template-columns:minmax(0,1fr)!important}
+  .score .pts{font-size:48px}
+  .panel{padding:14px}
+  .picks-key{font-size:12px;gap:8px}
+  .mlc{min-width:92px;padding:6px 9px}
+  .mlc b{font-size:17px}
+  h1{font-size:32px}
+}
+
+.hero{display:grid;gap:8px;padding-block:14px 4px}
+.hero h1{font-size:44px}
+.sub{max-width:66ch;color:var(--muted);font-size:16px;line-height:1.55;margin:0}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px;margin:6px 0 0;padding:0;list-style:none;counter-reset:s}
+.steps li{background:var(--surface);border:1px solid var(--faint);border-radius:10px;padding:14px 16px;display:grid;gap:4px;counter-increment:s}
+.steps li::before{content:counter(s);font-family:var(--display);font-weight:700;font-size:26px;line-height:1;color:var(--accent)}
+.steps b{font-weight:600}
+.steps span{color:var(--muted);font-size:14px;line-height:1.5}
+.steps a{color:var(--accent);font-weight:600;text-decoration:none}
+.sechead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:6px}
+.sechead h2{font-size:24px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--faint);border-radius:10px;padding:20px;display:grid;gap:12px}
+.card.soon{background:none;border-style:dashed}
+.ch{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.ch a{font-weight:600;color:var(--accent);text-decoration:none}
+.sport{font-family:var(--display);font-weight:700;font-size:30px;letter-spacing:.04em}
+.badge{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;border-radius:999px;padding:3px 9px;background:var(--sunk);color:var(--muted)}
+.badge.live{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}
+.lead{margin:0;font-size:15px;color:var(--muted)}
+.card h3{margin:4px 0 0;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.list{list-style:none;margin:0;padding:0;display:grid}
+.list li{display:grid;grid-template-columns:1fr auto 64px;gap:12px;align-items:baseline;padding:8px 2px;border-bottom:1px solid var(--faint)}
+.list li:last-child{border-bottom:0}
+.list small{color:var(--muted);font-size:12.5px;margin-left:4px}
+.list b{font-family:var(--display);font-size:22px;font-weight:700}
+.list em{font-style:normal;color:var(--muted);text-align:right}
+.pages{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.pages a{display:grid;gap:1px;padding:9px 12px;border-radius:8px;border:1px solid var(--faint);text-decoration:none;color:var(--ink)}
+.pages a:hover{border-color:var(--accent)}
+.pages b{font-weight:600}
+.pages span{font-size:13px;color:var(--muted)}
+.acc{margin:0;padding:12px 14px;border-radius:8px;background:var(--sunk);font-size:14px;line-height:1.5}
+.acc a{color:var(--accent);font-weight:600;text-decoration:none}
+.guide{display:grid;gap:18px}
+.guide section{background:var(--surface);border:1px solid var(--faint);border-radius:10px;padding:20px;display:grid;gap:12px}
+.guide h2{font-size:24px}
+.guide dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px 26px;margin:0}
+.guide dt{font-weight:600;margin-bottom:2px}
+.guide dd{margin:0;color:var(--muted);line-height:1.55;font-size:14.5px}
+.guide a{color:var(--accent)}
+.toc{display:flex;flex-wrap:wrap;gap:8px}
+.toc a{padding:6px 12px;border:1px solid var(--faint);border-radius:999px;text-decoration:none;color:var(--ink);font-size:14px}
+.toc a:hover{border-color:var(--accent)}
+.plan{margin:0;padding-left:20px;color:var(--muted);line-height:1.7}
+.mk-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.mk-q{background:var(--surface);color:var(--ink);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;min-width:0;flex:1 1 180px;max-width:280px}
+.mt{display:grid;gap:12px}
+.mt-game{padding:0;gap:0}
+.mt-game>summary{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:baseline;gap:4px 14px;padding:14px 18px;cursor:pointer;list-style:none}
+.mt-game>summary::before,.mt-sub>summary::before{content:"▸";color:var(--muted);margin-right:8px}
+.mt-game[open]>summary::before,.mt-sub[open]>summary::before{content:"▾"}
+.mt-game[open]>summary{border-bottom:1px solid var(--faint)}
+.mt-g b{font-family:var(--display);font-size:22px;font-weight:600;letter-spacing:.03em}
+.mt-g small{color:var(--muted);margin-left:10px;font-size:13px}
+.mt-meta{margin-left:auto;color:var(--muted);font-size:13px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.mt-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:14px 18px 4px}
+.mt-sub{border-top:1px solid var(--faint)}
+.mt-sub>summary{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:4px 14px;padding:9px 18px;cursor:pointer;list-style:none}
+.mt-sub>summary:hover{background:var(--sunk)}
+.mt-p b{font-weight:600}
+.mt-p small{color:var(--muted);font-size:12.5px;margin-left:8px}
+.mt-rows{padding:0 18px 10px 34px;container-type:inline-size}
+.mt-rows .mkx-r:first-child{border-top:0}
+.mt-chip{font-weight:700;font-size:12.5px}
+.mt-game summary::-webkit-details-marker,.mt-sub summary::-webkit-details-marker{display:none}
+@media (max-width:760px){ .mt-rows{padding:0 10px 10px 14px} .mt-game>summary,.mt-sub>summary{padding-inline:12px} .mt-label{padding-inline:12px} .mk-q{max-width:none} }
+
+.mk-thin{display:inline-block;margin-left:4px;padding:0 6px;border-radius:9px;border:1px solid var(--sel);color:var(--sel);font-size:11px;font-weight:600;line-height:16px}
+.mk-score{padding-top:14px;padding-bottom:14px}
+.mk-score summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;list-style:none}
+.mk-score summary::before{content:"▸";color:var(--muted)} .mk-score[open] summary::before{content:"▾"}
+.mk-score summary b{font-family:var(--display);font-size:19px;font-weight:600}
+.mk-score[open] summary{margin-bottom:10px}
+.mk-edge.weak b,.mk-edge.weak small{color:var(--muted)}
+.mk-warn{color:var(--r1)!important;font-weight:600;letter-spacing:0!important;font-size:10.5px!important}
+.mk-sort{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.mk-sort select{background:var(--surface);color:var(--ink);border:1px solid var(--faint);border-radius:6px;padding:5px 8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr));gap:10px}
+.tile{background:var(--surface);border:1px solid var(--faint);border-radius:10px;padding:12px 14px;display:grid;gap:2px}
+.tile .v{font-family:var(--display);font-weight:700;font-size:30px;line-height:1}
+.tile .s{font-size:12.5px;color:var(--muted)}
+.mk-head,.mk-row{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(150px,1.4fr) 92px 120px;gap:14px;align-items:center}
+.mk-head{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:0 10px 6px;border-bottom:1px solid var(--faint)}
+.mk-head span:nth-child(n+3){text-align:right}
+.mk-row{padding:10px;border-bottom:1px solid var(--faint);cursor:pointer;border-radius:6px}
+.mk-row:hover,.mk-row.open{background:var(--sunk)}
+.mk-name{display:grid;gap:2px;min-width:0}
+.mk-name b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-name small{color:var(--muted);font-size:12.5px}
+.mk-cmp{display:grid;gap:4px}
+.mk-nums{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.mk-nums b{color:var(--ink);font-weight:600}
+.mk-vs{position:relative;height:8px;border-radius:4px;background:var(--sunk);overflow:visible}
+.mk-row:hover .mk-vs,.mk-row.open .mk-vs{background:var(--surface)}
+.mk-vs i{position:absolute;left:0;top:0;bottom:0;background:var(--whisker);border-radius:4px}
+.mk-vs b{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1.5px;background:var(--sel);border-radius:2px}
+.mk-edge{text-align:right;display:grid}
+.mk-edge b{font-family:var(--display);font-size:22px;line-height:1}
+.mk-edge small{font-size:11px;font-weight:700;letter-spacing:.06em}
+.mk-money{text-align:right;display:grid}
+.mk-money small{color:var(--muted);font-size:11.5px}
+.mk-liq{font-weight:600;font-size:15px}
+.mk-liq.deep{color:var(--ink)} .mk-liq.ok{color:var(--muted)} .mk-liq.thin{color:var(--r1)}
+.mk-game{font-family:var(--display);font-size:18px;font-weight:600;letter-spacing:.03em;padding:14px 10px 4px}
+.mk-det{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:8px 18px;padding:10px 12px 16px;background:var(--sunk);border-radius:0 0 8px 8px;margin-top:-4px}
+.mk-kv{display:grid;gap:1px}
+.mk-kv span{font-size:12px;color:var(--muted)}
+.mk-kv b{font-weight:600}
+.mk-book{grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.mk-lv{display:grid;grid-template-columns:50px 1fr 70px;gap:8px;font-size:13px;padding:2px 0}
+.mk-lv span:last-child{text-align:right}
+.mk-help{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px 24px;margin:0}
+.mk-help dt{font-weight:600} .mk-help dd{margin:0;color:var(--muted);font-size:14px;line-height:1.5}
+@media (max-width:760px){
+  .mk-head{display:none}
+  .mk-row{grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"name edge" "cmp money";gap:8px 12px}
+  .mk-name{grid-area:name} .mk-edge{grid-area:edge} .mk-cmp{grid-area:cmp} .mk-money{grid-area:money}
+  .mk-name b{white-space:normal}
+  .tiles{grid-template-columns:1fr 1fr}
+  .tile .v{font-size:24px}
+}
+
+.g1{color:var(--g1)} .g2{color:var(--g2)} .g3{color:var(--g3)} .r1{color:var(--r1)} .r2{color:var(--r2)} .r3{color:var(--r3)}
+tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+@media (max-width:600px){.hero h1{font-size:30px}.cards{grid-template-columns:1fr}.card{padding:16px}.list li{grid-template-columns:1fr auto 54px;gap:8px}.wrap,.hero,.card,.steps li{min-width:0}}
+</style>
+<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA</a><a class="sp" href="mlb/index.html">MLB</a><span class="grow"></span><a class="help" href="screener.html" aria-current="page">Screener</a><a class="help" href="parlays.html">Parlays</a><a class="help" href="profit.html">Profit</a><a class="help guide" href="guide.html">How to read</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
+<div class="wrap"><style>
+.sc-bar{display:grid;gap:8px;margin:6px 0 10px}.sc-grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-l{font-size:12px;color:var(--muted);margin-right:2px}
+.sc-chip{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer}
+.sc-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sc-in select,.sc-in input{background:var(--sunk);color:var(--ink);border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font:500 13.5px var(--body)}
+.sc-in input{flex:1 1 180px;min-width:0}.sc-reset{background:none;border:0;color:var(--muted);font:600 12.5px var(--body);cursor:pointer;text-decoration:underline}
+.sc-count{font-size:13px;color:var(--muted);margin:4px 0 8px}.sc-count b{color:var(--ink)}
+.sc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 14px;align-items:center;padding:9px 4px;border-top:1px solid var(--faint)}
+.sc-who b{font-size:14.5px}.sc-m{font-size:12px;color:var(--muted)}.sc-bet{font-size:13.5px;margin-top:2px}
+.sc-num{text-align:right;cursor:help}.sc-e{display:block;font-family:var(--display);font-size:19px;font-weight:700}.sc-e.good{color:var(--good)}.sc-e.bad{color:var(--bad)}
+.sc-s{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.sc-px{white-space:nowrap;border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);text-decoration:none;min-width:118px;text-align:center}
+.sc-px b{font-size:14.5px}a.sc-px:hover{border-color:var(--accent)}.sc-px.nl{color:var(--muted)}
+.sc-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:0 5px;margin-left:4px;border:1px solid currentColor;vertical-align:1px}
+.sc-tag.v{color:var(--good)}.sc-tag.lc{color:var(--away)}.sc-tag.off{color:#F2C14E}.sc-tag.alt{color:var(--muted)}
+.sc-more{display:block;margin:12px auto;border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:7px 18px;font:600 13.5px var(--body);cursor:pointer}
+.sc-empty{color:var(--muted);padding:16px 4px}
+@media (max-width:560px){.sc-row{grid-template-columns:minmax(0,1fr) auto}.sc-who{grid-column:1 / -1}.sc-num{text-align:left}.sc-px{justify-self:end}}
+</style><header><div><div class="eyebrow">NFL · NBA · NHL · overs</div><h1>Odds screener</h1></div></header><p class="lead" style="margin:0 0 6px">Every over price on today’s slates against the fair price: tap the chips to narrow it down, tap a price to open the bet. Edge = our market-anchored chance × the payout − 1 (same rules as the sport pages: the sharp consensus without the book you’re betting, our number at its tested weight).</p><div id="screener"><p class="sc-empty">Loading prices…</p></div><script>window.SCREEN_GAMES = {"nfl":{"2026_07_NE_CHI":{"lab":"NE @ CHI","start":"2026-10-22T20:15:00-04:00","pl":{"dandre swift":["CHI","D'Andre Swift"],"jahdae walker":["CHI","Jahdae Walker"],"zavion thomas":["CHI","Zavion Thomas"],"colston loveland":["CHI","Colston Loveland"],"sam roush":["CHI","Sam Roush"],"roschon johnson":["CHI","Roschon Johnson"],"rome odunze":["CHI","Rome Odunze"],"cole kmet":["CHI","Cole Kmet"],"luther burden":["CHI","Luther Burden III"],"kalif raymond":["CHI","Kalif Raymond"],"caleb williams":["CHI","Caleb Williams"],"kyle williams":["NE","Kyle Williams"],"hunter henry":["NE","Hunter Henry"],"corey kiner":["NE","Corey Kiner"],"drake maye":["NE","Drake Maye"],"rhamondre stevenson":["NE","Rhamondre Stevenson"],"aj brown":["NE","A.J. Brown"],"demario douglas":["NE","DeMario Douglas"],"eli raridon":["NE","Eli Raridon"],"efton chism":["NE","Efton Chism III"],"treveyon henderson":["NE","TreVeyon Henderson"]}},"2026_07_PIT_NO":{"lab":"PIT @ NO","start":"2026-10-25T09:30:00-04:00","pl":{"devaughn vele":["NO","Devaughn Vele"],"noah fant":["NO","Noah Fant"],"chris olave":["NO","Chris Olave"],"tyler shough":["NO","Tyler Shough"],"juwan johnson":["NO","Juwan Johnson"],"cj donaldson":["NO","CJ Donaldson"],"oscar delp":["NO","Oscar Delp"],"alvin kamara":["NO","Alvin Kamara"],"kendre miller":["NO","Kendre Miller"],"bryce lance":["NO","Bryce Lance"],"dk metcalf":["PIT","DK Metcalf"],"aaron rodgers":["PIT","Aaron Rodgers"],"ben skowronek":["PIT","Ben Skowronek"],"jaylen warren":["PIT","Jaylen Warren"],"rico dowdle":["PIT","Rico Dowdle"],"pat freiermuth":["PIT","Pat Freiermuth"],"travis homer":["PIT","Travis Homer"],"darnell washington":["PIT","Darnell Washington"],"kaden wetjen":["PIT","Kaden Wetjen"],"germie bernard":["PIT","Germie Bernard"],"lew nichols":["PIT","Lew Nichols III"]}},"2026_07_CIN_BAL":{"lab":"CIN @ BAL","start":"2026-10-25T13:00:00-04:00","pl":{"rasheen ali":["BAL","Rasheen Ali"],"josh cuevas":["BAL","Josh Cuevas"],"justice hill":["BAL","Justice Hill"],"rashod bateman":["BAL","Rashod Bateman"],"lajohntay wester":["BAL","LaJohntay Wester"],"devontez walker":["BAL","Devontez Walker"],"zay flowers":["BAL","Zay Flowers"],"elijah sarratt":["BAL","Elijah Sarratt"],"jakobi lane":["BAL","Ja'Kobi Lane"],"mark andrews":["BAL","Mark Andrews"],"tyler huntley":["BAL","Tyler Huntley"],"derrick henry":["BAL","Derrick Henry"],"chase brown":["CIN","Chase Brown"],"drew sample":["CIN","Drew Sample"],"erick all":["CIN","Erick All"],"colbie young":["CIN","Colbie Young"],"mitchell tinsley":["CIN","Mitchell Tinsley"],"tahj brooks":["CIN","Tahj Brooks"],"jamarr chase":["CIN","Ja'Marr Chase"],"dohnte meyers":["CIN","Dohnte Meyers"],"mike gesicki":["CIN","Mike Gesicki"],"joe burrow":["CIN","Joe Burrow"],"tee higgins":["CIN","Tee Higgins"],"samaje perine":["CIN","Samaje Perine"]}},"2026_07_CLE_TEN":{"lab":"CLE @ TEN","start":"2026-10-25T13:00:00-04:00","pl":{"kylen granson":["TEN","Kylen Granson"],"chimere dike":["TEN","Chimere Dike"],"tony pollard":["TEN","Tony Pollard"],"elic ayomanor":["TEN","Elic Ayomanor"],"nicholas singleton":["TEN","Nicholas Singleton"],"julius chestnut":["TEN","Julius Chestnut"],"cam ward":["TEN","Cam Ward"],"gunnar helm":["TEN","Gunnar Helm"],"tyjae spears":["TEN","Tyjae Spears"],"daniel bellinger":["TEN","Daniel Bellinger"],"carnell tate":["TEN","Carnell Tate"],"wandale robinson":["TEN","Wan'Dale Robinson"],"calvin ridley":["TEN","Calvin Ridley"],"harold fannin":["CLE","Harold Fannin Jr."],"isaiah bond":["CLE","Isaiah Bond"],"blake whiteheart":["CLE","Blake Whiteheart"],"jaleel mclaughlin":["CLE","Jaleel McLaughlin"],"kc concepcion":["CLE","KC Concepcion"],"michael burton":["CLE","Michael Burton"],"deshaun watson":["CLE","Deshaun Watson"],"denzel boston":["CLE","Denzel Boston"],"jerry jeudy":["CLE","Jerry Jeudy"],"malachi corley":["CLE","Malachi Corley"],"quinshon judkins":["CLE","Quinshon Judkins"]}},"2026_07_IND_MIN":{"lab":"IND @ MIN","start":"2026-10-25T13:00:00-04:00","pl":{"gavin bartholomew":["MIN","Gavin Bartholomew"],"tj hockenson":["MIN","T.J. Hockenson"],"demond claiborne":["MIN","Demond Claiborne"],"jordan addison":["MIN","Jordan Addison"],"myles price":["MIN","Myles Price"],"ben yurosek":["MIN","Ben Yurosek"],"aaron jones":["MIN","Aaron Jones"],"justin jefferson":["MIN","Justin Jefferson"],"deejay dallas":["MIN","DeeJay Dallas"],"jauan jennings":["MIN","Jauan Jennings"],"kyler murray":["MIN","Kyler Murray"],"tai felton":["MIN","Tai Felton"],"laquon treadwell":["IND","Laquon Treadwell"],"daniel jones":["IND","Daniel Jones"],"tyler warren":["IND","Tyler Warren"],"will mallory":["IND","Will Mallory"],"seth mcgowan":["IND","Seth McGowan"],"deion burks":["IND","Deion Burks"],"ashton dulin":["IND","Ashton Dulin"],"josh downs":["IND","Josh Downs"],"mo aliecox":["IND","Mo Alie-Cox"],"keenan allen":["IND","Keenan Allen"],"dj giddens":["IND","DJ Giddens"],"pharaoh brown":["IND","Pharaoh Brown"],"jonathan taylor":["IND","Jonathan Taylor"]}},"2026_07_MIA_NYJ":{"lab":"MIA @ NYJ","start":"2026-10-25T13:00:00-04:00","pl":{"tim patrick":["NYJ","Tim Patrick"],"jeremy ruckert":["NYJ","Jeremy Ruckert"],"breece hall":["NYJ","Breece Hall"],"garrett wilson":["NYJ","Garrett Wilson"],"omar cooper":["NYJ","Omar Cooper Jr."],"adonai mitchell":["NYJ","Adonai Mitchell"],"geno smith":["NYJ","Geno Smith"],"braelon allen":["NYJ","Braelon Allen"],"jelani woods":["NYJ","Jelani Woods"],"isaiah williams":["NYJ","Isaiah Williams"],"isaiah davis":["NYJ","Isaiah Davis"],"mason taylor":["NYJ","Mason Taylor"],"kenyon sadiq":["NYJ","Kenyon Sadiq"],"ollie gordon":["MIA","Ollie Gordon II"],"jalen tolbert":["MIA","Jalen Tolbert"],"caleb douglas":["MIA","Caleb Douglas"],"malik washington":["MIA","Malik Washington"],"jaylen wright":["MIA","Jaylen Wright"],"chris bell":["MIA","Chris Bell"],"malik willis":["MIA","Malik Willis"],"kaytron allen":["MIA","Kaytron Allen"],"kevin coleman":["MIA","Kevin Coleman Jr."],"greg dulcich":["MIA","Greg Dulcich"],"will kacmarek":["MIA","Will Kacmarek"]}},"2026_07_NYG_HOU":{"lab":"NYG @ HOU","start":"2026-10-25T13:00:00-04:00","pl":{"woody marks":["HOU","Woody Marks"],"foster moreau":["HOU","Foster Moreau"],"xavier hutchinson":["HOU","Xavier Hutchinson"],"dare ogunbowale":["HOU","Dare Ogunbowale"],"cade stover":["HOU","Cade Stover"],"dalton schultz":["HOU","Dalton Schultz"],"brevin jordan":["HOU","Brevin Jordan"],"cj stroud":["HOU","C.J. Stroud"],"kayshon boutte":["HOU","Kayshon Boutte"],"jaylin noel":["HOU","Jaylin Noel"],"marvin harrison":["HOU","Marvin Harrison Jr."],"nico collins":["HOU","Nico Collins"],"david montgomery":["HOU","David Montgomery"],"malachi fields":["NYG","Malachi Fields"],"devin singletary":["NYG","Devin Singletary"],"jameis winston":["NYG","Jameis Winston"],"isaiah likely":["NYG","Isaiah Likely"],"tyrone tracy":["NYG","Tyrone Tracy Jr."],"cam skattebo":["NYG","Cam Skattebo"],"darnell mooney":["NYG","Darnell Mooney"],"malik nabers":["NYG","Malik Nabers"],"charlie jones":["NYG","Charlie Jones"],"theo johnson":["NYG","Theo Johnson"]}},"2026_07_SF_ATL":{"lab":"SF @ ATL","start":"2026-10-25T13:00:00-04:00","pl":{"austin hooper":["ATL","Austin Hooper"],"bijan robinson":["ATL","Bijan Robinson"],"drake london":["ATL","Drake London"],"charlie woerner":["ATL","Charlie Woerner"],"brian robinson":["ATL","Brian Robinson"],"michael penix":["ATL","Michael Penix Jr."],"chris blair":["ATL","Chris Blair"],"jahan dotson":["ATL","Jahan Dotson"],"kyle pitts":["ATL","Kyle Pitts"],"olamide zaccheaus":["ATL","Olamide Zaccheaus"],"zachariah branch":["ATL","Zachariah Branch"],"jacob cowing":["SF","Jacob Cowing"],"christian mccaffrey":["SF","Christian McCaffrey"],"mike evans":["SF","Mike Evans"],"brock purdy":["SF","Brock Purdy"],"george kittle":["SF","George Kittle"],"jordan james":["SF","Jordan James"],"kyle juszczyk":["SF","Kyle Juszczyk"],"brandin cooks":["SF","Brandin Cooks"],"kaelon black":["SF","Kaelon Black"],"luke farrell":["SF","Luke Farrell"],"jordan watkins":["SF","Jordan Watkins"]}},"2026_07_TB_CAR":{"lab":"TB @ CAR","start":"2026-10-25T13:00:00-04:00","pl":{"darren waller":["CAR","Darren Waller"],"aj dillon":["CAR","AJ Dillon"],"bryce young":["CAR","Bryce Young"],"david moore":["CAR","David Moore"],"brycen tremayne":["CAR","Brycen Tremayne"],"tommy tremble":["CAR","Tommy Tremble"],"john metchie":["CAR","John Metchie III"],"tetairoa mcmillan":["CAR","Tetairoa McMillan"],"mitchell evans":["CAR","Mitchell Evans"],"trevor etienne":["CAR","Trevor Etienne"],"jalen coker":["CAR","Jalen Coker"],"chuba hubbard":["CAR","Chuba Hubbard"],"ted hurst":["TB","Ted Hurst III"],"tez johnson":["TB","Tez Johnson"],"emeka egbuka":["TB","Emeka Egbuka"],"cade otton":["TB","Cade Otton"],"kameron johnson":["TB","Kameron Johnson"],"sean tucker":["TB","Sean Tucker"],"chris godwin":["TB","Chris Godwin Jr."],"kenny gainwell":["TB","Kenny Gainwell"],"jalon daniels":["TB","Jalon Daniels"],"bucky irving":["TB","Bucky Irving"]}},"2026_07_DEN_ARI":{"lab":"DEN @ ARI","start":"2026-10-25T16:05:00-04:00","pl":{"trey mcbride":["ARI","Trey McBride"],"jacoby brissett":["ARI","Jacoby Brissett"],"kendrick bourne":["ARI","Kendrick Bourne"],"reggie virgil":["ARI","Reggie Virgil"],"jeremiyah love":["ARI","Jeremiyah Love"],"jalen brooks":["ARI","Jalen Brooks"],"teagan quitoriano":["ARI","Teagan Quitoriano"],"elijah higgins":["ARI","Elijah Higgins"],"michael wilson":["ARI","Michael Wilson"],"tyler allgeier":["ARI","Tyler Allgeier"],"bam knight":["ARI","Bam Knight"],"adam trautman":["DEN","Adam Trautman"],"rj harvey":["DEN","RJ Harvey"],"bo nix":["DEN","Bo Nix"],"troy franklin":["DEN","Troy Franklin"],"nate adkins":["DEN","Nate Adkins"],"jaylen waddle":["DEN","Jaylen Waddle"],"liljordan humphrey":["DEN","Lil'Jordan Humphrey"],"courtland sutton":["DEN","Courtland Sutton"],"jk dobbins":["DEN","J.K. Dobbins"],"adam prentice":["DEN","Adam Prentice"],"tyler badie":["DEN","Tyler Badie"],"evan engram":["DEN","Evan Engram"],"marvin mims":["DEN","Marvin Mims Jr."]}},"2026_07_GB_DET":{"lab":"GB @ DET","start":"2026-10-25T16:25:00-04:00","pl":{"jacob saylors":["DET","Jacob Saylors"],"jackson meeks":["DET","Jackson Meeks"],"sam laporta":["DET","Sam LaPorta"],"sione vaki":["DET","Sione Vaki"],"jared goff":["DET","Jared Goff"],"brock wright":["DET","Brock Wright"],"isaac teslaa":["DET","Isaac TeSlaa"],"amonra st brown":["DET","Amon-Ra St. Brown"],"jahmyr gibbs":["DET","Jahmyr Gibbs"],"jameson williams":["DET","Jameson Williams"],"marshawn lloyd":["GB","MarShawn Lloyd"],"jonnu smith":["GB","Jonnu Smith"],"christian watson":["GB","Christian Watson"],"pierre strong":["GB","Pierre Strong"],"jordan love":["GB","Jordan Love"],"savion williams":["GB","Savion Williams"],"j michael sturdivant":["GB","J. Michael Sturdivant"],"matthew golden":["GB","Matthew Golden"],"kaleb johnson":["GB","Kaleb Johnson"],"bo melton":["GB","Bo Melton"],"tucker kraft":["GB","Tucker Kraft"]}},"2026_07_LA_LV":{"lab":"LA @ LV","start":"2026-10-25T16:25:00-04:00","pl":{"kirk cousins":["LV","Kirk Cousins"],"dareke young":["LV","Dareke Young"],"malik benson":["LV","Malik Benson"],"ashton jeanty":["LV","Ashton Jeanty"],"brock bowers":["LV","Brock Bowers"],"michael mayer":["LV","Michael Mayer"],"ian thomas":["LV","Ian Thomas"],"dylan laube":["LV","Dylan Laube"],"mike washington":["LV","Mike Washington Jr."],"connor heyward":["LV","Connor Heyward"],"jalen nailor":["LV","Jalen Nailor"],"cody white":["LV","Cody White"],"tre tucker":["LV","Tre Tucker"],"tutu atwell":["LA","Tutu Atwell"],"colby parkinson":["LA","Colby Parkinson"],"konata mumpfield":["LA","Konata Mumpfield"],"puka nacua":["LA","Puka Nacua"],"matthew stafford":["LA","Matthew Stafford"],"jordan whittington":["LA","Jordan Whittington"],"dean connors":["LA","Dean Connors"],"davis allen":["LA","Davis Allen"],"cj daniels":["LA","CJ Daniels"],"blake corum":["LA","Blake Corum"],"tyler higbee":["LA","Tyler Higbee"],"kyren williams":["LA","Kyren Williams"]}},"2026_07_KC_SEA":{"lab":"KC @ SEA","start":"2026-10-25T20:20:00-04:00","pl":{"velus jones":["SEA","Velus Jones Jr."],"montorie foster":["SEA","Montorie Foster Jr"],"tory horton":["SEA","Tory Horton"],"george holani":["SEA","George Holani"],"emanuel wilson":["SEA","Emanuel Wilson"],"jaxon smithnjigba":["SEA","Jaxon Smith-Njigba"],"sam darnold":["SEA","Sam Darnold"],"aj barner":["SEA","AJ Barner"],"eric saubert":["SEA","Eric Saubert"],"rashid shaheed":["SEA","Rashid Shaheed"],"cooper kupp":["SEA","Cooper Kupp"],"rashee rice":["KC","Rashee Rice"],"kenneth walker":["KC","Kenneth Walker III"],"cyrus allen":["KC","Cyrus Allen"],"travis kelce":["KC","Travis Kelce"],"emmett johnson":["KC","Emmett Johnson"],"patrick mahomes":["KC","Patrick Mahomes"],"jalen royals":["KC","Jalen Royals"],"brashard smith":["KC","Brashard Smith"],"xavier worthy":["KC","Xavier Worthy"],"noah gray":["KC","Noah Gray"]}},"2026_07_DAL_PHI":{"lab":"DAL @ PHI","start":"2026-10-26T20:15:00-04:00","pl":{"saquon barkley":["PHI","Saquon Barkley"],"dontayvion wicks":["PHI","Dontayvion Wicks"],"dallas goedert":["PHI","Dallas Goedert"],"darius cooper":["PHI","Darius Cooper"],"johnny mundt":["PHI","Johnny Mundt"],"tanner mckee":["PHI","Tanner McKee"],"elijah moore":["PHI","Elijah Moore"],"makai lemon":["PHI","Makai Lemon"],"devonta smith":["PHI","DeVonta Smith"],"dameon pierce":["PHI","Dameon Pierce"],"jonathan mingo":["DAL","Jonathan Mingo"],"ceedee lamb":["DAL","CeeDee Lamb"],"javonte williams":["DAL","Javonte Williams"],"hunter luepke":["DAL","Hunter Luepke"],"kavontae turpin":["DAL","KaVontae Turpin"],"jake ferguson":["DAL","Jake Ferguson"],"george pickens":["DAL","George Pickens"],"brevyn spannford":["DAL","Brevyn Spann-Ford"],"ryan flournoy":["DAL","Ryan Flournoy"],"dak prescott":["DAL","Dak Prescott"],"luke schoonmaker":["DAL","Luke Schoonmaker"],"emari demercado":["DAL","Emari Demercado"],"tyler goodson":["DAL","Tyler Goodson"]}}},"nhl":{"2026020154":{"lab":"NSH @ BOS","start":"2026-10-22T23:00:00+00:00","pl":{"steven stamkos":["NSH","Steven Stamkos"],"filip forsberg":["NSH","Filip Forsberg"],"ryan oreilly":["NSH","Ryan O'Reilly"],"jonathan marchessault":["NSH","Jonathan Marchessault"],"mavrik bourque":["NSH","Mavrik Bourque"],"adam edstrom":["NSH","Adam Edstrom"],"roman josi":["NSH","Roman Josi"],"matthew wood":["NSH","Matthew Wood"],"ross colton":["NSH","Ross Colton"],"alexander kerfoot":["NSH","Alexander Kerfoot"],"jack drury":["NSH","Jack Drury"],"nils hoglander":["NSH","Nils Hoglander"],"reid schaefer":["NSH","Reid Schaefer"],"adam wilsby":["NSH","Adam Wilsby"],"brady skjei":["NSH","Brady Skjei"],"nicolas hague":["NSH","Nicolas Hague"],"jayden struble":["NSH","Jayden Struble"],"ilya lyubushkin":["NSH","Ilya Lyubushkin"],"david pastrnak":["BOS","David Pastrnak"],"morgan geekie":["BOS","Morgan Geekie"],"pavel zacha":["BOS","Pavel Zacha"],"elias lindholm":["BOS","Elias Lindholm"],"jj peterka":["BOS","JJ Peterka"],"fraser minten":["BOS","Fraser Minten"],"james hagens":["BOS","James Hagens"],"casey mittelstadt":["BOS","Casey Mittelstadt"],"charlie mcavoy":["BOS","Charlie McAvoy"],"marat khusnutdinov":["BOS","Marat Khusnutdinov"],"mark kastelic":["BOS","Mark Kastelic"],"matthew poitras":["BOS","Matthew Poitras"],"tanner jeannot":["BOS","Tanner Jeannot"],"hampus lindholm":["BOS","Hampus Lindholm"],"frederic brunet":["BOS","Frederic Brunet"],"nikita zadorov":["BOS","Nikita Zadorov"],"mason lohrei":["BOS","Mason Lohrei"],"will borgen":["BOS","Will Borgen"]}},"2026020155":{"lab":"NYR @ TOR","start":"2026-10-22T23:00:00+00:00","pl":{"pavel dorofeyev":["NYR","Pavel Dorofeyev"],"alexis lafreniere":["NYR","Alexis Lafreni\u00e8re"],"mika zibanejad":["NYR","Mika Zibanejad"],"jt miller":["NYR","J.T. Miller"],"gabe perreault":["NYR","Gabe Perreault"],"will cuylle":["NYR","Will Cuylle"],"eeli tolvanen":["NYR","Eeli Tolvanen"],"tye kartye":["NYR","Tye Kartye"],"oliver bjorkstrand":["NYR","Oliver Bjorkstrand"],"adam fox":["NYR","Adam Fox"],"noah laba":["NYR","Noah Laba"],"taylor raddysh":["NYR","Taylor Raddysh"],"vladislav gavrikov":["NYR","Vladislav Gavrikov"],"sean durzi":["NYR","Sean Durzi"],"justin dowling":["NYR","Justin Dowling"],"braden schneider":["NYR","Braden Schneider"],"marcus pettersson":["NYR","Marcus Pettersson"],"alberts smits":["NYR","Alberts Smits"],"auston matthews":["TOR","Auston Matthews"],"william nylander":["TOR","William Nylander"],"kirill marchenko":["TOR","Kirill Marchenko"],"nick paul":["TOR","Nick Paul"],"gavin mckenna":["TOR","Gavin McKenna"],"jack roslovic":["TOR","Jack Roslovic"],"darren raddysh":["TOR","Darren Raddysh"],"easton cowan":["TOR","Easton Cowan"],"vinni lettieri":["TOR","Vinni Lettieri"],"colton sissons":["TOR","Colton Sissons"],"teddy blueger":["TOR","Teddy Blueger"],"morgan rielly":["TOR","Morgan Rielly"],"brandon duhaime":["TOR","Brandon Duhaime"],"oliver ekmanlarsson":["TOR","Oliver Ekman-Larsson"],"zack macewen":["TOR","Zack MacEwen"],"troy stecher":["TOR","Troy Stecher"],"jake mccabe":["TOR","Jake McCabe"],"marshall rifai":["TOR","Marshall Rifai"]}},"2026020156":{"lab":"SJS @ OTT","start":"2026-10-22T23:00:00+00:00","pl":{"macklin celebrini":["SJS","Macklin Celebrini"],"will smith":["SJS","Will Smith"],"mason marchment":["SJS","Mason Marchment"],"ivar stenberg":["SJS","Ivar Stenberg"],"kiefer sherwood":["SJS","Kiefer Sherwood"],"igor chernyshov":["SJS","Igor Chernyshov"],"collin graf":["SJS","Collin Graf"],"tyler toffoli":["SJS","Tyler Toffoli"],"michael misa":["SJS","Michael Misa"],"ty dellandrea":["SJS","Ty Dellandrea"],"jacob trouba":["SJS","Jacob Trouba"],"barclay goodrow":["SJS","Barclay Goodrow"],"zack ostapchuk":["SJS","Zack Ostapchuk"],"darnell nurse":["SJS","Darnell Nurse"],"dmitry orlov":["SJS","Dmitry Orlov"],"michael kesselring":["SJS","Michael Kesselring"],"sam dickinson":["SJS","Sam Dickinson"],"nolan allan":["SJS","Nolan Allan"],"tim stutzle":["OTT","Tim St\u00fctzle"],"drake batherson":["OTT","Drake Batherson"],"dylan cozens":["OTT","Dylan Cozens"],"shane pinto":["OTT","Shane Pinto"],"stephen halliday":["OTT","Stephen Halliday"],"ridly greig":["OTT","Ridly Greig"],"claude giroux":["OTT","Claude Giroux"],"jake sanderson":["OTT","Jake Sanderson"],"fabian zetterlund":["OTT","Fabian Zetterlund"],"michael amadio":["OTT","Michael Amadio"],"warren foegele":["OTT","Warren Foegele"],"carter yakemchuk":["OTT","Carter Yakemchuk"],"nick cousins":["OTT","Nick Cousins"],"jordan spence":["OTT","Jordan Spence"],"tyler kleven":["OTT","Tyler Kleven"],"hayden hodgson":["OTT","Hayden Hodgson"],"artem zub":["OTT","Artem Zub"],"nikolas matinpalo":["OTT","Nikolas Matinpalo"]}},"2026020157":{"lab":"ANA @ NJD","start":"2026-10-22T23:00:00+00:00","pl":{"cutter gauthier":["ANA","Cutter Gauthier"],"beckett sennecke":["ANA","Beckett Sennecke"],"leo carlsson":["ANA","Leo Carlsson"],"mikael granlund":["ANA","Mikael Granlund"],"alex killorn":["ANA","Alex Killorn"],"roger mcqueen":["ANA","Roger McQueen"],"aj greer":["ANA","A.J. Greer"],"jackson lacombe":["ANA","Jackson LaCombe"],"sam colangelo":["ANA","Sam Colangelo"],"frank vatrano":["ANA","Frank Vatrano"],"nikita nesterenko":["ANA","Nikita Nesterenko"],"tim washe":["ANA","Tim Washe"],"jeff malott":["ANA","Jeff Malott"],"pavel mintyukov":["ANA","Pavel Mintyukov"],"tyson hinds":["ANA","Tyson Hinds"],"drew helleson":["ANA","Drew Helleson"],"nick jensen":["ANA","Nick Jensen"],"noah warren":["ANA","Noah Warren"],"jack hughes":["NJD","Jack Hughes"],"nico hischier":["NJD","Nico Hischier"],"timo meier":["NJD","Timo Meier"],"jesper bratt":["NJD","Jesper Bratt"],"luke evangelista":["NJD","Luke Evangelista"],"arseny gritsyuk":["NJD","Arseny Gritsyuk"],"anthony mantha":["NJD","Anthony Mantha"],"connor brown":["NJD","Connor Brown"],"dawson mercer":["NJD","Dawson Mercer"],"evan rodrigues":["NJD","Evan Rodrigues"],"luke hughes":["NJD","Luke Hughes"],"cody glass":["NJD","Cody Glass"],"dougie hamilton":["NJD","Dougie Hamilton"],"jesper boqvist":["NJD","Jesper Boqvist"],"brett pesce":["NJD","Brett Pesce"],"jonas siegenthaler":["NJD","Jonas Siegenthaler"],"johnathan kovacevic":["NJD","Johnathan Kovacevic"],"declan chisholm":["NJD","Declan Chisholm"]}},"2026020158":{"lab":"FLA @ PIT","start":"2026-10-22T23:00:00+00:00","pl":{"sam reinhart":["FLA","Sam Reinhart"],"brady tkachuk":["FLA","Brady Tkachuk"],"matthew tkachuk":["FLA","Matthew Tkachuk"],"carter verhaeghe":["FLA","Carter Verhaeghe"],"sam bennett":["FLA","Sam Bennett"],"anton lundell":["FLA","Anton Lundell"],"eetu luostarinen":["FLA","Eetu Luostarinen"],"lars eller":["FLA","Lars Eller"],"seth jones":["FLA","Seth Jones"],"sandis vilmanis":["FLA","Sandis Vilmanis"],"cole schwindt":["FLA","Cole Schwindt"],"aaron ekblad":["FLA","Aaron Ekblad"],"garnet hathaway":["FLA","Garnet Hathaway"],"bokondji imama":["FLA","Bokondji Imama"],"gustav forsling":["FLA","Gustav Forsling"],"niko mikkola":["FLA","Niko Mikkola"],"dmitry kulikov":["FLA","Dmitry Kulikov"],"radko gudas":["FLA","Radko Gudas"],"rickard rakell":["PIT","Rickard Rakell"],"sidney crosby":["PIT","Sidney Crosby"],"evgeni malkin":["PIT","Evgeni Malkin"],"tommy novak":["PIT","Tommy Novak"],"egor chinakhov":["PIT","Egor Chinakhov"],"erik karlsson":["PIT","Erik Karlsson"],"ville koivunen":["PIT","Ville Koivunen"],"nick robertson":["PIT","Nick Robertson"],"andrei kuzmenko":["PIT","Andrei Kuzmenko"],"connor dewar":["PIT","Connor Dewar"],"hendrix lapierre":["PIT","Hendrix Lapierre"],"blake lizotte":["PIT","Blake Lizotte"],"elmer soderblom":["PIT","Elmer Soderblom"],"kris letang":["PIT","Kris Letang"],"declan carlile":["PIT","Declan Carlile"],"kaedan korczak":["PIT","Kaedan Korczak"],"spencer stastney":["PIT","Spencer Stastney"],"ilya solovyov":["PIT","Ilya Solovyov"]}},"2026020159":{"lab":"LAK @ NYI","start":"2026-10-22T23:30:00+00:00","pl":{"adrian kempe":["LAK","Adrian Kempe"],"artemi panarin":["LAK","Artemi Panarin"],"alex laferriere":["LAK","Alex Laferriere"],"mats zuccarello":["LAK","Mats Zuccarello"],"trevor moore":["LAK","Trevor Moore"],"erik haula":["LAK","Erik Haula"],"scott laughton":["LAK","Scott Laughton"],"corey perry":["LAK","Corey Perry"],"joel armia":["LAK","Joel Armia"],"andre lee":["LAK","Andre Lee"],"jared wright":["LAK","Jared Wright"],"brandt clarke":["LAK","Brandt Clarke"],"samuel helenius":["LAK","Samuel Helenius"],"drew doughty":["LAK","Drew Doughty"],"erik gustafsson":["LAK","Erik Gustafsson"],"joel edmundson":["LAK","Joel Edmundson"],"brian dumoulin":["LAK","Brian Dumoulin"],"mikey anderson":["LAK","Mikey Anderson"],"bo horvat":["NYI","Bo Horvat"],"simon holmstrom":["NYI","Simon Holmstrom"],"kyle palmieri":["NYI","Kyle Palmieri"],"brayden schenn":["NYI","Brayden Schenn"],"matthew schaefer":["NYI","Matthew Schaefer"],"emil heineman":["NYI","Emil Heineman"],"victor eklund":["NYI","Victor Eklund"],"jeangabriel pageau":["NYI","Jean-Gabriel Pageau"],"anthony duclair":["NYI","Anthony Duclair"],"ondrej palat":["NYI","Ondrej Palat"],"casey cizikas":["NYI","Casey Cizikas"],"mitchell chaffee":["NYI","Mitchell Chaffee"],"kyle maclean":["NYI","Kyle MacLean"],"tony deangelo":["NYI","Tony DeAngelo"],"logan stanley":["NYI","Logan Stanley"],"adam pelech":["NYI","Adam Pelech"],"ryan pulock":["NYI","Ryan Pulock"],"matthew kessel":["NYI","Matthew Kessel"]}},"2026020160":{"lab":"VGK @ STL","start":"2026-10-23T00:00:00+00:00","pl":{"mark stone":["VGK","Mark Stone"],"tomas hertl":["VGK","Tomas Hertl"],"mitch marner":["VGK","Mitch Marner"],"jack eichel":["VGK","Jack Eichel"],"brett howden":["VGK","Brett Howden"],"trevor connelly":["VGK","Trevor Connelly"],"william karlsson":["VGK","William Karlsson"],"ivan barbashev":["VGK","Ivan Barbashev"],"braeden bowman":["VGK","Braeden Bowman"],"marc gatcomb":["VGK","Marc Gatcomb"],"rasmus andersson":["VGK","Rasmus Andersson"],"shea theodore":["VGK","Shea Theodore"],"raphael lavoie":["VGK","Raphael Lavoie"],"nic dowd":["VGK","Nic Dowd"],"noah hanifin":["VGK","Noah Hanifin"],"brayden mcnabb":["VGK","Brayden McNabb"],"jeremy lauzon":["VGK","Jeremy Lauzon"],"dylan coghlan":["VGK","Dylan Coghlan"],"jimmy snuggerud":["STL","Jimmy Snuggerud"],"dylan holloway":["STL","Dylan Holloway"],"robert thomas":["STL","Robert Thomas"],"mason mctavish":["STL","Mason McTavish"],"jake neighbours":["STL","Jake Neighbours"],"pavel buchnevich":["STL","Pavel Buchnevich"],"connor mcmichael":["STL","Connor McMichael"],"jonatan berggren":["STL","Jonatan Berggren"],"pius suter":["STL","Pius Suter"],"philip broberg":["STL","Philip Broberg"],"otto stenberg":["STL","Otto Stenberg"],"dalibor dvorsky":["STL","Dalibor Dvorsky"],"aleksanteri kaskimaki":["STL","Aleksanteri Kaskimaki"],"colton parayko":["STL","Colton Parayko"],"cam fowler":["STL","Cam Fowler"],"adam jiricek":["STL","Adam Jiricek"],"justin barron":["STL","Justin Barron"],"brandon carlo":["STL","Brandon Carlo"]}},"2026020161":{"lab":"WPG @ DAL","start":"2026-10-23T00:00:00+00:00","pl":{"kyle connor":["WPG","Kyle Connor"],"mark scheifele":["WPG","Mark Scheifele"],"cole perfetti":["WPG","Cole Perfetti"],"gabriel vilardi":["WPG","Gabriel Vilardi"],"alex iafallo":["WPG","Alex Iafallo"],"viggo bjorck":["WPG","Viggo Bj\u00f6rck"],"isak rosen":["WPG","Isak Rosen"],"nino niederreiter":["WPG","Nino Niederreiter"],"morgan barron":["WPG","Morgan Barron"],"adam lowry":["WPG","Adam Lowry"],"neal pionk":["WPG","Neal Pionk"],"brayden yager":["WPG","Brayden Yager"],"brad lambert":["WPG","Brad Lambert"],"haydn fleury":["WPG","Haydn Fleury"],"dylan samberg":["WPG","Dylan Samberg"],"mario ferraro":["WPG","Mario Ferraro"],"dylan demelo":["WPG","Dylan DeMelo"],"tyrel bauer":["WPG","Tyrel Bauer"],"jason robertson":["DAL","Jason Robertson"],"wyatt johnston":["DAL","Wyatt Johnston"],"roope hintz":["DAL","Roope Hintz"],"mikko rantanen":["DAL","Mikko Rantanen"],"tyler seguin":["DAL","Tyler Seguin"],"arttu hyry":["DAL","Arttu Hyry"],"sam steel":["DAL","Sam Steel"],"jamie benn":["DAL","Jamie Benn"],"miro heiskanen":["DAL","Miro Heiskanen"],"thomas harley":["DAL","Thomas Harley"],"justin hryckowian":["DAL","Justin Hryckowian"],"joel kiviranta":["DAL","Joel Kiviranta"],"radek faksa":["DAL","Radek Faksa"],"colin blackwell":["DAL","Colin Blackwell"],"nils lundkvist":["DAL","Nils Lundkvist"],"tyler myers":["DAL","Tyler Myers"],"lian bichsel":["DAL","Lian Bichsel"],"kyle capobianco":["DAL","Kyle Capobianco"]}},"2026020162":{"lab":"MIN @ CGY","start":"2026-10-23T01:00:00+00:00","pl":{"kirill kaprizov":["MIN","Kirill Kaprizov"],"matt boldy":["MIN","Matt Boldy"],"joel eriksson ek":["MIN","Joel Eriksson Ek"],"blake coleman":["MIN","Blake Coleman"],"maxim shabanov":["MIN","Maxim Shabanov"],"ryan hartman":["MIN","Ryan Hartman"],"danila yurov":["MIN","Danila Yurov"],"quinn hughes":["MIN","Quinn Hughes"],"bobby brink":["MIN","Bobby Brink"],"yakov trenin":["MIN","Yakov Trenin"],"michael mccarron":["MIN","Michael McCarron"],"nico sturm":["MIN","Nico Sturm"],"jared spurgeon":["MIN","Jared Spurgeon"],"tyler pitlick":["MIN","Tyler Pitlick"],"olli maatta":["MIN","Olli Maatta"],"jonas brodin":["MIN","Jonas Brodin"],"daemon hunt":["MIN","Daemon Hunt"],"zach bogosian":["MIN","Zach Bogosian"],"morgan frost":["CGY","Morgan Frost"],"matt coronato":["CGY","Matt Coronato"],"joel farabee":["CGY","Joel Farabee"],"yegor sharangovich":["CGY","Yegor Sharangovich"],"matvei gridin":["CGY","Matvei Gridin"],"aydar suniev":["CGY","Aydar Suniev"],"ryan strome":["CGY","Ryan Strome"],"simon nemec":["CGY","Simon Nemec"],"adam klapka":["CGY","Adam Klapka"],"jonathan castagna":["CGY","Jonathan Castagna"],"zayne parekh":["CGY","Zayne Parekh"],"martin pospisil":["CGY","Martin Pospisil"],"brennan othmann":["CGY","Brennan Othmann"],"ben jones":["CGY","Ben Jones"],"jake middleton":["CGY","Jake Middleton"],"zach whitecloud":["CGY","Zach Whitecloud"],"yan kuznetsov":["CGY","Yan Kuznetsov"],"kevin bahl":["CGY","Kevin Bahl"]}},"2026020163":{"lab":"CAR @ EDM","start":"2026-10-23T01:00:00+00:00","pl":{"andrei svechnikov":["CAR","Andrei Svechnikov"],"sebastian aho":["CAR","Sebastian Aho"],"jackson blake":["CAR","Jackson Blake"],"logan stankoven":["CAR","Logan Stankoven"],"nikolaj ehlers":["CAR","Nikolaj Ehlers"],"shayne gostisbehere":["CAR","Shayne Gostisbehere"],"jordan martinook":["CAR","Jordan Martinook"],"skyler brindamour":["CAR","Skyler Brind'Amour"],"eric robinson":["CAR","Eric Robinson"],"william carrier":["CAR","William Carrier"],"jesperi kotkaniemi":["CAR","Jesperi Kotkaniemi"],"felix unger sorum":["CAR","Felix Unger S\u00f6rum"],"kandre miller":["CAR","K'Andre Miller"],"sean walker":["CAR","Sean Walker"],"jalen chatfield":["CAR","Jalen Chatfield"],"nicolas deslauriers":["CAR","Nicolas Deslauriers"],"jaccob slavin":["CAR","Jaccob Slavin"],"juuso valimaki":["CAR","Juuso V\u00e4lim\u00e4ki"],"leon draisaitl":["EDM","Leon Draisaitl"],"connor mcdavid":["EDM","Connor McDavid"],"zach hyman":["EDM","Zach Hyman"],"vasily podkolzin":["EDM","Vasily Podkolzin"],"ryan nugenthopkins":["EDM","Ryan Nugent-Hopkins"],"evan bouchard":["EDM","Evan Bouchard"],"kasperi kapanen":["EDM","Kasperi Kapanen"],"alex formenton":["EDM","Alex Formenton"],"colton dach":["EDM","Colton Dach"],"owen michaels":["EDM","Owen Michaels"],"isaac howard":["EDM","Isaac Howard"],"mathieu joseph":["EDM","Mathieu Joseph"],"trent frederic":["EDM","Trent Frederic"],"mattias ekholm":["EDM","Mattias Ekholm"],"ryan shea":["EDM","Ryan Shea"],"jake walman":["EDM","Jake Walman"],"connor murphy":["EDM","Connor Murphy"],"ty emberson":["EDM","Ty Emberson"]}},"2026020164":{"lab":"UTA @ SEA","start":"2026-10-23T02:00:00+00:00","pl":{"dylan guenther":["UTA","Dylan Guenther"],"nick schmaltz":["UTA","Nick Schmaltz"],"clayton keller":["UTA","Clayton Keller"],"logan cooley":["UTA","Logan Cooley"],"anders lee":["UTA","Anders Lee"],"kailer yamamoto":["UTA","Kailer Yamamoto"],"lawson crouse":["UTA","Lawson Crouse"],"vincent trocheck":["UTA","Vincent Trocheck"],"barrett hayton":["UTA","Barrett Hayton"],"jack mcbain":["UTA","Jack McBain"],"mikhail sergachev":["UTA","Mikhail Sergachev"],"daniil but":["UTA","Daniil But"],"mackenzie weegar":["UTA","MacKenzie Weegar"],"kevin stenlund":["UTA","Kevin Stenlund"],"nate schmidt":["UTA","Nate Schmidt"],"dmitri simashev":["UTA","Dmitri Simashev"],"nick desimone":["UTA","Nick DeSimone"],"andrew peeke":["UTA","Andrew Peeke"],"bobby mcmann":["SEA","Bobby McMann"],"jared mccann":["SEA","Jared McCann"],"jordan eberle":["SEA","Jordan Eberle"],"matty beniers":["SEA","Matty Beniers"],"chandler stephenson":["SEA","Chandler Stephenson"],"shane wright":["SEA","Shane Wright"],"berkly catton":["SEA","Berkly Catton"],"mackie samoskevich":["SEA","Mackie Samoskevich"],"vince dunn":["SEA","Vince Dunn"],"kaapo kakko":["SEA","Kaapo Kakko"],"brandon montour":["SEA","Brandon Montour"],"ryan winterton":["SEA","Ryan Winterton"],"frederick gaudreau":["SEA","Frederick Gaudreau"],"ben meyers":["SEA","Ben Meyers"],"adam larsson":["SEA","Adam Larsson"],"ryker evans":["SEA","Ryker Evans"],"ville ottavainen":["SEA","Ville Ottavainen"],"josh mahura":["SEA","Josh Mahura"]}},"2026020165":{"lab":"DET @ VAN","start":"2026-10-23T02:00:00+00:00","pl":{"alex debrincat":["DET","Alex DeBrincat"],"viktor arvidsson":["DET","Viktor Arvidsson"],"dylan larkin":["DET","Dylan Larkin"],"lucas raymond":["DET","Lucas Raymond"],"emmitt finnie":["DET","Emmitt Finnie"],"michael brandseggnygard":["DET","Michael Brandsegg-Nyg\u00e5rd"],"andrew copp":["DET","Andrew Copp"],"michael rasmussen":["DET","Michael Rasmussen"],"moritz seider":["DET","Moritz Seider"],"justin faulk":["DET","Justin Faulk"],"carter mazur":["DET","Carter Mazur"],"sheldon dries":["DET","Sheldon Dries"],"keegan kolesar":["DET","Keegan Kolesar"],"ben chiarot":["DET","Ben Chiarot"],"anton johansson":["DET","Anton Johansson"],"albert johansson":["DET","Albert Johansson"],"axel sandinpellikka":["DET","Axel Sandin-Pellikka"],"andreas englund":["DET","Andreas Englund"],"jake debrusk":["VAN","Jake DeBrusk"],"brock boeser":["VAN","Brock Boeser"],"filip chytil":["VAN","Filip Chytil"],"jonathan lekkerimaki":["VAN","Jonathan Lekkerim\u00e4ki"],"marco rossi":["VAN","Marco Rossi"],"elias pettersson":["VAN","Elias Pettersson"],"linus karlsson":["VAN","Linus Karlsson"],"paul cotter":["VAN","Paul Cotter"],"drew oconnor":["VAN","Drew O'Connor"],"max sasson":["VAN","Max Sasson"],"brendan gallagher":["VAN","Brendan Gallagher"],"liam ohgren":["VAN","Liam Ohgren"],"filip hronek":["VAN","Filip Hronek"],"zeev buium":["VAN","Zeev Buium"],"jamie oleksiak":["VAN","Jamie Oleksiak"],"tom willander":["VAN","Tom Willander"],"luke schenn":["VAN","Luke Schenn"]}}},"nba":{"401909093":{"lab":"CLE @ PHI","start":"2026-10-22T23:00:00+00:00","pl":{"adem bona":["PHI","Adem Bona"],"jaylen brown":["PHI","Jaylen Brown"],"kentavious caldwellpope":["PHI","Kentavious Caldwell-Pope"],"vj edgecombe":["PHI","VJ Edgecombe"],"justin edwards":["PHI","Justin Edwards"],"joel embiid":["PHI","Joel Embiid"],"lebron james":["PHI","LeBron James"],"caleb love":["PHI","Caleb Love"],"tyrese maxey":["PHI","Tyrese Maxey"],"rayan rupert":["PHI","Rayan Rupert"],"anfernee simons":["PHI","Anfernee Simons"],"dean wade":["PHI","Dean Wade"],"jabari walker":["PHI","Jabari Walker"],"jarrett allen":["CLE","Jarrett Allen"],"thomas bryant":["CLE","Thomas Bryant"],"tristan enaruna":["CLE","Tristan Enaruna"],"james harden":["CLE","James Harden"],"mario hezonja":["CLE","Mario Hezonja"],"sam merrill":["CLE","Sam Merrill"],"donovan mitchell":["CLE","Donovan Mitchell"],"evan mobley":["CLE","Evan Mobley"],"craig porter":["CLE","Craig Porter Jr."],"tyrese proctor":["CLE","Tyrese Proctor"],"meleek thomas":["CLE","Meleek Thomas"],"jaylon tyson":["CLE","Jaylon Tyson"],"peyton watson":["CLE","Peyton Watson"]}},"401909094":{"lab":"DEN @ OKC","start":"2026-10-23T01:30:00+00:00","pl":{"brooks barnhizer":["OKC","Brooks Barnhizer"],"alex caruso":["OKC","Alex Caruso"],"josh dix":["OKC","Josh Dix"],"shai gilgeousalexander":["OKC","Shai Gilgeous-Alexander"],"isaiah hartenstein":["OKC","Isaiah Hartenstein"],"chet holmgren":["OKC","Chet Holmgren"],"aday mara":["OKC","Aday Mara"],"jared mccain":["OKC","Jared McCain"],"ajay mitchell":["OKC","Ajay Mitchell"],"cason wallace":["OKC","Cason Wallace"],"jalen williams":["OKC","Jalen Williams"],"jaylin williams":["OKC","Jaylin Williams"],"kenrich williams":["OKC","Kenrich Williams"],"marvin bagley":["DEN","Marvin Bagley III"],"christian braun":["DEN","Christian Braun"],"trevon brazile":["DEN","Trevon Brazile"],"demar derozan":["DEN","DeMar DeRozan"],"aaron gordon":["DEN","Aaron Gordon"],"cameron johnson":["DEN","Cameron Johnson"],"nikola jokic":["DEN","Nikola Jokic"],"spencer jones":["DEN","Spencer Jones"],"tyus jones":["DEN","Tyus Jones"],"jamal murray":["DEN","Jamal Murray"],"ryan nembhard":["DEN","Ryan Nembhard"],"zeke nnaji":["DEN","Zeke Nnaji"],"cam whitmore":["DEN","Cam Whitmore"]}}}};</script><script src="screener.js"></script></div><script>(function(){function f(){var t=document.querySelector('.topbar');if(t)document.documentElement.style.setProperty('--tbh',Math.round(t.getBoundingClientRect().height)+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
+<script>
+(function(){ var b = document.getElementById('newbie'); if (!b) return;
+  try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
+  b.hidden = false;
+  b.querySelector('button').addEventListener('click', function(){ b.remove(); try { localStorage.setItem('simsheet-newbie', 'done'); } catch (e) {} });
+})();
+</script>
