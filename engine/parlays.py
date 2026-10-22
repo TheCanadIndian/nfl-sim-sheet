@@ -643,6 +643,8 @@ def settle(L, g):
 def grade():
     today = dt.datetime.now(ET).date()
     for fp in sorted(glob.glob(os.path.join(OUT, "*", "*.json"))):
+        if os.path.basename(os.path.dirname(fp)) == "learn":          # the learning builder's own files (builder.py)
+            continue
         d = json.load(open(fp))
         if d.get("graded") or dt.date.fromisoformat(d["date"]) > today:
             continue
