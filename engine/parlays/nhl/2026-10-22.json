@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-22",
 "lock": "2026-10-22T23:00:00+00:00",
-"frozen_at": "2026-10-22T11:26:15.623Z",
+"frozen_at": "2026-10-22T11:41:17.300Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -50,6 +50,40 @@
 "tier": "+250 to +600",
 "legs": [
 {
+"gid": "2026020155",
+"start": "2026-10-22T23:00:00Z",
+"kind": "spread",
+"side": "away",
+"line": 1.5,
+"name": null,
+"lab": "NYR +1.5",
+"p": 0.7185,
+"price": -251,
+"book": "Novig"
+},
+{
+"gid": "2026020165",
+"start": "2026-10-23T02:00:00Z",
+"kind": "spread",
+"side": "away",
+"line": -1.5,
+"name": null,
+"lab": "DET \u22121.5",
+"p": 0.4495,
+"price": 156,
+"book": "Novig"
+}
+],
+"p": 0.32295,
+"d": 3.58,
+"first": "2026-10-22T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
 "gid": "2026020160",
 "start": "2026-10-23T00:00:00Z",
 "kind": "spread",
@@ -77,40 +111,6 @@
 "p": 0.31652,
 "d": 3.74,
 "first": "2026-10-23T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020162",
-"start": "2026-10-23T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 5.5,
-"name": null,
-"lab": "MIN-CGY under 5.5",
-"p": 0.4863,
-"price": 122,
-"book": "Novig"
-},
-{
-"gid": "2026020165",
-"start": "2026-10-23T02:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "DET moneyline",
-"p": 0.6418,
-"price": -160,
-"book": "Novig"
-}
-],
-"p": 0.31212,
-"d": 3.607,
-"first": "2026-10-23T01:00:00+00:00",
 "res": null
 },
 {
@@ -192,7 +192,6 @@
 "p": 0.17146,
 "d": 7.049,
 "first": "2026-10-23T00:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -200,33 +199,46 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026020162",
-"start": "2026-10-23T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 5.5,
+"gid": "2026020159",
+"start": "2026-10-22T23:30:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
 "name": null,
-"lab": "MIN-CGY under 5.5",
-"p": 0.4863,
-"price": 122,
+"lab": "NYI moneyline",
+"p": 0.5329,
+"price": -108,
 "book": "Novig"
 },
 {
-"gid": "2026020163",
-"start": "2026-10-23T01:00:00Z",
+"gid": "2026020160",
+"start": "2026-10-23T00:00:00Z",
+"kind": "spread",
+"side": "home",
+"line": 1.5,
+"name": null,
+"lab": "STL +1.5",
+"p": 0.7042,
+"price": -217,
+"book": "Novig"
+},
+{
+"gid": "2026020165",
+"start": "2026-10-23T02:00:00Z",
 "kind": "spread",
 "side": "away",
 "line": -1.5,
 "name": null,
-"lab": "CAR \u22121.5",
-"p": 0.3478,
-"price": 217,
+"lab": "DET \u22121.5",
+"p": 0.4495,
+"price": 156,
 "book": "Novig"
 }
 ],
-"p": 0.16913,
-"d": 7.037,
-"first": "2026-10-23T01:00:00+00:00",
+"p": 0.16866,
+"d": 7.202,
+"first": "2026-10-22T23:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
