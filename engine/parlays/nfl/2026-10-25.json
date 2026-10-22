@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-22T11:41:18.775Z",
+"frozen_at": "2026-10-22T12:12:16.301Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,53 @@
 ],
 "final_at": "2026-10-25T11:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "kc concepcion",
+"lab": "KC Concepcion 60+ rec yds",
+"p": 0.2633,
+"price": 252,
+"book": "Kalshi",
+"sc": "CLE pulls away",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script"
+]
+},
+{
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 325+ pass yds",
+"p": 0.2756,
+"price": 296,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.07255,
+"d": 13.939,
+"first": "2026-10-25T17:00:00+00:00"
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -33,28 +80,29 @@
 ]
 },
 {
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "pass_yds",
 "side": "o",
-"line": 59.5,
-"name": "kc concepcion",
-"lab": "KC Concepcion 60+ rec yds",
-"p": 0.2633,
-"price": 252,
+"line": 324.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 325+ pass yds",
+"p": 0.2756,
+"price": 296,
 "book": "Kalshi",
-"sc": "CLE pulls away",
+"sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"rotation",
-"script"
+"script",
+"price"
 ]
 }
 ],
-"p": 0.06171,
-"d": 16.65,
-"first": "2026-10-25T17:00:00+00:00"
+"p": 0.0646,
+"d": 18.731,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "longshot"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -160,39 +208,6 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.534,
-"price": 108,
-"book": "Novig"
-},
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "sam laporta",
-"lab": "Sam Laporta anytime TD",
-"p": 0.377,
-"price": 182,
-"book": "Novig"
-}
-],
-"p": 0.20132,
-"d": 5.866,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
 "gid": "2026_07_SF_ATL",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
@@ -213,12 +228,12 @@
 "name": "aaron jones",
 "lab": "Aaron Jones anytime TD",
 "p": 0.534,
-"price": 108,
-"book": "Novig"
+"price": 111,
+"book": "Kalshi"
 }
 ],
 "p": 0.17782,
-"d": 8.154,
+"d": 8.271,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -246,12 +261,46 @@
 "name": "aaron jones",
 "lab": "Aaron Jones anytime TD",
 "p": 0.534,
-"price": 108,
-"book": "Novig"
+"price": 111,
+"book": "Kalshi"
 }
 ],
 "p": 0.16073,
-"d": 8.32,
+"d": 8.44,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.534,
+"price": 111,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "tre tucker",
+"lab": "Tre Tucker anytime TD",
+"p": 0.27,
+"price": 335,
+"book": "Novig"
+}
+],
+"p": 0.14418,
+"d": 9.179,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
 },
@@ -260,34 +309,33 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_IND_MIN",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "brian robinson",
-"lab": "Brian Robinson anytime TD",
-"p": 0.333,
-"price": 292,
-"book": "Novig"
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.534,
+"price": 111,
+"book": "Kalshi"
 },
 {
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
+"gid": "2026_07_TB_CAR",
+"start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "sam laporta",
-"lab": "Sam Laporta anytime TD",
-"p": 0.377,
-"price": 182,
+"name": "kenny gainwell",
+"lab": "Kenny Gainwell anytime TD",
+"p": 0.249,
+"price": 426,
 "book": "Novig"
 }
 ],
-"p": 0.12554,
-"d": 11.054,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
+"p": 0.13297,
+"d": 11.099,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -314,12 +362,12 @@
 "name": "aaron jones",
 "lab": "Aaron Jones anytime TD",
 "p": 0.534,
-"price": 108,
-"book": "Novig"
+"price": 111,
+"book": "Kalshi"
 }
 ],
 "p": 0.11908,
-"d": 13,
+"d": 13.188,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -327,34 +375,33 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_IND_MIN",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts anytime TD",
-"p": 0.301,
-"price": 300,
-"book": "Novig"
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.534,
+"price": 111,
+"book": "Kalshi"
 },
 {
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
+"gid": "2026_07_NYG_HOU",
+"start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "sam laporta",
-"lab": "Sam Laporta anytime TD",
-"p": 0.377,
-"price": 182,
+"name": "cj stroud",
+"lab": "Cj Stroud anytime TD",
+"p": 0.191,
+"price": 614,
 "book": "Novig"
 }
 ],
-"p": 0.11348,
-"d": 11.28,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
+"p": 0.10199,
+"d": 15.065,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Cross-game parlays",
