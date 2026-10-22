@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-21",
 "lock": "2026-10-21T23:00:00+00:00",
-"frozen_at": "2026-10-22T00:37:03.113Z",
+"frozen_at": "2026-10-22T00:42:00.748Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -1032,16 +1032,16 @@
 {
 "gid": "401909092",
 "start": "2026-10-22T02:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "stephen curry",
-"lab": "Stephen Curry 7+ threes",
-"p": 0.2073,
-"price": 456,
-"book": "Novig",
+"line": 3.5,
+"name": "al horford",
+"lab": "Al Horford 4+ ast",
+"p": 0.2875,
+"price": 425,
+"book": "Kalshi",
 "f": [
-"usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -1065,8 +1065,8 @@
 ]
 }
 ],
-"p": 0.06061,
-"d": 22.018,
+"p": 0.08405,
+"d": 20.79,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1077,17 +1077,79 @@
 {
 "gid": "401909092",
 "start": "2026-10-22T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "al horford",
+"lab": "Al Horford 4+ ast",
+"p": 0.2875,
+"price": 425,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909841",
+"start": "2026-10-22T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "ja morant",
+"lab": "Ja Morant 8+ ast",
+"p": 0.2137,
+"price": 400,
+"book": "Novig",
+"f": [
+"usage",
+"game",
+"price"
+]
+}
+],
+"p": 0.06144,
+"d": 26.25,
+"first": "2026-10-22T02:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909092",
+"start": "2026-10-22T02:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "luka doncic",
-"lab": "Luka Doncic 6+ threes",
-"p": 0.2207,
-"price": 398,
+"line": 6.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 7+ threes",
+"p": 0.2034,
+"price": 456,
 "book": "Kalshi",
 "f": [
 "usage",
 "rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909841",
+"start": "2026-10-22T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "ja morant",
+"lab": "Ja Morant 8+ ast",
+"p": 0.2137,
+"price": 400,
+"book": "Novig",
+"f": [
+"usage",
 "game",
 "price"
 ]
@@ -1110,8 +1172,8 @@
 ]
 }
 ],
-"p": 0.06452,
-"d": 19.721,
+"p": 0.01271,
+"d": 110.088,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1127,70 +1189,8 @@
 "line": 6.5,
 "name": "stephen curry",
 "lab": "Stephen Curry 7+ threes",
-"p": 0.2073,
+"p": 0.2034,
 "price": 456,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909841",
-"start": "2026-10-22T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "ja morant",
-"lab": "Ja Morant 8+ ast",
-"p": 0.2137,
-"price": 400,
-"book": "Novig",
-"f": [
-"usage",
-"game",
-"price"
-]
-},
-{
-"gid": "401909842",
-"start": "2026-10-22T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "kris dunn",
-"lab": "Kris Dunn 6+ reb",
-"p": 0.2366,
-"price": 344,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.01048,
-"d": 123.432,
-"first": "2026-10-22T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909092",
-"start": "2026-10-22T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 5.5,
-"name": "luka doncic",
-"lab": "Luka Doncic 6+ threes",
-"p": 0.2207,
-"price": 398,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -1202,18 +1202,18 @@
 {
 "gid": "401909841",
 "start": "2026-10-22T02:00Z",
-"kind": "ast",
+"kind": "pts",
 "side": "o",
-"line": 7.5,
-"name": "ja morant",
-"lab": "Ja Morant 8+ ast",
-"p": 0.2137,
-"price": 400,
+"line": 18.5,
+"name": "dillon brooks",
+"lab": "Dillon Brooks 19+ pts",
+"p": 0.4237,
+"price": 130,
 "book": "Novig",
 "f": [
 "usage",
-"game",
-"price"
+"rotation",
+"game"
 ]
 },
 {
@@ -1234,8 +1234,8 @@
 ]
 }
 ],
-"p": 0.01116,
-"d": 110.556,
+"p": 0.02039,
+"d": 56.779,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1251,9 +1251,9 @@
 "line": 2.5,
 "name": "al horford",
 "lab": "Al Horford over 2.5 assists",
-"p": 0.5106,
+"p": 0.5123,
 "price": 135,
-"book": "Novig"
+"book": "Hard Rock"
 },
 {
 "gid": "401909842",
@@ -1268,8 +1268,42 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.31802,
+"p": 0.31913,
 "d": 4.065,
+"first": "2026-10-22T02:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909841",
+"start": "2026-10-22T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "ja morant",
+"lab": "Ja Morant 8+ assists",
+"p": 0.2196,
+"price": 398,
+"book": "Kalshi"
+},
+{
+"gid": "401909842",
+"start": "2026-10-22T02:30Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "darius garland",
+"lab": "Darius Garland 20+ points",
+"p": 0.7798,
+"price": -218,
+"book": "Kalshi"
+}
+],
+"p": 0.17125,
+"d": 7.264,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1319,9 +1353,9 @@
 "line": 2.5,
 "name": "al horford",
 "lab": "Al Horford over 2.5 assists",
-"p": 0.5106,
+"p": 0.5123,
 "price": 135,
-"book": "Novig"
+"book": "Hard Rock"
 },
 {
 "gid": "401909841",
@@ -1336,7 +1370,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.11212,
+"p": 0.11251,
 "d": 11.703,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
