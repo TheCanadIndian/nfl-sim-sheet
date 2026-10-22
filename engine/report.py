@@ -1253,7 +1253,40 @@ function pathLongshots(){
     <details class="how"><summary>How these are built</summary><p class="note">Each leg needs a path. First a game script our simulated games rate at least 3 points more likely than the prediction markets do (shown as us vs market). Then a rung that script feeds: the line clears 15%+ more often when it happens. The player needs at least three of five reasons: <b>usage</b> (his team’s top three by touches, or the starting QB), <b>matchup</b> (a defense in the 8 that allow the most to his position), <b>rotation</b> (a teammate out or a snap jump), <b>script</b>, and <b>price</b> (our market-anchored chance beats the best price at your books by 5%+, or a Value tag). Each leg sits inside our projection’s realistic range (our chance 20-45%, paying about +100 to +500), and legs come from different games, so the book pays them multiplied. <b>Hits</b> uses each leg’s market-anchored chance (not the script-boosted one). Every leg records its reasons, so the Profit page will show which ones actually matter.</p></details>
     <div class="dcg">${P.map(card).join('')}</div></section>`;
 }
+// Learning builder candidates (builder.py, owner 2026-10-22): in freeze mode, every over the page could bet at the owner's
+// books (QB pass yds; RB rush / rec yds; WR / TE rec yds, catches; anytime TD) with its path reasons -- usage, matchup
+// (DvP top 8), rotation (roleOf), script (a script our sims rate 3+ pts above the markets lifts his line 15%+) -- and
+// whether it fits: the script, or 2+ of the others. Graded later for every candidate, picked or not.
+function learnCandsNFL(){
+  const now = Date.now();
+  for (const g of D.games){
+    if (!g.sort || new Date(g.sort) <= now) continue;
+    const pool = D.players.filter(p => p.g === g.id), mu = (q, s_) => q.s[s_] ? q.s[s_][MEAN] : 0;
+    const top = new Set([g.home, g.away].flatMap(t => { const tp = pool.filter(q => q.t === t);
+      const qb = tp.filter(q => q.pos === 'QB').sort((a, b) => mu(b, 'att') - mu(a, 'att'))[0];
+      return [qb, ...tp.filter(q => q.pos !== 'QB').sort((a, b) => (mu(b, 'tgt') + mu(b, 'car')) - (mu(a, 'tgt') + mu(a, 'car'))).slice(0, 3)].filter(Boolean); }));
+    const sc = gameScriptsOf(g), DW = SCR[g.id];
+    for (const p of pool){
+      if (p.pos === 'QB' ? mu(p, 'att') < 20 : mu(p, 'tgt') + mu(p, 'car') < 3) continue;
+      const k = p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR', r = dvpRow(k, p.o);
+      const base = [top.has(p) ? 'usage' : null, r && r.rank <= 8 ? 'matchup' : null, roleOf(g, p) ? 'rotation' : null].filter(Boolean);
+      const stats = p.pos === 'QB' ? ['pass_yds'] : p.pos === 'RB' ? ['rush_yds', 'rec_yds', 'td'] : ['rec_yds', 'rec', 'td'];
+      for (const st of stats){
+        const v = LAD_VOL[st]; if (v && mu(p, v[0]) < v[1]) continue;
+        const ss = p.s[WHY_ST[st] || st] || p.s[st];
+        let script = null;
+        const x = sc && sc.length && DW && DW.p && DW.p[p.k] ? sdecode(DW.p[p.k][WHY_ST[st] || st]) : null;
+        if (x){ const med = st === 'td' ? 0 : ((ss || [])[MED] ?? 0); let a = 0; for (const z of x) if (z > med) a++;
+          for (const s_ of sc){ let b = 0; for (let i = 0; i < x.length; i++) if (s_.mask[i] && x[i] > med) b++;
+            if (((b + 1) / (s_.n + 2)) / ((a + 1) / (x.length + 2)) >= 1.15){ script = s_.name; break; } } }
+        const f = script ? [...base, 'script'] : base, fit = !!script || base.length >= 2;
+        MKT.cand(g.id, g.sort, p.n, st, null, null, f, fit);              // our chance at the books' main line: the props file's
+      }
+    }
+  }
+}
 function renderParlays(){
+  if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNFL(); } catch (e) {}
   const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + pathLongshots() + ladderCard() + primetimeLadders() + ladderLongshots();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',

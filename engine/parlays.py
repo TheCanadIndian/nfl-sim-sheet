@@ -111,6 +111,14 @@ def freeze():
             if not snap:
                 print(f"parlays {sport}: page gave no parlays (prices not loaded?)")
                 continue
+            try:                                                     # learning builder (builder.py): log candidates, add its parlays
+                import builder as LB
+                LB.save_cands(sport, snap.get("cands"), now)
+                lp = LB.build(sport, snap.get("cands"), now)
+                snap["parlays"] = snap.get("parlays", []) + lp
+                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays")
+            except Exception as e:                                   # noqa: BLE001
+                print(f"parlays {sport}: learning builder skipped ({type(e).__name__}: {e})")
             by = {}
             for p in snap["parlays"]:
                 starts = [when(L["start"]) for L in p["legs"] if L.get("start")]
@@ -131,9 +139,22 @@ def freeze():
                     continue
                 fin = card_final_at(date, (old["parlays"] if old else []) + by.get(date, []), sport)
                 locked = [dict(p, locked=True) for p in (old["parlays"] if old else []) if p.get("locked") or when(p["first"]) <= now
-                          or (p.get("pick") and now >= pick_lock(sport, p["pick"], p, fin))]
+                          or (p.get("pick") and now >= pick_lock(sport, p["pick"], p, fin))
+                          or (str(p.get("card", "")).startswith("Learning parlays") and now >= pick_lock(sport, "core", p, fin))]
                 lk = {tuple(sorted(_legkey(L) for L in p["legs"])) for p in locked}
                 pending = [p for p in by.get(date, []) if when(p["first"]) > now and tuple(sorted(_legkey(L) for L in p["legs"])) not in lk]
+                # learning parlays: at most 3 a day; once some lock, new ones only from other games (and not past their lock)
+                LP = lambda q: str(q.get("card", "")).startswith("Learning parlays")
+                lgids = {str(L.get("gid")) for q in locked if LP(q) for L in q["legs"]}
+                room = 3 - sum(1 for q in locked if LP(q))
+                keep = []
+                for q in pending:
+                    if LP(q):
+                        if room <= 0 or now >= pick_lock(sport, "core", q, fin) or any(str(L.get("gid")) in lgids for L in q["legs"]):
+                            continue
+                        room -= 1
+                    keep.append(q)
+                pending = keep
                 ps = pick_card(sport, locked + pending, now, fin)
                 if not ps or (old and ps == old["parlays"]):
                     continue
@@ -167,8 +188,8 @@ def _legkey(L):
 def card_slot(sport, p):
     """('core' | 'longshot' | None, edge on the parlay's market-anchored chance) for one parlay."""
     legs, d = p.get("legs") or [], p.get("d")
-    if not d or p.get("p") is None or str(p.get("card", "")).startswith("Same-game") or len(legs) < 2:
-        return None, None
+    if not d or p.get("p") is None or str(p.get("card", "")).startswith(("Same-game", "Learning parlays")) or len(legs) < 2:
+        return None, None                                            # the learning builder's parlays are tracked on their own
     if any(L.get("price") is None or L.get("book") not in CARD_BOOKS for L in legs) or len({str(L.get("gid")) for L in legs}) < len(legs):
         return None, None
     if any(str(L.get("side")).lower() in ("u", "under") for L in legs):  # overs only (owner, 2026-10-20): no unders, props or totals
@@ -398,7 +419,15 @@ def hub_data():
                                                          legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
                                                                     sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
         sports.append(dict(sport=sport, date=d["date"], final_at=d.get("final_at"), cards=[dict(card=c, parlays=v) for c, v in cards.items()]))
-    return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports)
+    L = None
+    try:                                                            # the learning builder's status (builder.py)
+        st = json.load(open(os.path.join(OUT, "learn", "state.json")))
+        segs = st.get("segments", [])
+        show = [x for x in segs if x["status"] in ("Proven", "Dropped")] + sorted([x for x in segs if x["status"] == "Watching"], key=lambda x: -x["n"])[:6]
+        L = dict(builder=st.get("builder"), rows=st.get("rows"), live=st.get("live_rows"), segs=show[:16], changes=st.get("changes", [])[-6:], updated=st.get("updated"))
+    except (OSError, ValueError):
+        pass
+    return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports, learn=L)
 
 
 HUB = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -416,6 +445,9 @@ HUB = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .hp li i{font-style:normal;font-weight:800;width:12px;flex:none}.hp li i.W{color:var(--good)}.hp li i.L{color:var(--bad)}
 .hs{display:flex;flex-wrap:wrap;gap:4px 12px;border-top:1px solid var(--faint);padding-top:6px;font-size:13px}.hs b{font-family:var(--display);font-size:16px}.hs .good{color:var(--good)}
 .hsec h2 small{font-family:var(--body);font-size:12.5px;color:var(--muted);font-weight:500;margin-left:8px;letter-spacing:0;text-transform:none}
+.lst{font-family:var(--body);font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:3px;border:1px solid currentColor}
+.lst.exp{color:#F2C14E}.lst.Proven{color:var(--good)}.lst.Dropped{color:var(--bad)}.lst.Watching,.lst.Learning{color:var(--muted)}
+.lt td.good{color:var(--good)}.lt td.bad{color:var(--bad)}.lt td{font-size:13px}
 details.hc{border-top:1px solid var(--faint);padding:8px 0}details.hc summary{cursor:pointer;font-weight:700}details.hc summary span{color:var(--muted);font-weight:500;font-size:12.5px;margin-left:6px}
 </style></head><body><div class="wrap">
 <header><div><div class="eyebrow">All sports · $5 a parlay</div><h1>Parlays</h1></div></header>
@@ -448,10 +480,23 @@ function render(){
   const today = new Date().toLocaleDateString('en-CA');
   const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
   if (picks.length) html += sec('Today’s cards', `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
+  const LRN = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Learning parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  if (D.learn || LRN.length){
+    const B = (D.learn && D.learn.builder) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    const segRow = x => `<tr><td class="l">${esc(x.seg)}</td><td>${x.n}</td><td class="${x.ret >= 0 ? 'good' : 'bad'}">${x.ret >= 0 ? '+' : '−'}${Math.abs(Math.round(x.ret * 100))}%</td><td>${x.h1 == null ? '–' : (x.h1 >= 0 ? '+' : '−') + Math.abs(Math.round(x.h1 * 100)) + '%'} / ${x.h2 == null ? '–' : (x.h2 >= 0 ? '+' : '−') + Math.abs(Math.round(x.h2 * 100)) + '%'}</td><td><span class="lst ${x.status}">${x.status}</span></td></tr>`;
+    const learned = D.learn ? `<details class="hc"><summary>What it has learned<span>${D.learn.rows} graded value props${D.learn.live ? ` · ${D.learn.live} with path reasons` : ''}</span></summary>
+      <p class="note">Every over the pages could bet at your books is logged with its reasons and graded, picked or not. A kind of leg is <b>Proven</b> after 30+ bets with a positive return in both halves of the record, <b>Dropped</b> after 30+ negative in both (the builder skips it), and <b>Watching</b> in between. Started from the Oct 12-22 price history (no kind of value prop had consistent returns yet: all 5-40% edges −14% on 305).</p>
+      <div class="tw"><table class="t lt"><thead><tr><th class="l">Kind of leg</th><th>Bets</th><th>Return</th><th>Halves</th><th>Status</th></tr></thead><tbody>${D.learn.segs.map(segRow).join('')}</tbody></table></div>
+      ${D.learn.changes.length ? `<p class="note">Recent changes: ${D.learn.changes.map(c => `${esc(c.date.slice(5))} ${esc(c.seg)} ${esc(c.was)} → <b>${esc(c.now)}</b>`).join(' · ')}</p>` : ''}</details>` : '';
+    html += sec(`Learning parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec}`,
+      (LRN.length ? `<div class="hg">${LRN.map(x => card(x.q, x.s.sport, SP[x.s.sport])).join('')}</div>` : '<p class="note">No legs qualify yet today: every leg must fit a game script or path, carry a 5-40% edge at your books, and not belong to a kind of leg it has dropped.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Builds up to three parlays a sport a day (two 2-leg, one 3-leg), one leg per game, overs only, from legs that fit a game script or our paths (NFL: the script, or two of usage, matchup, rotation; NBA: two of usage, matchup, rotation, game; NHL: top-3 usage plus first power-play unit or a struggling goalie). It ranks them by edge, prefers kinds of legs it has proven and skips the ones it has dropped, and it relearns after every graded game. It stays Experimental until its own record is consistent: 60+ graded parlays, positive in both halves.</p></details>` + learned);
+  }
   if (multi && multi.cards.length) html += sec('Multisport all-day longshots', `${day(multi.date)} · one leg per game, 2+ sports`, `<div class="hg">${multi.cards.flatMap(c => c.parlays).map(q => card(q, 'multi', '')).join('')}</div>
     <p class="note" style="margin:6px 0 0">Legs are each sport’s strongest at your books: NFL and NBA path legs (three or more of usage, matchup, rotation, game script and price, with our chance 20-45%) and NHL anytime-goal legs from our top three per game. One leg per game, 3-4 legs, paying 15x to 300x.</p>`);
   for (const s of S.filter(s => s.sport !== 'multi')){
-    const body = s.cards.map(c => `<details class="hc"${/Path|Ladder|Primetime/.test(c.card) ? ' open' : ''}><summary>${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`).join('');
+    const body = s.cards.filter(c => !/^Learning parlays/.test(c.card)).map(c => `<details class="hc"${/Path|Ladder|Primetime/.test(c.card) ? ' open' : ''}><summary>${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`).join('');
     html += sec(SP[s.sport], day(s.date), body || '<p class="note">No parlays yet.</p>');
   }
   if (!D.sports.length) html += '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>';

@@ -56,9 +56,10 @@ jobs:
         if: steps.q.outputs.skip != 'true'
         working-directory: engine
         run: python watch.py
-      - name: Parlay record (freeze every parlay card before the day's first game, grade from box scores, publish the Parlays tab)
+      - name: Parlay record (learning builder grades / learns; freeze every parlay card before the day's first game, grade from box scores, publish the Parlays tab)
         working-directory: engine
         run: |
+          python builder.py grade learn || true
           if [ "${{ steps.q.outputs.skip }}" != "true" ]; then python parlays.py freeze || true; fi
           python parlays.py grade || true
           python parlays.py page || true

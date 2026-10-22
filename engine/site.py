@@ -78,6 +78,7 @@ BAR_CSS = """
 .topbar .grow{flex:1}
 @media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}.topbar .help.guide{display:none}}
 .topbar .help{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:5px 9px;border-radius:6px}
+@media (max-width:520px){.topbar .help{padding:5px 5px;font-size:12.5px}.topbar .sp{padding:4px 5px;font-size:15px}}   /* after the base rule so it applies; fits Screener / Parlays / Profit */
 .topbar .help:hover,.topbar .help[aria-current="page"]{color:var(--ink);background:var(--sunk)}
 .topbar a.lnk{color:var(--muted);text-decoration:none;font-weight:500;font-size:14px;padding:5px 10px;border-radius:6px}
 .topbar a.lnk:hover{color:var(--ink);background:var(--sunk)}
@@ -128,8 +129,9 @@ def bar(depth, active):
     help_cur = ' aria-current="page"' if active == "guide" else ""
     prof_cur = ' aria-current="page"' if active == "profit" else ""
     parl_cur = ' aria-current="page"' if active == "parlays" else ""
+    scr_cur = ' aria-current="page"' if active == "screener" else ""
     r1 = (f'<div class="row r1"><a class="brand" href="{pre}index.html">Sim Sheet</a>{"".join(tabs)}'
-          f'<span class="grow"></span><a class="help" href="{pre}parlays.html"{parl_cur}>Parlays</a><a class="help" href="{pre}profit.html"{prof_cur}>Profit</a>'
+          f'<span class="grow"></span><a class="help" href="{pre}screener.html"{scr_cur}>Screener</a><a class="help" href="{pre}parlays.html"{parl_cur}>Parlays</a><a class="help" href="{pre}profit.html"{prof_cur}>Profit</a>'
           f'<a class="help guide" href="{pre}guide.html"{help_cur}>How to read</a></div>')
     r2 = ""
     if sport in SPORT and SPORT[sport]["status"] == "live":
@@ -465,6 +467,67 @@ def mlb_card():
         <p class="lead">{html.escape(day)} · {len(mlb['games'])} game{'s' if len(mlb['games']) != 1 else ''}</p>
         <h3>Most likely to homer</h3>
         <ol class="list">{''.join(f'<li><span>{html.escape(n)} <small>{t} vs {html.escape(sp)}</small></span><b>{p*100:.0f}%</b><em>{american(p)}</em></li>' for p, n, t, sp in rows)}</ol>"""
+
+
+SCREEN_CSS = """
+.sc-bar{display:grid;gap:8px;margin:6px 0 10px}.sc-grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-l{font-size:12px;color:var(--muted);margin-right:2px}
+.sc-chip{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer}
+.sc-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sc-in select,.sc-in input{background:var(--sunk);color:var(--ink);border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font:500 13.5px var(--body)}
+.sc-in input{flex:1 1 180px;min-width:0}.sc-reset{background:none;border:0;color:var(--muted);font:600 12.5px var(--body);cursor:pointer;text-decoration:underline}
+.sc-count{font-size:13px;color:var(--muted);margin:4px 0 8px}.sc-count b{color:var(--ink)}
+.sc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 14px;align-items:center;padding:9px 4px;border-top:1px solid var(--faint)}
+.sc-who b{font-size:14.5px}.sc-m{font-size:12px;color:var(--muted)}.sc-bet{font-size:13.5px;margin-top:2px}
+.sc-num{text-align:right;cursor:help}.sc-e{display:block;font-family:var(--display);font-size:19px;font-weight:700}.sc-e.good{color:var(--good)}.sc-e.bad{color:var(--bad)}
+.sc-s{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.sc-px{white-space:nowrap;border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);text-decoration:none;min-width:118px;text-align:center}
+.sc-px b{font-size:14.5px}a.sc-px:hover{border-color:var(--accent)}.sc-px.nl{color:var(--muted)}
+.sc-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:0 5px;margin-left:4px;border:1px solid currentColor;vertical-align:1px}
+.sc-tag.v{color:var(--good)}.sc-tag.lc{color:var(--away)}.sc-tag.off{color:#F2C14E}.sc-tag.alt{color:var(--muted)}
+.sc-more{display:block;margin:12px auto;border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:7px 18px;font:600 13.5px var(--body);cursor:pointer}
+.sc-empty{color:var(--muted);padding:16px 4px}
+@media (max-width:560px){.sc-row{grid-template-columns:minmax(0,1fr) auto}.sc-who{grid-column:1 / -1}.sc-num{text-align:left}.sc-px{justify-self:end}}
+"""
+
+
+def write_screener():
+    """screener.html (owner 2026-10-22: "a screener for odds that is easy to use"): every over price on the current NFL /
+    NBA / NHL slates vs the fair price. screener.js reads markets/props_<sport>.json + flags live; this page only carries
+    the game map (label, start, each player's team) from each sport's current page."""
+    import parlays as PLS
+    from zoneinfo import ZoneInfo
+    ET = ZoneInfo("America/New_York")
+
+    def iso(v):
+        try:
+            t = dt.datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+        except ValueError:
+            return None
+        return (t if t.tzinfo else t.replace(tzinfo=ET)).isoformat()
+    G = {}
+    nfl = page_data(os.path.join(HERE, "projections", "index.html"))
+    if nfl:
+        pl = {}
+        for q in nfl.get("players", []):
+            pl.setdefault(q["g"], {})[PLS.jsnorm(q["n"])] = [q["t"], q["n"]]
+        G["nfl"] = {g["id"]: dict(lab=f"{g['away']} @ {g['home']}", start=iso(g.get("sort")), pl=pl.get(g["id"], {})) for g in nfl.get("games", [])}
+    nhl = page_data(os.path.join(HERE, "hockey", "projections", "index.html"))
+    if nhl:
+        G["nhl"] = {str(g["id"]): dict(lab=f"{g['away']['team']} @ {g['home']['team']}", start=iso(g.get("start_utc")),
+                                       pl={PLS.jsnorm(q["name"]): [s["team"], q["name"]] for s in (g["away"], g["home"]) for q in s["players"]}) for g in nhl.get("games", [])}
+    nba = page_data(os.path.join(HERE, "nba", "projections", "index.html"))
+    if nba:
+        pl = {}
+        for q in nba.get("players", []):
+            pl.setdefault(str(q["g"]), {})[PLS.jsnorm(q["n"])] = [q["t"], q["n"]]
+        G["nba"] = {str(g["id"]): dict(lab=f"{g['away']} @ {g['home']}", start=iso(g.get("start_utc")), pl=pl.get(str(g["id"]), {})) for g in nba.get("games", [])}
+    body = (f"<style>{SCREEN_CSS}</style><header><div><div class=\"eyebrow\">NFL · NBA · NHL · overs</div><h1>Odds screener</h1></div></header>"
+            "<p class=\"lead\" style=\"margin:0 0 6px\">Every over price on today’s slates against the fair price: tap the chips to narrow it down, tap a price to open the bet. "
+            "Edge = our market-anchored chance × the payout − 1 (same rules as the sport pages: the sharp consensus without the book you’re betting, our number at its tested weight).</p>"
+            "<div id=\"screener\"><p class=\"sc-empty\">Loading prices…</p></div>"
+            f"<script>window.SCREEN_GAMES = {json.dumps(G, separators=(',', ':')).replace('</', '<' + chr(92) + '/')};</script>"
+            "<script src=\"screener.js\"></script>")
+    write_page("screener.html", "Odds screener · Sim Sheet", "screener", body, depth=0)
 
 
 HOME_CARDS = {"nfl": nfl_card, "nhl": nhl_card, "nba": nba_card, "mlb": mlb_card}
@@ -816,6 +879,7 @@ def main():
     os.makedirs(SITE, exist_ok=True)
     shutil.copy2(os.path.join(HERE, "mkt.js"), os.path.join(SITE, "mkt.js"))
     shutil.copy2(os.path.join(HERE, "slip.js"), os.path.join(SITE, "slip.js"))
+    shutil.copy2(os.path.join(HERE, "screener.js"), os.path.join(SITE, "screener.js"))
     # saved simulations for the slip (current slate only: replace the folder)
     for src, dst in ((os.path.join(HERE, "projections", "draws"), os.path.join(SITE, "nfl", "draws")),
                      (os.path.join(HERE, "nba", "projections", "draws"), os.path.join(SITE, "nba", "draws"))):
@@ -866,6 +930,10 @@ def main():
     guide()
     updates()
     markets_page()
+    try:
+        write_screener()
+    except Exception as e:                                   # noqa: BLE001 -- never block the site build
+        print("screener skipped:", type(e).__name__, e)
 
     # Old addresses from before the reorganisation
     redirect(os.path.join(SITE, "results.html"), "nfl/results.html")

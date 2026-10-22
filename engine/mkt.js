@@ -45,11 +45,13 @@
   // Results page can grade them. Each leg: {gid, start, kind, side, line, name, lab, p, price, book}.
   const FREEZE = /[?&]freeze=1(&|$)/.test(location.search);
   if (FREEZE) MY = ['Novig', 'Kalshi', 'Hard Rock'];
-  let FROZEN = [];
+  let FROZEN = [], CANDS = [];
   const reg = (card, tier, legs, p, d) => { if (FREEZE && legs && legs.length) FROZEN.push({card, tier, legs, p: +(+p).toFixed(5), d: d == null ? null : +(+d).toFixed(3)}); };
+  // learning builder (builder.py): every over the page could bet at the owner's books, with its path / script reasons (f)
+  const regCand = c => { if (FREEZE && c) CANDS.push(c); };
   const dumpFrozen = () => { let el = document.getElementById('frozen-parlays');
     if (!el){ el = document.createElement('script'); el.type = 'application/json'; el.id = 'frozen-parlays'; document.body.appendChild(el); }
-    el.textContent = JSON.stringify({generated: new Date().toISOString(), books: MY, prices: BK && BK.fetched, props: PR && PR.fetched, parlays: FROZEN}); };
+    el.textContent = JSON.stringify({generated: new Date().toISOString(), books: MY, prices: BK && BK.fetched, props: PR && PR.fetched, parlays: FROZEN, cands: CANDS}); };
   const mine = k => !MY.length || MY.includes(k);
   // Pinnacle's no-vig is on the prop when its line matches ours (TD props have no line: .5). w: 2 two-way (multiplicative), 1 one-way (power)
   const pinHow = (w, pl) => w === 1 ? 'one-way price, power de-vig' : w === 3 ? `carried from Pinnacle’s ${pl != null ? pl + ' ' : ''}line by our distribution’s shape` : 'both sides, multiplicative de-vig';
@@ -273,7 +275,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     }).catch(() => {});
   }
   let rr = null;
-  function rerender(){ clearTimeout(rr); rr = setTimeout(() => { FROZEN = []; try { window.render && window.render(); } catch (e) {} if (FREEZE) dumpFrozen(); }, 250); }
+  function rerender(){ clearTimeout(rr); rr = setTimeout(() => { FROZEN = []; CANDS = []; try { window.render && window.render(); } catch (e) {} if (FREEZE) dumpFrozen(); }, 250); }
 
   // flow badges (Kalshi pre-game taker flow, r.fl: +1 all money bought YES, -1 all NO). Backtests Sep-Oct 2026:
   // VALUE (YES edge) with NO-heavy/mixed flow beat VALUE with YES-heavy flow in MLB HR, NFL yards and NHL goals;
@@ -808,6 +810,20 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return r ? {m: (r.ya + r.yb) / 2, w: .5, src: 'Kalshi'} : null;
     },
     norm, reg, FREEZE,
+    // one learning-builder candidate: an over (main line, or yes for TD / goal) priced at the owner's books with the
+    // site's anchored chance (sgLeg); f = the page's reasons (keys), fit = whether it fits a script / path (page rule)
+    cand(gid, start, name, kind, line, p, f, fit){
+      if (!FREEZE) return;
+      const e0 = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind];
+      if (p == null) p = e0 && e0.p;                                     // our chance at the books' main line (props file)
+      if (p == null) return;
+      const L = window.MKT.sgLeg(gid, kind, 'o', line, p, name); if (!L || !L.b || !L.b.mine || L.b.o == null) return;
+      const d = dec(L.b.o), tag = window.MKT.tagKind ? window.MKT.tagKind(gid, name) : null;
+      const e = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind];
+      const ln = kind === 'goal' || kind === 'td' ? .5 : e && e.l != null ? e.l : line;          // sgLeg prices the main line
+      regCand({gid: String(gid), start, name: norm(name), lab: name, kind, line: ln ?? .5, p: +(+p).toFixed(4), q: +L.q.toFixed(4), m: +L.m.toFixed(4),
+               price: L.b.o, book: L.b.k, edge: +(L.q * d - 1).toFixed(4), f: f || [], fit: !!fit, tag: tag || null});
+    },
     hasProps: gid => !!(PR && PR.props && PR.props[String(gid)] && Date.now() - new Date(PR.fetched) < 12 * 3600e3),
     // one player's best price at the viewer's books (all books if none chosen) for a prop, as a compact link.
     // kind: 'goal' | 'td' (yes side) or 'rec' / 'rec_yds' / 'rush_yds' / 'pass_yds' (main line: whichever side we rate better)
