@@ -502,7 +502,24 @@ function nbaLadderLongshots(){
     <div class="dcg">${P.map(card).join('')}</div></section>`;
 }
 const amO = q => q >= .5 ? -Math.round(100 * q / (1 - q)) : Math.round(100 * (1 - q) / q);
+// Learning builder candidates (builder.py, owner 2026-10-22): in freeze mode, every rotation player's main-line over at
+// the owner's books with its path reasons (nbaFactors: usage, matchup, rotation, game); fits with 2+ of them.
+function learnCandsNBA(){
+  const now = Date.now();
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id && x.st !== 'Out')){
+      const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED]; if (!(mins >= 20)) continue;
+      for (const st of ['pts', 'reb', 'ast', 'fg3m']){
+        if (!vol(p, st)) continue;
+        const F0 = nbaFactors(g, p, st), f = Object.keys(F0).filter(k => F0[k]);
+        MKT.cand(g.id, g.start_utc, p.n, st, null, null, f, f.length >= 2);
+      }
+    }
+  }
+}
 function parlaysView(){
+  if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNBA(); } catch (e) {}
   return (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + ladderCard() + nbaLadderLongshots() + tierParlays();
 }
 function render(){

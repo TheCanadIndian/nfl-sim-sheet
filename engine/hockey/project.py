@@ -1119,7 +1119,23 @@ function sameGameCard(){
     <details class="how"><summary>How these work</summary><p class="note">Two legs from the same game that tend to happen together: a goal and his team winning, a goal and the game going over 5.5, or 3+ shots and a goal. Each leg’s chance is market-anchored (anytime goal: our number blended with the market; moneyline and total: ours averaged with the books’ no-vig line; shots: ours 50/50 with the books’ no-vig), then multiplied by how much more often the two happen together in our game simulations (power plays, score effects, empty nets, overtime, shared to players by their even-strength and power-play roles). Tested on 1,312 games of 2025-26: multiplying the legs as if unrelated ran 20-35% low on these combos, and the simulated link fixed it in both halves of the season. Fair is the price a same-game parlay must pay to break even; books build in their own correlation, so most same-game prices will be below Fair. Leaders: each game’s top 3 by usage rank. Tracked on the Profit page at fair odds.</p></details>
     <div class="tw"><table class="t pairs atgp sgc"><thead><tr><th class="l">Combo</th><th>Chance</th><th>Fair</th><th>Together</th><th class="l">My parlay</th></tr></thead><tbody>${body}</tbody></table></div></section>`;
 }
+// Learning builder candidates (builder.py, owner 2026-10-22): in freeze mode, anytime goals for skaters 15%+ and shots
+// 2+ / 3+ for players projecting 2+ shots, at the owner's books, with reasons -- usage (our top 3 in the game), pp1
+// (first power-play unit), goalie (the opposing goalie struggling, as the page's green flag); fits with usage + one more.
+function learnCandsNHL(){
+  const now = Date.now();
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const [s, o] of [[g.away, g.home], [g.home, g.away]]) for (const p of s.players){
+      const f = [p.ur && p.ur <= 3 ? 'usage' : null, p.pp === 'PP1' ? 'pp1' : null, gGreen(o) ? 'goalie' : null].filter(Boolean);
+      const fit = f.includes('usage') && f.length >= 2;
+      if (p.p >= .15) MKT.cand(g.id, g.start_utc, p.name, 'goal', .5, null, f, fit);
+      if ((p.sog ?? 0) >= 2) for (const k of ['sog15', 'sog25']) MKT.cand(g.id, g.start_utc, p.name, k, null, null, f, fit);
+    }
+  }
+}
 function playsView(){
+  if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNHL(); } catch (e) {}
   const h = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + foldable(atgParlays() + sameGameCard() + tierParlays() + pairsCard() + tripleCard());
   return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
