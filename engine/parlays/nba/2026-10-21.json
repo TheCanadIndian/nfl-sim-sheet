@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-21",
 "lock": "2026-10-21T23:00:00+00:00",
-"frozen_at": "2026-10-22T00:56:16.341Z",
+"frozen_at": "2026-10-22T00:58:59.901Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -1050,29 +1050,76 @@
 {
 "gid": "401909842",
 "start": "2026-10-22T02:30Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 15.5,
-"name": "domantas sabonis",
-"lab": "Domantas Sabonis 16+ reb",
-"p": 0.2923,
-"price": 270,
-"book": "Novig",
+"line": 4.5,
+"name": "darius garland",
+"lab": "Darius Garland 5+ threes",
+"p": 0.2298,
+"price": 373,
+"book": "Kalshi",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "price"
 ]
 }
 ],
-"p": 0.08478,
-"d": 19.425,
+"p": 0.06664,
+"d": 24.833,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "401909092",
+"start": "2026-10-22T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 6.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 7+ threes",
+"p": 0.2073,
+"price": 456,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909842",
+"start": "2026-10-22T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "darius garland",
+"lab": "Darius Garland 5+ threes",
+"p": 0.2298,
+"price": 373,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.04765,
+"d": 26.299,
+"first": "2026-10-22T02:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909092",
@@ -1108,10 +1155,27 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401909842",
+"start": "2026-10-22T02:30Z",
+"kind": "reb",
+"side": "o",
+"line": 15.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis 16+ reb",
+"p": 0.2923,
+"price": 270,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"price"
+]
 }
 ],
-"p": 0.06197,
-"d": 26.25,
+"p": 0.01812,
+"d": 97.125,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1174,102 +1238,6 @@
 ],
 "p": 0.01295,
 "d": 102.86,
-"first": "2026-10-22T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909092",
-"start": "2026-10-22T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 6.5,
-"name": "stephen curry",
-"lab": "Stephen Curry 7+ threes",
-"p": 0.2073,
-"price": 456,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909841",
-"start": "2026-10-22T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 17.5,
-"name": "dillon brooks",
-"lab": "Dillon Brooks 18+ pts",
-"p": 0.442,
-"price": 122,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909842",
-"start": "2026-10-22T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "kris dunn",
-"lab": "Kris Dunn 6+ reb",
-"p": 0.2366,
-"price": 344,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.02168,
-"d": 54.804,
-"first": "2026-10-22T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909092",
-"start": "2026-10-22T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "al horford",
-"lab": "Al Horford over 2.5 assists",
-"p": 0.5106,
-"price": 135,
-"book": "Novig"
-},
-{
-"gid": "401909842",
-"start": "2026-10-22T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "precious achiuwa",
-"lab": "Precious Achiuwa 6+ rebounds",
-"p": 0.6266,
-"price": -142,
-"book": "Kalshi"
-}
-],
-"p": 0.31994,
-"d": 4.005,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1346,6 +1314,18 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "401909092",
+"start": "2026-10-22T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "al horford",
+"lab": "Al Horford over 2.5 assists",
+"p": 0.5106,
+"price": 135,
+"book": "Novig"
+},
+{
 "gid": "401909841",
 "start": "2026-10-22T02:00Z",
 "kind": "ast",
@@ -1356,22 +1336,10 @@
 "p": 0.2151,
 "price": 398,
 "book": "Kalshi"
-},
-{
-"gid": "401909842",
-"start": "2026-10-22T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "precious achiuwa",
-"lab": "Precious Achiuwa 6+ rebounds",
-"p": 0.6266,
-"price": -142,
-"book": "Kalshi"
 }
 ],
-"p": 0.13478,
-"d": 8.487,
+"p": 0.10982,
+"d": 11.703,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 },
@@ -1402,10 +1370,22 @@
 "p": 0.2151,
 "price": 398,
 "book": "Kalshi"
+},
+{
+"gid": "401909842",
+"start": "2026-10-22T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "brook lopez",
+"lab": "Brook Lopez 1+ threes",
+"p": 0.8014,
+"price": -290,
+"book": "Kalshi"
 }
 ],
-"p": 0.10982,
-"d": 11.703,
+"p": 0.08801,
+"d": 15.739,
 "first": "2026-10-22T02:00:00+00:00",
 "res": null
 }
