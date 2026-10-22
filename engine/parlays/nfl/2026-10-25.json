@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-22T20:15:03.154Z",
+"frozen_at": "2026-10-22T20:27:22.830Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,97 @@
 ],
 "final_at": "2026-10-25T11:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "joe burrow",
+"lab": "Joe Burrow 325+ pass yds",
+"p": 0.2324,
+"price": 398,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "denzel boston",
+"lab": "Denzel Boston 80+ rec yds",
+"p": 0.2527,
+"price": 280,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script"
+]
+}
+],
+"p": 0.05871,
+"d": 18.924,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "joe burrow",
+"lab": "Joe Burrow 325+ pass yds",
+"p": 0.2324,
+"price": 398,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 89.5,
+"name": "christian mccaffrey",
+"lab": "Christian McCaffrey 90+ rush yds",
+"p": 0.2082,
+"price": 331,
+"book": "Kalshi",
+"sc": "SF pulls away",
+"f": [
+"usage",
+"rotation",
+"script"
+]
+}
+],
+"p": 0.04839,
+"d": 21.464,
+"first": "2026-10-25T17:00:00+00:00"
+},
 {
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
@@ -39,7 +130,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.045,
+"p": 0.05227,
 "d": 16.381,
 "first": "2026-10-26T00:20:00+00:00"
 },
@@ -237,6 +328,18 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.4971,
+"price": 113,
+"book": "Novig"
+},
+{
 "gid": "2026_07_DEN_ARI",
 "start": "2026-10-25T16:05:00",
 "kind": "td",
@@ -247,6 +350,28 @@
 "p": 0.3119,
 "price": 264,
 "book": "Novig"
+}
+],
+"p": 0.15504,
+"d": 7.753,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.4971,
+"price": 113,
+"book": "Novig"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -256,15 +381,48 @@
 "line": 0.5,
 "name": "brian robinson",
 "lab": "Brian Robinson TD",
-"p": 0.3048,
+"p": 0.306,
 "price": 270,
 "book": "Novig"
 }
 ],
-"p": 0.09508,
-"d": 13.468,
+"p": 0.1521,
+"d": 7.881,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.4971,
+"price": 113,
+"book": "Novig"
+},
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "marshawn lloyd",
+"lab": "Marshawn Lloyd TD",
+"p": 0.2906,
+"price": 365,
+"book": "Novig"
+}
+],
+"p": 0.14445,
+"d": 9.905,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -285,52 +443,18 @@
 {
 "gid": "2026_07_GB_DET",
 "start": "2026-10-25T16:25:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "pierre strong",
-"lab": "Pierre Strong over 1.5 receptions",
-"p": 0.4814,
-"price": 127,
+"kind": "rec_yds",
+"side": "u",
+"line": 19.5,
+"name": "savion williams",
+"lab": "Savion Williams under 19.5 rec yds",
+"p": 0.5597,
+"price": 100,
 "book": "Novig"
 }
 ],
-"p": 0.25707,
-"d": 4.835,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.534,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "2026_07_TB_CAR",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kenny gainwell",
-"lab": "Kenny Gainwell anytime TD",
-"p": 0.249,
-"price": 426,
-"book": "Kalshi"
-}
-],
-"p": 0.13297,
-"d": 11.204,
+"p": 0.29888,
+"d": 4.26,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -340,13 +464,13 @@
 {
 "gid": "2026_07_IND_MIN",
 "start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.534,
-"price": 113,
+"kind": "rec_yds",
+"side": "u",
+"line": 72.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 72.5 rec yds",
+"p": 0.58,
+"price": -104,
 "book": "Novig"
 },
 {
@@ -358,12 +482,78 @@
 "name": "foster moreau",
 "lab": "Foster Moreau anytime TD",
 "p": 0.226,
-"price": 488,
+"price": 506,
 "book": "Novig"
 }
 ],
-"p": 0.12068,
-"d": 12.524,
+"p": 0.13108,
+"d": 11.887,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "george holani",
+"lab": "George Holani anytime TD",
+"p": 0.223,
+"price": 525,
+"book": "Novig"
+},
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 72.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 72.5 rec yds",
+"p": 0.58,
+"price": -104,
+"book": "Novig"
+}
+],
+"p": 0.12934,
+"d": 12.26,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 19.5,
+"name": "savion williams",
+"lab": "Savion Williams under 19.5 rec yds",
+"p": 0.5597,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "2026_07_NYG_HOU",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "foster moreau",
+"lab": "Foster Moreau anytime TD",
+"p": 0.226,
+"price": 506,
+"book": "Novig"
+}
+],
+"p": 0.12649,
+"d": 12.12,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
