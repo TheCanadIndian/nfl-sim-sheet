@@ -707,6 +707,30 @@ def stale(c, now, minutes):
     """True when a cached pull is missing or older than `minutes` (refresh within the credit pacing)."""
     return not c or now - pd.Timestamp(c.get("fetched", "2000-01-01")).tz_convert("UTC") >= pd.Timedelta(minutes=minutes)
 HR_CACHE = os.path.join(M.OUT, "hr_props_{}.json")
+MORNING_HOUR, FAST = 8, 30           # owner 2026-10-23: one early-morning pull for early value, then every 30 min
+
+
+def wanted(games, cache, now, window_h, base_min, bst):
+    """Games due a paid prop pull: inside a game's window (last window_h hours) every FAST minutes while today's credits
+    are on pace (books.tight: 75% of the day's allowance spent -> back to base_min, so the pulls nearest each game are
+    never the ones the budget cuts); outside it, one pull of every game later today from MORNING_HOUR ET on.
+    An empty answer (the book hasn't posted yet) stores nothing and is free, so it simply retries next run."""
+    et = now.tz_convert("America/New_York")
+    morning = et.normalize() + pd.Timedelta(hours=MORNING_HOUR)
+    every = base_min if B.tight(bst, now) else FAST
+    out = {}
+    for ga, g in games.items():
+        st = pd.Timestamp(g["start"]).tz_convert("UTC")
+        if st <= now:
+            continue
+        c = cache.get(str(g["id"]))
+        if st <= now + pd.Timedelta(hours=window_h):
+            if stale(c, now, every):
+                out[ga] = g
+        elif st.tz_convert("America/New_York").date() == et.date() and et >= morning:
+            if not c or pd.Timestamp(c.get("fetched", "2000-01-01")).tz_convert("America/New_York") < morning:
+                out[ga] = g
+    return out
 
 
 def hr_pull(sport, now, st):
@@ -719,18 +743,18 @@ def hr_pull(sport, now, st):
     key, mkt, kind, hours = HR_MKT[sport]
     O = (M.ours_nhl if sport == "nhl" else M.ours_nfl)() or {}
     soon = {(g["away"], g["home"]): g for g in O.get("games", [])
-            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=hours)}
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
     try:
         cache = json.load(open(HR_CACHE.format(sport)))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, HR_REFRESH)}
+    bst = B.load_state()
+    todo = wanted(soon, cache, now, hours, HR_REFRESH, bst)
     if not todo:
         return
     r = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events", params=dict(apiKey=k), timeout=30)   # free
     if r.status_code != 200:
         return
-    bst = B.load_state()
     for e in r.json():
         g = todo.get((B.NAMES[sport].get(e["away_team"]), B.NAMES[sport].get(e["home_team"])))
         if not g:
@@ -1078,16 +1102,16 @@ def hr_ou_pull(sport, now):
     key, mkts = HR_OU[sport]
     O = (M.ours_nhl if sport == "nhl" else M.ours_nfl)() or {}
     soon = {(g["away"], g["home"]): g for g in O.get("games", [])
-            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=6)}
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
     f = HR_OU_CACHE.format(sport)
     try:
         cache = json.load(open(f))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, HR_REFRESH)}
+    bst = B.load_state()
+    todo = wanted(soon, cache, now, 6, HR_REFRESH, bst)
     if todo:
         r = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events", params=dict(apiKey=k), timeout=30)   # free
-        bst = B.load_state()
         for e in (r.json() if r.status_code == 200 else []):
             g = todo.get((B.NAMES[sport].get(e["away_team"]), B.NAMES[sport].get(e["home_team"])))
             if not g:
@@ -1259,15 +1283,15 @@ def oa_nba(now):
     if not k or not O:
         return
     games = {(g["away"], g["home"]): g for g in O.get("games", [])
-             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=NBA_HOURS)}
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
     try:
         cache = json.load(open(NBA_CACHE))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in games.items() if stale(cache.get(str(g["id"])), now, NBA_REFRESH)}
+    bst = B.load_state()
+    todo = wanted(games, cache, now, NBA_HOURS, NBA_REFRESH, bst)
     if todo:
         r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
-        bst = B.load_state()
         for e in (r.json() if r.status_code == 200 else []):
             g = todo.get((B.NAMES["nba"].get(e["away_team"]), B.NAMES["nba"].get(e["home_team"])))
             if not g:
