@@ -339,6 +339,16 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     return `<div class="mkx-pb"><div class="mkx-h"><span class="t">Patterns in props that hit</span><small>${P_NOTE}</small></div>${ids.map(line).join('')}${tip ? `<div class="mkx-tip">⏱ ${esc(tip)}</div>` : ''}</div>`;
   }
   const P_NOTE = 'early leads from 3 weeks: the "since" record shows whether they keep hitting';
+  // the sportsbooks' over prices at one exact number, for comparing a Kalshi rung (owner 2026-10-23: Hard Rock alt props
+  // and Novig ladders): the props file's main line or that number's alt line; {book: {o, u}} (u = bet link or null)
+  const booksAt = (gid, name, kind, line) => {
+    const e = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || line == null) return {};
+    const x = Math.abs((e.l ?? -99) - line) < 1e-9 ? e.o : ((e.a || {})[String(line)] || (e.a || {})[(+line).toFixed(1)] || {}).o;
+    const out = {};
+    for (const [b, v] of Object.entries(x || {})) if (['Hard Rock', 'Novig'].includes(b) && v && v[0] != null)
+      out[b] = {o: v[0], u: v[1] ? (String(v[1]).startsWith('http') ? v[1] : `https://www.gambly.com/deeplink/odds/${v[1]}?utm_campaign=${encodeURIComponent(PR.partner || '')}`) : null};
+    return out;
+  };
   window.MKT = {
     // best sportsbook price for one game-line option, as a small second line inside the page's bet chip.
     // kind: 'ml' (side home|away), 'spread' (line = HOME team's handicap, side home|away), 'total' (side over|under)
@@ -1080,6 +1090,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return null;
     },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
+    booksAt(gid, name, kind, line){ return booksAt(gid, name, kind, line); },
     ladder(gid, pid, name, kinds){
       kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
       // wide quotes (spread over 10c) say nothing about the price: left out
@@ -1091,7 +1102,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const mid = r => (r.ya + r.yb) / 2; let i0 = 0;
         L.forEach((r, i) => { if (Math.abs(mid(r) - .5) < Math.abs(mid(L[i0]) - .5)) i0 = i; });
         L.slice(i0 + 2).forEach((r, i) => { if (mid(r) < mid(L[i0])) out.push({k, i, l: r.l, ya: r.ya, yb: r.yb, mid: mid(r), p: ours(r, 'vegas'), price: px(r.ya, 'kalshi'),
-          top: L.length - 1 - (i0 + 2 + i), cost: r.ya + .07 * r.ya * (1 - r.ya)}); });   // top: rungs above this one (0 = the top rung)
+          top: L.length - 1 - (i0 + 2 + i), cost: r.ya + .07 * r.ya * (1 - r.ya), bk: booksAt(gid, name, k, r.l)}); });   // top: rungs above this one (0 = the top rung)
       }
       return out.sort((a, b) => a.i - b.i);                         // each stat's nearest high rung first
     },
