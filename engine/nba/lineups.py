@@ -5,8 +5,10 @@ lineups"). Our minutes model doesn't know who starts tonight, and lineup changes
   research (nba/backtest walk-forward, 2025 fit -> 2026 test): a player moving INTO the starting five ran x1.20 his
   projected minutes (23 -> 28), moving OUT x0.87; applying those to 2026 improved minutes / points / rebounds / assists /
   threes deviance in both halves (with the actual starters -- the best case).
-Tonight's five per team:
-  official   ESPN's game summary lists the starters (posted ~30 min before tip) -> full multiplier
+Tonight's five per team (sources in order):
+  official   NBA.com's daily lineups marked Confirmed (~30 min before tip; ESPN's summary never lists them pregame)
+             -> full multiplier
+  expected   NBA.com's Expected five -> PROJ_STRENGTH (unsure, no change, if an expected starter is out / questionable)
   projected  each position (PG, SG, SF, PF, C) takes the first healthy player in ESPN's depth-chart order, skipping
              anyone Out (ESPN keeps injured starters at the top of its chart, so the chart alone mostly repeats the
              last lineup) -> the multiplier at PROJ_STRENGTH of its effect until lineups_log.json shows how often the
@@ -76,24 +78,70 @@ def projected(teams, out_ids):
     return out
 
 
-def tonight(games, out_ids):
-    """games: [(game_id, home, away)]. Returns {team: (five, 'official' | 'projected')} and logs it."""
+NBA_LINEUPS = "https://stats.nba.com/js/data/leaders/00_daily_lineups_{:%Y%m%d}.json"
+NBA_TEAM = {"GSW": "GS", "NOP": "NO", "NYK": "NY", "SAS": "SA", "UTA": "UTAH", "WAS": "WSH"}     # NBA.com -> our (ESPN) codes
+
+
+def nba_com(day):
+    """NBA.com's daily lineups (2026-10-23: ESPN never lists starters before tip; NBA.com marks each team's five
+    'Confirmed' ~30 min before tip and 'Expected' before that). {team: (set of normalized names, 'official' | 'expected')}."""
+    try:
+        r = requests.get(NBA_LINEUPS.format(day), timeout=20, headers={"User-Agent": "Mozilla/5.0", "Referer": "https://www.nba.com/"})
+        d = r.json() if r.status_code == 200 else {}
+    except (requests.RequestException, ValueError):
+        return {}
+    out = {}
+    for g in d.get("games", []):
+        for side in ("homeTeam", "awayTeam"):
+            T = g.get(side) or {}
+            st = [p for p in T.get("players", []) if p.get("position")]
+            if len(st) != 5:
+                continue
+            conf = all(p.get("lineupStatus") == "Confirmed" for p in st)
+            out[NBA_TEAM.get(T.get("teamAbbreviation"), T.get("teamAbbreviation"))] = ({_norm(p.get("playerName")) for p in st}, "official" if conf else "expected")
+    return out
+
+
+def _norm(s):
+    import re
+    import unicodedata
+    s = unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode().lower()
+    return re.sub(r"\s+", " ", re.sub(r"\b(jr|sr|ii|iii|iv)\b", "", re.sub(r"[^a-z ]", "", s))).strip()
+
+
+def tonight(games, out_ids, day=None, names=None, unsure_names=frozenset()):
+    """games: [(game_id, home, away)]; names: {team: {player_id: name}} for matching NBA.com's names. Returns
+    {team: (set of player ids, 'official' | 'projected' | 'unsure', source)} and logs it. Order: NBA.com Confirmed,
+    NBA.com Expected (unsure when an expected starter is out / questionable for us), ESPN depth charts (fallback)."""
     res = {}
+    N = nba_com(day or dt.date.today()) if names is not None else {}
     for gid, h, a in games:
+        for t in (h, a):
+            if t not in N:
+                continue
+            want, st = N[t]
+            ids = {pid for pid, nm in (names.get(t) or {}).items() if _norm(nm) in want}
+            if len(ids) != 5:
+                continue                                       # a starter we can't match: leave the team to the fallback
+            src = "official" if st == "official" else "unsure" if (ids & set(out_ids)) or any(_norm((names.get(t) or {})[i]) in unsure_names for i in ids) else "projected"
+            res[t] = (sorted(ids), src, "nba.com")
+    for gid, h, a in games:
+        if h in res and a in res:
+            continue
         off = official(gid)
         for t in (h, a):
-            if t in off:
-                res[t] = (off[t], "official")
+            if t in off and t not in res:
+                res[t] = (off[t], "official", "espn")
     proj = projected([t for _, h, a in games for t in (h, a) if t not in res], out_ids)
     for t, (five, unsure) in proj.items():
-        res[t] = (five, "unsure" if unsure else "projected")
+        res[t] = (five, "unsure" if unsure else "projected", "espn depth chart")
     try:
         log = json.load(open(LOG)) if os.path.exists(LOG) else {}
         now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
         for gid, h, a in games:
             for t in (h, a):
                 if t in res:
-                    log.setdefault(str(gid), {})[t] = dict(five=res[t][0], src=res[t][1], at=now)
+                    log.setdefault(str(gid), {})[t] = dict(five=res[t][0], src=res[t][1], via=res[t][2], at=now)
         json.dump(dict(list(log.items())[-400:]), open(LOG, "w"), separators=(",", ":"))
     except (OSError, ValueError):
         pass
@@ -106,7 +154,7 @@ def multipliers(rows, last_start, lineup):
     import numpy as np
     m, tags = [], []
     for t, pid in zip(rows.team, rows.player_id.astype(int)):
-        five, src = lineup.get(t, (None, None))
+        five, src = (lineup.get(t) or (None, None, None))[:2]
         prev = last_start.get(pid)
         if five is None or prev is None or src == "unsure":        # a questionable starter: wait for the official five
             m.append(1.0); tags.append(None); continue
