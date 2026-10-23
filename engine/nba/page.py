@@ -25,6 +25,7 @@ def player_payload(tab, meta, dists):
                         pg=None if mm is None else mm.pg, st=None if mm is None else mm.status,
                         note=None if mm is None else (mm.note or ""), start=None if mm is None else bool(mm.starter == 1),
                         trend=None if mm is None or pd.isna(mm.min_trend) else round(float(mm.min_trend), 1),
+                        lu=None if mm is None or "lineup" not in mm.index or not isinstance(mm.lineup, str) else mm.lineup,
                         gp=None if mm is None else int(mm.games_prior or 0), s=s,
                         ar=None if mm is None or "arch_name" not in mm.index else mm.arch_name,
                         va=None if mm is None or "dva_pts" not in mm.index else {c: round(float(mm["dva_" + c]), 3) for c in ("pts", "fg3m", "stl") if "dva_" + c in mm.index and pd.notna(mm["dva_" + c])},
@@ -56,6 +57,7 @@ __CSS__
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--ink);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
 .lru .ledge{color:var(--good);font-weight:700;margin-left:4px}
+.lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
 .ladsw{display:flex;gap:6px;margin:4px 0 8px}.ladsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px var(--body);cursor:pointer}.ladsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .ladgm{border-top:1px solid var(--faint);padding:10px 0 2px}.ladgh{font-size:14.5px;margin-bottom:2px}.ladgm .lad:first-child{border-top:0}
 .ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}

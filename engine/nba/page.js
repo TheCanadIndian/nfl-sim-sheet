@@ -42,6 +42,9 @@ function whyNBA(p, gid){
 function chips(p, g){
   let h = '';
   if (p.st && p.st !== 'Active') h += `<span class="tag q" title="${esc(p.st + (p.note ? ': ' + p.note : ''))}">${p.st === 'Day-To-Day' ? 'DTD' : p.st === 'Questionable' ? 'Q' : esc(p.st)}</span>`;
+  if (p.lu){ const [mv, src] = p.lu.split('|'), off = src === 'official';
+    h += mv === 'in' ? `<span class="lean g2" title="${off ? 'In tonight’s official starting five' : 'Projected to start tonight (our lineup from ESPN’s depth chart, minus anyone out)'}; came off the bench last game. Starting raises his minutes about 20% (2025-26 test), ${off ? 'fully applied' : 'applied at 70% until the official lineup posts'}.">▲ starts</span>`
+      : `<span class="lean r2" title="${off ? 'Not in tonight’s official starting five' : 'Projected to come off the bench tonight'}; started last game. Coming off the bench cuts his minutes about 13% (2025-26 test), ${off ? 'fully applied' : 'applied at 70% until the official lineup posts'}.">▼ bench</span>`; }
   if (p.trend >= 3) h += `<span class="lean g2" title="Minutes trending up: last few games ${f1(p.trend)} above his longer average">▲ min</span>`;
   else if (p.trend <= -3) h += `<span class="lean r2" title="Minutes trending down: last few games ${f1(-p.trend)} below his longer average">▼ min</span>`;
   const l = lean(p, 'pts');
@@ -248,7 +251,13 @@ function ladderCard(){
       if (!(mins >= 20) || p.st === 'Out') continue;
       const all = window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n, Object.keys(KLAB)) : [];
       if (all.length) anyLadder++;
-      const rungs = all.map(u => ({...u, edge: u.p != null ? u.p / kcost(u.ya) - 1 : null})).filter(u => u.edge != null && u.edge >= LEDGE)
+      // each rung at Kalshi (fee included) and at Hard Rock / Novig for the same number (owner 2026-10-23); the edge
+      // shown and ranked is the best of the three
+      const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+      const rungs = all.map(u => { if (u.p == null) return {...u, edge: null};
+        const opts = [{b: 'Kalshi', price: u.price, e: u.p / kcost(u.ya) - 1}, ...Object.entries(u.bk || {}).map(([b, v]) => ({b, price: (v.o > 0 ? '+' : '') + v.o, u: v.u, e: u.p * dec(v.o) - 1}))];
+        const best = opts.reduce((a, c) => c.e > a.e ? c : a);
+        return {...u, opts, best, edge: best.e}; }).filter(u => u.edge != null && u.edge >= LEDGE)
         .sort((a, b) => b.edge - a.edge);
       if (!rungs.length) continue;
       const R = DVP[p.o + '|' + p.pg] || {};
@@ -259,12 +268,13 @@ function ladderCard(){
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${c.p.trend >= 3 ? '<span class="ladc">▲ minutes</span>' : ''}</div>
-    <div class="ladr">${c.rungs.slice(0, 3).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KLAB[u.k]}: price ${Math.round(u.mid * 100)}% (${Math.round(kcost(u.ya) * 100)}% with the fee) · our chance ${Math.round(u.p * 100)}%"><b>${Math.round(u.l + .5)}+</b> ${KLAB[u.k]} <i>${u.price}</i> <b class="ledge">+${Math.round(u.edge * 100)}%</b></span>`).join('')}</div></div>`;
+    <div class="ladr">${c.rungs.slice(0, 3).map(u => `<span class="lru" title="${Math.round(u.l + .5)}+ ${KLAB[u.k]}: our chance ${Math.round(u.p * 100)}% · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kcost(u.ya) * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}"><b>${Math.round(u.l + .5)}+</b> ${KLAB[u.k]} ${u.opts.map(o => { const tx = `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`;
+      return o === u.best ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx} ↗</a>` : `<i class="lbk best">${tx}</i>`) : `<i class="lbk">${tx}</i>`; }).join('')} <b class="ledge">+${Math.round(u.edge * 100)}%</b></span>`).join('')}</div></div>`;
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
     : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.' : '';
   return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     ${empty ? `<p class="note" style="margin:0 0 6px">${empty}</p>` : ''}
-    <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the price, Kalshi’s fee included, by 5% or more, for players projected for 20+ minutes. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page.</p></details>
+    <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the best price by 5% or more, for players projected for 20+ minutes. Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price and its edge is the one shown (tap it to open the bet when the book gives a link). Hard Rock’s alt lines refresh in the morning and hourly in the last two hours before tip. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page.</p></details>
     ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div>` : ''}
     ${LADV === 'game' ? byGame(cards, row) : `<div class="ladg">${cards.slice(0, 8).map(row).join('')}</div>${cards.length > 8 ? `<details class="ladw"><summary>${cards.length - 8} more</summary><div class="ladg">${cards.slice(8).map(row).join('')}</div></details>` : ''}`}</section>`;
 }

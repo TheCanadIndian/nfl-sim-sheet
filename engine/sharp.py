@@ -710,7 +710,7 @@ HR_CACHE = os.path.join(M.OUT, "hr_props_{}.json")
 MORNING_HOUR, FAST = 8, 30           # owner 2026-10-23: one early-morning pull for early value, then every 30 min
 
 
-def wanted(games, cache, now, window_h, base_min, bst, slow_h=None):
+def wanted(games, cache, now, window_h, base_min, bst, slow_h=None, fast_min=None):
     """Games due a paid prop pull: inside a game's window (last window_h hours) every FAST minutes while today's credits
     are on pace (books.tight: 75% of the day's allowance spent -> back to base_min, so the pulls nearest each game are
     never the ones the budget cuts); outside it, one pull of every game later today from MORNING_HOUR ET on.
@@ -719,7 +719,7 @@ def wanted(games, cache, now, window_h, base_min, bst, slow_h=None):
     nothing and is free, so it simply retries next run."""
     et = now.tz_convert("America/New_York")
     morning = et.normalize() + pd.Timedelta(hours=MORNING_HOUR)
-    every = base_min if B.tight(bst, now) else FAST
+    every = base_min if B.tight(bst, now) else (fast_min or FAST)
     out = {}
     for ga, g in games.items():
         st = pd.Timestamp(g["start"]).tz_convert("UTC")
@@ -1333,12 +1333,21 @@ def oa_nba(now):
     json.dump(cache, open(NBA_CACHE, "w"), separators=(",", ":"))
     # publish: one main line per player-stat
     dist = {(int(p["g"]), jsnorm(p["n"])): p.get("d", {}).get("vegas", {}) for p in O.get("players", [])}
+    try:                                                   # Hard Rock's alternate lines (oa_nba_alt) join each player's ladder
+        alt = json.load(open(NBA_ALT_CACHE))
+    except (OSError, ValueError):
+        alt = {}
     out = {}
     for gid, c in cache.items():
         if pd.Timestamp(c["start"]).tz_convert("UTC") <= now:
             continue
+        A = (alt.get(gid) or {}).get("props", {})
         for nm, kinds in c["props"].items():
             for kind, lines in kinds.items():
+                lines = {l: {sd: dict(v) for sd, v in x.items()} for l, x in lines.items()}
+                for l, x in ((A.get(nm) or {}).get(kind) or {}).items():
+                    for sd, bk in x.items():
+                        lines.setdefault(l, {}).setdefault(sd, {}).update(bk)
                 two = {l: x for l, x in lines.items() if x.get("o") and x.get("u")}
                 if not two:
                     continue
@@ -1364,6 +1373,64 @@ def oa_nba(now):
         print(f"odds api nba props: published {sum(len(v) for v in out.values())} players")
 
 
+NBA_ALT_MKT = {"player_points_alternate": "pts", "player_rebounds_alternate": "reb", "player_assists_alternate": "ast",
+               "player_threes_alternate": "fg3m"}
+NBA_ALT_CACHE = os.path.join(M.OUT, "oa_props_nba_alt.json")
+
+
+def oa_nba_alt(now):
+    """Hard Rock's NBA alternate lines (owner 2026-10-23: compare Kalshi ladder rungs with Hard Rock alt props and Novig
+    ladders; Novig's ladder already comes in the main markets). 4 credits a game (4 alternate markets, one book): the
+    morning pull, then hourly in the last 2 h before tip (sharp.wanted) -- alt prices move less than main lines.
+    Cache: {gid: {fetched, start, props: {player: {kind: {line: {o|u: {book: [odds, link]}}}}}}}, merged by oa_nba."""
+    k = B.key()
+    O = M.ours_nba() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+    try:
+        cache = json.load(open(NBA_ALT_CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    bst = B.load_state()
+    todo = wanted(games, cache, now, 2.0, 60, bst, fast_min=60)
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nba"].get(e["away_team"]), B.NAMES["nba"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nba alt lines: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/basketball_nba/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers="hardrockbet", markets=",".join(NBA_ALT_MKT), oddsFormat="american", includeLinks="true"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    kind = NBA_ALT_MKT.get(m["key"])
+                    for o in m.get("outcomes", []):
+                        side = {"over": "o", "under": "u"}.get((o.get("name") or "").lower())
+                        if not kind or not side or o.get("point") is None or not o.get("description"):
+                            continue
+                        P.setdefault(jsnorm(o["description"]), {}).setdefault(kind, {}).setdefault(f"{float(o['point']):g}", {})                          .setdefault(side, {})[NBA_SHORT.get(b["key"], b["key"])] = [int(o["price"]), _link(o.get("link") or b.get("link"))]
+            if P:
+                cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+                print(f"odds api nba alt lines: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+            else:
+                print(f"odds api nba alt lines: {g['away']} @ {g['home']}: not posted yet")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(NBA_ALT_CACHE, "w"), separators=(",", ":"))
+
+
 def write_props(sport, now):
     """Publish PROPS[sport] as <site>/markets/props_<sport>.json, keeping kinds this pull didn't get (< 12 h old)."""
     fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
@@ -1387,6 +1454,10 @@ def write_props(sport, now):
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
     if not argv or "nba" in argv:
+        try:
+            oa_nba_alt(now)                          # Hard Rock alt lines first, so oa_nba publishes them on the ladders
+        except Exception as e:                       # noqa: BLE001
+            print("odds api nba alt lines skipped:", type(e).__name__, e)
         try:
             oa_nba(now)
         except Exception as e:                       # never break the markets run

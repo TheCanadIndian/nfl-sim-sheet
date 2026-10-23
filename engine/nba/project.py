@@ -188,6 +188,29 @@ def main():
     st = ro.set_index(["team", "player_id"])
     rows["status"] = [st.status.get((t, p), "Active") for t, p in zip(rows.team, rows.player_id)]
     rows["note"] = [st.note.get((t, p), "") for t, p in zip(rows.team, rows.player_id)]
+    # tonight's starting five (lineups.py: ESPN's official starters once posted, else our projection from ESPN's depth
+    # charts minus anyone out): moving into the lineup vs his last game x1.20 minutes, out x0.87 (projected: 70% of that)
+    rows["lineup"] = None
+    try:
+        import lineups as LU
+        out_ids = {int(p) for p in ro[ro.status.isin(STATUS_OUT)].player_id}
+        LN = LU.tonight([(int(g.game_id), g.home, g.away) for g in fut.itertuples()], out_ids)
+        # 'started last game' = started his team's most recent regular-season / playoff game (sat out = didn't start)
+        import sqlite3
+        con_ = sqlite3.connect(M.DB)
+        tg_ = pd.read_sql("SELECT game_id, date, home, away FROM games WHERE state = 'FINAL' AND game_type IN (2, 3)", con_)
+        tg_ = pd.concat([tg_.rename(columns={"home": "team"})[["game_id", "date", "team"]], tg_.rename(columns={"away": "team"})[["game_id", "date", "team"]]])
+        lastg = tg_.sort_values("date").groupby("team").game_id.last()
+        st_ = pd.read_sql(f"SELECT game_id, team, player_id FROM players WHERE starter = 1 AND game_id IN ({','.join(map(str, lastg.tolist())) or 0})", con_)
+        starters_ = {(t, int(p_)) for t, p_ in zip(st_.team, st_.player_id)}
+        last_start = {int(p_): int((t, int(p_)) in starters_) for t, p_ in zip(rows.team, rows.player_id) if t in lastg.index}
+        mult, tags = LU.multipliers(rows, last_start, LN)
+        rows["e_min"] = rows.e_min * mult
+        rows["lineup"] = tags
+        src = {s_ for _, s_ in LN.values()}
+        print(f"lineups: {len(LN)} teams ({', '.join(sorted(src))}); {sum(1 for t in tags if t and t.startswith('in'))} moving into the starting five, {sum(1 for t in tags if t and t.startswith('out'))} out")
+    except Exception as e:                                     # noqa: BLE001 -- never block the projection
+        print("lineups skipped:", type(e).__name__, e)
     tabs, dists = [], {}
     for mode in ("vegas", "blind"):
         out, sims = M.project(fr, rows, mode=mode, live=True)
@@ -208,7 +231,7 @@ def main():
                 print("game-state draws skipped:", type(e).__name__, e)
             save_draws(out, sv)
     tab = pd.concat(tabs, ignore_index=True)
-    meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play"]
+    meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play", "lineup"]
                 + [c for c in ["arch"] + [f"dva_{s}" for s in M.DVA_STATS] if c in rows]].copy()
     if fr.arch is not None and "arch" in meta:                         # archetype name for the page
         meta["arch_name"] = meta.arch.map(lambda a: fr.arch["names"][int(a)] if pd.notna(a) else None)
