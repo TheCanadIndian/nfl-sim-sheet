@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-23T00:23:07.889Z",
+"frozen_at": "2026-10-23T00:40:19.541Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,52 @@
 ],
 "final_at": "2026-10-25T11:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "dk metcalf",
+"lab": "DK Metcalf 100+ rec yds",
+"p": 0.2046,
+"price": 456,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 89.5,
+"name": "christian mccaffrey",
+"lab": "Christian McCaffrey 90+ rush yds",
+"p": 0.2155,
+"price": 331,
+"book": "Kalshi",
+"sc": "SF pulls away",
+"f": [
+"usage",
+"rotation",
+"script"
+]
+}
+],
+"p": 0.04408,
+"d": 23.964,
+"first": "2026-10-25T13:30:00+00:00",
+"pick": "longshot"
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -40,7 +86,7 @@
 "line": 89.5,
 "name": "christian mccaffrey",
 "lab": "Christian McCaffrey 90+ rush yds",
-"p": 0.215,
+"p": 0.2155,
 "price": 331,
 "book": "Kalshi",
 "sc": "SF pulls away",
@@ -51,7 +97,7 @@
 ]
 }
 ],
-"p": 0.04568,
+"p": 0.0458,
 "d": 22.628,
 "first": "2026-10-25T13:30:00+00:00"
 },
@@ -167,7 +213,7 @@
 "name": "rj harvey",
 "lab": "Rj Harvey TD",
 "p": 0.3107,
-"price": 270,
+"price": 277,
 "book": "Novig"
 },
 {
@@ -178,13 +224,13 @@
 "line": 0.5,
 "name": "brian robinson",
 "lab": "Brian Robinson TD",
-"p": 0.306,
+"p": 0.3048,
 "price": 257,
 "book": "Novig"
 }
 ],
-"p": 0.09507,
-"d": 13.209,
+"p": 0.0947,
+"d": 13.459,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
 },
@@ -201,7 +247,7 @@
 "name": "rj harvey",
 "lab": "Rj Harvey TD",
 "p": 0.3107,
-"price": 270,
+"price": 277,
 "book": "Novig"
 },
 {
@@ -212,13 +258,13 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.2821,
+"p": 0.285,
 "price": 277,
 "book": "Novig"
 }
 ],
-"p": 0.08765,
-"d": 13.949,
+"p": 0.08854,
+"d": 14.213,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
 },
@@ -234,7 +280,7 @@
 "line": 0.5,
 "name": "tre tucker",
 "lab": "Tre Tucker TD",
-"p": 0.2542,
+"p": 0.2533,
 "price": 335,
 "book": "Novig"
 },
@@ -246,15 +292,81 @@
 "line": 0.5,
 "name": "brian robinson",
 "lab": "Brian Robinson TD",
-"p": 0.306,
+"p": 0.3048,
 "price": 257,
 "book": "Novig"
 }
 ],
-"p": 0.07778,
+"p": 0.07722,
 "d": 15.529,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "longshot"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.532,
+"price": 130,
+"book": "Novig"
+},
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams under 65.5 rush yds",
+"p": 0.5425,
+"price": 102,
+"book": "Novig"
+}
+],
+"p": 0.28861,
+"d": 4.646,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams under 65.5 rush yds",
+"p": 0.5425,
+"price": 102,
+"book": "Novig"
+},
+{
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "rj harvey",
+"lab": "Rj Harvey anytime TD",
+"p": 0.345,
+"price": 277,
+"book": "Novig"
+}
+],
+"p": 0.18716,
+"d": 7.615,
+"first": "2026-10-25T20:05:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -281,80 +393,13 @@
 "name": "rj harvey",
 "lab": "Rj Harvey anytime TD",
 "p": 0.345,
-"price": 270,
-"book": "Novig"
-}
-],
-"p": 0.18354,
-"d": 8.51,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.532,
-"price": 130,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "brian robinson",
-"lab": "Brian Robinson anytime TD",
-"p": 0.333,
-"price": 257,
-"book": "Novig"
-}
-],
-"p": 0.17716,
-"d": 8.211,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.532,
-"price": 130,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts anytime TD",
-"p": 0.301,
 "price": 277,
 "book": "Novig"
 }
 ],
-"p": 0.16013,
+"p": 0.18354,
 "d": 8.671,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -402,7 +447,7 @@
 "name": "rj harvey",
 "lab": "Rj Harvey anytime TD",
 "p": 0.345,
-"price": 270,
+"price": 277,
 "book": "Novig"
 },
 {
@@ -419,7 +464,7 @@
 }
 ],
 "p": 0.11489,
-"d": 13.209,
+"d": 13.459,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -427,33 +472,33 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_07_DEN_ARI",
-"start": "2026-10-25T16:05:00",
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "rj harvey",
-"lab": "Rj Harvey anytime TD",
-"p": 0.345,
-"price": 270,
-"book": "Novig"
+"name": "george holani",
+"lab": "George Holani anytime TD",
+"p": 0.193,
+"price": 536,
+"book": "Kalshi"
 },
 {
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts anytime TD",
-"p": 0.301,
-"price": 277,
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams under 65.5 rush yds",
+"p": 0.5425,
+"price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.10384,
-"d": 13.949,
-"first": "2026-10-25T17:00:00+00:00"
+"p": 0.1047,
+"d": 12.847,
+"first": "2026-10-26T00:20:00+00:00"
 },
 {
 "card": "Cross-game parlays",
