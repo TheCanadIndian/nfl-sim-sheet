@@ -46,7 +46,7 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 - **Never automate clicks** on affiliate or bet links.
 - **The Odds API:** paid base plan since 2026-10-18, 20,000 credits/month (`books.PLAN`). `books.budget_ok` paces each day to its share of what's left (Sunday ×2.5, Mon/Thu ×1.2). Game lines: games within 24 h, every 90 min. Hard Rock anytime goal/TD and over/unders (NFL yardage + receptions, NHL shots on goal; `sharp.hr_ou_pull`): last 6 h, hourly. Pinnacle NFL props: last 24 h, every 2 h (~5 credits/game). Pinnacle NHL anytime goal: last 8 h, hourly, every pull logged.
 - **UX first:** every site change is checked on phone (~500 px) and desktop before shipping. Prefer clean chips over text clutter.
-- **JS inside Python templates:** a straight apostrophe inside a JS string breaks the page. Use ’ in display text.
+- **Page scripts live in .js files (2026-10-23):** NFL `nfl_page.js`, NHL `hockey/page.js`, NBA `nba/page.js` (plus `mkt.js`, `slip.js`, `screener.js`); each builder pastes its script into the page at build (`__JS__` in the template), so dated / weekly pages stay self-contained. Edit the .js file, not the Python template. The run-sport action `node --check`s every page script before each run (a syntax error turns the run red). Scripts still inside Python strings (parlays.py hub / Parlays pages, site.py, profit.py, mlb/page.py): a straight apostrophe inside a JS string there breaks the page; use ’ in display text.
 
 ## Owner's context
 - Bets at **Novig, Kalshi, Hard Rock**: the default "my books" on every page (`mkt.js OWNER`) until a device saves its own choice (`localStorage simbooks-v1`). Mostly overs, small edges, parlays. Wants fewer long droughts.
