@@ -89,3 +89,13 @@ runs:
         # keep this run's freshly rebuilt version)
         for i in 1 2 3 4 5; do git pull -q --rebase -X theirs && git push -q && break; sleep $((i * 5)); done
         gh workflow run deploy.yml
+
+    # run.py lets every step finish and publishes what worked; a crashed projection / page / results build is
+    # written to $RUNNER_TEMP/sim_run_failures.txt and turns the run red here (GitHub emails on failed runs)
+    - name: Fail the run if a page build crashed
+      if: always() && steps.gate.outputs.skip != 'true'
+      shell: bash
+      run: |
+        f="$RUNNER_TEMP/sim_run_failures.txt"
+        if [ -s "$f" ]; then echo "Page builds that crashed (pages kept their last version):"; cat "$f"; exit 1; fi
+        echo "all page builds ran"

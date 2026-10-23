@@ -27,9 +27,21 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 PY = sys.executable
 
 
+# Steps whose crash leaves a page stale (owner 2026-10-23: the NHL page froze overnight while every run showed green).
+# The run still finishes and publishes what worked; the failures go to a file outside the repo and the workflow's
+# last step (run-sport action, "Fail the run if a page build crashed") turns the run red so GitHub emails.
+CRITICAL = ("project.py", "page.py", "results.py")
+FAILS = os.path.join(os.environ.get("RUNNER_TEMP") or __import__("tempfile").gettempdir(), "sim_run_failures.txt")
+
+
 def sh(*args, check=False):
     print(f"\n$ {' '.join(args)}", flush=True)
     r = subprocess.run(list(args), cwd=HERE)
+    if r.returncode and len(args) > 1 and str(args[1]).endswith(CRITICAL):
+        msg = f"{' '.join(str(a) for a in args[1:])} exited {r.returncode}"
+        print(f"::error::page build failed: {msg}", flush=True)
+        with open(FAILS, "a", encoding="utf-8") as f:
+            f.write(msg + "\n")
     if check and r.returncode:
         sys.exit(r.returncode)
     return r.returncode
@@ -111,6 +123,7 @@ def nba():
     sh(PY, "markets.py", "nba")
     sh(PY, "grade_markets.py", "nba")
     sh(PY, "profit.py", "rows", "nba")
+    sh(PY, "nba/should_run.py", "--mark")          # the 15-min check in markets.yml starts the next run (same rules as NHL)
     return True
 
 

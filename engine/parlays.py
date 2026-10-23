@@ -60,6 +60,18 @@ def et_date(ts):
     return when(ts).astimezone(ET).date().isoformat()
 
 
+def fail_note(msg):
+    """A step that failed but let the run go on: noted for markets.yml's last step, which turns the run red
+    (owner 2026-10-23: crashes must not hide behind green runs)."""
+    try:
+        import tempfile
+        with open(os.path.join(os.environ.get("RUNNER_TEMP") or tempfile.gettempdir(), "sim_run_failures.txt"), "a", encoding="utf-8") as f:
+            f.write(msg + "\n")
+        print(f"::error::{msg}", flush=True)
+    except OSError:
+        pass
+
+
 def dec(o):
     o = float(o)
     return 1 + (o / 100 if o > 0 else 100 / -o)
@@ -836,3 +848,4 @@ if __name__ == "__main__":
                 fn()
             except Exception as e:                                                  # noqa: BLE001
                 print(f"parlays {step}: failed ({type(e).__name__}: {e})")
+                fail_note(f"parlays {step}: {type(e).__name__}: {e}")

@@ -77,3 +77,17 @@ jobs:
           git commit -q -m "Auto: market prices $(date -u +'%Y-%m-%d %H:%M') UTC"
           for i in 1 2 3 4 5; do git pull -q --rebase -X theirs && git push -q && break; sleep $((i * 5)); done
           gh workflow run deploy.yml
+      # NBA on the NHL's schedule (owner 2026-10-23): nba/should_run.py (seconds, no data) starts nba.yml when a game
+      # tips within 75 min, lines are 4+ h old on a game day, or last night needs grading; the fixed Worker times stay
+      - name: NBA check (start an NBA run when due)
+        working-directory: engine
+        run: |
+          set +e; python nba/should_run.py; rc=$?; set -e
+          if [ $rc -eq 0 ]; then gh workflow run nba.yml || true; fi
+      # parlays.py / builder.py steps catch their own errors so the rest runs; any they noted turn the run red here
+      - name: Fail the run if a parlay step crashed
+        if: always()
+        run: |
+          f="$RUNNER_TEMP/sim_run_failures.txt"
+          if [ -s "$f" ]; then echo "Steps that crashed:"; cat "$f"; exit 1; fi
+          echo "all parlay steps ran"
