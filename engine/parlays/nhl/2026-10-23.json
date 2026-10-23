@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-23",
 "lock": "2026-10-24T00:00:00+00:00",
-"frozen_at": "2026-10-23T18:42:08.241Z",
+"frozen_at": "2026-10-23T18:50:12.870Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -35,12 +35,12 @@
 "name": "nathan mackinnon",
 "lab": "Nathan MacKinnon to score",
 "p": 0.4629,
-"price": 125,
+"price": 127,
 "book": "Novig"
 }
 ],
 "p": 0.16788,
-"d": 6.435,
+"d": 6.492,
 "first": "2026-10-24T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -92,7 +92,7 @@
 "name": "cole caufield",
 "lab": "Cole Caufield to score",
 "p": 0.427,
-"price": 125,
+"price": 130,
 "book": "Novig"
 },
 {
@@ -137,13 +137,13 @@
 "line": 2.5,
 "name": "connor bedard",
 "lab": "Connor Bedard 3+ shots",
-"p": 0.583,
+"p": 0.5832,
 "price": -144,
 "book": "Novig"
 }
 ],
-"p": 0.27757,
-"d": 3.603,
+"p": 0.27769,
+"d": 3.601,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
@@ -205,14 +205,48 @@
 "line": 2.5,
 "name": "juraj slafkovsky",
 "lab": "Juraj Slafkovsk\u00fd 3+ shots",
-"p": 0.4848,
+"p": 0.4844,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.21764,
-"d": 4.595,
+"p": 0.21746,
+"d": 4.599,
 "first": "2026-10-24T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "Goal + over 5.5",
+"legs": [
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "nathan mackinnon",
+"lab": "Nathan MacKinnon to score",
+"p": 0.4629,
+"price": 127,
+"book": "Novig"
+},
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "total",
+"side": "over",
+"line": 5.5,
+"name": null,
+"lab": "TBL-COL over 5.5",
+"p": 0.5764,
+"price": -150,
+"book": "Novig"
+}
+],
+"p": 0.32261,
+"d": 3.1,
+"first": "2026-10-24T01:00:00+00:00",
 "res": null
 },
 {
@@ -228,7 +262,7 @@
 "name": "nathan mackinnon",
 "lab": "Nathan MacKinnon to score",
 "p": 0.4629,
-"price": 125,
+"price": 127,
 "book": "Novig"
 },
 {
@@ -307,47 +341,13 @@
 "line": 2.5,
 "name": "nikita kucherov",
 "lab": "Nikita Kucherov 3+ shots",
-"p": 0.5589,
+"p": 0.5592,
 "price": -141,
 "book": "Novig"
 }
 ],
-"p": 0.26688,
-"d": 3.747,
-"first": "2026-10-24T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "Goal + win",
-"legs": [
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel to score",
-"p": 0.3621,
-"price": 178,
-"book": "Novig"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "TBL moneyline",
-"p": 0.4784,
-"price": 113,
-"book": "Novig"
-}
-],
-"p": 0.22331,
-"d": 4.478,
+"p": 0.26702,
+"d": 3.745,
 "first": "2026-10-24T01:00:00+00:00",
 "res": null
 },
@@ -363,7 +363,7 @@
 "line": 2.5,
 "name": "noah dobson",
 "lab": "Noah Dobson under 2.5 shots",
-"p": 0.602,
+"p": 0.6026,
 "price": -115,
 "book": "Hard Rock"
 },
@@ -375,12 +375,12 @@
 "line": 1.5,
 "name": "devon toews",
 "lab": "Devon Toews under 1.5 shots",
-"p": 0.6026,
+"p": 0.5985,
 "price": 105,
 "book": "Hard Rock"
 }
 ],
-"p": 0.36275,
+"p": 0.36067,
 "d": 3.833,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
@@ -397,7 +397,7 @@
 "line": 1.5,
 "name": "chris kreider",
 "lab": "Chris Kreider under 1.5 shots",
-"p": 0.5558,
+"p": 0.558,
 "price": 100,
 "book": "Hard Rock"
 },
@@ -409,12 +409,12 @@
 "line": 2.5,
 "name": "cale makar",
 "lab": "Cale Makar under 2.5 shots",
-"p": 0.6075,
+"p": 0.607,
 "price": -120,
 "book": "Hard Rock"
 }
 ],
-"p": 0.33765,
+"p": 0.33871,
 "d": 3.667,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
@@ -431,7 +431,7 @@
 "line": 1.5,
 "name": "chris kreider",
 "lab": "Chris Kreider under 1.5 shots",
-"p": 0.5558,
+"p": 0.558,
 "price": 100,
 "book": "Hard Rock"
 },
@@ -443,12 +443,12 @@
 "line": 1.5,
 "name": "devon toews",
 "lab": "Devon Toews under 1.5 shots",
-"p": 0.6026,
+"p": 0.5985,
 "price": 105,
 "book": "Hard Rock"
 }
 ],
-"p": 0.33489,
+"p": 0.33397,
 "d": 4.1,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
@@ -465,7 +465,7 @@
 "line": 1.5,
 "name": "frank nazar",
 "lab": "Frank Nazar over 1.5 shots",
-"p": 0.5342,
+"p": 0.5346,
 "price": -104,
 "book": "Novig"
 },
@@ -482,7 +482,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.25556,
+"p": 0.25577,
 "d": 4.178,
 "first": "2026-10-24T00:00:00+00:00",
 "pick": "core",
@@ -497,11 +497,11 @@
 "start": "2026-10-24T00:00:00Z",
 "kind": "sog",
 "side": "o",
-"line": 1.5,
-"name": "sam rinzel",
-"lab": "Sam Rinzel over 1.5 shots",
-"p": 0.441,
-"price": 135,
+"line": 2.5,
+"name": "patrick kane",
+"lab": "Patrick Kane over 2.5 shots",
+"p": 0.4366,
+"price": 141,
 "book": "Novig"
 },
 {
@@ -517,8 +517,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.211,
-"d": 5.005,
+"p": 0.20889,
+"d": 5.133,
 "first": "2026-10-24T00:00:00+00:00",
 "pick": "core",
 "res": null
