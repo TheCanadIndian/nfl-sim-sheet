@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-23T14:10:46.381Z",
+"frozen_at": "2026-10-23T14:28:13.277Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 299.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2233,
+"p": 0.2125,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -51,54 +51,8 @@
 ]
 }
 ],
-"p": 0.04812,
+"p": 0.0458,
 "d": 22.628,
-"first": "2026-10-25T13:30:00+00:00",
-"pick": "longshot"
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "dk metcalf",
-"lab": "DK Metcalf 100+ rec yds",
-"p": 0.2084,
-"price": 456,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 89.5,
-"name": "christian mccaffrey",
-"lab": "Christian McCaffrey 90+ rush yds",
-"p": 0.2155,
-"price": 331,
-"book": "Kalshi",
-"sc": "SF pulls away",
-"f": [
-"usage",
-"rotation",
-"script"
-]
-}
-],
-"p": 0.04491,
-"d": 23.964,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -205,6 +159,18 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "tyler warren",
+"lab": "Tyler Warren TD",
+"p": 0.3312,
+"price": 277,
+"book": "Novig"
+},
+{
 "gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
@@ -215,24 +181,11 @@
 "p": 0.4792,
 "price": 156,
 "book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "brian robinson",
-"lab": "Brian Robinson TD",
-"p": 0.315,
-"price": 239,
-"book": "Novig"
 }
 ],
-"p": 0.15092,
-"d": 8.678,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
+"p": 0.15869,
+"d": 9.651,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -308,30 +261,30 @@
 {
 "gid": "2026_07_IND_MIN",
 "start": "2026-10-25T13:00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "u",
-"line": 4.5,
-"name": "keenan allen",
-"lab": "Keenan Allen under 4.5 receptions",
-"p": 0.5016,
-"price": 117,
+"line": 72.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 72.5 rec yds",
+"p": 0.5786,
+"price": 100,
 "book": "Novig"
 },
 {
-"gid": "2026_07_DEN_ARI",
-"start": "2026-10-25T16:05:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rj harvey",
-"lab": "Rj Harvey anytime TD",
-"p": 0.345,
-"price": 285,
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams under 65.5 rush yds",
+"p": 0.5425,
+"price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.17305,
-"d": 8.354,
+"p": 0.31392,
+"d": 4.04,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -339,32 +292,32 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 4.5,
-"name": "keenan allen",
-"lab": "Keenan Allen under 4.5 receptions",
-"p": 0.5016,
-"price": 117,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "brian robinson",
-"lab": "Brian Robinson anytime TD",
-"p": 0.333,
-"price": 239,
+"name": "rj harvey",
+"lab": "Rj Harvey anytime TD",
+"p": 0.345,
+"price": 285,
+"book": "Novig"
+},
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "gunnar helm",
+"lab": "Gunnar Helm under 2.5 receptions",
+"p": 0.7311,
+"price": -182,
 "book": "Novig"
 }
 ],
-"p": 0.16703,
-"d": 7.356,
+"p": 0.25225,
+"d": 5.965,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -372,38 +325,50 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.331,
-"price": 270,
-"book": "Novig"
-},
-{
-"gid": "2026_07_IND_MIN",
+"gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
 "kind": "rec",
 "side": "u",
-"line": 4.5,
-"name": "keenan allen",
-"lab": "Keenan Allen under 4.5 receptions",
-"p": 0.5016,
-"price": 117,
+"line": 2.5,
+"name": "gunnar helm",
+"lab": "Gunnar Helm under 2.5 receptions",
+"p": 0.7311,
+"price": -182,
+"book": "Novig"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "brian robinson",
+"lab": "Brian Robinson anytime TD",
+"p": 0.333,
+"price": 228,
 "book": "Novig"
 }
 ],
-"p": 0.16603,
-"d": 8.029,
-"first": "2026-10-25T13:30:00+00:00"
+"p": 0.24347,
+"d": 5.082,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 72.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 72.5 rec yds",
+"p": 0.5786,
+"price": 100,
+"book": "Novig"
+},
 {
 "gid": "2026_07_DEN_ARI",
 "start": "2026-10-25T16:05:00",
@@ -417,20 +382,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "brian robinson",
-"lab": "Brian Robinson anytime TD",
-"p": 0.333,
-"price": 239,
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "gunnar helm",
+"lab": "Gunnar Helm under 2.5 receptions",
+"p": 0.7311,
+"price": -182,
 "book": "Novig"
 }
 ],
-"p": 0.11489,
-"d": 13.052,
+"p": 0.14596,
+"d": 11.931,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -450,6 +415,51 @@
 "book": "Novig"
 },
 {
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 72.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 72.5 rec yds",
+"p": 0.5786,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "gunnar helm",
+"lab": "Gunnar Helm under 2.5 receptions",
+"p": 0.7311,
+"price": -182,
+"book": "Novig"
+}
+],
+"p": 0.14004,
+"d": 11.466,
+"first": "2026-10-25T13:30:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams under 65.5 rush yds",
+"p": 0.5425,
+"price": 102,
+"book": "Novig"
+},
+{
 "gid": "2026_07_DEN_ARI",
 "start": "2026-10-25T16:05:00",
 "kind": "td",
@@ -460,45 +470,23 @@
 "p": 0.345,
 "price": 285,
 "book": "Novig"
-}
-],
-"p": 0.11419,
-"d": 14.245,
-"first": "2026-10-25T13:30:00+00:00"
 },
 {
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.331,
-"price": 270,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "brian robinson",
-"lab": "Brian Robinson anytime TD",
-"p": 0.333,
-"price": 239,
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "gunnar helm",
+"lab": "Gunnar Helm under 2.5 receptions",
+"p": 0.7311,
+"price": -182,
 "book": "Novig"
 }
 ],
-"p": 0.11022,
-"d": 12.543,
-"first": "2026-10-25T13:30:00+00:00",
-"pick": "core"
+"p": 0.13684,
+"d": 12.05,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Cross-game parlays",
