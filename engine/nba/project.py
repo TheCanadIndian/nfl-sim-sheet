@@ -194,7 +194,10 @@ def main():
     try:
         import lineups as LU
         out_ids = {int(p) for p in ro[ro.status.isin(STATUS_OUT)].player_id}
-        LN = LU.tonight([(int(g.game_id), g.home, g.away) for g in fut.itertuples()], out_ids)
+        names_ = {t: {int(p_): n_ for p_, n_ in zip(x.player_id, x.name)} for t, x in ro.groupby("team")}
+        unsure_ = {LU._norm(n_) for n_, st_ in zip(ro.name, ro.status) if st_ in ("Questionable", "Day-To-Day", "Doubtful")}
+        LN = LU.tonight([(int(g.game_id), g.home, g.away) for g in fut.itertuples()], out_ids,
+                        day=pd.Timestamp(fut.start_utc.min()).tz_convert("America/New_York").date(), names=names_, unsure_names=unsure_)
         # 'started last game' = started his team's most recent regular-season / playoff game (sat out = didn't start)
         import sqlite3
         con_ = sqlite3.connect(M.DB)
@@ -207,7 +210,7 @@ def main():
         mult, tags = LU.multipliers(rows, last_start, LN)
         rows["e_min"] = rows.e_min * mult
         rows["lineup"] = tags
-        src = {s_ for _, s_ in LN.values()}
+        src = {f"{v[1]} via {v[2]}" for v in LN.values()}
         print(f"lineups: {len(LN)} teams ({', '.join(sorted(src))}); {sum(1 for t in tags if t and t.startswith('in'))} moving into the starting five, {sum(1 for t in tags if t and t.startswith('out'))} out")
     except Exception as e:                                     # noqa: BLE001 -- never block the projection
         print("lineups skipped:", type(e).__name__, e)
