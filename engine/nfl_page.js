@@ -17,7 +17,7 @@ const american = p => { p = Math.min(Math.max(p,1e-4),1-1e-4); const o = p>=.5 ?
 const niceCeil = v => { if (v<=0) return 1; const e = 10**Math.floor(Math.log10(v)); for (const m of [1,1.2,1.5,2,2.5,3,4,5,6,8,10]) if (m*e >= v - 1e-9) return m*e; };
 const fmtTick = v => Math.abs(v) >= 10 || Number.isInteger(v) ? f0(v) : f1(v);
 
-const state = {script:'all', view:'games', game:D.games[0]?.id, group:'receiving', bstat:'rec_yds', bpos:'All', q:'', bflag:false, dpos:'WR', rzscope:'two'};
+const state = {script:'all', view:'games', game:D.games[0]?.id, group:'receiving', bstat:'rec_yds', bpos:'All', q:'', bflag:false, bpin:false, dpos:'WR', rzscope:'two'};
 try { Object.assign(state, JSON.parse(localStorage.getItem('simsheet-ui') || '{}')); } catch (e) {}
 if (!D.games.some(g => g.id === state.game)) state.game = D.games[0]?.id;
 if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
@@ -972,7 +972,7 @@ function renderGames(){
 /* ---------------- board view ---------------- */
 function renderBoard(){
   const st = STATS[state.bstat], q = state.q.trim().toLowerCase();
-  let rows = D.players.filter(p => p.s[state.bstat] && p.s[state.bstat][MEAN] >= st.min && (!state.bflag || (p.tags && p.tags.length))
+  let rows = D.players.filter(p => p.s[state.bstat] && p.s[state.bstat][MEAN] >= st.min && (!state.bflag || (p.tags && p.tags.length)) && (!state.bpin || (window.MKT && MKT.pinMoves && MKT.pinMoves(p.g, p.n).some(m => m.src === 'pin')))
     && (state.bpos === 'All' || p.pos === state.bpos) && (!q || p.n.toLowerCase().includes(q) || p.t.toLowerCase() === q));
   const key = p => st.prob ? p.s[state.bstat][MEAN] : p.s[state.bstat][MED] + p.s[state.bstat][MEAN]/1e4;
   rows.sort((a,b) => key(b) - key(a));
@@ -994,6 +994,7 @@ function renderBoard(){
       <label for="bstat">Stat</label><select id="bstat">${opts}</select>
       <div class="seg" role="group" aria-label="Position">${pos}</div>
       <button class="flagbtn" data-bflag="1" aria-pressed="${state.bflag}">Matchup flags only</button>
+      <button class="flagbtn" data-bpin="1" aria-pressed="${state.bpin}" title="Players whose prop Pinnacle has moved: line up and / or the over shortened (tracked, experimental)">Pinnacle moved</button>
       <input type="search" id="bsearch" placeholder="Player name or team code" value="${esc(state.q)}" aria-label="Search players">
       <span class="muted small">${rows.length} player${rows.length===1?'':'s'}</span>
     </div>
@@ -1211,7 +1212,7 @@ function mxNFL(p){
   return `<div class="mxw">${groups.map(G => `<span class="mxl ${G[0].v > 1 ? 'up' : 'dn'}" title="${esc(G.map(x => x.tip).join(' '))}">${G.map(x => `${x.lab} ${sg(x.v)}`).join(' · ')} <i>vs ${MXG[key]}</i></span>`).join('')}</div>`;
 }
 const roleChip = p => { const r = roleOf2(p); return r ? `<span class="tag arch" title="${esc(r[1])} (display only)">${esc(r[0])}</span>` : ''; };
-const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${roleChip(p)}${(() => { const mx = mxNFL(p); return mx || chips(p); })()}</td>`;
+const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + (MKT.moveFlag ? MKT.moveFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${roleChip(p)}${(() => { const mx = mxNFL(p); return mx || chips(p); })()}</td>`;
 // Market-blind lean, inline (same rule as the Model agreement tab)
 const AGK = Object.fromEntries((D.agree || []).map(r => [r.k + '|' + r.stat, r]));
 function agChip(p, stat){
@@ -1317,6 +1318,7 @@ document.addEventListener('click', e => {
   else if (t.dataset.drank){ state.drank = t.dataset.drank; render(); }
   else if (t.dataset.rzscope){ state.rzscope = t.dataset.rzscope; render(); }
   else if (t.dataset.bflag){ state.bflag = !state.bflag; render(); }
+  else if (t.dataset.bpin){ state.bpin = !state.bpin; render(); }
 });
 document.addEventListener('change', e => {
   const id = e.target.id;

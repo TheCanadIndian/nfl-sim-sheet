@@ -50,7 +50,7 @@ function chips(p, g){
   const l = lean(p, 'pts');
   if (l && Math.abs(l.edge) >= .03) h += `<span class="lean ${shadeP(.5 + l.edge * 2)}" title="Market-blind model ${l.edge > 0 ? 'higher' : 'lower'} on points at ${l.L}">${l.edge > 0 ? '▲' : '▼'} blind</span>`;
   if (p.gp === 0) h += '<span class="tag" style="color:var(--muted)" title="No NBA games yet: league-average role assumed">new</span>';
-  if (window.MKT && MKT.lcFlag) h += MKT.lcFlag(g, p.n) + (MKT.offFlag ? MKT.offFlag(g, p.n) : '') + whyNBA(p, g);
+  if (window.MKT && MKT.lcFlag) h += MKT.lcFlag(g, p.n) + (MKT.offFlag ? MKT.offFlag(g, p.n) : '') + (MKT.moveFlag ? MKT.moveFlag(g, p.n) : '') + whyNBA(p, g);
   if (p.ar) h += `<span class="tag arch" title="Playstyle archetype from his per-minute production (points, threes, free-throw rate, assists, rebounds, blocks). Points and threes matchups use what this defense allows to this archetype as well as to his position.">${esc(p.ar)}</span>`;
   return h;
 }
@@ -193,10 +193,12 @@ function gameView(){
   const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;
 }
+let BPIN = false;                                 // board filter: only players Pinnacle has moved (sharp.pin_moves)
 function board(){
-  const st = state.bstat, rows = D.players.filter(p => p.s.vegas && p.s.vegas[st]).sort((a,b) => b.s[mode(a.g)][st][MED] - a.s[mode(b.g)][st][MED] || 0);
+  const st = state.bstat, rows = D.players.filter(p => p.s.vegas && p.s.vegas[st] && (!BPIN || (window.MKT && MKT.pinMoves && MKT.pinMoves(p.g, p.n).some(m => m.src === 'pin'))))
+    .sort((a,b) => b.s[mode(a.g)][st][MED] - a.s[mode(b.g)][st][MED] || 0);
   rows.sort((a,b) => b.s[mode(b.g)][st][MED] - a.s[mode(a.g)][st][MED]);
-  return `<section class="panel"><div class="phead"><div class="seg">${COLS.map(c => `<button data-bstat="${c}" aria-pressed="${c === st}">${LAB[c]}</button>`).join('')}</div><span class="muted small">Uses each game's selected model</span></div>
+  return `<section class="panel"><div class="phead"><div class="seg">${COLS.map(c => `<button data-bstat="${c}" aria-pressed="${c === st}">${LAB[c]}</button>`).join('')}</div><button class="flagbtn" data-bpin="1" aria-pressed="${BPIN}" title="Players whose prop Pinnacle has moved: line up and / or the over shortened (tracked, experimental)">Pinnacle moved</button><span class="muted small">${BPIN ? rows.length + ' players · ' : ''}Uses each game's selected model</span></div>
   <div class="tw"><table class="t"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Game</th>${COLS.map(c => `<th>${c === 'fg3m' ? '3PM' : c === 'pra' ? 'PRA' : c.toUpperCase()}</th>`).join('')}</tr></thead><tbody>
   ${rows.slice(0, 150).map((p,i) => `<tr><td class="muted">${i+1}</td><td class="l name">${esc(p.n)}${chips(p, p.g)}</td><td class="l">${esc(p.t)} <span class="small muted">vs ${esc(p.o)}</span></td>${COLS.map(c => cell(p, c, p.g)).join('')}</tr>`).join('')}</tbody></table></div></section>`;
 }
@@ -474,3 +476,5 @@ document.addEventListener('input', e => {
   document.getElementById('sl-res').innerHTML = readout(p.d[mode(p.g)][state.ostat], state.oline, p, state.ostat);
 });
 render();
+
+document.addEventListener('click', e => { const b = e.target.closest('[data-bpin]'); if (!b) return; BPIN = !BPIN; render(); });
