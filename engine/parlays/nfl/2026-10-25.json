@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-23T18:03:26.721Z",
+"frozen_at": "2026-10-23T18:12:17.584Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 299.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2229,
+"p": 0.2125,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -40,7 +40,7 @@
 "line": 89.5,
 "name": "christian mccaffrey",
 "lab": "Christian McCaffrey 90+ rush yds",
-"p": 0.2137,
+"p": 0.2162,
 "price": 331,
 "book": "Kalshi",
 "sc": "SF pulls away",
@@ -51,10 +51,9 @@
 ]
 }
 ],
-"p": 0.04763,
+"p": 0.04595,
 "d": 22.628,
-"first": "2026-10-25T13:30:00+00:00",
-"pick": "longshot"
+"first": "2026-10-25T13:30:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -168,7 +167,7 @@
 "name": "aaron jones",
 "lab": "Aaron Jones TD",
 "p": 0.4658,
-"price": 150,
+"price": 156,
 "book": "Novig"
 },
 {
@@ -185,7 +184,7 @@
 }
 ],
 "p": 0.23349,
-"d": 6.1,
+"d": 6.246,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -279,13 +278,46 @@
 "line": 0.5,
 "name": "marshawn lloyd",
 "lab": "Marshawn Lloyd TD",
-"p": 0.2902,
+"p": 0.2911,
 "price": 376,
 "book": "Novig"
 }
 ],
-"p": 0.14544,
+"p": 0.14592,
 "d": 11.614,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.532,
+"price": 156,
+"book": "Novig"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 29.5,
+"name": "kaelon black",
+"lab": "Kaelon Black under 29.5 rush yds",
+"p": 0.5551,
+"price": -111,
+"book": "Novig"
+}
+],
+"p": 0.2953,
+"d": 4.866,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -356,8 +388,20 @@
 },
 {
 "card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
+"tier": "+1000 to +3000",
 "legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.532,
+"price": 156,
+"book": "Novig"
+},
 {
 "gid": "2026_07_LA_LV",
 "start": "2026-10-25T16:25:00",
@@ -369,22 +413,10 @@
 "p": 0.271,
 "price": 335,
 "book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 29.5,
-"name": "kaelon black",
-"lab": "Kaelon Black under 29.5 rush yds",
-"p": 0.5551,
-"price": -111,
-"book": "Novig"
 }
 ],
-"p": 0.15043,
-"d": 8.269,
+"p": 0.14417,
+"d": 11.136,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -392,15 +424,48 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.331,
-"price": 270,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.532,
+"price": 156,
+"book": "Novig"
+},
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "pierre strong",
+"lab": "Pierre Strong anytime TD",
+"p": 0.256,
+"price": 365,
+"book": "Novig"
+}
+],
+"p": 0.13619,
+"d": 11.904,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.532,
+"price": 156,
 "book": "Novig"
 },
 {
@@ -409,81 +474,15 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "rj harvey",
-"lab": "Rj Harvey anytime TD",
-"p": 0.345,
-"price": 285,
+"name": "bo nix",
+"lab": "Bo Nix anytime TD",
+"p": 0.255,
+"price": 388,
 "book": "Novig"
 }
 ],
-"p": 0.11419,
-"d": 14.245,
-"first": "2026-10-25T13:30:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_07_DEN_ARI",
-"start": "2026-10-25T16:05:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rj harvey",
-"lab": "Rj Harvey anytime TD",
-"p": 0.345,
-"price": 285,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts anytime TD",
-"p": 0.301,
-"price": 277,
-"book": "Novig"
-}
-],
-"p": 0.10384,
-"d": 14.514,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_07_TB_CAR",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "sean tucker",
-"lab": "Sean Tucker anytime TD",
-"p": 0.182,
-"price": 641,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 29.5,
-"name": "kaelon black",
-"lab": "Kaelon Black under 29.5 rush yds",
-"p": 0.5551,
-"price": -111,
-"book": "Novig"
-}
-],
-"p": 0.10102,
-"d": 14.086,
+"p": 0.13566,
+"d": 12.493,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {

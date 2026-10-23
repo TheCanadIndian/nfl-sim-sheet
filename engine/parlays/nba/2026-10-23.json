@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-23",
 "lock": "2026-10-23T20:00:00+00:00",
-"frozen_at": "2026-10-23T18:03:29.024Z",
+"frozen_at": "2026-10-23T18:12:20.750Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,24 +15,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "leonard miller",
-"lab": "Leonard Miller 2+ threes",
-"p": 0.3405,
-"price": 223,
-"book": "Novig",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
 "gid": "401909849",
 "start": "2026-10-24T01:30Z",
 "kind": "reb",
@@ -49,11 +31,29 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "draymond green",
+"lab": "Draymond Green 2+ threes",
+"p": 0.3407,
+"price": 218,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
 }
 ],
-"p": 0.07567,
-"d": 17.474,
-"first": "2026-10-23T20:00:00+00:00",
+"p": 0.0757,
+"d": 17.204,
+"first": "2026-10-24T01:30:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -66,76 +66,12 @@
 "start": "2026-10-23T20:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 1.5,
-"name": "leonard miller",
-"lab": "Leonard Miller 2+ threes",
-"p": 0.3405,
-"price": 223,
-"book": "Novig",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909849",
-"start": "2026-10-24T01:30Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "lauri markkanen",
-"lab": "Lauri Markkanen 30+ pts",
-"p": 0.2429,
-"price": 355,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.08271,
-"d": 14.696,
-"first": "2026-10-23T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
+"line": 2.5,
 "name": "josh giddey",
-"lab": "Josh Giddey 8+ reb",
-"p": 0.4333,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909844",
-"start": "2026-10-23T23:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "andrew nembhard",
-"lab": "Andrew Nembhard 8+ ast",
-"p": 0.4062,
-"price": 147,
-"book": "Novig",
+"lab": "Josh Giddey 3+ threes",
+"p": 0.2054,
+"price": 398,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -162,8 +98,8 @@
 ]
 }
 ],
-"p": 0.03911,
-"d": 31.135,
+"p": 0.04563,
+"d": 26.942,
 "first": "2026-10-23T20:00:00+00:00",
 "res": null
 },
@@ -174,14 +110,78 @@
 {
 "gid": "401909848",
 "start": "2026-10-23T20:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
+"line": 2.5,
 "name": "josh giddey",
-"lab": "Josh Giddey 8+ reb",
-"p": 0.4333,
-"price": 133,
+"lab": "Josh Giddey 3+ threes",
+"p": 0.2054,
+"price": 398,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909849",
+"start": "2026-10-24T01:30Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "lauri markkanen",
+"lab": "Lauri Markkanen 30+ pts",
+"p": 0.2429,
+"price": 355,
 "book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "draymond green",
+"lab": "Draymond Green 2+ threes",
+"p": 0.3407,
+"price": 218,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.01699,
+"d": 72.056,
+"first": "2026-10-23T20:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909848",
+"start": "2026-10-23T20:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.3776,
+"price": 166,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -226,8 +226,8 @@
 ]
 }
 ],
-"p": 0.04274,
-"d": 26.186,
+"p": 0.03726,
+"d": 29.894,
 "first": "2026-10-23T20:00:00+00:00",
 "res": null
 },
@@ -248,6 +248,28 @@
 "book": "Kalshi"
 },
 {
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 5+ threes",
+"p": 0.23,
+"price": 280,
+"book": "Kalshi"
+}
+],
+"p": 0.04255,
+"d": 18.929,
+"first": "2026-10-24T01:30:00+00:00",
+"res": null
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
 "gid": "401909847",
 "start": "2026-10-24T00:00Z",
 "kind": "fg3m",
@@ -255,13 +277,25 @@
 "line": 3.5,
 "name": "cade cunningham",
 "lab": "Cade Cunningham 4+ threes",
-"p": 0.18,
-"price": 373,
+"p": 0.175,
+"price": 398,
+"book": "Kalshi"
+},
+{
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 5+ threes",
+"p": 0.23,
+"price": 280,
 "book": "Kalshi"
 }
 ],
-"p": 0.0333,
-"d": 23.583,
+"p": 0.04025,
+"d": 18.929,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
@@ -282,28 +316,6 @@
 "book": "Kalshi"
 },
 {
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 4+ threes",
-"p": 0.16,
-"price": 425,
-"book": "Kalshi"
-}
-],
-"p": 0.0296,
-"d": 26.169,
-"first": "2026-10-23T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
 "gid": "401909847",
 "start": "2026-10-24T00:00Z",
 "kind": "fg3m",
@@ -311,61 +323,14 @@
 "line": 3.5,
 "name": "cade cunningham",
 "lab": "Cade Cunningham 4+ threes",
-"p": 0.18,
-"price": 373,
-"book": "Kalshi"
-},
-{
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 4+ threes",
-"p": 0.16,
-"price": 425,
+"p": 0.175,
+"price": 398,
 "book": "Kalshi"
 }
 ],
-"p": 0.0288,
-"d": 24.877,
-"first": "2026-10-23T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909850",
-"start": "2026-10-24T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "scotty pippen",
-"lab": "Scotty Pippen over 3.5 assists",
-"p": 0.5845,
-"price": -110,
-"book": "Hard Rock"
-},
-{
-"gid": "401909852",
-"start": "2026-10-24T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "scoot henderson",
-"lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6107,
-"price": -110,
-"book": "Hard Rock"
-}
-],
-"p": 0.35695,
-"d": 3.645,
-"first": "2026-10-24T02:00:00+00:00",
-"pick": "core",
+"p": 0.03238,
+"d": 24.808,
+"first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
 {
@@ -380,8 +345,8 @@
 "line": 11.5,
 "name": "gg jackson",
 "lab": "Gg Jackson over 11.5 points",
-"p": 0.5324,
-"price": 102,
+"p": 0.53,
+"price": 104,
 "book": "Novig"
 },
 {
@@ -397,9 +362,10 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.32512,
-"d": 3.856,
+"p": 0.32368,
+"d": 3.895,
 "first": "2026-10-24T02:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -427,7 +393,7 @@
 "name": "scotty pippen",
 "lab": "Scotty Pippen over 3.5 assists",
 "p": 0.5845,
-"price": -110,
+"price": -125,
 "book": "Hard Rock"
 },
 {
@@ -444,7 +410,54 @@
 }
 ],
 "p": 0.29277,
-"d": 4.415,
+"d": 4.163,
+"first": "2026-10-24T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909847",
+"start": "2026-10-24T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 1.5,
+"name": "tim hardaway",
+"lab": "Tim Hardaway Jr. 2+ rebounds",
+"p": 0.6383,
+"price": -148,
+"book": "Kalshi"
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 11.5,
+"name": "gg jackson",
+"lab": "Gg Jackson over 11.5 points",
+"p": 0.53,
+"price": 104,
+"book": "Novig"
+},
+{
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "deni avdija",
+"lab": "Deni Avdija 4+ assists",
+"p": 0.7847,
+"price": -263,
+"book": "Kalshi"
+}
+],
+"p": 0.26547,
+"d": 4.718,
 "first": "2026-10-24T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -466,22 +479,21 @@
 "book": "Kalshi"
 },
 {
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "reb",
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "tre jones",
-"lab": "Tre Jones 4+ rebounds",
-"p": 0.264,
-"price": 373,
+"line": 5.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday 6+ assists",
+"p": 0.2708,
+"price": 398,
 "book": "Kalshi"
 }
 ],
-"p": 0.16851,
-"d": 7.926,
-"first": "2026-10-23T20:00:00+00:00",
-"pick": "core",
+"p": 0.17288,
+"d": 8.345,
+"first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
 {
@@ -523,33 +535,33 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "reb",
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "tre jones",
-"lab": "Tre Jones 4+ rebounds",
-"p": 0.264,
-"price": 373,
-"book": "Kalshi"
+"name": "scotty pippen",
+"lab": "Scotty Pippen over 3.5 assists",
+"p": 0.5845,
+"price": -125,
+"book": "Hard Rock"
 },
 {
 "gid": "401909852",
 "start": "2026-10-24T02:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 1.5,
-"name": "scoot henderson",
-"lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6107,
-"price": -110,
-"book": "Hard Rock"
+"line": 5.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday 6+ assists",
+"p": 0.2708,
+"price": 398,
+"book": "Kalshi"
 }
 ],
-"p": 0.16121,
-"d": 9.03,
-"first": "2026-10-23T20:00:00+00:00",
+"p": 0.1583,
+"d": 8.964,
+"first": "2026-10-24T02:00:00+00:00",
 "res": null
 },
 {
@@ -565,14 +577,14 @@
 "name": "gg jackson",
 "lab": "GG Jackson over 11.5 points",
 "p": 0.542,
-"price": 102,
+"price": 104,
 "book": "Novig",
 "f": [
 "usage",
 "game"
 ],
 "sport": "nba",
-"edge": 0.0949
+"edge": 0.1058
 },
 {
 "gid": "401909852",
@@ -594,7 +606,7 @@
 }
 ],
 "p": 0.29853,
-"d": 3.856,
+"d": 3.895,
 "first": "2026-10-24T02:00:00+00:00",
 "res": null
 }
