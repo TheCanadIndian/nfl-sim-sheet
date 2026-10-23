@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-23",
 "lock": "2026-10-24T00:00:00+00:00",
-"frozen_at": "2026-10-23T20:43:44.215Z",
+"frozen_at": "2026-10-23T20:52:06.549Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -362,6 +362,40 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel to score",
+"p": 0.3643,
+"price": 190,
+"book": "Novig"
+},
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel 3+ shots",
+"p": 0.5708,
+"price": -190,
+"book": "ProphetX"
+}
+],
+"p": 0.27348,
+"d": 3.657,
+"first": "2026-10-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "3+ shots + goal",
+"legs": [
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
 "name": "nikita kucherov",
 "lab": "Nikita Kucherov to score",
 "p": 0.3521,
@@ -387,40 +421,6 @@
 "res": null
 },
 {
-"card": "Same-game combos (experimental)",
-"tier": "3+ shots + goal",
-"legs": [
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel to score",
-"p": 0.3643,
-"price": 190,
-"book": "Novig"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel 3+ shots",
-"p": 0.5435,
-"price": -190,
-"book": "ProphetX"
-}
-],
-"p": 0.26041,
-"d": 3.84,
-"first": "2026-10-24T01:00:00+00:00",
-"res": null
-},
-{
 "card": "Parlays by payout (your books)",
 "tier": "+250 to +600",
 "legs": [
@@ -432,7 +432,7 @@
 "line": 1.5,
 "name": "chris kreider",
 "lab": "Chris Kreider under 1.5 shots",
-"p": 0.5562,
+"p": 0.5635,
 "price": 100,
 "book": "Hard Rock"
 },
@@ -449,7 +449,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.34106,
+"p": 0.34556,
 "d": 3.639,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
@@ -478,12 +478,12 @@
 "line": 1.5,
 "name": "john carlson",
 "lab": "John Carlson over 1.5 shots",
-"p": 0.5203,
+"p": 0.5231,
 "price": 115,
 "book": "Hard Rock"
 }
 ],
-"p": 0.31273,
+"p": 0.31439,
 "d": 4.02,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
@@ -498,61 +498,27 @@
 "kind": "sog",
 "side": "u",
 "line": 1.5,
-"name": "oliver kapanen",
-"lab": "Oliver Kapanen under 1.5 shots",
-"p": 0.4829,
-"price": 145,
+"name": "chris kreider",
+"lab": "Chris Kreider under 1.5 shots",
+"p": 0.5635,
+"price": 100,
 "book": "Hard Rock"
 },
 {
 "gid": "2026020167",
 "start": "2026-10-24T01:00:00Z",
 "kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "cale makar",
-"lab": "Cale Makar under 2.5 shots",
-"p": 0.6132,
-"price": -122,
-"book": "Novig"
-}
-],
-"p": 0.29613,
-"d": 4.458,
-"first": "2026-10-24T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020166",
-"start": "2026-10-24T00:00:00Z",
-"kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "frank nazar",
-"lab": "Frank Nazar over 1.5 shots",
-"p": 0.5383,
-"price": -105,
-"book": "DK"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "TBL moneyline",
-"p": 0.4861,
-"price": 111,
-"book": "ProphetX"
+"name": "john carlson",
+"lab": "John Carlson over 1.5 shots",
+"p": 0.5231,
+"price": 115,
+"book": "Hard Rock"
 }
 ],
-"p": 0.26171,
-"d": 4.12,
+"p": 0.29477,
+"d": 4.3,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
@@ -580,15 +546,49 @@
 "line": 1.5,
 "name": "john carlson",
 "lab": "John Carlson over 1.5 shots",
-"p": 0.5203,
+"p": 0.5231,
 "price": 115,
 "book": "Hard Rock"
 }
 ],
-"p": 0.22207,
+"p": 0.22325,
 "d": 5.375,
 "first": "2026-10-24T00:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020166",
+"start": "2026-10-24T00:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "sam rinzel",
+"lab": "Sam Rinzel over 1.5 shots",
+"p": 0.441,
+"price": 135,
+"book": "Novig"
+},
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "TBL moneyline",
+"p": 0.4861,
+"price": 111,
+"book": "ProphetX"
+}
+],
+"p": 0.2144,
+"d": 4.959,
+"first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
 {
@@ -649,12 +649,12 @@
 "line": 1.5,
 "name": "john carlson",
 "lab": "John Carlson over 1.5 shots",
-"p": 0.5203,
+"p": 0.5231,
 "price": 115,
 "book": "Hard Rock"
 }
 ],
-"p": 0.22207,
+"p": 0.22325,
 "d": 5.375,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
