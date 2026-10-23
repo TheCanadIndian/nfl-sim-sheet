@@ -82,8 +82,8 @@ def load_state():
         return {}
 
 
-def budget_ok(st, now):
-    """Pace the month: today's spend may not pass (credits left at the start of today) / (days left incl. today)."""
+def allowance(st, now):
+    """Today's credit allowance: (credits left at the start of today) / (days left incl. today), weighted by weekday."""
     day = now.strftime("%Y-%m-%d")
     if st.get("day") != day:
         st.update(day=day, spent_today=0, left_at_day_start=st.get("remaining", PLAN) if st.get("month") == now.strftime("%Y-%m") else PLAN)
@@ -94,8 +94,18 @@ def budget_ok(st, now):
     days_left = (nxt - now.date()).days
     W = {6: 2.5, 0: 1.2, 3: 1.2}                       # Sunday (NFL slate), Monday/Thursday nights; other days 1 (NBA/NHL nightly)
     days = pd.date_range(now.date(), periods=max(days_left, 1), freq="D")
-    allow = max(COST, st["left_at_day_start"] * W.get(now.weekday(), 1.0) / sum(W.get(d.weekday(), 1.0) for d in days))
-    return st["spent_today"] + COST <= allow and st.get("remaining", PLAN) >= COST
+    return max(COST, st["left_at_day_start"] * W.get(now.weekday(), 1.0) / sum(W.get(d.weekday(), 1.0) for d in days))
+
+
+def budget_ok(st, now):
+    """Pace the month: today's spend may not pass today's allowance."""
+    return st["spent_today"] + COST <= allowance(st, now) and st.get("remaining", PLAN) >= COST
+
+
+def tight(st, now, frac=.75):
+    """True once 75% of today's allowance is spent: the 30-minute prop pulls fall back to the slower pace, so the
+    pulls nearest each game (and the card locks) are never the ones the budget cuts (owner 2026-10-23)."""
+    return st.get("spent_today", 0) >= frac * allowance(st, now)
 
 
 def tidy(events, sport, games):
