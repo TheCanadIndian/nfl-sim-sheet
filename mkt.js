@@ -202,7 +202,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
 @media (max-width:640px){.offr{grid-template-columns:1fr auto}.offg{grid-column:1/-1;text-align:left}.offg b{display:inline;margin-left:6px}}
 .vtag.offt{border-color:color-mix(in srgb,#F2C14E 60%,transparent);color:#F2C14E}.vtag.offt i{font-style:normal;font-weight:700;margin-left:2px}
 .why{display:inline-block;font-size:11px;color:var(--muted);border:1px dashed var(--faint);border-radius:999px;padding:0 8px;margin:2px 4px 0 0;white-space:nowrap}.why b{color:var(--ink);font-weight:600}.why.none{opacity:.75}
-.vtag.lct{border-color:color-mix(in srgb,#6CB4FF 60%,transparent);color:#6CB4FF}.vtag.lct i{font-style:normal;font-weight:700;margin-left:2px}
+.vtag.lct{border-color:color-mix(in srgb,#6CB4FF 60%,transparent);color:#6CB4FF}.vtag.pmv{border-color:color-mix(in srgb,#C084FC 55%,transparent);color:#C084FC}.vtag.pmv.st{background:color-mix(in srgb,#C084FC 14%,transparent);font-weight:700}.vtag.pmv i{font-style:normal;font-weight:700}.vtag.lct i{font-style:normal;font-weight:700;margin-left:2px}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
@@ -928,6 +928,24 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     },
     // 'LC' tag (experimental): the price at one of the owner's books beats the liquidity-weighted fair (sharp consensus
     // + Kalshi / Polymarket weighted by depth, never the book being bet; sharp.lc_tags) by 5%+. Tracked on the Profit page.
+    // Pinnacle line moves (sharp.pin_moves; owner 2026-10-23): this player's live Pinnacle signals, and a chip --
+    // 'PIN ▲ ast 5.5→6.5' (line up), 'PIN odds ▼ reb' (over shortened at the same line), both together; the tooltip adds
+    // the consensus agreeing and any higher-rung outliers at the owner's books. Tracked on the Profit page (experimental).
+    pinMoves(gid, name){
+      if (!FL || !FL.moves || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return [];
+      return FL.moves.filter(m => String(m.g) === String(gid) && m.n === norm(name));
+    },
+    moveFlag(gid, name){
+      const M = window.MKT.pinMoves(gid, name), P = M.filter(m => m.src === 'pin' && m.sig !== 'rung'); if (!P.length) return '';
+      const SL = {pts: 'pts', reb: 'reb', ast: 'ast', fg3m: '3PM', rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', td: 'TD'};
+      const by = {}; P.forEach(m => { const c = by[m.k] = by[m.k] || {k: m.k, line: null, price: false}; if (m.sig === 'line' || m.sig === 'both') c.line = m; if (m.sig === 'price' || m.sig === 'both') c.price = true; });
+      return Object.values(by).map(c => {
+        const cons = M.some(m => m.src === 'cons' && m.k === c.k && m.sig !== 'rung'), rungs = M.filter(m => m.sig === 'rung' && m.k === c.k);
+        const body = `PIN ${c.line ? `▲ ${SL[c.k] || c.k} ${c.line.from_l}→${c.line.to_l}` : `${SL[c.k] || c.k}`}${c.price ? ' · odds ▼' : ''}`;
+        const tip = `Pinnacle ${c.line ? `moved ${esc(name)}’s ${SL[c.k] || c.k} line up, ${c.line.from_l} to ${c.line.to_l}` : `kept the line`}${c.price ? `${c.line ? ' and' : ','} the over got shorter (its no-vig chance up 2-3+ pts)` : ''}${c.line && c.price ? ': the strong version of the signal' : ''}.${cons ? ' Our sharp consensus moved the same way.' : ''}${rungs.length ? ' Higher rungs priced above the moved fair at your books: ' + rungs.map(r => `${esc(r.b)} ${r.o > 0 ? '+' : ''}${r.o} ${esc(BKS[r.bk] || r.bk)} (+${Math.round(r.ev * 100)}%)`).join(', ') + '.' : ''} Tracked on the Profit page; not yet a tested rule.`;
+        return `<span class="vtag pmv${c.line && c.price ? ' st' : ''}" title="${tip}">${body}${rungs.length ? ` <i>+${rungs.length} rung${rungs.length === 1 ? '' : 's'}</i>` : ''}</span>`;
+      }).join('');
+    },
     lcFlag(gid, name){
       if (!FL || !FL.lc || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
       const v = (FL.lc[String(gid)] || {})[norm(name)]; if (!v || (MY.length && !MY.includes(v.k))) return '';
