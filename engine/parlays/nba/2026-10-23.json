@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-23",
 "lock": "2026-10-23T20:00:00+00:00",
-"frozen_at": "2026-10-23T14:05:03.022Z",
+"frozen_at": "2026-10-23T14:10:48.451Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,46 +15,47 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909843",
-"start": "2026-10-23T23:00Z",
-"kind": "reb",
+"gid": "401909848",
+"start": "2026-10-23T20:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "grayson allen",
-"lab": "Grayson Allen 4+ reb",
-"p": 0.3249,
-"price": 245,
+"line": 2.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 3+ threes",
+"p": 0.2522,
+"price": 317,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
 ]
 },
 {
-"gid": "401909851",
+"gid": "401909850",
 "start": "2026-10-24T02:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
 "line": 5.5,
-"name": "brook lopez",
-"lab": "Brook Lopez 6+ reb",
-"p": 0.4163,
-"price": 156,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 6+ ast",
+"p": 0.2189,
+"price": 388,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
 ]
 }
 ],
-"p": 0.13528,
-"d": 8.832,
-"first": "2026-10-23T23:00:00+00:00",
-"pick": "core",
+"p": 0.05521,
+"d": 20.35,
+"first": "2026-10-23T20:00:00+00:00",
 "res": null
 },
 {
@@ -69,7 +70,7 @@
 "line": 3.5,
 "name": "grayson allen",
 "lab": "Grayson Allen 4+ reb",
-"p": 0.3249,
+"p": 0.3269,
 "price": 245,
 "book": "Novig",
 "f": [
@@ -87,8 +88,104 @@
 "line": 5.5,
 "name": "brandin podziemski",
 "lab": "Brandin Podziemski 6+ ast",
-"p": 0.2144,
+"p": 0.2189,
 "price": 388,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.07157,
+"d": 16.836,
+"first": "2026-10-23T23:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909848",
+"start": "2026-10-23T20:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 3+ threes",
+"p": 0.2522,
+"price": 317,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909843",
+"start": "2026-10-23T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "grayson allen",
+"lab": "Grayson Allen 4+ reb",
+"p": 0.3269,
+"price": 245,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 30+ pts",
+"p": 0.3135,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.02585,
+"d": 48.914,
+"first": "2026-10-23T20:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909844",
+"start": "2026-10-23T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "max christie",
+"lab": "Max Christie 4+ reb",
+"p": 0.4191,
+"price": 133,
 "book": "Novig",
 "f": [
 "usage",
@@ -96,139 +193,81 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401909849",
+"start": "2026-10-24T01:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "keyonte george",
+"lab": "Keyonte George 3+ threes",
+"p": 0.432,
+"price": 125,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 30+ pts",
+"p": 0.3135,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
 }
 ],
-"p": 0.06968,
-"d": 16.836,
+"p": 0.05677,
+"d": 17.824,
 "first": "2026-10-23T23:00:00+00:00",
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
 "legs": [
-{
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "josh giddey",
-"lab": "Josh Giddey 3+ threes",
-"p": 0.2466,
-"price": 317,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
 {
 "gid": "401909850",
 "start": "2026-10-24T02:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski 6+ ast",
-"p": 0.2144,
-"price": 388,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
+"line": 3.5,
+"name": "scotty pippen",
+"lab": "Scotty Pippen over 3.5 assists",
+"p": 0.5763,
+"price": -120,
+"book": "Hard Rock"
 },
 {
-"gid": "401909851",
-"start": "2026-10-24T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "brook lopez",
-"lab": "Brook Lopez 6+ reb",
-"p": 0.4163,
-"price": 156,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.02201,
-"d": 52.095,
-"first": "2026-10-23T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "josh giddey",
-"lab": "Josh Giddey 3+ threes",
-"p": 0.2466,
-"price": 317,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909850",
-"start": "2026-10-24T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "stephen curry",
-"lab": "Stephen Curry 5+ ast",
-"p": 0.4478,
-"price": 120,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909851",
+"gid": "401909852",
 "start": "2026-10-24T02:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "luka doncic",
-"lab": "Luka Doncic 6+ threes",
-"p": 0.2207,
-"price": 426,
-"book": "Novig",
-"f": [
-"usage",
-"game",
-"price"
-]
+"line": 1.5,
+"name": "scoot henderson",
+"lab": "Scoot Henderson over 1.5 threes",
+"p": 0.6131,
+"price": -110,
+"book": "Hard Rock"
 }
 ],
-"p": 0.02436,
-"d": 48.255,
-"first": "2026-10-23T20:00:00+00:00",
-"pick": "longshot",
+"p": 0.35333,
+"d": 3.5,
+"first": "2026-10-24T02:00:00+00:00",
 "res": null
 },
 {
@@ -255,12 +294,12 @@
 "line": 1.5,
 "name": "scoot henderson",
 "lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6103,
+"p": 0.6131,
 "price": -110,
 "book": "Hard Rock"
 }
 ],
-"p": 0.33043,
+"p": 0.33194,
 "d": 3.818,
 "first": "2026-10-23T23:00:00+00:00",
 "res": null
@@ -289,48 +328,14 @@
 "line": 1.5,
 "name": "scoot henderson",
 "lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6103,
+"p": 0.6131,
 "price": -110,
 "book": "Hard Rock"
 }
 ],
-"p": 0.32912,
+"p": 0.33063,
 "d": 3.818,
 "first": "2026-10-24T01:30:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909851",
-"start": "2026-10-24T02:00Z",
-"kind": "total",
-"side": "over",
-"line": 228.5,
-"name": null,
-"lab": "LAC-LAL over 228.5",
-"p": 0.5023,
-"price": 122,
-"book": "Novig"
-},
-{
-"gid": "401909852",
-"start": "2026-10-24T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "scoot henderson",
-"lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6103,
-"price": -110,
-"book": "Hard Rock"
-}
-],
-"p": 0.30655,
-"d": 4.238,
-"first": "2026-10-24T02:00:00+00:00",
 "res": null
 },
 {
@@ -350,16 +355,16 @@
 "book": "Novig"
 },
 {
-"gid": "401909849",
-"start": "2026-10-24T01:30Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "UTAH moneyline",
-"p": 0.5393,
-"price": 100,
-"book": "Novig"
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "scotty pippen",
+"lab": "Scotty Pippen over 3.5 assists",
+"p": 0.5763,
+"price": -120,
+"book": "Hard Rock"
 },
 {
 "gid": "401909852",
@@ -369,13 +374,13 @@
 "line": 1.5,
 "name": "scoot henderson",
 "lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6103,
+"p": 0.6131,
 "price": -110,
 "book": "Hard Rock"
 }
 ],
-"p": 0.17819,
-"d": 7.636,
+"p": 0.1913,
+"d": 7,
 "first": "2026-10-23T23:00:00+00:00",
 "pick": "core",
 "res": null
@@ -385,28 +390,28 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "401909845",
-"start": "2026-10-23T23:00Z",
+"gid": "401909849",
+"start": "2026-10-24T01:30Z",
 "kind": "ml",
-"side": "away",
+"side": "home",
 "line": null,
 "name": null,
-"lab": "MIN moneyline",
-"p": 0.5414,
+"lab": "UTAH moneyline",
+"p": 0.5393,
 "price": 100,
 "book": "Novig"
 },
 {
-"gid": "401909851",
+"gid": "401909850",
 "start": "2026-10-24T02:00Z",
-"kind": "total",
-"side": "over",
-"line": 228.5,
-"name": null,
-"lab": "LAC-LAL over 228.5",
-"p": 0.5023,
-"price": 122,
-"book": "Novig"
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "scotty pippen",
+"lab": "Scotty Pippen over 3.5 assists",
+"p": 0.5763,
+"price": -120,
+"book": "Hard Rock"
 },
 {
 "gid": "401909852",
@@ -416,14 +421,14 @@
 "line": 1.5,
 "name": "scoot henderson",
 "lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6103,
+"p": 0.6131,
 "price": -110,
 "book": "Hard Rock"
 }
 ],
-"p": 0.16597,
-"d": 8.476,
-"first": "2026-10-23T23:00:00+00:00",
+"p": 0.19054,
+"d": 7,
+"first": "2026-10-24T01:30:00+00:00",
 "res": null
 },
 {
@@ -431,18 +436,6 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "401909844",
-"start": "2026-10-23T23:00Z",
-"kind": "spread",
-"side": "away",
-"line": 6.5,
-"name": null,
-"lab": "DAL +6.5",
-"p": 0.5013,
-"price": 113,
-"book": "Novig"
-},
-{
 "gid": "401909845",
 "start": "2026-10-23T23:00Z",
 "kind": "ml",
@@ -455,6 +448,18 @@
 "book": "Novig"
 },
 {
+"gid": "401909849",
+"start": "2026-10-24T01:30Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "UTAH moneyline",
+"p": 0.5393,
+"price": 100,
+"book": "Novig"
+},
+{
 "gid": "401909852",
 "start": "2026-10-24T02:00Z",
 "kind": "fg3m",
@@ -462,13 +467,13 @@
 "line": 1.5,
 "name": "scoot henderson",
 "lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6103,
+"p": 0.6131,
 "price": -110,
 "book": "Hard Rock"
 }
 ],
-"p": 0.16565,
-"d": 8.133,
+"p": 0.17901,
+"d": 7.636,
 "first": "2026-10-23T23:00:00+00:00",
 "pick": "core",
 "res": null
@@ -485,16 +490,15 @@
 "line": 5.5,
 "name": "brook lopez",
 "lab": "Brook Lopez over 5.5 rebounds",
-"p": 0.4163,
+"p": 0.4164,
 "price": 156,
 "book": "Novig",
 "f": [
 "usage",
-"rotation",
-"game"
+"rotation"
 ],
 "sport": "nba",
-"edge": 0.0657
+"edge": 0.0661
 },
 {
 "gid": "401909852",
@@ -504,7 +508,7 @@
 "line": 1.5,
 "name": "scoot henderson",
 "lab": "Scoot Henderson over 1.5 threes",
-"p": 0.5506,
+"p": 0.552,
 "price": -110,
 "book": "Hard Rock",
 "f": [
@@ -512,10 +516,10 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.0512
+"edge": 0.0539
 }
 ],
-"p": 0.22921,
+"p": 0.22985,
 "d": 4.887,
 "first": "2026-10-24T02:00:00+00:00",
 "res": null
