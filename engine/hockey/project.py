@@ -657,7 +657,7 @@ def shot_maps(games, shots, teams, goalie_ids, n_games=30, players=(), n_shots=5
     s["zone"] = np.where(s.inner, "inner", np.where(~s.inner & (s.dist <= 45) & (s.angle <= 35), "high", "perim"))
     ros = pd.read_sql("SELECT DISTINCT player_id, pos FROM rosters", __import__("sqlite3").connect(M.DB)).drop_duplicates("player_id")
     pos = dict(zip(ros.player_id.astype("int64"), ros.pos))
-    s["grp"] = s.shooter.map(lambda x: "D" if pos.get(int(x)) == "D" else "F" if x == x else None)
+    s["grp"] = s.shooter.map(lambda x: None if x != x else "D" if pos.get(int(x)) == "D" else "F")    # a shot with no shooter recorded
     rec = s[s.date >= s.date.max() - pd.Timedelta(days=365)]
     pz = {gp: {z: round(float(v), 3) for z, v in x.zone.value_counts(normalize=True).items()} for gp, x in rec.groupby("grp")}
     by = s[s.shooter.isin({int(x) for x in players})].sort_values(["date", "t"])
