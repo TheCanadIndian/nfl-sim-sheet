@@ -11,7 +11,8 @@ Tables
            total, line_source
   players  game_id, team, player_id, name, pos, starter, dnp, min, pts, fgm, fga, fg3m, fg3a,
            ftm, fta, reb, oreb, dreb, ast, stl, blk, tov, pf, plus_minus
-  opps     game_id, player_id, reb_ch, reb, ast_ch, ast -- rebound / assist chances from the play-by-play (opps.py);
+  opps_v2  game_id, player_id, reb_ch, reb, ast_ch, ast -- rebounds available / teammate FGs while on the floor (opps.py;
+           v2 2026-10-23: team rebounds left out, matching Basketball-Reference TRB%);
            new games as they're fetched, plus up to OPPS_BACKFILL earlier games of the season a run
 """
 
@@ -215,8 +216,8 @@ def main():
         # rebound / assist chances (opps.py): this run's new games, then earlier games of the season still missing
         try:
             import opps as OPPS
-            con.execute("CREATE TABLE IF NOT EXISTS opps (game_id INTEGER, player_id INTEGER, reb_ch INTEGER, reb INTEGER, ast_ch INTEGER, ast INTEGER)")
-            have_o = {r[0] for r in con.execute("SELECT DISTINCT game_id FROM opps")}
+            con.execute("CREATE TABLE IF NOT EXISTS opps_v2 (game_id INTEGER, player_id INTEGER, reb_ch INTEGER, reb INTEGER, ast_ch INTEGER, ast INTEGER)")
+            have_o = {r[0] for r in con.execute("SELECT DISTINCT game_id FROM opps_v2")}
             new_o = {int(gid): sm for gid, sm in zip(todo.game_id, res) if sm and int(gid) not in have_o}
             back = [int(x) for x in done.game_id if int(x) not in have_o and int(x) not in new_o][:OPPS_BACKFILL]
             if back:
@@ -226,7 +227,7 @@ def main():
                             new_o[gid] = sm
             orows = [r for gid, sm in new_o.items() for r in OPPS.game_opps(gid, sm)]
             if orows:
-                con.executemany("INSERT INTO opps VALUES (?,?,?,?,?,?)", orows)
+                con.executemany("INSERT INTO opps_v2 VALUES (?,?,?,?,?,?)", orows)
             print(f"{season}: rebound / assist chances for {len(new_o)} games", flush=True)
         except Exception as e:                                       # noqa: BLE001 -- never block the box scores
             print(f"{season}: rebound / assist chances skipped ({type(e).__name__}: {e})")
