@@ -109,6 +109,31 @@ def summarize(out, sims, mode):
     return pd.DataFrame(rows), dists
 
 
+def chance_stats(season, pids):
+    """Per player, this season's games so far (last season's when he has fewer than 3): 3-point attempts a game (season,
+    last 10), rebounds available while on the floor and his share, teammates' made baskets while on the floor (assist
+    chances) and his share (nba.db `opps`, from the play-by-play; owner 2026-10-23)."""
+    import sqlite3
+    con = sqlite3.connect(M.DB)
+    q = f"""SELECT p.game_id, p.player_id, g.season, g.date, p.fg3a, o.reb_ch, o.reb, o.ast_ch, o.ast FROM players p
+             JOIN games g USING (game_id) LEFT JOIN opps o ON o.game_id = p.game_id AND o.player_id = p.player_id
+             WHERE p.min > 0 AND g.season IN ({season}, {season - 1}) AND p.player_id IN ({','.join(map(str, pids)) or 0})"""
+    d = pd.read_sql(q, con).sort_values("date")
+    out = []
+    for pid, x in d.groupby("player_id"):
+        cur = x[x.season == season]
+        use = cur if len(cur) >= 3 else x[x.season == season - 1]
+        if use.empty:
+            continue
+        o = use.dropna(subset=["reb_ch"])
+        out.append(dict(player_id=int(pid), x_gp=len(use), x_season=int(use.season.iloc[0]), x_fg3a=float(use.fg3a.mean()),
+                        x_fg3a10=float(x.tail(10).fg3a.mean()),
+                        x_rch=float(o.reb_ch.mean()) if len(o) else None, x_rr=float(o.reb.sum() / o.reb_ch.sum()) if len(o) and o.reb_ch.sum() else None,
+                        x_ach=float(o.ast_ch.mean()) if len(o) else None, x_ar=float(o.ast.sum() / o.ast_ch.sum()) if len(o) and o.ast_ch.sum() else None,
+                        x_reb=float(o.reb.mean()) if len(o) else None, x_ast=float(o.ast.mean()) if len(o) else None, x_on=len(o)))
+    return pd.DataFrame(out, columns=["player_id", "x_gp", "x_season", "x_fg3a", "x_fg3a10", "x_rch", "x_rr", "x_ach", "x_ar", "x_reb", "x_ast", "x_on"])
+
+
 def save_draws(out, sims, n=1000):
     """First n simulations per player and stat, packed as small ints: <OUT>/draws/<game_id>.json."""
     import base64
@@ -188,6 +213,10 @@ def main():
     if fr.arch is not None and "arch" in meta:                         # archetype name for the page
         meta["arch_name"] = meta.arch.map(lambda a: fr.arch["names"][int(a)] if pd.notna(a) else None)
     meta["e_min"] = M.team_minutes(rows, live=True)
+    try:                                                           # 3PA, rebound / assist chances (opps.py) for the page
+        meta = meta.merge(chance_stats(int(fut.season.iloc[0]), set(meta.player_id.astype(int))), on="player_id", how="left")
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("rebound / assist chances skipped:", type(e).__name__, e)
     # per-game team view
     games = []
     # each out player's usual minutes (his latest expected minutes before this game): a teammate out matters when he plays

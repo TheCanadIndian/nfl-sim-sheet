@@ -11,6 +11,8 @@ Tables
            total, line_source
   players  game_id, team, player_id, name, pos, starter, dnp, min, pts, fgm, fga, fg3m, fg3a,
            ftm, fta, reb, oreb, dreb, ast, stl, blk, tov, pf, plus_minus
+  opps     game_id, player_id, reb_ch, reb, ast_ch, ast -- rebound / assist chances from the play-by-play (opps.py);
+           new games as they're fetched, plus up to OPPS_BACKFILL earlier games of the season a run
 """
 
 import argparse
@@ -30,6 +32,7 @@ DB = os.path.join(HERE, "nba.db")
 RAW = os.path.join(HERE, "raw")
 API = "https://site.api.espn.com/apis/site/v2/sports/basketball/nba"
 H = {"User-Agent": "Mozilla/5.0 (personal NBA projections)"}
+OPPS_BACKFILL = 300               # earlier games of the season to add rebound / assist chances for, per run
 
 
 def get(url, tries=4):
@@ -209,6 +212,24 @@ def main():
             if _has(con, "players"):
                 con.execute(f"DELETE FROM players WHERE game_id IN ({','.join(map(str, p.game_id.unique()))})")
             p.to_sql("players", con, if_exists="append", index=False)
+        # rebound / assist chances (opps.py): this run's new games, then earlier games of the season still missing
+        try:
+            import opps as OPPS
+            con.execute("CREATE TABLE IF NOT EXISTS opps (game_id INTEGER, player_id INTEGER, reb_ch INTEGER, reb INTEGER, ast_ch INTEGER, ast INTEGER)")
+            have_o = {r[0] for r in con.execute("SELECT DISTINCT game_id FROM opps")}
+            new_o = {int(gid): sm for gid, sm in zip(todo.game_id, res) if sm and int(gid) not in have_o}
+            back = [int(x) for x in done.game_id if int(x) not in have_o and int(x) not in new_o][:OPPS_BACKFILL]
+            if back:
+                with ThreadPoolExecutor(max_workers=6) as ex:
+                    for gid, sm in zip(back, ex.map(lambda x: cached(os.path.join(RAW, str(season), f"{x}.json.gz"), f"{API}/summary?event={x}"), back)):
+                        if sm:
+                            new_o[gid] = sm
+            orows = [r for gid, sm in new_o.items() for r in OPPS.game_opps(gid, sm)]
+            if orows:
+                con.executemany("INSERT INTO opps VALUES (?,?,?,?,?,?)", orows)
+            print(f"{season}: rebound / assist chances for {len(new_o)} games", flush=True)
+        except Exception as e:                                       # noqa: BLE001 -- never block the box scores
+            print(f"{season}: rebound / assist chances skipped ({type(e).__name__}: {e})")
         con.commit()
         print(f"{season}: {len(todo)} new final games, {len(rows)} player lines, {len(lines)} lines ({time.time() - t0:.0f}s)", flush=True)
 
