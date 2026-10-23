@@ -710,11 +710,13 @@ HR_CACHE = os.path.join(M.OUT, "hr_props_{}.json")
 MORNING_HOUR, FAST = 8, 30           # owner 2026-10-23: one early-morning pull for early value, then every 30 min
 
 
-def wanted(games, cache, now, window_h, base_min, bst):
+def wanted(games, cache, now, window_h, base_min, bst, slow_h=None):
     """Games due a paid prop pull: inside a game's window (last window_h hours) every FAST minutes while today's credits
     are on pace (books.tight: 75% of the day's allowance spent -> back to base_min, so the pulls nearest each game are
     never the ones the budget cuts); outside it, one pull of every game later today from MORNING_HOUR ET on.
-    An empty answer (the book hasn't posted yet) stores nothing and is free, so it simply retries next run."""
+    slow_h: a wider window pulled every base_min before the 30-minute one starts (NBA: every 2 h from 8 h out, every
+    30 min in the last 4 h; owner 2026-10-23, 12-game nights). An empty answer (the book hasn't posted yet) stores
+    nothing and is free, so it simply retries next run."""
     et = now.tz_convert("America/New_York")
     morning = et.normalize() + pd.Timedelta(hours=MORNING_HOUR)
     every = base_min if B.tight(bst, now) else FAST
@@ -726,6 +728,9 @@ def wanted(games, cache, now, window_h, base_min, bst):
         c = cache.get(str(g["id"]))
         if st <= now + pd.Timedelta(hours=window_h):
             if stale(c, now, every):
+                out[ga] = g
+        elif slow_h and st <= now + pd.Timedelta(hours=slow_h):
+            if stale(c, now, base_min):
                 out[ga] = g
         elif st.tz_convert("America/New_York").date() == et.date() and et >= morning:
             if not c or pd.Timestamp(c.get("fetched", "2000-01-01")).tz_convert("America/New_York") < morning:
@@ -1266,6 +1271,7 @@ NBA_BOOKS = ["pinnacle", "novig", "hardrockbet", "draftkings", "fanduel", "betmg
 NBA_SHORT = {"draftkings": "DK", "fanduel": "FD", "betmgm": "MGM", "williamhill_us": "Caesars", "fanatics": "Fanatics", "novig": "Novig",
              "hardrockbet": "Hard Rock", "espnbet": "ESPN BET", "betrivers": "BetRivers", "pinnacle": "Pinnacle"}
 NBA_HOURS, NBA_REFRESH = 8.0, 120       # games within 8 h of tip-off, re-pulled every 2 h (4 credits a game: one per market)
+NBA_FAST_HOURS = 4.0                    # ... and every 30 min in the last 4 h (sharp.wanted; a morning pull before that)
 NBA_CACHE = os.path.join(M.OUT, "oa_props_nba.json")
 
 
@@ -1289,7 +1295,7 @@ def oa_nba(now):
     except (OSError, ValueError):
         cache = {}
     bst = B.load_state()
-    todo = wanted(games, cache, now, NBA_HOURS, NBA_REFRESH, bst)
+    todo = wanted(games, cache, now, NBA_FAST_HOURS, NBA_REFRESH, bst, slow_h=NBA_HOURS)
     if todo:
         r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
         for e in (r.json() if r.status_code == 200 else []):
