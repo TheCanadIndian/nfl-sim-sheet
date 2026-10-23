@@ -107,6 +107,18 @@ function mxWhy(p, st, m){
               : `${esc(p.o)} allows ${sgn(m.v)} ${KLAB[st]} per minute to ${PG_PL[p.pg]}`;
 }
 // one or two big matchups (8%+ either way) under a player's name
+// 3-point attempts, rebound chances and assist chances (owner 2026-10-23), from his games this season (last season's
+// with fewer than 3): rebounds available while he's on the floor (both teams) and his share; teammates' made baskets
+// while he's on the floor (assist chances) and his share. Our play-by-play counts, not NBA tracking data.
+function usageLine(p){
+  const x = p.x; if (!x) return '';
+  const pc0 = v => Math.round(v * 100) + '%', yr = x.season ? ` (${x.season - 1}-${String(x.season).slice(2)}, ${x.gp} games)` : '';
+  const L = [];
+  if (x.fg3a >= 1) L.push(`<span class="usl" title="3-point attempts a game${esc(yr)}${x.fg3a10 != null ? `; last 10 games ${f1(x.fg3a10)}` : ''}">3PA <b>${f1(x.fg3a)}</b>${x.fg3a10 != null && Math.abs(x.fg3a10 - x.fg3a) >= 1 ? ` <i>L10 ${f1(x.fg3a10)}</i>` : ''}</span>`);
+  if (x.reb >= 2 && x.rch) L.push(`<span class="usl" title="Rebound chances: rebounds by either team while he was on the floor, ${f1(x.rch)} a game${esc(yr)}; he grabbed ${f1(x.reb)} (${pc0(x.rr)}). Counted from the play-by-play, so the chances run higher than NBA tracking's.">Reb <b>${f1(x.reb)}</b> of ${Math.round(x.rch)} <i>${pc0(x.rr)}</i></span>`);
+  if (x.ast >= 1.5 && x.ach) L.push(`<span class="usl" title="Assist chances: teammates' made baskets while he was on the floor, ${f1(x.ach)} a game${esc(yr)}; he assisted ${f1(x.ast)} (${pc0(x.ar)}). Passes that led to misses aren't logged, so this runs lower than NBA's potential assists.">Ast <b>${f1(x.ast)}</b> of ${Math.round(x.ach)} <i>${pc0(x.ar)}</i></span>`);
+  return L.length ? `<div class="usw">${L.join('')}</div>` : '';
+}
 function mxLine(p){
   const L = ['pts', 'reb', 'ast', 'fg3m'].filter(st => vol(p, st)).map(st => ({st, m: mx(p, st)})).filter(x => x.m && Math.abs(x.m.v - 1) >= .08)
     .sort((a, b) => Math.abs(b.m.v - 1) - Math.abs(a.m.v - 1)).slice(0, 2);
@@ -133,7 +145,7 @@ function softStrip(g){
 }
 function teamTable(g, team){
   const ps = D.players.filter(p => p.g === g.id && p.t === team).sort((a,b) => (b.s[mode(g.id)]?.min?.[MED] ?? 0) - (a.s[mode(g.id)]?.min?.[MED] ?? 0));
-  const rows = ps.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-open="${esc(p.k)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${chips(p, g.id)}${mxLine(p)}</td><td class="l"><span class="pos">${esc(p.pos)}${p.start ? '' : ''}</span></td>${COLS.map(c => cell(p, c, g.id)).join('')}</tr>`
+  const rows = ps.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-open="${esc(p.k)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${chips(p, g.id)}${mxLine(p)}${usageLine(p)}</td><td class="l"><span class="pos">${esc(p.pos)}${p.start ? '' : ''}</span></td>${COLS.map(c => cell(p, c, g.id)).join('')}</tr>`
     + (state.open === p.k ? `<tr class="xrow"><td colspan="${COLS.length + 2}">${slider(p, g.id)}</td></tr>` : '')).join('');
   const outs = (g.out && g.out[team]) || [];
   const outLine = outs.length ? `<p class="muted small" style="margin:6px 0 0"><b style="color:var(--r2)">Out:</b> ${outs.map(o => `${esc(o.n)}${o.note ? ` <span title="${esc(o.note)}">(${esc(o.st)})</span>` : ''}`).join(', ')}. Their minutes are shared among the players below.</p>` : '';

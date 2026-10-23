@@ -28,6 +28,10 @@ def player_payload(tab, meta, dists):
                         gp=None if mm is None else int(mm.games_prior or 0), s=s,
                         ar=None if mm is None or "arch_name" not in mm.index else mm.arch_name,
                         va=None if mm is None or "dva_pts" not in mm.index else {c: round(float(mm["dva_" + c]), 3) for c in ("pts", "fg3m", "stl") if "dva_" + c in mm.index and pd.notna(mm["dva_" + c])},
+                        x=None if mm is None or "x_gp" not in mm.index or pd.isna(mm.x_gp) else {
+                            k_: (None if pd.isna(mm[c]) else round(float(mm[c]), 3 if c in ("x_rr", "x_ar") else 1))
+                            for k_, c in (("gp", "x_gp"), ("season", "x_season"), ("fg3a", "x_fg3a"), ("fg3a10", "x_fg3a10"), ("rch", "x_rch"), ("rr", "x_rr"),
+                                          ("ach", "x_ach"), ("ar", "x_ar"), ("reb", "x_reb"), ("ast", "x_ast"), ("on", "x_on"))},
                         d={mode: dists[mode].get(k, {}) for mode in ("vegas", "blind")}))
     return out
 
@@ -61,6 +65,7 @@ __CSS__
 .dcp li.lwhy{gap:4px;flex-wrap:wrap;margin:-2px 0 2px 0}.dcp li.lwhy span{margin-left:0;font-size:11px}
 .mxw{display:flex;flex-wrap:wrap;gap:3px 6px;margin:2px 0 0 18px}.mxl{font-size:11px;font-weight:700;white-space:nowrap;cursor:help}.mxl i{font-style:normal;font-weight:500;color:var(--muted)}
 .mxl.up{color:var(--good)}.mxl.dn{color:var(--bad)}
+.usw{display:flex;flex-wrap:wrap;gap:2px 10px;margin:2px 0 0 18px}.usl{font-size:11px;color:var(--muted);white-space:nowrap;cursor:help}.usl b{color:var(--ink);font-weight:700}.usl i{font-style:normal}
 .mxstrip{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:0 0 10px;padding:8px 10px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
 .mxstrip .eyebrow{margin-right:2px}.mxstrip .eyebrow:not(:first-child){margin-left:6px}
 .mxs{border:1px solid var(--faint);border-radius:999px;padding:2px 9px;font-size:12.5px;cursor:help}.mxs i{font-style:normal;color:var(--muted);font-size:11.5px;margin-left:3px}
