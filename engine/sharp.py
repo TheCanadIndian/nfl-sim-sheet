@@ -1451,6 +1451,124 @@ def write_props(sport, now):
               open(fp, "w"), separators=(",", ":"))
 
 
+# ---------------------------------------------------------------- Pinnacle / consensus line moves (tracked)
+MOVES_STATE = os.path.join(M.OUT, "pin_moves_{}.json")
+PRICE_UP, BOTH_UP = .03, .02         # no-vig over chance: +3 pts at the same line; +2 pts more at the new line
+RUNG_EDGE = (.10, .60)               # higher rungs of a moved market: our book's price 10%+ over the carried fair (60%+ = stale)
+OWN_BOOKS = ("Hard Rock", "Novig", "Kalshi")
+
+
+def _nv(o, u):
+    a, b = 1 / dec(o), 1 / dec(u)
+    return a / (a + b)
+
+
+def pin_moves(sport, now):
+    """The owner's line-move signal (2026-10-23: "I want the Pinnacle baseline to move up... and when it moves up I want
+    the odds to drop on it. Doesn't need both, but both is a strong signal... track using only Pinnacle and our consensus
+    weight, NBA and NFL"). Per player prop, from its first sighting:
+      line   the line moved up (Pinnacle's own two-way line; or the consensus line)
+      price  same line, the over's no-vig chance up PRICE_UP+
+      both   the line moved up AND the over shortened BOTH_UP+ more at the new line
+    Each first firing goes to flags_<sport>.json "moves" with the best over price at the owner's books on the books'
+    main line, plus up to two higher rungs of that market priced 10%+ over the carried fair at the owner's books (sig
+    'rung', owner: "grabbing 9+ assists if it was an outlier on our books"); profit.tags logs and grades them ('<SPORT> Pinnacle / Consensus move: ...' rows, experimental).
+    State: markets/pin_moves_<sport>.json {g|n|k: {start, pin: {...}, cons: {...}, fired: [src:sig]}}."""
+    fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
+    try:
+        PR = json.load(open(fp))
+    except (OSError, ValueError):
+        return
+    pinc = {}
+    if sport == "nfl":
+        try:
+            pinc = json.load(open(PIN_CACHE))
+        except (OSError, ValueError):
+            pinc = {}
+    sf = MOVES_STATE.format(sport)
+    try:
+        S = json.load(open(sf))
+    except (OSError, ValueError):
+        S = {}
+    O = (M.ours_nba if sport == "nba" else M.ours_nfl)() or {}
+    start = {str(g["id"]): str(g["start"]) for g in O.get("games", [])}
+    LAB = dict(LC_LAB, td="TD")
+    moves = []
+    for gid, G in (PR.get("props") or {}).items():
+        st = start.get(str(gid))
+        if not st or pd.Timestamp(st).tz_convert("UTC") <= now:
+            continue
+        for nm, kinds in G.items():
+            for k, e in kinds.items():
+                if k not in LAB or not e.get("o"):
+                    continue
+                # Pinnacle's own line now: NBA from the Pinnacle prices on the published lines, NFL from its own pull
+                pl = po = None
+                if sport == "nba":
+                    cand = [(e.get("l"), e.get("o"), e.get("u"))] + [(float(l), a.get("o"), a.get("u")) for l, a in (e.get("a") or {}).items()]
+                    two = [(l, _nv(o["Pinnacle"][0], u["Pinnacle"][0])) for l, o, u in cand if l is not None and o and u and "Pinnacle" in o and "Pinnacle" in u]
+                    if two:
+                        pl, po = min(two, key=lambda x: abs(x[1] - .5))
+                else:
+                    x = ((pinc.get(str(gid)) or {}).get("props") or {}).get(nm, {}).get(k)
+                    if x and x[1] is not None and x[2] is not None:
+                        pl, po = float(x[0]), _nv(x[1], x[2])
+                pin_ = e.get("pin") or {}
+                cl, co = (e.get("l"), pin_.get("o")) if pin_.get("o") is not None and pin_.get("l") == e.get("l") else (None, None)
+                key = f"{gid}|{nm}|{k}"
+                rec = S.setdefault(key, dict(start=st, fired=[]))
+                for src, l, o in (("pin", pl, po), ("cons", cl, co)):
+                    if l is None or o is None:
+                        continue
+                    r = rec.setdefault(src, dict(open_l=l, open_o=round(o, 4), open_t=now.isoformat(), at={}))
+                    r.setdefault("at", {}).setdefault(f"{l:g}", round(o, 4))     # first chance seen at each line
+                    r["last_l"], r["last_o"] = l, round(o, 4)
+                    sig = None
+                    if l > r["open_l"] and o - r["at"][f"{l:g}"] >= BOTH_UP:
+                        sig = "both"
+                    elif l > r["open_l"]:
+                        sig = "line"
+                    elif l == r["open_l"] and o - r["open_o"] >= PRICE_UP:
+                        sig = "price"
+                    if not sig:
+                        continue
+                    tag = f"{src}:{sig}"
+                    # best over price at the owner's books on the books' main line (a lagging book still on the lower line is the point)
+                    best = max(((b, v[0]) for b, v in e["o"].items() if b in OWN_BOOKS and v and v[0] is not None), key=lambda x: dec(x[1]), default=None)
+                    if best is None:
+                        continue
+                    bet = "TD" if k == "td" else f"over {e['l']:g} {LAB[k]}"
+                    moves.append(dict(g=str(gid), n=nm, k=k, b=bet, bk=best[0], o=best[1], src=src, sig=sig, from_l=r["open_l"], to_l=l,
+                                      d=round(o - r["open_o"], 4), cons=co, start=st))
+                    if tag not in rec["fired"]:
+                        rec["fired"].append(tag)
+                    # owner 2026-10-23: also the higher outliers of the same market ("grabbing 9+ assists if it was an
+                    # outlier on our books"): alt rungs above the main line whose price at the owner's books beats the
+                    # fair carried to that rung (apply_consensus `pin`, already reflecting the move) by RUNG_EDGE; best two
+                    rungs = []
+                    for la, a in (e.get("a") or {}).items():
+                        fa = a.get("pin")
+                        if fa is None or float(la) <= (e.get("l") or 0):
+                            continue
+                        bb = max(((b, v[0]) for b, v in (a.get("o") or {}).items() if b in OWN_BOOKS and v and v[0] is not None), key=lambda x: dec(x[1]), default=None)
+                        if bb and RUNG_EDGE[0] <= fa * dec(bb[1]) - 1 <= RUNG_EDGE[1]:
+                            rungs.append((fa * dec(bb[1]) - 1, float(la), bb, fa))
+                    for ev, la, bb, fa in sorted(rungs, reverse=True)[:2]:
+                        moves.append(dict(g=str(gid), n=nm, k=k, b=f"over {la:g} {LAB[k]}", bk=bb[0], o=bb[1], src=src, sig="rung", trig=sig,
+                                          from_l=r["open_l"], to_l=l, fair=round(fa, 4), ev=round(ev, 3), start=st))
+    S = {k: v for k, v in S.items() if pd.Timestamp(v["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=12)}
+    json.dump(S, open(sf, "w"), separators=(",", ":"))
+    ff = os.path.join(M.SITE, "markets", f"flags_{sport}.json")
+    try:
+        FL = json.load(open(ff))
+    except (OSError, ValueError):
+        FL = dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), tags={})
+    FL["moves"] = moves
+    json.dump(FL, open(ff, "w"), separators=(",", ":"))
+    print(f"line moves {sport}: {len(S)} props tracked, {len(moves)} live signals "
+          f"({', '.join(f'{t} {sum(1 for m in moves if f"{m['src']}:{m['sig']}" == t)}' for t in sorted({f'{m['src']}:{m['sig']}' for m in moves}))})")
+
+
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
     if not argv or "nba" in argv:
@@ -1540,6 +1658,11 @@ def main(argv):
             apply_consensus(sport, now)
         except Exception as e:
             print(f"sharp {sport}: consensus skipped ({type(e).__name__}: {e})")
+        if sport in ("nba", "nfl"):
+            try:
+                pin_moves(sport, now)
+            except Exception as e:                       # noqa: BLE001 -- tracking only
+                print(f"line moves {sport}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=1)
 
