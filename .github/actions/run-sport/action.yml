@@ -58,6 +58,18 @@ runs:
           nhl.tar.gz) [ -f hockey/nhl.db ] || { gh release download data-seed -p nhl.tar.gz -D . && tar -xzf nhl.tar.gz && rm nhl.tar.gz; } || echo "no seed; will rebuild" ;;
         esac
 
+    # page scripts live in .js files (nfl_page.js, hockey/page.js, nba/page.js, mkt.js, slip.js, screener.js);
+    # a syntax error is noted and turns the run red at the end (the pages still build and keep working where they can)
+    - name: Syntax-check page scripts
+      if: steps.gate.outputs.skip != 'true'
+      shell: bash
+      working-directory: engine
+      run: |
+        for f in *.js hockey/*.js nba/*.js; do
+          [ -f "$f" ] || continue
+          node --check "$f" || { echo "::error::syntax error in $f"; echo "syntax error in $f" >> "$RUNNER_TEMP/sim_run_failures.txt"; }
+        done
+
     - name: Run
       if: steps.gate.outputs.skip != 'true'
       shell: bash
