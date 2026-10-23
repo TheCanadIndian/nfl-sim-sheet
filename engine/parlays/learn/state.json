@@ -1,70 +1,70 @@
 {
-"updated": "2026-10-23T01:56:48+00:00",
-"rows": 306,
-"live_rows": 0,
+"updated": "2026-10-23T02:06:05+00:00",
+"rows": 324,
+"live_rows": 18,
 "segments": [
 {
 "seg": "NHL",
-"n": 282,
-"ret": -0.193,
+"n": 300,
+"ret": -0.2206,
 "h1": -0.1079,
-"h2": -0.2657,
-"z": -1.18,
+"h2": -0.3067,
+"z": -1.43,
 "status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 goals",
-"n": 282,
-"ret": -0.193,
+"n": 299,
+"ret": -0.218,
 "h1": -0.1079,
-"h2": -0.2657,
-"z": -1.18,
+"h2": -0.3026,
+"z": -1.41,
 "status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 Novig",
-"n": 272,
-"ret": -0.1633,
+"n": 288,
+"ret": -0.1881,
 "h1": -0.0336,
-"h2": -0.2657,
-"z": -0.96,
-"status": "Watching"
+"h2": -0.2985,
+"z": -1.17,
+"status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 longshot",
-"n": 245,
-"ret": -0.1804,
+"n": 259,
+"ret": -0.2006,
 "h1": -0.1186,
-"h2": -0.2333,
-"z": -1.03,
+"h2": -0.264,
+"z": -1.21,
 "status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 edge 5-10%",
-"n": 220,
-"ret": -0.3272,
+"n": 226,
+"ret": -0.345,
 "h1": -0.408,
-"h2": -0.2598,
-"z": -2.28,
+"h2": -0.2951,
+"z": -2.46,
 "status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 edge 10-20%",
-"n": 58,
-"ret": 0.3717,
+"n": 67,
+"ret": 0.2807,
 "h1": 0.9576,
-"h2": -0.2141,
-"z": 0.62,
+"h2": -0.2358,
+"z": 0.54,
 "status": "Watching"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 plus money",
-"n": 36,
-"ret": -0.2561,
-"h1": -0.0371,
-"h2": -0.4521,
-"z": -0.93,
-"status": "Watching"
+"n": 39,
+"ret": -0.3133,
+"h1": -0.3179,
+"h2": -0.306,
+"z": -1.22,
+"status": "Dropped"
 },
 {
 "seg": "NFL",
@@ -73,6 +73,15 @@
 "h1": 1.355,
 "h2": 0.4738,
 "z": 2.54,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 no path",
+"n": 18,
+"ret": -0.6528,
+"h1": -0.6528,
+"h2": null,
+"z": -5.29,
 "status": "Learning"
 },
 {
@@ -94,6 +103,24 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 Kalshi",
+"n": 12,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": -8.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 goalie",
+"n": 11,
+"ret": -0.4318,
+"h1": -0.4318,
+"h2": null,
+"z": -2.22,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 receptions \u00b7 edge 5-10%",
 "n": 11,
 "ret": 0.6924,
@@ -112,12 +139,30 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 Kalshi",
+"seg": "NHL \u00b7 1 reason",
 "n": 10,
+"ret": -0.375,
+"h1": -0.375,
+"h2": null,
+"z": -1.4,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 pp1",
+"n": 7,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": -7.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 goals \u00b7 edge 20-40%",
+"n": 6,
 "ret": -1.0,
 "h1": -1.0,
 "h2": -1.0,
-"z": -7.07,
+"z": 0.0,
 "status": "Learning"
 },
 {
@@ -166,6 +211,24 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 0 reasons",
+"n": 4,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": -4.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 2 reasons",
+"n": 4,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 Hard Rock",
 "n": 4,
 "ret": 0.0333,
@@ -175,21 +238,39 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 goals \u00b7 edge 20-40%",
-"n": 4,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
-"z": 0.0,
-"status": "Learning"
-},
-{
 "seg": "NFL \u00b7 Kalshi",
 "n": 2,
 "ret": 1.0348,
 "h1": 1.0348,
 "h2": null,
 "z": 6.26,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 3+ shots",
+"n": 1,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 3+ shots \u00b7 edge 5-10%",
+"n": 1,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
+"n": 1,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": 0.0,
 "status": "Learning"
 },
 {
@@ -283,7 +364,24 @@
 "status": "Learning"
 }
 ],
-"changes": [],
+"changes": [
+{
+"date": "2026-10-22",
+"seg": "NHL \u00b7 Novig",
+"was": "Watching",
+"now": "Dropped",
+"n": 288,
+"ret": -0.1881
+},
+{
+"date": "2026-10-22",
+"seg": "NHL \u00b7 goals \u00b7 plus money",
+"was": "Watching",
+"now": "Dropped",
+"n": 39,
+"ret": -0.3133
+}
+],
 "builder": {
 "n": 1,
 "w": 0,
