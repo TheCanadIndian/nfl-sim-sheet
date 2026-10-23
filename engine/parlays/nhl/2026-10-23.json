@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-23",
 "lock": "2026-10-24T00:00:00+00:00",
-"frozen_at": "2026-10-23T21:15:41.491Z",
+"frozen_at": "2026-10-23T21:23:45.821Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -81,75 +81,6 @@
 "res": null
 },
 {
-"card": "Anytime-goal parlays",
-"tier": "Best 2-leg",
-"legs": [
-{
-"gid": "2026020166",
-"start": "2026-10-24T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "cole caufield",
-"lab": "Cole Caufield to score",
-"p": 0.427,
-"price": 135,
-"book": "Novig"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel to score",
-"p": 0.3643,
-"price": 190,
-"book": "Novig"
-}
-],
-"p": 0.15557,
-"d": 6.815,
-"first": "2026-10-24T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Anytime-goal parlays",
-"tier": "Best 2-leg",
-"legs": [
-{
-"gid": "2026020166",
-"start": "2026-10-24T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "cole caufield",
-"lab": "Cole Caufield to score",
-"p": 0.427,
-"price": 135,
-"book": "Novig"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "nathan mackinnon",
-"lab": "Nathan MacKinnon to score",
-"p": 0.4445,
-"price": 130,
-"book": "Novig"
-}
-],
-"p": 0.18978,
-"d": 5.405,
-"first": "2026-10-24T00:00:00+00:00",
-"res": null
-},
-{
 "card": "Same-game combos (experimental)",
 "tier": "Goal + win",
 "legs": [
@@ -162,7 +93,7 @@
 "name": "cole caufield",
 "lab": "Cole Caufield to score",
 "p": 0.427,
-"price": 135,
+"price": 133,
 "book": "Novig"
 },
 {
@@ -363,6 +294,40 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel to score",
+"p": 0.3643,
+"price": 190,
+"book": "Novig"
+},
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel 3+ shots",
+"p": 0.5708,
+"price": -190,
+"book": "ProphetX"
+}
+],
+"p": 0.27348,
+"d": 3.657,
+"first": "2026-10-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "3+ shots + goal",
+"legs": [
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
 "name": "nikita kucherov",
 "lab": "Nikita Kucherov to score",
 "p": 0.3521,
@@ -384,40 +349,6 @@
 ],
 "p": 0.27304,
 "d": 3.662,
-"first": "2026-10-24T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "3+ shots + goal",
-"legs": [
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel to score",
-"p": 0.3643,
-"price": 190,
-"book": "Novig"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel 3+ shots",
-"p": 0.5435,
-"price": -190,
-"book": "ProphetX"
-}
-],
-"p": 0.26041,
-"d": 3.84,
 "first": "2026-10-24T01:00:00+00:00",
 "res": null
 },
@@ -445,13 +376,47 @@
 "line": 2.5,
 "name": "cale makar",
 "lab": "Cale Makar under 2.5 shots",
-"p": 0.6168,
+"p": 0.614,
 "price": -122,
 "book": "Novig"
 }
 ],
-"p": 0.34163,
+"p": 0.34008,
 "d": 3.639,
+"first": "2026-10-24T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020166",
+"start": "2026-10-24T00:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "oliver kapanen",
+"lab": "Oliver Kapanen under 1.5 shots",
+"p": 0.4733,
+"price": 145,
+"book": "Hard Rock"
+},
+{
+"gid": "2026020167",
+"start": "2026-10-24T01:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "gabriel landeskog",
+"lab": "Gabriel Landeskog under 2.5 shots",
+"p": 0.6922,
+"price": -175,
+"book": "Hard Rock"
+}
+],
+"p": 0.32762,
+"d": 3.85,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
@@ -479,47 +444,13 @@
 "line": 2.5,
 "name": "cale makar",
 "lab": "Cale Makar under 2.5 shots",
-"p": 0.6168,
+"p": 0.614,
 "price": -122,
 "book": "Novig"
 }
 ],
-"p": 0.29196,
+"p": 0.29063,
 "d": 4.458,
-"first": "2026-10-24T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020166",
-"start": "2026-10-24T00:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "noah dobson",
-"lab": "Noah Dobson under 2.5 shots",
-"p": 0.6011,
-"price": -115,
-"book": "Hard Rock"
-},
-{
-"gid": "2026020167",
-"start": "2026-10-24T01:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 3.5,
-"name": "nathan mackinnon",
-"lab": "Nathan Mackinnon under 3.5 shots",
-"p": 0.4808,
-"price": 127,
-"book": "Novig"
-}
-],
-"p": 0.28898,
-"d": 4.244,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
 },
@@ -615,12 +546,12 @@
 "line": 1.5,
 "name": "john carlson",
 "lab": "John Carlson over 1.5 shots",
-"p": 0.5233,
+"p": 0.5244,
 "price": -105,
 "book": "theScore"
 }
 ],
-"p": 0.22334,
+"p": 0.22382,
 "d": 4.822,
 "first": "2026-10-24T00:00:00+00:00",
 "res": null
