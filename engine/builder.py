@@ -257,3 +257,4 @@ if __name__ == "__main__":
             {"grade": grade, "learn": learn}[step]()
         except Exception as e:                                                 # noqa: BLE001
             print(f"builder {step}: failed ({type(e).__name__}: {e})")
+            PL.fail_note(f"builder {step}: {type(e).__name__}: {e}")
