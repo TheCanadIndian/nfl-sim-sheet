@@ -116,7 +116,7 @@ def chance_stats(season, pids):
     import sqlite3
     con = sqlite3.connect(M.DB)
     q = f"""SELECT p.game_id, p.player_id, g.season, g.date, p.fg3a, o.reb_ch, o.reb, o.ast_ch, o.ast FROM players p
-             JOIN games g USING (game_id) LEFT JOIN opps o ON o.game_id = p.game_id AND o.player_id = p.player_id
+             JOIN games g USING (game_id) LEFT JOIN opps_v2 o ON o.game_id = p.game_id AND o.player_id = p.player_id
              WHERE p.min > 0 AND g.season IN ({season}, {season - 1}) AND p.player_id IN ({','.join(map(str, pids)) or 0})"""
     d = pd.read_sql(q, con).sort_values("date")
     out = []

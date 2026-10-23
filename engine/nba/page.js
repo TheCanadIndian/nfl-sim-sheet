@@ -107,16 +107,18 @@ function mxWhy(p, st, m){
               : `${esc(p.o)} allows ${sgn(m.v)} ${KLAB[st]} per minute to ${PG_PL[p.pg]}`;
 }
 // one or two big matchups (8%+ either way) under a player's name
-// 3-point attempts, rebound chances and assist chances (owner 2026-10-23), from his games this season (last season's
-// with fewer than 3): rebounds available while he's on the floor (both teams) and his share; teammates' made baskets
-// while he's on the floor (assist chances) and his share. Our play-by-play counts, not NBA tracking data.
+// 3-point attempts, rebound share and assist share (owner 2026-10-23), from his games this season (last season's with
+// fewer than 3): REB% = his share of the rebounds grabbed while he's on the floor (both teams, team rebounds left out);
+// AST% = his assists over his teammates' made baskets while he's on the floor. Counted from the play-by-play lineups;
+// on 2025-26 they match Basketball-Reference's TRB% / AST% (275 players: median gap 0.1 / 0.25 pts). NBA's tracking
+// 'chances' (rebounds near him, passes into shots) need player tracking we don't have.
 function usageLine(p){
   const x = p.x; if (!x) return '';
-  const pc0 = v => Math.round(v * 100) + '%', yr = x.season ? ` (${x.season - 1}-${String(x.season).slice(2)}, ${x.gp} games)` : '';
+  const p1 = v => (v * 100).toFixed(1), yr = x.season ? ` (${x.season - 1}-${String(x.season).slice(2)}, ${x.gp} games)` : '';
   const L = [];
   if (x.fg3a >= 1) L.push(`<span class="usl" title="3-point attempts a game${esc(yr)}${x.fg3a10 != null ? `; last 10 games ${f1(x.fg3a10)}` : ''}">3PA <b>${f1(x.fg3a)}</b>${x.fg3a10 != null && Math.abs(x.fg3a10 - x.fg3a) >= 1 ? ` <i>L10 ${f1(x.fg3a10)}</i>` : ''}</span>`);
-  if (x.reb >= 2 && x.rch) L.push(`<span class="usl" title="Rebound chances: rebounds by either team while he was on the floor, ${f1(x.rch)} a game${esc(yr)}; he grabbed ${f1(x.reb)} (${pc0(x.rr)}). Counted from the play-by-play, so the chances run higher than NBA tracking's.">Reb <b>${f1(x.reb)}</b> of ${Math.round(x.rch)} <i>${pc0(x.rr)}</i></span>`);
-  if (x.ast >= 1.5 && x.ach) L.push(`<span class="usl" title="Assist chances: teammates' made baskets while he was on the floor, ${f1(x.ach)} a game${esc(yr)}; he assisted ${f1(x.ast)} (${pc0(x.ar)}). Passes that led to misses aren't logged, so this runs lower than NBA's potential assists.">Ast <b>${f1(x.ast)}</b> of ${Math.round(x.ach)} <i>${pc0(x.ar)}</i></span>`);
+  if (x.reb >= 2 && x.rch) L.push(`<span class="usl" title="REB% = his share of the rebounds grabbed while he's on the floor: ${f1(x.reb)} of ${f1(x.rch)} a game${esc(yr)}. Same as Basketball-Reference's TRB%.">Reb <b>${f1(x.reb)}</b> <i>REB% ${p1(x.rr)}</i></span>`);
+  if (x.ast >= 1.5 && x.ach) L.push(`<span class="usl" title="AST% = his assists over his teammates' made baskets while he's on the floor: ${f1(x.ast)} of ${f1(x.ach)} a game${esc(yr)}. Same as Basketball-Reference's AST%.">Ast <b>${f1(x.ast)}</b> <i>AST% ${p1(x.ar)}</i></span>`);
   return L.length ? `<div class="usw">${L.join('')}</div>` : '';
 }
 function mxLine(p){
