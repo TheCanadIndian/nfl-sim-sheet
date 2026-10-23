@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-23",
 "lock": "2026-10-23T20:00:00+00:00",
-"frozen_at": "2026-10-23T16:56:14.413Z",
+"frozen_at": "2026-10-23T17:07:53.584Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -68,11 +68,11 @@
 "kind": "fg3m",
 "side": "o",
 "line": 3.5,
-"name": "julian champagnie",
-"lab": "Julian Champagnie 4+ threes",
-"p": 0.2113,
-"price": 425,
-"book": "Kalshi",
+"name": "devin vassell",
+"lab": "Devin Vassell 4+ threes",
+"p": 0.2147,
+"price": 413,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
@@ -100,8 +100,8 @@
 ]
 }
 ],
-"p": 0.04243,
-"d": 29.19,
+"p": 0.04311,
+"d": 28.523,
 "first": "2026-10-24T01:30:00+00:00",
 "res": null
 },
@@ -125,71 +125,6 @@
 "rotation",
 "game",
 "price"
-]
-},
-{
-"gid": "401909096",
-"start": "2026-10-24T01:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "julian champagnie",
-"lab": "Julian Champagnie 4+ threes",
-"p": 0.2113,
-"price": 425,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909850",
-"start": "2026-10-24T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "stephen curry",
-"lab": "Stephen Curry 30+ pts",
-"p": 0.3106,
-"price": 240,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.01451,
-"d": 93.712,
-"first": "2026-10-23T20:00:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ threes",
-"p": 0.3819,
-"price": 170,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
 ]
 },
 {
@@ -229,8 +164,73 @@
 ]
 }
 ],
-"p": 0.02547,
-"d": 47.093,
+"p": 0.01475,
+"d": 91.57,
+"first": "2026-10-23T20:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909848",
+"start": "2026-10-23T20:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.3819,
+"price": 170,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909096",
+"start": "2026-10-24T01:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. 4+ threes",
+"p": 0.2122,
+"price": 398,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+]
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 30+ pts",
+"p": 0.3106,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.02518,
+"d": 45.716,
 "first": "2026-10-23T20:00:00+00:00",
 "res": null
 },
@@ -251,21 +251,55 @@
 "book": "Kalshi"
 },
 {
-"gid": "401909847",
-"start": "2026-10-24T00:00Z",
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham 4+ threes",
-"p": 0.16,
-"price": 425,
+"line": 4.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 5+ threes",
+"p": 0.21,
+"price": 313,
 "book": "Kalshi"
 }
 ],
-"p": 0.0296,
-"d": 26.169,
-"first": "2026-10-24T00:00:00+00:00",
+"p": 0.03885,
+"d": 20.548,
+"first": "2026-10-24T01:30:00+00:00",
+"res": null
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909848",
+"start": "2026-10-23T20:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 4+ threes",
+"p": 0.165,
+"price": 425,
+"book": "Kalshi"
+},
+{
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 5+ threes",
+"p": 0.21,
+"price": 313,
+"book": "Kalshi"
+}
+],
+"p": 0.03465,
+"d": 21.675,
+"first": "2026-10-23T20:00:00+00:00",
 "res": null
 },
 {
@@ -292,47 +326,13 @@
 "line": 3.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 4+ threes",
-"p": 0.16,
+"p": 0.165,
 "price": 425,
 "book": "Kalshi"
 }
 ],
-"p": 0.0296,
+"p": 0.03052,
 "d": 26.169,
-"first": "2026-10-23T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909847",
-"start": "2026-10-24T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham 4+ threes",
-"p": 0.16,
-"price": 425,
-"book": "Kalshi"
-},
-{
-"gid": "401909848",
-"start": "2026-10-23T20:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 4+ threes",
-"p": 0.16,
-"price": 425,
-"book": "Kalshi"
-}
-],
-"p": 0.0256,
-"d": 27.604,
 "first": "2026-10-23T20:00:00+00:00",
 "res": null
 },
