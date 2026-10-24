@@ -17,14 +17,15 @@
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
-.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px}
+.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
 h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:6px 0 0;letter-spacing:.005em;text-transform:uppercase;text-wrap:balance}
 h2{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
-.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
 .tabs button{border:0;background:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
 .tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .muted{color:var(--muted)}
@@ -124,6 +125,10 @@ tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
 
 /* tables */
 .tw{overflow-x:auto}
+.nbxgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.nbxteam h3{margin:4px 0 6px;font-family:var(--display);font-size:18px}
+table.nbx{margin-bottom:10px}table.nbx td,table.nbx th{text-align:right;white-space:nowrap}table.nbx .l{text-align:left;white-space:normal}table.nbx th.l{color:var(--muted)}table.nbx .bxp{font-weight:700}
+@media(max-width:820px){.nbxgrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){table.nbx td,table.nbx th{padding-left:5px;padding-right:5px}}
 table.t{width:100%;border-collapse:collapse;font-size:14px}
 .t th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--faint);white-space:nowrap;vertical-align:bottom}
 .t td{padding:7px 8px;border-bottom:1px solid var(--faint);text-align:right;white-space:nowrap}
@@ -534,7 +539,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
 <nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA</a><a class="sp" href="mlb/index.html">MLB</a><span class="grow"></span><a class="help" href="screener.html">Screener</a><a class="help" href="parlays.html">Parlays</a><a class="help" href="profit.html">Profit</a><a class="help guide" href="guide.html">How to read</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
 <div class="wrap">
   <header class="hero">
-    <div class="eyebrow">Updated Saturday Oct 24, 6:25 PM</div>
+    <div class="eyebrow">Updated Saturday Oct 24, 6:28 PM</div>
     <h1>Player projections, simulated</h1>
     <p class="sub">Every game is simulated thousands of times from play-by-play data. For each player you get the
       most likely result, a realistic range, the chance to score, and the fair odds that chance is worth.</p>
@@ -559,7 +564,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
         <p class="lead">Minutes, points, rebounds, assists and threes for every player, with and without Vegas lines.</p>
         <p class="lead">Saturday, October 24 · 8 games</p>
         <h3>Top projected scorers (median points)</h3>
-        <ol class="list"><li><span>Donovan Mitchell <small>CLE vs BKN</small></span><b>28</b><em>pts</em></li><li><span>Victor Wembanyama <small>SA vs DAL</small></span><b>27</b><em>pts</em></li><li><span>Nikola Jokic <small>DEN vs NO</small></span><b>27</b><em>pts</em></li><li><span>Giannis Antetokounmpo <small>MIA vs CHA</small></span><b>27</b><em>pts</em></li><li><span>Kyrie Irving <small>DAL vs SA</small></span><b>25</b><em>pts</em></li></ol><ul class="pages"><li><a href="nba/index.html"><b>Next slate</b><span>Every player&#x27;s projection for the next slate, both models</span></a></li><li><a href="nba/results.html"><b>Results</b><span>Every night graded against the box scores, both models</span></a></li><li><a href="nba/markets.html"><b>Markets</b><span>Live Kalshi and Polymarket prices by game and player, with money on each side</span></a></li><li><a href="updates.html#nba"><b>Model updates</b><span>What the model learned and changed</span></a></li></ul></section><section class="card"><div class="ch"><span class="sport">MLB</span><span class="badge live">Live</span></div>
+        <ol class="list"><li><span>Giannis Antetokounmpo <small>MIA vs CHA</small></span><b>27</b><em>pts</em></li><li><span>Victor Wembanyama <small>SA vs DAL</small></span><b>25</b><em>pts</em></li><li><span>Nikola Jokic <small>DEN vs NO</small></span><b>25</b><em>pts</em></li><li><span>Donovan Mitchell <small>CLE vs BKN</small></span><b>25</b><em>pts</em></li><li><span>Brandon Miller <small>CHA vs MIA</small></span><b>24</b><em>pts</em></li></ol><ul class="pages"><li><a href="nba/index.html"><b>Next slate</b><span>Every player&#x27;s projection for the next slate, both models</span></a></li><li><a href="nba/results.html"><b>Results</b><span>Every night graded against the box scores, both models</span></a></li><li><a href="nba/markets.html"><b>Markets</b><span>Live Kalshi and Polymarket prices by game and player, with money on each side</span></a></li><li><a href="updates.html#nba"><b>Model updates</b><span>What the model learned and changed</span></a></li></ul></section><section class="card"><div class="ch"><span class="sport">MLB</span><span class="badge live">Live</span></div>
         <p class="lead">Home run chances for every hitter: power, the pitchers he&#x27;ll face, handedness, park and weather. Playoffs now; the full model comes for 2027.</p>
         <p class="lead">Saturday, October 24 · 1 game</p>
         <h3>Most likely to homer</h3>
