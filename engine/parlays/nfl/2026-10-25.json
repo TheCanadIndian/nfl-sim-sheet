@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-24T16:43:42.687Z",
+"frozen_at": "2026-10-24T16:51:57.470Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 299.5,
 "name": "joe burrow",
 "lab": "Joe Burrow 300+ pass yds",
-"p": 0.3329,
+"p": 0.3316,
 "price": 240,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -51,8 +51,53 @@
 ]
 }
 ],
-"p": 0.08406,
+"p": 0.08374,
 "d": 14.042,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown",
+"lab": "Chase Brown 50+ rush yds",
+"p": 0.3962,
+"price": 166,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "bo nix",
+"lab": "Bo Nix 275+ pass yds",
+"p": 0.2525,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script"
+]
+}
+],
+"p": 0.10005,
+"d": 10.986,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -360,73 +405,6 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones TD",
-"p": 0.4592,
-"price": 156,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 69.5,
-"name": "george kittle",
-"lab": "George Kittle over 69.5 rec yds",
-"p": 0.6027,
-"price": -120,
-"book": "Kalshi"
-}
-],
-"p": 0.2768,
-"d": 4.693,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones TD",
-"p": 0.4592,
-"price": 156,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 89.5,
-"name": "bijan robinson",
-"lab": "Bijan Robinson over 89.5 rush yds",
-"p": 0.5854,
-"price": -120,
-"book": "Kalshi"
-}
-],
-"p": 0.26882,
-"d": 4.693,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
 "gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
@@ -434,7 +412,7 @@
 "line": 0.5,
 "name": "quinshon judkins",
 "lab": "Quinshon Judkins TD",
-"p": 0.3791,
+"p": 0.3769,
 "price": 199,
 "book": "Novig"
 },
@@ -451,7 +429,41 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.2285,
+"p": 0.22716,
+"d": 5.482,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins TD",
+"p": 0.3769,
+"price": 199,
+"book": "Novig"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 89.5,
+"name": "bijan robinson",
+"lab": "Bijan Robinson over 89.5 rush yds",
+"p": 0.5938,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.22378,
 "d": 5.482,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
@@ -469,7 +481,7 @@
 "name": "rico dowdle",
 "lab": "Rico Dowdle TD",
 "p": 0.2921,
-"price": 285,
+"price": 292,
 "book": "Novig"
 },
 {
@@ -486,41 +498,8 @@
 }
 ],
 "p": 0.17605,
-"d": 7.058,
-"first": "2026-10-25T13:30:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones TD",
-"p": 0.4592,
-"price": 156,
-"book": "Novig"
-},
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "quinshon judkins",
-"lab": "Quinshon Judkins TD",
-"p": 0.3791,
-"price": 199,
-"book": "Novig"
-}
-],
-"p": 0.1741,
-"d": 7.654,
-"first": "2026-10-25T17:00:00+00:00",
+"d": 7.187,
+"first": "2026-10-25T13:30:00+00:00",
 "pick": "core"
 },
 {
@@ -536,7 +515,7 @@
 "name": "rico dowdle",
 "lab": "Rico Dowdle TD",
 "p": 0.2921,
-"price": 285,
+"price": 292,
 "book": "Novig"
 },
 {
@@ -547,15 +526,48 @@
 "line": 89.5,
 "name": "bijan robinson",
 "lab": "Bijan Robinson over 89.5 rush yds",
-"p": 0.5854,
+"p": 0.5938,
 "price": -120,
 "book": "Kalshi"
 }
 ],
-"p": 0.17098,
-"d": 7.058,
+"p": 0.17343,
+"d": 7.187,
 "first": "2026-10-25T13:30:00+00:00",
 "pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "marshawn lloyd",
+"lab": "Marshawn Lloyd TD",
+"p": 0.2775,
+"price": 426,
+"book": "Novig"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "george kittle",
+"lab": "George Kittle over 69.5 rec yds",
+"p": 0.6027,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.16728,
+"d": 9.643,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -648,12 +660,12 @@
 "name": "rico dowdle",
 "lab": "Rico Dowdle anytime TD",
 "p": 0.329,
-"price": 285,
+"price": 292,
 "book": "Novig"
 }
 ],
 "p": 0.17305,
-"d": 9.856,
+"d": 10.035,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -735,7 +747,7 @@
 "name": "rico dowdle",
 "lab": "Rico Dowdle anytime TD",
 "p": 0.329,
-"price": 285,
+"price": 292,
 "book": "Novig"
 },
 {
@@ -752,7 +764,7 @@
 }
 ],
 "p": 0.1395,
-"d": 11.512,
+"d": 11.721,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
