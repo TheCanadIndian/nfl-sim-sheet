@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-24T22:30:10.288Z",
+"frozen_at": "2026-10-24T22:35:42.360Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -11,6 +11,99 @@
 "final_at": "2026-10-25T11:30:00+00:00",
 "parlays": [
 {
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "joe burrow",
+"lab": "Joe Burrow 300+ pass yds",
+"p": 0.3305,
+"price": 240,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "bo nix",
+"lab": "Bo Nix 275+ pass yds",
+"p": 0.2547,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.08417,
+"d": 14.042,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown",
+"lab": "Chase Brown 50+ rush yds",
+"p": 0.3998,
+"price": 166,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "bo nix",
+"lab": "Bo Nix 275+ pass yds",
+"p": 0.2547,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.10183,
+"d": 10.986,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
 "legs": [
@@ -20,43 +113,10 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "sam darnold",
-"lab": "Sam Darnold 275+ pass yds",
-"p": 0.22,
-"price": 296,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.295,
-"price": 208,
-"book": "Kalshi"
-}
-],
-"p": 0.0649,
-"d": 12.174,
-"first": "2026-10-26T00:20:00+00:00"
-},
-{
-"card": "Primetime ladders (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.295,
-"price": 208,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 275+ pass yds",
+"p": 0.19,
+"price": 373,
 "book": "Kalshi"
 },
 {
@@ -64,21 +124,21 @@
 "start": "2026-10-25T20:20:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 39.5,
-"name": "kenneth walker",
-"lab": "Kenneth Walker III 40+ rec yds",
-"p": 0.195,
-"price": 351,
+"line": 79.5,
+"name": "travis kelce",
+"lab": "Travis Kelce 80+ rec yds",
+"p": 0.175,
+"price": 398,
 "book": "Kalshi"
 }
 ],
-"p": 0.05753,
-"d": 13.885,
+"p": 0.06438,
+"d": 23.583,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "2026_07_KC_SEA",
@@ -92,6 +152,27 @@
 "price": 296,
 "book": "Kalshi"
 },
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 8.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smith-Njigba 9+ catches",
+"p": 0.295,
+"price": 208,
+"book": "Kalshi"
+}
+],
+"p": 0.10969,
+"d": 12.174,
+"first": "2026-10-26T00:20:00+00:00"
+},
+{
+"card": "Primetime ladders (experimental)",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
@@ -115,10 +196,22 @@
 "p": 0.195,
 "price": 351,
 "book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "travis kelce",
+"lab": "Travis Kelce 80+ rec yds",
+"p": 0.175,
+"price": 398,
+"book": "Kalshi"
 }
 ],
-"p": 0.00815,
-"d": 84.526,
+"p": 0.01831,
+"d": 106.416,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
