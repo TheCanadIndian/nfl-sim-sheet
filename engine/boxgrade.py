@@ -44,6 +44,28 @@ def lr(vals):
     return fl
 
 
+def baseline(df, stats, order):
+    """The 'base' each projection is judged against (owner 2026-10-24: highlight projections beating their base): the
+    player's average in his earlier games this season (games he played), else his last season's average.
+    Returns {(game_id, player_id): {stat: average}}."""
+    d = df.sort_values(["season"] + order).copy()
+    g = d.groupby(["player_id", "season"])
+    prior = {k: g[k].transform(lambda z: z.shift(1).expanding().mean()) for k in stats}
+    last = d.groupby(["player_id", "season"])[stats].mean().reset_index()
+    last["season"] += 1
+    d = d.merge(last.rename(columns={k: "l_" + k for k in stats}), on=["player_id", "season"], how="left")
+    out = {}
+    for i, (gid, pid) in enumerate(zip(d.game_id, d.player_id)):
+        b = {}
+        for k in stats:
+            v = prior[k].iloc[i] if not pd.isna(prior[k].iloc[i]) else d["l_" + k].iloc[i]
+            if not pd.isna(v):
+                b[k] = round(float(v), 2)
+        if b:
+            out[(gid if isinstance(gid, str) else int(gid), pid if isinstance(pid, str) else int(pid))] = b
+    return out
+
+
 # ------------------------------------------------------------------ NBA
 
 NBA_KS = ["min", "pts", "reb", "ast", "fg3m", "stl", "blk", "tov"]
@@ -84,6 +106,8 @@ def grade_nba():
     act = act.fillna({k: 0 for k in NBA_KS})
     A = {(int(g), int(p)): r for g, p, r in zip(act.game_id, act.player_id, act.to_dict("records"))}
     tpts = act.groupby(["game_id", "team"]).pts.sum().to_dict()
+    gd = pd.read_sql("SELECT game_id, season, date FROM games", con)
+    BASE = baseline(act[(act.dnp == 0) & (act["min"] > 0)].merge(gd, on="game_id"), NBA_KS, ["date", "game_id"])
     nights = []
     for f in sorted(glob.glob(os.path.join(HERE, "nba", "projections", "????-??-??.json"))):
         D = json.load(open(f, encoding="utf-8"))
@@ -102,6 +126,7 @@ def grade_nba():
                     played = a is not None and a["dnp"] == 0 and (a["min"] or 0) > 0
                     r["a"] = {k: (float(a[k]) if played else 0.0) for k in NBA_KS}
                     r["dnp"] = not played
+                    r["base"] = BASE.get((gid, r["id"]))
                     rows.append(r)
                 teams.append(dict(t=t, box=sum(r["pts"] for r in bx), act=float(tpts.get((gid, t), 0))))
             if rows and len(teams) == 2:
@@ -147,6 +172,9 @@ def grade_nfl():
     final = set(games[games.result.notna()].game_id) if "result" in games else set(games.game_id)
     pg = BD.player_games(BD.load_plays(con), BD.load_kneels(con)).reset_index()
     A = {(g, p): r for g, p, r in zip(pg.game_id, pg.player_id, pg.to_dict("records"))}
+    q = pg.copy()
+    q["season"], q["week"] = q.game_id.str[:4].astype(int), q.game_id.str[5:7].astype(int)
+    BASE = baseline(q, [k for g in NFL_GROUPS.values() for k in g], ["week", "game_id"])
     weeks = []
     for f in sorted(glob.glob(os.path.join(HERE, "projections", "weeks", "20??_wk??_players.csv"))):
         stem = f[:-len("_players.csv")]
@@ -169,6 +197,7 @@ def grade_nfl():
                     a = A.get((gid, r["id"]))
                     r["a"] = {k: (float(a.get(k) or 0) if a is not None else 0.0) for k in r["b"]}
                     r["dnp"] = a is None
+                    r["base"] = BASE.get((gid, r["id"]))
                     r["t"] = t
                     rows.append(r)
                 qb = [r for r in bx if "pass_yds" in r["b"]]
@@ -200,10 +229,26 @@ def summarize(nights, sport):
                 continue
             e = np.array([a - p for p, a in pr], float)
             out["mae"][k], out["n"][k], out["bias"][k] = round(float(np.abs(e).mean()), 2), len(pr), round(float(e.mean()), 2)
+            bb = []
+            for r in rows:
+                if r["dnp"] or not r.get("base") or k not in r["base"] or (sport == "nfl" and k not in r["b"]):
+                    continue
+                p_, a_ = (r["b"][k] if sport == "nfl" else r[k]), r["a"][k]
+                bb.append((abs(a_ - p_), abs(a_ - r["base"][k])))
+            if bb:
+                out.setdefault("base", {})[k] = round(float(np.mean([y for _, y in bb])), 2)
+                out.setdefault("boxb", {})[k] = round(float(np.mean([x for x, _ in bb])), 2)
+                out.setdefault("beat", {})[k] = round(float(np.mean([x < y for x, y in bb])), 3)
+                out.setdefault("worse", {})[k] = round(float(np.mean([x > y for x, y in bb])), 3)
+                out.setdefault("nb", {})[k] = len(bb)
             if k in within:
                 out["within"][k] = round(float((np.abs(e) <= within[k]).mean()), 3)
         te = [abs(t["box"] - t["act"]) for g in games for t in g["teams"]]
         out["team"] = round(float(np.mean(te)), 1) if te else None
+        tot = [(sum(out["beat"][k] * out["nb"][k] for k in out.get("beat", {})), sum(out["worse"][k] * out["nb"][k] for k in out.get("beat", {})),
+                sum(out["nb"][k] for k in out.get("beat", {})))]
+        out["beat_all"] = round(tot[0][0] / tot[0][2], 3) if tot[0][2] else None
+        out["worse_all"] = round(tot[0][1] / tot[0][2], 3) if tot[0][2] else None
         return out
     allg = [g for n in nights for g in n["games"]]
     return dict(season=summ(allg) if allg else None, nights=[dict(key=n["key"], label=n["label"], s=summ(n["games"]),
@@ -239,7 +284,8 @@ __CSS__
 .exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
 table.ga td,table.ga th{text-align:right;white-space:nowrap}table.ga .l{text-align:left;white-space:normal}
 .pa{font-weight:700}.pa i{font-style:normal;color:var(--muted);font-weight:400}
-.hit{color:var(--good)}.miss{color:var(--bad)}
+.miss{color:var(--bad)}.pa .beat{background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 4px}
+.key{display:inline-block;background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 5px;font-weight:700}
 details.gm{border-top:1px solid var(--faint);padding:8px 0}details.gm summary{cursor:pointer;font-weight:600}
 @media(max-width:560px){table.ga td,table.ga th{padding-left:4px;padding-right:4px}}
 </style>
@@ -260,9 +306,11 @@ const KS = Object.keys(LAB);
 const unit = NBA ? 'night' : 'week';
 document.getElementById('sub').textContent = `Built ${D.generated} · graded every ${unit}`;
 const errRow = (lab, s) => `<tr><td class="l">${lab}</td><td>${s.games}</td><td>${s.players}</td>${KS.map(k => `<td>${s.mae[k] == null ? '–' : s.mae[k]}</td>`).join('')}<td>${s.team == null ? '–' : s.team}</td></tr>`;
+const baseRows = s => !s.base ? '' : [['Box, lines with an average', s.boxb], ['His own average (base)', s.base]].map(([l, m]) => `<tr class="muted"><td class="l">${l}</td><td></td><td></td>${KS.map(k => `<td>${m[k] == null ? '–' : (m === s.boxb && s.base[k] != null && m[k] < s.base[k] ? `<span class="key">${m[k]}</span>` : m[k])}</td>`).join('')}<td></td></tr>`).join('');
 const errHead = `<tr><th class="l">${NBA ? 'Night' : 'Week'}</th><th>Games</th><th>Players</th>${KS.map(k => `<th>${LAB[k]}</th>`).join('')}<th>${NBA ? 'Team pts' : 'Team pass yds'}</th></tr>`;
 function tiles(s){
   const W = D.within, T = [];
+  if (s.beat_all != null) T.push([pct(s.beat_all), `of lines beat his own average (${pct(s.worse_all)} worse, rest tied)`]);
   if (NBA){
     T.push([s.mae.pts, 'points off per player']); T.push([pct(s.within.pts), `points within ${W.pts}`]);
     T.push([pct(s.within.reb), `rebounds within ${W.reb}`]); T.push([pct(s.within.ast), `assists within ${W.ast}`]); T.push([s.team, 'team score off by']);
@@ -272,25 +320,27 @@ function tiles(s){
   }
   return `<div class="tiles">${T.map(([v, l]) => `<div class="tile"><span class="v">${v == null ? '–' : v}</span><span class="s">${l}</span></div>`).join('')}</div>`;
 }
-const cell = (p, a, w) => { const d = Math.abs(a - p), cls = w != null ? (d <= w ? 'hit' : '') : ''; return `<td class="pa"><span class="${cls}">${p}</span> <i>${Math.round(a * 10) / 10}</i></td>`; };
+const cell = (p, a, b) => { const beat = b != null && Math.abs(a - p) < Math.abs(a - b); return `<td class="pa"${b != null ? ` title="his average ${Math.round(b * 10) / 10}"` : ''}><span class="${beat ? 'beat' : ''}">${p}</span> <i>${Math.round(a * 10) / 10}</i></td>`; };
 function gameTable(g){
   if (NBA){
     const C = ['min', 'pts', 'reb', 'ast', 'fg3m', 'stl', 'blk', 'tov'];
     const sides = g.teams.map(T => { const rs = g.rows.filter(r => r.t === T.t);
-      return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)}${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(k => cell(r[k], r.a[k], D.within[k])).join('')}</tr>`).join(''); }).join('');
+      return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)}${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(k => cell(r[k], r.a[k], r.dnp || !r.base ? null : r.base[k])).join('')}</tr>`).join(''); }).join('');
     return `<div class="tw"><table class="t ga"><thead><tr><th class="l">Box <i class="muted">actual</i></th>${C.map(k => `<th>${LAB[k]}</th>`).join('')}</tr></thead><tbody>${sides}</tbody></table></div>`;
   }
   const C = [['pass_yds', 'PASS'], ['car', 'CAR'], ['rush_yds', 'RUSH'], ['rec', 'REC'], ['rec_yds', 'REC YDS'], ['td', 'TD']];
-  const v = (r, k, which) => k === 'td' ? ['pass_td', 'rush_td', 'rec_td'].filter(x => x in r.b && (x !== 'pass_td')).reduce((s, x) => s + (which === 'b' ? r.b[x] : r.a[x]), 0) : (which === 'b' ? r.b[k] : r.a[k]);
+  const TDS = r => ['rush_td', 'rec_td'].filter(x => x in r.b);
+  const v = (r, k, which) => k === 'td' ? TDS(r).reduce((s, x) => s + (which === 'b' ? r.b[x] : r.a[x]), 0) : (which === 'b' ? r.b[k] : r.a[k]);
+  const bv = (r, k) => r.dnp || !r.base ? null : k === 'td' ? (TDS(r).every(x => x in r.base) ? TDS(r).reduce((s, x) => s + r.base[x], 0) : null) : (k in r.base ? r.base[k] : null);
   const sides = g.teams.map(T => { const rs = g.rows.filter(r => r.t === T.t);
-    return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">pass yds box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)} <span class="small muted">${esc(r.pos)}</span>${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(([k]) => (k === 'td' || k in r.b) ? cell(v(r, k, 'b'), v(r, k, 'a'), D.within[k]) : '<td class="muted">·</td>').join('')}</tr>`).join(''); }).join('');
+    return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">pass yds box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)} <span class="small muted">${esc(r.pos)}</span>${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(([k]) => (k === 'td' || k in r.b) ? cell(v(r, k, 'b'), v(r, k, 'a'), bv(r, k)) : '<td class="muted">·</td>').join('')}</tr>`).join(''); }).join('');
   return `<div class="tw"><table class="t ga"><thead><tr><th class="l">Box <i class="muted">actual</i></th>${C.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>${sides}</tbody></table></div>`;
 }
 const main = document.getElementById('main');
 if (!D.season) main.innerHTML = `<section class="panel"><p class="note" style="margin:0">No graded box scores yet. The first ones appear after the first ${unit} with projected box scores is final.</p></section>`;
 else main.innerHTML = `<section class="panel"><div class="phead"><h2>So far</h2><span class="small muted">${D.season.games} games · ${D.season.players} player lines${D.season.dnp ? ` · ${D.season.dnp} listed but didn’t play` : ''}</span></div>${tiles(D.season)}
-  <div class="tw"><table class="t"><thead>${errHead}</thead><tbody>${errRow('All', D.season)}${D.nights.map(n => errRow(esc(n.label), n.s)).join('')}</tbody></table></div>
-  <p class="note" style="margin:0">Numbers in the table are the average miss per player (box vs actual). In the game tables, each cell is the box’s number with what happened beside it${Object.keys(D.within).length ? `; green = within ${Object.entries(D.within).map(([k, w]) => `${w} ${LAB[k].toLowerCase()}`).join(', ')}` : ''}.</p></section>`
+  <div class="tw"><table class="t"><thead>${errHead}</thead><tbody>${errRow('All', D.season)}${baseRows(D.season)}${D.nights.map(n => errRow(esc(n.label), n.s)).join('')}</tbody></table></div>
+  <p class="note" style="margin:0">Numbers in the table are the average miss per player (box vs actual). <span class="key">Highlighted</span> = the box beat the player’s base (his own average so far this season, else last season’s) on that stat. In the game tables each cell is the box’s number with what happened beside it; highlighted when it landed closer than his average (hover for the average).</p></section>`
   + D.nights.filter(n => n.games).map((n, i) => `<section class="panel"><div class="phead"><h2>${esc(n.label)}</h2><span class="small muted">${n.s.games} games${n.s.mae.pts != null ? ` · points off ${n.s.mae.pts} a player` : n.s.mae.rec_yds != null ? ` · receiving yards off ${n.s.mae.rec_yds}` : ''}</span></div>
     ${n.games.map(g => `<details class="gm"${i === 0 ? ' open' : ''}><summary>${esc(g.label)} <span class="muted small">${g.teams.map(T => `${esc(T.t)} ${T.box} → ${T.act}`).join(' · ')}</span></summary>${gameTable(g)}</details>`).join('')}</section>`).join('');
 </script>
