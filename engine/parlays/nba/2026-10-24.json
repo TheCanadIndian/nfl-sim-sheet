@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-24",
 "lock": "2026-10-24T22:00:00+00:00",
-"frozen_at": "2026-10-24T22:10:52.476Z",
+"frozen_at": "2026-10-24T22:21:11.550Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -42,43 +42,6 @@
 "p": 0.35902,
 "d": 3.85,
 "first": "2026-10-25T00:00:00+00:00",
-"pick": "core",
-"res": null,
-"locked": true,
-"final": true
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909855",
-"start": "2026-10-24T23:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "vj edgecombe",
-"lab": "Vj Edgecombe over 3.5 assists",
-"p": 0.4508,
-"price": 150,
-"book": "Hard Rock"
-},
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 9.5,
-"name": "josh giddey",
-"lab": "Josh Giddey 10+ points",
-"p": 0.7456,
-"price": -228,
-"book": "Kalshi"
-}
-],
-"p": 0.33613,
-"d": 3.596,
-"first": "2026-10-24T23:30:00+00:00",
 "pick": "core",
 "res": null,
 "locked": true,
@@ -127,6 +90,55 @@
 ],
 "p": 0.18296,
 "d": 7.636,
+"first": "2026-10-25T00:00:00+00:00",
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909856",
+"start": "2026-10-25T00:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "HOU moneyline",
+"p": 0.5216,
+"price": 102,
+"book": "Novig"
+},
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "CHI moneyline",
+"p": 0.5538,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "401909860",
+"start": "2026-10-25T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 13.5,
+"name": "gui santos",
+"lab": "Gui Santos over 13.5 points",
+"p": 0.6246,
+"price": -120,
+"book": "Hard Rock"
+}
+],
+"p": 0.18044,
+"d": 7.04,
 "first": "2026-10-25T00:00:00+00:00",
 "pick": "core",
 "res": null,
@@ -349,52 +361,51 @@
 "locked": true
 },
 {
-"card": "Path longshots",
-"tier": "2-leg",
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
 "legs": [
+{
+"gid": "401909853",
+"start": "2026-10-24T22:00Z",
+"kind": "spread",
+"side": "home",
+"line": 3.5,
+"name": null,
+"lab": "CHA +3.5",
+"p": 0.4946,
+"price": 113,
+"book": "Novig"
+},
 {
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
 "kind": "reb",
 "side": "o",
-"line": 13.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 14+ reb",
-"p": 0.294,
-"price": 266,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
+"line": 5.5,
+"name": "leonard miller",
+"lab": "Leonard Miller over 5.5 rebounds",
+"p": 0.5711,
+"price": 110,
+"book": "Hard Rock"
 },
 {
-"gid": "401909858",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
+"gid": "401909860",
+"start": "2026-10-25T02:00Z",
+"kind": "reb",
 "side": "o",
-"line": 14.5,
-"name": "julian champagnie",
-"lab": "Julian Champagnie 15+ pts",
-"p": 0.2026,
-"price": 456,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
+"line": 2.5,
+"name": "collin gillespie",
+"lab": "Collin Gillespie over 2.5 rebounds",
+"p": 0.6751,
+"price": -175,
+"book": "Hard Rock"
 }
 ],
-"p": 0.05957,
-"d": 20.35,
-"first": "2026-10-25T00:00:00+00:00",
-"res": null
+"p": 0.19069,
+"d": 7.029,
+"first": "2026-10-24T22:00:00+00:00",
+"res": null,
+"locked": true
 },
 {
 "card": "Path longshots",
@@ -446,19 +457,19 @@
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "reb",
+"gid": "401909855",
+"start": "2026-10-24T23:30Z",
+"kind": "fg3m",
 "side": "o",
-"line": 13.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 14+ reb",
-"p": 0.294,
-"price": 266,
-"book": "Kalshi",
+"line": 2.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 3+ threes",
+"p": 0.2772,
+"price": 285,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -470,33 +481,14 @@
 {
 "gid": "401909858",
 "start": "2026-10-25T00:00Z",
-"kind": "fg3m",
+"kind": "pts",
 "side": "o",
-"line": 2.5,
-"name": "victor wembanyama",
-"lab": "Victor Wembanyama 3+ threes",
-"p": 0.3309,
-"price": 229,
+"line": 14.5,
+"name": "julian champagnie",
+"lab": "Julian Champagnie 15+ pts",
+"p": 0.2026,
+"price": 456,
 "book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 7+ ast",
-"p": 0.3338,
-"price": 220,
-"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -506,9 +498,9 @@
 ]
 }
 ],
-"p": 0.03248,
-"d": 38.532,
-"first": "2026-10-25T00:00:00+00:00",
+"p": 0.05616,
+"d": 21.406,
+"first": "2026-10-24T23:30:00+00:00",
 "res": null
 },
 {
@@ -556,6 +548,72 @@
 {
 "gid": "401909856",
 "start": "2026-10-25T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "alperen sengun",
+"lab": "Alperen Sengun 7+ ast",
+"p": 0.3338,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.03062,
+"d": 40.533,
+"first": "2026-10-24T23:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 3+ threes",
+"p": 0.2121,
+"price": 456,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 3+ threes",
+"p": 0.3309,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909856",
+"start": "2026-10-25T00:30Z",
 "kind": "fg3m",
 "side": "o",
 "line": 3.5,
@@ -572,8 +630,42 @@
 ]
 }
 ],
-"p": 0.01985,
-"d": 70.426,
+"p": 0.01518,
+"d": 101.706,
+"first": "2026-10-25T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909854",
+"start": "2026-10-24T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "sam merrill",
+"lab": "Sam Merrill 4+ threes",
+"p": 0.155,
+"price": 425,
+"book": "Kalshi"
+},
+{
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "julian champagnie",
+"lab": "Julian Champagnie 4+ threes",
+"p": 0.17,
+"price": 398,
+"book": "Kalshi"
+}
+],
+"p": 0.02635,
+"d": 26.169,
 "first": "2026-10-24T23:30:00+00:00",
 "res": null
 },
@@ -582,6 +674,18 @@
 "tier": "+250 to +600",
 "legs": [
 {
+"gid": "401909856",
+"start": "2026-10-25T00:30Z",
+"kind": "pts",
+"side": "o",
+"line": 10.5,
+"name": "reed sheppard",
+"lab": "Reed Sheppard over 10.5 points",
+"p": 0.5517,
+"price": -110,
+"book": "Hard Rock"
+},
+{
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
 "kind": "reb",
@@ -592,154 +696,16 @@
 "p": 0.5682,
 "price": 105,
 "book": "Hard Rock"
-},
-{
-"gid": "401909860",
-"start": "2026-10-25T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "gui santos",
-"lab": "Gui Santos over 5.5 rebounds",
-"p": 0.6157,
-"price": -125,
-"book": "Hard Rock"
 }
 ],
-"p": 0.34984,
-"d": 3.69,
+"p": 0.31348,
+"d": 3.914,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
 },
 {
 "card": "Parlays by payout (your books)",
 "tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "pts",
-"side": "o",
-"line": 10.5,
-"name": "reed sheppard",
-"lab": "Reed Sheppard over 10.5 points",
-"p": 0.5517,
-"price": -110,
-"book": "Hard Rock"
-},
-{
-"gid": "401909860",
-"start": "2026-10-25T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 13.5,
-"name": "gui santos",
-"lab": "Gui Santos over 13.5 points",
-"p": 0.6216,
-"price": -120,
-"book": "Hard Rock"
-}
-],
-"p": 0.34294,
-"d": 3.5,
-"first": "2026-10-25T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "pts",
-"side": "o",
-"line": 10.5,
-"name": "reed sheppard",
-"lab": "Reed Sheppard over 10.5 points",
-"p": 0.5517,
-"price": -110,
-"book": "Hard Rock"
-},
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "leonard miller",
-"lab": "Leonard Miller over 5.5 rebounds",
-"p": 0.5682,
-"price": 105,
-"book": "Hard Rock"
-},
-{
-"gid": "401909860",
-"start": "2026-10-25T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 13.5,
-"name": "gui santos",
-"lab": "Gui Santos over 13.5 points",
-"p": 0.6216,
-"price": -120,
-"book": "Hard Rock"
-}
-],
-"p": 0.19486,
-"d": 7.175,
-"first": "2026-10-25T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "pts",
-"side": "o",
-"line": 10.5,
-"name": "reed sheppard",
-"lab": "Reed Sheppard over 10.5 points",
-"p": 0.5517,
-"price": -110,
-"book": "Hard Rock"
-},
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "leonard miller",
-"lab": "Leonard Miller over 5.5 rebounds",
-"p": 0.5682,
-"price": 105,
-"book": "Hard Rock"
-},
-{
-"gid": "401909860",
-"start": "2026-10-25T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "gui santos",
-"lab": "Gui Santos over 5.5 rebounds",
-"p": 0.6157,
-"price": -125,
-"book": "Hard Rock"
-}
-],
-"p": 0.19301,
-"d": 7.045,
-"first": "2026-10-25T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
 "legs": [
 {
 "gid": "401909856",
@@ -764,22 +730,56 @@
 "p": 0.5682,
 "price": 105,
 "book": "Hard Rock"
+}
+],
+"p": 0.29573,
+"d": 4.141,
+"first": "2026-10-25T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909856",
+"start": "2026-10-25T00:30Z",
+"kind": "pts",
+"side": "o",
+"line": 10.5,
+"name": "reed sheppard",
+"lab": "Reed Sheppard over 10.5 points",
+"p": 0.5517,
+"price": -110,
+"book": "Hard Rock"
+},
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "leonard miller",
+"lab": "Leonard Miller over 5.5 rebounds",
+"p": 0.5682,
+"price": 105,
+"book": "Hard Rock"
 },
 {
 "gid": "401909860",
 "start": "2026-10-25T02:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 13.5,
-"name": "gui santos",
-"lab": "Gui Santos over 13.5 points",
-"p": 0.6216,
-"price": -120,
+"line": 2.5,
+"name": "collin gillespie",
+"lab": "Collin Gillespie over 2.5 rebounds",
+"p": 0.6751,
+"price": -175,
 "book": "Hard Rock"
 }
 ],
-"p": 0.18382,
-"d": 7.592,
+"p": 0.21163,
+"d": 6.15,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
 }
