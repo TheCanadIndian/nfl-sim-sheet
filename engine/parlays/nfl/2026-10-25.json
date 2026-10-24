@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-24T17:08:03.984Z",
+"frozen_at": "2026-10-24T17:14:17.332Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -65,11 +65,11 @@
 "start": "2026-10-25T13:00:00",
 "kind": "rush_yds",
 "side": "o",
-"line": 69.5,
+"line": 49.5,
 "name": "chase brown",
-"lab": "Chase Brown 70+ rush yds",
-"p": 0.221,
-"price": 398,
+"lab": "Chase Brown 50+ rush yds",
+"p": 0.4001,
+"price": 166,
 "book": "Kalshi",
 "sc": "CIN pulls away",
 "f": [
@@ -97,10 +97,10 @@
 ]
 }
 ],
-"p": 0.05579,
-"d": 20.567,
+"p": 0.10101,
+"d": 10.986,
 "first": "2026-10-25T17:00:00+00:00",
-"pick": "longshot"
+"pick": "core"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -131,7 +131,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.10969,
+"p": 0.0649,
 "d": 12.174,
 "first": "2026-10-26T00:20:00+00:00"
 },
@@ -139,6 +139,51 @@
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
 "legs": [
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 8.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smith-Njigba 9+ catches",
+"p": 0.295,
+"price": 208,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "kenneth walker",
+"lab": "Kenneth Walker III 40+ rec yds",
+"p": 0.195,
+"price": 351,
+"book": "Kalshi"
+}
+],
+"p": 0.05753,
+"d": 13.885,
+"first": "2026-10-26T00:20:00+00:00"
+},
+{
+"card": "Primetime ladders (experimental)",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "sam darnold",
+"lab": "Sam Darnold 275+ pass yds",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
+},
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
@@ -164,53 +209,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.05554,
-"d": 21.365,
-"first": "2026-10-26T00:20:00+00:00"
-},
-{
-"card": "Primetime ladders (experimental)",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "sam darnold",
-"lab": "Sam Darnold 275+ pass yds",
-"p": 0.22,
-"price": 296,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.295,
-"price": 208,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.19,
-"price": 373,
-"book": "Kalshi"
-}
-],
-"p": 0.02533,
-"d": 57.642,
+"p": 0.00815,
+"d": 84.526,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -479,39 +479,6 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "marshawn lloyd",
-"lab": "Marshawn Lloyd TD",
-"p": 0.2775,
-"price": 426,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "george kittle",
-"lab": "George Kittle over 5.5 receptions",
-"p": 0.5515,
-"price": -108,
-"book": "Novig"
-}
-],
-"p": 0.15307,
-"d": 10.13,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
 "name": "pierre strong",
 "lab": "Pierre Strong TD",
 "p": 0.2226,
@@ -535,6 +502,39 @@
 "d": 10.13,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "wandale robinson",
+"lab": "Wandale Robinson TD",
+"p": 0.2114,
+"price": 400,
+"book": "Novig"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "george kittle",
+"lab": "George Kittle over 5.5 receptions",
+"p": 0.5515,
+"price": -108,
+"book": "Novig"
+}
+],
+"p": 0.11661,
+"d": 9.63,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -30009,14 +30009,14 @@
 "name": "aaron jones",
 "lab": "Aaron Jones over 39.5 rush yds",
 "p": 0.6916,
-"price": -115,
+"price": -120,
 "book": "Kalshi",
 "f": [
 "usage",
 "rotation"
 ],
 "sport": "nfl",
-"edge": 0.2929
+"edge": 0.2678
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -30038,7 +30038,7 @@
 }
 ],
 "p": 0.19019,
-"d": 7.329,
+"d": 7.187,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
