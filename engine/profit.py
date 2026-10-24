@@ -83,8 +83,9 @@ def ladder_rows(date, mk, R, GM):
             if y is None:
                 continue
             ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
+            po = (r.get("ours") or {}).get("vegas")                      # our chance: the claimed edge is po / cost - 1
             out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"),
-                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), won=int(y), pnl=round(y / cy - 1, 4)))
+                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4)))
     return out
 
 
@@ -134,7 +135,7 @@ def nba_ladder_rows(date, mk, R, GM):
                 continue
             for cat in cats:
                 out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"),
-                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), won=int(y), pnl=round(y / cy - 1, 4)))
+                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if p is None else round(p, 4), won=int(y), pnl=round(y / cy - 1, 4)))
     return out
 
 
@@ -720,7 +721,7 @@ def page_data():
             track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),
                               roi=st["roi"] if st else None, moe=st["moe"] if st else None,
                               clv=st.get("clv") if st else None, clv_n=st.get("clv_n") if st else 0))
-    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data())
+    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data(), edges=edge_bands())
 
 
 # ---------------------------------------------------------------- what actually worked (owner 2026-10-21)
@@ -739,6 +740,51 @@ def _plays(cat, bet):
 
 def _over_leg(L):
     return str(L.get("side", "o")).lower() not in ("u", "under") and not str(L.get("lab", "")).lower().startswith(("under ", "no "))
+
+
+EDGE_BANDS = [(-9, 0, "under 0%"), (0, .05, "0-5%"), (.05, .10, "5-10%"), (.10, .20, "10-20%"), (.20, .40, "20-40%"), (.40, .80, "40-80%"), (.80, 99, "80%+")]
+EDGE_CATS = ("ladder candidates", "ladder edge")
+
+
+def edge_bands():
+    """Results by claimed edge (owner 2026-10-23: "out of all the ladder candidates and pinnacle movement show the edge
+    percentage that they have hit in"): ladder rules (claimed edge = our chance / Kalshi cost with fee - 1; rows carry
+    `p` since 2026-10-23, rebuilt for every graded quote) and the Pinnacle / consensus move signals (profit_tags src
+    'move': the fair at logging x the payout - 1). Per band: bets, hit rate, our average chance, return per $1."""
+    out = []
+    def table(cat, xs):
+        bands = []
+        for lo, hi, lab in EDGE_BANDS:
+            x = [r for r in xs if lo <= r[0] < hi]
+            if x:
+                n = len(x)
+                bands.append(dict(lab=lab, n=n, hit=round(sum(r[1] for r in x) / n, 4), ours=round(sum(r[2] for r in x) / n, 4), roi=round(sum(r[3] for r in x) / n, 4)))
+        if bands:
+            n = len(xs)
+            out.append(dict(cat=cat, n=n, hit=round(sum(r[1] for r in xs) / n, 4), roi=round(sum(r[3] for r in xs) / n, 4), bands=bands))
+    for f in sorted(glob.glob(os.path.join(OUT, "profit_*.json"))):
+        if f.endswith(("profit_tags.json", "profit_wfair.json")):
+            continue
+        try:
+            rs = json.load(open(f)).get("rows", [])
+        except (OSError, ValueError):
+            continue
+        by = {}
+        for r in rs:
+            if any(k in r["cat"] for k in EDGE_CATS) and r.get("won") is not None and r.get("p") is not None and r.get("cost"):
+                by.setdefault(r["cat"], []).append((r["p"] / r["cost"] - 1, r["won"], r["p"], r["pnl"]))
+        for cat, xs in by.items():
+            table(cat, xs)
+    tp = os.path.join(OUT, "profit_tags.json")
+    by = {}
+    for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
+        if e.get("src") != "move" or e.get("res") not in ("W", "L") or e.get("p") is None or e.get("o") is None:
+            continue
+        d = 1 + (e["o"] / 100 if e["o"] > 0 else 100 / -e["o"])
+        by.setdefault(f"{e['sport'].upper()} {tag_label(e)}", []).append((e["p"] * d - 1, int(e["res"] == "W"), e["p"], (d - 1) if e["res"] == "W" else -1.0))
+    for cat, xs in sorted(by.items()):
+        table(cat, xs)
+    return out
 
 
 def feed_data():
@@ -902,6 +948,14 @@ function feed(){
         return `<details class="fgrp"><summary><span class="gl"><b>${esc(lab)}</b> <span class="c">won ${w.length} of ${L.length}</span></span><span class="net">${usd(nn)}</span></summary>${show.map(row).join('') || '<p class="small muted" style="margin:4px 0">No winners.</p>'}</details>`; }).join('');
       return `<details class="fday"${i === 0 ? ' open' : ''}><summary><h3>${dayL(d)} · ${XA.filter(x => x.res === 'W').length}-${XA.filter(x => x.res === 'L').length} · net ${usd(n)}</h3></summary>${grp}</details>`; }).join('') || '<p class="note">Nothing graded in this view yet.</p>'}</section>`;
 }
+function edgeTable(){
+  const E = D.edges || []; if (!E.length) return '';
+  const pc0 = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
+  const tb = c => `<div class="tb"><h3>${esc(c.cat)}</h3><p class="small muted" style="margin:0 0 4px">${c.n} bets · hit ${Math.round(c.hit * 100)}% · return ${pc0(c.roi)}</p><table><thead><tr><th>Claimed edge</th><th>Bets</th><th>Hit</th><th>Ours</th><th>Return</th></tr></thead><tbody>${c.bands.map(b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${(b.hit * 100).toFixed(1)}%</td><td class="muted">${(b.ours * 100).toFixed(1)}%</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${pc0(b.roi)}${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`).join('')}</tbody></table></div>`;
+  return `<section class="panel lt"><details><summary style="cursor:pointer"><h2 style="display:inline">Results by claimed edge</h2> <span class="small muted">ladder candidates · ladder edges · Pinnacle / consensus moves</span></summary>
+    <p class="note" style="margin:8px 0">Each bet grouped by the edge we claimed when it was flagged (our chance against the price; Kalshi with its fee). Hit = how often it won; Ours = the chance we gave it on average. If the big claimed edges hit no more often than the small ones, the model is overconfident there. Fewer than 30 bets in a band is noise.</p>
+    <div class="trk">${E.map(tb).join('')}</div></details></section>`;
+}
 function legTable(){
   const L = FE.legs || []; if (!L.length) return '';
   const KL = {rec_yds: 'receiving yds', rush_yds: 'rushing yds', pass_yds: 'passing yds', rec: 'catches', td: 'anytime TD', goal: 'anytime goal', sog: 'shots on goal', pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes', ml: 'moneyline', spread: 'spread', total: 'total'};
@@ -931,7 +985,7 @@ function render(){
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
   const all = `<details class="panel"><summary style="cursor:pointer"><h2 style="display:inline">Every tracked rule</h2> <span class="small muted">all bets incl. unders and the test versions</span></summary>
     <section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>${track}${D.sports.map(sp).join('')}</details>`;
-  document.getElementById('main').innerHTML = you() + working() + feed() + legTable() + all;
+  document.getElementById('main').innerHTML = you() + working() + feed() + legTable() + edgeTable() + all;
 }
 render();
 </script></body></html>"""
