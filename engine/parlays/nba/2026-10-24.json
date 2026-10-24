@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-24",
 "lock": "2026-10-24T23:30:00+00:00",
-"frozen_at": "2026-10-24T10:39:02.996Z",
+"frozen_at": "2026-10-24T10:56:36.759Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,33 +15,34 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909855",
-"start": "2026-10-24T23:30Z",
-"kind": "ast",
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "vj edgecombe",
-"lab": "VJ Edgecombe 4+ ast",
-"p": 0.3822,
-"price": 181,
+"line": 5.5,
+"name": "devin vassell",
+"lab": "Devin Vassell 6+ reb",
+"p": 0.2801,
+"price": 373,
 "book": "Kalshi",
 "f": [
 "usage",
 "matchup",
+"rotation",
 "game",
 "price"
 ]
 },
 {
-"gid": "401909858",
-"start": "2026-10-25T00:00Z",
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
 "kind": "pts",
 "side": "o",
 "line": 19.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 20+ pts",
-"p": 0.2601,
-"price": 331,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ pts",
+"p": 0.378,
+"price": 266,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -51,10 +52,9 @@
 ]
 }
 ],
-"p": 0.0994,
-"d": 12.111,
-"first": "2026-10-24T23:30:00+00:00",
-"pick": "core",
+"p": 0.10589,
+"d": 17.312,
+"first": "2026-10-25T00:00:00+00:00",
 "res": null
 },
 {
@@ -62,6 +62,71 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "kyshawn george",
+"lab": "Kyshawn George 6+ reb",
+"p": 0.2512,
+"price": 351,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "devin vassell",
+"lab": "Devin Vassell 6+ reb",
+"p": 0.2801,
+"price": 373,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.07035,
+"d": 21.332,
+"first": "2026-10-25T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "kyshawn george",
+"lab": "Kyshawn George 6+ reb",
+"p": 0.2512,
+"price": 351,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
 "gid": "401909858",
 "start": "2026-10-25T00:00Z",
 "kind": "pts",
@@ -69,7 +134,7 @@
 "line": 19.5,
 "name": "deaaron fox",
 "lab": "De'Aaron Fox 20+ pts",
-"p": 0.2601,
+"p": 0.2651,
 "price": 331,
 "book": "Kalshi",
 "f": [
@@ -80,51 +145,33 @@
 ]
 },
 {
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "ast",
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "pts",
 "side": "o",
-"line": 5.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 6+ ast",
-"p": 0.4376,
-"price": 134,
+"line": 19.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ pts",
+"p": 0.378,
+"price": 266,
 "book": "Kalshi",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.11382,
-"d": 10.085,
+"p": 0.02517,
+"d": 71.143,
 "first": "2026-10-25T00:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "401909854",
-"start": "2026-10-24T23:30Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "jarrett allen",
-"lab": "Jarrett Allen 15+ pts",
-"p": 0.4181,
-"price": 181,
-"book": "Kalshi",
-"f": [
-"usage",
-"game",
-"price"
-]
-},
 {
 "gid": "401909855",
 "start": "2026-10-24T23:30Z",
@@ -133,7 +180,7 @@
 "line": 3.5,
 "name": "vj edgecombe",
 "lab": "VJ Edgecombe 4+ ast",
-"p": 0.3822,
+"p": 0.3872,
 "price": 181,
 "book": "Kalshi",
 "f": [
@@ -144,90 +191,81 @@
 ]
 },
 {
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "ast",
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 6+ ast",
-"p": 0.4376,
-"price": 134,
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.3586,
+"price": 181,
 "book": "Kalshi",
 "f": [
 "usage",
 "matchup",
 "rotation",
 "game"
-]
-}
-],
-"p": 0.06993,
-"d": 18.477,
-"first": "2026-10-24T23:30:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909854",
-"start": "2026-10-24T23:30Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "jarrett allen",
-"lab": "Jarrett Allen 15+ pts",
-"p": 0.4181,
-"price": 181,
-"book": "Kalshi",
-"f": [
-"usage",
-"game",
-"price"
 ]
 },
 {
 "gid": "401909858",
 "start": "2026-10-25T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "devin vassell",
-"lab": "Devin Vassell 3+ threes",
-"p": 0.3707,
-"price": 173,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
 "kind": "pts",
 "side": "o",
-"line": 24.5,
-"name": "kevin durant",
-"lab": "Kevin Durant 25+ pts",
-"p": 0.442,
-"price": 119,
+"line": 19.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 20+ pts",
+"p": 0.2651,
+"price": 331,
 "book": "Kalshi",
 "f": [
 "usage",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.06851,
-"d": 16.8,
+"p": 0.0368,
+"d": 34.032,
 "first": "2026-10-24T23:30:00+00:00",
 "pick": "longshot",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909855",
+"start": "2026-10-24T23:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "MIL moneyline",
+"p": 0.169,
+"price": 525,
+"book": "Novig"
+},
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "pts",
+"side": "o",
+"line": 9.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 10+ points",
+"p": 0.7917,
+"price": -251,
+"book": "Kalshi"
+}
+],
+"p": 0.13379,
+"d": 8.74,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
 "res": null
 }
 ],
