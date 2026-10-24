@@ -483,11 +483,128 @@ SCREEN_CSS = """
 .sc-px{white-space:nowrap;border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);text-decoration:none;min-width:118px;text-align:center}
 .sc-px b{font-size:14.5px}a.sc-px:hover{border-color:var(--accent)}.sc-px.nl{color:var(--muted)}
 .sc-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:0 5px;margin-left:4px;border:1px solid currentColor;vertical-align:1px}
-.sc-tag.pin{color:#C084FC}.sc-tag.v{color:var(--good)}.sc-tag.lc{color:var(--away)}.sc-tag.off{color:#F2C14E}.sc-tag.alt{color:var(--muted)}
+.sc-cx{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:3px}.sc-cx span{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px;white-space:nowrap}.sc-cx span.g{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}.sc-cx span.b{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}.sc-tag.pin{color:#C084FC}.sc-tag.v{color:var(--good)}.sc-tag.lc{color:var(--away)}.sc-tag.off{color:#F2C14E}.sc-tag.alt{color:var(--muted)}
 .sc-more{display:block;margin:12px auto;border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:7px 18px;font:600 13.5px var(--body);cursor:pointer}
 .sc-empty{color:var(--muted);padding:16px 4px}
 @media (max-width:560px){.sc-row{grid-template-columns:minmax(0,1fr) auto}.sc-who{grid-column:1 / -1}.sc-num{text-align:left}.sc-px{justify-self:end}}
 """
+
+
+# Context chips for the screener (owner 2026-10-23: "put the dvp tags and other tags in the screener"), computed with
+# the same rules as each page: [text, tone] with tone 'g' (soft / up), 'b' (tough / down) or '' -- general ones in "c",
+# matchup lines per stat in "s" (a threes matchup shows on threes rows only).
+_NBA_PL = {"G": "guards", "F": "forwards", "C": "centers"}
+_ARCH_PL = {"Interior big": "interior bigs", "3-and-D role player": "3-and-D players", "Spot-up shooter": "spot-up shooters", "Rim protector": "rim protectors",
+            "Primary creator": "primary creators", "Versatile forward": "versatile forwards", "Pass-first guard": "pass-first guards", "Scoring guard/wing": "scoring guards/wings"}
+_NBA_MIN = {"pts": 8, "reb": 3, "ast": 2, "fg3m": 1}
+_NBA_SL = {"pts": "pts", "reb": "reb", "ast": "ast", "fg3m": "threes"}
+
+
+def _pct(v):
+    return ("+" if v >= 1 else "−") + f"{abs(round((v - 1) * 100))}%"
+
+
+def ctx_nba(D):
+    dvp = {(r["team"], r["pg"]): r for r in D.get("dvp") or []}
+    out = {}
+    for q in D.get("players", []):
+        c, st_ = [], {}
+        if q.get("ar"):
+            c.append([q["ar"], ""])
+        lu = (q.get("lu") or "").split("|")[0]
+        if lu == "in":
+            c.append(["▲ starts", "g"])
+        elif lu == "out":
+            c.append(["▼ bench", "b"])
+        tr = q.get("trend")
+        if tr is not None and tr >= 3:
+            c.append(["▲ minutes", "g"])
+        elif tr is not None and tr <= -3:
+            c.append(["▼ minutes", "b"])
+        vg = (q.get("s") or {}).get("vegas") or {}
+        for k, fl in _NBA_MIN.items():
+            if not vg.get(k) or vg[k][3] < fl:
+                continue
+            dp = (dvp.get((q.get("o"), q.get("pg"))) or {}).get(k)
+            if dp is None:
+                continue
+            da = (q.get("va") or {}).get(k)
+            v = (dp * da) ** .5 if da else dp
+            if abs(v - 1) >= .08:
+                grp = _ARCH_PL.get(q.get("ar"), _NBA_PL.get(q.get("pg"), "")) if da else _NBA_PL.get(q.get("pg"), "")
+                st_[k] = [[f"{q.get('o')} {_pct(v)} {_NBA_SL[k]} vs {grp}", "g" if v > 1 else "b"]]
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_)
+    return out
+
+
+_NFL_GRP = {"QB": "QBs", "RB": "RBs", "TE": "TEs", "WR": "WRs", "SLOT": "slot WRs", "OUT": "outside WRs"}
+_NFL_MX = {"QB": [("pass_yds", "Pass yds", "pass yds", 150)], "RB": [("rush_yds", "Rush yds", "rush yds", 30), ("rec_yds", "Rec yds", "rec yds", 20)],
+           "WR": [("rec_yds", "Rec yds", "rec yds", 25), ("rec", "Rec", "catches", 3)], "TE": [("rec_yds", "Rec yds", "rec yds", 25), ("rec", "Rec", "catches", 3)]}
+
+
+def _ord(n):
+    return f"{n}{'th' if 10 <= n % 100 <= 20 else {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')}"
+
+
+def ctx_nfl(D):
+    dvp = D.get("dvp") or {}
+    out = {}
+    for q in D.get("players", []):
+        S_ = q.get("s") or {}
+        mean = lambda k: (S_.get(k) or [0])[0]
+        med = lambda k: (S_.get(k) or [0, 0, 0, 0])[3]
+        c, st_ = [], {}
+        pos, al = q.get("pos"), (q.get("lab") or "").split(" · ")[1] if " · " in (q.get("lab") or "") else ""
+        if pos == "RB" and mean("tgt") + mean("car") >= 6:
+            r = mean("tgt") / (mean("tgt") + mean("car"))
+            c.append(["Receiving back" if r >= .3 else "Early-down back" if r <= .17 else "Three-down back", ""])
+        elif pos == "TE" and mean("tgt") >= 5:
+            c.append(["Pass-catching TE", ""])
+        elif pos == "QB" and mean("att") >= 20:
+            c.append(["Dual-threat QB" if mean("rush_yds") >= 25 else "Pocket passer", ""])
+        key = ("SLOT" if al == "Slot" else "OUT" if al in ("X", "Z") else "WR") if pos == "WR" else pos
+        T = dvp.get(key) or dvp.get("WR" if pos == "WR" else key)
+        if not T or pos not in _NFL_MX:
+            out[(str(q["g"]), q["n"])] = dict(c=c, s=st_)
+            continue
+        row = next((r for r in T["rows"] if r.get("team") == q.get("o")), None)
+        soft = row and row.get("rank") and row["rank"] <= 8
+        for stat, col, lab, fl in _NFL_MX[pos]:
+            chips = []
+            if soft and med(stat) >= fl * .6:
+                chips.append([f"soft: {_ord(row['rank'])} most to {_NFL_GRP[key]}", "g"])
+            if row and row.get("season_stats") and (row.get("season_games") or 0) >= 3 and col in T["cols"] and med(stat) >= fl:
+                i = T["cols"].index(col)
+                xs = [r["season_stats"][i] for r in T["rows"] if r.get("season_stats")]
+                lg = sum(xs) / len(xs) if xs else 0
+                if lg > 0 and abs(row["season_stats"][i] / lg - 1) >= .15:
+                    v = row["season_stats"][i] / lg
+                    chips.append([f"{lab} {_pct(v)} vs {_NFL_GRP[key]}", "g" if v > 1 else "b"])
+            if chips:
+                st_[stat] = chips
+        if soft:
+            st_["td"] = [[f"soft: {_ord(row['rank'])} most to {_NFL_GRP[key]}", "g"]]
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_)
+    return out
+
+
+def ctx_nhl(g, side, opp):
+    out = {}
+    gs = (opp.get("gstats") or {})
+    x = gs.get("now") if (gs.get("now") or {}).get("gp", 0) >= 3 else (gs.get("last") or gs.get("now"))
+    weak_g = x and x.get("gsaa") is not None and x["gsaa"] <= -1.5
+    for q in side.get("players", []):
+        c = []
+        if q.get("ur") and q["ur"] <= 3:
+            c.append([f"usage #{q['ur']} in the game", "g"])
+        if q.get("pp") == "PP1":
+            c.append(["PP1", "g"])
+        if q.get("line"):
+            c.append([q["line"], ""])
+        if weak_g:
+            c.append([f"vs {opp.get('goalie', 'goalie')} (GSAA {x['gsaa']:+.1f})", "g"])
+        out[q["name"]] = dict(c=c, s={})
+    return out
 
 
 def write_screener():
@@ -507,19 +624,20 @@ def write_screener():
     G = {}
     nfl = page_data(os.path.join(HERE, "projections", "index.html"))
     if nfl:
-        pl = {}
+        pl, CX = {}, ctx_nfl(nfl)
         for q in nfl.get("players", []):
-            pl.setdefault(q["g"], {})[PLS.jsnorm(q["n"])] = [q["t"], q["n"]]
+            pl.setdefault(q["g"], {})[PLS.jsnorm(q["n"])] = [q["t"], q["n"], CX.get((str(q["g"]), q["n"]))]
         G["nfl"] = {g["id"]: dict(lab=f"{g['away']} @ {g['home']}", start=iso(g.get("sort")), pl=pl.get(g["id"], {})) for g in nfl.get("games", [])}
     nhl = page_data(os.path.join(HERE, "hockey", "projections", "index.html"))
     if nhl:
         G["nhl"] = {str(g["id"]): dict(lab=f"{g['away']['team']} @ {g['home']['team']}", start=iso(g.get("start_utc")),
-                                       pl={PLS.jsnorm(q["name"]): [s["team"], q["name"]] for s in (g["away"], g["home"]) for q in s["players"]}) for g in nhl.get("games", [])}
+                                       pl={PLS.jsnorm(q["name"]): [s["team"], q["name"], ctx_nhl(g, s, o).get(q["name"])]
+                                           for s, o in ((g["away"], g["home"]), (g["home"], g["away"])) for q in s["players"]}) for g in nhl.get("games", [])}
     nba = page_data(os.path.join(HERE, "nba", "projections", "index.html"))
     if nba:
-        pl = {}
+        pl, CX = {}, ctx_nba(nba)
         for q in nba.get("players", []):
-            pl.setdefault(str(q["g"]), {})[PLS.jsnorm(q["n"])] = [q["t"], q["n"]]
+            pl.setdefault(str(q["g"]), {})[PLS.jsnorm(q["n"])] = [q["t"], q["n"], CX.get((str(q["g"]), q["n"]))]
         G["nba"] = {str(g["id"]): dict(lab=f"{g['away']} @ {g['home']}", start=iso(g.get("start_utc")), pl=pl.get(str(g["id"]), {})) for g in nba.get("games", [])}
     body = (f"<style>{SCREEN_CSS}</style><header><div><div class=\"eyebrow\">NFL · NBA · NHL · overs</div><h1>Odds screener</h1></div></header>"
             "<p class=\"lead\" style=\"margin:0 0 6px\">Every over price on today’s slates against the fair price: tap the chips to narrow it down, tap a price to open the bet. "
