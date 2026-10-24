@@ -522,6 +522,18 @@ def tag_label(e):
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
 
+def _et_day(ts):
+    """The Eastern date of a start time (2026-10-24 fix: UTC starts were cut to their UTC date, so every game from 8 PM
+    ET on -- and Sunday / Monday night NFL -- was filed under the next day on the Profit page)."""
+    try:
+        t = dt.datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except ValueError:
+        return str(ts)[:10]
+    from zoneinfo import ZoneInfo
+    et = ZoneInfo("America/New_York")
+    return (t if t.tzinfo else t.replace(tzinfo=et)).astimezone(et).date().isoformat()
+
+
 def tags():
     import parlays as PL
     site = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")
@@ -659,7 +671,7 @@ def page_data():
             continue
         d_ = dec(e["o"])
         clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
-        rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)}", date=(e.get("start") or e["first"])[:10],
+        rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)}", date=_et_day(e.get("start") or e["first"]),
                          pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
@@ -674,7 +686,7 @@ def page_data():
         print(f"book-weighted fair ({sp_}): {st['n']} bets, {st['roi']:+.1%}, verdict {st['verdict']}")
         if st["verdict"] in ("proven", "promising"):
             for e, p_, c_ in zip(y, pnl, clv):
-                rows.append(dict(sport=sp_, cat=WF_CAT, date=(e.get("start") or e["first"])[:10], pnl=p_, clv=c_))
+                rows.append(dict(sport=sp_, cat=WF_CAT, date=_et_day(e.get("start") or e["first"]), pnl=p_, clv=c_))
     for f in glob.glob(os.path.join(HERE, "parlays", "*", "*.json")):
         if os.path.basename(os.path.dirname(f)) == "learn":           # the learning builder's own files (builder.py)
             continue
@@ -811,7 +823,7 @@ def feed_data():
                               q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2)))
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
-        d0 = (e.get("start") or e["first"])[:10]
+        d0 = _et_day(e.get("start") or e["first"])
         if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under"):
             continue
         dd = dec(e["o"])

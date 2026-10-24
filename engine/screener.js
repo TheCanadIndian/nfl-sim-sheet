@@ -40,7 +40,7 @@
 
   // ---------------------------------------------------------------- state (remembered per device)
   // alt lines off by default: their fair is carried from the main line (the least reliable fairs); one tap turns them on
-  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, softm: false, soon: false, alts: false, sort: 'edge'};
+  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, softm: false, soon: false, alts: false, sort: 'edge'};
   let S = {...DEF};
   try { Object.assign(S, JSON.parse(localStorage.getItem('simscreen-v2') || '{}')); } catch (e) {}
   const save = () => { try { localStorage.setItem('simscreen-v2', JSON.stringify(S)); } catch (e) {} };
@@ -54,8 +54,9 @@
     const tagsOf = (gid, nm) => { const t = []; const v = ((F.tags || {})[gid] || {})[nm], l = ((F.lc || {})[gid] || {})[nm];
       return {v: v && v.b, lc: l && l.b}; };
     const off = new Set((F.off || []).map(x => `${x.g}|${x.n}|${x.k}|${x.l}`));
-    const pinm = {};                                                           // Pinnacle moves (sharp.pin_moves) per prop
-    for (const m of F.moves || []) if (m.src === 'pin' && m.sig !== 'rung') { const c = pinm[`${m.g}|${m.n}|${m.k}`] = pinm[`${m.g}|${m.n}|${m.k}`] || {line: null, price: false};
+    const pinm = {}, consm = {};                                               // Pinnacle / consensus moves (sharp.pin_moves) per prop
+    for (const m of F.moves || []) if ((m.src === 'pin' || m.src === 'cons') && m.sig !== 'rung') { const M_ = m.src === 'pin' ? pinm : consm;
+      const c = M_[`${m.g}|${m.n}|${m.k}`] = M_[`${m.g}|${m.n}|${m.k}`] || {line: null, price: false};
       if (m.sig === 'line' || m.sig === 'both') c.line = `${m.from_l}→${m.to_l}`; if (m.sig === 'price' || m.sig === 'both') c.price = true; }
     for (const [gid, ps] of Object.entries(P.props || {})){
       const g = G[gid] || {}; const start = g.start ? new Date(g.start).getTime() : null;
@@ -83,7 +84,7 @@
               return {b, o: v[0], u: link(v, P.partner), fair, q, w, src, edge: q != null ? q * dec(v[0]) - 1 : null};
             });
             out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, bet, p: x.p,
-                      prices, value: tg.v === tagBet, lc: tg.lc === tagBet, pin: pinm[`${gid}|${nm}|${k}`] || null,
+                      prices, value: tg.v === tagBet, lc: tg.lc === tagBet, pin: pinm[`${gid}|${nm}|${k}`] || null, cons: consm[`${gid}|${nm}|${k}`] || null,
                       cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(x => x[1] === 'g')), off: off.has(`${gid}|${nm}|${k}|${x.l}`) || off.has(`${gid}|${nm}|${k}|${x.l ?? .5}`)});
           }
         }
@@ -115,6 +116,7 @@
       if (S.soon && !(r.start && r.start <= soon)) continue;
       if (S.tagged && !(r.value || r.lc || r.off)) continue;
       if (S.pinmv && !r.pin) continue;
+      if (S.consmv && !r.cons) continue;
       if (S.softm && !r.soft) continue;
       if (q && !(norm(r.name).includes(q) || norm(r.team).includes(q) || norm(r.game).includes(q))) continue;
       const ps = r.prices.filter(x => S.books === 'all' || mine.has(x.b)).sort((a, b) => dec(b.o) - dec(a.o));
@@ -137,7 +139,8 @@
     const row = r => { const b = r.best, ev = b.edge;
       const tags = [r.value ? '<span class="sc-tag v" title="Value tag on the sport page">Value</span>' : '', r.lc ? '<span class="sc-tag lc" title="LC tag: beats the liquidity-weighted consensus">LC</span>' : '',
                     r.off ? '<span class="sc-tag off" title="Off-market price: 8+ pts from the fair (often stale; check before betting)">Off</span>' : '',
-                    r.pin ? `<span class="sc-tag pin" title="Pinnacle moved this prop${r.pin.line ? ': line up ' + r.pin.line : ''}${r.pin.price ? (r.pin.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">PIN${r.pin.line ? ' ▲' : ''}${r.pin.price ? ' ▼odds' : ''}</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
+                    r.pin ? `<span class="sc-tag pin" title="Pinnacle moved this prop${r.pin.line ? ': line up ' + r.pin.line : ''}${r.pin.price ? (r.pin.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">PIN${r.pin.line ? ' ▲' : ''}${r.pin.price ? ' ▼odds' : ''}</span>` : '',
+                    r.cons ? `<span class="sc-tag cons" title="Our sharp consensus (Pinnacle, Novig, ProphetX) moved this prop${r.cons.line ? ': line up ' + r.cons.line : ''}${r.cons.price ? (r.cons.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">CONS${r.cons.line ? ' ▲' : ''}${r.cons.price ? ' ▼odds' : ''}</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
       const tip = `Fair ${b.fair != null ? pc(b.fair) + ' (' + b.src + ')' : 'none'} · ours ${pc(r.p)} · chance ${b.q != null ? pc(b.q) + ' (' + Math.round(b.w * 100) + '% ours)' : '—'} · price implies ${pc(1 / dec(b.o))}`;
       const priceHtml = `<b>${am(b.o)}</b> ${esc(FULL[b.b] || b.b)}${b.u ? ' ↗' : ''}`;
       return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b> <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
@@ -150,7 +153,7 @@
         <div class="sc-grp">${chip('books', 'mine', 'My books', S.books === 'mine')}${chip('books', 'all', 'All books', S.books === 'all')}</div>
         <div class="sc-grp"><span class="sc-l">Edge</span>${[[-100, 'Any'], [0, '0%+'], [3, '3%+'], [5, '5%+'], [10, '10%+']].map(([v, l]) => chip('edge', v, l, +S.edge === v)).join('')}</div>
         <div class="sc-grp">${Object.entries(PRICE).map(([k, v]) => chip('price', k, v[2], S.price === k)).join('')}</div>
-        <div class="sc-grp">${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
+        <div class="sc-grp">${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
         <div class="sc-grp sc-in"><select id="sc-stat" aria-label="Stat"><option value="all">Every stat</option>${stats.map(s => `<option value="${s}"${S.stat === s ? ' selected' : ''}>${esc(STAT[s] || s)}</option>`).join('')}</select>
           <input id="sc-q" type="search" placeholder="Player, team or game" value="${esc(S.q)}" aria-label="Search">
           <select id="sc-sort" aria-label="Sort"><option value="edge"${S.sort === 'edge' ? ' selected' : ''}>Best edge</option><option value="gap"${S.sort === 'gap' ? ' selected' : ''}>Biggest gap</option><option value="start"${S.sort === 'start' ? ' selected' : ''}>Starting soonest</option><option value="price"${S.sort === 'price' ? ' selected' : ''}>Biggest payout</option></select>
@@ -162,7 +165,7 @@
   document.addEventListener('click', e => {
     const c = e.target.closest('.sc-chip');
     if (c){ const k = c.dataset.k, v = c.dataset.v;
-      if (k === 'tagged' || k === 'pinmv' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
+      if (k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }
