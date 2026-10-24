@@ -103,6 +103,7 @@ def alt_model(stem, match):
     teams = pd.read_csv(f"{b}_teams.csv")
     players = pd.read_csv(f"{b}_players.csv")
     bd = json.load(open(f"{b}_dist.json")) if os.path.exists(f"{b}_dist.json") else {}
+    btd = json.load(open(f"{b}_box.json")) if os.path.exists(f"{b}_box.json") else {}
     tr = {}
     for r in teams.to_dict("records"):
         tr.setdefault(r["game_id"], {})[r["team"]] = {k: (round(v, 3) if isinstance(v, float) else v) for k, v in r.items()}
@@ -110,7 +111,7 @@ def alt_model(stem, match):
     for (gid, team, opp, name, pid, pos), d in players.groupby(["game_id", "team", "opp", "player", "player_id", "pos"], sort=False):
         key = f"{gid}|{team}|{name}"
         mp = match["players"].get(key, {})
-        pl.append(dict(k=key, g=gid, t=team, o=opp, n=name, id=pid, pos=pos, d=bd.get(key, {}), lab=mp.get("label"), tags=mp.get("tags", []),
+        pl.append(dict(k=key, g=gid, t=team, o=opp, n=name, id=pid, pos=pos, d=bd.get(key, {}), lab=mp.get("label"), tags=mp.get("tags", []), tdm=btd.get(key),
                        s={r["stat"]: [round(float(r[q]), 3 if r["stat"] in ("anytime_td", "first_td") else 2) for q in Q]
                           for r in d.to_dict("records")}))
     sp = f"{b}_sgp.json"
@@ -274,12 +275,13 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
     spath = f"{stem}_sgp.json"
     sgp = json.load(open(spath)) if os.path.exists(spath) else None
     plist = []
+    btd = json.load(open(f"{stem}_box.json")) if os.path.exists(f"{stem}_box.json") else {}     # mean rushing / receiving TDs
     for (gid, team, opp, name, pid, pos), d in players.groupby(
             ["game_id", "team", "opp", "player", "player_id", "pos"], sort=False):
         key = f"{gid}|{team}|{name}"
         mp = match["players"].get(key, {})
         plist.append(dict(k=key, g=gid, t=team, o=opp, n=name, id=pid, pos=pos, d=dists.get(key, {}),
-                          lab=mp.get("label"), tags=mp.get("tags", []),
+                          lab=mp.get("label"), tags=mp.get("tags", []), tdm=btd.get(key),
                           s={r["stat"]: [round(float(r[q]), 3 if r["stat"] in ("anytime_td", "first_td") else 2) for q in Q]
                              for r in d.to_dict("records")}))
 
@@ -334,14 +336,15 @@ TEMPLATE = r"""<meta charset="utf-8">
 }
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
-.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px}
+.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
 h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:6px 0 0;letter-spacing:.005em;text-transform:uppercase;text-wrap:balance}
 h2{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
-.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
 .tabs button{border:0;background:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
 .tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
 .muted{color:var(--muted)}
@@ -441,6 +444,10 @@ tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
 
 /* tables */
 .tw{overflow-x:auto}
+.nbxgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.nbxteam h3{margin:4px 0 6px;font-family:var(--display);font-size:18px}
+table.nbx{margin-bottom:10px}table.nbx td,table.nbx th{text-align:right;white-space:nowrap}table.nbx .l{text-align:left;white-space:normal}table.nbx th.l{color:var(--muted)}table.nbx .bxp{font-weight:700}
+@media(max-width:820px){.nbxgrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){table.nbx td,table.nbx th{padding-left:5px;padding-right:5px}}
 table.t{width:100%;border-collapse:collapse;font-size:14px}
 .t th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--faint);white-space:nowrap;vertical-align:bottom}
 .t td{padding:7px 8px;border-bottom:1px solid var(--faint);text-align:right;white-space:nowrap}

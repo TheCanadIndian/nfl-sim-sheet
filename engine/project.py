@@ -582,7 +582,7 @@ def main():
     model, params = PL.fit(fr, train)
 
     prow, trow, box, dists, keyrows = [], [], {}, {}, []
-    sgps, draws = {}, {}
+    sgps, draws, boxtd = {}, {}, {}
     try:
         BIAS = season_bias(con, season, week, os.path.join(args.out, "weeks"))
     except Exception as e:                                       # never block a projection run
@@ -629,6 +629,7 @@ def main():
                 box[(t.team, p.name)] = s
                 keyrows.append((g.game_id, t.team, p.player_id, p.name))
                 s_all = dict(s, tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])
+                boxtd[f"{g.game_id}|{t.team}|{p.name}"] = [round(float(pl["rush_td"][:, j].mean()), 3), round(float(pl["rec_td"][:, j].mean()), 3)]
                 if not args.played and not args.blind:           # saved simulations for the build-your-own slip
                     draws.setdefault(g.game_id, {"n": 5000, "p": {}, "g": {"margin": pack(margin), "total": pack(h["points"] + a["points"])}})["p"][
                         f"{g.game_id}|{t.team}|{p.name}"] = {st: pack(s_all[st]) for st in DIST_STATS if st in s_all}
@@ -652,6 +653,7 @@ def main():
         players, teams = add_actuals(players, teams, fr, con)
         print_actuals(players, teams)
     players.to_csv(f"{stem}_players.csv", index=False)
+    json.dump(boxtd, open(f"{stem}_box.json", "w"), separators=(",", ":"))     # mean rushing / receiving TDs (projected box score)
     json.dump(BIAS, open(f"{stem}_bias.json", "w"))                 # ratios applied this run (later weeks divide them back out)
     teams.to_csv(f"{stem}_teams.csv", index=False)
     with open(f"{stem}_dist.json", "w") as f:

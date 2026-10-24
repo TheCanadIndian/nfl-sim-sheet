@@ -167,7 +167,14 @@ class Frames:
         # how often he gets into the game when he's in uniform (box-score rows incl. DNP-coach's decision)
         dressed = p.dnp.notna().astype(float)
         pp = decayed(p.assign(dressed=dressed), "player_id", ["one", "dressed"], 10.0, CARRY)
-        p["p_play"] = ((pp.one + 0.2) / (pp.dressed + 1.0)).clip(0.05, 1.0)
+        raw = ((pp.one + 0.2) / (pp.dressed + 1.0)).clip(0.05, 1.0)
+        # calibrated to AVAILABLE players (research/nba_pplay_cal.py, 2026-10-24): 'dressed' counts injury DNPs too, but the
+        # live page already drops Out players, so the raw rate ran low (0.935 -> played 99.1%) and the live minutes model,
+        # spreading 240 minutes by it, put every 'if he plays' stat ~10% high (actual / projected 0.89-0.91, 2025 and 2026).
+        # logit(p) = a + b logit(raw), fit on each season and tested on the other: ratio -> 0.96-0.99, deviance better on
+        # every stat in all 4 halves (pts MAE 4.68 -> 4.52). Only live projections (team_minutes / project live=True) use it.
+        lr = np.log(raw / (1 - raw).clip(lower=1e-4))
+        p["p_play"] = (1 / (1 + np.exp(-(P_PLAY_CAL[0] + P_PLAY_CAL[1] * lr)))).clip(0.05, 1.0)
         # minutes variability: recent sd of minutes around the player's mean
         sq = decayed(p.assign(m2=p.min_x ** 2), "player_id", ["m2", "min_x", "one"], 15.0, CARRY)
         var = sq.m2 / sq.one.clip(lower=1) - (sq.min_x / sq.one.clip(lower=1)) ** 2
@@ -238,6 +245,7 @@ class Frames:
 MIN_NORM = True        # each team's expected minutes add up to a full game (48 x 5)
 TEAM_MIN = 241.0       # 240 + a little overtime
 MIN_CAP = 42.0
+P_PLAY_CAL = (0.48, 1.27)                 # logit calibration of p_play to available players (see _priors)
 
 
 def team_minutes(x, live=False):
