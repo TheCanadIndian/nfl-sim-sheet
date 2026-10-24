@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-24",
 "lock": "2026-10-24T17:00:00+00:00",
-"frozen_at": "2026-10-24T09:54:01.313Z",
+"frozen_at": "2026-10-24T10:09:12.845Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -492,13 +492,13 @@
 "line": 5.5,
 "name": null,
 "lab": "ANA-PHI over 5.5",
-"p": 0.5297,
+"p": 0.5312,
 "price": -115,
 "book": "Novig"
 }
 ],
-"p": 0.21151,
-"d": 4.728,
+"p": 0.21209,
+"d": 4.715,
 "first": "2026-10-24T17:00:00+00:00",
 "res": null
 },
@@ -526,13 +526,13 @@
 "line": 5.5,
 "name": null,
 "lab": "ANA-PHI over 5.5",
-"p": 0.5297,
+"p": 0.5312,
 "price": -115,
 "book": "Novig"
 }
 ],
-"p": 0.20651,
-"d": 4.842,
+"p": 0.20708,
+"d": 4.829,
 "first": "2026-10-24T17:00:00+00:00",
 "res": null
 },
@@ -560,13 +560,13 @@
 "line": null,
 "name": null,
 "lab": "ANA moneyline",
-"p": 0.4873,
+"p": 0.4899,
 "price": 111,
 "book": "Novig"
 }
 ],
-"p": 0.20021,
-"d": 4.995,
+"p": 0.20128,
+"d": 4.968,
 "first": "2026-10-24T17:00:00+00:00",
 "res": null
 },
@@ -662,13 +662,13 @@
 "line": 5.5,
 "name": null,
 "lab": "LAK-NJD over 5.5",
-"p": 0.5163,
+"p": 0.5157,
 "price": -117,
 "book": "Novig"
 }
 ],
-"p": 0.23865,
-"d": 4.19,
+"p": 0.2384,
+"d": 4.195,
 "first": "2026-10-24T19:30:00+00:00",
 "res": null
 },
@@ -878,6 +878,40 @@
 },
 {
 "card": "Same-game combos (experimental)",
+"tier": "Goal + win",
+"legs": [
+{
+"gid": "2026020171",
+"start": "2026-10-24T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "tim stutzle",
+"lab": "Tim St\u00fctzle to score",
+"p": 0.362,
+"price": 153,
+"book": "Novig"
+},
+{
+"gid": "2026020171",
+"start": "2026-10-24T23:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "OTT moneyline",
+"p": 0.5139,
+"price": -117,
+"book": "Novig"
+}
+],
+"p": 0.24282,
+"d": 4.118,
+"first": "2026-10-24T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
 "tier": "3+ shots + goal",
 "legs": [
 {
@@ -907,40 +941,6 @@
 ],
 "p": 0.24207,
 "d": 4.131,
-"first": "2026-10-24T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "Goal + win",
-"legs": [
-{
-"gid": "2026020171",
-"start": "2026-10-24T23:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "tim stutzle",
-"lab": "Tim St\u00fctzle to score",
-"p": 0.362,
-"price": 153,
-"book": "Novig"
-},
-{
-"gid": "2026020171",
-"start": "2026-10-24T23:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "OTT moneyline",
-"p": 0.5118,
-"price": -117,
-"book": "Novig"
-}
-],
-"p": 0.24181,
-"d": 4.135,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
 },
@@ -1308,13 +1308,13 @@
 "line": null,
 "name": null,
 "lab": "VGK moneyline",
-"p": 0.5254,
+"p": 0.5244,
 "price": -122,
 "book": "Novig"
 }
 ],
-"p": 0.22018,
-"d": 4.542,
+"p": 0.21978,
+"d": 4.55,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
 },
@@ -1342,13 +1342,13 @@
 "line": null,
 "name": null,
 "lab": "CBJ moneyline",
-"p": 0.4746,
+"p": 0.4756,
 "price": 120,
 "book": "Novig"
 }
 ],
-"p": 0.19444,
-"d": 5.143,
+"p": 0.19483,
+"d": 5.133,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
 },
@@ -2037,6 +2037,40 @@
 "tier": "+250 to +600",
 "legs": [
 {
+"gid": "2026020171",
+"start": "2026-10-24T23:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "jake sanderson",
+"lab": "Jake Sanderson under 2.5 shots",
+"p": 0.6549,
+"price": -163,
+"book": "Novig"
+},
+{
+"gid": "2026020174",
+"start": "2026-10-24T23:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "jack eichel",
+"lab": "Jack Eichel under 2.5 shots",
+"p": 0.5136,
+"price": 120,
+"book": "Novig"
+}
+],
+"p": 0.33636,
+"d": 3.55,
+"first": "2026-10-24T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
 "gid": "2026020170",
 "start": "2026-10-24T23:00:00Z",
 "kind": "sog",
@@ -2044,7 +2078,7 @@
 "line": 2.5,
 "name": "pavel zacha",
 "lab": "Pavel Zacha under 2.5 shots",
-"p": 0.6545,
+"p": 0.6512,
 "price": -160,
 "book": "Novig"
 },
@@ -2056,12 +2090,12 @@
 "line": 2.5,
 "name": "jack eichel",
 "lab": "Jack Eichel under 2.5 shots",
-"p": 0.5155,
+"p": 0.5136,
 "price": 120,
 "book": "Novig"
 }
 ],
-"p": 0.33743,
+"p": 0.33446,
 "d": 3.575,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
@@ -2078,7 +2112,7 @@
 "line": 2.5,
 "name": "jake sanderson",
 "lab": "Jake Sanderson under 2.5 shots",
-"p": 0.6531,
+"p": 0.6549,
 "price": -163,
 "book": "Novig"
 },
@@ -2087,51 +2121,17 @@
 "start": "2026-10-24T23:00:00Z",
 "kind": "sog",
 "side": "u",
-"line": 2.5,
-"name": "jack eichel",
-"lab": "Jack Eichel under 2.5 shots",
-"p": 0.5155,
-"price": 120,
-"book": "Novig"
-}
-],
-"p": 0.33671,
-"d": 3.55,
-"first": "2026-10-24T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020169",
-"start": "2026-10-24T19:30:00Z",
-"kind": "sog",
-"side": "u",
 "line": 1.5,
-"name": "brandt clarke",
-"lab": "Brandt Clarke under 1.5 shots",
-"p": 0.494,
-"price": 122,
-"book": "Novig"
-},
-{
-"gid": "2026020170",
-"start": "2026-10-24T23:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "pavel zacha",
-"lab": "Pavel Zacha under 2.5 shots",
-"p": 0.6545,
-"price": -160,
+"name": "valeri nichushkin",
+"lab": "Valeri Nichushkin under 1.5 shots",
+"p": 0.5009,
+"price": 117,
 "book": "Novig"
 }
 ],
-"p": 0.32332,
-"d": 3.607,
-"first": "2026-10-24T19:30:00+00:00",
+"p": 0.328,
+"d": 3.501,
+"first": "2026-10-24T23:00:00+00:00",
 "res": null
 },
 {
@@ -2146,7 +2146,7 @@
 "line": 1.5,
 "name": "alex bump",
 "lab": "Alex Bump under 1.5 shots",
-"p": 0.5575,
+"p": 0.5547,
 "price": -104,
 "book": "Novig"
 },
@@ -2158,7 +2158,7 @@
 "line": 2.5,
 "name": "pavel zacha",
 "lab": "Pavel Zacha under 2.5 shots",
-"p": 0.6545,
+"p": 0.6512,
 "price": -160,
 "book": "Novig"
 },
@@ -2170,60 +2170,14 @@
 "line": 2.5,
 "name": "jack eichel",
 "lab": "Jack Eichel under 2.5 shots",
-"p": 0.5155,
+"p": 0.5136,
 "price": 120,
 "book": "Novig"
 }
 ],
-"p": 0.1881,
+"p": 0.18554,
 "d": 7.013,
 "first": "2026-10-24T17:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020170",
-"start": "2026-10-24T23:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "pavel zacha",
-"lab": "Pavel Zacha under 2.5 shots",
-"p": 0.6545,
-"price": -160,
-"book": "Novig"
-},
-{
-"gid": "2026020173",
-"start": "2026-10-24T23:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "jack quinn",
-"lab": "Jack Quinn over 2.5 shots",
-"p": 0.5455,
-"price": 100,
-"book": "Novig"
-},
-{
-"gid": "2026020174",
-"start": "2026-10-24T23:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "jack eichel",
-"lab": "Jack Eichel under 2.5 shots",
-"p": 0.5155,
-"price": 120,
-"book": "Novig"
-}
-],
-"p": 0.18408,
-"d": 7.15,
-"first": "2026-10-24T23:00:00+00:00",
 "res": null
 },
 {
@@ -2238,7 +2192,7 @@
 "line": 2.5,
 "name": "jake sanderson",
 "lab": "Jake Sanderson under 2.5 shots",
-"p": 0.6531,
+"p": 0.6549,
 "price": -163,
 "book": "Novig"
 },
@@ -2250,7 +2204,7 @@
 "line": 2.5,
 "name": "jack quinn",
 "lab": "Jack Quinn over 2.5 shots",
-"p": 0.5455,
+"p": 0.5371,
 "price": 100,
 "book": "Novig"
 },
@@ -2262,13 +2216,59 @@
 "line": 2.5,
 "name": "jack eichel",
 "lab": "Jack Eichel under 2.5 shots",
-"p": 0.5155,
+"p": 0.5136,
 "price": 120,
 "book": "Novig"
 }
 ],
-"p": 0.18369,
+"p": 0.18065,
 "d": 7.099,
+"first": "2026-10-24T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020170",
+"start": "2026-10-24T23:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "pavel zacha",
+"lab": "Pavel Zacha under 2.5 shots",
+"p": 0.6512,
+"price": -160,
+"book": "Novig"
+},
+{
+"gid": "2026020173",
+"start": "2026-10-24T23:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "jack quinn",
+"lab": "Jack Quinn over 2.5 shots",
+"p": 0.5371,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "2026020174",
+"start": "2026-10-24T23:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "jack eichel",
+"lab": "Jack Eichel under 2.5 shots",
+"p": 0.5136,
+"price": 120,
+"book": "Novig"
+}
+],
+"p": 0.17963,
+"d": 7.15,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
 },
@@ -2432,7 +2432,7 @@
 "line": 2.5,
 "name": "jack quinn",
 "lab": "Jack Quinn over 2.5 shots",
-"p": 0.5455,
+"p": 0.5371,
 "price": 100,
 "book": "Novig"
 },
@@ -2461,7 +2461,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.17838,
+"p": 0.1756,
 "d": 7.062,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
@@ -2490,7 +2490,7 @@
 "line": 2.5,
 "name": "jack quinn",
 "lab": "Jack Quinn over 2.5 shots",
-"p": 0.5455,
+"p": 0.5371,
 "price": 100,
 "book": "Novig"
 },
@@ -2507,7 +2507,7 @@
 "book": "theScore"
 }
 ],
-"p": 0.17698,
+"p": 0.17423,
 "d": 7.156,
 "first": "2026-10-24T23:00:00+00:00",
 "res": null
