@@ -1,8 +1,8 @@
 {
 "sport": "nba",
 "date": "2026-10-24",
-"lock": "2026-10-25T00:00:00+00:00",
-"frozen_at": "2026-10-24T12:10:39.803Z",
+"lock": "2026-10-24T23:30:00+00:00",
+"frozen_at": "2026-10-24T12:28:15.712Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -81,16 +81,16 @@
 ]
 },
 {
-"gid": "401909859",
-"start": "2026-10-25T01:00Z",
-"kind": "ast",
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
+"kind": "pts",
 "side": "o",
-"line": 3.5,
-"name": "demar derozan",
-"lab": "DeMar DeRozan 4+ ast",
-"p": 0.4224,
-"price": 181,
-"book": "Kalshi",
+"line": 29.5,
+"name": "kyrie irving",
+"lab": "Kyrie Irving 30+ pts",
+"p": 0.2074,
+"price": 456,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
@@ -99,10 +99,10 @@
 ]
 }
 ],
-"p": 0.10354,
-"d": 13.348,
+"p": 0.05082,
+"d": 26.41,
 "first": "2026-10-25T00:00:00+00:00",
-"pick": "core",
+"pick": "longshot",
 "res": null
 },
 {
@@ -154,8 +154,8 @@
 "name": "demar derozan",
 "lab": "DeMar DeRozan 4+ ast",
 "p": 0.4224,
-"price": 181,
-"book": "Kalshi",
+"price": 170,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
@@ -165,7 +165,7 @@
 }
 ],
 "p": 0.02096,
-"d": 77.746,
+"d": 74.703,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
 },
@@ -173,24 +173,6 @@
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "alex sarr",
-"lab": "Alex Sarr 15+ pts",
-"p": 0.3459,
-"price": 213,
-"book": "Novig",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
 {
 "gid": "401909858",
 "start": "2026-10-25T00:00Z",
@@ -226,12 +208,64 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 4+ ast",
+"p": 0.4224,
+"price": 170,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
 }
 ],
-"p": 0.015,
-"d": 91.539,
+"p": 0.01832,
+"d": 78.963,
 "first": "2026-10-25T00:00:00+00:00",
-"pick": "longshot",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909854",
+"start": "2026-10-24T23:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "BKN moneyline",
+"p": 0.2002,
+"price": 456,
+"book": "Novig"
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 4+ assists",
+"p": 0.4381,
+"price": 159,
+"book": "Kalshi"
+}
+],
+"p": 0.08769,
+"d": 14.4,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
 "res": null
 }
 ],
