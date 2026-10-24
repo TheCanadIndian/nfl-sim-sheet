@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-24",
 "lock": "2026-10-24T22:00:00+00:00",
-"frozen_at": "2026-10-24T17:27:35.108Z",
+"frozen_at": "2026-10-24T17:50:32.597Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -66,6 +66,55 @@
 {
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 11.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 12+ ast",
+"p": 0.2688,
+"price": 313,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 16.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic 17+ reb",
+"p": 0.2335,
+"price": 350,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.06275,
+"d": 18.585,
+"first": "2026-10-25T00:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
 "kind": "fg3m",
 "side": "o",
 "line": 2.5,
@@ -99,10 +148,28 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 4+ ast",
+"p": 0.422,
+"price": 170,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
 }
 ],
-"p": 0.08814,
-"d": 19.08,
+"p": 0.03719,
+"d": 51.516,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
 },
@@ -113,16 +180,17 @@
 {
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
+"line": 11.5,
 "name": "josh giddey",
-"lab": "Josh Giddey 3+ threes",
-"p": 0.2151,
-"price": 456,
-"book": "Novig",
+"lab": "Josh Giddey 12+ ast",
+"p": 0.2688,
+"price": 313,
+"book": "Kalshi",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -149,71 +217,6 @@
 {
 "gid": "401909859",
 "start": "2026-10-25T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 16.5,
-"name": "nikola jokic",
-"lab": "Nikola Jokic 17+ reb",
-"p": 0.2335,
-"price": 350,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.0116,
-"d": 150.12,
-"first": "2026-10-25T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "josh giddey",
-"lab": "Josh Giddey 3+ threes",
-"p": 0.2151,
-"price": 456,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909858",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "kyrie irving",
-"lab": "Kyrie Irving 30+ pts",
-"p": 0.2051,
-"price": 488,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909859",
-"start": "2026-10-25T01:00Z",
 "kind": "ast",
 "side": "o",
 "line": 3.5,
@@ -230,9 +233,125 @@
 ]
 }
 ],
-"p": 0.01861,
-"d": 88.271,
+"p": 0.02621,
+"d": 66.906,
 "first": "2026-10-25T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909854",
+"start": "2026-10-24T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "james harden",
+"lab": "James Harden 4+ rebounds",
+"p": 0.6677,
+"price": -161,
+"book": "Kalshi"
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ points",
+"p": 0.3208,
+"price": 280,
+"book": "Kalshi"
+}
+],
+"p": 0.21418,
+"d": 6.16,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909856",
+"start": "2026-10-25T00:30Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "ATL moneyline",
+"p": 0.5321,
+"price": -102,
+"book": "Novig"
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ points",
+"p": 0.3208,
+"price": 280,
+"book": "Kalshi"
+}
+],
+"p": 0.17069,
+"d": 7.525,
+"first": "2026-10-25T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909854",
+"start": "2026-10-24T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "james harden",
+"lab": "James Harden 4+ rebounds",
+"p": 0.6677,
+"price": -161,
+"book": "Kalshi"
+},
+{
+"gid": "401909856",
+"start": "2026-10-25T00:30Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "ATL moneyline",
+"p": 0.5321,
+"price": -102,
+"book": "Novig"
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ points",
+"p": 0.3208,
+"price": 280,
+"book": "Kalshi"
+}
+],
+"p": 0.11397,
+"d": 12.2,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
