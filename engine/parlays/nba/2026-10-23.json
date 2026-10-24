@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-23",
 "lock": "2026-10-23T20:00:00+00:00",
-"frozen_at": "2026-10-24T01:01:19.470Z",
+"frozen_at": "2026-10-24T01:05:59.796Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -805,6 +805,53 @@
 "start": "2026-10-24T01:30Z",
 "kind": "fg3m",
 "side": "o",
+"line": 3.5,
+"name": "kevin durant",
+"lab": "Kevin Durant 4+ threes",
+"p": 0.2018,
+"price": 490,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 7+ ast",
+"p": 0.2019,
+"price": 425,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.04074,
+"d": 30.975,
+"first": "2026-10-24T01:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909096",
+"start": "2026-10-24T01:30Z",
+"kind": "fg3m",
+"side": "o",
 "line": 2.5,
 "name": "julian champagnie",
 "lab": "Julian Champagnie 3+ threes",
@@ -826,7 +873,7 @@
 "line": 6.5,
 "name": "stephen curry",
 "lab": "Stephen Curry 7+ ast",
-"p": 0.2052,
+"p": 0.2019,
 "price": 425,
 "book": "Hard Rock",
 "f": [
@@ -838,25 +885,25 @@
 ]
 }
 ],
-"p": 0.07864,
+"p": 0.07738,
 "d": 14.752,
 "first": "2026-10-24T01:30:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909096",
 "start": "2026-10-24T01:30Z",
 "kind": "fg3m",
 "side": "o",
-"line": 2.5,
-"name": "devin vassell",
-"lab": "Devin Vassell 3+ threes",
-"p": 0.3701,
-"price": 189,
+"line": 3.5,
+"name": "kevin durant",
+"lab": "Kevin Durant 4+ threes",
+"p": 0.2018,
+"price": 490,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -866,27 +913,44 @@
 ]
 },
 {
+"gid": "401909849",
+"start": "2026-10-24T01:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "saddiq bey",
+"lab": "Saddiq Bey 6+ reb",
+"p": 0.2072,
+"price": 413,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+]
+},
+{
 "gid": "401909850",
 "start": "2026-10-24T02:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 6.5,
-"name": "stephen curry",
-"lab": "Stephen Curry 7+ ast",
-"p": 0.2052,
-"price": 425,
-"book": "Hard Rock",
+"line": 5.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 6+ reb",
+"p": 0.4417,
+"price": 133,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 }
 ],
-"p": 0.07593,
-"d": 15.172,
+"p": 0.01847,
+"d": 70.522,
 "first": "2026-10-24T01:30:00+00:00",
 "res": null
 },
@@ -955,70 +1019,6 @@
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909096",
-"start": "2026-10-24T01:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "devin vassell",
-"lab": "Devin Vassell 3+ threes",
-"p": 0.3701,
-"price": 189,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909849",
-"start": "2026-10-24T01:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "saddiq bey",
-"lab": "Saddiq Bey 6+ reb",
-"p": 0.2072,
-"price": 413,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"game",
-"price"
-]
-},
-{
-"gid": "401909850",
-"start": "2026-10-24T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski 6+ reb",
-"p": 0.4417,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.03386,
-"d": 34.544,
-"first": "2026-10-24T01:30:00+00:00",
-"res": null
-},
-{
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
 "legs": [
@@ -1030,8 +1030,8 @@
 "line": 5.5,
 "name": "stephen curry",
 "lab": "Stephen Curry 6+ threes",
-"p": 0.22,
-"price": 313,
+"p": 0.215,
+"price": 331,
 "book": "Kalshi"
 },
 {
@@ -1042,13 +1042,13 @@
 "line": 3.5,
 "name": "toumani camara",
 "lab": "Toumani Camara 4+ threes",
-"p": 0.165,
+"p": 0.17,
 "price": 425,
 "book": "Kalshi"
 }
 ],
-"p": 0.0363,
-"d": 21.675,
+"p": 0.03655,
+"d": 22.645,
 "first": "2026-10-24T02:00:00+00:00",
 "res": null
 },
@@ -1093,6 +1093,40 @@
 {
 "gid": "401909850",
 "start": "2026-10-24T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "jerami grant",
+"lab": "Jerami Grant over 14.5 points",
+"p": 0.4854,
+"price": 117,
+"book": "Novig"
+},
+{
+"gid": "401909852",
+"start": "2026-10-24T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "scoot henderson",
+"lab": "Scoot Henderson over 1.5 threes",
+"p": 0.6047,
+"price": -115,
+"book": "Hard Rock"
+}
+],
+"p": 0.2935,
+"d": 4.057,
+"first": "2026-10-24T02:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909850",
+"start": "2026-10-24T02:00Z",
 "kind": "reb",
 "side": "o",
 "line": 5.5,
@@ -1117,108 +1151,6 @@
 ],
 "p": 0.27276,
 "d": 4.356,
-"first": "2026-10-24T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909850",
-"start": "2026-10-24T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski over 3.5 assists",
-"p": 0.4996,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "401909852",
-"start": "2026-10-24T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "scoot henderson",
-"lab": "Scoot Henderson 15+ points",
-"p": 0.3241,
-"price": 252,
-"book": "Kalshi"
-}
-],
-"p": 0.16192,
-"d": 7.498,
-"first": "2026-10-24T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909851",
-"start": "2026-10-24T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "collin sexton",
-"lab": "Collin Sexton 15+ points",
-"p": 0.2443,
-"price": 331,
-"book": "Kalshi"
-},
-{
-"gid": "401909852",
-"start": "2026-10-24T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "scoot henderson",
-"lab": "Scoot Henderson over 1.5 threes",
-"p": 0.6047,
-"price": -115,
-"book": "Hard Rock"
-}
-],
-"p": 0.1477,
-"d": 8.058,
-"first": "2026-10-24T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909850",
-"start": "2026-10-24T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski over 5.5 rebounds",
-"p": 0.4511,
-"price": 133,
-"book": "Novig"
-},
-{
-"gid": "401909852",
-"start": "2026-10-24T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "scoot henderson",
-"lab": "Scoot Henderson 15+ points",
-"p": 0.3241,
-"price": 252,
-"book": "Kalshi"
-}
-],
-"p": 0.1462,
-"d": 8.202,
 "first": "2026-10-24T02:00:00+00:00",
 "res": null
 }
