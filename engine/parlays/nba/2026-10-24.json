@@ -1,8 +1,8 @@
 {
 "sport": "nba",
 "date": "2026-10-24",
-"lock": "2026-10-25T00:00:00+00:00",
-"frozen_at": "2026-10-24T12:40:21.767Z",
+"lock": "2026-10-24T23:30:00+00:00",
+"frozen_at": "2026-10-24T12:59:10.315Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,55 @@
 ],
 "final_at": "2026-10-24T22:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 4+ threes",
+"p": 0.2026,
+"price": 490,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 16.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic 17+ reb",
+"p": 0.2354,
+"price": 350,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.04769,
+"d": 26.55,
+"first": "2026-10-25T00:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -56,12 +105,11 @@
 "p": 0.05799,
 "d": 21.375,
 "first": "2026-10-25T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909857",
@@ -72,8 +120,8 @@
 "name": "matas buzelis",
 "lab": "Matas Buzelis 4+ threes",
 "p": 0.2026,
-"price": 456,
-"book": "Novig",
+"price": 490,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -83,29 +131,45 @@
 ]
 },
 {
-"gid": "401909859",
-"start": "2026-10-25T01:00Z",
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
 "kind": "reb",
 "side": "o",
-"line": 16.5,
-"name": "nikola jokic",
-"lab": "Nikola Jokic 17+ reb",
-"p": 0.2354,
-"price": 350,
-"book": "Hard Rock",
+"line": 15.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 16+ reb",
+"p": 0.24,
+"price": 426,
+"book": "Novig",
 "f": [
 "usage",
-"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 4+ ast",
+"p": 0.422,
+"price": 170,
+"book": "Novig",
+"f": [
+"usage",
 "rotation",
 "game",
 "price"
 ]
 }
 ],
-"p": 0.04769,
-"d": 25.02,
+"p": 0.02052,
+"d": 83.792,
 "first": "2026-10-25T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -174,68 +238,108 @@
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
 "legs": [
+{
+"gid": "401909854",
+"start": "2026-10-24T23:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "BKN moneyline",
+"p": 0.1897,
+"price": 456,
+"book": "Novig"
+},
 {
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 4+ threes",
-"p": 0.2026,
-"price": 456,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909858",
-"start": "2026-10-25T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 15.5,
-"name": "victor wembanyama",
-"lab": "Victor Wembanyama 16+ reb",
-"p": 0.24,
-"price": 426,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909859",
-"start": "2026-10-25T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "demar derozan",
-"lab": "DeMar DeRozan 4+ ast",
-"p": 0.422,
-"price": 170,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "WSH moneyline",
+"p": 0.5286,
+"price": 102,
+"book": "Novig"
 }
 ],
-"p": 0.02052,
-"d": 78.963,
-"first": "2026-10-25T00:00:00+00:00",
+"p": 0.10026,
+"d": 11.231,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909854",
+"start": "2026-10-24T23:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "BKN moneyline",
+"p": 0.1897,
+"price": 456,
+"book": "Novig"
+},
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "spread",
+"side": "away",
+"line": -1.5,
+"name": null,
+"lab": "WSH \u22121.5",
+"p": 0.4942,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.09372,
+"d": 11.843,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909855",
+"start": "2026-10-24T23:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "MIL moneyline",
+"p": 0.1691,
+"price": 525,
+"book": "Novig"
+},
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "WSH moneyline",
+"p": 0.5286,
+"price": 102,
+"book": "Novig"
+}
+],
+"p": 0.08937,
+"d": 12.625,
+"first": "2026-10-24T23:30:00+00:00",
+"pick": "core",
 "res": null
 }
 ],
