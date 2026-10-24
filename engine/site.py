@@ -1016,6 +1016,8 @@ def main():
         inject(os.path.join(P, "index.html"), os.path.join(SITE, "nfl", "index.html"), 1, "nfl:week")
     if os.path.exists(os.path.join(P, "results.html")):
         inject(os.path.join(P, "results.html"), os.path.join(SITE, "nfl", "results.html"), 1, "nfl:results")
+    if os.path.exists(os.path.join(P, "boxes.html")):                  # projected box scores graded (boxgrade.py)
+        inject(os.path.join(P, "boxes.html"), os.path.join(SITE, "nfl", "boxes.html"), 1, "nfl:results")
     has = lambda *parts: os.path.exists(os.path.join(P, *parts))
     for f in glob.glob(os.path.join(P, "weeks", "*.html")):
         b = os.path.basename(f)

@@ -650,7 +650,7 @@ function boxPanel(g){
   };
   return `<section class="panel" aria-label="Projected box score"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${modelSwitch(g)}<span class="muted small">${esc(g.away)} at ${esc(g.home)} · each player’s simulated average, rounded so team totals hold</span></div>
     <div class="nbxgrid">${side(g.away)}${side(g.home)}</div>
-    <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games, rounded so the parts add up (catches = completions, receiving yards = passing yards, TDs to the players most likely to score them). A single projection, not a prediction of the exact game: the Projections tab shows each player’s range. Highly experimental.</p></section>`;
+    <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games, rounded so the parts add up (catches = completions, receiving yards = passing yards, TDs to the players most likely to score them). A single projection, not a prediction of the exact game: the Projections tab shows each player’s range. Highly experimental. <a href="${/\/(weeks|blind)\//.test(location.pathname) ? '../' : ''}boxes.html">How accurate it has been, graded every week →</a></p></section>`;
 }
 function summaryPanel(g){
   const L = D.spot[g.id] || [];
