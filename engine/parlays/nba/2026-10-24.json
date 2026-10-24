@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-24",
 "lock": "2026-10-24T22:00:00+00:00",
-"frozen_at": "2026-10-24T19:12:10.865Z",
+"frozen_at": "2026-10-24T19:21:46.469Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,55 @@
 ],
 "final_at": "2026-10-24T21:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909853",
+"start": "2026-10-24T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 5+ threes",
+"p": 0.319,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909855",
+"start": "2026-10-24T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "jaylen brown",
+"lab": "Jaylen Brown 7+ ast",
+"p": 0.2023,
+"price": 500,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.06455,
+"d": 20.4,
+"first": "2026-10-24T22:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -56,55 +105,6 @@
 "p": 0.05267,
 "d": 24.78,
 "first": "2026-10-24T23:30:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909853",
-"start": "2026-10-24T22:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 4.5,
-"name": "brandon miller",
-"lab": "Brandon Miller 5+ threes",
-"p": 0.3131,
-"price": 240,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909855",
-"start": "2026-10-24T23:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "jaylen brown",
-"lab": "Jaylen Brown 7+ ast",
-"p": 0.2023,
-"price": 500,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.06336,
-"d": 20.4,
-"first": "2026-10-24T22:00:00+00:00",
 "res": null
 },
 {
@@ -119,28 +119,9 @@
 "line": 4.5,
 "name": "brandon miller",
 "lab": "Brandon Miller 5+ threes",
-"p": 0.3131,
+"p": 0.319,
 "price": 240,
 "book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909855",
-"start": "2026-10-24T23:30Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "vj edgecombe",
-"lab": "VJ Edgecombe 5+ ast",
-"p": 0.2515,
-"price": 325,
-"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -167,10 +148,29 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 16.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic 17+ reb",
+"p": 0.2378,
+"price": 350,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
 }
 ],
-"p": 0.0205,
-"d": 59.678,
+"p": 0.01974,
+"d": 63.189,
 "first": "2026-10-24T22:00:00+00:00",
 "res": null
 },
@@ -224,7 +224,7 @@
 "line": 16.5,
 "name": "nikola jokic",
 "lab": "Nikola Jokic 17+ reb",
-"p": 0.2361,
+"p": 0.2378,
 "price": 350,
 "book": "Hard Rock",
 "f": [
@@ -236,7 +236,7 @@
 ]
 }
 ],
-"p": 0.01896,
+"p": 0.01909,
 "d": 62.921,
 "first": "2026-10-24T23:30:00+00:00",
 "res": null
@@ -308,6 +308,7 @@
 "p": 0.32622,
 "d": 3.739,
 "first": "2026-10-25T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -342,6 +343,75 @@
 "p": 0.31255,
 "d": 3.833,
 "first": "2026-10-25T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "leonard miller",
+"lab": "Leonard Miller over 5.5 rebounds",
+"p": 0.5659,
+"price": 110,
+"book": "Hard Rock"
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ points",
+"p": 0.3236,
+"price": 266,
+"book": "Kalshi"
+}
+],
+"p": 0.1831,
+"d": 7.686,
+"first": "2026-10-25T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909857",
+"start": "2026-10-25T00:00Z",
+"kind": "pts",
+"side": "o",
+"line": 10.5,
+"name": "bilal coulibaly",
+"lab": "Bilal Coulibaly over 10.5 points",
+"p": 0.549,
+"price": 100,
+"book": "Hard Rock"
+},
+{
+"gid": "401909859",
+"start": "2026-10-25T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "demar derozan",
+"lab": "DeMar DeRozan 20+ points",
+"p": 0.3236,
+"price": 266,
+"book": "Kalshi"
+}
+],
+"p": 0.17763,
+"d": 7.32,
+"first": "2026-10-25T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -388,100 +458,6 @@
 "p": 0.17687,
 "d": 8.048,
 "first": "2026-10-25T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "pts",
-"side": "o",
-"line": 9.5,
-"name": "reed sheppard",
-"lab": "Reed Sheppard over 9.5 points",
-"p": 0.5942,
-"price": -115,
-"book": "Hard Rock"
-},
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 10.5,
-"name": "bilal coulibaly",
-"lab": "Bilal Coulibaly over 10.5 points",
-"p": 0.549,
-"price": 100,
-"book": "Hard Rock"
-},
-{
-"gid": "401909858",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "pj washington",
-"lab": "P.J. Washington 15+ points",
-"p": 0.526,
-"price": 105,
-"book": "Kalshi"
-}
-],
-"p": 0.17159,
-"d": 7.665,
-"first": "2026-10-25T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "HOU moneyline",
-"p": 0.5216,
-"price": 102,
-"book": "Novig"
-},
-{
-"gid": "401909857",
-"start": "2026-10-25T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "leonard miller",
-"lab": "Leonard Miller over 5.5 rebounds",
-"p": 0.5659,
-"price": 110,
-"book": "Hard Rock"
-},
-{
-"gid": "401909858",
-"start": "2026-10-25T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "pj washington",
-"lab": "P.J. Washington 15+ points",
-"p": 0.526,
-"price": 105,
-"book": "Kalshi"
-}
-],
-"p": 0.15528,
-"d": 8.696,
-"first": "2026-10-25T00:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
