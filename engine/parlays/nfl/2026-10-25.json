@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-24T13:41:08.838Z",
+"frozen_at": "2026-10-24T13:58:04.523Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -68,7 +68,7 @@
 "line": 299.5,
 "name": "joe burrow",
 "lab": "Joe Burrow 300+ pass yds",
-"p": 0.3329,
+"p": 0.3316,
 "price": 240,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -97,42 +97,9 @@
 ]
 }
 ],
-"p": 0.08406,
+"p": 0.08374,
 "d": 14.042,
 "first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Primetime ladders (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.19,
-"price": 373,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "travis kelce",
-"lab": "Travis Kelce 80+ rec yds",
-"p": 0.175,
-"price": 398,
-"book": "Kalshi"
-}
-],
-"p": 0.06438,
-"d": 23.583,
-"first": "2026-10-26T00:20:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -163,14 +130,59 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.10969,
+"p": 0.0649,
 "d": 12.174,
+"first": "2026-10-26T00:20:00+00:00"
+},
+{
+"card": "Primetime ladders (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 8.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smith-Njigba 9+ catches",
+"p": 0.295,
+"price": 208,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "kenneth walker",
+"lab": "Kenneth Walker III 40+ rec yds",
+"p": 0.195,
+"price": 351,
+"book": "Kalshi"
+}
+],
+"p": 0.05753,
+"d": 13.885,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "sam darnold",
+"lab": "Sam Darnold 275+ pass yds",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
+},
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
@@ -194,22 +206,10 @@
 "p": 0.195,
 "price": 351,
 "book": "Kalshi"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "travis kelce",
-"lab": "Travis Kelce 80+ rec yds",
-"p": 0.175,
-"price": 398,
-"book": "Kalshi"
 }
 ],
-"p": 0.01831,
-"d": 106.416,
+"p": 0.00815,
+"d": 84.526,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -459,12 +459,12 @@
 "line": 5.5,
 "name": "george kittle",
 "lab": "George Kittle over 5.5 receptions",
-"p": 0.5537,
+"p": 0.5562,
 "price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.25428,
+"p": 0.25541,
 "d": 4.93,
 "first": "2026-10-25T17:00:00+00:00"
 },
@@ -480,7 +480,7 @@
 "line": 0.5,
 "name": "quinshon judkins",
 "lab": "Quinshon Judkins TD",
-"p": 0.3783,
+"p": 0.3785,
 "price": 194,
 "book": "Novig"
 },
@@ -497,7 +497,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.22698,
+"p": 0.22715,
 "d": 5.39,
 "first": "2026-10-25T17:00:00+00:00"
 },
@@ -592,12 +592,12 @@
 "line": 0.5,
 "name": "quinshon judkins",
 "lab": "Quinshon Judkins TD",
-"p": 0.3783,
+"p": 0.3785,
 "price": 194,
 "book": "Novig"
 }
 ],
-"p": 0.17371,
+"p": 0.17383,
 "d": 7.526,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "core"
@@ -673,18 +673,6 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.329,
-"price": 285,
-"book": "Novig"
-},
-{
 "gid": "2026_07_IND_MIN",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
@@ -694,6 +682,18 @@
 "lab": "Aaron Jones anytime TD",
 "p": 0.526,
 "price": 156,
+"book": "Novig"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "rico dowdle",
+"lab": "Rico Dowdle anytime TD",
+"p": 0.329,
+"price": 285,
 "book": "Novig"
 }
 ],
@@ -30085,26 +30085,26 @@
 "edge": 0.2833
 },
 {
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "rec",
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 4.5,
-"name": "tyler higbee",
-"lab": "Tyler Higbee over 4.5 receptions",
-"p": 0.5174,
-"price": 111,
+"line": 69.5,
+"name": "george kittle",
+"lab": "George Kittle over 69.5 rec yds",
+"p": 0.5911,
+"price": -120,
 "book": "Kalshi",
 "f": [
-"matchup",
+"usage",
 "rotation"
 ],
 "sport": "nfl",
-"edge": 0.0918
+"edge": 0.0836
 }
 ],
-"p": 0.36218,
-"d": 3.868,
+"p": 0.41377,
+"d": 3.361,
 "first": "2026-10-25T17:00:00+00:00"
 }
 ],
