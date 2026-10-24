@@ -30,7 +30,7 @@ PY = sys.executable
 # Steps whose crash leaves a page stale (owner 2026-10-23: the NHL page froze overnight while every run showed green).
 # The run still finishes and publishes what worked; the failures go to a file outside the repo and the workflow's
 # last step (run-sport action, "Fail the run if a page build crashed") turns the run red so GitHub emails.
-CRITICAL = ("project.py", "page.py", "results.py")
+CRITICAL = ("project.py", "page.py", "results.py", "boxgrade.py")
 FAILS = os.path.join(os.environ.get("RUNNER_TEMP") or __import__("tempfile").gettempdir(), "sim_run_failures.txt")
 
 
@@ -89,6 +89,7 @@ def nfl(news=False):
     sh(PY, "backfill_missing.py")
     sh(PY, "backfill_missing.py", "--blind")
     sh(PY, "results.py")
+    sh(PY, "boxgrade.py", "nfl")             # projected box scores graded (nfl/boxes.html)
     sh(PY, "markets.py", "nfl")
     sh(PY, "grade_markets.py", "nfl")
     sh(PY, "profit.py", "rows", "nfl")          # Profit page: picks under the site's rules
@@ -120,6 +121,7 @@ def nba():
     sh(PY, "nba/fetch.py", "--seasons", str(season_nba()))
     sh(PY, "nba/project.py")
     sh(PY, "nba/results.py")
+    sh(PY, "boxgrade.py", "nba")             # projected box scores graded (nba/boxes.html)
     sh(PY, "markets.py", "nba")
     sh(PY, "grade_markets.py", "nba")
     sh(PY, "profit.py", "rows", "nba")
