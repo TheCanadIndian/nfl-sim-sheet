@@ -55,6 +55,9 @@ def update(stem, season, week, game_ids, source="live", sims=None, db="nfl.db", 
     dist = {k: v for k, v in _load(f"{ws}_dist.json", {}).items() if k.split("|")[0] not in game_ids}
     dist.update({k: v for k, v in _load(f"{stem}_dist.json", {}).items() if k.split("|")[0] in game_ids})
     json.dump(dist, open(f"{ws}_dist.json", "w"), separators=(",", ":"))
+    btd = {k: v for k, v in _load(f"{ws}_box.json", {}).items() if k.split("|")[0] not in game_ids}     # projected box score TDs
+    btd.update({k: v for k, v in _load(f"{stem}_box.json", {}).items() if k.split("|")[0] in game_ids})
+    json.dump(btd, open(f"{ws}_box.json", "w"), separators=(",", ":"))
 
     m_old = _load(f"{ws}_matchups.json", {"players": {}, "dvp": {}})
     m_new = _load(f"{stem}_matchups.json", {"players": {}, "dvp": {}})

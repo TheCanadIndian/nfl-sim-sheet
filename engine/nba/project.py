@@ -109,6 +109,19 @@ def summarize(out, sims, mode):
     return pd.DataFrame(rows), dists
 
 
+def shooting(season, pids):
+    """3P% and FT% per player for the projected box score: this season and last, shrunk toward the league (3PT: 60
+    attempts at 36%; FT: 30 attempts at 78%)."""
+    import sqlite3
+    con = sqlite3.connect(M.DB)
+    d = pd.read_sql(f"""SELECT p.player_id, SUM(p.fg3m) m3, SUM(p.fg3a) a3, SUM(p.ftm) mf, SUM(p.fta) af FROM players p JOIN games g USING (game_id)
+                        WHERE g.season IN ({season}, {season - 1}) AND g.game_type IN (2, 3) AND p.min > 0 AND p.player_id IN ({','.join(map(str, pids)) or 0})
+                        GROUP BY p.player_id""", con)
+    d["sh_f3"] = (d.m3 + 60 * .36) / (d.a3 + 60)
+    d["sh_ft"] = (d.mf + 30 * .78) / (d.af + 30)
+    return d[["player_id", "sh_f3", "sh_ft"]]
+
+
 def chance_stats(season, pids):
     """Per player, this season's games so far (last season's when he has fewer than 3): 3-point attempts a game (season,
     last 10), rebounds available while on the floor and his share, teammates' made baskets while on the floor (assist
@@ -214,9 +227,13 @@ def main():
         print(f"lineups: {len(LN)} teams ({', '.join(sorted(src))}); {sum(1 for t in tags if t and t.startswith('in'))} moving into the starting five, {sum(1 for t in tags if t and t.startswith('out'))} out")
     except Exception as e:                                     # noqa: BLE001 -- never block the projection
         print("lineups skipped:", type(e).__name__, e)
-    tabs, dists = [], {}
+    tabs, dists, BX = [], {}, {}
     for mode in ("vegas", "blind"):
         out, sims = M.project(fr, rows, mode=mode, live=True)
+        # the projected box score (owner 2026-10-24): each player's simulated averages, incl. shot attempts
+        for r_ in out.itertuples():
+            BX.setdefault((r_.game_id, r_.team, r_.player_id), {})[mode] = {c: round(float(getattr(r_, "mu_" + c)), 2)
+                                                                           for c in ("min", "pts", "reb", "ast", "fg3m", "stl", "blk", "tov", "fga", "fta")}
         tab, d = summarize(out, sims, mode)
         tabs.append(tab)
         dists[mode] = d
@@ -239,6 +256,11 @@ def main():
     if fr.arch is not None and "arch" in meta:                         # archetype name for the page
         meta["arch_name"] = meta.arch.map(lambda a: fr.arch["names"][int(a)] if pd.notna(a) else None)
     meta["e_min"] = M.team_minutes(rows, live=True)
+    meta["bx"] = [BX.get((g_, t_, p_)) for g_, t_, p_ in zip(meta.game_id, meta.team, meta.player_id)]
+    try:                                                           # 3P% / FT% for the box score's made-attempted columns
+        meta = meta.merge(shooting(int(fut.season.iloc[0]), set(meta.player_id.astype(int))), on="player_id", how="left")
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("shooting rates skipped:", type(e).__name__, e)
     try:                                                           # 3PA, rebound / assist chances (opps.py) for the page
         meta = meta.merge(chance_stats(int(fut.season.iloc[0]), set(meta.player_id.astype(int))), on="player_id", how="left")
     except Exception as e:                                         # noqa: BLE001 -- display only

@@ -179,6 +179,45 @@ function nbaGameBets(g){
     rows.push(betRow(`Total ${g.total}`, [betChip(leg('over', `Over ${g.total}`, po), 'Over', po, BK(g.id, 'total', 'over', g.total, po)), betChip(leg('under', `Under ${g.total}`, 1 - po), 'Under', 1 - po, BK(g.id, 'total', 'under', g.total, 1 - po))])); }
   return `<div class="betgrid" style="margin:8px 0">${rows.join('')}${window.MKT && MKT.bkNote ? MKT.bkNote(g.id) : ''}</div>`;
 }
+// Projected box score (owner 2026-10-24: "full box scores for every game... I want x person 27 points 6 rebounds 2
+// assists... make sure NBA has steals and blocks"): each player's simulated averages (p.bx[mode]), integer columns by
+// largest remainder within the team (team totals = the sum of the averages), points rebuilt from rounded makes.
+let PVIEW = 'proj';
+try { PVIEW = localStorage.getItem('nba-pview') || 'proj'; } catch (e) {}
+document.addEventListener('click', e => { const b = e.target.closest('[data-pview]'); if (!b) return; PVIEW = b.dataset.pview;
+  try { localStorage.setItem('nba-pview', PVIEW); } catch (x) {} render(); });
+function lrRound(vals){
+  const tot = Math.round(vals.reduce((a, b) => a + b, 0)), fl = vals.map(v => Math.floor(v));
+  let rem = tot - fl.reduce((a, b) => a + b, 0);
+  vals.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (rem > 0){ fl[i]++; rem--; } });
+  return fl;
+}
+function boxTable(g, team){
+  const md = mode(g.id);
+  // bx = 'if he plays' means; team totals hold only weighted by his chance to play (pp). Box = the rotation, each stat
+  // scaled so it adds up to the team's expected total (240 min, the projected points, ...)
+  const all = D.players.filter(p => p.g === g.id && p.t === team && p.bx && p.bx[md] && p.st !== 'Out');
+  const pp = p => p.pp == null ? 1 : p.pp, KS = ['min', 'pts', 'reb', 'ast', 'stl', 'blk', 'tov', 'fga', 'fta', 'fg3m'];
+  // the 11 with the most expected minutes (research/nba_box_backtest.py, 2024-26: best MAE for players who played; ~10.7 play)
+  const ps = all.slice().sort((a, b) => pp(b) * b.bx[md].min - pp(a) * a.bx[md].min).slice(0, 11).sort((a, b) => b.bx[md].min - a.bx[md].min);
+  if (!ps.length) return '';
+  const sc = {};
+  for (const k of KS) { const want = all.reduce((a, p) => a + pp(p) * p.bx[md][k], 0), have = ps.reduce((a, p) => a + p.bx[md][k], 0); sc[k] = have > 0 ? want / have : 1; }
+  const X = ps.map(p => { const b = {}; for (const k of KS) b[k] = p.bx[md][k] * sc[k];
+    const f3 = p.sh ? p.sh[0] : .36, ft = p.sh ? p.sh[1] : .78;
+    const ftm = b.fta * ft, fg3a = Math.min(b.fga, b.fg3m / Math.max(f3, .15)), fg2m = Math.max(0, (b.pts - 3 * b.fg3m - ftm) / 2);
+    return {min: b.min, reb: b.reb, ast: b.ast, stl: b.stl, blk: b.blk, tov: b.tov, fg2m, fg3m: b.fg3m, ftm, fga: Math.max(b.fga, fg2m + b.fg3m), fg3a: Math.max(fg3a, b.fg3m), fta: Math.max(b.fta, ftm)}; });
+  const R = {};
+  for (const k of ['min', 'reb', 'ast', 'stl', 'blk', 'tov', 'fg2m', 'fg3m', 'ftm', 'fga', 'fg3a', 'fta']) R[k] = lrRound(X.map(x => x[k]));
+  const rows = ps.map((p, i) => { const fgm = R.fg2m[i] + R.fg3m[i];
+    return {p, start: i < 5, min: R.min[i], pts: 2 * R.fg2m[i] + 3 * R.fg3m[i] + R.ftm[i], reb: R.reb[i], ast: R.ast[i], stl: R.stl[i], blk: R.blk[i], tov: R.tov[i],
+            fgm, fga: Math.max(R.fga[i], fgm), f3m: R.fg3m[i], f3a: Math.max(R.fg3a[i], R.fg3m[i]), ftm: R.ftm[i], fta: Math.max(R.fta[i], R.ftm[i])}; });
+  const T = k => rows.reduce((a, r) => a + r[k], 0);
+  const q = p => p.st && p.st !== 'Active' ? ` <span class="tag q" title="${esc(p.st)}">${p.st === 'Questionable' ? 'Q' : p.st === 'Day-To-Day' ? 'DTD' : esc(p.st)}</span>` : '';
+  const tr = (r, i) => `${i === 5 ? '<tr class="bxsep"><td class="l" colspan="11">Bench</td></tr>' : ''}<tr><td class="l"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.pos)}</span>${q(r.p)}</td><td>${r.min}</td><td class="bxp">${r.pts}</td><td>${r.reb}</td><td>${r.ast}</td><td>${r.stl}</td><td>${r.blk}</td><td>${r.tov}</td><td>${r.fgm}-${r.fga}</td><td>${r.f3m}-${r.f3a}</td><td>${r.ftm}-${r.fta}</td></tr>`;
+  return `<div class="tw"><table class="t bx"><thead><tr><th class="l">${esc(team)} · starters</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>FG</th><th>3P</th><th>FT</th></tr></thead><tbody>
+    ${rows.map(tr).join('')}<tr class="bxt"><td class="l"><b>Team</b></td><td>${T('min')}</td><td class="bxp">${T('pts')}</td><td>${T('reb')}</td><td>${T('ast')}</td><td>${T('stl')}</td><td>${T('blk')}</td><td>${T('tov')}</td><td>${T('fgm')}-${T('fga')}</td><td>${T('f3m')}-${T('f3a')}</td><td>${T('ftm')}-${T('fta')}</td></tr></tbody></table></div>`;
+}
 function gameView(){
   const g = D.games.find(x => x.id === state.game) || D.games[0]; if (!g) return '<div class="empty">No games.</div>';
   const M = g.models[mode(g.id)], hw = M.home_win;
@@ -190,7 +229,11 @@ function gameView(){
     <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div>
     ${nbaGameBets(g)}
     ${window.MKT ? MKT.game(g.id, mode(g.id)) : ''}</section>`;
-  const tables = `<section class="panel"><div class="phead"><h2>Players</h2><span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
+  const pv = `<span class="gmsw" role="group" aria-label="Players view"><button data-pview="proj" aria-pressed="${PVIEW === 'proj'}">Projections</button><button data-pview="box" aria-pressed="${PVIEW === 'box'}">Box score</button></span>`;
+  const tables = PVIEW === 'box'
+    ? `<section class="panel"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${pv}<span class="muted small">${mode(g.id) === 'vegas' ? 'With Vegas' : 'Market-blind'} · each player’s simulated average, rounded so team totals hold</span></div>${boxTable(g, g.away)}${boxTable(g, g.home)}
+      <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games (the most accurate single guess, and averages add up to the team score). The 11 players with the most expected minutes (about how many play); the rest of the bench’s expected share goes to them so totals match the projected score. Tested on 2024-26 games: points off by 4.4 a player on average. Starters are the five with the most projected minutes; Q = questionable. Points come from his makes (2 × twos + 3 × threes + free throws); shooting splits use his 3P% and FT% this season and last, pulled toward league average on small samples.</p></section>`
+    : `<section class="panel"><div class="phead"><h2>Players</h2>${pv}<span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;
 }
 let BPIN = false;                                 // board filter: only players Pinnacle has moved (sharp.pin_moves)

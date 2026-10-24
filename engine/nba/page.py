@@ -33,6 +33,9 @@ def player_payload(tab, meta, dists):
                             k_: (None if pd.isna(mm[c]) else round(float(mm[c]), 3 if c in ("x_rr", "x_ar") else 1))
                             for k_, c in (("gp", "x_gp"), ("season", "x_season"), ("fg3a", "x_fg3a"), ("fg3a10", "x_fg3a10"), ("rch", "x_rch"), ("rr", "x_rr"),
                                           ("ach", "x_ach"), ("ar", "x_ar"), ("reb", "x_reb"), ("ast", "x_ast"), ("on", "x_on"))},
+                        pp=None if mm is None or pd.isna(mm.p_play) else round(float(mm.p_play), 3),
+                        bx=None if mm is None or "bx" not in mm.index or not isinstance(mm.bx, dict) else mm.bx,
+                        sh=None if mm is None or "sh_f3" not in mm.index or pd.isna(mm.sh_f3) else [round(float(mm.sh_f3), 3), round(float(mm.sh_ft), 3)],
                         d={mode: dists[mode].get(k, {}) for mode in ("vegas", "blind")}))
     return out
 
@@ -57,6 +60,8 @@ __CSS__
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--ink);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
 .lru .ledge{color:var(--good);font-weight:700;margin-left:4px}
+.t.bx{margin:6px 0 14px}.t.bx td,.t.bx th{text-align:right;white-space:nowrap}.t.bx td.l,.t.bx th.l{text-align:left}.t.bx .bxp{font-weight:800}.t.bx tr.bxsep td{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding-top:8px}.t.bx tr.bxt td{border-top:1px solid var(--faint);font-weight:700}
+@media(max-width:560px){.t.bx td,.t.bx th{padding-left:4px;padding-right:4px}.t.bx td.l{font-size:13px}}
 .lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
 .ladsw{display:flex;gap:6px;margin:4px 0 8px}.ladsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px var(--body);cursor:pointer}.ladsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .ladgm{border-top:1px solid var(--faint);padding:10px 0 2px}.ladgh{font-size:14.5px;margin-bottom:2px}.ladgm .lad:first-child{border-top:0}

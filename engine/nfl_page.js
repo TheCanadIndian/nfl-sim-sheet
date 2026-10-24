@@ -620,6 +620,38 @@ function renderParlays(){
     <div class="sgp-grid">${C.map(card).join('')}</div></section>`;
 }
 /* ---------------- game summary: players worth a look, tiered, with the reasons (display only) ---------------- */
+// Projected box score (owner 2026-10-24: "full box scores... x person 27 points 6 rebounds"; highly experimental): each
+// player's simulated average (50,000 games), rounded largest-remainder within the team so the parts add up (catches =
+// the QB's completions, receiving yards = his passing yards, receiving TDs = his TDs). TDs from project.py _box.json.
+function lrRound(vals){
+  const tot = Math.round(vals.reduce((a, b) => a + b, 0)), fl = vals.map(v => Math.floor(v));
+  let rem = tot - fl.reduce((a, b) => a + b, 0);
+  vals.map((v, i) => [v - Math.floor(v), i]).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (rem > 0){ fl[i]++; rem--; } });
+  return fl;
+}
+function boxPanel(g){
+  const mean = (p, k) => p.s[k] ? p.s[k][MEAN] : 0, td = (p, i) => p.tdm ? p.tdm[i] : 0;
+  const nm = p => `<td class="l"><b>${esc(p.n)}</b> <span class="small muted">${esc(p.pos)}</span></td>`;
+  const tbl = (head, rows) => rows.length ? `<div class="tw"><table class="t nbx"><thead><tr>${head.map((h, i) => `<th${i ? '' : ' class="l"'}>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : '';
+  const side = t => {
+    const P = PL(g).filter(p => p.t === t);
+    const qb = P.filter(p => p.s.att).sort((a, b) => mean(b, 'att') - mean(a, 'att'))[0];
+    const rec = P.filter(p => mean(p, 'tgt') >= 1).sort((a, b) => mean(b, 'rec_yds') - mean(a, 'rec_yds'));
+    const ru = P.filter(p => mean(p, 'car') >= 1).sort((a, b) => mean(b, 'rush_yds') - mean(a, 'rush_yds'));
+    const R = (L, f) => lrRound(L.map(f));
+    const rc = R(rec, p => mean(p, 'rec')), tg = R(rec, p => mean(p, 'tgt')), ry = R(rec, p => mean(p, 'rec_yds')), rt = R(rec, p => td(p, 1));
+    const ca = R(ru, p => mean(p, 'car')), uy = R(ru, p => mean(p, 'rush_yds')), ut = R(ru, p => td(p, 0));
+    const sum = a => a.reduce((x, y) => x + y, 0);
+    const pass = qb ? [`<tr>${nm(qb)}<td>${sum(rc)}/${Math.max(Math.round(mean(qb, 'att')), sum(rc))}</td><td class="bxp">${sum(ry)}</td><td>${sum(rt)}</td><td>${Math.round(mean(qb, 'ints'))}</td></tr>`] : [];
+    const rush = ru.map((p, i) => `<tr>${nm(p)}<td>${ca[i]}</td><td class="bxp">${uy[i]}</td><td>${ut[i]}</td></tr>`);
+    const recv = rec.map((p, i) => `<tr>${nm(p)}<td>${rc[i]}</td><td>${Math.max(tg[i], rc[i])}</td><td class="bxp">${ry[i]}</td><td>${rt[i]}</td></tr>`);
+    return `<div class="nbxteam"><h3>${esc(t)} <span class="muted small">${f1(TM(g)[t].points)} pts</span></h3>
+      ${tbl([`Passing`, 'C/ATT', 'YDS', 'TD', 'INT'], pass)}${tbl(['Rushing', 'CAR', 'YDS', 'TD'], rush)}${tbl(['Receiving', 'REC', 'TGT', 'YDS', 'TD'], recv)}</div>`;
+  };
+  return `<section class="panel" aria-label="Projected box score"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${modelSwitch(g)}<span class="muted small">${esc(g.away)} at ${esc(g.home)} · each player’s simulated average, rounded so team totals hold</span></div>
+    <div class="nbxgrid">${side(g.away)}${side(g.home)}</div>
+    <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games, rounded so the parts add up (catches = completions, receiving yards = passing yards, TDs to the players most likely to score them). A single projection, not a prediction of the exact game: the Projections tab shows each player’s range. Highly experimental.</p></section>`;
+}
 function summaryPanel(g){
   const L = D.spot[g.id] || [];
   const row = c => `<div class="sp-row"><span class="tierb t${c.tier}">Tier ${c.tier}</span><div class="sp-main">
@@ -809,7 +841,8 @@ function scriptPanel(g){
 }
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
-  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ...(D.sgp ? [['script', 'Game script']] : []), ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.fmap && D.fmap[g.id] ? [['map', 'Matchup map']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ['box', 'Box score'], ...(D.sgp ? [['script', 'Game script']] : []), ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.fmap && D.fmap[g.id] ? [['map', 'Matchup map']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  if (state.gtab === 'box') return gsw + boxPanel(g);
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
   if (D.sgp && state.gtab === 'script') return gsw + scriptPanel(g);
   if (state.gtab === 'sum' && D.spot && g.id in D.spot) return gsw + summaryPanel(g);
