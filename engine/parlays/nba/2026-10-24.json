@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-24",
 "lock": "2026-10-24T22:00:00+00:00",
-"frozen_at": "2026-10-24T22:46:56.652Z",
+"frozen_at": "2026-10-24T22:55:05.466Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -360,7 +360,7 @@
 "line": 2.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 3+ ast",
-"p": 0.3797,
+"p": 0.3792,
 "price": 200,
 "book": "Hard Rock",
 "f": [
@@ -379,7 +379,7 @@
 "line": 8.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 9+ ast",
-"p": 0.2393,
+"p": 0.2572,
 "price": 375,
 "book": "Hard Rock",
 "f": [
@@ -391,7 +391,7 @@
 ]
 }
 ],
-"p": 0.09085,
+"p": 0.09752,
 "d": 14.25,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
@@ -408,7 +408,7 @@
 "line": 2.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 3+ ast",
-"p": 0.3797,
+"p": 0.3792,
 "price": 200,
 "book": "Hard Rock",
 "f": [
@@ -422,14 +422,14 @@
 {
 "gid": "401909858",
 "start": "2026-10-25T00:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "victor wembanyama",
-"lab": "Victor Wembanyama 4+ ast",
-"p": 0.3671,
-"price": 189,
-"book": "Kalshi",
+"line": 4.5,
+"name": "devin vassell",
+"lab": "Devin Vassell 5+ reb",
+"p": 0.3973,
+"price": 165,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -439,8 +439,8 @@
 ]
 }
 ],
-"p": 0.13939,
-"d": 8.67,
+"p": 0.15064,
+"d": 7.95,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
 },
@@ -449,6 +449,24 @@
 "tier": "3-leg",
 "legs": [
 {
+"gid": "401909855",
+"start": "2026-10-24T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 5+ ast",
+"p": 0.3067,
+"price": 225,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
 "kind": "reb",
@@ -456,7 +474,7 @@
 "line": 7.5,
 "name": "josh giddey",
 "lab": "Josh Giddey 8+ reb",
-"p": 0.4474,
+"p": 0.4438,
 "price": 133,
 "book": "Novig",
 "f": [
@@ -474,7 +492,7 @@
 "line": 8.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 9+ ast",
-"p": 0.2393,
+"p": 0.2572,
 "price": 375,
 "book": "Hard Rock",
 "f": [
@@ -484,35 +502,35 @@
 "game",
 "price"
 ]
-},
-{
-"gid": "401909856",
-"start": "2026-10-25T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "jabari smith",
-"lab": "Jabari Smith Jr. 3+ threes",
-"p": 0.3955,
-"price": 167,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
 }
 ],
-"p": 0.04234,
-"d": 29.55,
-"first": "2026-10-25T00:00:00+00:00",
+"p": 0.03501,
+"d": 35.969,
+"first": "2026-10-24T23:30:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "401909855",
+"start": "2026-10-24T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 5+ ast",
+"p": 0.3067,
+"price": 225,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
 {
 "gid": "401909857",
 "start": "2026-10-25T00:00Z",
@@ -521,7 +539,7 @@
 "line": 7.5,
 "name": "josh giddey",
 "lab": "Josh Giddey 8+ reb",
-"p": 0.4474,
+"p": 0.4438,
 "price": 133,
 "book": "Novig",
 "f": [
@@ -534,14 +552,14 @@
 {
 "gid": "401909858",
 "start": "2026-10-25T00:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "victor wembanyama",
-"lab": "Victor Wembanyama 4+ ast",
-"p": 0.3671,
-"price": 189,
-"book": "Kalshi",
+"line": 4.5,
+"name": "devin vassell",
+"lab": "Devin Vassell 5+ reb",
+"p": 0.3973,
+"price": 165,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -549,28 +567,44 @@
 "game",
 "price"
 ]
+}
+],
+"p": 0.05407,
+"d": 20.067,
+"first": "2026-10-24T23:30:00+00:00",
+"res": null
 },
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
 {
 "gid": "401909856",
 "start": "2026-10-25T00:30Z",
-"kind": "fg3m",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "HOU moneyline",
+"p": 0.5205,
+"price": 102,
+"book": "Novig"
+},
+{
+"gid": "401909858",
+"start": "2026-10-25T00:00Z",
+"kind": "pts",
 "side": "o",
-"line": 2.5,
-"name": "jabari smith",
-"lab": "Jabari Smith Jr. 3+ threes",
-"p": 0.3955,
-"price": 167,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
+"line": 14.5,
+"name": "max christie",
+"lab": "Max Christie 15+ points",
+"p": 0.3789,
+"price": 181,
+"book": "Kalshi"
 }
 ],
-"p": 0.06496,
-"d": 17.979,
+"p": 0.19719,
+"d": 5.676,
 "first": "2026-10-25T00:00:00+00:00",
 "res": null
 }
