@@ -1,31 +1,33 @@
 {
 "sport": "nba",
 "date": "2026-10-25",
-"lock": "2026-10-25T22:00:00+00:00",
-"frozen_at": "2026-10-25T12:38:12.717Z",
+"lock": "2026-10-25T23:00:00+00:00",
+"frozen_at": "2026-10-25T12:52:01.565Z",
 "books": [
 "Novig",
 "Kalshi",
 "Hard Rock"
 ],
-"final_at": "2026-10-25T21:00:00+00:00",
+"final_at": "2026-10-25T22:00:00+00:00",
 "parlays": [
 {
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909862",
-"start": "2026-10-25T22:00Z",
-"kind": "reb",
+"gid": "401909866",
+"start": "2026-10-25T23:30Z",
+"kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "kelly oubre",
-"lab": "Kelly Oubre Jr. 6+ reb",
-"p": 0.2032,
-"price": 456,
+"line": 4.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 5+ threes",
+"p": 0.2126,
+"price": 426,
 "book": "Novig",
 "f": [
+"usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -39,7 +41,7 @@
 "line": 3.5,
 "name": "zach lavine",
 "lab": "Zach LaVine 4+ threes",
-"p": 0.2838,
+"p": 0.2903,
 "price": 257,
 "book": "Novig",
 "f": [
@@ -50,9 +52,9 @@
 ]
 }
 ],
-"p": 0.05766,
-"d": 19.849,
-"first": "2026-10-25T22:00:00+00:00",
+"p": 0.0617,
+"d": 18.778,
+"first": "2026-10-25T23:30:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -68,13 +70,77 @@
 "line": 3.5,
 "name": "darius garland",
 "lab": "Darius Garland 4+ threes",
-"p": 0.3255,
-"price": 233,
-"book": "Novig",
+"p": 0.315,
+"price": 240,
+"book": "Kalshi",
 "f": [
 "usage",
 "rotation",
 "price"
+]
+},
+{
+"gid": "401909866",
+"start": "2026-10-25T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 5+ threes",
+"p": 0.2126,
+"price": 426,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.06695,
+"d": 17.884,
+"first": "2026-10-25T23:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909865",
+"start": "2026-10-25T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "darius garland",
+"lab": "Darius Garland 4+ threes",
+"p": 0.315,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909866",
+"start": "2026-10-25T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "jaylen brown",
+"lab": "Jaylen Brown 3+ threes",
+"p": 0.2614,
+"price": 285,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
 ]
 },
 {
@@ -85,7 +151,7 @@
 "line": 3.5,
 "name": "zach lavine",
 "lab": "Zach LaVine 4+ threes",
-"p": 0.2838,
+"p": 0.2903,
 "price": 257,
 "book": "Novig",
 "f": [
@@ -96,72 +162,9 @@
 ]
 }
 ],
-"p": 0.09238,
-"d": 11.888,
+"p": 0.0239,
+"d": 46.731,
 "first": "2026-10-25T23:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909862",
-"start": "2026-10-25T22:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "kelly oubre",
-"lab": "Kelly Oubre Jr. 6+ reb",
-"p": 0.2032,
-"price": 456,
-"book": "Novig",
-"f": [
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909865",
-"start": "2026-10-25T23:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "darius garland",
-"lab": "Darius Garland 4+ threes",
-"p": 0.3255,
-"price": 233,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909866",
-"start": "2026-10-25T23:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 4+ threes",
-"p": 0.3037,
-"price": 213,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.02009,
-"d": 57.951,
-"first": "2026-10-25T22:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -170,20 +173,37 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909862",
-"start": "2026-10-25T22:00Z",
-"kind": "ast",
+"gid": "401909864",
+"start": "2026-10-25T23:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "andrew nembhard",
-"lab": "Andrew Nembhard 8+ ast",
-"p": 0.3537,
-"price": 178,
-"book": "Novig",
+"line": 1.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu 2+ threes",
+"p": 0.3883,
+"price": 145,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
 "game"
+]
+},
+{
+"gid": "401909865",
+"start": "2026-10-25T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "rui hachimura",
+"lab": "Rui Hachimura 4+ threes",
+"p": 0.2111,
+"price": 398,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
 ]
 },
 {
@@ -191,40 +211,22 @@
 "start": "2026-10-25T23:30Z",
 "kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 4+ threes",
-"p": 0.3037,
-"price": 213,
+"line": 2.5,
+"name": "jaylen brown",
+"lab": "Jaylen Brown 3+ threes",
+"p": 0.2614,
+"price": 285,
 "book": "Novig",
 "f": [
 "usage",
-"matchup",
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401909867",
-"start": "2026-10-26T01:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "deandre hunter",
-"lab": "De'Andre Hunter 15+ pts",
-"p": 0.2575,
-"price": 317,
-"book": "Novig",
-"f": [
-"matchup",
-"game",
-"price"
-]
 }
 ],
-"p": 0.02766,
-"d": 36.285,
-"first": "2026-10-25T22:00:00+00:00",
+"p": 0.02142,
+"d": 46.974,
+"first": "2026-10-25T23:00:00+00:00",
 "res": null
 }
 ],
