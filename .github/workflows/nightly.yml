@@ -1,0 +1,70 @@
+# Nightly settle-up at 2 AM Eastern (owner 2026-10-24: "schedule an update at 2am daily to figure out all results for the
+# previous day"). Starts each sport's full run (fresh box scores -> results pages, box score grades, Profit rows), waits
+# for them, then a markets run (parlays graded, learning builder, Profit page). GitHub cron is UTC: both 06:00 and 07:00
+# fire and only the one that is 2 AM in New York goes ahead, so it stays at 2 AM through daylight-saving changes.
+name: nightly
+
+on:
+  schedule:
+    - cron: "0 6 * * *"
+    - cron: "0 7 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+jobs:
+  settle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - id: hour
+        run: |
+          h=$(TZ=America/New_York date +%H)
+          go=true
+          if [ "${{ github.event_name }}" = "schedule" ] && [ "$h" != "02" ]; then go=false; fi
+          echo "New York hour $h -> go=$go"
+          echo "go=$go" >> "$GITHUB_OUTPUT"
+      - name: Start every sport's run (fetch last night's box scores, grade)
+        if: steps.hour.outputs.go == 'true'
+        run: |
+          : > ids.txt
+          for w in "nba.yml" "nhl.yml -f mode=nhl" "nfl.yml -f mode=nfl" "mlb.yml"; do
+            url=$(gh workflow run $w 2>&1 | grep -o 'actions/runs/[0-9]*' | grep -o '[0-9]*$' || true)
+            echo "$w -> ${url:-started}"
+            [ -n "$url" ] && echo "$url" >> ids.txt
+            sleep 3
+          done
+          if [ ! -s ids.txt ]; then                       # older gh: no run URL printed -> find the runs just queued
+            sleep 20
+            for w in nba nhl nfl mlb; do gh run list --workflow "$w.yml" -L 1 --json databaseId -q '.[0].databaseId' >> ids.txt; done
+          fi
+          cat ids.txt
+      - name: Wait for them (up to 2 hours)
+        if: steps.hour.outputs.go == 'true'
+        run: |
+          for i in $(seq 1 120); do
+            left=0
+            for id in $(cat ids.txt); do
+              s=$(gh run view "$id" --json status -q .status 2>/dev/null || echo completed)
+              [ "$s" != "completed" ] && left=$((left + 1))
+            done
+            [ $left -eq 0 ] && break
+            sleep 60
+          done
+          echo "## Nightly results ($(TZ=America/New_York date +'%a %b %d'))" >> "$GITHUB_STEP_SUMMARY"
+          for id in $(cat ids.txt); do
+            gh run view "$id" --json workflowName,conclusion,url -q '"- \(.workflowName): \(.conclusion // "still running") \(.url)"' >> "$GITHUB_STEP_SUMMARY" || true
+          done
+          cat "$GITHUB_STEP_SUMMARY"
+      - name: Markets run (grade parlays, learning builder, Profit page)
+        if: steps.hour.outputs.go == 'true'
+        run: gh workflow run markets.yml
