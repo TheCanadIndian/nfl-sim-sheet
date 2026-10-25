@@ -52,6 +52,9 @@ jobs:
           SHARPAPI_KEY: ${{ secrets.SHARPAPI_KEY }}
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python sharp.py || true
+      - name: Freeze the books' main prop lines for the projected box score grades (boxgrade.py; games not yet started)
+        working-directory: engine
+        run: python boxgrade.py lines || true
       - name: Watch for late scratches and line moves (re-runs a sport's model if needed)
         if: steps.q.outputs.skip != 'true'
         working-directory: engine
