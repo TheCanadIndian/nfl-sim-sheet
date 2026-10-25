@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T03:13:38.640Z",
+"frozen_at": "2026-10-25T03:31:36.345Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,17 +17,17 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 299.5,
-"name": "aaron rodgers",
-"lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2095,
-"price": 456,
+"line": 89.5,
+"name": "germie bernard",
+"lab": "Germie Bernard 90+ rec yds",
+"p": 0.2126,
+"price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
-"usage",
+"rotation",
 "script",
 "price"
 ]
@@ -40,7 +40,7 @@
 "line": 69.5,
 "name": "chase brown",
 "lab": "Chase Brown 70+ rush yds",
-"p": 0.217,
+"p": 0.2176,
 "price": 425,
 "book": "Kalshi",
 "sc": "CIN pulls away",
@@ -51,8 +51,8 @@
 ]
 }
 ],
-"p": 0.04545,
-"d": 29.19,
+"p": 0.04627,
+"d": 27.563,
 "first": "2026-10-25T13:30:00+00:00",
 "pick": "longshot"
 },
@@ -63,12 +63,120 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 119.5,
+"name": "chris olave",
+"lab": "Chris Olave 120+ rec yds",
+"p": 0.2007,
+"price": 456,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 69.5,
+"name": "chase brown",
+"lab": "Chase Brown 70+ rush yds",
+"p": 0.2176,
+"price": 425,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.04367,
+"d": 29.19,
+"first": "2026-10-25T13:30:00+00:00"
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "germie bernard",
+"lab": "Germie Bernard 90+ rec yds",
+"p": 0.2126,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"rotation",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 299.5,
-"name": "aaron rodgers",
-"lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2095,
+"line": 324.5,
+"name": "joe burrow",
+"lab": "Joe Burrow 325+ pass yds",
+"p": 0.2324,
+"price": 373,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 79.5,
+"name": "christian mccaffrey",
+"lab": "Christian McCaffrey 80+ rush yds",
+"p": 0.2555,
+"price": 280,
+"book": "Kalshi",
+"sc": "SF pulls away",
+"f": [
+"usage",
+"rotation",
+"script"
+]
+}
+],
+"p": 0.01262,
+"d": 94.364,
+"first": "2026-10-25T13:30:00+00:00"
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 119.5,
+"name": "chris olave",
+"lab": "Chris Olave 120+ rec yds",
+"p": 0.2007,
 "price": 456,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -86,115 +194,7 @@
 "line": 324.5,
 "name": "joe burrow",
 "lab": "Joe Burrow 325+ pass yds",
-"p": 0.2317,
-"price": 373,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-}
-],
-"p": 0.04853,
-"d": 26.299,
-"first": "2026-10-25T13:30:00+00:00"
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 89.5,
-"name": "germie bernard",
-"lab": "Germie Bernard 90+ rec yds",
-"p": 0.2126,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"rotation",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 69.5,
-"name": "chase brown",
-"lab": "Chase Brown 70+ rush yds",
-"p": 0.217,
-"price": 425,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 79.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson 80+ rush yds",
-"p": 0.2375,
-"price": 351,
-"book": "Kalshi",
-"sc": "SEA pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-}
-],
-"p": 0.01096,
-"d": 124.307,
-"first": "2026-10-25T13:30:00+00:00"
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 89.5,
-"name": "germie bernard",
-"lab": "Germie Bernard 90+ rec yds",
-"p": 0.2126,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"rotation",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "joe burrow",
-"lab": "Joe Burrow 325+ pass yds",
-"p": 0.2317,
+"p": 0.2324,
 "price": 373,
 "book": "Kalshi",
 "sc": "CIN pulls away",
@@ -205,26 +205,26 @@
 ]
 },
 {
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
 "kind": "rush_yds",
 "side": "o",
 "line": 79.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson 80+ rush yds",
-"p": 0.2375,
-"price": 351,
+"name": "christian mccaffrey",
+"lab": "Christian McCaffrey 80+ rush yds",
+"p": 0.2555,
+"price": 280,
 "book": "Kalshi",
-"sc": "SEA pulls away",
+"sc": "SF pulls away",
 "f": [
 "usage",
-"script",
-"price"
+"rotation",
+"script"
 ]
 }
 ],
-"p": 0.0117,
-"d": 111.995,
+"p": 0.01192,
+"d": 99.935,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -234,13 +234,13 @@
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
-"kind": "pass_yds",
+"kind": "rec",
 "side": "o",
-"line": 274.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.19,
-"price": 373,
+"line": 8.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smith-Njigba 9+ catches",
+"p": 0.3,
+"price": 198,
 "book": "Kalshi"
 },
 {
@@ -256,8 +256,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.0952,
-"d": 15.046,
+"p": 0.084,
+"d": 9.479,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -284,13 +284,13 @@
 "line": 8.5,
 "name": "jaxon smithnjigba",
 "lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.295,
-"price": 208,
+"p": 0.3,
+"price": 198,
 "book": "Kalshi"
 }
 ],
-"p": 0.11872,
-"d": 12.174,
+"p": 0.069,
+"d": 11.801,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -303,10 +303,10 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.19,
-"price": 373,
+"name": "sam darnold",
+"lab": "Sam Darnold 275+ pass yds",
+"p": 0.23,
+"price": 296,
 "book": "Kalshi"
 },
 {
@@ -334,9 +334,75 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.02481,
-"d": 67.891,
+"p": 0.0132,
+"d": 56.726,
 "first": "2026-10-26T00:20:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 129.5,
+"name": "bijan robinson",
+"lab": "Bijan Robinson 130+ rush yds",
+"p": 0.195,
+"price": 373,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "jordan love",
+"lab": "Jordan Love 325+ pass yds",
+"p": 0.295,
+"price": 218,
+"book": "Kalshi"
+}
+],
+"p": 0.05752,
+"d": 15.046,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 129.5,
+"name": "bijan robinson",
+"lab": "Bijan Robinson 130+ rush yds",
+"p": 0.195,
+"price": 373,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "ryan flournoy",
+"lab": "Ryan Flournoy 50+ rec yds",
+"p": 0.28,
+"price": 229,
+"book": "Kalshi"
+}
+],
+"p": 0.0546,
+"d": 15.554,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -373,20 +439,8 @@
 },
 {
 "card": "Ladder longshots (experimental)",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "jordan love",
-"lab": "Jordan Love 325+ pass yds",
-"p": 0.295,
-"price": 218,
-"book": "Kalshi"
-},
 {
 "gid": "2026_07_NYG_HOU",
 "start": "2026-10-25T13:00:00",
@@ -398,15 +452,84 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
+},
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "kc concepcion",
+"lab": "KC Concepcion 60+ rec yds",
+"p": 0.245,
+"price": 280,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "pat freiermuth",
+"lab": "Pat Freiermuth 50+ rec yds",
+"p": 0.24,
+"price": 280,
+"book": "Kalshi"
 }
 ],
-"p": 0.08113,
-"d": 10.804,
-"first": "2026-10-25T17:00:00+00:00"
+"p": 0.01617,
+"d": 49.109,
+"first": "2026-10-25T13:30:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
-"tier": "2-leg",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_NYG_HOU",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "cj stroud",
+"lab": "C.J. Stroud 300+ pass yds",
+"p": 0.275,
+"price": 240,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "kc concepcion",
+"lab": "KC Concepcion 60+ rec yds",
+"p": 0.245,
+"price": 280,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "kyren williams",
+"lab": "Kyren Williams 6+ catches",
+"p": 0.225,
+"price": 296,
+"book": "Kalshi"
+}
+],
+"p": 0.01516,
+"d": 51.121,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "2026_07_DAL_PHI",
@@ -414,118 +537,28 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "ryan flournoy",
-"lab": "Ryan Flournoy 50+ rec yds",
-"p": 0.28,
-"price": 229,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_NYG_HOU",
-"start": "2026-10-25T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "cj stroud",
-"lab": "C.J. Stroud 300+ pass yds",
-"p": 0.275,
-"price": 240,
-"book": "Kalshi"
-}
-],
-"p": 0.077,
-"d": 11.169,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "pat freiermuth",
-"lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.245,
-"price": 266,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "kc concepcion",
-"lab": "KC Concepcion 60+ rec yds",
-"p": 0.245,
-"price": 280,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_DEN_ARI",
-"start": "2026-10-25T16:05:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "bo nix",
-"lab": "Bo Nix 275+ pass yds",
-"p": 0.215,
-"price": 331,
-"book": "Kalshi"
-}
-],
-"p": 0.01291,
-"d": 59.899,
-"first": "2026-10-25T13:30:00+00:00"
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "pat freiermuth",
-"lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.245,
-"price": 266,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "kc concepcion",
-"lab": "KC Concepcion 60+ rec yds",
-"p": 0.245,
-"price": 280,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 49.5 rec yds",
+"p": 0.5654,
+"price": -115,
 "book": "Kalshi"
 },
 {
 "gid": "2026_07_SF_ATL",
 "start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
+"kind": "rec",
 "side": "o",
-"line": 129.5,
-"name": "bijan robinson",
-"lab": "Bijan Robinson 130+ rush yds",
-"p": 0.195,
-"price": 373,
-"book": "Kalshi"
+"line": 5.5,
+"name": "george kittle",
+"lab": "George Kittle over 5.5 receptions",
+"p": 0.5677,
+"price": -111,
+"book": "Novig"
 }
 ],
-"p": 0.0117,
-"d": 65.802,
-"first": "2026-10-25T13:30:00+00:00"
+"p": 0.32099,
+"d": 3.554,
+"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -565,6 +598,40 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "tre tucker",
+"lab": "Tre Tucker TD",
+"p": 0.2503,
+"price": 355,
+"book": "Novig"
+},
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 49.5 rec yds",
+"p": 0.5654,
+"price": -115,
+"book": "Kalshi"
+}
+],
+"p": 0.14154,
+"d": 8.507,
+"first": "2026-10-25T20:25:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "kind": "td",
@@ -595,40 +662,6 @@
 "pick": "core"
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "tre tucker",
-"lab": "Tre Tucker TD",
-"p": 0.2503,
-"price": 355,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "christian mccaffrey",
-"lab": "Christian Mccaffrey over 5.5 receptions",
-"p": 0.5397,
-"price": -104,
-"book": "Novig"
-}
-],
-"p": 0.1351,
-"d": 8.925,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
-},
-{
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
 "legs": [
@@ -652,12 +685,12 @@
 "line": 65.5,
 "name": "javonte williams",
 "lab": "Javonte Williams under 65.5 rush yds",
-"p": 0.5872,
+"p": 0.5814,
 "price": -111,
 "book": "Novig"
 }
 ],
-"p": 0.29244,
+"p": 0.28951,
 "d": 4.942,
 "first": "2026-10-25T17:00:00+00:00"
 },
@@ -700,18 +733,6 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_07_DAL_PHI",
-"start": "2026-10-26T20:15:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 65.5,
-"name": "javonte williams",
-"lab": "Javonte Williams under 65.5 rush yds",
-"p": 0.5872,
-"price": -111,
-"book": "Novig"
-},
-{
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "kind": "td",
@@ -722,9 +743,21 @@
 "p": 0.321,
 "price": 300,
 "book": "Novig"
+},
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams under 65.5 rush yds",
+"p": 0.5814,
+"price": -111,
+"book": "Novig"
 }
 ],
-"p": 0.1885,
+"p": 0.18661,
 "d": 7.604,
 "first": "2026-10-25T13:30:00+00:00"
 },
@@ -29845,7 +29878,7 @@
 "line": 5.5,
 "name": "george kittle",
 "lab": "George Kittle over 5.5 receptions",
-"p": 0.5615,
+"p": 0.5624,
 "price": -111,
 "book": "Novig",
 "f": [
@@ -29853,7 +29886,7 @@
 "rotation"
 ],
 "sport": "nfl",
-"edge": 0.0674
+"edge": 0.0691
 },
 {
 "gid": "2026_07_PIT_NO",
@@ -29875,7 +29908,7 @@
 "edge": 0.0581
 }
 ],
-"p": 0.20208,
+"p": 0.20241,
 "d": 5.589,
 "first": "2026-10-25T13:30:00+00:00"
 }
