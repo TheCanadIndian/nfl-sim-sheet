@@ -1,7 +1,7 @@
 {
-"updated": "2026-10-25T16:25:30+00:00",
-"rows": 386,
-"live_rows": 80,
+"updated": "2026-10-25T16:39:57+00:00",
+"rows": 388,
+"live_rows": 82,
 "segments": [
 {
 "seg": "NHL",
@@ -104,11 +104,11 @@
 },
 {
 "seg": "NFL",
-"n": 24,
-"ret": 0.4859,
+"n": 26,
+"ret": 0.5319,
 "h1": 0.5805,
-"h2": -0.1767,
-"z": 2.05,
+"h2": 0.328,
+"z": 2.44,
 "status": "Learning"
 },
 {
@@ -122,11 +122,11 @@
 },
 {
 "seg": "NFL \u00b7 Novig",
-"n": 18,
-"ret": 0.5254,
+"n": 20,
+"ret": 0.5814,
 "h1": 0.6658,
-"h2": -0.1767,
-"z": 2.13,
+"h2": 0.328,
+"z": 2.58,
 "status": "Learning"
 },
 {
@@ -310,6 +310,15 @@
 "status": "Learning"
 },
 {
+"seg": "NFL \u00b7 anytime TD",
+"n": 3,
+"ret": 0.39,
+"h1": -1.0,
+"h2": 1.085,
+"z": 0.37,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 2+ shots \u00b7 edge 5-10%",
 "n": 2,
 "ret": 0.7576,
@@ -325,6 +334,51 @@
 "h1": 1.0295,
 "h2": null,
 "z": 8.55,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 5-10%",
+"n": 2,
+"ret": 1.085,
+"h1": 1.085,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 plus money",
+"n": 2,
+"ret": 1.085,
+"h1": 1.085,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 fits a path",
+"n": 2,
+"ret": 1.085,
+"h1": 1.085,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 script",
+"n": 2,
+"ret": 1.085,
+"h1": 1.085,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 2 reasons",
+"n": 2,
+"ret": 1.085,
+"h1": 1.085,
+"h2": null,
+"z": 0.0,
 "status": "Learning"
 },
 {
@@ -364,7 +418,16 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 anytime TD",
+"seg": "NFL \u00b7 matchup",
+"n": 1,
+"ret": 3.17,
+"h1": 3.17,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 usage",
 "n": 1,
 "ret": -1.0,
 "h1": -1.0,
