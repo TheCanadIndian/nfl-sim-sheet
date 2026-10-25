@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T03:54:25.631Z",
+"frozen_at": "2026-10-25T04:03:47.552Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 299.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2183,
+"p": 0.218,
 "price": 456,
 "book": "Kalshi",
 "sc": "PIT pulls away",
@@ -40,7 +40,7 @@
 "line": 69.5,
 "name": "chase brown",
 "lab": "Chase Brown 70+ rush yds",
-"p": 0.2111,
+"p": 0.2176,
 "price": 425,
 "book": "Kalshi",
 "sc": "CIN pulls away",
@@ -51,10 +51,11 @@
 ]
 }
 ],
-"p": 0.04608,
+"p": 0.04744,
 "d": 29.19,
 "first": "2026-10-25T13:30:00+00:00",
-"pick": "longshot"
+"pick": "longshot",
+"res": null
 },
 {
 "card": "Path longshots",
@@ -68,7 +69,7 @@
 "line": 299.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2183,
+"p": 0.218,
 "price": 456,
 "book": "Kalshi",
 "sc": "PIT pulls away",
@@ -97,26 +98,143 @@
 ]
 }
 ],
-"p": 0.05073,
+"p": 0.05066,
 "d": 26.299,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "dk metcalf",
+"lab": "DK Metcalf 90+ rec yds",
+"p": 0.2669,
+"price": 313,
+"book": "Kalshi",
+"sc": "PIT pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 69.5,
+"name": "chase brown",
+"lab": "Chase Brown 70+ rush yds",
+"p": 0.2176,
+"price": 425,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 79.5,
+"name": "emanuel wilson",
+"lab": "Emanuel Wilson 80+ rush yds",
+"p": 0.2351,
+"price": 351,
+"book": "Kalshi",
+"sc": "SEA pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.01365,
+"d": 97.788,
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "dk metcalf",
+"lab": "DK Metcalf 90+ rec yds",
+"p": 0.2669,
+"price": 313,
+"book": "Kalshi",
+"sc": "PIT pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "joe burrow",
+"lab": "Joe Burrow 325+ pass yds",
+"p": 0.2324,
+"price": 373,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 79.5,
+"name": "emanuel wilson",
+"lab": "Emanuel Wilson 80+ rush yds",
+"p": 0.2351,
+"price": 351,
+"book": "Kalshi",
+"sc": "SEA pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.01458,
+"d": 88.102,
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.3,
-"price": 198,
-"book": "Kalshi"
-},
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
@@ -128,11 +246,24 @@
 "p": 0.28,
 "price": 218,
 "book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 275+ pass yds",
+"p": 0.19,
+"price": 373,
+"book": "Kalshi"
 }
 ],
-"p": 0.084,
-"d": 9.479,
-"first": "2026-10-26T00:20:00+00:00"
+"p": 0.09922,
+"d": 15.046,
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -163,26 +294,15 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.069,
+"p": 0.12254,
 "d": 11.801,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Primetime ladders (experimental)",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "sam darnold",
-"lab": "Sam Darnold 275+ pass yds",
-"p": 0.23,
-"price": 296,
-"book": "Kalshi"
-},
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
@@ -203,14 +323,27 @@
 "line": 39.5,
 "name": "kenneth walker",
 "lab": "Kenneth Walker III 40+ rec yds",
-"p": 0.2,
-"price": 331,
+"p": 0.195,
+"price": 351,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 275+ pass yds",
+"p": 0.19,
+"price": 373,
 "book": "Kalshi"
 }
 ],
-"p": 0.01288,
-"d": 54.184,
-"first": "2026-10-26T00:20:00+00:00"
+"p": 0.028,
+"d": 67.891,
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -243,7 +376,8 @@
 ],
 "p": 0.08408,
 "d": 10.097,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -276,7 +410,8 @@
 ],
 "p": 0.08113,
 "d": 10.804,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -309,7 +444,8 @@
 ],
 "p": 0.07838,
 "d": 10.804,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -354,7 +490,8 @@
 ],
 "p": 0.0129,
 "d": 59.899,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -399,7 +536,8 @@
 ],
 "p": 0.012,
 "d": 62.71,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Parlays by payout (your books)",
@@ -413,7 +551,7 @@
 "line": 49.5,
 "name": "dallas goedert",
 "lab": "Dallas Goedert over 49.5 rec yds",
-"p": 0.5704,
+"p": 0.5703,
 "price": -115,
 "book": "Kalshi"
 },
@@ -430,9 +568,10 @@
 "book": "Novig"
 }
 ],
-"p": 0.32336,
+"p": 0.32331,
 "d": 3.554,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Parlays by payout (your books)",
@@ -465,22 +604,91 @@
 ],
 "p": 0.298,
 "d": 3.84,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 49.5 rec yds",
+"p": 0.5703,
+"price": -115,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy TD",
+"p": 0.2941,
+"price": 264,
+"book": "Novig"
+}
+],
+"p": 0.16772,
+"d": 6.805,
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "tanner mckee",
+"lab": "Tanner Mckee over 199.5 pass yds",
+"p": 0.5256,
+"price": 102,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "tre tucker",
-"lab": "Tre Tucker TD",
-"p": 0.2493,
-"price": 355,
+"name": "xavier worthy",
+"lab": "Xavier Worthy TD",
+"p": 0.2941,
+"price": 264,
+"book": "Novig"
+}
+],
+"p": 0.15459,
+"d": 7.353,
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "alvin kamara",
+"lab": "Alvin Kamara TD",
+"p": 0.238,
+"price": 388,
 "book": "Novig"
 },
 {
@@ -491,29 +699,31 @@
 "line": 49.5,
 "name": "dallas goedert",
 "lab": "Dallas Goedert over 49.5 rec yds",
-"p": 0.5704,
+"p": 0.5703,
 "price": -115,
 "book": "Kalshi"
 }
 ],
-"p": 0.14222,
-"d": 8.507,
-"first": "2026-10-25T20:25:00+00:00"
+"p": 0.13575,
+"d": 9.123,
+"first": "2026-10-25T13:30:00+00:00",
+"pick": "core",
+"res": null
 },
 {
 "card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "tre tucker",
-"lab": "Tre Tucker TD",
-"p": 0.2493,
-"price": 355,
+"name": "alvin kamara",
+"lab": "Alvin Kamara TD",
+"p": 0.238,
+"price": 388,
 "book": "Novig"
 },
 {
@@ -529,43 +739,10 @@
 "book": "Novig"
 }
 ],
-"p": 0.14136,
-"d": 8.649,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "alvin kamara",
-"lab": "Alvin Kamara TD",
-"p": 0.2375,
-"price": 388,
-"book": "Novig"
-},
-{
-"gid": "2026_07_DAL_PHI",
-"start": "2026-10-26T20:15:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "dallas goedert",
-"lab": "Dallas Goedert over 49.5 rec yds",
-"p": 0.5704,
-"price": -115,
-"book": "Kalshi"
-}
-],
-"p": 0.13544,
-"d": 9.123,
+"p": 0.13495,
+"d": 9.276,
 "first": "2026-10-25T13:30:00+00:00",
-"pick": "core"
+"res": null
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -599,7 +776,7 @@
 "p": 0.27779,
 "d": 4.942,
 "first": "2026-10-25T17:00:00+00:00",
-"pick": "core"
+"res": null
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -611,10 +788,10 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.319,
-"price": 300,
+"name": "alvin kamara",
+"lab": "Alvin Kamara anytime TD",
+"p": 0.262,
+"price": 388,
 "book": "Novig"
 },
 {
@@ -630,14 +807,50 @@
 "book": "Novig"
 }
 ],
-"p": 0.18085,
-"d": 7.604,
+"p": 0.14853,
+"d": 9.276,
 "first": "2026-10-25T13:30:00+00:00",
-"pick": "core"
+"pick": "core",
+"res": null
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_07_TB_CAR",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kenny gainwell",
+"lab": "Kenny Gainwell anytime TD",
+"p": 0.243,
+"price": 426,
+"book": "Novig"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "george kittle",
+"lab": "George Kittle over 5.5 receptions",
+"p": 0.5669,
+"price": -111,
+"book": "Novig"
+}
+],
+"p": 0.13776,
+"d": 9.999,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
 "legs": [
 {
 "gid": "2026_07_IND_MIN",
@@ -657,16 +870,17 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.319,
-"price": 300,
+"name": "alvin kamara",
+"lab": "Alvin Kamara anytime TD",
+"p": 0.262,
+"price": 388,
 "book": "Novig"
 }
 ],
-"p": 0.15631,
-"d": 10.4,
-"first": "2026-10-25T13:30:00+00:00"
+"p": 0.12838,
+"d": 12.688,
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -699,7 +913,8 @@
 ],
 "p": 0.11907,
 "d": 13.676,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -732,40 +947,8 @@
 ],
 "p": 0.11613,
 "d": 12.376,
-"first": "2026-10-25T17:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.49,
-"price": 160,
-"book": "Novig"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "george holani",
-"lab": "George Holani anytime TD",
-"p": 0.227,
-"price": 441,
-"book": "Novig"
-}
-],
-"p": 0.11123,
-"d": 14.066,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Cross-game parlays",
@@ -834,7 +1017,8 @@
 ],
 "p": 0.0836,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Cross-game parlays",
@@ -927,7 +1111,8 @@
 ],
 "p": 0.04688,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Cross-game parlays",
@@ -1008,7 +1193,8 @@
 ],
 "p": 0.08355,
 "d": 31.415,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Cross-game parlays",
@@ -1077,7 +1263,8 @@
 ],
 "p": 0.0596,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Cross-game parlays",
@@ -1230,7 +1417,8 @@
 ],
 "p": 0.00703,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1299,7 +1487,8 @@
 ],
 "p": 0.0937,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1380,7 +1569,8 @@
 ],
 "p": 0.0606,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1473,7 +1663,8 @@
 ],
 "p": 0.0341,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1542,7 +1733,8 @@
 ],
 "p": 0.0866,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1623,7 +1815,8 @@
 ],
 "p": 0.0485,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1716,7 +1909,8 @@
 ],
 "p": 0.0272,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1761,7 +1955,8 @@
 ],
 "p": 0.1293,
 "d": 6.485,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1818,7 +2013,8 @@
 ],
 "p": 0.0656,
 "d": 13.514,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1887,7 +2083,8 @@
 ],
 "p": 0.0826,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -1968,7 +2165,8 @@
 ],
 "p": 0.0585,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2061,7 +2259,8 @@
 ],
 "p": 0.038,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2130,7 +2329,8 @@
 ],
 "p": 0.0349,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2199,7 +2399,8 @@
 ],
 "p": 0.0413,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2268,7 +2469,8 @@
 ],
 "p": 0.0653,
 "d": 20.243,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2337,7 +2539,8 @@
 ],
 "p": 0.075,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2418,7 +2621,8 @@
 ],
 "p": 0.0508,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2511,7 +2715,8 @@
 ],
 "p": 0.032,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2580,7 +2785,8 @@
 ],
 "p": 0.0761,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2625,7 +2831,8 @@
 ],
 "p": 0.1312,
 "d": 5.414,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2682,7 +2889,8 @@
 ],
 "p": 0.0685,
 "d": 8.598,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2751,7 +2959,8 @@
 ],
 "p": 0.0947,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2832,7 +3041,8 @@
 ],
 "p": 0.0608,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2925,7 +3135,8 @@
 ],
 "p": 0.0371,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -2994,7 +3205,8 @@
 ],
 "p": 0.0375,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3063,7 +3275,8 @@
 ],
 "p": 0.0506,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3144,7 +3357,8 @@
 ],
 "p": 0.0311,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3213,7 +3427,8 @@
 ],
 "p": 0.0555,
 "d": 20.704,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3282,7 +3497,8 @@
 ],
 "p": 0.0963,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3363,7 +3579,8 @@
 ],
 "p": 0.0594,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3456,7 +3673,8 @@
 ],
 "p": 0.0336,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3501,7 +3719,8 @@
 ],
 "p": 0.1308,
 "d": 12.034,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3558,7 +3777,8 @@
 ],
 "p": 0.0561,
 "d": 27.322,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3627,7 +3847,8 @@
 ],
 "p": 0.0903,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3708,7 +3929,8 @@
 ],
 "p": 0.0669,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3801,7 +4023,8 @@
 ],
 "p": 0.0444,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3870,7 +4093,8 @@
 ],
 "p": 0.081,
 "d": 22.371,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -3939,7 +4163,8 @@
 ],
 "p": 0.0523,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4020,7 +4245,8 @@
 ],
 "p": 0.0309,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4113,7 +4339,8 @@
 ],
 "p": 0.018,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4182,7 +4409,8 @@
 ],
 "p": 0.056,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4263,7 +4491,8 @@
 ],
 "p": 0.0367,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4356,7 +4585,8 @@
 ],
 "p": 0.0201,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4425,7 +4655,8 @@
 ],
 "p": 0.1332,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4506,7 +4737,8 @@
 ],
 "p": 0.0887,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4599,7 +4831,8 @@
 ],
 "p": 0.0566,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4668,7 +4901,8 @@
 ],
 "p": 0.0322,
 "d": 99.01,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4713,7 +4947,8 @@
 ],
 "p": 0.1293,
 "d": 7.402,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4770,7 +5005,8 @@
 ],
 "p": 0.0679,
 "d": 13.228,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4839,7 +5075,8 @@
 ],
 "p": 0.1142,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -4920,7 +5157,8 @@
 ],
 "p": 0.0732,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5013,7 +5251,8 @@
 ],
 "p": 0.0468,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5082,7 +5321,8 @@
 ],
 "p": 0.0672,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5151,7 +5391,8 @@
 ],
 "p": 0.0741,
 "d": 25.381,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5220,7 +5461,8 @@
 ],
 "p": 0.0405,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5301,7 +5543,8 @@
 ],
 "p": 0.0238,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5370,7 +5613,8 @@
 ],
 "p": 0.1206,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5451,7 +5695,8 @@
 ],
 "p": 0.0697,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5544,7 +5789,8 @@
 ],
 "p": 0.0402,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5589,7 +5835,8 @@
 ],
 "p": 0.106,
 "d": 6.246,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5646,7 +5893,8 @@
 ],
 "p": 0.0651,
 "d": 9.766,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5715,7 +5963,8 @@
 ],
 "p": 0.1185,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5796,7 +6045,8 @@
 ],
 "p": 0.074,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5889,7 +6139,8 @@
 ],
 "p": 0.0454,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -5958,7 +6209,8 @@
 ],
 "p": 0.0801,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6039,7 +6291,8 @@
 ],
 "p": 0.0441,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6108,7 +6361,8 @@
 ],
 "p": 0.0375,
 "d": 34.483,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6177,7 +6431,8 @@
 ],
 "p": 0.0526,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6258,7 +6513,8 @@
 ],
 "p": 0.0326,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6351,7 +6607,8 @@
 ],
 "p": 0.0171,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6420,7 +6677,8 @@
 ],
 "p": 0.0745,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6501,7 +6759,8 @@
 ],
 "p": 0.0497,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6594,7 +6853,8 @@
 ],
 "p": 0.0312,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6663,7 +6923,8 @@
 ],
 "p": 0.0605,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6744,7 +7005,8 @@
 ],
 "p": 0.0413,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6837,7 +7099,8 @@
 ],
 "p": 0.0231,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6882,7 +7145,8 @@
 ],
 "p": 0.1189,
 "d": 12.346,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -6939,7 +7203,8 @@
 ],
 "p": 0.0636,
 "d": 24.213,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7008,7 +7273,8 @@
 ],
 "p": 0.083,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7089,7 +7355,8 @@
 ],
 "p": 0.0577,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7182,7 +7449,8 @@
 ],
 "p": 0.0374,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7251,7 +7519,8 @@
 ],
 "p": 0.0519,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7320,7 +7589,8 @@
 ],
 "p": 0.0521,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7389,7 +7659,8 @@
 ],
 "p": 0.0874,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7470,7 +7741,8 @@
 ],
 "p": 0.0494,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7539,7 +7811,8 @@
 ],
 "p": 0.1211,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7620,7 +7893,8 @@
 ],
 "p": 0.0758,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7713,7 +7987,8 @@
 ],
 "p": 0.0438,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7782,7 +8057,8 @@
 ],
 "p": 0.0449,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7863,7 +8139,8 @@
 ],
 "p": 0.0301,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -7956,7 +8233,8 @@
 ],
 "p": 0.0188,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8001,7 +8279,8 @@
 ],
 "p": 0.1059,
 "d": 8.13,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8058,7 +8337,8 @@
 ],
 "p": 0.058,
 "d": 28.011,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8127,7 +8407,8 @@
 ],
 "p": 0.1114,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8208,7 +8489,8 @@
 ],
 "p": 0.078,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8301,7 +8583,8 @@
 ],
 "p": 0.0497,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8370,7 +8653,8 @@
 ],
 "p": 0.0538,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8451,7 +8735,8 @@
 ],
 "p": 0.0322,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8544,7 +8829,8 @@
 ],
 "p": 0.0182,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8613,7 +8899,8 @@
 ],
 "p": 0.0933,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8682,7 +8969,8 @@
 ],
 "p": 0.0399,
 "d": 31.949,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8763,7 +9051,8 @@
 ],
 "p": 0.0214,
 "d": 57.143,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8832,7 +9121,8 @@
 ],
 "p": 0.0895,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -8913,7 +9203,8 @@
 ],
 "p": 0.057,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9006,7 +9297,8 @@
 ],
 "p": 0.0344,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9051,7 +9343,8 @@
 ],
 "p": 0.1372,
 "d": 7.576,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9108,7 +9401,8 @@
 ],
 "p": 0.0651,
 "d": 16.835,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9177,7 +9471,8 @@
 ],
 "p": 0.0832,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9258,7 +9553,8 @@
 ],
 "p": 0.0535,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9351,7 +9647,8 @@
 ],
 "p": 0.0317,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9420,7 +9717,8 @@
 ],
 "p": 0.0502,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9501,7 +9799,8 @@
 ],
 "p": 0.0301,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9594,7 +9893,8 @@
 ],
 "p": 0.0167,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9663,7 +9963,8 @@
 ],
 "p": 0.0196,
 "d": 46.512,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9732,7 +10033,8 @@
 ],
 "p": 0.0686,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9813,7 +10115,8 @@
 ],
 "p": 0.0354,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9882,7 +10185,8 @@
 ],
 "p": 0.1546,
 "d": 24.814,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -9963,7 +10267,8 @@
 ],
 "p": 0.1013,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10056,7 +10361,8 @@
 ],
 "p": 0.0735,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10125,7 +10431,8 @@
 ],
 "p": 0.0826,
 "d": 30.03,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10206,7 +10513,8 @@
 ],
 "p": 0.0579,
 "d": 55.556,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10299,7 +10607,8 @@
 ],
 "p": 0.0359,
 "d": 99.01,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10344,7 +10653,8 @@
 ],
 "p": 0.0964,
 "d": 25.126,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10401,7 +10711,8 @@
 ],
 "p": 0.0608,
 "d": 64.516,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10470,7 +10781,8 @@
 ],
 "p": 0.1403,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10551,7 +10863,8 @@
 ],
 "p": 0.1002,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10644,7 +10957,8 @@
 ],
 "p": 0.0735,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10713,7 +11027,8 @@
 ],
 "p": 0.0772,
 "d": 30.03,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10794,7 +11109,8 @@
 ],
 "p": 0.0475,
 "d": 53.476,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10887,7 +11203,8 @@
 ],
 "p": 0.0274,
 "d": 99.01,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -10956,7 +11273,8 @@
 ],
 "p": 0.1031,
 "d": 24.752,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11037,7 +11355,8 @@
 ],
 "p": 0.0587,
 "d": 64.935,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11130,7 +11449,8 @@
 ],
 "p": 0.0301,
 "d": 128.205,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11199,7 +11519,8 @@
 ],
 "p": 0.1191,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11280,7 +11601,8 @@
 ],
 "p": 0.0822,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11373,7 +11695,8 @@
 ],
 "p": 0.052,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11442,7 +11765,8 @@
 ],
 "p": 0.1045,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11523,7 +11847,8 @@
 ],
 "p": 0.0717,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11616,7 +11941,8 @@
 ],
 "p": 0.0435,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11685,7 +12011,8 @@
 ],
 "p": 0.1045,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11766,7 +12093,8 @@
 ],
 "p": 0.0717,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11859,7 +12187,8 @@
 ],
 "p": 0.0435,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11904,7 +12233,8 @@
 ],
 "p": 0.1468,
 "d": 8.666,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -11961,7 +12291,8 @@
 ],
 "p": 0.0776,
 "d": 22.222,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12030,7 +12361,8 @@
 ],
 "p": 0.1052,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12111,7 +12443,8 @@
 ],
 "p": 0.0633,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12204,7 +12537,8 @@
 ],
 "p": 0.0386,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12273,7 +12607,8 @@
 ],
 "p": 0.0426,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12342,7 +12677,8 @@
 ],
 "p": 0.0777,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12423,7 +12759,8 @@
 ],
 "p": 0.0442,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12516,7 +12853,8 @@
 ],
 "p": 0.0252,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12585,7 +12923,8 @@
 ],
 "p": 0.0441,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12666,7 +13005,8 @@
 ],
 "p": 0.0226,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12759,7 +13099,8 @@
 ],
 "p": 0.012,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12828,7 +13169,8 @@
 ],
 "p": 0.1476,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -12909,7 +13251,8 @@
 ],
 "p": 0.0951,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13002,7 +13345,8 @@
 ],
 "p": 0.0612,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13071,7 +13415,8 @@
 ],
 "p": 0.0985,
 "d": 18.45,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13152,7 +13497,8 @@
 ],
 "p": 0.0625,
 "d": 37.594,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13245,7 +13591,8 @@
 ],
 "p": 0.0353,
 "d": 80,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13290,7 +13637,8 @@
 ],
 "p": 0.1028,
 "d": 28.169,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13347,7 +13695,8 @@
 ],
 "p": 0.0596,
 "d": 85.47,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13416,7 +13765,8 @@
 ],
 "p": 0.1501,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13497,7 +13847,8 @@
 ],
 "p": 0.0984,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13590,7 +13941,8 @@
 ],
 "p": 0.0654,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13659,7 +14011,8 @@
 ],
 "p": 0.0595,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13728,7 +14081,8 @@
 ],
 "p": 0.0533,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13797,7 +14151,8 @@
 ],
 "p": 0.1061,
 "d": 21.505,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13878,7 +14233,8 @@
 ],
 "p": 0.0664,
 "d": 43.86,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -13971,7 +14327,8 @@
 ],
 "p": 0.0381,
 "d": 69.93,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14040,7 +14397,8 @@
 ],
 "p": 0.1003,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14121,7 +14479,8 @@
 ],
 "p": 0.065,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14214,7 +14573,8 @@
 ],
 "p": 0.0382,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14283,7 +14643,8 @@
 ],
 "p": 0.0516,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14364,7 +14725,8 @@
 ],
 "p": 0.0329,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14457,7 +14819,8 @@
 ],
 "p": 0.0208,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14502,7 +14865,8 @@
 ],
 "p": 0.1209,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14559,7 +14923,8 @@
 ],
 "p": 0.0565,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14628,7 +14993,8 @@
 ],
 "p": 0.0975,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14709,7 +15075,8 @@
 ],
 "p": 0.0615,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14802,7 +15169,8 @@
 ],
 "p": 0.0357,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14871,7 +15239,8 @@
 ],
 "p": 0.0772,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -14952,7 +15321,8 @@
 ],
 "p": 0.0489,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -15021,7 +15391,8 @@
 ],
 "p": 0.035,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays",
@@ -15090,7 +15461,8 @@
 ],
 "p": 0.062,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15159,7 +15531,8 @@
 ],
 "p": 0.0936,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15240,7 +15613,8 @@
 ],
 "p": 0.0671,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15333,7 +15707,8 @@
 ],
 "p": 0.0382,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15402,7 +15777,8 @@
 ],
 "p": 0.0936,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15483,7 +15859,8 @@
 ],
 "p": 0.0671,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15576,7 +15953,8 @@
 ],
 "p": 0.0376,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15621,7 +15999,8 @@
 ],
 "p": 0.1299,
 "d": 6.485,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15678,7 +16057,8 @@
 ],
 "p": 0.0623,
 "d": 13.245,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15747,7 +16127,8 @@
 ],
 "p": 0.1069,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15828,7 +16209,8 @@
 ],
 "p": 0.0671,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15921,7 +16303,8 @@
 ],
 "p": 0.0376,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -15990,7 +16373,8 @@
 ],
 "p": 0.0603,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16059,7 +16443,8 @@
 ],
 "p": 0.0488,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16128,7 +16513,8 @@
 ],
 "p": 0.0763,
 "d": 21.459,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16209,7 +16595,8 @@
 ],
 "p": 0.0422,
 "d": 38.911,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16278,7 +16665,8 @@
 ],
 "p": 0.0908,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16359,7 +16747,8 @@
 ],
 "p": 0.0581,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16452,7 +16841,8 @@
 ],
 "p": 0.0351,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16521,7 +16911,8 @@
 ],
 "p": 0.0882,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16602,7 +16993,8 @@
 ],
 "p": 0.0548,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16647,7 +17039,8 @@
 ],
 "p": 0.1367,
 "d": 10.204,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16704,7 +17097,8 @@
 ],
 "p": 0.0655,
 "d": 17.889,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16773,7 +17167,8 @@
 ],
 "p": 0.0908,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16854,7 +17249,8 @@
 ],
 "p": 0.0581,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -16947,7 +17343,8 @@
 ],
 "p": 0.0351,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17016,7 +17413,8 @@
 ],
 "p": 0.0479,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17085,7 +17483,8 @@
 ],
 "p": 0.0401,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17154,7 +17553,8 @@
 ],
 "p": 0.0788,
 "d": 17.889,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17235,7 +17635,8 @@
 ],
 "p": 0.0469,
 "d": 30.303,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17304,7 +17705,8 @@
 ],
 "p": 0.1042,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17385,7 +17787,8 @@
 ],
 "p": 0.0683,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17478,7 +17881,8 @@
 ],
 "p": 0.0457,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17547,7 +17951,8 @@
 ],
 "p": 0.0462,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17628,7 +18033,8 @@
 ],
 "p": 0.0307,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17721,7 +18127,8 @@
 ],
 "p": 0.0182,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17766,7 +18173,8 @@
 ],
 "p": 0.1182,
 "d": 15.625,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17823,7 +18231,8 @@
 ],
 "p": 0.0532,
 "d": 31.949,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17892,7 +18301,8 @@
 ],
 "p": 0.1027,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -17973,7 +18383,8 @@
 ],
 "p": 0.0683,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18066,7 +18477,8 @@
 ],
 "p": 0.0457,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18135,7 +18547,8 @@
 ],
 "p": 0.0734,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18204,7 +18617,8 @@
 ],
 "p": 0.0477,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18285,7 +18699,8 @@
 ],
 "p": 0.0277,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18378,7 +18793,8 @@
 ],
 "p": 0.0157,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18447,7 +18863,8 @@
 ],
 "p": 0.057,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18528,7 +18945,8 @@
 ],
 "p": 0.0375,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18621,7 +19039,8 @@
 ],
 "p": 0.0246,
 "d": null,
-"first": "2026-10-25T20:05:00+00:00"
+"first": "2026-10-25T20:05:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18690,7 +19109,8 @@
 ],
 "p": 0.143,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18771,7 +19191,8 @@
 ],
 "p": 0.082,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18864,7 +19285,8 @@
 ],
 "p": 0.0513,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18909,7 +19331,8 @@
 ],
 "p": 0.1165,
 "d": 5.807,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -18966,7 +19389,8 @@
 ],
 "p": 0.0633,
 "d": 12.626,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19035,7 +19459,8 @@
 ],
 "p": 0.093,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19116,7 +19541,8 @@
 ],
 "p": 0.067,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19209,7 +19635,8 @@
 ],
 "p": 0.0429,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19278,7 +19705,8 @@
 ],
 "p": 0.0588,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19347,7 +19775,8 @@
 ],
 "p": 0.0811,
 "d": 26.316,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19416,7 +19845,8 @@
 ],
 "p": 0.07,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19497,7 +19927,8 @@
 ],
 "p": 0.0416,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19566,7 +19997,8 @@
 ],
 "p": 0.098,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19647,7 +20079,8 @@
 ],
 "p": 0.0623,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19740,7 +20173,8 @@
 ],
 "p": 0.0378,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19809,7 +20243,8 @@
 ],
 "p": 0.0532,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19890,7 +20325,8 @@
 ],
 "p": 0.0301,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19935,7 +20371,8 @@
 ],
 "p": 0.1128,
 "d": 15.244,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -19992,7 +20429,8 @@
 ],
 "p": 0.0556,
 "d": 33.113,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20061,7 +20499,8 @@
 ],
 "p": 0.098,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20142,7 +20581,8 @@
 ],
 "p": 0.062,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20235,7 +20675,8 @@
 ],
 "p": 0.0378,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20304,7 +20745,8 @@
 ],
 "p": 0.0538,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20385,7 +20827,8 @@
 ],
 "p": 0.0301,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20454,7 +20897,8 @@
 ],
 "p": 0.0294,
 "d": 31.25,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20523,7 +20967,8 @@
 ],
 "p": 0.0415,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20604,7 +21049,8 @@
 ],
 "p": 0.0255,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20673,7 +21119,8 @@
 ],
 "p": 0.0668,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20754,7 +21201,8 @@
 ],
 "p": 0.0448,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20847,7 +21295,8 @@
 ],
 "p": 0.0283,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20916,7 +21365,8 @@
 ],
 "p": 0.09,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -20997,7 +21447,8 @@
 ],
 "p": 0.0596,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21090,7 +21541,8 @@
 ],
 "p": 0.0358,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21135,7 +21587,8 @@
 ],
 "p": 0.1088,
 "d": 6.614,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21192,7 +21645,8 @@
 ],
 "p": 0.0742,
 "d": 12.034,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21261,7 +21715,8 @@
 ],
 "p": 0.0987,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21342,7 +21797,8 @@
 ],
 "p": 0.0596,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21435,7 +21891,8 @@
 ],
 "p": 0.0358,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21504,7 +21961,8 @@
 ],
 "p": 0.041,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21573,7 +22031,8 @@
 ],
 "p": 0.0671,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21642,7 +22101,8 @@
 ],
 "p": 0.0829,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21723,7 +22183,8 @@
 ],
 "p": 0.0559,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21816,7 +22277,8 @@
 ],
 "p": 0.0358,
 "d": null,
-"first": "2026-10-26T00:20:00+00:00"
+"first": "2026-10-26T00:20:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21885,7 +22347,8 @@
 ],
 "p": 0.1485,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -21966,7 +22429,8 @@
 ],
 "p": 0.0986,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22059,7 +22523,8 @@
 ],
 "p": 0.064,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22128,7 +22593,8 @@
 ],
 "p": 0.1379,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22209,7 +22675,8 @@
 ],
 "p": 0.097,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22302,7 +22769,8 @@
 ],
 "p": 0.064,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22347,7 +22815,8 @@
 ],
 "p": 0.1223,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22404,7 +22873,8 @@
 ],
 "p": 0.0563,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22473,7 +22943,8 @@
 ],
 "p": 0.1485,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22554,7 +23025,8 @@
 ],
 "p": 0.097,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22647,7 +23119,8 @@
 ],
 "p": 0.0626,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22716,7 +23189,8 @@
 ],
 "p": 0.0748,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22797,7 +23271,8 @@
 ],
 "p": 0.0457,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22890,7 +23365,8 @@
 ],
 "p": 0.0269,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -22959,7 +23435,8 @@
 ],
 "p": 0.0582,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23040,7 +23517,8 @@
 ],
 "p": 0.0298,
 "d": null,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23109,7 +23587,8 @@
 ],
 "p": 0.1158,
 "d": 25.189,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23190,7 +23669,8 @@
 ],
 "p": 0.0757,
 "d": 48.544,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23283,7 +23763,8 @@
 ],
 "p": 0.0466,
 "d": 84.746,
-"first": "2026-10-25T20:25:00+00:00"
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23352,7 +23833,8 @@
 ],
 "p": 0.098,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23433,7 +23915,8 @@
 ],
 "p": 0.0581,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23526,7 +24009,8 @@
 ],
 "p": 0.0349,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23595,7 +24079,8 @@
 ],
 "p": 0.0566,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23676,7 +24161,8 @@
 ],
 "p": 0.0341,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23721,7 +24207,8 @@
 ],
 "p": 0.1349,
 "d": 7.576,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23778,7 +24265,8 @@
 ],
 "p": 0.0638,
 "d": 18.051,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23847,7 +24335,8 @@
 ],
 "p": 0.0889,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -23928,7 +24417,8 @@
 ],
 "p": 0.0571,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24021,7 +24511,8 @@
 ],
 "p": 0.035,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24090,7 +24581,8 @@
 ],
 "p": 0.047,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24171,7 +24663,8 @@
 ],
 "p": 0.0289,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24264,7 +24757,8 @@
 ],
 "p": 0.0175,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24333,7 +24827,8 @@
 ],
 "p": 0.0374,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24414,7 +24909,8 @@
 ],
 "p": 0.0228,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24507,7 +25003,8 @@
 ],
 "p": 0.0138,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24576,7 +25073,8 @@
 ],
 "p": 0.0767,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24645,7 +25143,8 @@
 ],
 "p": 0.2096,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24726,7 +25225,8 @@
 ],
 "p": 0.156,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24819,7 +25319,8 @@
 ],
 "p": 0.1146,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24888,7 +25389,8 @@
 ],
 "p": 0.0935,
 "d": 30.03,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -24969,7 +25471,8 @@
 ],
 "p": 0.0681,
 "d": 55.556,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25062,7 +25565,8 @@
 ],
 "p": 0.0442,
 "d": 103.093,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25107,7 +25611,8 @@
 ],
 "p": 0.1182,
 "d": 29.412,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25164,7 +25669,8 @@
 ],
 "p": 0.059,
 "d": 101.01,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25233,7 +25739,8 @@
 ],
 "p": 0.2096,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25314,7 +25821,8 @@
 ],
 "p": 0.1552,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25407,7 +25915,8 @@
 ],
 "p": 0.1139,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25476,7 +25985,8 @@
 ],
 "p": 0.0935,
 "d": 30.03,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25557,7 +26067,8 @@
 ],
 "p": 0.0681,
 "d": 55.556,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25650,7 +26161,8 @@
 ],
 "p": 0.0438,
 "d": 99.01,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25719,7 +26231,8 @@
 ],
 "p": 0.12,
 "d": 38.023,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25800,7 +26313,8 @@
 ],
 "p": 0.0842,
 "d": 62.112,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25893,7 +26407,8 @@
 ],
 "p": 0.0575,
 "d": 125,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -25962,7 +26477,8 @@
 ],
 "p": 0.1857,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26043,7 +26559,8 @@
 ],
 "p": 0.1349,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26136,7 +26653,8 @@
 ],
 "p": 0.0957,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26205,7 +26723,8 @@
 ],
 "p": 0.1287,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26286,7 +26805,8 @@
 ],
 "p": 0.0894,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26379,7 +26899,8 @@
 ],
 "p": 0.0545,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26448,7 +26969,8 @@
 ],
 "p": 0.0865,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26529,7 +27051,8 @@
 ],
 "p": 0.0554,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26622,7 +27145,8 @@
 ],
 "p": 0.0338,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26667,7 +27191,8 @@
 ],
 "p": 0.1261,
 "d": 12.407,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26724,7 +27249,8 @@
 ],
 "p": 0.0607,
 "d": 31.847,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26793,7 +27319,8 @@
 ],
 "p": 0.1287,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26874,7 +27401,8 @@
 ],
 "p": 0.079,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -26967,7 +27495,8 @@
 ],
 "p": 0.0458,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27036,7 +27565,8 @@
 ],
 "p": 0.0645,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27105,7 +27635,8 @@
 ],
 "p": 0.072,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27186,7 +27717,8 @@
 ],
 "p": 0.0417,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27279,7 +27811,8 @@
 ],
 "p": 0.024,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27348,7 +27881,8 @@
 ],
 "p": 0.0865,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27429,7 +27963,8 @@
 ],
 "p": 0.0554,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27522,7 +28057,8 @@
 ],
 "p": 0.0338,
 "d": null,
-"first": "2026-10-25T13:30:00+00:00"
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27591,7 +28127,8 @@
 ],
 "p": 0.1635,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27672,7 +28209,8 @@
 ],
 "p": 0.1068,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27765,7 +28303,8 @@
 ],
 "p": 0.0703,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27834,7 +28373,8 @@
 ],
 "p": 0.1635,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -27915,7 +28455,8 @@
 ],
 "p": 0.1068,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28008,7 +28549,8 @@
 ],
 "p": 0.0703,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28053,7 +28595,8 @@
 ],
 "p": 0.1276,
 "d": 36.765,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28110,7 +28653,8 @@
 ],
 "p": 0.0712,
 "d": 114.943,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28179,7 +28723,8 @@
 ],
 "p": 0.165,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28260,7 +28805,8 @@
 ],
 "p": 0.1096,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28353,7 +28899,8 @@
 ],
 "p": 0.0716,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28422,7 +28969,8 @@
 ],
 "p": 0.0695,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28503,7 +29051,8 @@
 ],
 "p": 0.0461,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28596,7 +29145,8 @@
 ],
 "p": 0.0327,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28665,7 +29215,8 @@
 ],
 "p": 0.059,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28746,7 +29297,8 @@
 ],
 "p": 0.0354,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28839,7 +29391,8 @@
 ],
 "p": 0.0199,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28908,7 +29461,8 @@
 ],
 "p": 0.1311,
 "d": 25.51,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -28989,7 +29543,8 @@
 ],
 "p": 0.0782,
 "d": 46.296,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29082,7 +29637,8 @@
 ],
 "p": 0.0515,
 "d": 80,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29151,7 +29707,8 @@
 ],
 "p": 0.0871,
 "d": 22.222,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29232,7 +29789,8 @@
 ],
 "p": 0.046,
 "d": 40.323,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29325,7 +29883,8 @@
 ],
 "p": 0.0244,
 "d": 73.529,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29394,7 +29953,8 @@
 ],
 "p": 0.0295,
 "d": 25.381,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29439,7 +29999,8 @@
 ],
 "p": 0.1034,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29496,7 +30057,8 @@
 ],
 "p": 0.0502,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29565,7 +30127,8 @@
 ],
 "p": 0.0847,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29646,7 +30209,8 @@
 ],
 "p": 0.0473,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29715,7 +30279,8 @@
 ],
 "p": 0.0731,
 "d": 21.413,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29784,7 +30349,8 @@
 ],
 "p": 0.0295,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Same-game parlays (market-blind)",
@@ -29853,7 +30419,8 @@
 ],
 "p": 0.0154,
 "d": null,
-"first": "2026-10-25T17:00:00+00:00"
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 },
 {
 "card": "Learning parlays (experimental)",
@@ -29877,6 +30444,34 @@
 "edge": 0.0978
 },
 {
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 37.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 37.5 rec yds",
+"p": 0.556,
+"price": -108,
+"book": "Novig",
+"f": [
+"usage",
+"matchup"
+],
+"sport": "nfl",
+"edge": 0.0707
+}
+],
+"p": 0.16497,
+"d": 7.126,
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
+},
+{
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
 "kind": "td",
@@ -29893,16 +30488,7 @@
 ],
 "sport": "nfl",
 "edge": 0.0705
-}
-],
-"p": 0.08726,
-"d": 13.468,
-"first": "2026-10-25T17:00:00+00:00"
 },
-{
-"card": "Learning parlays (experimental)",
-"tier": "2 legs",
-"legs": [
 {
 "gid": "2026_07_SF_ATL",
 "start": "2026-10-25T13:00:00",
@@ -29920,29 +30506,12 @@
 ],
 "sport": "nfl",
 "edge": 0.0675
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kendre miller",
-"lab": "Kendre Miller anytime TD",
-"p": 0.3599,
-"price": 194,
-"book": "Novig",
-"f": [
-"usage",
-"rotation"
-],
-"sport": "nfl",
-"edge": 0.0581
 }
 ],
-"p": 0.20212,
-"d": 5.589,
-"first": "2026-10-25T13:30:00+00:00"
+"p": 0.16517,
+"d": 6.919,
+"first": "2026-10-25T17:00:00+00:00",
+"res": null
 }
 ],
 "graded": false
