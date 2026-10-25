@@ -32,6 +32,7 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 
 ## Pipeline
 - **Schedules:** a Cloudflare Worker (`sim-sheet-cron`, Eastern time) starts the workflows; all also run by hand (`workflow_dispatch`).
+- **Nightly settle-up (2026-10-24, owner: 'an update at 2am daily to figure out all results for the previous day'; `nightly.yml`, GitHub cron 06:00 + 07:00 UTC, only the one at 2 AM New York goes ahead):** starts full NBA / NHL / NFL / MLB runs (fresh box scores -> results pages, box score grades, Profit rows), waits for them (run summary lists each result), then a markets run (parlays graded, learning builder, Profit page).
 - **Sport workflows:** `nfl.yml`, `nhl.yml`, `nba.yml` and `mlb.yml` use the shared action `.github/actions/run-sport` (Python 3.12, `pip install -r requirements.txt`, `python run.py <mode>`).
   - NFL also runs `outperf.py`.
 - **`markets.yml` (about every 15 min):** runs `books.py`, `sharp.py` and `watch.py`.
