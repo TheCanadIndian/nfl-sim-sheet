@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-25",
 "lock": "2026-10-25T19:00:00+00:00",
-"frozen_at": "2026-10-25T15:03:18.254Z",
+"frozen_at": "2026-10-25T15:17:24.128Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -447,7 +447,7 @@
 "name": "brady tkachuk",
 "lab": "Brady Tkachuk to score",
 "p": 0.389,
-"price": 147,
+"price": 153,
 "book": "Novig"
 },
 {
@@ -458,13 +458,13 @@
 "line": null,
 "name": null,
 "lab": "FLA moneyline",
-"p": 0.5924,
+"p": 0.5947,
 "price": -170,
 "book": "Novig"
 }
 ],
-"p": 0.28643,
-"d": 3.491,
+"p": 0.28751,
+"d": 3.478,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
 },
@@ -492,13 +492,13 @@
 "line": null,
 "name": null,
 "lab": "FLA moneyline",
-"p": 0.5924,
+"p": 0.5947,
 "price": -170,
 "book": "Novig"
 }
 ],
-"p": 0.27398,
-"d": 3.65,
+"p": 0.27502,
+"d": 3.636,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
 },
@@ -526,13 +526,13 @@
 "line": 2.5,
 "name": "sam reinhart",
 "lab": "Sam Reinhart 3+ shots",
-"p": 0.484,
+"p": 0.4819,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.26038,
-"d": 3.84,
+"p": 0.25925,
+"d": 3.857,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
 },
@@ -560,13 +560,13 @@
 "line": 2.5,
 "name": "connor bedard",
 "lab": "Connor Bedard 3+ shots",
-"p": 0.5373,
+"p": 0.5398,
 "price": -104,
 "book": "Novig"
 }
 ],
-"p": 0.24494,
-"d": 4.083,
+"p": 0.24606,
+"d": 4.064,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
 },
@@ -594,13 +594,13 @@
 "line": 2.5,
 "name": "jason robertson",
 "lab": "Jason Robertson 3+ shots",
-"p": 0.618,
-"price": -170,
+"p": 0.619,
+"price": -174,
 "book": "Novig"
 }
 ],
-"p": 0.30463,
-"d": 3.283,
+"p": 0.30513,
+"d": 3.277,
 "first": "2026-10-25T22:00:00+00:00",
 "res": null
 },
@@ -696,13 +696,13 @@
 "line": 2.5,
 "name": "wyatt johnston",
 "lab": "Wyatt Johnston 3+ shots",
-"p": 0.4388,
+"p": 0.44,
 "price": 122,
 "book": "Novig"
 }
 ],
-"p": 0.24262,
-"d": 4.122,
+"p": 0.24323,
+"d": 4.111,
 "first": "2026-10-25T22:00:00+00:00",
 "res": null
 },
@@ -730,47 +730,13 @@
 "line": 2.5,
 "name": "kyle connor",
 "lab": "Kyle Connor 3+ shots",
-"p": 0.6231,
+"p": 0.6205,
 "price": -180,
 "book": "Hard Rock"
 }
 ],
-"p": 0.31102,
-"d": 3.215,
-"first": "2026-10-25T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "3+ shots + goal",
-"legs": [
-{
-"gid": "2026020182",
-"start": "2026-10-25T23:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "cole caufield",
-"lab": "Cole Caufield to score",
-"p": 0.3987,
-"price": 144,
-"book": "Novig"
-},
-{
-"gid": "2026020182",
-"start": "2026-10-25T23:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "cole caufield",
-"lab": "Cole Caufield 3+ shots",
-"p": 0.5663,
-"price": -250,
-"book": "ProphetX"
-}
-],
-"p": 0.30137,
-"d": 3.318,
+"p": 0.30975,
+"d": 3.228,
 "first": "2026-10-25T23:00:00+00:00",
 "res": null
 },
@@ -833,12 +799,46 @@
 "name": null,
 "lab": "MTL-WPG over 5.5",
 "p": 0.5144,
-"price": -115,
+"price": -117,
 "book": "Novig"
 }
 ],
 "p": 0.25675,
 "d": 3.895,
+"first": "2026-10-25T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "Goal + over 5.5",
+"legs": [
+{
+"gid": "2026020182",
+"start": "2026-10-25T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "cole caufield",
+"lab": "Cole Caufield to score",
+"p": 0.3987,
+"price": 144,
+"book": "Novig"
+},
+{
+"gid": "2026020182",
+"start": "2026-10-25T23:00:00Z",
+"kind": "total",
+"side": "over",
+"line": 5.5,
+"name": null,
+"lab": "MTL-WPG over 5.5",
+"p": 0.5144,
+"price": -117,
+"book": "Novig"
+}
+],
+"p": 0.25549,
+"d": 3.914,
 "first": "2026-10-25T23:00:00+00:00",
 "res": null
 },
@@ -934,13 +934,13 @@
 "line": 2.5,
 "name": "steven stamkos",
 "lab": "Steven Stamkos 3+ shots",
-"p": 0.4108,
+"p": 0.4071,
 "price": 147,
 "book": "Novig"
 }
 ],
-"p": 0.20166,
-"d": 4.959,
+"p": 0.19982,
+"d": 5.005,
 "first": "2026-10-26T00:00:00+00:00",
 "res": null
 },
@@ -1036,13 +1036,13 @@
 "line": 5.5,
 "name": null,
 "lab": "MIN-VAN over 5.5",
-"p": 0.5932,
-"price": -167,
+"p": 0.5981,
+"price": -174,
 "book": "Poly US"
 }
 ],
-"p": 0.34002,
-"d": 2.941,
+"p": 0.3428,
+"d": 2.917,
 "first": "2026-10-26T02:00:00+00:00",
 "res": null
 },
@@ -1104,48 +1104,14 @@
 "line": 5.5,
 "name": null,
 "lab": "MIN-VAN over 5.5",
-"p": 0.5932,
-"price": -167,
+"p": 0.5981,
+"price": -174,
 "book": "Poly US"
 }
 ],
-"p": 0.29744,
-"d": 3.362,
+"p": 0.29987,
+"d": 3.335,
 "first": "2026-10-26T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020183",
-"start": "2026-10-26T00:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "cale makar",
-"lab": "Cale Makar under 2.5 shots",
-"p": 0.5485,
-"price": -104,
-"book": "Novig"
-},
-{
-"gid": "2026020184",
-"start": "2026-10-26T02:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "elias pettersson",
-"lab": "Elias Pettersson under 1.5 shots",
-"p": 0.724,
-"price": -110,
-"book": "Hard Rock"
-}
-],
-"p": 0.39711,
-"d": 3.745,
-"first": "2026-10-26T00:00:00+00:00",
 "res": null
 },
 {
@@ -1160,7 +1126,7 @@
 "line": 1.5,
 "name": "lane hutson",
 "lab": "Lane Hutson under 1.5 shots",
-"p": 0.525,
+"p": 0.5325,
 "price": 105,
 "book": "Hard Rock"
 },
@@ -1177,7 +1143,7 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.38006,
+"p": 0.38554,
 "d": 3.914,
 "first": "2026-10-25T23:00:00+00:00",
 "res": null
@@ -1187,15 +1153,15 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026020180",
-"start": "2026-10-25T19:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "frank nazar",
-"lab": "Frank Nazar over 1.5 shots",
-"p": 0.5097,
-"price": 115,
+"gid": "2026020183",
+"start": "2026-10-26T00:00:00Z",
+"kind": "total",
+"side": "under",
+"line": 6.5,
+"name": null,
+"lab": "COL-NSH under 6.5",
+"p": 0.5294,
+"price": 102,
 "book": "Novig"
 },
 {
@@ -1211,9 +1177,43 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.36902,
-"d": 4.105,
-"first": "2026-10-25T19:00:00+00:00",
+"p": 0.38326,
+"d": 3.856,
+"first": "2026-10-26T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020182",
+"start": "2026-10-25T23:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "oliver kapanen",
+"lab": "Oliver Kapanen under 1.5 shots",
+"p": 0.5212,
+"price": 130,
+"book": "Hard Rock"
+},
+{
+"gid": "2026020184",
+"start": "2026-10-26T02:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "elias pettersson",
+"lab": "Elias Pettersson under 1.5 shots",
+"p": 0.724,
+"price": -110,
+"book": "Hard Rock"
+}
+],
+"p": 0.37736,
+"d": 4.391,
+"first": "2026-10-25T23:00:00+00:00",
 "res": null
 },
 {
@@ -1228,7 +1228,7 @@
 "line": 1.5,
 "name": "anton lundell",
 "lab": "Anton Lundell under 1.5 shots",
-"p": 0.4183,
+"p": 0.4148,
 "price": 156,
 "book": "Novig"
 },
@@ -1257,7 +1257,7 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.21651,
+"p": 0.21475,
 "d": 7.394,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
@@ -1274,7 +1274,7 @@
 "line": null,
 "name": null,
 "lab": "CHI moneyline",
-"p": 0.4076,
+"p": 0.4053,
 "price": 163,
 "book": "Novig"
 },
@@ -1303,7 +1303,7 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.21098,
+"p": 0.20982,
 "d": 7.596,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
@@ -1320,20 +1320,20 @@
 "line": 1.5,
 "name": "lane hutson",
 "lab": "Lane Hutson under 1.5 shots",
-"p": 0.525,
+"p": 0.5325,
 "price": 105,
 "book": "Hard Rock"
 },
 {
 "gid": "2026020183",
 "start": "2026-10-26T00:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "cale makar",
-"lab": "Cale Makar under 2.5 shots",
-"p": 0.5485,
-"price": -104,
+"kind": "total",
+"side": "under",
+"line": 6.5,
+"name": null,
+"lab": "COL-NSH under 6.5",
+"p": 0.5294,
+"price": 102,
 "book": "Novig"
 },
 {
@@ -1349,8 +1349,8 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.20847,
-"d": 7.677,
+"p": 0.20409,
+"d": 7.906,
 "first": "2026-10-25T23:00:00+00:00",
 "res": null
 },
@@ -1366,8 +1366,8 @@
 "line": null,
 "name": null,
 "lab": "CHI moneyline",
-"p": 0.4076,
-"price": 167,
+"p": 0.4053,
+"price": 165,
 "book": "ProphetX"
 },
 {
@@ -1383,8 +1383,8 @@
 "book": "theScore"
 }
 ],
-"p": 0.29141,
-"d": 4.075,
+"p": 0.28981,
+"d": 4.045,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
 },
@@ -1461,18 +1461,6 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026020180",
-"start": "2026-10-25T19:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "CHI moneyline",
-"p": 0.4076,
-"price": 167,
-"book": "ProphetX"
-},
-{
 "gid": "2026020182",
 "start": "2026-10-25T23:00:00Z",
 "kind": "sog",
@@ -1487,19 +1475,31 @@
 {
 "gid": "2026020183",
 "start": "2026-10-26T00:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NSH moneyline",
+"p": 0.3461,
+"price": 213,
+"book": "Novig"
+},
+{
+"gid": "2026020184",
+"start": "2026-10-26T02:00:00Z",
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.5797,
-"price": -127,
-"book": "Novig"
+"name": "blake coleman",
+"lab": "Blake Coleman over 1.5 shots",
+"p": 0.6707,
+"price": -195,
+"book": "Hard Rock"
 }
 ],
-"p": 0.16894,
-"d": 7.284,
-"first": "2026-10-25T19:00:00+00:00",
+"p": 0.16599,
+"d": 7.227,
+"first": "2026-10-25T23:00:00+00:00",
 "res": null
 },
 {
@@ -1509,42 +1509,30 @@
 {
 "gid": "2026020181",
 "start": "2026-10-25T22:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "NYI moneyline",
-"p": 0.3916,
-"price": 170,
-"book": "Novig"
-},
-{
-"gid": "2026020182",
-"start": "2026-10-25T23:00:00Z",
 "kind": "sog",
 "side": "o",
-"line": 1.5,
-"name": "cole perfetti",
-"lab": "Cole Perfetti over 1.5 shots",
-"p": 0.715,
-"price": -190,
+"line": 3.5,
+"name": "jason robertson",
+"lab": "Jason Robertson over 3.5 shots",
+"p": 0.4525,
+"price": 135,
 "book": "theScore"
 },
 {
 "gid": "2026020183",
 "start": "2026-10-26T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.5797,
-"price": -127,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NSH moneyline",
+"p": 0.3461,
+"price": 213,
 "book": "Novig"
 }
 ],
-"p": 0.16231,
-"d": 7.366,
+"p": 0.15661,
+"d": 7.356,
 "first": "2026-10-25T22:00:00+00:00",
 "res": null
 },
@@ -1553,45 +1541,34 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026020182",
-"start": "2026-10-25T23:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "cole perfetti",
-"lab": "Cole Perfetti over 1.5 shots",
-"p": 0.715,
-"price": -190,
-"book": "theScore"
-},
-{
 "gid": "2026020183",
 "start": "2026-10-26T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.5797,
-"price": -127,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NSH moneyline",
+"p": 0.3461,
+"price": 213,
 "book": "Novig"
 },
 {
 "gid": "2026020184",
 "start": "2026-10-26T02:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "VAN moneyline",
-"p": 0.3864,
-"price": 174,
-"book": "Novig"
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "jake debrusk",
+"lab": "Jake Debrusk over 2.5 shots",
+"p": 0.4515,
+"price": 145,
+"book": "Hard Rock"
 }
 ],
-"p": 0.16017,
-"d": 7.475,
-"first": "2026-10-25T23:00:00+00:00",
+"p": 0.15628,
+"d": 7.668,
+"first": "2026-10-26T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -1606,8 +1583,8 @@
 "line": null,
 "name": null,
 "lab": "CHI moneyline",
-"p": 0.4076,
-"price": 167,
+"p": 0.4053,
+"price": 165,
 "book": "ProphetX"
 },
 {
@@ -1623,8 +1600,8 @@
 "book": "theScore"
 }
 ],
-"p": 0.29141,
-"d": 4.075,
+"p": 0.28981,
+"d": 4.045,
 "first": "2026-10-25T19:00:00+00:00",
 "res": null
 },
