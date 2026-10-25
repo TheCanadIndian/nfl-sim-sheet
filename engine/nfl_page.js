@@ -633,8 +633,11 @@ function boxPanel(g){
   const mean = (p, k) => p.s[k] ? p.s[k][MEAN] : 0, td = (p, i) => p.tdm ? p.tdm[i] : 0;
   const nm = p => `<td class="l"><b>${esc(p.n)}</b> <span class="small muted">${esc(p.pos)}</span></td>`;
   const tbl = (head, rows) => rows.length ? `<div class="tw"><table class="t nbx"><thead><tr>${head.map((h, i) => `<th${i ? '' : ' class="l"'}>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>` : '';
+  // owner 2026-10-24: highlight box numbers above the books' main line (an over lean); strip lists them with the line
+  const LN = (p, k) => window.MKT && MKT.propLine ? MKT.propLine(g.id, p.n, k) : null;
   const side = t => {
-    const P = PL(g).filter(p => p.t === t);
+    const P = PL(g).filter(p => p.t === t), over = [];
+    const ov = (p, k, v, lab) => { const l = LN(p, k); if (l == null || !(v > l)) return v; over.push(`<span class="bxoc">${esc(p.n.split(' ').slice(-1)[0])} ${lab} <b>${v}</b> <i>line ${l}</i></span>`); return `<span class="bxo" title="above the books’ line ${l}">${v}</span>`; };
     const qb = P.filter(p => p.s.att).sort((a, b) => mean(b, 'att') - mean(a, 'att'))[0];
     const rec = P.filter(p => mean(p, 'tgt') >= 1).sort((a, b) => mean(b, 'rec_yds') - mean(a, 'rec_yds'));
     const ru = P.filter(p => mean(p, 'car') >= 1).sort((a, b) => mean(b, 'rush_yds') - mean(a, 'rush_yds'));
@@ -642,15 +645,15 @@ function boxPanel(g){
     const rc = R(rec, p => mean(p, 'rec')), tg = R(rec, p => mean(p, 'tgt')), ry = R(rec, p => mean(p, 'rec_yds')), rt = R(rec, p => td(p, 1));
     const ca = R(ru, p => mean(p, 'car')), uy = R(ru, p => mean(p, 'rush_yds')), ut = R(ru, p => td(p, 0));
     const sum = a => a.reduce((x, y) => x + y, 0);
-    const pass = qb ? [`<tr>${nm(qb)}<td>${sum(rc)}/${Math.max(Math.round(mean(qb, 'att')), sum(rc))}</td><td class="bxp">${sum(ry)}</td><td>${sum(rt)}</td><td>${Math.round(mean(qb, 'ints'))}</td></tr>`] : [];
-    const rush = ru.map((p, i) => `<tr>${nm(p)}<td>${ca[i]}</td><td class="bxp">${uy[i]}</td><td>${ut[i]}</td></tr>`);
-    const recv = rec.map((p, i) => `<tr>${nm(p)}<td>${rc[i]}</td><td>${Math.max(tg[i], rc[i])}</td><td class="bxp">${ry[i]}</td><td>${rt[i]}</td></tr>`);
+    const pass = qb ? [`<tr>${nm(qb)}<td>${sum(rc)}/${Math.max(Math.round(mean(qb, 'att')), sum(rc))}</td><td class="bxp">${ov(qb, 'pass_yds', sum(ry), 'pass yds')}</td><td>${sum(rt)}</td><td>${Math.round(mean(qb, 'ints'))}</td></tr>`] : [];
+    const rush = ru.map((p, i) => `<tr>${nm(p)}<td>${ca[i]}</td><td class="bxp">${ov(p, 'rush_yds', uy[i], 'rush yds')}</td><td>${ut[i]}</td></tr>`);
+    const recv = rec.map((p, i) => `<tr>${nm(p)}<td>${ov(p, 'rec', rc[i], 'rec')}</td><td>${Math.max(tg[i], rc[i])}</td><td class="bxp">${ov(p, 'rec_yds', ry[i], 'rec yds')}</td><td>${rt[i]}</td></tr>`);
     return `<div class="nbxteam"><h3>${esc(t)} <span class="muted small">${f1(TM(g)[t].points)} pts</span></h3>
-      ${tbl([`Passing`, 'C/ATT', 'YDS', 'TD', 'INT'], pass)}${tbl(['Rushing', 'CAR', 'YDS', 'TD'], rush)}${tbl(['Receiving', 'REC', 'TGT', 'YDS', 'TD'], recv)}</div>`;
+      ${tbl([`Passing`, 'C/ATT', 'YDS', 'TD', 'INT'], pass)}${tbl(['Rushing', 'CAR', 'YDS', 'TD'], rush)}${tbl(['Receiving', 'REC', 'TGT', 'YDS', 'TD'], recv)}${over.length ? `<div class="bxos"><span class="eyebrow">Above the books’ line</span>${over.join('')}</div>` : ''}</div>`;
   };
   return `<section class="panel" aria-label="Projected box score"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${modelSwitch(g)}<span class="muted small">${esc(g.away)} at ${esc(g.home)} · each player’s simulated average, rounded so team totals hold</span></div>
     <div class="nbxgrid">${side(g.away)}${side(g.home)}</div>
-    <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games, rounded so the parts add up (catches = completions, receiving yards = passing yards, TDs to the players most likely to score them). A single projection, not a prediction of the exact game: the Projections tab shows each player’s range. Highly experimental. <a href="${/\/(weeks|blind)\//.test(location.pathname) ? '../' : ''}boxes.html">How accurate it has been, graded every week →</a></p></section>`;
+    <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games, rounded so the parts add up (catches = completions, receiving yards = passing yards, TDs to the players most likely to score them). Highlighted = above the books’ main line for that prop (an over lean; the chips list the line). A single projection, not a prediction of the exact game: the Projections tab shows each player’s range. Highly experimental. <a href="${/\/(weeks|blind)\//.test(location.pathname) ? '../' : ''}boxes.html">How accurate it has been, graded every week →</a></p></section>`;
 }
 function summaryPanel(g){
   const L = D.spot[g.id] || [];

@@ -598,6 +598,11 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length, w: !!e.w};
     },
     myBooks: () => MY.slice(),
+    // the books' main line for a player prop (props file `l`), for the projected box score's 'above the line' highlight
+    propLine(gid, name, kind){
+      if (!PR || !PR.props || Date.now() - new Date(PR.fetched) > 12 * 3600e3) return null;
+      const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; return e && e.l != null ? +e.l : null;
+    },
     // one leg of a same-game combo, market-anchored like the payout cards: game lines ('ml' side home|away, 'total' side
     // over at line) = ours averaged with Pinnacle's no-vig (else the books' median no-vig); props ('sog25', ...) = ours 50/50
     // with the books' two-way no-vig median (Pinnacle at WPIN weights when pulled), 'goal' = blend(). Returns {q, m, b}
