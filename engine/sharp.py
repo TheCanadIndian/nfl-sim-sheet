@@ -1569,6 +1569,91 @@ def pin_moves(sport, now):
           f"({', '.join(f'{t} {sum(1 for m in moves if f"{m['src']}:{m['sig']}" == t)}' for t in sorted({f'{m['src']}:{m['sig']}' for m in moves}))})")
 
 
+KNEE_RATIO = 2.0                     # the drop out of the rung is 2x+ the drop into it ...
+KNEE_DROP = .06                      # ... and 6+ pts of implied chance
+KNEE_Q = (.15, .65)                  # the rung itself priced about -185..+570 (achievable, overs)
+
+
+def ladder_knees(sport, now):
+    """Ladder knees (owner 2026-10-24: "track odds changes within the ladder... 7 rbs at +180, 8 at +220, 9 at +500 --
+    I'm looking to likely take 8"): at each of the owner's books, three consecutive rungs (equal line gaps) of one
+    player-stat ladder, the middle one where moving up into it costs little chance and the next step costs a lot:
+    drop in = q(prev) - q(rung), drop out = q(rung) - q(next) (q = the book's implied chance; Kalshi with its 7% fee),
+    drop out >= KNEE_RATIO x drop in and >= KNEE_DROP, q(rung) in KNEE_Q. The strongest knee per player-stat ->
+    flags_<sport>.json "knees" (with the fair / our chance at that rung for context); profit.tags logs and grades
+    each first sighting ('<SPORT> Ladder knee (experimental)'). Shape only: no edge is claimed."""
+    fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
+    try:
+        PR = json.load(open(fp))
+    except (OSError, ValueError):
+        return
+    O = (M.ours_nba if sport == "nba" else M.ours_nfl)() or {}
+    start = {str(g["id"]): str(g["start"]) for g in O.get("games", [])}
+    # Kalshi's ladders live in live_<sport>.json (asks / bids), not the props file: rungs with a spread of 3c or
+    # less only (research/kalshi_liquidity_rule.py: 4c+ spreads lost 38%; wide quotes would make fake knees)
+    kal = {}
+    try:
+        for r in json.load(open(os.path.join(M.SITE, "markets", f"live_{sport}.json"))).get("rows", []):
+            if r.get("s") == "kalshi" and r.get("k") in LC_LAB and r.get("l") is not None and r.get("n") and r.get("ya") and r.get("yb") is not None \
+                    and r["ya"] - r["yb"] <= .03 and .01 < r["ya"] < .99:
+                kal.setdefault((str(r["g"]), jsnorm(r["n"]), r["k"]), {})[float(r["l"])] = (r["ya"], (r.get("p") or {}).get("vegas"))
+    except (OSError, ValueError):
+        pass
+    am = lambda q: round(-100 * q / (1 - q)) if q >= .5 else round(100 * (1 - q) / q)
+    keys = {(str(g), nm, k) for g, G in (PR.get("props") or {}).items() for nm, ks in G.items() for k in ks} | set(kal)
+    knees = []
+    for gid, nm, k in sorted(keys):
+        st = start.get(gid)
+        if k not in LC_LAB or not st or pd.Timestamp(st).tz_convert("UTC") <= now:
+            continue
+        e = ((PR.get("props") or {}).get(gid) or {}).get(nm, {}).get(k) or {}
+        rungs = {}                                            # line -> (book prices, fair, ours)
+        if e.get("l") is not None and e.get("o"):
+            pin_ = e.get("pin") or {}
+            rungs[float(e["l"])] = (e["o"], pin_.get("o") if pin_.get("l") == e.get("l") else None, e.get("p"))
+        for la, a in (e.get("a") or {}).items():
+            if a.get("o"):
+                rungs.setdefault(float(la), (a["o"], a.get("pin"), a.get("p")))
+        for la, (ya, ours) in (kal.get((gid, nm, k)) or {}).items():
+            rungs.setdefault(la, ({}, None, ours))
+        best = None
+        for bk in OWN_BOOKS:
+            L = []
+            if bk == "Kalshi":                                # the ask plus Kalshi's 7% fee; stored price is fee-in
+                for l, (ya, _) in sorted((kal.get((gid, nm, k)) or {}).items()):
+                    q = ya + .07 * ya * (1 - ya)
+                    L.append((l, am(q), q))
+            for l in sorted(rungs) if bk != "Kalshi" else []:
+                v = rungs[l][0].get(bk)
+                if v and v[0] is not None:
+                    L.append((l, v[0], 1 / dec(v[0])))
+            for i in range(1, len(L) - 1):
+                (l0, o0, q0), (l1, o1, q1), (l2, o2, q2) = L[i - 1], L[i], L[i + 1]
+                g0, g1 = l1 - l0, l2 - l1                         # line gaps (yardage ladders are uneven: 9.5, 19.5, 24.5 ...)
+                if max(g0, g1) > 2.5 * min(g0, g1):
+                    continue
+                din, dout = q0 - q1, q1 - q2
+                # per unit of line (a yard, a rebound): the step out costs KNEE_RATIO x the step in
+                if din <= 0 or dout < KNEE_DROP or dout / g1 < KNEE_RATIO * din / g0 or not KNEE_Q[0] <= q1 <= KNEE_Q[1]:
+                    continue
+                score = (dout / g1) / (din / g0)
+                if best is None or score > best[0]:
+                    best = (score, bk, (l0, o0), (l1, o1), (l2, o2), din, dout, rungs[l1][1], rungs[l1][2])
+        if best:
+            score, bk, prev, mid, nxt, din, dout, fair, ours = best
+            knees.append(dict(g=str(gid), n=nm, k=k, l=mid[0], b=f"over {mid[0]:g} {LC_LAB[k]}", bk=bk, o=mid[1],
+                              prev=list(prev), next=list(nxt), din=round(din, 4), dout=round(dout, 4), ratio=round(min(score, 99), 2),
+                              fair=None if fair is None else round(float(fair), 4), p=None if ours is None else round(float(ours), 4), start=st))
+    ff = os.path.join(M.SITE, "markets", f"flags_{sport}.json")
+    try:
+        FL = json.load(open(ff))
+    except (OSError, ValueError):
+        FL = dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), tags={})
+    FL["knees"] = knees
+    json.dump(FL, open(ff, "w"), separators=(",", ":"))
+    print(f"ladder knees {sport}: {len(knees)} ({', '.join(f'{b} {sum(1 for x in knees if x['bk'] == b)}' for b in OWN_BOOKS)})")
+
+
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
     if not argv or "nba" in argv:
@@ -1663,6 +1748,10 @@ def main(argv):
                 pin_moves(sport, now)
             except Exception as e:                       # noqa: BLE001 -- tracking only
                 print(f"line moves {sport}: skipped ({type(e).__name__}: {e})")
+            try:
+                ladder_knees(sport, now)
+            except Exception as e:                       # noqa: BLE001 -- tracking only
+                print(f"ladder knees {sport}: skipped ({type(e).__name__}: {e})")
     os.makedirs(M.OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=1)
 

@@ -519,6 +519,8 @@ def tag_label(e):
     """Profit-page category for a logged tag."""
     if e.get("src") == "move":
         return f"{'Pinnacle' if e.get('msrc') == 'pin' else 'Consensus'} move: {MOVE_SIG.get(e.get('sig'), e.get('sig'))} (experimental)"
+    if e.get("src") == "knee":
+        return "Ladder knee (experimental)"
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
 
@@ -579,6 +581,15 @@ def tags():
             e = log.setdefault(f"move|{sport}|{x['g']}|{x['n']}|{x['b']}|{x['src']}|{x['sig']}", dict(sport=sport, src="move", msrc=x["src"], sig=x["sig"],
                                gid=x["g"], name=x["n"], bet=x["b"], book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair") or x.get("cons"),
                                m=x.get("fair") or x.get("cons"), start=st, from_l=x.get("from_l"), to_l=x.get("to_l")))
+            e.setdefault("start", st)
+        # ladder knees (sharp.ladder_knees; owner 2026-10-24): each first sighting at its book's price, graded like tags
+        for x in FL.get("knees") or []:
+            st = starts.get(str(x["g"])) or x.get("start")
+            if (st and PL.when(st) <= now) or x.get("o") is None:
+                continue
+            e = log.setdefault(f"knee|{sport}|{x['g']}|{x['n']}|{x['b']}|{x['bk']}", dict(sport=sport, src="knee", gid=x["g"], name=x["n"], bet=x["b"],
+                               book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair") or x.get("p"), m=x.get("fair"), start=st,
+                               prev=x.get("prev"), next=x.get("next"), ratio=x.get("ratio")))
             e.setdefault("start", st)
         # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
         for gid, tg in (FL.get("lc") or {}).items():
