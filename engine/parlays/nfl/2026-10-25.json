@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T08:14:24.918Z",
+"frozen_at": "2026-10-25T08:30:36.116Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,24 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "aaron rodgers",
+"lab": "Aaron Rodgers 300+ pass yds",
+"p": 0.2146,
+"price": 456,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
 "gid": "2026_07_GB_DET",
 "start": "2026-10-25T16:25:00",
 "kind": "pass_yds",
@@ -22,7 +40,7 @@
 "line": 349.5,
 "name": "jared goff",
 "lab": "Jared Goff 350+ pass yds",
-"p": 0.2323,
+"p": 0.2325,
 "price": 456,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -31,102 +49,17 @@
 "script",
 "price"
 ]
-},
-{
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "matthew stafford",
-"lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2346,
-"price": 398,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-]
 }
 ],
-"p": 0.0545,
-"d": 27.689,
-"first": "2026-10-25T20:25:00+00:00",
+"p": 0.04988,
+"d": 30.914,
+"first": "2026-10-25T13:30:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "aaron rodgers",
-"lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2146,
-"price": 456,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "matthew stafford",
-"lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2346,
-"price": 398,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-]
-}
-],
-"p": 0.05033,
-"d": 27.689,
-"first": "2026-10-25T13:30:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "aaron rodgers",
-"lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2146,
-"price": 456,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
 {
 "gid": "2026_07_CIN_BAL",
 "start": "2026-10-25T13:00:00",
@@ -153,7 +86,7 @@
 "line": 349.5,
 "name": "jared goff",
 "lab": "Jared Goff 350+ pass yds",
-"p": 0.2323,
+"p": 0.2325,
 "price": 456,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -164,9 +97,9 @@
 ]
 }
 ],
-"p": 0.01154,
-"d": 153.95,
-"first": "2026-10-25T13:30:00+00:00",
+"p": 0.05384,
+"d": 27.689,
+"first": "2026-10-25T17:00:00+00:00",
 "res": null
 },
 {
@@ -176,12 +109,12 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 99.5,
-"name": "dk metcalf",
-"lab": "DK Metcalf 100+ rec yds",
-"p": 0.2044,
+"line": 299.5,
+"name": "aaron rodgers",
+"lab": "Aaron Rodgers 300+ pass yds",
+"p": 0.2146,
 "price": 456,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -217,7 +150,7 @@
 "line": 79.5,
 "name": "sam laporta",
 "lab": "Sam LaPorta 80+ rec yds",
-"p": 0.2521,
+"p": 0.2504,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -228,7 +161,71 @@
 ]
 }
 ],
-"p": 0.01193,
+"p": 0.01244,
+"d": 124.876,
+"first": "2026-10-25T13:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "dk metcalf",
+"lab": "DK Metcalf 100+ rec yds",
+"p": 0.2044,
+"price": 456,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 69.5,
+"name": "chase brown",
+"lab": "Chase Brown 70+ rush yds",
+"p": 0.2193,
+"price": 398,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "sam laporta",
+"lab": "Sam LaPorta 80+ rec yds",
+"p": 0.2504,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.01122,
 "d": 124.876,
 "first": "2026-10-25T13:30:00+00:00",
 "res": null
@@ -291,12 +288,12 @@
 "line": 69.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy 70+ rec yds",
-"p": 0.275,
+"p": 0.265,
 "price": 229,
 "book": "Kalshi"
 }
 ],
-"p": 0.05363,
+"p": 0.05168,
 "d": 14.823,
 "first": "2026-10-26T00:20:00+00:00",
 "res": null
@@ -337,12 +334,12 @@
 "line": 69.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy 70+ rec yds",
-"p": 0.275,
+"p": 0.265,
 "price": 229,
 "book": "Kalshi"
 }
 ],
-"p": 0.01803,
+"p": 0.01737,
 "d": 41.297,
 "first": "2026-10-26T00:20:00+00:00",
 "res": null
@@ -371,13 +368,13 @@
 "line": 49.5,
 "name": "ryan flournoy",
 "lab": "Ryan Flournoy 50+ rec yds",
-"p": 0.28,
-"price": 229,
+"p": 0.285,
+"price": 218,
 "book": "Kalshi"
 }
 ],
-"p": 0.0826,
-"d": 10.439,
+"p": 0.08408,
+"d": 10.097,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
 },
@@ -427,8 +424,8 @@
 "line": 49.5,
 "name": "ryan flournoy",
 "lab": "Ryan Flournoy 50+ rec yds",
-"p": 0.28,
-"price": 229,
+"p": 0.285,
+"price": 218,
 "book": "Kalshi"
 },
 {
@@ -444,8 +441,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.0882,
-"d": 9.799,
+"p": 0.08978,
+"d": 9.479,
 "first": "2026-10-25T17:00:00+00:00",
 "res": null
 },
@@ -453,18 +450,6 @@
 "card": "Ladder longshots (experimental)",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "pat freiermuth",
-"lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.25,
-"price": 266,
-"book": "Kalshi"
-},
 {
 "gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
@@ -475,6 +460,18 @@
 "lab": "KC Concepcion 60+ rec yds",
 "p": 0.25,
 "price": 266,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "pat freiermuth",
+"lab": "Pat Freiermuth 50+ rec yds",
+"p": 0.245,
+"price": 280,
 "book": "Kalshi"
 },
 {
@@ -490,8 +487,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01375,
-"d": 52.901,
+"p": 0.01347,
+"d": 54.981,
 "first": "2026-10-25T13:30:00+00:00",
 "res": null
 },
@@ -499,18 +496,6 @@
 "card": "Ladder longshots (experimental)",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "pat freiermuth",
-"lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.25,
-"price": 266,
-"book": "Kalshi"
-},
 {
 "gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
@@ -521,6 +506,18 @@
 "lab": "KC Concepcion 60+ rec yds",
 "p": 0.25,
 "price": 266,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "pat freiermuth",
+"lab": "Pat Freiermuth 50+ rec yds",
+"p": 0.245,
+"price": 280,
 "book": "Kalshi"
 },
 {
@@ -536,130 +533,25 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01344,
-"d": 57.634,
+"p": 0.01317,
+"d": 59.899,
 "first": "2026-10-25T13:30:00+00:00",
 "res": null
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_07_DAL_PHI",
-"start": "2026-10-26T20:15:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.5072,
-"price": 111,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "christian kirk",
-"lab": "Christian Kirk over 2.5 receptions",
-"p": 0.4681,
-"price": 130,
-"book": "Novig"
-}
-],
-"p": 0.23745,
-"d": 4.853,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
 {
 "gid": "2026_07_DAL_PHI",
 "start": "2026-10-26T20:15:00",
-"kind": "rec",
+"kind": "pass_yds",
 "side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.5072,
-"price": 111,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "harold fannin",
-"lab": "Harold Fannin TD",
-"p": 0.2965,
-"price": 270,
-"book": "Novig"
-}
-],
-"p": 0.1504,
-"d": 7.807,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "harold fannin",
-"lab": "Harold Fannin TD",
-"p": 0.2965,
-"price": 270,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "christian kirk",
-"lab": "Christian Kirk over 2.5 receptions",
-"p": 0.4681,
-"price": 130,
-"book": "Novig"
-}
-],
-"p": 0.1388,
-"d": 8.51,
-"first": "2026-10-25T17:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_DAL_PHI",
-"start": "2026-10-26T20:15:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.5072,
-"price": 111,
+"line": 199.5,
+"name": "tanner mckee",
+"lab": "Tanner Mckee over 199.5 pass yds",
+"p": 0.5365,
+"price": -102,
 "book": "Kalshi"
 },
 {
@@ -675,9 +567,79 @@
 "book": "Novig"
 }
 ],
-"p": 0.12655,
-"d": 12.407,
+"p": 0.13386,
+"d": 11.645,
 "first": "2026-10-25T20:25:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "tanner mckee",
+"lab": "Tanner Mckee over 199.5 pass yds",
+"p": 0.5365,
+"price": -102,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "christian kirk",
+"lab": "Christian Kirk TD",
+"p": 0.2132,
+"price": 426,
+"book": "Novig"
+}
+],
+"p": 0.11437,
+"d": 10.417,
+"first": "2026-10-25T17:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "tanner mckee",
+"lab": "Tanner Mckee over 199.5 pass yds",
+"p": 0.5365,
+"price": -102,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "george holani",
+"lab": "George Holani TD",
+"p": 0.2052,
+"price": 441,
+"book": "Novig"
+}
+],
+"p": 0.11011,
+"d": 10.714,
+"first": "2026-10-26T00:20:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -29579,22 +29541,23 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
-"kind": "td",
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 0.5,
-"name": "zay flowers",
-"lab": "Zay Flowers anytime TD",
-"p": 0.3338,
-"price": 223,
+"line": 37.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 37.5 rec yds",
+"p": 0.556,
+"price": -106,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation"
 ],
 "sport": "nfl",
-"edge": 0.0782
+"edge": 0.0806
 },
 {
 "gid": "2026_07_PIT_NO",
@@ -29616,8 +29579,8 @@
 "edge": 0.0737
 }
 ],
-"p": 0.11987,
-"d": 9.658,
+"p": 0.19966,
+"d": 5.811,
 "first": "2026-10-25T13:30:00+00:00",
 "res": null
 },
@@ -29626,45 +29589,44 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_CIN_BAL",
 "start": "2026-10-25T13:00:00",
-"kind": "rec",
+"kind": "td",
 "side": "o",
-"line": 2.5,
-"name": "christian kirk",
-"lab": "Christian Kirk over 2.5 receptions",
-"p": 0.4656,
-"price": 130,
-"book": "Novig",
-"f": [
-"matchup",
-"rotation"
-],
-"sport": "nfl",
-"edge": 0.0708
-},
-{
-"gid": "2026_07_DAL_PHI",
-"start": "2026-10-26T20:15:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 37.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 37.5 rec yds",
-"p": 0.556,
-"price": -108,
+"line": 0.5,
+"name": "zay flowers",
+"lab": "Zay Flowers anytime TD",
+"p": 0.3303,
+"price": 223,
 "book": "Novig",
 "f": [
 "usage",
-"matchup",
 "rotation"
 ],
 "sport": "nfl",
-"edge": 0.0707
+"edge": 0.0669
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy anytime TD",
+"p": 0.2928,
+"price": 264,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"sport": "nfl",
+"edge": 0.0658
 }
 ],
-"p": 0.25887,
-"d": 4.43,
+"p": 0.09671,
+"d": 11.757,
 "first": "2026-10-25T17:00:00+00:00",
 "res": null
 }
