@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-25",
 "lock": "2026-10-25T22:00:00+00:00",
-"frozen_at": "2026-10-25T20:44:52.578Z",
+"frozen_at": "2026-10-25T20:53:42.542Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 3.5,
 "name": "rui hachimura",
 "lab": "Rui Hachimura 4+ threes",
-"p": 0.2192,
+"p": 0.2144,
 "price": 456,
 "book": "Kalshi",
 "f": [
@@ -36,39 +36,41 @@
 "start": "2026-10-25T23:30Z",
 "kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 4+ threes",
-"p": 0.2522,
-"price": 229,
+"line": 2.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham 3+ threes",
+"p": 0.3755,
+"price": 159,
 "book": "Kalshi",
 "f": [
 "usage",
-"matchup",
 "rotation",
 "game"
 ]
 }
 ],
-"p": 0.05526,
-"d": 18.292,
+"p": 0.08052,
+"d": 14.4,
 "first": "2026-10-25T23:00:00+00:00",
-"res": null
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909862",
-"start": "2026-10-25T22:00Z",
-"kind": "ast",
+"gid": "401909864",
+"start": "2026-10-25T23:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "andrew nembhard",
-"lab": "Andrew Nembhard 8+ ast",
-"p": 0.3167,
-"price": 229,
+"line": 4.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball 5+ threes",
+"p": 0.2854,
+"price": 240,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -84,7 +86,7 @@
 "line": 3.5,
 "name": "rui hachimura",
 "lab": "Rui Hachimura 4+ threes",
-"p": 0.2192,
+"p": 0.2144,
 "price": 456,
 "book": "Kalshi",
 "f": [
@@ -94,15 +96,17 @@
 ]
 }
 ],
-"p": 0.0694,
-"d": 18.292,
-"first": "2026-10-25T22:00:00+00:00",
+"p": 0.06119,
+"d": 18.904,
+"first": "2026-10-25T23:00:00+00:00",
 "pick": "longshot",
-"res": null
+"res": null,
+"locked": true,
+"final": true
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "401909862",
@@ -112,15 +116,89 @@
 "line": 7.5,
 "name": "andrew nembhard",
 "lab": "Andrew Nembhard 8+ ast",
-"p": 0.3167,
+"p": 0.3195,
 "price": 229,
 "book": "Kalshi",
 "f": [
 "usage",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
+{
+"gid": "401909866",
+"start": "2026-10-25T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 4+ threes",
+"p": 0.2992,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.09561,
+"d": 10.824,
+"first": "2026-10-25T22:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909862",
+"start": "2026-10-25T22:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "andrew nembhard",
+"lab": "Andrew Nembhard 8+ ast",
+"p": 0.3195,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909865",
+"start": "2026-10-25T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "rui hachimura",
+"lab": "Rui Hachimura 4+ threes",
+"p": 0.2192,
+"price": 388,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.07002,
+"d": 16.055,
+"first": "2026-10-25T22:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "401909864",
 "start": "2026-10-25T23:00Z",
@@ -139,26 +217,44 @@
 ]
 },
 {
-"gid": "401909866",
-"start": "2026-10-25T23:30Z",
-"kind": "ast",
+"gid": "401909865",
+"start": "2026-10-25T23:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "lebron james",
-"lab": "LeBron James 8+ ast",
-"p": 0.4098,
-"price": 150,
+"line": 3.5,
+"name": "rui hachimura",
+"lab": "Rui Hachimura 4+ threes",
+"p": 0.2192,
+"price": 388,
 "book": "Novig",
 "f": [
 "usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909866",
+"start": "2026-10-25T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 4+ threes",
+"p": 0.2992,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
 "rotation",
 "game"
 ]
 }
 ],
-"p": 0.05077,
-"d": 20.563,
-"first": "2026-10-25T22:00:00+00:00",
+"p": 0.02565,
+"d": 40.138,
+"first": "2026-10-25T23:00:00+00:00",
 "res": null
 }
 ],
