@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T02:50:54.822Z",
+"frozen_at": "2026-10-25T03:02:17.374Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -40,8 +40,8 @@
 "line": 69.5,
 "name": "chase brown",
 "lab": "Chase Brown 70+ rush yds",
-"p": 0.2171,
-"price": 425,
+"p": 0.217,
+"price": 456,
 "book": "Kalshi",
 "sc": "CIN pulls away",
 "f": [
@@ -51,14 +51,59 @@
 ]
 }
 ],
-"p": 0.04548,
-"d": 29.19,
+"p": 0.04545,
+"d": 30.914,
+"first": "2026-10-25T13:30:00+00:00"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "germie bernard",
+"lab": "Germie Bernard 80+ rec yds",
+"p": 0.2751,
+"price": 296,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"rotation",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 69.5,
+"name": "chase brown",
+"lab": "Chase Brown 70+ rush yds",
+"p": 0.217,
+"price": 456,
+"book": "Kalshi",
+"sc": "CIN pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.05969,
+"d": 22.018,
 "first": "2026-10-25T13:30:00+00:00",
 "pick": "longshot"
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_07_PIT_NO",
@@ -95,10 +140,28 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 79.5,
+"name": "emanuel wilson",
+"lab": "Emanuel Wilson 80+ rush yds",
+"p": 0.2375,
+"price": 351,
+"book": "Kalshi",
+"sc": "SEA pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
 }
 ],
-"p": 0.04868,
-"d": 26.299,
+"p": 0.01156,
+"d": 118.608,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -113,70 +176,7 @@
 "line": 79.5,
 "name": "germie bernard",
 "lab": "Germie Bernard 80+ rec yds",
-"p": 0.2754,
-"price": 296,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"rotation",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 69.5,
-"name": "chase brown",
-"lab": "Chase Brown 70+ rush yds",
-"p": 0.2171,
-"price": 425,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 79.5,
-"name": "christian mccaffrey",
-"lab": "Christian McCaffrey 80+ rush yds",
-"p": 0.2572,
-"price": 280,
-"book": "Kalshi",
-"sc": "SF pulls away",
-"f": [
-"usage",
-"rotation",
-"script"
-]
-}
-],
-"p": 0.01538,
-"d": 79.002,
-"first": "2026-10-25T13:30:00+00:00"
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "germie bernard",
-"lab": "Germie Bernard 80+ rec yds",
-"p": 0.2754,
+"p": 0.2751,
 "price": 296,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -205,26 +205,26 @@
 ]
 },
 {
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
 "kind": "rush_yds",
 "side": "o",
 "line": 79.5,
-"name": "christian mccaffrey",
-"lab": "Christian McCaffrey 80+ rush yds",
-"p": 0.2572,
-"price": 280,
+"name": "emanuel wilson",
+"lab": "Emanuel Wilson 80+ rush yds",
+"p": 0.2375,
+"price": 351,
 "book": "Kalshi",
-"sc": "SF pulls away",
+"sc": "SEA pulls away",
 "f": [
 "usage",
-"rotation",
-"script"
+"script",
+"price"
 ]
 }
 ],
-"p": 0.01647,
-"d": 71.177,
+"p": 0.01518,
+"d": 84.476,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -234,46 +234,13 @@
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
-"kind": "rush_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 69.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson 70+ rush yds",
-"p": 0.275,
-"price": 218,
-"book": "Kalshi"
-},
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.3,
-"price": 198,
-"book": "Kalshi"
-}
-],
-"p": 0.0825,
-"d": 9.479,
-"first": "2026-10-26T00:20:00+00:00"
-},
-{
-"card": "Primetime ladders (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smith-Njigba 9+ catches",
-"p": 0.3,
-"price": 198,
+"line": 274.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 275+ pass yds",
+"p": 0.2,
+"price": 351,
 "book": "Kalshi"
 },
 {
@@ -284,18 +251,18 @@
 "line": 69.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy 70+ rec yds",
-"p": 0.275,
-"price": 229,
+"p": 0.28,
+"price": 218,
 "book": "Kalshi"
 }
 ],
-"p": 0.0825,
-"d": 9.799,
+"p": 0.10021,
+"d": 14.339,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "2026_07_KC_SEA",
@@ -312,13 +279,46 @@
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
-"kind": "rush_yds",
+"kind": "rec",
 "side": "o",
-"line": 69.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson 70+ rush yds",
-"p": 0.275,
-"price": 218,
+"line": 8.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smith-Njigba 9+ catches",
+"p": 0.3,
+"price": 198,
+"book": "Kalshi"
+}
+],
+"p": 0.12074,
+"d": 11.801,
+"first": "2026-10-26T00:20:00+00:00"
+},
+{
+"card": "Primetime ladders (experimental)",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 275+ pass yds",
+"p": 0.2,
+"price": 351,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "kenneth walker",
+"lab": "Kenneth Walker III 40+ rec yds",
+"p": 0.205,
+"price": 351,
 "book": "Kalshi"
 },
 {
@@ -329,13 +329,13 @@
 "line": 69.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy 70+ rec yds",
-"p": 0.275,
-"price": 229,
+"p": 0.28,
+"price": 218,
 "book": "Kalshi"
 }
 ],
-"p": 0.01739,
-"d": 41.297,
+"p": 0.02612,
+"d": 64.701,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -449,8 +449,8 @@
 "line": 49.5,
 "name": "pat freiermuth",
 "lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.25,
-"price": 252,
+"p": 0.245,
+"price": 266,
 "book": "Kalshi"
 },
 {
@@ -462,7 +462,7 @@
 "name": "kc concepcion",
 "lab": "KC Concepcion 60+ rec yds",
 "p": 0.245,
-"price": 266,
+"price": 280,
 "book": "Kalshi"
 },
 {
@@ -478,8 +478,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01317,
-"d": 55.536,
+"p": 0.01291,
+"d": 59.899,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -494,8 +494,8 @@
 "line": 49.5,
 "name": "pat freiermuth",
 "lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.25,
-"price": 252,
+"p": 0.245,
+"price": 266,
 "book": "Kalshi"
 },
 {
@@ -507,7 +507,7 @@
 "name": "kc concepcion",
 "lab": "KC Concepcion 60+ rec yds",
 "p": 0.245,
-"price": 266,
+"price": 280,
 "book": "Kalshi"
 },
 {
@@ -523,8 +523,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01194,
-"d": 61.009,
+"p": 0.0117,
+"d": 65.802,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -700,18 +700,6 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.321,
-"price": 300,
-"book": "Novig"
-},
-{
 "gid": "2026_07_DAL_PHI",
 "start": "2026-10-26T20:15:00",
 "kind": "rush_yds",
@@ -721,6 +709,18 @@
 "lab": "Javonte Williams under 65.5 rush yds",
 "p": 0.6146,
 "price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "rico dowdle",
+"lab": "Rico Dowdle anytime TD",
+"p": 0.321,
+"price": 300,
 "book": "Novig"
 }
 ],
@@ -799,18 +799,6 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.321,
-"price": 300,
-"book": "Novig"
-},
-{
 "gid": "2026_07_DAL_PHI",
 "start": "2026-10-26T20:15:00",
 "kind": "rush_yds",
@@ -820,6 +808,18 @@
 "lab": "Javonte Williams under 65.5 rush yds",
 "p": 0.6146,
 "price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "rico dowdle",
+"lab": "Rico Dowdle anytime TD",
+"p": 0.321,
+"price": 300,
 "book": "Novig"
 },
 {
@@ -29868,29 +29868,28 @@
 "edge": 0.0674
 },
 {
-"gid": "2026_07_MIA_NYJ",
-"start": "2026-10-25T13:00:00",
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "braelon allen",
-"lab": "Braelon Allen anytime TD",
-"p": 0.4864,
-"price": 117,
+"name": "kendre miller",
+"lab": "Kendre Miller anytime TD",
+"p": 0.3599,
+"price": 194,
 "book": "Novig",
 "f": [
 "usage",
-"matchup",
 "rotation",
 "script"
 ],
 "sport": "nfl",
-"edge": 0.0555
+"edge": 0.0581
 }
 ],
-"p": 0.27311,
-"d": 4.125,
-"first": "2026-10-25T17:00:00+00:00"
+"p": 0.20208,
+"d": 5.589,
+"first": "2026-10-25T13:30:00+00:00"
 }
 ],
 "graded": false
