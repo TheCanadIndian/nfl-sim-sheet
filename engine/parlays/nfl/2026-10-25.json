@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T01:50:34.569Z",
+"frozen_at": "2026-10-25T02:03:09.087Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 69.5,
 "name": "chase brown",
 "lab": "Chase Brown 70+ rush yds",
-"p": 0.2176,
+"p": 0.215,
 "price": 425,
 "book": "Kalshi",
 "sc": "CIN pulls away",
@@ -33,26 +33,26 @@
 ]
 },
 {
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
 "kind": "rush_yds",
 "side": "o",
 "line": 79.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson 80+ rush yds",
-"p": 0.2338,
-"price": 351,
+"name": "christian mccaffrey",
+"lab": "Christian McCaffrey 80+ rush yds",
+"p": 0.2557,
+"price": 280,
 "book": "Kalshi",
-"sc": "SEA pulls away",
+"sc": "SF pulls away",
 "f": [
 "usage",
-"script",
-"price"
+"rotation",
+"script"
 ]
 }
 ],
-"p": 0.05088,
-"d": 23.677,
+"p": 0.05496,
+"d": 19.95,
 "first": "2026-10-25T17:00:00+00:00",
 "pick": "longshot"
 },
@@ -79,26 +79,26 @@
 ]
 },
 {
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
 "kind": "rush_yds",
 "side": "o",
 "line": 79.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson 80+ rush yds",
-"p": 0.2338,
-"price": 351,
+"name": "christian mccaffrey",
+"lab": "Christian McCaffrey 80+ rush yds",
+"p": 0.2557,
+"price": 280,
 "book": "Kalshi",
-"sc": "SEA pulls away",
+"sc": "SF pulls away",
 "f": [
 "usage",
-"script",
-"price"
+"rotation",
+"script"
 ]
 }
 ],
-"p": 0.05434,
-"d": 21.332,
+"p": 0.05942,
+"d": 17.974,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -108,13 +108,13 @@
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
-"kind": "pass_yds",
+"kind": "rec",
 "side": "o",
-"line": 274.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.195,
-"price": 373,
+"line": 8.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smith-Njigba 9+ catches",
+"p": 0.3,
+"price": 198,
 "book": "Kalshi"
 },
 {
@@ -126,12 +126,12 @@
 "name": "xavier worthy",
 "lab": "Xavier Worthy 70+ rec yds",
 "p": 0.285,
-"price": 218,
+"price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.09945,
-"d": 15.046,
+"p": 0.0855,
+"d": 9.179,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -163,7 +163,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.12074,
+"p": 0.069,
 "d": 11.801,
 "first": "2026-10-26T00:20:00+00:00"
 },
@@ -177,10 +177,10 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.195,
-"price": 373,
+"name": "sam darnold",
+"lab": "Sam Darnold 275+ pass yds",
+"p": 0.23,
+"price": 296,
 "book": "Kalshi"
 },
 {
@@ -204,12 +204,12 @@
 "name": "xavier worthy",
 "lab": "Xavier Worthy 70+ rec yds",
 "p": 0.285,
-"price": 218,
+"price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.02592,
-"d": 67.891,
+"p": 0.01344,
+"d": 54.933,
 "first": "2026-10-26T00:20:00+00:00"
 },
 {
@@ -403,6 +403,72 @@
 },
 {
 "card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "george kittle",
+"lab": "George Kittle over 5.5 receptions",
+"p": 0.5677,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy TD",
+"p": 0.2947,
+"price": 257,
+"book": "Novig"
+}
+],
+"p": 0.16732,
+"d": 6.786,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_07_SF_ATL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "christian mccaffrey",
+"lab": "Christian Mccaffrey over 5.5 receptions",
+"p": 0.5454,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy TD",
+"p": 0.2947,
+"price": 257,
+"book": "Novig"
+}
+],
+"p": 0.16072,
+"d": 7.003,
+"first": "2026-10-25T17:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
 {
@@ -413,7 +479,7 @@
 "line": 0.5,
 "name": "alvin kamara",
 "lab": "Alvin Kamara TD",
-"p": 0.2386,
+"p": 0.2367,
 "price": 388,
 "book": "Novig"
 },
@@ -430,7 +496,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.13549,
+"p": 0.13437,
 "d": 9.276,
 "first": "2026-10-25T13:30:00+00:00",
 "pick": "core"
@@ -447,7 +513,7 @@
 "line": 0.5,
 "name": "alvin kamara",
 "lab": "Alvin Kamara TD",
-"p": 0.2386,
+"p": 0.2367,
 "price": 388,
 "book": "Novig"
 },
@@ -464,43 +530,10 @@
 "book": "Novig"
 }
 ],
-"p": 0.13015,
+"p": 0.12908,
 "d": 9.572,
 "first": "2026-10-25T13:30:00+00:00",
 "pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "pierre strong",
-"lab": "Pierre Strong TD",
-"p": 0.2167,
-"price": 506,
-"book": "Novig"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "george kittle",
-"lab": "George Kittle over 5.5 receptions",
-"p": 0.5677,
-"price": -111,
-"book": "Novig"
-}
-],
-"p": 0.12302,
-"d": 11.519,
-"first": "2026-10-25T17:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -574,6 +607,18 @@
 "tier": "+300 to +1000",
 "legs": [
 {
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "rico dowdle",
+"lab": "Rico Dowdle anytime TD",
+"p": 0.321,
+"price": 285,
+"book": "Novig"
+},
+{
 "gid": "2026_07_DAL_PHI",
 "start": "2026-10-26T20:15:00",
 "kind": "rush_yds",
@@ -584,22 +629,10 @@
 "p": 0.5826,
 "price": -111,
 "book": "Novig"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.321,
-"price": 300,
-"book": "Novig"
 }
 ],
 "p": 0.18701,
-"d": 7.604,
+"d": 7.318,
 "first": "2026-10-25T13:30:00+00:00"
 },
 {
@@ -652,20 +685,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026_07_DAL_PHI",
-"start": "2026-10-26T20:15:00",
+"gid": "2026_07_KC_SEA",
+"start": "2026-10-25T20:20:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "ryan flournoy",
-"lab": "Ryan Flournoy anytime TD",
-"p": 0.232,
-"price": 376,
-"book": "Novig"
+"name": "george holani",
+"lab": "George Holani anytime TD",
+"p": 0.224,
+"price": 426,
+"book": "Kalshi"
 }
 ],
-"p": 0.11554,
-"d": 12.376,
+"p": 0.11155,
+"d": 13.676,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -685,20 +718,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026_07_KC_SEA",
-"start": "2026-10-25T20:20:00",
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "george holani",
-"lab": "George Holani anytime TD",
-"p": 0.224,
-"price": 441,
+"name": "wandale robinson",
+"lab": "Wandale Robinson anytime TD",
+"p": 0.222,
+"price": 400,
 "book": "Novig"
 }
 ],
-"p": 0.11155,
-"d": 14.066,
+"p": 0.11056,
+"d": 13,
 "first": "2026-10-25T17:00:00+00:00"
 },
 {
@@ -29712,24 +29745,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_07_IND_MIN",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 38.5,
-"name": "aaron jones",
-"lab": "Aaron Jones over 38.5 rush yds",
-"p": 0.5525,
-"price": -108,
-"book": "Novig",
-"f": [
-"usage",
-"rotation"
-],
-"sport": "nfl",
-"edge": 0.0641
-},
-{
 "gid": "2026_07_MIA_NYJ",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
@@ -29748,10 +29763,28 @@
 ],
 "sport": "nfl",
 "edge": 0.06
+},
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 38.5,
+"name": "aaron jones",
+"lab": "Aaron Jones over 38.5 rush yds",
+"p": 0.5537,
+"price": -111,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"sport": "nfl",
+"edge": 0.0525
 }
 ],
-"p": 0.2699,
-"d": 4.179,
+"p": 0.27048,
+"d": 4.125,
 "first": "2026-10-25T17:00:00+00:00"
 }
 ],
