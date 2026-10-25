@@ -127,7 +127,7 @@ tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
 /* tables */
 .tw{overflow-x:auto}
 .nbxgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.nbxteam h3{margin:4px 0 6px;font-family:var(--display);font-size:18px}
-table.nbx{margin-bottom:10px}table.nbx td,table.nbx th{text-align:right;white-space:nowrap}table.nbx .l{text-align:left;white-space:normal}table.nbx th.l{color:var(--muted)}table.nbx .bxp{font-weight:700}
+table.nbx{margin-bottom:10px}.bxo{background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 4px}.bxos{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 12px}.bxoc{border:1px solid var(--faint);border-radius:999px;padding:2px 9px;font-size:12.5px;white-space:nowrap}.bxoc b{color:var(--good)}.bxoc i{font-style:normal;color:var(--muted)}table.nbx td,table.nbx th{text-align:right;white-space:nowrap}table.nbx .l{text-align:left;white-space:normal}table.nbx th.l{color:var(--muted)}table.nbx .bxp{font-weight:700}
 @media(max-width:820px){.nbxgrid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:560px){table.nbx td,table.nbx th{padding-left:5px;padding-right:5px}}
 table.t{width:100%;border-collapse:collapse;font-size:14px}
@@ -372,7 +372,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 .exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
 table.ga td,table.ga th{text-align:right;white-space:nowrap}table.ga .l{text-align:left;white-space:normal}
 .pa{font-weight:700}.pa i{font-style:normal;color:var(--muted);font-weight:400}
-.miss{color:var(--bad)}.pa .beat{background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 4px}
+.miss{color:var(--bad)}.pa .ovh{background:rgba(52,199,123,.2);color:var(--good);border-radius:4px;padding:0 4px}.pa .ovm{background:rgba(229,83,75,.16);color:var(--bad);border-radius:4px;padding:0 4px}.pa .ln{display:block;font-size:10.5px;color:var(--muted);line-height:1}.key.r{background:rgba(229,83,75,.16);color:var(--bad)}
 .key{display:inline-block;background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 5px;font-weight:700}
 details.gm{border-top:1px solid var(--faint);padding:8px 0}details.gm summary{cursor:pointer;font-weight:600}
 @media(max-width:560px){table.ga td,table.ga th{padding-left:4px;padding-right:4px}}
@@ -431,7 +431,7 @@ details.gm{border-top:1px solid var(--faint);padding:8px 0}details.gm summary{cu
   <main id="main"></main>
   <footer>Each game’s projected box score is frozen at tip-off / kickoff exactly as the page showed it (With Vegas) and graded against the real box score after the game. Error = how far the box’s number was from what happened, on average per player. A player the box listed who didn’t play counts as 0.</footer>
 </div>
-<script type="application/json" id="data">{"season":null,"nights":[],"sport":"nba","generated":"Oct 24, 2026 8:19 PM","within":{"pts":5,"reb":2,"ast":2}}</script>
+<script type="application/json" id="data">{"season":null,"nights":[],"sport":"nba","generated":"Oct 24, 2026 8:22 PM","within":{"pts":5,"reb":2,"ast":2}}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -447,7 +447,8 @@ const baseRows = s => !s.base ? '' : [['Box, lines with an average', s.boxb], ['
 const errHead = `<tr><th class="l">${NBA ? 'Night' : 'Week'}</th><th>Games</th><th>Players</th>${KS.map(k => `<th>${LAB[k]}</th>`).join('')}<th>${NBA ? 'Team pts' : 'Team pass yds'}</th></tr>`;
 function tiles(s){
   const W = D.within, T = [];
-  if (s.beat_all != null) T.push([pct(s.beat_all), `of lines beat his own average (${pct(s.worse_all)} worse, rest tied)`]);
+  const A = s.above_all;
+  T.push([A ? `${A.hit} of ${A.n}` : '–', A ? `box above the books’ line: overs hit (${pct(A.hit / A.n)})` : 'box above the books’ line: none graded yet']);
   if (NBA){
     T.push([s.mae.pts, 'points off per player']); T.push([pct(s.within.pts), `points within ${W.pts}`]);
     T.push([pct(s.within.reb), `rebounds within ${W.reb}`]); T.push([pct(s.within.ast), `assists within ${W.ast}`]); T.push([s.team, 'team score off by']);
@@ -457,12 +458,12 @@ function tiles(s){
   }
   return `<div class="tiles">${T.map(([v, l]) => `<div class="tile"><span class="v">${v == null ? '–' : v}</span><span class="s">${l}</span></div>`).join('')}</div>`;
 }
-const cell = (p, a, b) => { const beat = b != null && Math.abs(a - p) < Math.abs(a - b); return `<td class="pa"${b != null ? ` title="his average ${Math.round(b * 10) / 10}"` : ''}><span class="${beat ? 'beat' : ''}">${p}</span> <i>${Math.round(a * 10) / 10}</i></td>`; };
+const cell = (p, a, l) => { const on = l != null && p > l, cls = on ? (a > l ? 'ovh' : 'ovm') : ''; return `<td class="pa"${l != null ? ` title="books’ line ${l}"` : ''}><span class="${cls}">${p}</span> <i>${Math.round(a * 10) / 10}</i>${on ? `<small class="ln">o${l}</small>` : ''}</td>`; };
 function gameTable(g){
   if (NBA){
     const C = ['min', 'pts', 'reb', 'ast', 'fg3m', 'stl', 'blk', 'tov'];
     const sides = g.teams.map(T => { const rs = g.rows.filter(r => r.t === T.t);
-      return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)}${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(k => cell(r[k], r.a[k], r.dnp || !r.base ? null : r.base[k])).join('')}</tr>`).join(''); }).join('');
+      return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)}${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(k => cell(r[k], r.a[k], r.L && r.L[k] != null ? r.L[k] : null)).join('')}</tr>`).join(''); }).join('');
     return `<div class="tw"><table class="t ga"><thead><tr><th class="l">Box <i class="muted">actual</i></th>${C.map(k => `<th>${LAB[k]}</th>`).join('')}</tr></thead><tbody>${sides}</tbody></table></div>`;
   }
   const C = [['pass_yds', 'PASS'], ['car', 'CAR'], ['rush_yds', 'RUSH'], ['rec', 'REC'], ['rec_yds', 'REC YDS'], ['td', 'TD']];
@@ -470,14 +471,15 @@ function gameTable(g){
   const v = (r, k, which) => k === 'td' ? TDS(r).reduce((s, x) => s + (which === 'b' ? r.b[x] : r.a[x]), 0) : (which === 'b' ? r.b[k] : r.a[k]);
   const bv = (r, k) => r.dnp || !r.base ? null : k === 'td' ? (TDS(r).every(x => x in r.base) ? TDS(r).reduce((s, x) => s + r.base[x], 0) : null) : (k in r.base ? r.base[k] : null);
   const sides = g.teams.map(T => { const rs = g.rows.filter(r => r.t === T.t);
-    return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">pass yds box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)} <span class="small muted">${esc(r.pos)}</span>${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(([k]) => (k === 'td' || k in r.b) ? cell(v(r, k, 'b'), v(r, k, 'a'), bv(r, k)) : '<td class="muted">·</td>').join('')}</tr>`).join(''); }).join('');
+    return `<tr class="bxsep"><td class="l" colspan="${C.length + 1}"><b>${esc(T.t)}</b> <span class="muted small">pass yds box ${T.box} · actual ${T.act}</span></td></tr>` + rs.map(r => `<tr><td class="l">${esc(r.n)} <span class="small muted">${esc(r.pos)}</span>${r.dnp ? ' <span class="small miss">DNP</span>' : ''}</td>${C.map(([k]) => (k === 'td' || k in r.b) ? cell(v(r, k, 'b'), v(r, k, 'a'), r.L && r.L[k] != null ? r.L[k] : null) : '<td class="muted">·</td>').join('')}</tr>`).join(''); }).join('');
   return `<div class="tw"><table class="t ga"><thead><tr><th class="l">Box <i class="muted">actual</i></th>${C.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>${sides}</tbody></table></div>`;
 }
 const main = document.getElementById('main');
 if (!D.season) main.innerHTML = `<section class="panel"><p class="note" style="margin:0">No graded box scores yet. The first ones appear after the first ${unit} with projected box scores is final.</p></section>`;
 else main.innerHTML = `<section class="panel"><div class="phead"><h2>So far</h2><span class="small muted">${D.season.games} games · ${D.season.players} player lines${D.season.dnp ? ` · ${D.season.dnp} listed but didn’t play` : ''}</span></div>${tiles(D.season)}
   <div class="tw"><table class="t"><thead>${errHead}</thead><tbody>${errRow('All', D.season)}${baseRows(D.season)}${D.nights.map(n => errRow(esc(n.label), n.s)).join('')}</tbody></table></div>
-  <p class="note" style="margin:0">Numbers in the table are the average miss per player (box vs actual). <span class="key">Highlighted</span> = the box beat the player’s base (his own average so far this season, else last season’s) on that stat. In the game tables each cell is the box’s number with what happened beside it; highlighted when it landed closer than his average (hover for the average).</p></section>`
+  <p class="note" style="margin:0">Numbers in the table are the average miss per player (box vs actual). Base rows: the same lines judged by the player’s own average so far this season (else last season’s); <span class="key">highlighted</span> where the box missed by less. In the game tables each cell is the box’s number with what happened beside it; when the box sat above the books’ main line (frozen at the start, shown under it) the number is <span class="key">green</span> if the over hit, <span class="key r">red</span> if it didn’t.</p></section>`
+  + (D.season.above_all ? `<section class="panel"><div class="phead"><h2>Box above the books’ line</h2><span class="small muted">overs only · line frozen at the start</span></div><div class="tw"><table class="t"><thead><tr><th class="l">Stat</th><th>Lines</th><th>Over hit</th><th>Hit rate</th></tr></thead><tbody>${Object.entries(D.season.above).map(([k, a]) => `<tr><td class="l">${LAB[k]}</td><td>${a.n}</td><td>${a.hit}</td><td>${pct(a.hit / a.n)}</td></tr>`).join('')}</tbody></table></div><p class="note" style="margin:0">A typical over at −110 needs 52.4% to break even.</p></section>` : '')
   + D.nights.filter(n => n.games).map((n, i) => `<section class="panel"><div class="phead"><h2>${esc(n.label)}</h2><span class="small muted">${n.s.games} games${n.s.mae.pts != null ? ` · points off ${n.s.mae.pts} a player` : n.s.mae.rec_yds != null ? ` · receiving yards off ${n.s.mae.rec_yds}` : ''}</span></div>
     ${n.games.map(g => `<details class="gm"${i === 0 ? ' open' : ''}><summary>${esc(g.label)} <span class="muted small">${g.teams.map(T => `${esc(T.t)} ${T.box} → ${T.act}`).join(' · ')}</span></summary>${gameTable(g)}</details>`).join('')}</section>`).join('');
 </script>
