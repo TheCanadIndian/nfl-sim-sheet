@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T20:08:10.071Z",
+"frozen_at": "2026-10-25T20:17:44.910Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 299.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2202,
+"p": 0.2271,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -41,8 +41,8 @@
 "line": 324.5,
 "name": "joe burrow",
 "lab": "Joe Burrow 325+ pass yds",
-"p": 0.2331,
-"price": 398,
+"p": 0.2328,
+"price": 373,
 "book": "Kalshi",
 "sc": "CIN pulls away",
 "f": [
@@ -53,13 +53,13 @@
 "res": "L"
 }
 ],
-"p": 0.05133,
-"d": 26.145,
+"p": 0.05288,
+"d": 24.833,
 "first": "2026-10-25T13:30:00+00:00",
 "pick": "longshot",
+"final": true,
 "res": "L",
-"locked": true,
-"final": true
+"locked": true
 },
 {
 "card": "Learning parlays (experimental)",
@@ -111,9 +111,134 @@
 "locked": true
 },
 {
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "aaron rodgers",
+"lab": "Aaron Rodgers 300+ pass yds",
+"p": 0.2157,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+],
+"res": "L"
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "zay flowers",
+"lab": "Zay Flowers 100+ rec yds",
+"p": 0.2398,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"res": "W"
+}
+],
+"p": 0.05173,
+"d": 26.145,
+"first": "2026-10-25T13:30:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "germie bernard",
+"lab": "Germie Bernard 90+ rec yds",
+"p": 0.2146,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"rotation",
+"script",
+"price"
+],
+"res": "L"
+},
+{
+"gid": "2026_07_CIN_BAL",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "zay flowers",
+"lab": "Zay Flowers 100+ rec yds",
+"p": 0.2398,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"res": "W"
+}
+],
+"p": 0.05147,
+"d": 24.8,
+"first": "2026-10-25T13:30:00+00:00",
+"res": "L",
+"locked": true
+},
+{
 "card": "Ladder longshots (experimental)",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "2026_07_NYG_HOU",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "cj stroud",
+"lab": "C.J. Stroud 300+ pass yds",
+"p": 0.275,
+"price": 240,
+"book": "Kalshi"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "pat freiermuth",
+"lab": "Pat Freiermuth 50+ rec yds",
+"p": 0.25,
+"price": 266,
+"book": "Kalshi",
+"res": "L"
+},
 {
 "gid": "2026_07_TB_CAR",
 "start": "2026-10-25T13:00:00",
@@ -126,6 +251,29 @@
 "price": 266,
 "book": "Kalshi",
 "res": "W"
+}
+],
+"p": 0.01719,
+"d": 45.465,
+"first": "2026-10-25T13:30:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "2026_07_NYG_HOU",
+"start": "2026-10-25T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "cj stroud",
+"lab": "C.J. Stroud 300+ pass yds",
+"p": 0.275,
+"price": 240,
+"book": "Kalshi"
 },
 {
 "gid": "2026_07_PIT_NO",
@@ -135,8 +283,8 @@
 "line": 49.5,
 "name": "pat freiermuth",
 "lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.245,
-"price": 280,
+"p": 0.25,
+"price": 266,
 "book": "Kalshi",
 "res": "L"
 },
@@ -150,60 +298,12 @@
 "lab": "KC Concepcion 60+ rec yds",
 "p": 0.245,
 "price": 266,
-"book": "Kalshi"
-}
-],
-"p": 0.01501,
-"d": 50.819,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_TB_CAR",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 89.5,
-"name": "bucky irving",
-"lab": "Bucky Irving 90+ rush yds",
-"p": 0.25,
-"price": 266,
 "book": "Kalshi",
 "res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "pat freiermuth",
-"lab": "Pat Freiermuth 50+ rec yds",
-"p": 0.245,
-"price": 280,
-"book": "Kalshi",
-"res": "L"
-},
-{
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "kyren williams",
-"lab": "Kyren Williams 6+ catches",
-"p": 0.22,
-"price": 296,
-"book": "Kalshi"
 }
 ],
-"p": 0.01347,
-"d": 54.981,
+"p": 0.01684,
+"d": 45.465,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -216,7 +316,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -229,7 +329,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -242,7 +342,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -268,7 +368,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
+"p": 0.466,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -278,7 +378,7 @@
 "res": "W"
 }
 ],
-"p": 0.07856,
+"p": 0.08016,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -291,33 +391,34 @@
 {
 "gid": "2026_07_CIN_BAL",
 "start": "2026-10-25T13:00:00",
-"lab": "Chase Brown over 39.5 rush yds",
+"lab": "Dohnte Meyers over 14.5 rec yds",
 "p": 0.655,
-"price": 0.52,
+"price": 0.53,
 "book": "Kalshi",
-"kind": "rush_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 39.5,
-"name": "chase brown",
+"line": 14.5,
+"name": "dohnte meyers",
 "res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
 "lab": "Jerry Jeudy over 1.5 receptions",
-"p": 0.63,
+"p": 0.629,
 "price": 0.59,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_DEN_ARI",
 "start": "2026-10-25T16:05:00",
 "lab": "Tyler Allgeier over 29.5 rush yds",
-"p": 0.69,
+"p": 0.689,
 "price": 0.52,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -329,8 +430,8 @@
 "gid": "2026_07_GB_DET",
 "start": "2026-10-25T16:25:00",
 "lab": "Jahmyr Gibbs anytime TD",
-"p": 0.711,
-"price": 0.75,
+"p": 0.707,
+"price": 0.74,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -340,15 +441,15 @@
 {
 "gid": "2026_07_IND_MIN",
 "start": "2026-10-25T13:00:00",
-"lab": "MIN wins",
-"p": 0.693,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"res": "W"
+"lab": "Aaron Jones over 39.5 rush yds",
+"p": 0.691,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 39.5,
+"name": "aaron jones",
+"res": "L"
 },
 {
 "gid": "2026_07_KC_SEA",
@@ -365,20 +466,20 @@
 {
 "gid": "2026_07_LA_LV",
 "start": "2026-10-25T16:25:00",
-"lab": "Puka Nacua over 94.5 rec yds",
-"p": 0.638,
-"price": 0.6,
+"lab": "Puka Nacua over 7.5 receptions",
+"p": 0.633,
+"price": 0.55,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 94.5,
+"line": 7.5,
 "name": "puka nacua"
 },
 {
 "gid": "2026_07_MIA_NYJ",
 "start": "2026-10-25T13:00:00",
 "lab": "Malik Washington over 3.5 receptions",
-"p": 0.713,
+"p": 0.708,
 "price": 0.6,
 "book": "Kalshi",
 "kind": "rec",
@@ -391,7 +492,7 @@
 "gid": "2026_07_NYG_HOU",
 "start": "2026-10-25T13:00:00",
 "lab": "Woody Marks over 59.5 rush yds",
-"p": 0.673,
+"p": 0.677,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -403,7 +504,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -416,13 +517,14 @@
 "gid": "2026_07_SF_ATL",
 "start": "2026-10-25T13:00:00",
 "lab": "Bijan Robinson anytime TD",
-"p": 0.601,
+"p": 0.603,
 "price": 0.68,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_TB_CAR",
@@ -438,8 +540,8 @@
 "res": "W"
 }
 ],
-"p": 0.00583,
-"d": null,
+"p": 0.00574,
+"d": 781.861,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -452,7 +554,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -465,7 +567,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -478,7 +580,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -504,7 +606,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
+"p": 0.466,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -514,7 +616,7 @@
 "res": "W"
 }
 ],
-"p": 0.0982,
+"p": 0.1002,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -528,7 +630,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -541,7 +643,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -554,7 +656,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -580,7 +682,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
+"p": 0.466,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -593,8 +695,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.507,
-"price": 0.57,
+"p": 0.506,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -603,7 +705,7 @@
 "res": "W"
 }
 ],
-"p": 0.0643,
+"p": 0.0652,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -617,7 +719,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -630,7 +732,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -643,7 +745,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -669,7 +771,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
+"p": 0.466,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -682,8 +784,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.507,
-"price": 0.57,
+"p": 0.506,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -695,7 +797,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 0.5 receptions",
-"p": 0.552,
+"p": 0.551,
 "price": 0.62,
 "book": "Kalshi",
 "kind": "rec",
@@ -705,7 +807,7 @@
 "res": "W"
 }
 ],
-"p": 0.0364,
+"p": 0.0378,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -718,21 +820,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.403,
+"p": 0.405,
 "price": 0.45,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -745,7 +834,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "NO wins",
-"p": 0.367,
+"p": 0.361,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -758,198 +847,20 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 14.5,
 "name": "alvin kamara",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.507,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-}
-],
-"p": 0.0463,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays",
-"tier": "Expected: close game \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.403,
-"price": 0.45,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "kendre miller",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "NO wins",
-"p": 0.367,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 14.5,
-"name": "alvin kamara",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.507,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
 "res": "L"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
-"res": "L"
-}
-],
-"p": 0.0314,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays",
-"tier": "Expected: close game \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.403,
-"price": 0.45,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "kendre miller",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "NO wins",
-"p": 0.367,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 14.5,
-"name": "alvin kamara",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.507,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -962,7 +873,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -972,7 +883,198 @@
 "res": "L"
 }
 ],
-"p": 0.0209,
+"p": 0.0531,
+"d": null,
+"first": "2026-10-25T13:30:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Expected: close game \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Kendre Miller over 39.5 rush yds",
+"p": 0.405,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 39.5,
+"name": "kendre miller",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "NO wins",
+"p": 0.361,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Alvin Kamara over 14.5 rush yds",
+"p": 0.673,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 14.5,
+"name": "alvin kamara",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Aaron Rodgers over 224.5 pass yds",
+"p": 0.607,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "aaron rodgers",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.557,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "dk metcalf",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Over 43.5 total points",
+"p": 0.507,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 43.5,
+"name": null,
+"res": "L"
+}
+],
+"p": 0.0362,
+"d": null,
+"first": "2026-10-25T13:30:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Expected: close game \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Kendre Miller over 39.5 rush yds",
+"p": 0.405,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 39.5,
+"name": "kendre miller",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "NO wins",
+"p": 0.361,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Alvin Kamara over 14.5 rush yds",
+"p": 0.673,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 14.5,
+"name": "alvin kamara",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Aaron Rodgers over 224.5 pass yds",
+"p": 0.607,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "aaron rodgers",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.557,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "dk metcalf",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Over 43.5 total points",
+"p": 0.507,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 43.5,
+"name": null,
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Chris Olave over 5.5 receptions",
+"p": 0.506,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "chris olave",
+"res": "W"
+}
+],
+"p": 0.0189,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -999,7 +1101,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.43,
+"p": 0.436,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1022,7 +1124,7 @@
 "res": "L"
 }
 ],
-"p": 0.1413,
+"p": 0.1397,
 "d": 7.645,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1049,7 +1151,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.43,
+"p": 0.436,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1075,7 +1177,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 249.5 pass yds",
-"p": 0.436,
+"p": 0.434,
 "price": 0.39,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1085,7 +1187,7 @@
 "res": "L"
 }
 ],
-"p": 0.0695,
+"p": 0.0685,
 "d": 19.608,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1112,7 +1214,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1124,21 +1226,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "dk metcalf",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
+"p": 0.466,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1150,58 +1239,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.507,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
-}
-],
-"p": 0.0942,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays",
-"tier": "Shootout \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.507,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -1213,44 +1252,18 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.507,
-"price": 0.57,
+"p": 0.506,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
 "line": 5.5,
 "name": "chris olave",
 "res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 0.5 receptions",
-"p": 0.552,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "kendre miller",
-"res": "W"
 }
 ],
-"p": 0.054,
+"p": 0.0947,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1264,7 +1277,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "NO wins",
-"p": 0.367,
+"p": 0.361,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -1277,7 +1290,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -1289,21 +1302,21 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.403,
-"price": 0.45,
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.557,
+"price": 0.55,
 "book": "Kalshi",
-"kind": "rush_yds",
+"kind": "rec",
 "side": "o",
-"line": 39.5,
-"name": "kendre miller",
+"line": 4.5,
+"name": "dk metcalf",
 "res": "L"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
+"p": 0.466,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1326,7 +1339,7 @@
 "res": "L"
 }
 ],
-"p": 0.0418,
+"p": 0.0504,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1340,7 +1353,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "PIT wins",
-"p": 0.577,
+"p": 0.581,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -1353,7 +1366,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1366,8 +1379,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Jaylen Warren anytime TD",
-"p": 0.446,
-"price": 0.48,
+"p": 0.449,
+"price": 0.49,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -1378,21 +1391,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Germie Bernard over 54.5 rec yds",
-"p": 0.418,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 54.5,
-"name": "germie bernard",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.498,
+"p": 0.496,
 "price": 0.5,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -1400,9 +1400,22 @@
 "line": 59.5,
 "name": "dk metcalf",
 "res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Kendre Miller over 0.5 receptions",
+"p": 0.551,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "kendre miller",
+"res": "W"
 }
 ],
-"p": 0.062,
+"p": 0.0716,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1416,7 +1429,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "PIT wins",
-"p": 0.577,
+"p": 0.581,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -1429,7 +1442,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
+"p": 0.607,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1442,8 +1455,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Jaylen Warren anytime TD",
-"p": 0.446,
-"price": 0.48,
+"p": 0.449,
+"price": 0.49,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -1454,21 +1467,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Germie Bernard over 54.5 rec yds",
-"p": 0.418,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 54.5,
-"name": "germie bernard",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.498,
+"p": 0.496,
 "price": 0.5,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -1481,96 +1481,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 0.5 receptions",
-"p": 0.552,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "kendre miller",
-"res": "W"
-}
-],
-"p": 0.0349,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays",
-"tier": "PIT pulls away \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "PIT wins",
-"p": 0.577,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.609,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Jaylen Warren anytime TD",
-"p": 0.446,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jaylen warren",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Germie Bernard over 54.5 rec yds",
-"p": 0.418,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 54.5,
-"name": "germie bernard",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.498,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "dk metcalf",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 0.5 receptions",
-"p": 0.552,
+"p": 0.551,
 "price": 0.62,
 "book": "Kalshi",
 "kind": "rec",
@@ -1583,8 +1494,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.507,
-"price": 0.57,
+"p": 0.506,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -1593,7 +1504,7 @@
 "res": "W"
 }
 ],
-"p": 0.0183,
+"p": 0.0374,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1607,7 +1518,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.403,
+"p": 0.405,
 "price": 0.45,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -1620,7 +1531,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -1633,7 +1544,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -1645,32 +1556,32 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Darnell Washington over 24.5 rec yds",
-"p": 0.496,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
+"lab": "Rico Dowdle over 1.5 receptions",
+"p": 0.538,
+"price": null,
+"book": null,
+"kind": "rec",
 "side": "o",
-"line": 24.5,
-"name": "darnell washington",
-"res": "L"
+"line": 1.5,
+"name": "rico dowdle",
+"res": "W"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
-"price": 0.47,
+"lab": "Bryce Lance over 14.5 rec yds",
+"p": 0.488,
+"price": 0.48,
 "book": "Kalshi",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
+"line": 14.5,
+"name": "bryce lance",
+"res": "L"
 }
 ],
-"p": 0.0366,
-"d": 29.586,
+"p": 0.0402,
+"d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -1683,7 +1594,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.403,
+"p": 0.405,
 "price": 0.45,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -1696,7 +1607,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Alvin Kamara over 14.5 rush yds",
-"p": 0.672,
+"p": 0.673,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -1709,7 +1620,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.563,
+"p": 0.557,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -1721,35 +1632,35 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Darnell Washington over 24.5 rec yds",
-"p": 0.496,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
+"lab": "Rico Dowdle over 1.5 receptions",
+"p": 0.538,
+"price": null,
+"book": null,
+"kind": "rec",
 "side": "o",
-"line": 24.5,
-"name": "darnell washington",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.46,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "tyler shough",
+"line": 1.5,
+"name": "rico dowdle",
 "res": "W"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
+"lab": "Bryce Lance over 14.5 rec yds",
+"p": 0.488,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "bryce lance",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.507,
-"price": 0.57,
+"p": 0.506,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -1758,8 +1669,8 @@
 "res": "W"
 }
 ],
-"p": 0.0231,
-"d": 51.813,
+"p": 0.0191,
+"d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -1785,7 +1696,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1798,7 +1709,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Over 43.5 total points",
-"p": 0.572,
+"p": 0.575,
 "price": null,
 "book": null,
 "kind": "total",
@@ -1811,7 +1722,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -1824,7 +1735,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1834,7 +1745,7 @@
 "res": "W"
 }
 ],
-"p": 0.1213,
+"p": 0.1231,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1861,7 +1772,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1874,7 +1785,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Over 43.5 total points",
-"p": 0.572,
+"p": 0.575,
 "price": null,
 "book": null,
 "kind": "total",
@@ -1887,7 +1798,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -1900,7 +1811,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1913,8 +1824,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"p": 0.527,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -1923,7 +1834,7 @@
 "res": "W"
 }
 ],
-"p": 0.0809,
+"p": 0.0832,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -1950,7 +1861,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -1963,7 +1874,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Over 43.5 total points",
-"p": 0.572,
+"p": 0.575,
 "price": null,
 "book": null,
 "kind": "total",
@@ -1976,7 +1887,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -1989,7 +1900,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2002,8 +1913,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"p": 0.527,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -2014,18 +1925,18 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Pat Freiermuth over 29.5 rec yds",
-"p": 0.512,
-"price": 0.53,
+"lab": "Darnell Washington over 24.5 rec yds",
+"p": 0.511,
+"price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
-"line": 29.5,
-"name": "pat freiermuth",
+"line": 24.5,
+"name": "darnell washington",
 "res": "L"
 }
 ],
-"p": 0.0477,
+"p": 0.0488,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2038,40 +1949,14 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
-"price": 0.47,
+"lab": "Kendre Miller over 39.5 rush yds",
+"p": 0.417,
+"price": 0.45,
 "book": "Kalshi",
-"kind": "pass_yds",
+"kind": "rush_yds",
 "side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.572,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
+"line": 39.5,
+"name": "kendre miller",
 "res": "L"
 },
 {
@@ -2090,18 +1975,44 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"lab": "Aaron Rodgers over 224.5 pass yds",
+"p": 0.637,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "aaron rodgers",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Over 43.5 total points",
+"p": 0.575,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 43.5,
+"name": null,
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.571,
+"price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
+"line": 4.5,
+"name": "dk metcalf",
+"res": "L"
 }
 ],
-"p": 0.1207,
+"p": 0.0839,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2114,40 +2025,14 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
-"price": 0.47,
+"lab": "Kendre Miller over 39.5 rush yds",
+"p": 0.417,
+"price": 0.45,
 "book": "Kalshi",
-"kind": "pass_yds",
+"kind": "rush_yds",
 "side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.572,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
+"line": 39.5,
+"name": "kendre miller",
 "res": "L"
 },
 {
@@ -2166,31 +2051,57 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"lab": "Aaron Rodgers over 224.5 pass yds",
+"p": 0.637,
+"price": 0.54,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "pass_yds",
 "side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
+"line": 224.5,
+"name": "aaron rodgers",
+"res": "L"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.514,
-"price": 0.5,
+"lab": "Over 43.5 total points",
+"p": 0.575,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 43.5,
+"name": null,
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.571,
+"price": 0.55,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 59.5,
+"line": 4.5,
 "name": "dk metcalf",
 "res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Tyler Shough over 224.5 pass yds",
+"p": 0.514,
+"price": 0.47,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "tyler shough",
+"res": "W"
 }
 ],
-"p": 0.0781,
+"p": 0.0528,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2203,40 +2114,14 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
-"price": 0.47,
+"lab": "Kendre Miller over 39.5 rush yds",
+"p": 0.417,
+"price": 0.45,
 "book": "Kalshi",
-"kind": "pass_yds",
+"kind": "rush_yds",
 "side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.572,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
+"line": 39.5,
+"name": "kendre miller",
 "res": "L"
 },
 {
@@ -2255,44 +2140,70 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"lab": "Aaron Rodgers over 224.5 pass yds",
+"p": 0.637,
+"price": 0.54,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "pass_yds",
 "side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
+"line": 224.5,
+"name": "aaron rodgers",
+"res": "L"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.514,
-"price": 0.5,
+"lab": "Over 43.5 total points",
+"p": 0.575,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 43.5,
+"name": null,
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.571,
+"price": 0.55,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 59.5,
+"line": 4.5,
 "name": "dk metcalf",
 "res": "L"
 },
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Pat Freiermuth over 29.5 rec yds",
-"p": 0.512,
-"price": 0.53,
+"lab": "Tyler Shough over 224.5 pass yds",
+"p": 0.514,
+"price": 0.47,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 29.5,
-"name": "pat freiermuth",
-"res": "L"
+"line": 224.5,
+"name": "tyler shough",
+"res": "W"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Chris Olave over 5.5 receptions",
+"p": 0.527,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "chris olave",
+"res": "W"
 }
 ],
-"p": 0.0457,
+"p": 0.0345,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2306,7 +2217,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Darnell Washington over 2.5 receptions",
-"p": 0.484,
+"p": 0.487,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec",
@@ -2319,7 +2230,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Germie Bernard over 4.5 receptions",
-"p": 0.481,
+"p": 0.483,
 "price": 0.59,
 "book": "Kalshi",
 "kind": "rec",
@@ -2332,8 +2243,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 274.5 pass yds",
-"p": 0.334,
-"price": 0.26,
+"p": 0.335,
+"price": 0.27,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -2342,8 +2253,8 @@
 "res": "L"
 }
 ],
-"p": 0.1162,
-"d": 12.788,
+"p": 0.1172,
+"d": 12.315,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -2356,7 +2267,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Darnell Washington over 2.5 receptions",
-"p": 0.484,
+"p": 0.487,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec",
@@ -2369,7 +2280,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Germie Bernard over 4.5 receptions",
-"p": 0.481,
+"p": 0.483,
 "price": 0.59,
 "book": "Kalshi",
 "kind": "rec",
@@ -2382,8 +2293,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 274.5 pass yds",
-"p": 0.334,
-"price": 0.26,
+"p": 0.335,
+"price": 0.27,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -2395,7 +2306,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 69.5 rec yds",
-"p": 0.422,
+"p": 0.421,
 "price": 0.4,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -2405,8 +2316,8 @@
 "res": "L"
 }
 ],
-"p": 0.0639,
-"d": 31.949,
+"p": 0.0629,
+"d": 30.769,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -2419,7 +2330,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Over 43.5 total points",
-"p": 0.572,
+"p": 0.575,
 "price": null,
 "book": null,
 "kind": "total",
@@ -2432,7 +2343,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2445,7 +2356,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2458,7 +2369,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -2471,8 +2382,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"p": 0.527,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -2481,7 +2392,7 @@
 "res": "W"
 }
 ],
-"p": 0.1183,
+"p": 0.1204,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2495,7 +2406,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Over 43.5 total points",
-"p": 0.572,
+"p": 0.575,
 "price": null,
 "book": null,
 "kind": "total",
@@ -2508,7 +2419,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2521,7 +2432,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2534,7 +2445,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -2547,8 +2458,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"p": 0.527,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -2559,18 +2470,18 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 0.5 receptions",
-"p": 0.556,
-"price": 0.62,
+"lab": "Pat Freiermuth over 29.5 rec yds",
+"p": 0.513,
+"price": 0.53,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 0.5,
-"name": "kendre miller",
-"res": "W"
+"line": 29.5,
+"name": "pat freiermuth",
+"res": "L"
 }
 ],
-"p": 0.0702,
+"p": 0.0706,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2584,7 +2495,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Over 43.5 total points",
-"p": 0.572,
+"p": 0.575,
 "price": null,
 "book": null,
 "kind": "total",
@@ -2597,7 +2508,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2610,7 +2521,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2623,7 +2534,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -2636,8 +2547,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"p": 0.527,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -2648,21 +2559,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 0.5 receptions",
-"p": 0.556,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "kendre miller",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Pat Freiermuth over 29.5 rec yds",
-"p": 0.512,
+"p": 0.513,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -2670,9 +2568,22 @@
 "line": 29.5,
 "name": "pat freiermuth",
 "res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Devaughn Vele over 3.5 receptions",
+"p": 0.502,
+"price": 0.58,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "devaughn vele",
+"res": "W"
 }
 ],
-"p": 0.0413,
+"p": 0.0414,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2686,7 +2597,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "NO wins",
-"p": 0.409,
+"p": 0.408,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -2712,7 +2623,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2725,7 +2636,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 79.5 rec yds",
-"p": 0.43,
+"p": 0.429,
 "price": 0.48,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -2738,7 +2649,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Devaughn Vele over 39.5 rec yds",
-"p": 0.472,
+"p": 0.473,
 "price": 0.56,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -2748,7 +2659,7 @@
 "res": "W"
 }
 ],
-"p": 0.0577,
+"p": 0.057,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -2762,7 +2673,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "PIT wins",
-"p": 0.535,
+"p": 0.538,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -2775,7 +2686,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -2787,110 +2698,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Jaylen Warren anytime TD",
-"p": 0.454,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jaylen warren",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Germie Bernard over 54.5 rec yds",
-"p": 0.439,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 54.5,
-"name": "germie bernard",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.514,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "dk metcalf",
-"res": "L"
-}
-],
-"p": 0.0674,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "PIT pulls away \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "PIT wins",
-"p": 0.535,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Jaylen Warren anytime TD",
-"p": 0.454,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jaylen warren",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Germie Bernard over 54.5 rec yds",
-"p": 0.439,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 54.5,
-"name": "germie bernard",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.514,
+"p": 0.512,
 "price": 0.5,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -2902,59 +2711,9 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
-}
-],
-"p": 0.038,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "PIT pulls away \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "PIT wins",
-"p": 0.535,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Jaylen Warren anytime TD",
 "p": 0.454,
-"price": 0.48,
+"price": 0.49,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -2965,57 +2724,18 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Germie Bernard over 54.5 rec yds",
-"p": 0.439,
-"price": 0.51,
+"lab": "Pat Freiermuth over 29.5 rec yds",
+"p": 0.513,
+"price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
-"line": 54.5,
-"name": "germie bernard",
+"line": 29.5,
+"name": "pat freiermuth",
 "res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 59.5 rec yds",
-"p": 0.514,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "dk metcalf",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Devaughn Vele over 3.5 receptions",
-"p": 0.506,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "devaughn vele",
-"res": "W"
 }
 ],
-"p": 0.0202,
+"p": 0.0746,
 "d": null,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
@@ -3029,7 +2749,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -3042,7 +2762,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.414,
+"p": 0.417,
 "price": 0.45,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -3054,21 +2774,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.572,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -3081,7 +2788,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -3089,10 +2796,23 @@
 "line": 4.5,
 "name": "dk metcalf",
 "res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Chris Olave over 5.5 receptions",
+"p": 0.527,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "chris olave",
+"res": "W"
 }
 ],
-"p": 0.0789,
-"d": null,
+"p": 0.0651,
+"d": 28.409,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -3105,7 +2825,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
+"p": 0.514,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -3118,7 +2838,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.414,
+"p": 0.417,
 "price": 0.45,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -3130,21 +2850,8 @@
 {
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.572,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
 "lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
+"p": 0.637,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -3157,7 +2864,7 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
+"p": 0.571,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec",
@@ -3170,97 +2877,8 @@
 "gid": "2026_07_PIT_NO",
 "start": "2026-10-25T09:30:00",
 "lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "chris olave",
-"res": "W"
-}
-],
-"p": 0.052,
-"d": null,
-"first": "2026-10-25T13:30:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Close finish \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Tyler Shough over 224.5 pass yds",
-"p": 0.515,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "tyler shough",
-"res": "W"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Kendre Miller over 39.5 rush yds",
-"p": 0.414,
-"price": 0.45,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "kendre miller",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Over 43.5 total points",
-"p": 0.572,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 43.5,
-"name": null,
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Aaron Rodgers over 224.5 pass yds",
-"p": 0.632,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "aaron rodgers",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "DK Metcalf over 4.5 receptions",
-"p": 0.572,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "dk metcalf",
-"res": "L"
-},
-{
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
-"lab": "Chris Olave over 5.5 receptions",
-"p": 0.528,
-"price": 0.57,
+"p": 0.527,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -3282,8 +2900,110 @@
 "res": "L"
 }
 ],
-"p": 0.0346,
-"d": null,
+"p": 0.0428,
+"d": 49.751,
+"first": "2026-10-25T13:30:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Close finish \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Tyler Shough over 224.5 pass yds",
+"p": 0.514,
+"price": 0.47,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "tyler shough",
+"res": "W"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Kendre Miller over 39.5 rush yds",
+"p": 0.417,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 39.5,
+"name": "kendre miller",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Aaron Rodgers over 224.5 pass yds",
+"p": 0.637,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "aaron rodgers",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "DK Metcalf over 4.5 receptions",
+"p": 0.571,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "dk metcalf",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Chris Olave over 5.5 receptions",
+"p": 0.527,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "chris olave",
+"res": "W"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Alvin Kamara over 14.5 rush yds",
+"p": 0.676,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 14.5,
+"name": "alvin kamara",
+"res": "L"
+},
+{
+"gid": "2026_07_PIT_NO",
+"start": "2026-10-25T09:30:00",
+"lab": "Bryce Lance over 14.5 rec yds",
+"p": 0.503,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "bryce lance",
+"res": "L"
+}
+],
+"p": 0.024,
+"d": 104.167,
 "first": "2026-10-25T13:30:00+00:00",
 "res": "L",
 "locked": true
@@ -3331,6 +3051,24 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 219.5,
+"name": "bo nix",
+"lab": "Bo Nix over 219.5 pass yds",
+"p": 0.4832,
+"price": 122,
+"book": "Novig",
+"f": [
+"usage",
+"matchup"
+],
+"sport": "nfl",
+"edge": 0.0728
+},
+{
 "gid": "2026_07_CIN_BAL",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
@@ -3348,7 +3086,18 @@
 "sport": "nfl",
 "edge": 0.069,
 "res": "L"
+}
+],
+"p": 0.13177,
+"d": 8.702,
+"first": "2026-10-25T17:00:00+00:00",
+"res": "L",
+"locked": true
 },
+{
+"card": "Learning parlays (experimental)",
+"tier": "3 legs",
+"legs": [
 {
 "gid": "2026_07_KC_SEA",
 "start": "2026-10-25T20:20:00",
@@ -3366,10 +3115,47 @@
 ],
 "sport": "nfl",
 "edge": 0.0658
+},
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "harold fannin",
+"lab": "Harold Fannin Jr. anytime TD",
+"p": 0.2807,
+"price": 277,
+"book": "Novig",
+"f": [
+"script"
+],
+"sport": "nfl",
+"edge": 0.0582,
+"res": "L"
+},
+{
+"gid": "2026_07_IND_MIN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 40.5,
+"name": "keenan allen",
+"lab": "Keenan Allen over 40.5 rec yds",
+"p": 0.5462,
+"price": -108,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"sport": "nfl",
+"edge": 0.0519,
+"res": "L"
 }
 ],
-"p": 0.07985,
-"d": 14.269,
+"p": 0.04489,
+"d": 26.429,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -3379,23 +3165,23 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_CIN_BAL",
 "start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "o",
-"line": 109.5,
-"name": "george kittle",
-"lab": "George Kittle 110+ rec yds",
-"p": 0.2314,
+"line": 69.5,
+"name": "chase brown",
+"lab": "Chase Brown 70+ rush yds",
+"p": 0.2288,
 "price": 398,
 "book": "Kalshi",
-"sc": "Shootout",
+"sc": "CIN pulls away",
 "f": [
 "usage",
-"rotation",
 "script",
 "price"
-]
+],
+"res": "L"
 },
 {
 "gid": "2026_07_GB_DET",
@@ -3405,7 +3191,7 @@
 "line": 349.5,
 "name": "jordan love",
 "lab": "Jordan Love 350+ pass yds",
-"p": 0.2434,
+"p": 0.2394,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -3417,10 +3203,10 @@
 ]
 }
 ],
-"p": 0.05631,
+"p": 0.05478,
 "d": 22.46,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -3428,23 +3214,23 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_07_SF_ATL",
+"gid": "2026_07_CIN_BAL",
 "start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "o",
-"line": 109.5,
-"name": "george kittle",
-"lab": "George Kittle 110+ rec yds",
-"p": 0.2314,
+"line": 69.5,
+"name": "chase brown",
+"lab": "Chase Brown 70+ rush yds",
+"p": 0.2288,
 "price": 398,
 "book": "Kalshi",
-"sc": "Shootout",
+"sc": "CIN pulls away",
 "f": [
 "usage",
-"rotation",
 "script",
 "price"
-]
+],
+"res": "L"
 },
 {
 "gid": "2026_07_GB_DET",
@@ -3454,7 +3240,7 @@
 "line": 349.5,
 "name": "jared goff",
 "lab": "Jared Goff 350+ pass yds",
-"p": 0.2426,
+"p": 0.2413,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -3465,143 +3251,8 @@
 ]
 }
 ],
-"p": 0.05613,
+"p": 0.05522,
 "d": 26.145,
-"first": "2026-10-25T17:00:00+00:00",
-"res": null,
-"locked": true
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 69.5,
-"name": "chase brown",
-"lab": "Chase Brown 70+ rush yds",
-"p": 0.2289,
-"price": 398,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"script",
-"price"
-],
-"res": "L"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "bijan robinson",
-"lab": "Bijan Robinson 50+ rec yds",
-"p": 0.2336,
-"price": 280,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"script"
-]
-},
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 349.5,
-"name": "jordan love",
-"lab": "Jordan Love 350+ pass yds",
-"p": 0.2434,
-"price": 351,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-]
-}
-],
-"p": 0.01301,
-"d": 85.347,
-"first": "2026-10-25T17:00:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 69.5,
-"name": "chase brown",
-"lab": "Chase Brown 70+ rush yds",
-"p": 0.2289,
-"price": 398,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"script",
-"price"
-],
-"res": "L"
-},
-{
-"gid": "2026_07_SF_ATL",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "bijan robinson",
-"lab": "Bijan Robinson 50+ rec yds",
-"p": 0.2336,
-"price": 280,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"script"
-]
-},
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 349.5,
-"name": "jared goff",
-"lab": "Jared Goff 350+ pass yds",
-"p": 0.2426,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-}
-],
-"p": 0.01297,
-"d": 99.351,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -3619,7 +3270,7 @@
 "name": "makai lemon",
 "lab": "Makai Lemon 70+ rec yds",
 "p": 0.17,
-"price": 398,
+"price": 425,
 "book": "Kalshi"
 },
 {
@@ -3636,7 +3287,7 @@
 }
 ],
 "p": 0.04675,
-"d": 16.935,
+"d": 17.864,
 "first": "2026-10-25T17:00:00+00:00",
 "res": null,
 "locked": true
@@ -3681,6 +3332,19 @@
 "tier": "3-leg",
 "legs": [
 {
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "kc concepcion",
+"lab": "KC Concepcion 60+ rec yds",
+"p": 0.255,
+"price": 266,
+"book": "Kalshi",
+"res": "W"
+},
+{
 "gid": "2026_07_TB_CAR",
 "start": "2026-10-25T13:00:00",
 "kind": "rush_yds",
@@ -3692,18 +3356,6 @@
 "price": 252,
 "book": "Kalshi",
 "res": "W"
-},
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "kc concepcion",
-"lab": "KC Concepcion 60+ rec yds",
-"p": 0.245,
-"price": 266,
-"book": "Kalshi"
 },
 {
 "gid": "2026_07_LA_LV",
@@ -3718,7 +3370,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01374,
+"p": 0.01431,
 "d": 53.157,
 "first": "2026-10-25T17:00:00+00:00",
 "res": null,
@@ -3728,6 +3380,19 @@
 "card": "Ladder longshots (experimental)",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "2026_07_CLE_TEN",
+"start": "2026-10-25T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "kc concepcion",
+"lab": "KC Concepcion 60+ rec yds",
+"p": 0.255,
+"price": 266,
+"book": "Kalshi",
+"res": "W"
+},
 {
 "gid": "2026_07_TB_CAR",
 "start": "2026-10-25T13:00:00",
@@ -3740,18 +3405,6 @@
 "price": 252,
 "book": "Kalshi",
 "res": "W"
-},
-{
-"gid": "2026_07_CLE_TEN",
-"start": "2026-10-25T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "kc concepcion",
-"lab": "KC Concepcion 60+ rec yds",
-"p": 0.245,
-"price": 266,
-"book": "Kalshi"
 },
 {
 "gid": "2026_07_CIN_BAL",
@@ -3767,7 +3420,7 @@
 "res": "L"
 }
 ],
-"p": 0.01312,
+"p": 0.01366,
 "d": 55.536,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
@@ -3785,8 +3438,8 @@
 "line": 0.5,
 "name": "aaron jones",
 "lab": "Aaron Jones TD",
-"p": 0.4455,
-"price": 163,
+"p": 0.4462,
+"price": 160,
 "book": "Novig",
 "res": "L"
 },
@@ -3803,8 +3456,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.1098,
-"d": 14.623,
+"p": 0.10999,
+"d": 14.456,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -3821,8 +3474,8 @@
 "line": 0.5,
 "name": "aaron jones",
 "lab": "Aaron Jones TD",
-"p": 0.4455,
-"price": 163,
+"p": 0.4462,
+"price": 160,
 "book": "Novig",
 "res": "L"
 },
@@ -3836,11 +3489,12 @@
 "lab": "Brock Purdy TD",
 "p": 0.2278,
 "price": 388,
-"book": "Novig"
+"book": "Novig",
+"res": "L"
 }
 ],
-"p": 0.10147,
-"d": 12.834,
+"p": 0.10164,
+"d": 12.688,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -3857,8 +3511,8 @@
 "line": 0.5,
 "name": "aaron jones",
 "lab": "Aaron Jones TD",
-"p": 0.4455,
-"price": 163,
+"p": 0.4462,
+"price": 160,
 "book": "Novig",
 "res": "L"
 },
@@ -3875,8 +3529,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.09841,
-"d": 12.519,
+"p": 0.09857,
+"d": 12.376,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -3906,13 +3560,13 @@
 "name": "aaron jones",
 "lab": "Aaron Jones anytime TD",
 "p": 0.504,
-"price": 163,
+"price": 160,
 "book": "Novig",
 "res": "L"
 }
 ],
 "p": 0.28481,
-"d": 5.065,
+"d": 5.007,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -3978,7 +3632,7 @@
 "name": "aaron jones",
 "lab": "Aaron Jones anytime TD",
 "p": 0.504,
-"price": 163,
+"price": 160,
 "book": "Novig",
 "res": "L"
 },
@@ -3996,7 +3650,7 @@
 }
 ],
 "p": 0.1387,
-"d": 14.486,
+"d": 14.321,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -4006,35 +3660,35 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_07_CIN_BAL",
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 37.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 37.5 rec yds",
+"p": 0.5651,
+"price": -108,
+"book": "Novig"
+},
+{
+"gid": "2026_07_CLE_TEN",
 "start": "2026-10-25T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "samaje perine",
-"lab": "Samaje Perine anytime TD",
-"p": 0.275,
-"price": 317,
+"name": "wandale robinson",
+"lab": "Wandale Robinson anytime TD",
+"p": 0.237,
+"price": 488,
 "book": "Novig",
-"res": "W"
-},
-{
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "puka nacua",
-"lab": "Puka Nacua over 8.5 receptions",
-"p": 0.487,
-"price": 186,
-"book": "Novig"
+"res": "L"
 }
 ],
 "p": 0.13393,
-"d": 11.926,
+"d": 11.324,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -4075,13 +3729,13 @@
 "name": "aaron jones",
 "lab": "Aaron Jones anytime TD",
 "p": 0.504,
-"price": 163,
+"price": 160,
 "book": "Novig",
 "res": "L"
 }
 ],
 "p": 0.13304,
-"d": 11.498,
+"d": 11.367,
 "first": "2026-10-25T17:00:00+00:00",
 "res": "L",
 "locked": true
@@ -4113,7 +3767,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_IND_MIN",
@@ -4163,7 +3818,8 @@
 "kind": "rec",
 "side": "o",
 "line": 0.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 },
 {
 "gid": "2026_07_TB_CAR",
@@ -4212,7 +3868,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_DEN_ARI",
@@ -4310,7 +3967,8 @@
 "kind": "rec",
 "side": "o",
 "line": 0.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 },
 {
 "gid": "2026_07_TB_CAR",
@@ -5870,7 +5528,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5882,7 +5541,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5894,7 +5554,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5906,7 +5567,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5918,13 +5580,14 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 }
 ],
 "p": 0.1203,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -5941,7 +5604,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5953,7 +5617,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5965,7 +5630,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5977,7 +5643,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -5989,7 +5656,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6001,13 +5669,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.0744,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6024,7 +5693,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6036,7 +5706,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6048,7 +5719,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6060,7 +5732,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6072,7 +5745,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6084,7 +5758,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6096,13 +5771,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0452,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6119,7 +5795,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6131,7 +5808,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6143,7 +5821,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6155,7 +5834,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6167,13 +5847,14 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 }
 ],
 "p": 0.1045,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6190,7 +5871,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6202,7 +5884,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6214,7 +5897,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6226,7 +5910,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6238,7 +5923,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6250,13 +5936,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0615,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6273,7 +5960,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6285,7 +5973,8 @@
 "kind": "rec",
 "side": "o",
 "line": 3.5,
-"name": "denzel boston"
+"name": "denzel boston",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6297,13 +5986,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 }
 ],
 "p": 0.1354,
 "d": 9.434,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6320,7 +6010,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6332,7 +6023,8 @@
 "kind": "rec",
 "side": "o",
 "line": 3.5,
-"name": "denzel boston"
+"name": "denzel boston",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6344,7 +6036,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6356,13 +6049,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "L"
 }
 ],
 "p": 0.0693,
 "d": 24.213,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6379,7 +6073,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6391,7 +6086,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6403,7 +6099,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6415,7 +6112,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6427,13 +6125,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 }
 ],
 "p": 0.1146,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6450,7 +6149,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6462,7 +6162,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6474,7 +6175,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6486,7 +6188,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6498,7 +6201,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6510,13 +6214,14 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 }
 ],
 "p": 0.0816,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6533,7 +6238,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6545,7 +6251,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6557,7 +6264,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6569,7 +6277,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6581,7 +6290,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6593,7 +6303,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6605,13 +6316,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.0559,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6628,7 +6340,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6640,7 +6353,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6652,7 +6366,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6664,7 +6379,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6676,13 +6392,14 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "kc concepcion"
+"name": "kc concepcion",
+"res": "W"
 }
 ],
 "p": 0.0451,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6699,7 +6416,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6711,7 +6429,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 29.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6723,7 +6442,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 9.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6735,7 +6455,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6747,13 +6468,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.0585,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6770,7 +6492,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6782,7 +6505,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 29.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6794,7 +6518,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 9.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6806,7 +6531,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6818,7 +6544,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6830,13 +6557,14 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 }
 ],
 "p": 0.0394,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6853,7 +6581,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6865,7 +6594,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 29.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6877,7 +6607,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 9.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6889,7 +6620,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6901,7 +6633,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6913,7 +6646,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6925,13 +6659,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 }
 ],
 "p": 0.0257,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -6948,7 +6683,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6960,7 +6696,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6972,7 +6709,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6984,7 +6722,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -6996,13 +6735,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 }
 ],
 "p": 0.0912,
 "d": 26.455,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -7019,7 +6759,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -7031,7 +6772,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -7043,7 +6785,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -7055,7 +6798,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -7067,7 +6811,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -7079,13 +6824,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0534,
 "d": 49.02,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11210,7 +10956,8 @@
 "kind": "rec",
 "side": "o",
 "line": 0.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11222,7 +10969,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11234,7 +10982,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11246,7 +10995,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11258,13 +11008,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 }
 ],
 "p": 0.098,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11281,7 +11032,8 @@
 "kind": "rec",
 "side": "o",
 "line": 0.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11293,7 +11045,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11305,7 +11058,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11317,7 +11071,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11329,7 +11084,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11341,13 +11097,14 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 }
 ],
 "p": 0.0635,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11364,7 +11121,8 @@
 "kind": "rec",
 "side": "o",
 "line": 0.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11376,7 +11134,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11388,7 +11147,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11400,7 +11160,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11412,7 +11173,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11424,7 +11186,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11436,13 +11199,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 }
 ],
 "p": 0.0408,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11459,7 +11223,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11471,7 +11236,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11483,7 +11249,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11495,7 +11262,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11507,13 +11275,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 }
 ],
 "p": 0.0801,
 "d": 19.084,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11530,7 +11299,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11542,7 +11312,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11554,7 +11325,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11566,7 +11338,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11578,7 +11351,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11590,13 +11364,14 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "christian kirk"
+"name": "christian kirk",
+"res": "L"
 }
 ],
 "p": 0.0453,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11613,7 +11388,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11625,7 +11401,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11637,7 +11414,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11649,7 +11427,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11661,7 +11440,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11673,7 +11453,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "christian kirk"
+"name": "christian kirk",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11685,13 +11466,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
-"name": "zachariah branch"
+"name": "zachariah branch",
+"res": "L"
 }
 ],
 "p": 0.0255,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11708,7 +11490,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 89.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11720,7 +11503,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11732,13 +11516,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 }
 ],
 "p": 0.1007,
 "d": 13.459,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11755,7 +11540,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 89.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11767,7 +11553,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11779,7 +11566,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11791,13 +11579,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "L"
 }
 ],
 "p": 0.0563,
 "d": 42.017,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11814,7 +11603,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11826,7 +11616,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11838,7 +11629,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11850,7 +11642,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11862,13 +11655,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 }
 ],
 "p": 0.0974,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11885,7 +11679,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11897,7 +11692,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11909,7 +11705,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11921,7 +11718,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11933,7 +11731,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11945,13 +11744,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 }
 ],
 "p": 0.0716,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11968,7 +11768,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11980,7 +11781,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -11992,7 +11794,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12004,7 +11807,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12016,7 +11820,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12028,7 +11833,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12040,13 +11846,14 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 }
 ],
 "p": 0.0463,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12063,7 +11870,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12075,7 +11883,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12087,7 +11896,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12099,7 +11909,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12111,13 +11922,14 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 }
 ],
 "p": 0.0531,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12134,7 +11946,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12146,7 +11959,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12158,7 +11972,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12170,7 +11985,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12182,7 +11998,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12194,13 +12011,14 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 19.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "L"
 }
 ],
 "p": 0.0285,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12217,7 +12035,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12229,7 +12048,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12241,7 +12061,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12253,7 +12074,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12265,13 +12087,14 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "L"
 }
 ],
 "p": 0.0411,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12288,7 +12111,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12300,7 +12124,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12312,7 +12137,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12324,7 +12150,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12336,13 +12163,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 }
 ],
 "p": 0.0801,
 "d": 19.084,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12359,7 +12187,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12371,7 +12200,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12383,7 +12213,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12395,7 +12226,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12407,7 +12239,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12419,13 +12252,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
-"name": "zachariah branch"
+"name": "zachariah branch",
+"res": "L"
 }
 ],
 "p": 0.0446,
 "d": 38.168,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12442,7 +12276,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12454,7 +12289,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12466,7 +12302,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12478,7 +12315,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12490,7 +12328,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12502,7 +12341,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
-"name": "zachariah branch"
+"name": "zachariah branch",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -12514,13 +12354,14 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 }
 ],
 "p": 0.0239,
 "d": 71.942,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15381,7 +15222,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15393,7 +15235,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15405,7 +15248,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15417,7 +15261,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15429,13 +15274,14 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 }
 ],
 "p": 0.1217,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15452,7 +15298,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15464,7 +15311,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15476,7 +15324,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15488,7 +15337,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15500,7 +15350,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15512,13 +15363,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.0746,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15535,7 +15387,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15547,7 +15400,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15559,7 +15413,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15571,7 +15426,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15583,7 +15439,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15595,7 +15452,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15607,13 +15465,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0456,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15630,7 +15489,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15642,7 +15502,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15654,7 +15515,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15666,7 +15528,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15678,13 +15541,14 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 }
 ],
 "p": 0.1217,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15701,7 +15565,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15713,7 +15578,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15725,7 +15591,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15737,7 +15604,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15749,7 +15617,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15761,13 +15630,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.0746,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15784,7 +15654,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15796,7 +15667,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15808,7 +15680,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15820,7 +15693,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15832,7 +15706,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15844,7 +15719,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15856,13 +15732,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0456,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15879,7 +15756,8 @@
 "kind": "rec",
 "side": "o",
 "line": 3.5,
-"name": "denzel boston"
+"name": "denzel boston",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15891,7 +15769,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15903,13 +15782,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "L"
 }
 ],
 "p": 0.1317,
 "d": 10.406,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15926,7 +15806,8 @@
 "kind": "rec",
 "side": "o",
 "line": 3.5,
-"name": "denzel boston"
+"name": "denzel boston",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15938,7 +15819,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15950,7 +15832,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15962,13 +15845,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "L"
 }
 ],
 "p": 0.0633,
 "d": 31.546,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -15985,7 +15869,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -15997,7 +15882,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16009,7 +15895,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16021,7 +15908,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16033,13 +15921,14 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 }
 ],
 "p": 0.1269,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16056,7 +15945,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16068,7 +15958,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16080,7 +15971,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16092,7 +15984,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16104,7 +15997,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16116,13 +16010,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.0773,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16139,7 +16034,8 @@
 "kind": "total",
 "side": "over",
 "line": 36.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16151,7 +16047,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16163,7 +16060,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16175,7 +16073,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16187,7 +16086,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16199,7 +16099,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16211,13 +16112,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0471,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16234,7 +16136,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16246,7 +16149,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16258,7 +16162,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16270,7 +16175,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16282,13 +16188,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 }
 ],
 "p": 0.1002,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16305,7 +16212,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16317,7 +16225,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16329,7 +16238,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16341,7 +16251,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16353,7 +16264,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16365,13 +16277,14 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 }
 ],
 "p": 0.0641,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16388,7 +16301,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16400,7 +16314,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16412,7 +16327,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16424,7 +16340,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16436,7 +16353,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16448,7 +16366,8 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "jerry jeudy"
+"name": "jerry jeudy",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16460,13 +16379,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 14.5,
-"name": "elic ayomanor"
+"name": "elic ayomanor",
+"res": "W"
 }
 ],
 "p": 0.0379,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16483,7 +16403,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16495,7 +16416,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 24.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16507,7 +16429,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 9.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16519,7 +16442,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 199.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16531,13 +16455,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "denzel boston"
+"name": "denzel boston",
+"res": "L"
 }
 ],
 "p": 0.0551,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16554,7 +16479,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16566,7 +16492,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16578,7 +16505,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16590,7 +16518,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 24.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16602,13 +16531,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 }
 ],
 "p": 0.1007,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16625,7 +16555,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16637,7 +16568,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16649,7 +16581,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16661,7 +16594,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 24.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16673,7 +16607,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16685,13 +16620,14 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 29.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "L"
 }
 ],
 "p": 0.0528,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -16708,7 +16644,8 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "carnell tate"
+"name": "carnell tate",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16720,7 +16657,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
-"name": "cam ward"
+"name": "cam ward",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16732,7 +16670,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "wandale robinson"
+"name": "wandale robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16744,7 +16683,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 24.5,
-"name": "dylan sampson"
+"name": "dylan sampson",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16756,7 +16696,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "harold fannin"
+"name": "harold fannin",
+"res": "W"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16768,7 +16709,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 29.5,
-"name": "deshaun watson"
+"name": "deshaun watson",
+"res": "L"
 },
 {
 "gid": "2026_07_CLE_TEN",
@@ -16780,13 +16722,14 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 69.5,
-"name": "tony pollard"
+"name": "tony pollard",
+"res": "W"
 }
 ],
 "p": 0.0259,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21273,7 +21216,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21285,7 +21229,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21297,7 +21242,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21309,7 +21255,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21321,13 +21268,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 }
 ],
 "p": 0.1105,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21344,7 +21292,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21356,7 +21305,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21368,7 +21318,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21380,7 +21331,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21392,7 +21344,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21404,13 +21357,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 }
 ],
 "p": 0.0816,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21427,7 +21381,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21439,7 +21394,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21451,7 +21407,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21463,7 +21420,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21475,7 +21433,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21487,7 +21446,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21499,13 +21459,14 @@
 "kind": "rec",
 "side": "o",
 "line": 0.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 }
 ],
 "p": 0.0532,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21522,7 +21483,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21534,7 +21496,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21546,7 +21509,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21558,7 +21522,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "drake london"
+"name": "drake london",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21570,13 +21535,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 }
 ],
 "p": 0.0831,
 "d": 20.79,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21593,7 +21559,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21605,7 +21572,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21617,7 +21585,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21629,7 +21598,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "drake london"
+"name": "drake london",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21641,7 +21611,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21653,13 +21624,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 }
 ],
 "p": 0.049,
 "d": 42.373,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21676,7 +21648,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21688,7 +21661,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21700,7 +21674,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21712,7 +21687,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "drake london"
+"name": "drake london",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21724,7 +21700,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21736,7 +21713,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21748,13 +21726,14 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "christian kirk"
+"name": "christian kirk",
+"res": "L"
 }
 ],
 "p": 0.028,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21771,7 +21750,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 89.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21783,7 +21763,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21795,13 +21776,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 }
 ],
 "p": 0.1057,
 "d": 13.459,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21818,7 +21800,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 89.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21830,7 +21813,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21842,7 +21826,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21854,13 +21839,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "L"
 }
 ],
 "p": 0.0598,
 "d": 42.017,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21877,7 +21863,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21889,7 +21876,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21901,7 +21889,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21913,7 +21902,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21925,13 +21915,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 }
 ],
 "p": 0.1214,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -21948,7 +21939,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21960,7 +21952,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21972,7 +21965,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21984,7 +21978,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -21996,7 +21991,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22008,13 +22004,14 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 }
 ],
 "p": 0.0789,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22031,7 +22028,8 @@
 "kind": "total",
 "side": "over",
 "line": 50.5,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22043,7 +22041,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22055,7 +22054,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22067,7 +22067,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22079,7 +22080,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22091,7 +22093,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22103,13 +22106,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 }
 ],
 "p": 0.0527,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22126,7 +22130,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22138,7 +22143,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22150,7 +22156,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22162,7 +22169,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "drake london"
+"name": "drake london",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22174,13 +22182,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 }
 ],
 "p": 0.0695,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22197,7 +22206,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22209,7 +22219,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22221,7 +22232,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22233,7 +22245,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "drake london"
+"name": "drake london",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22245,7 +22258,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22257,13 +22271,14 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "christian kirk"
+"name": "christian kirk",
+"res": "L"
 }
 ],
 "p": 0.0406,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22280,7 +22295,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22292,7 +22308,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22304,7 +22321,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22316,7 +22334,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 89.5,
-"name": "drake london"
+"name": "drake london",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22328,7 +22347,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22340,7 +22360,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "christian kirk"
+"name": "christian kirk",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22352,13 +22373,14 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 }
 ],
 "p": 0.0239,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22375,7 +22397,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22387,7 +22410,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "christian mccaffrey"
+"name": "christian mccaffrey",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22399,7 +22423,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22411,7 +22436,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22423,13 +22449,14 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "W"
 }
 ],
 "p": 0.042,
 "d": null,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22446,7 +22473,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22458,7 +22486,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22470,7 +22499,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22482,7 +22512,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22494,13 +22525,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 }
 ],
 "p": 0.087,
 "d": 19.084,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22517,7 +22549,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22529,7 +22562,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22541,7 +22575,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22553,7 +22588,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22565,7 +22601,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22577,13 +22614,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 4.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 }
 ],
 "p": 0.0502,
 "d": 44.444,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -22600,7 +22638,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "bijan robinson"
+"name": "bijan robinson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22612,7 +22651,8 @@
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "george kittle"
+"name": "george kittle",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22624,7 +22664,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "michael penix"
+"name": "michael penix",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22636,7 +22677,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 34.5,
-"name": "kyle pitts"
+"name": "kyle pitts",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22648,7 +22690,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "jahan dotson"
+"name": "jahan dotson",
+"res": "L"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22660,7 +22703,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 4.5,
-"name": "austin hooper"
+"name": "austin hooper",
+"res": "W"
 },
 {
 "gid": "2026_07_SF_ATL",
@@ -22672,13 +22716,14 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 19.5,
-"name": "brock purdy"
+"name": "brock purdy",
+"res": "L"
 }
 ],
 "p": 0.0263,
 "d": 85.47,
 "first": "2026-10-25T17:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -23531,20 +23576,20 @@
 "locked": true
 },
 {
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
 "legs": [
 {
 "gid": "2026_07_DAL_PHI",
 "start": "2026-10-26T20:15:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 37.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 37.5 rec yds",
-"p": 0.5651,
-"price": -108,
-"book": "Novig"
+"line": 49.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 49.5 rec yds",
+"p": 0.5714,
+"price": -115,
+"book": "Kalshi"
 },
 {
 "gid": "2026_07_LA_LV",
@@ -23553,14 +23598,14 @@
 "side": "o",
 "line": 0.5,
 "name": "tre tucker",
-"lab": "Tre Tucker anytime TD",
-"p": 0.275,
-"price": 335,
+"lab": "Tre Tucker TD",
+"p": 0.2494,
+"price": 344,
 "book": "Novig"
 }
 ],
-"p": 0.1554,
-"d": 8.378,
+"p": 0.14248,
+"d": 8.301,
 "first": "2026-10-25T20:25:00+00:00",
 "pick": "core",
 "res": null,
@@ -23576,33 +23621,31 @@
 "start": "2026-10-26T20:15:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 37.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 37.5 rec yds",
-"p": 0.5651,
-"price": -108,
+"line": 48.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 48.5 rec yds",
+"p": 0.5839,
+"price": -106,
 "book": "Novig"
 },
 {
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
+"gid": "2026_07_DEN_ARI",
+"start": "2026-10-25T16:05:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "pierre strong",
-"lab": "Pierre Strong anytime TD",
-"p": 0.23,
+"name": "jonah coleman",
+"lab": "Jonah Coleman anytime TD",
+"p": 0.237,
 "price": 441,
 "book": "Novig"
 }
 ],
-"p": 0.12997,
-"d": 10.419,
-"first": "2026-10-25T20:25:00+00:00",
-"pick": "core",
+"p": 0.13839,
+"d": 10.514,
+"first": "2026-10-25T20:05:00+00:00",
 "res": null,
-"locked": true,
-"final": true
+"locked": true
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -26436,7 +26479,7 @@
 "line": 349.5,
 "name": "jared goff",
 "lab": "Jared Goff 350+ pass yds",
-"p": 0.234,
+"p": 0.2343,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -26454,7 +26497,7 @@
 "line": 79.5,
 "name": "emanuel wilson",
 "lab": "Emanuel Wilson 80+ rush yds",
-"p": 0.2336,
+"p": 0.2352,
 "price": 373,
 "book": "Kalshi",
 "sc": "SEA pulls away",
@@ -26465,7 +26508,7 @@
 ]
 }
 ],
-"p": 0.05467,
+"p": 0.05511,
 "d": 24.833,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
@@ -26482,7 +26525,7 @@
 "line": 79.5,
 "name": "sam laporta",
 "lab": "Sam LaPorta 80+ rec yds",
-"p": 0.2501,
+"p": 0.2484,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -26500,7 +26543,7 @@
 "line": 79.5,
 "name": "emanuel wilson",
 "lab": "Emanuel Wilson 80+ rush yds",
-"p": 0.2336,
+"p": 0.2352,
 "price": 373,
 "book": "Kalshi",
 "sc": "SEA pulls away",
@@ -26511,7 +26554,7 @@
 ]
 }
 ],
-"p": 0.05842,
+"p": 0.05841,
 "d": 21.332,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
@@ -26574,13 +26617,13 @@
 "line": 274.5,
 "name": "patrick mahomes",
 "lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.205,
-"price": 351,
+"p": 0.21,
+"price": 331,
 "book": "Kalshi"
 }
 ],
-"p": 0.04364,
-"d": 20.361,
+"p": 0.0447,
+"d": 19.449,
 "first": "2026-10-26T00:20:00+00:00",
 "res": null
 },
@@ -26620,13 +26663,13 @@
 "line": 274.5,
 "name": "patrick mahomes",
 "lab": "Patrick Mahomes 275+ pass yds",
-"p": 0.205,
-"price": 351,
+"p": 0.21,
+"price": 331,
 "book": "Kalshi"
 }
 ],
-"p": 0.03625,
-"d": 59.154,
+"p": 0.03713,
+"d": 56.502,
 "first": "2026-10-26T00:20:00+00:00",
 "res": null
 },
@@ -26744,7 +26787,7 @@
 "line": 48.5,
 "name": "dallas goedert",
 "lab": "Dallas Goedert over 48.5 rec yds",
-"p": 0.5667,
+"p": 0.5563,
 "price": -106,
 "book": "Novig"
 },
@@ -26761,7 +26804,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.14252,
+"p": 0.1399,
 "d": 8.454,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
@@ -26778,7 +26821,7 @@
 "line": 4.5,
 "name": "makai lemon",
 "lab": "Makai Lemon over 4.5 receptions",
-"p": 0.521,
+"p": 0.5232,
 "price": 106,
 "book": "Kalshi"
 },
@@ -26795,7 +26838,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.13101,
+"p": 0.13157,
 "d": 8.961,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
@@ -26813,7 +26856,7 @@
 "name": "pierre strong",
 "lab": "Pierre Strong TD",
 "p": 0.212,
-"price": 471,
+"price": 488,
 "book": "Novig"
 },
 {
@@ -26824,13 +26867,47 @@
 "line": 48.5,
 "name": "dallas goedert",
 "lab": "Dallas Goedert over 48.5 rec yds",
-"p": 0.5667,
+"p": 0.5563,
 "price": -106,
 "book": "Novig"
 }
 ],
-"p": 0.12014,
-"d": 11.097,
+"p": 0.11793,
+"d": 11.427,
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 37.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 37.5 rec yds",
+"p": 0.5701,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "tre tucker",
+"lab": "Tre Tucker anytime TD",
+"p": 0.269,
+"price": 335,
+"book": "Novig"
+}
+],
+"p": 0.15335,
+"d": 8.269,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
 },
@@ -26865,40 +26942,6 @@
 ],
 "p": 0.12492,
 "d": 9.806,
-"first": "2026-10-25T20:25:00+00:00",
-"res": null
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_07_GB_DET",
-"start": "2026-10-25T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "pierre strong",
-"lab": "Pierre Strong anytime TD",
-"p": 0.245,
-"price": 471,
-"book": "Novig"
-},
-{
-"gid": "2026_07_LA_LV",
-"start": "2026-10-25T16:25:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 67.5,
-"name": "kyren williams",
-"lab": "Kyren Williams under 67.5 rush yds",
-"p": 0.5432,
-"price": 106,
-"book": "Novig"
-}
-],
-"p": 0.13307,
-"d": 11.763,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
 },
@@ -26967,6 +27010,40 @@
 ],
 "p": 0.12384,
 "d": 12.113,
+"first": "2026-10-25T20:25:00+00:00",
+"res": null
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_07_DAL_PHI",
+"start": "2026-10-26T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 37.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 37.5 rec yds",
+"p": 0.5701,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "jordan love",
+"lab": "Jordan Love anytime TD",
+"p": 0.133,
+"price": 852,
+"book": "Novig"
+}
+],
+"p": 0.07582,
+"d": 18.097,
 "first": "2026-10-25T20:25:00+00:00",
 "res": null
 },
