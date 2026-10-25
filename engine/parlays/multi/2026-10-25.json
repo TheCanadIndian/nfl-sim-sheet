@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-10-25",
 "lock": "2026-10-25T13:30:00+00:00",
-"frozen_at": "2026-10-25T11:33:49.669074+00:00",
+"frozen_at": "2026-10-25T11:46:27.199119+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,34 +15,35 @@
 "tier": "3 legs \u00b7 NFL + NHL",
 "legs": [
 {
-"gid": "2026_07_CIN_BAL",
-"start": "2026-10-25T13:00:00",
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
 "kind": "pass_yds",
 "side": "o",
 "line": 324.5,
-"name": "joe burrow",
-"lab": "Joe Burrow 325+ pass yds",
-"p": 0.2331,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 325+ pass yds",
+"p": 0.2392,
 "price": 398,
 "book": "Kalshi",
-"sc": "CIN pulls away",
+"sc": "Shootout",
 "f": [
 "usage",
+"matchup",
 "script",
 "price"
 ],
 "sport": "nfl"
 },
 {
-"gid": "2026_07_PIT_NO",
-"start": "2026-10-25T09:30:00",
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 299.5,
-"name": "aaron rodgers",
-"lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2202,
-"price": 425,
+"line": 349.5,
+"name": "jared goff",
+"lab": "Jared Goff 350+ pass yds",
+"p": 0.2414,
+"price": 456,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -66,15 +67,78 @@
 "sport": "nhl"
 }
 ],
-"p": 0.01544,
-"d": 90.2,
-"first": "2026-10-25T13:30:00+00:00",
+"p": 0.01737,
+"d": 95.526,
+"first": "2026-10-25T20:25:00+00:00",
 "res": null,
 "locked": true
 },
 {
 "card": "Multisport longshots",
 "tier": "3 legs \u00b7 NFL + NHL",
+"legs": [
+{
+"gid": "2026_07_LA_LV",
+"start": "2026-10-25T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 325+ pass yds",
+"p": 0.2392,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_07_GB_DET",
+"start": "2026-10-25T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 349.5,
+"name": "jared goff",
+"lab": "Jared Goff 350+ pass yds",
+"p": 0.2414,
+"price": 456,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026020180",
+"start": "2026-10-25T19:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "sam reinhart",
+"lab": "Sam Reinhart to score",
+"p": 0.3739,
+"price": 174,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.02159,
+"d": 75.867,
+"first": "2026-10-25T19:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NFL + NHL",
 "legs": [
 {
 "gid": "2026_07_CIN_BAL",
@@ -84,7 +148,7 @@
 "line": 324.5,
 "name": "joe burrow",
 "lab": "Joe Burrow 325+ pass yds",
-"p": 0.2331,
+"p": 0.2335,
 "price": 398,
 "book": "Kalshi",
 "sc": "CIN pulls away",
@@ -103,7 +167,7 @@
 "line": 299.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 300+ pass yds",
-"p": 0.2202,
+"p": 0.2177,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -115,21 +179,34 @@
 "sport": "nfl"
 },
 {
-"gid": "2026020184",
-"start": "2026-10-26T02:00:00Z",
+"gid": "2026020181",
+"start": "2026-10-25T22:00:00Z",
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "kirill kaprizov",
-"lab": "Kirill Kaprizov to score",
-"p": 0.4872,
-"price": 111,
+"name": "bo horvat",
+"lab": "Bo Horvat to score",
+"p": 0.3008,
+"price": 245,
+"book": "Novig",
+"sport": "nhl"
+},
+{
+"gid": "2026020180",
+"start": "2026-10-25T19:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "sam reinhart",
+"lab": "Sam Reinhart to score",
+"p": 0.3739,
+"price": 174,
 "book": "Novig",
 "sport": "nhl"
 }
 ],
-"p": 0.02501,
-"d": 55.166,
+"p": 0.00572,
+"d": 247.149,
 "first": "2026-10-25T13:30:00+00:00",
 "res": null,
 "locked": true
