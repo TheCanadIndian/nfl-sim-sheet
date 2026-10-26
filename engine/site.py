@@ -786,6 +786,10 @@ def updates():
     <div><dt>How it decides</dt><dd>Each option re-projects every game of recent seasons using only data from before each game, then is graded. A change is kept only if it beats the current settings in <b>both</b> test windows (last season and this season) by a minimum margin, without hurting any stat or the calibration.</dd></div>
     <div><dt>Guardrails</dt><dd>At most one change per sport per week, small steps inside fixed limits, and the current setting always competes, so a change that stops helping can be undone the same way.</dd></div>
   </dl></section>
+  <section id="shadow"><h2>Shadow tests</h2><dl>
+    <div><dt>What they are</dt><dd>Model changes that didn’t pass their backtest, graded live beside the real projections without changing anything the site shows or bets: NFL quarterback attempts and completions scaled to this season’s results, and three adjustments to NHL goal chances. One is switched on only if it beats the live numbers in both halves of its live record and then passes a re-test on past seasons.</dd></div>
+    <div><dt>Latest results</dt><dd><a href="shadow.html">See the shadow tests →</a></dd></div>
+  </dl></section>
   {section("nfl", "NFL")}
   {section("nhl", "NHL")}
   {section("nba", "NBA")}
