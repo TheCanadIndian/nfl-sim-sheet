@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-10-26",
 "lock": "2026-10-26T23:00:00+00:00",
-"frozen_at": "2026-10-26T20:58:49.911491+00:00",
+"frozen_at": "2026-10-26T21:04:59.545453+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -71,7 +71,8 @@
 "p": 0.02384,
 "d": 49.742,
 "first": "2026-10-26T23:00:00+00:00",
-"res": null
+"res": null,
+"locked": true
 },
 {
 "card": "Multisport longshots",
@@ -98,49 +99,6 @@
 "sport": "nba"
 },
 {
-"gid": "401909868",
-"start": "2026-10-26T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "brandon miller",
-"lab": "Brandon Miller 8+ reb",
-"p": 0.21,
-"price": 400,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "2026020185",
-"start": "2026-10-26T23:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "artemi panarin",
-"lab": "Artemi Panarin to score",
-"p": 0.3298,
-"price": 223,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.0183,
-"d": 64.6,
-"first": "2026-10-26T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
-{
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
 "kind": "fg3m",
@@ -161,19 +119,42 @@
 "sport": "nba"
 },
 {
+"gid": "2026020187",
+"start": "2026-10-27T01:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "connor mcdavid",
+"lab": "Connor McDavid to score",
+"p": 0.4622,
+"price": 125,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.03341,
+"d": 34.65,
+"first": "2026-10-26T23:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
+{
 "gid": "401909868",
 "start": "2026-10-26T23:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "brandon miller",
-"lab": "Brandon Miller 8+ reb",
-"p": 0.21,
-"price": 400,
-"book": "Novig",
+"line": 4.5,
+"name": "grayson allen",
+"lab": "Grayson Allen 5+ threes",
+"p": 0.2183,
+"price": 398,
+"book": "Kalshi",
 "f": [
 "usage",
-"matchup",
 "rotation",
 "game",
 "price"
@@ -200,6 +181,25 @@
 "sport": "nba"
 },
 {
+"gid": "401909872",
+"start": "2026-10-27T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "andrew nembhard",
+"lab": "Andrew Nembhard 9+ ast",
+"p": 0.256,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
 "gid": "2026020187",
 "start": "2026-10-27T01:30:00Z",
 "kind": "goal",
@@ -213,10 +213,11 @@
 "sport": "nhl"
 }
 ],
-"p": 0.00571,
-"d": 216.562,
+"p": 0.00556,
+"d": 224.1,
 "first": "2026-10-26T23:00:00+00:00",
-"res": null
+"res": null,
+"locked": true
 }
 ],
 "graded": false
