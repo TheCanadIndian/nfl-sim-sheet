@@ -445,6 +445,8 @@ tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
 /* tables */
 .tw{overflow-x:auto}
 .nbxgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.nbxteam h3{margin:4px 0 6px;font-family:var(--display);font-size:18px}
+.ladsw{display:flex;gap:6px;margin:4px 0 8px}.ladsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px var(--body);cursor:pointer}.ladsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ladgm{border-top:1px solid var(--faint);padding:10px 0 2px}.ladgh{font-size:14.5px;margin-bottom:2px}.ladgm .lad:first-child{border-top:0}
 table.nbx{margin-bottom:10px}.bxo{background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 4px}.bxos{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 12px}.bxoc{border:1px solid var(--faint);border-radius:999px;padding:2px 9px;font-size:12.5px;white-space:nowrap}.bxoc b{color:var(--good)}.bxoc i{font-style:normal;color:var(--muted)}table.nbx td,table.nbx th{text-align:right;white-space:nowrap}table.nbx .l{text-align:left;white-space:normal}table.nbx th.l{color:var(--muted)}table.nbx .bxp{font-weight:700}
 @media(max-width:820px){.nbxgrid{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:560px){table.nbx td,table.nbx th{padding-left:5px;padding-right:5px}}

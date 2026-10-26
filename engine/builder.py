@@ -202,7 +202,7 @@ def learn():
             changes.append(dict(date=today, seg=s["seg"], was=prev[s["seg"]], now=s["status"], n=s["n"], ret=s["ret"]))
     st = dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), rows=len(rows),
               live_rows=sum(1 for r in rows if r.get("f") is not None), segments=segs, changes=changes[-60:], builder=builder_record(),
-              confluence=builder_record(CONF_CARD))
+              confluence=builder_record(CONF_CARD), moveknee=builder_record(MK_CARD))
     os.makedirs(OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=0)
     print(f"builder: {len(rows)} graded value props ({st['live_rows']} with reasons), {sum(s['status'] == 'Proven' for s in segs)} proven, "
@@ -358,6 +358,122 @@ def build_confluence(sport, cands, now):
             break
     if len(ls) >= 4 and CONF_LONG[0] <= math.prod(PL.dec(x["price"]) for x in ls) <= CONF_LONG[1]:
         out.append(mk(ls, f"{len(ls)}-leg longshot"))
+    return out
+
+
+# ---------------------------------------------------------------- 6. NBA move + knee parlays
+# Owner 2026-10-25: "create parlays in nba based on our confluence up and down markers. When we see the baseline increase
+# for a player and/or their odds drop, look and find a higher priced knee that can be used that has confluence with either
+# dvp, value, 5% or more edge, or the LC tag". Trigger = a Pinnacle / consensus move up on the prop (sharp.pin_moves: line
+# up, odds drop, or both); leg = a ladder knee ABOVE the main line at the owner's books (sharp.ladder_knees rule, plus
+# money) with at least one of: soft matchup (the page's 'matchup' reason: blended DvP x archetype 6%+), a Value tag, an LC
+# tag on that prop, or a 5%+ edge at the rung (chance = WPIN on ours + the rung's fair). One leg per game; 2- and 3-leg
+# parlays. EXPERIMENTAL, tracked; never Today's card.
+MK_CARD = "Move + knee parlays (experimental)"
+MK_EDGE = .05
+MK_WPIN = .05                        # NBA weight on our number (mkt.js / screener WPIN for NBA props)
+
+
+def build_moveknee(sport, cands, now):
+    return moveknee_parlays(moveknee_legs(sport, cands, now))
+
+
+def moveknee_legs(sport, cands, now):
+    """[(score, leg)]: each moved prop's best higher knee with confluence (one per prop)."""
+    if sport != "nba":
+        return []
+    import sharp as SH
+    try:
+        PR = json.load(open(os.path.join(PL.SITE, "markets", "props_nba.json")))
+        FL = json.load(open(os.path.join(PL.SITE, "markets", "flags_nba.json")))
+    except (OSError, ValueError):
+        return []
+    try:
+        LV = json.load(open(os.path.join(PL.SITE, "markets", "live_nba.json"))).get("rows", [])
+    except (OSError, ValueError):
+        LV = []
+    C = {(str(c["gid"]), c["name"], c["kind"]): c for c in cands or [] if c.get("start")}
+    moved = {}
+    for m in FL.get("moves") or []:
+        if m.get("sig") in ("line", "price", "both"):
+            moved.setdefault((str(m["g"]), m["n"], m["k"]), set()).add(f"{'Pinnacle' if m.get('src') == 'pin' else 'consensus'} {'line up' if m['sig'] == 'line' else 'odds drop' if m['sig'] == 'price' else 'line up + odds drop'}")
+    tagged = lambda src, g, n, k: any(isinstance(v, dict) and str(v.get("b", "")).endswith(" " + STAT.get(k, k)) for nm, v in ((FL.get(src) or {}).get(g) or {}).items() if nm == n)
+    kal = {}
+    for r in LV:
+        if r.get("s") == "kalshi" and r.get("k") in SH.LC_LAB and r.get("l") is not None and r.get("n") and r.get("ya") and r.get("yb") is not None \
+                and r["ya"] - r["yb"] <= .03 and .01 < r["ya"] < .99:
+            kal.setdefault((str(r["g"]), SH.jsnorm(r["n"]), r["k"]), {})[float(r["l"])] = r["ya"]
+    legs = []
+    for key, why_move in moved.items():
+        gid, nm, k = key
+        c = C.get(key)
+        e = ((PR.get("props") or {}).get(gid) or {}).get(nm, {}).get(k)
+        if not c or not e or e.get("l") is None or PL.when(c["start"]) <= now:
+            continue
+        main, pmain = float(e["l"]), e.get("p")
+        mfair = (e.get("pin") or {}).get("o") if (e.get("pin") or {}).get("l") == e.get("l") else None
+        rungs = {main: (e.get("o") or {}, e.get("u") or {}, mfair, pmain)}
+        for la, a in (e.get("a") or {}).items():
+            rungs.setdefault(float(la), (a.get("o") or {}, a.get("u") or {}, a.get("pin"), a.get("p")))
+        best = None
+        for bk in SH.OWN_BOOKS:
+            if bk == "Kalshi":
+                L = [(l, round(-100 * q / (1 - q)) if q >= .5 else round(100 * (1 - q) / q), q)
+                     for l, ya in sorted((kal.get(key) or {}).items()) for q in [ya + .07 * ya * (1 - ya)]]
+            else:
+                L = [(l, rungs[l][0][bk][0], 1 / SH.dec(rungs[l][0][bk][0])) for l in sorted(rungs) if (rungs[l][0].get(bk) or [None])[0] is not None]
+            for i in range(1, len(L) - 1):
+                (l0, o0, q0), (l1, o1, q1), (l2, o2, q2) = L[i - 1], L[i], L[i + 1]
+                g0, g1 = l1 - l0, l2 - l1
+                if l1 <= main or o1 < 100 or max(g0, g1) > 2.5 * min(g0, g1):
+                    continue                                          # a higher-priced knee: above the main line, plus money
+                din, dout = q0 - q1, q1 - q2
+                if din <= 0 or dout < SH.KNEE_DROP or dout / g1 < SH.KNEE_RATIO * din / g0 or not SH.KNEE_Q[0] <= q1 <= SH.KNEE_Q[1]:
+                    continue
+                # the rung's fair: the consensus carried to it, else the books' two-way no-vig, else the main fair carried by our distribution
+                ro, ru, rf, rp = rungs.get(l1, ({}, {}, None, None))
+                fair = rf
+                if fair is None:
+                    two = [(1 / SH.dec(ro[b][0])) / ((1 / SH.dec(ro[b][0])) + (1 / SH.dec(ru[b][0]))) for b in ro if b in ru and ro[b] and ru[b] and ro[b][0] is not None and ru[b][0] is not None]
+                    fair = sorted(two)[len(two) // 2] if len(two) >= 2 else None
+                ours = rp if rp is not None else next((r.get("p", {}).get("vegas") for r in LV if r.get("s") == "kalshi" and str(r.get("g")) == gid and SH.jsnorm(r.get("n") or "") == nm and r.get("k") == k and r.get("l") == l1), None)
+                if fair is None and mfair is not None and pmain and ours and 0 < pmain < 1 and 0 < ours < 1:
+                    lg = lambda x: math.log(x / (1 - x))
+                    fair = 1 / (1 + math.exp(-(lg(mfair) + lg(ours) - lg(pmain))))
+                if fair is None:
+                    continue                                          # never our number alone
+                chance = MK_WPIN * ours + (1 - MK_WPIN) * fair if ours is not None else fair
+                edge = chance / q1 - 1
+                conf = (["soft matchup"] if "matchup" in (c.get("f") or []) else []) + (["Value"] if tagged("tags", gid, nm, k) else []) \
+                    + (["LC"] if tagged("lc", gid, nm, k) else []) + ([f"edge +{edge:.0%}"] if edge >= MK_EDGE else [])
+                if not conf or edge > .40:                            # 40%+ claimed edges are stale quotes / model error
+                    continue
+                score = (len(conf), dout / g1 / (din / g0), edge)
+                if best is None or score > best[0]:
+                    best = (score, dict(gid=gid, start=c["start"], kind=k, side="o", line=l1, name=nm,
+                                        lab=f"{c.get('lab') or nm.title()} over {l1:g} {STAT.get(k, k)}", p=round(chance, 4), fair=round(fair, 4),
+                                        price=o1, book=bk, sport=sport, edge=round(edge, 4),
+                                        v=sorted(why_move) + [f"knee at {bk}: {l0:g} {o0:+d} → {l1:g} {o1:+d} → {l2:g} {o2:+d}"] + conf))
+        if best:
+            legs.append(best)
+    return legs
+
+
+def moveknee_parlays(legs):
+    """One leg per game (its strongest), then a 2-leg, a 3-leg and a second 2-leg from the next legs (a leg in at most 2)."""
+    legs = sorted(legs, key=lambda x: tuple(-v for v in x[0]))
+    per_game = {}
+    for sc, L in legs:
+        per_game.setdefault(L["gid"], L)
+    pool = list(per_game.values())
+    mk = lambda ls, tier: dict(card=MK_CARD, tier=tier, legs=ls, p=round(math.prod(L["fair"] for L in ls), 5), d=round(math.prod(PL.dec(L["price"]) for L in ls), 3))
+    out = []
+    if len(pool) >= 2:
+        out.append(mk(pool[:2], "2 legs"))
+    if len(pool) >= 3:
+        out.append(mk(pool[:3], "3 legs"))
+    if len(pool) >= 5:
+        out.append(mk(pool[2:4], "2 legs"))
     return out
 
 
