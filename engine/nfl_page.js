@@ -637,7 +637,7 @@ function boxPanel(g){
   const LN = (p, k) => window.MKT && MKT.propLine ? MKT.propLine(g.id, p.n, k) : null;
   const side = t => {
     const P = PL(g).filter(p => p.t === t), over = [];
-    const ov = (p, k, v, lab) => { const l = LN(p, k); if (l == null || !(v > l)) return v; over.push(`<span class="bxoc">${esc(p.n.split(' ').slice(-1)[0])} ${lab} <b>${v}</b> <i>line ${l}</i></span>`); return `<span class="bxo" title="above the books’ line ${l}">${v}</span>`; };
+    const ov = (p, k, v, lab) => { const l = LN(p, k); if (l == null || !(v > l)) return v; over.push(`<span class="bxoc">${esc(p.n.replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/, '').split(' ').slice(-1)[0])} ${lab} <b>${v}</b> <i>line ${l}</i></span>`); return `<span class="bxo" title="above the books’ line ${l}">${v}</span>`; };
     const qb = P.filter(p => p.s.att).sort((a, b) => mean(b, 'att') - mean(a, 'att'))[0];
     const rec = P.filter(p => mean(p, 'tgt') >= 1).sort((a, b) => mean(b, 'rec_yds') - mean(a, 'rec_yds'));
     const ru = P.filter(p => mean(p, 'car') >= 1).sort((a, b) => mean(b, 'rush_yds') - mean(a, 'rush_yds'));

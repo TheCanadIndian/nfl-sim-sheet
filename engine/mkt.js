@@ -28,7 +28,8 @@
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
   let D = null, stamp = null, timer = null;
-  let BK = null, FL = null, PR = null, CARD = null;            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
+  let BK = null, FL = null, PR = null, CARD = null, BL = null;   // BL: books' main lines frozen at each start (boxgrade.py lines)
+  //            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
   const ORDER = ['Novig', 'Kalshi', 'Hard Rock', 'Polymarket', 'Poly US', 'ProphetX', 'DK', 'FD', 'MGM', 'Caesars', 'Fanatics', 'theScore', 'ESPN BET', 'BetRivers', 'Fliff', 'Bally Bet', 'betPARX'];
@@ -600,8 +601,11 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     myBooks: () => MY.slice(),
     // the books' main line for a player prop (props file `l`), for the projected box score's 'above the line' highlight
     propLine(gid, name, kind){
-      if (!PR || !PR.props || Date.now() - new Date(PR.fetched) > 12 * 3600e3) return null;
-      const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; return e && e.l != null ? +e.l : null;
+      const e = PR && PR.props && Date.now() - new Date(PR.fetched) < 12 * 3600e3 ? ((PR.props[String(gid)] || {})[norm(name)] || {})[kind] : null;
+      if (e && e.l != null) return +e.l;
+      // a started game's props leave the live file: the line frozen at its start (owner 2026-10-25: highlights vanished)
+      const f = BL && BL[String(gid)] && ((BL[String(gid)].p || {})[norm(name)] || {})[kind];
+      return f != null ? +f : null;
     },
     // one leg of a same-game combo, market-anchored like the payout cards: game lines ('ml' side home|away, 'total' side
     // over at line) = ours averaged with Pinnacle's no-vig (else the books' median no-vig); props ('sog25', ...) = ours 50/50
@@ -1209,6 +1213,9 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     fetch(base + 'markets/flags_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
       if (!d || (FL && d.fetched === FL.fetched)) return;
       FL = d; rerender();
+    }).catch(() => {});
+    if (!BL && (sport === 'nba' || sport === 'nfl')) fetch(base + 'markets/boxlines_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
+      if (d){ BL = d; rerender(); }
     }).catch(() => {});
     if (!FREEZE) fetch(base + 'markets/card_' + sport + '.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
       if (!d || (CARD && d.updated === CARD.updated)) return;

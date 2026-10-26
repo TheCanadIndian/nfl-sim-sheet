@@ -68,6 +68,11 @@ def freeze_lines():
         cut = (now - dt.timedelta(days=150)).isoformat()
         L = {g: v for g, v in L.items() if v.get("start", "") >= cut}
         json.dump(L, open(out, "w"), separators=(",", ":"))
+        try:                                                     # published copy: the box panels fall back to it once a game starts
+            pub = {g: v for g, v in L.items() if v.get("start", "") >= (now - dt.timedelta(days=2)).isoformat()}
+            json.dump(pub, open(os.path.join(M.SITE, "markets", f"boxlines_{sport}.json"), "w"), separators=(",", ":"))
+        except OSError:
+            pass
         print(f"{sport}: book lines frozen for {n} upcoming games ({len(L)} kept)")
 
 

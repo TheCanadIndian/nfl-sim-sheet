@@ -1148,6 +1148,102 @@ def hr_ou_pull(sport, now):
     json.dump(cache, open(f, "w"), separators=(",", ":"))
 
 
+# NFL alternate lines (owner 2026-10-25: "can we pull alt lines for nfl as well"): Hard Rock + Novig alternate ladders for
+# receiving yards, catches, rushing and passing yards. One Odds API call per game (4 alternate markets, both books in it:
+# 4 credits); the NBA alt schedule -- one morning pull, then hourly in the last 2 h (sharp.wanted) -- about 150 credits on a
+# full Sunday (folding them into the 30-min Hard Rock pull would have cost ~700). Merged onto each player's ladder.
+NFL_ALT_MKT = {"player_reception_yds_alternate": "rec_yds", "player_receptions_alternate": "rec", "player_rush_yds_alternate": "rush_yds",
+               "player_pass_yds_alternate": "pass_yds"}
+NFL_ALT_CACHE = os.path.join(M.OUT, "oa_props_nfl_alt.json")
+
+
+def nfl_alt_pull(now):
+    """Cache: {gid: {fetched, start, props: {player: {kind: {line: {o|u: {book: [odds, link]}}}}}}}."""
+    k = B.key()
+    O = M.ours_nfl() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+    try:
+        cache = json.load(open(NFL_ALT_CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    bst = B.load_state()
+    todo = wanted(games, cache, now, 2.0, 60, bst, fast_min=60)
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events", params=dict(apiKey=k), timeout=30)   # free
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nfl"].get(e["away_team"]), B.NAMES["nfl"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nfl alt lines: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers="hardrockbet,novig", markets=",".join(NFL_ALT_MKT), oddsFormat="american", includeLinks="true"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    kind = NFL_ALT_MKT.get(m["key"])
+                    for o in m.get("outcomes", []):
+                        side = {"over": "o", "under": "u"}.get((o.get("name") or "").lower())
+                        if not kind or not side or o.get("point") is None or not o.get("description"):
+                            continue
+                        P.setdefault(jsnorm(o["description"]), {}).setdefault(kind, {}).setdefault(f"{float(o['point']):g}", {}) \
+                            .setdefault(side, {})[NBA_SHORT.get(b["key"], b["key"])] = [int(o["price"]), _link(o.get("link") or b.get("link"))]
+            cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+            print(f"odds api nfl alt lines: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(NFL_ALT_CACHE, "w"), separators=(",", ":"))
+
+
+def nfl_alt_merge(now):
+    """Each alt price onto the published props: the main line when it matches, else that line's alt entry; our chance at
+    a new rung from the player's saved distribution (like hr_ou_merge)."""
+    try:
+        cache = json.load(open(NFL_ALT_CACHE))
+        fp = os.path.join(M.SITE, "markets", "props_nfl.json")
+        PR = json.load(open(fp))
+    except (OSError, ValueError):
+        return
+    _, by = nfl_ours()
+    dist = {(str(g_), jsnorm(me["name"])): me["d"] for (g_, _n), me in (by or {}).items()}
+    n = 0
+    for gid, c in cache.items():
+        if pd.Timestamp(c["start"]).tz_convert("UTC") <= now:
+            continue
+        G = PR.get("props", {}).get(gid, {})
+        for nm, kinds in c["props"].items():
+            pl = G.get(nm)
+            if not pl:
+                continue
+            for kind, lines in kinds.items():
+                e = pl.get(kind)
+                if not e:
+                    continue
+                for line, sides in lines.items():
+                    tgt = e if e.get("l") is not None and abs(float(e["l"]) - float(line)) < 1e-9 else e.setdefault("a", {}).setdefault(line, {})
+                    for sd, books in sides.items():
+                        for bk, v in books.items():
+                            tgt.setdefault(sd, {})[bk] = v
+                            n += 1
+                    if tgt.get("p") is None:
+                        d = dist.get((gid, nm), {}).get(kind)
+                        po = p_over(d, float(line)) if d else None
+                        if po is not None:
+                            tgt["p"] = round(po, 4)
+    json.dump(PR, open(fp, "w"), separators=(",", ":"))
+    print(f"odds api nfl alt lines: merged {n} prices")
+
+
 def hr_ou_merge(sport, now):
     """Put Hard Rock's over/under prices on the published props: the main line when it matches, else that line's alt entry
     (NHL shots: each line is its own kind, sog05 / sog15 / ...)."""
@@ -1728,6 +1824,12 @@ def main(argv):
             hr_merge(sport, now)
             hr_ou_pull(sport, now)
             hr_ou_merge(sport, now)
+            if sport == "nfl":
+                try:
+                    nfl_alt_pull(now)
+                    nfl_alt_merge(now)
+                except Exception as e:                       # noqa: BLE001 -- the main lines still publish
+                    print(f"odds api nfl alt lines: skipped ({type(e).__name__}: {e})")
             if sport == "nfl":
                 pin_pull(now)
                 pin_merge(now)
