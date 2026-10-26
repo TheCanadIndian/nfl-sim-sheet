@@ -163,14 +163,14 @@ def seg_stats(rows):
     return sorted(out, key=lambda s: (-s["n"]))
 
 
-def builder_record():
+def builder_record(card=CARD):
     ps = []
     for fp in glob.glob(os.path.join(PL.OUT, "*", "*.json")):
         if os.sep + "learn" + os.sep in fp:
             continue
         d = json.load(open(fp))
         for p in d.get("parlays", []):
-            if p.get("card") == CARD and p.get("res") in ("W", "L"):
+            if p.get("card") == card and p.get("res") in ("W", "L"):
                 ps.append((d["date"], (((p.get("paid") or p.get("d") or 1) - 1) if p["res"] == "W" else -1.0), p.get("p") or 0))
     if not ps:
         return dict(n=0, status="Experimental")
@@ -201,7 +201,8 @@ def learn():
                 prev.get(s["seg"]) in ("Proven", "Dropped") and s["status"] != prev[s["seg"]]):
             changes.append(dict(date=today, seg=s["seg"], was=prev[s["seg"]], now=s["status"], n=s["n"], ret=s["ret"]))
     st = dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), rows=len(rows),
-              live_rows=sum(1 for r in rows if r.get("f") is not None), segments=segs, changes=changes[-60:], builder=builder_record())
+              live_rows=sum(1 for r in rows if r.get("f") is not None), segments=segs, changes=changes[-60:], builder=builder_record(),
+              confluence=builder_record(CONF_CARD))
     os.makedirs(OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=0)
     print(f"builder: {len(rows)} graded value props ({st['live_rows']} with reasons), {sum(s['status'] == 'Proven' for s in segs)} proven, "
@@ -232,7 +233,7 @@ def build(sport, cands, now):
 
     def mk(ls, tier):
         kind = lambda c: "sog" if c["kind"].startswith("sog") else c["kind"]
-        lab = lambda c: f"{c['lab']} {'anytime TD' if c['kind'] == 'td' else 'to score' if c['kind'] == 'goal' else 'over ' + str(c['line']) + ' ' + STAT.get(c['kind'], c['kind'])}"
+        lab = lambda c: f"{c['lab']} {'anytime TD' if c['kind'] == 'td' else 'to score' if c['kind'] == 'goal' else (STAT.get(c['kind'], c['kind']) if c['kind'].startswith('sog') else 'over ' + str(c['line']) + ' ' + STAT.get(c['kind'], c['kind']))}"
         L = [dict(gid=c["gid"], start=c["start"], kind=kind(c), side="o", line=c["line"], name=c["name"], lab=lab(c), p=c["q"],
                   price=c["price"], book=c["book"], f=c["f"], sport=sport, edge=c["edge"]) for c in ls]
         p = math.prod(c["q"] for c in ls)
@@ -248,6 +249,114 @@ def build(sport, cands, now):
         ls = a[:size]
         out.append(mk(ls, f"{size} legs"))
         used.update(c["gid"] for c in ls)
+    return out
+
+
+# ---------------------------------------------------------------- 5. confluence parlays
+# Owner 2026-10-25: "I do want to go for higher odds parlays... take confluence into account... multiple things agreeing
+# leading to an increased leg hit rate"; run alongside Today's card (not on it) until its record says otherwise.
+# Why the rules (research/confluence_study.py, 2,117 graded overs at the owner's books Oct 22-25; parlay legs Oct 8-25):
+# every over landed near its price (-2%); 5+ agreeing signals hit 53.6% vs 48.3% priced (+11%, n 56), 2+ market signals
+# 51% vs 47% (+8%, n 82) -- the right direction, not proven (halves split). Legs priced under 25% hit 10.5% vs 19.9% priced
+# and claimed edges 15%+ hit 24% vs 40% claimed, so neither goes in; the payout comes from more near-fair legs.
+CONF_CARD = "Confluence parlays (experimental)"
+CONF_Q = (.25, .55)                  # leg price as implied chance: about -122 .. +300
+CONF_EDGE = (0.0, .15)               # market-anchored edge at the price
+CONF_VOTES = 3                       # agreeing signals a leg needs
+CONF_LONG = (20, 100)                # the longshot's payout
+
+
+def signals(sport):
+    """Live market signals per bet from the markets run (flags_<sport>.json): {(gid, name, kind, line): {votes}} for
+    Value / LC / knees at that line, and {(gid, name, kind): {votes}} for Pinnacle / consensus moves up (any line)."""
+    try:
+        FL = json.load(open(os.path.join(PL.SITE, "markets", f"flags_{sport}.json")))
+    except (OSError, ValueError):
+        return {}, {}
+    rev = {v: k for k, v in STAT.items()}
+    at, prop = {}, {}
+
+    def bet(b):                                                       # 'over 9.5 rebounds' -> (kind, line)
+        if b == "TD":
+            return "td", .5
+        if b == "goal":
+            return "goal", .5
+        p = str(b).split(" ", 2)
+        if len(p) == 3 and p[0] == "over" and p[2] in rev:
+            return rev[p[2]], float(p[1])
+        return None
+    for src in ("tags", "lc"):
+        for gid, tg in (FL.get(src) or {}).items():
+            for nm, v in tg.items():
+                kl = bet(v.get("b")) if isinstance(v, dict) else None
+                if kl:
+                    at.setdefault((str(gid), nm, kl[0], kl[1]), set()).add("value" if src == "tags" else "lc")
+    for x in FL.get("knees") or []:
+        at.setdefault((str(x["g"]), x["n"], x["k"], float(x["l"])), set()).add("knee")
+    for m in FL.get("moves") or []:
+        if m.get("sig") in ("line", "price", "both"):
+            prop.setdefault((str(m["g"]), m["n"], m["k"]), set()).add("pinnacle up" if m.get("src") == "pin" else "consensus up")
+    return at, prop
+
+
+def build_confluence(sport, cands, now):
+    """Confluence parlays from this freeze's candidates: legs where 3+ things agree, one per game; a 2-leg, a 3-leg and
+    a 4-5 leg longshot (CONF_LONG). Each leg's shown chance is the market's fair (our model is one vote, not the chance)."""
+    st = json.load(open(STATE)) if os.path.exists(STATE) else {"segments": []}
+    status = {s["seg"]: s["status"] for s in st["segments"]}
+    at, prop = signals(sport)
+    SP = sport.upper()
+    w = lambda v: 0 if status.get(f"{SP} · {v}") == "Dropped" else 2 if status.get(f"{SP} · {v}") == "Proven" else 1
+    legs = []
+    for c in cands or []:
+        if not c.get("start") or PL.when(c["start"]) <= now or c.get("price") is None:
+            continue
+        q = 1 / PL.dec(c["price"])
+        if not CONF_Q[0] <= q <= CONF_Q[1] or not CONF_EDGE[0] <= (c.get("edge") or -1) <= CONF_EDGE[1]:
+            continue
+        F = features(sport, c)
+        if any(status.get(f) == "Dropped" for f in F[1:5]):            # a dropped stat / book / band never plays
+            continue
+        line = float(c["line"]) if c.get("line") is not None else .5
+        votes = [x for x in (c.get("f") or []) if x != "price"]
+        if c.get("p") is not None and c.get("m") is not None and c["p"] > c["m"]:
+            votes.append("our model above fair")
+        kind = "sog" if c["kind"].startswith("sog") else c["kind"]
+        votes += sorted(at.get((str(c["gid"]), c["name"], kind, line), set()) | prop.get((str(c["gid"]), c["name"], kind), set()))
+        score = sum(w(v) for v in votes)
+        if score < CONF_VOTES:
+            continue
+        legs.append(dict(c, votes=votes, score=score, fair=c.get("m") if c.get("m") is not None else c.get("q")))
+    # market signals rank first (research/confluence_study.py: 2+ market signals lift 1.08, model reasons alone ~1.0)
+    MK = ("value", "lc", "knee", "pinnacle up", "consensus up")
+    legs.sort(key=lambda c: (-(c["score"] + .5 * sum(v in MK for v in c["votes"])), -(c.get("edge") or 0)))
+    best = {}
+    for c in legs:
+        best.setdefault(c["gid"], c)
+    pool = list(best.values())
+
+    def mk(ls, tier):
+        lab = lambda c: f"{c['lab']} {'anytime TD' if c['kind'] == 'td' else 'to score' if c['kind'] == 'goal' else (STAT.get(c['kind'], c['kind']) if c['kind'].startswith('sog') else 'over ' + str(c['line']) + ' ' + STAT.get(c['kind'], c['kind']))}"
+        L = [dict(gid=c["gid"], start=c["start"], kind="sog" if c["kind"].startswith("sog") else c["kind"], side="o", line=c["line"], name=c["name"],
+                  lab=lab(c), p=round(c["fair"], 4), price=c["price"], book=c["book"], f=c.get("f"), v=c["votes"], sport=sport, edge=c.get("edge")) for c in ls]
+        return dict(card=CONF_CARD, tier=tier, legs=L, p=round(math.prod(c["fair"] for c in ls), 5), d=round(math.prod(PL.dec(c["price"]) for c in ls), 3))
+    out = []
+    if len(pool) >= 2:
+        out.append(mk(pool[:2], "2 legs"))
+    if len(pool) >= 5:
+        out.append(mk(pool[2:5], "3 legs"))
+    elif len(pool) >= 3 and not out:
+        out.append(mk(pool[:3], "3 legs"))
+    ls = []                                                          # longshot: the strongest legs again (a leg in at most 2)
+    for c in pool:
+        ls.append(c)
+        d = math.prod(PL.dec(x["price"]) for x in ls)
+        if len(ls) >= 4 and d >= CONF_LONG[0]:
+            break
+        if len(ls) == 5:
+            break
+    if len(ls) >= 4 and CONF_LONG[0] <= math.prod(PL.dec(x["price"]) for x in ls) <= CONF_LONG[1]:
+        out.append(mk(ls, f"{len(ls)}-leg longshot"))
     return out
 
 

@@ -31,6 +31,8 @@
   const pc = p => (p * 100).toFixed(0) + '%';
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
   const norm = s => String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[.'’]/g, '').replace(/\s+(jr|sr|ii|iii|iv)$/, '').trim();
+  const jn = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z ]/g, '').replace(/\b(jr|sr|ii|iii|iv)\b/g, '').replace(/\s+/g, ' ').trim();
+  const sig = p => 1 / (1 + Math.exp(-p));
   const med = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
   const twoWay = (o, u) => med(Object.keys(o || {}).filter(k => !NOBET.has(k) && u && u[k] && o[k][0] != null && u[k][0] != null)
     .map(k => { const a = 1 / dec(o[k][0]), b = 1 / dec(u[k][0]); return a / (a + b); }));
@@ -39,18 +41,29 @@
     return 1 / (1 + Math.exp(-xs.reduce((s, v) => s + lgt(v), 0) / xs.length)); };
 
   // ---------------------------------------------------------------- state (remembered per device)
-  // alt lines off by default: their fair is carried from the main line (the least reliable fairs); one tap turns them on
-  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, softm: false, soon: false, alts: false, sort: 'edge'};
+  // alt lines on (owner 2026-10-25: "I feel like we are missing prices"): every rung shows; their fair is carried from
+  // the main line (shown with ≈ where only our distribution carries it). Devices that had saved 'off' are switched on once.
+  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, softm: false, soon: false, alts: true, sort: 'edge'};
   let S = {...DEF};
   try { Object.assign(S, JSON.parse(localStorage.getItem('simscreen-v2') || '{}')); } catch (e) {}
+  if (!S.v3){ S.alts = true; S.v3 = 1; }
   const save = () => { try { localStorage.setItem('simscreen-v2', JSON.stringify(S)); } catch (e) {} };
   let ROWS = [], FETCHED = {}, SHOW = 60;
 
   // ---------------------------------------------------------------- data
   const link = (v, partner) => { const u = v && v[1]; if (!u) return null; if (String(u).startsWith('http')) return u;
     return partner === 'thecanadindian' ? `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${partner}` : null; };
-  function build(sport, P, F){
+  function build(sport, P, F, LV){
     const out = [], G = GAMES[sport] || {}, now = Date.now();
+    // Kalshi's prop ladders are only in live_<sport>.json (asks / bids), not the props file: every rung with a 4c-or-less
+    // spread joins its prop's ladder at the ask plus Kalshi's 7% fee (research/kalshi_liquidity_rule.py: 4c+ spreads lost 38%)
+    const KAL = {};
+    for (const r of (LV && LV.rows) || []) if (r.s === 'kalshi' && LAB[r.k] && r.k !== 'td' && r.l != null && r.n && r.ya && r.yb != null && r.ya - r.yb <= .04 && r.ya > .01 && r.ya < .99){
+      const q = r.ya + .07 * r.ya * (1 - r.ya), o = q >= .5 ? -100 * q / (1 - q) : 100 * (1 - q) / q;
+      ((KAL[`${r.g}|${jn(r.n)}|${r.k}`] = KAL[`${r.g}|${jn(r.n)}|${r.k}`] || {})[+r.l] = {o: Math.round(o), p: r.p && r.p.vegas != null ? r.p.vegas : null}); }
+    const props = JSON.parse(JSON.stringify(P.props || {}));
+    for (const key of Object.keys(KAL)){ const [g, nm, k] = key.split('|');            // Kalshi-only players / stats join too
+      ((props[g] = props[g] || {})[nm] = props[g][nm] || {})[k] = props[g][nm][k] || {o: null, a: {}}; }
     const tagsOf = (gid, nm) => { const t = []; const v = ((F.tags || {})[gid] || {})[nm], l = ((F.lc || {})[gid] || {})[nm];
       return {v: v && v.b, lc: l && l.b}; };
     const off = new Set((F.off || []).map(x => `${x.g}|${x.n}|${x.k}|${x.l}`));
@@ -60,7 +73,7 @@
     for (const m of F.moves || []) if ((m.src === 'pin' || m.src === 'cons') && m.sig !== 'rung') { const M_ = m.src === 'pin' ? pinm : consm;
       const c = M_[`${m.g}|${m.n}|${m.k}`] = M_[`${m.g}|${m.n}|${m.k}`] || {line: null, price: false};
       if (m.sig === 'line' || m.sig === 'both') c.line = `${m.from_l}→${m.to_l}`; if (m.sig === 'price' || m.sig === 'both') c.price = true; }
-    for (const [gid, ps] of Object.entries(P.props || {})){
+    for (const [gid, ps] of Object.entries(props)){
       const g = G[gid] || {}; const start = g.start ? new Date(g.start).getTime() : null;
       if (start && start <= now) continue;                                   // started: no pregame price
       for (const [nm, kinds] of Object.entries(ps)){
@@ -68,13 +81,22 @@
         for (const [k, e] of Object.entries(kinds)){
           if (!LAB[k] || !e) continue;
           const statKey = k.startsWith('sog') ? 'sog' : k;
-          const lines = [{l: e.l ?? null, o: e.o, u: e.u, p: e.p, main: true, pin: e.pin && Math.abs((e.pin.l ?? .5) - (e.l ?? .5)) < 1e-9 ? e.pin : null}];
+          const lines = e.o ? [{l: e.l ?? null, o: e.o, u: e.u, p: e.p, main: true, pin: e.pin && Math.abs((e.pin.l ?? .5) - (e.l ?? .5)) < 1e-9 ? e.pin : null}] : [];
           for (const [L, a] of Object.entries(e.a || {})) if (+L !== +(e.l ?? -1)) lines.push({l: +L, o: a.o, u: a.u, p: a.p, main: false, apin: a.pin});
+          // Kalshi rungs: on the matching line beside the books, else a rung of its own; its fair = the line's carried
+          // consensus, else the main line's fair carried by our distribution (log-odds gap, shown with ≈)
+          const mainFair = e.pin && e.pin.o != null && e.l != null && Math.abs((e.pin.l ?? .5) - e.l) < 1e-9 ? e.pin.o : null;
+          for (const [L, kx] of Object.entries(KAL[`${gid}|${nm}|${k}`] || {})){
+            const x = lines.find(y => y.l != null && Math.abs(+y.l - +L) < 1e-9);
+            if (x){ if (!(x.o || {}).Kalshi){ x.o = {...(x.o || {}), Kalshi: [kx.o, null]}; x.kal = true; } if (x.p == null) x.p = kx.p; continue; }
+            const carry = mainFair != null && e.p != null && kx.p != null && e.p > 0 && e.p < 1 && kx.p > 0 && kx.p < 1 ? sig(lgt(mainFair) + lgt(kx.p) - lgt(e.p)) : null;
+            lines.push({l: +L, o: {Kalshi: [kx.o, null]}, u: {}, p: kx.p, main: false, apin: null, carry, kal: true});
+          }
           // a Kalshi-only knee rung (Kalshi's ladders aren't in the props file): add it so the knee shows
           for (const x of F.knees || []) if (x.g === gid && x.n === nm && x.k === k && x.bk === 'Kalshi' && !lines.some(y => +y.l === +x.l))
             lines.push({l: x.l, o: {Kalshi: [x.o, null]}, u: {}, p: x.p, main: false, apin: x.fair});
           for (const x of lines){
-            if (x.p == null || !x.o) continue;
+            if (!x.o) continue;
             const books = Object.entries(x.o).filter(([b, v]) => !NOBET.has(b) && v && v[0] != null);
             if (!books.length) continue;
             const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : `over ${x.l} ${LAB[k]}`;
@@ -83,9 +105,10 @@
               let fair = null, w = .5, src = '';
               if (x.main && x.pin){ fair = sharpO(x.pin, b); w = (WPIN[sport] || {})[k] ?? .5; src = 'sharp consensus'; }
               else if (!x.main && x.apin != null){ fair = x.apin; src = 'sharp consensus, carried to this line'; }
+              else if (!x.main && x.carry != null){ fair = x.carry; w = 0; src = '≈ main line’s fair carried by our distribution'; }   // our model is already in the carry: don't count it twice
               else { const tw = twoWay(x.o, x.u); if (tw != null && (x.main || Object.keys(x.u || {}).length >= 2)){ fair = tw; src = 'books’ no-vig median'; }
                 else if (k === 'goal'){ const ex = books.filter(([bb]) => EXCH.includes(bb)).map(([, vv]) => 1 / dec(vv[0])); const m = med(ex); if (m != null){ fair = m / 1.03; src = 'exchanges, less 3%'; } } }
-              const q = fair != null ? w * x.p + (1 - w) * fair : null;
+              const q = fair != null ? (x.p != null ? w * x.p + (1 - w) * fair : fair) : null;
               return {b, o: v[0], u: link(v, P.partner), fair, q, w, src, edge: q != null ? q * dec(v[0]) - 1 : null};
             });
             out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, bet, p: x.p,
@@ -100,9 +123,9 @@
   async function load(){
     const res = await Promise.all(SPORTS.map(async sp => {
       try {
-        const [P, F] = await Promise.all(['props', 'flags'].map(f => fetch(`${root}markets/${f}_${sp}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))));
+        const [P, F, LV] = await Promise.all(['props', 'flags', 'live'].map(f => fetch(`${root}markets/${f}_${sp}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))));
         FETCHED[sp] = P.fetched || null;
-        return P && P.props ? build(sp, P, F || {}) : [];
+        return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}) : [];
       } catch (e) { return []; }
     }));
     ROWS = res.flat();
