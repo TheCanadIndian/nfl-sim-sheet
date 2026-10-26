@@ -111,7 +111,7 @@
               const q = fair != null ? (x.p != null ? w * x.p + (1 - w) * fair : fair) : null;
               return {b, o: v[0], u: link(v, P.partner), fair, q, w, src, edge: q != null ? q * dec(v[0]) - 1 : null};
             });
-            out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, bet, p: x.p,
+            out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, ml: e.l ?? null, bet, p: x.p,
                       prices, value: tg.v === tagBet, lc: tg.lc === tagBet, pin: pinm[`${gid}|${nm}|${k}`] || null, cons: consm[`${gid}|${nm}|${k}`] || null,
                       cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(x => x[1] === 'g')), off: off.has(`${gid}|${nm}|${k}|${x.l}`) || off.has(`${gid}|${nm}|${k}|${x.l ?? .5}`), knee: knee[`${gid}|${nm}|${k}|${x.l}`] || null});
           }
@@ -176,7 +176,11 @@
       const kl = r.knee ? `<div class="sc-knee">${esc(FULL[r.knee.bk] || r.knee.bk)} ladder: ${[[...r.knee.prev, 0], [r.knee.l, r.knee.o, 1], [...r.knee.next, 0]].map(([l, o, me]) => `<span${me ? ' class="me"' : ''}>${Math.ceil(l)}+ ${am(o)}</span>`).join('<i>→</i>')}</div>` : '';
       const tip = `Fair ${b.fair != null ? pc(b.fair) + ' (' + b.src + ')' : 'none'} · ours ${pc(r.p)} · chance ${b.q != null ? pc(b.q) + ' (' + Math.round(b.w * 100) + '% ours)' : '—'} · price implies ${pc(1 / dec(b.o))}`;
       const priceHtml = `<b>${am(b.o)}</b> ${esc(FULL[b.b] || b.b)}${b.u ? ' ↗' : ''}`;
-      return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b> <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
+      // watchlist + odds chart (watch.js; owner 2026-10-26): this row's line at the shown book
+      const wi = {sport: r.sport, gid: r.gid, name: r.nm, kind: r.k, line: r.l, book: b.b, o: b.o, fair: b.fair, main: r.ml, glab: r.game,
+                  start: r.start ? new Date(r.start).toISOString() : null, lab: `${r.name} ${r.bet}`};
+      const wb = window.WATCH ? `<span class="sc-w">${WATCH.both(wi)}</span>` : '';
+      return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b>${wb} <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
           <div class="sc-bet">${esc(r.bet[0].toUpperCase() + r.bet.slice(1))} ${tags}</div>${kl}${r.cx.length ? `<div class="sc-cx">${r.cx.map(x => `<span class="${x[1] === 'g' ? 'g' : x[1] === 'b' ? 'b' : ''}">${esc(x[0])}</span>`).join('')}</div>` : ''}</div>
         <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
           <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.fair != null ? pc(b.fair) : '—'}</span></div>

@@ -205,7 +205,7 @@ def inject(src, dst, depth, active, model=None, other=None):
             f'<a href="{f}"' + (' aria-current="true"' if f == cur else "") + f'>{lab}</a>'
             for f, lab in (("results.html", "Model results"), ("parlays.html", "Parlays"))) + '</span></div>') + tog
     s = s.replace('<div class="wrap">', bar(depth, active) + '\n<div class="wrap">' + tog, 1)
-    s = s + NEWBIE_JS
+    s = s + NEWBIE_JS + f'<script src="{"../" * depth}watch.js"></script>'   # watchlist + odds charts (owner 2026-10-26)
     sport = os.path.basename(os.path.dirname(dst))
     if os.path.basename(dst) == "index.html" and os.path.dirname(os.path.dirname(dst)) == SITE and sport in ("nfl", "nhl", "nba", "mlb"):
         s += f'<script src="../mkt.js" data-sport="{sport}"></script>'     # live market prices on the current slate
@@ -380,7 +380,7 @@ def write_page(rel, title, active, body, depth=None):
 <title>{html.escape(title)}</title>
 {report.FONTS}<style>{PAGE_CSS}</style>
 {bar(depth, active)}
-<div class="wrap">{body}</div>{NEWBIE_JS}"""
+<div class="wrap">{body}</div>{NEWBIE_JS}<script src="{'../' * depth}watch.js"></script>"""
     path = os.path.join(SITE, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
@@ -1001,6 +1001,7 @@ def main():
     os.makedirs(SITE, exist_ok=True)
     shutil.copy2(os.path.join(HERE, "mkt.js"), os.path.join(SITE, "mkt.js"))
     shutil.copy2(os.path.join(HERE, "slip.js"), os.path.join(SITE, "slip.js"))
+    shutil.copy2(os.path.join(HERE, "watch.js"), os.path.join(SITE, "watch.js"))   # watchlist + odds charts, every page
     shutil.copy2(os.path.join(HERE, "screener.js"), os.path.join(SITE, "screener.js"))
     # saved simulations for the slip (current slate only: replace the folder)
     for src, dst in ((os.path.join(HERE, "projections", "draws"), os.path.join(SITE, "nfl", "draws")),
