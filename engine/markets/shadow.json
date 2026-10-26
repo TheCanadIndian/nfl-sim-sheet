@@ -1,44 +1,62 @@
 {
- "generated": "Oct 26, 2026 12:29 AM",
- "nfl": [
+ "generated": "Oct 26, 2026 12:33 AM",
+ "nfl": null,
+ "nhl": [
   {
-   "stat": "att",
-   "n": 169,
-   "weeks": [
-    2,
-    7
-   ],
-   "live_pin": 2.3951,
-   "shadow_pin": 2.3442,
-   "live_mae": 6.74,
-   "shadow_mae": 6.64,
-   "live_over": 0.521,
-   "shadow_over": 0.485,
-   "ratio": 1.0719,
+   "model": "live",
+   "n": 6531,
+   "nights": 27,
+   "exp": 1042.6,
+   "act": 991,
+   "ll": 0.39252,
+   "d": 0.0,
    "halves": [
-    -0.0323,
-    -0.0727
-   ]
+    0.0,
+    0.0
+   ],
+   "scale": null
   },
   {
-   "stat": "cmp",
-   "n": 168,
-   "weeks": [
-    2,
-    7
-   ],
-   "live_pin": 1.5683,
-   "shadow_pin": 1.5367,
-   "live_mae": 4.55,
-   "shadow_mae": 4.46,
-   "live_over": 0.524,
-   "shadow_over": 0.494,
-   "ratio": 1.0703,
+   "model": "recal",
+   "n": 6531,
+   "nights": 27,
+   "exp": 1030.0,
+   "act": 991,
+   "ll": 0.3924,
+   "d": -0.00012,
    "halves": [
-    -0.0342,
-    -0.0285
-   ]
+    -0.00021,
+    -3e-05
+   ],
+   "scale": null
+  },
+  {
+   "model": "high",
+   "n": 6531,
+   "nights": 27,
+   "exp": 1038.4,
+   "act": 991,
+   "ll": 0.39246,
+   "d": -5e-05,
+   "halves": [
+    -0.00011,
+    -0.0
+   ],
+   "scale": null
+  },
+  {
+   "model": "season",
+   "n": 6531,
+   "nights": 27,
+   "exp": 998.2,
+   "act": 991,
+   "ll": 0.39243,
+   "d": -9e-05,
+   "halves": [
+    -0.00031,
+    0.00011
+   ],
+   "scale": 0.9572
   }
- ],
- "nhl": null
+ ]
 }
