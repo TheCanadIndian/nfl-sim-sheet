@@ -564,7 +564,12 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           const face = b ? `<span class="pcb">${esc(side(b.r.what))}${b.r.alt ? ' <span class="altb">alt</span>' : ''} ${lnk(b.pick, `<b>${amS(b.pick.x.o)}</b> ${esc(BKS[b.pick.k] || b.pick.k)}`)} <i class="${b.edge > 0 ? 'pe' : 'ne'}">${b.edge > 0 ? '+' : ''}${(b.edge * 100).toFixed(1)}%</i></span>`
             : '<span class="pcb muted">no sharp line to compare</span>';
           const lines = c.lines.slice().sort((a, x) => parseFloat(String(a.r.what).split(' ').pop().slice(1)) - parseFloat(String(x.r.what).split(' ').pop().slice(1)) || a.r.o - x.r.o);
-          const tr = x => `<tr${x === b ? ' class="top"' : ''}><td class="l">${esc(side(x.r.what))}${x.r.alt ? ' <span class="altb">alt</span>' : ''}</td><td>${x.r.p != null ? Math.round(x.r.p * 100) + '%' : '–'}</td>
+          // watchlist + odds chart (watch.js; owner 2026-10-26): each over line at your best price (or the best anywhere)
+          const WB = x => { const w = String(x.r.what).split(' ').pop(), bk = x.mineB || x.any;
+            if (!window.WATCH || w[0] !== 'o' || !bk) return '';
+            return ' ' + WATCH.both({sport, gid: String(r.gid), name: norm(r.who), kind: r.m, line: parseFloat(w.slice(1)), book: bk.k, o: bk.x.o, fair: x.q,
+                                     glab: glab[String(r.gid)] || '', lab: `${r.who} ${side(x.r.what)} ${mlab(r.m)}`}); };
+          const tr = x => `<tr${x === b ? ' class="top"' : ''}><td class="l">${esc(side(x.r.what))}${x.r.alt ? ' <span class="altb">alt</span>' : ''}${WB(x)}</td><td>${x.r.p != null ? Math.round(x.r.p * 100) + '%' : '–'}</td>
             <td>${x.q != null ? `${x.r.pw === 3 ? '≈' : ''}${Math.round(x.q * 100)}%` : '–'}</td><td>${MY.length ? lnk(x.mineB, bkl(x.mineB)) : ''}</td><td>${lnk(x.any, bkl(x.any))}</td>
             <td class="${x.edge > 0 ? 'pe' : 'ne'}">${x.edge != null ? (x.edge > 0 ? '+' : '') + (x.edge * 100).toFixed(1) + '%' : '–'}</td></tr>`;
           return `<details class="pcard" data-ovr data-ovg="${esc(String(r.gid))}" data-ovm="${esc(r.m)}" data-ovn="${esc(norm(r.who))}"${ed ? ' data-ed="1"' : ''}${i >= 15 ? ' data-more="1"' : ''}${(OV.edge && !ed) || i >= 15 || !show(r) ? ' hidden' : ''}>

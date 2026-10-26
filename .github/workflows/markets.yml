@@ -55,6 +55,9 @@ jobs:
       - name: Freeze the books' main prop lines for the projected box score grades (boxgrade.py; games not yet started)
         working-directory: engine
         run: python boxgrade.py lines || true
+      - name: Odds history for the watchlist charts (oddshist.py -> markets/hist_<sport>.json)
+        working-directory: engine
+        run: python oddshist.py || true
       - name: Watch for late scratches and line moves (re-runs a sport's model if needed)
         if: steps.q.outputs.skip != 'true'
         working-directory: engine
