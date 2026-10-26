@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-26",
 "lock": "2026-10-26T23:00:00+00:00",
-"frozen_at": "2026-10-26T20:53:42.751Z",
+"frozen_at": "2026-10-26T20:59:03.390Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -66,16 +66,17 @@
 {
 "gid": "401909868",
 "start": "2026-10-26T23:00Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "grayson allen",
-"lab": "Grayson Allen 5+ threes",
-"p": 0.2183,
-"price": 398,
-"book": "Kalshi",
+"line": 7.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 8+ reb",
+"p": 0.21,
+"price": 400,
+"book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -101,8 +102,8 @@
 ]
 }
 ],
-"p": 0.05771,
-"d": 19.92,
+"p": 0.05551,
+"d": 20,
 "first": "2026-10-26T23:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -114,16 +115,17 @@
 {
 "gid": "401909868",
 "start": "2026-10-26T23:00Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "grayson allen",
-"lab": "Grayson Allen 5+ threes",
-"p": 0.2183,
-"price": 398,
-"book": "Kalshi",
+"line": 7.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 8+ reb",
+"p": 0.21,
+"price": 400,
+"book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -167,8 +169,8 @@
 ]
 }
 ],
-"p": 0.01285,
-"d": 95.865,
+"p": 0.01236,
+"d": 96.25,
 "first": "2026-10-26T23:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -177,6 +179,24 @@
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "grayson allen",
+"lab": "Grayson Allen 5+ threes",
+"p": 0.2114,
+"price": 398,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
 {
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
@@ -187,24 +207,6 @@
 "lab": "Cooper Flagg 9+ reb",
 "p": 0.2323,
 "price": 350,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909872",
-"start": "2026-10-27T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "andrew nembhard",
-"lab": "Andrew Nembhard 9+ ast",
-"p": 0.256,
-"price": 300,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -232,10 +234,9 @@
 ]
 }
 ],
-"p": 0.0128,
-"d": 90,
-"first": "2026-10-26T23:30:00+00:00",
-"pick": "longshot",
+"p": 0.01057,
+"d": 112.05,
+"first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
 {
@@ -261,27 +262,26 @@
 "edge": 0.1051
 },
 {
-"gid": "401909871",
+"gid": "401909870",
 "start": "2026-10-26T23:30Z",
 "kind": "pts",
 "side": "o",
-"line": 21.5,
-"name": "kyrie irving",
-"lab": "Kyrie Irving over 21.5 points",
-"p": 0.4793,
-"price": 125,
+"line": 11.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 11.5 points",
+"p": 0.4441,
+"price": 138,
 "book": "Novig",
 "f": [
-"usage",
 "rotation",
 "game"
 ],
 "sport": "nba",
-"edge": 0.0785
+"edge": 0.0569
 }
 ],
-"p": 0.29429,
-"d": 4.05,
+"p": 0.27268,
+"d": 4.284,
 "first": "2026-10-26T23:30:00+00:00",
 "res": null
 },
@@ -364,9 +364,9 @@
 "line": 1.5,
 "name": "jaden mcdaniels",
 "lab": "Jaden McDaniels over 1.5 threes",
-"p": 0.391,
-"price": 160,
-"book": "Novig",
+"p": 0.4012,
+"price": 155,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -378,10 +378,11 @@
 "matchup",
 "rotation",
 "game",
+"consensus up",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0028
+"edge": 0.0082
 },
 {
 "gid": "401909873",
@@ -433,8 +434,8 @@
 "edge": 0.0037
 }
 ],
-"p": 0.11243,
-"d": 9.535,
+"p": 0.11536,
+"d": 9.351,
 "first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
@@ -507,9 +508,9 @@
 "line": 1.5,
 "name": "jaden mcdaniels",
 "lab": "Jaden McDaniels over 1.5 threes",
-"p": 0.391,
-"price": 160,
-"book": "Novig",
+"p": 0.4012,
+"price": 155,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -521,10 +522,11 @@
 "matchup",
 "rotation",
 "game",
+"consensus up",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0028
+"edge": 0.0082
 },
 {
 "gid": "401909873",
@@ -551,8 +553,8 @@
 "edge": 0.043
 }
 ],
-"p": 0.04481,
-"d": 25.155,
+"p": 0.04598,
+"d": 24.671,
 "first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
