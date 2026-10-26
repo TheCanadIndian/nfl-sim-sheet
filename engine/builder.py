@@ -379,8 +379,9 @@ def build_moveknee(sport, cands, now):
     return moveknee_parlays(moveknee_legs(sport, cands, now))
 
 
-def moveknee_legs(sport, cands, now):
-    """[(score, leg)]: each moved prop's first rung above the main line at the owner's best price (one per prop)."""
+def moveknee_legs(sport, cands, now, step=1):
+    """[(score, leg)]: each moved prop's first rung above the main line at the owner's best price (one per prop); step=2 is
+    the next rung out (research only)."""
     if sport != "nba":
         return []
     import sharp as SH
@@ -424,9 +425,9 @@ def moveknee_legs(sport, cands, now):
             q = ya + .07 * ya * (1 - ya)
             prices.setdefault(l, []).append(("Kalshi", round(-100 * q / (1 - q)) if q >= .5 else round(100 * (1 - q) / q)))
         above = sorted(l for l in prices if l > main)
-        if not above:
+        if len(above) < step:
             continue
-        l1 = above[0]
+        l1 = above[step - 1]
         bk, o1 = max(prices[l1], key=lambda x: PL.dec(x[1]))
         a = rungs.get(l1) or {}
         ours = a.get("p") if a.get("p") is not None else (kal.get(key) or {}).get(l1, (None, None))[1]
@@ -449,7 +450,7 @@ def moveknee_legs(sport, cands, now):
         legs.append((score, dict(gid=gid, start=c["start"], kind=k, side="o", line=l1, name=nm,
                                  lab=f"{c.get('lab') or nm.title()} over {l1:g} {STAT.get(k, k)}", p=round(chance, 4), fair=round(fair, 4),
                                  price=o1, book=bk, sport=sport, edge=round(edge, 4),
-                                 v=why + [f"one rung above the main line ({main:g})"] + conf)))
+                                 v=why + [f"{'one rung' if step == 1 else f'{step} rungs'} above the main line ({main:g})"] + conf)))
     return legs
 
 
