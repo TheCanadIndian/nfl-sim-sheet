@@ -1,7 +1,7 @@
 {
-"updated": "2026-10-26T03:14:58+00:00",
-"rows": 415,
-"live_rows": 109,
+"updated": "2026-10-26T03:20:36+00:00",
+"rows": 418,
+"live_rows": 112,
 "segments": [
 {
 "seg": "NHL",
@@ -85,6 +85,15 @@
 "status": "Watching"
 },
 {
+"seg": "NFL",
+"n": 49,
+"ret": 0.1162,
+"h1": 0.5805,
+"h2": -0.232,
+"z": 0.61,
+"status": "Watching"
+},
+{
 "seg": "NHL \u00b7 pp1",
 "n": 46,
 "ret": -0.03,
@@ -94,21 +103,12 @@
 "status": "Watching"
 },
 {
-"seg": "NFL",
-"n": 46,
-"ret": 0.189,
-"h1": 0.5805,
-"h2": -0.1399,
-"z": 1.0,
-"status": "Watching"
-},
-{
 "seg": "NFL \u00b7 Novig",
-"n": 38,
-"ret": 0.2234,
+"n": 41,
+"ret": 0.1339,
 "h1": 0.6658,
-"h2": -0.0651,
-"z": 1.06,
+"h2": -0.173,
+"z": 0.63,
 "status": "Watching"
 },
 {
@@ -202,30 +202,48 @@
 "status": "Learning"
 },
 {
+"seg": "NFL \u00b7 usage",
+"n": 12,
+"ret": -0.6683,
+"h1": -0.6683,
+"h2": null,
+"z": -2.36,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD",
+"n": 12,
+"ret": -0.6525,
+"h1": -1.0,
+"h2": -0.6209,
+"z": -1.71,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 1 reason",
+"n": 11,
+"ret": -0.6381,
+"h1": -0.6381,
+"h2": null,
+"z": -1.88,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 fits a path",
+"n": 11,
+"ret": -0.6209,
+"h1": -0.6209,
+"h2": null,
+"z": -1.63,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 goals \u00b7 edge 20-40%",
 "n": 10,
 "ret": -0.5,
 "h1": -1.0,
 "h2": -0.2857,
 "z": -1.25,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 usage",
-"n": 10,
-"ret": -0.6019,
-"h1": -0.6019,
-"h2": null,
-"z": -1.86,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 1 reason",
-"n": 10,
-"ret": -0.6019,
-"h1": -0.6019,
-"h2": null,
-"z": -1.57,
 "status": "Learning"
 },
 {
@@ -256,12 +274,30 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 anytime TD",
+"seg": "NFL \u00b7 2 reasons",
 "n": 9,
 "ret": -0.5367,
-"h1": -1.0,
-"h2": -0.4788,
-"z": -1.19,
+"h1": -0.5367,
+"h2": null,
+"z": -1.28,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 5-10%",
+"n": 9,
+"ret": -0.5367,
+"h1": -0.5367,
+"h2": null,
+"z": -1.11,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 plus money",
+"n": 9,
+"ret": -0.5367,
+"h1": -0.5367,
+"h2": null,
+"z": -1.11,
 "status": "Learning"
 },
 {
@@ -283,30 +319,12 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 fits a path",
-"n": 8,
-"ret": -0.4788,
-"h1": -0.4788,
-"h2": null,
-"z": -1.09,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 2 reasons",
+"seg": "NFL \u00b7 rotation",
 "n": 7,
-"ret": -0.4043,
-"h1": -0.4043,
+"ret": -1.0,
+"h1": -1.0,
 "h2": null,
-"z": -0.8,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 plus money",
-"n": 7,
-"ret": -0.4043,
-"h1": -0.4043,
-"h2": null,
-"z": -0.66,
+"z": -3.66,
 "status": "Learning"
 },
 {
@@ -355,15 +373,6 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 anytime TD \u00b7 edge 5-10%",
-"n": 6,
-"ret": -0.305,
-"h1": -0.305,
-"h2": null,
-"z": -0.5,
-"status": "Learning"
-},
-{
 "seg": "NFL \u00b7 matchup",
 "n": 6,
 "ret": -0.305,
@@ -382,21 +391,21 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 rotation",
-"n": 5,
-"ret": -1.0,
-"h1": -1.0,
-"h2": null,
-"z": -2.5,
-"status": "Learning"
-},
-{
 "seg": "NHL \u00b7 2+ shots",
 "n": 4,
 "ret": 0.4163,
 "h1": 0.6061,
 "h2": 0.353,
 "z": 0.86,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 script",
+"n": 4,
+"ret": 0.0425,
+"h1": 0.0425,
+"h2": null,
+"z": 0.05,
 "status": "Learning"
 },
 {
@@ -463,16 +472,16 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 script",
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
 "n": 3,
-"ret": 0.39,
-"h1": 0.39,
-"h2": null,
-"z": 0.37,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": 0.0,
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
+"seg": "NFL \u00b7 anytime TD \u00b7 longshot",
 "n": 3,
 "ret": -1.0,
 "h1": -1.0,
@@ -487,15 +496,6 @@
 "h1": -1.0,
 "h2": 1.53,
 "z": 0.21,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 longshot",
-"n": 2,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
-"z": 0.0,
 "status": "Learning"
 },
 {
