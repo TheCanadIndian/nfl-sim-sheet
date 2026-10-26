@@ -90,7 +90,7 @@ def nfl(news=False):
     sh(PY, "backfill_missing.py", "--blind")
     sh(PY, "results.py")
     sh(PY, "boxgrade.py", "nfl")             # projected box scores graded (nfl/boxes.html)
-    sh(PY, "shadow.py")                      # shadow tests: failed changes graded beside the live numbers (shadow.html)
+    sh(PY, "shadow.py", "nfl")               # shadow tests: failed changes graded beside the live numbers (shadow.html)
     sh(PY, "markets.py", "nfl")
     sh(PY, "grade_markets.py", "nfl")
     sh(PY, "profit.py", "rows", "nfl")          # Profit page: picks under the site's rules
@@ -106,7 +106,7 @@ def nhl(auto=False):
     sh(PY, "hockey/project.py")
     sh(PY, "hockey/linecheck.py")
     sh(PY, "hockey/results.py")
-    sh(PY, "shadow.py")                      # shadow tests (shadow.html)
+    sh(PY, "shadow.py", "nhl")               # shadow tests (shadow.html)
     sh(PY, "markets.py", "nhl")
     sh(PY, "grade_markets.py", "nhl")
     sh(PY, "profit.py", "rows", "nhl")

@@ -14,7 +14,7 @@ record with enough games (then re-tested on history before any switch).
          season    p x (goals + 200) / (expected + 200) over this season's earlier nights
        Scored by log-loss, goals expected vs scored.
 
-    python shadow.py          # -> projections/shadow.html (site: shadow.html), markets/shadow.json
+    python shadow.py nfl|nhl  # -> projections/shadow.html (site: shadow.html), markets/shadow.json
 """
 import datetime as dt
 import glob
@@ -110,17 +110,26 @@ def nhl():
     return out
 
 
-def build():
+def build(sports):
+    """Each sport's run has only its own database, so it updates only its own section and keeps the other's last result."""
     season = dt.date.today().year if dt.date.today().month >= 8 else dt.date.today().year - 1
-    data = dict(generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "))
+    fp = os.path.join(HERE, "markets", "shadow.json")
+    try:
+        data = json.load(open(fp))
+    except (OSError, ValueError):
+        data = {}
+    data["generated"] = dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " ")
     for nm, fn in (("nfl", lambda: nfl(season)), ("nhl", nhl)):
+        if nm not in sports:
+            continue
         try:
-            data[nm] = fn()
+            r = fn()
+            if r:
+                data[nm] = r
         except Exception as e:                                         # noqa: BLE001 -- a shadow never breaks a run
             print(f"shadow {nm}: skipped ({type(e).__name__}: {e})")
-            data[nm] = None
     os.makedirs(os.path.join(HERE, "markets"), exist_ok=True)
-    json.dump(data, open(os.path.join(HERE, "markets", "shadow.json"), "w"), indent=1)
+    json.dump(data, open(fp, "w"), indent=1)
     import report
     src = os.path.join(HERE, "projections", "shadow.html")
     open(src, "w", encoding="utf-8").write(PAGE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS)
@@ -170,4 +179,4 @@ document.getElementById('main').innerHTML = h || '<section class="panel"><p clas
 """
 
 if __name__ == "__main__":
-    build()
+    build(sys.argv[1:] or ["nfl", "nhl"])
