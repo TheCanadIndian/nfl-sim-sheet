@@ -313,8 +313,22 @@ function ladderCard(){
       `<span class="lru" title="${esc(c.p.o)}: ${ord(c.r.rank)} most to ${c.k}s${c.extra.length ? ' · ' + c.extra.join(' · ') : ''}"><b>${esc(c.p.n)}</b> <i>${esc(c.p.pos)} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
   return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). In Kalshi’s 2026 markets (weeks 1-5), those higher rungs cleared 3-8 points more often than their price said, in both halves of the sample; a second signal (underdog, or a team total of 25+) pointed the same way. The market seems to price the average game against a bad defense but not the ceiling. That is a small sample from one season, so these are tracked on the Profit page to see if it holds, not a recommendation. Defense rankings early in the season rest on only a few games.</p></details>
-    <div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}${wait}</section>`;
+    ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['rank', 'Softest first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>` : ''}
+    ${NLADV === 'game' ? ladByGame(on, row) : `<div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}`}${wait}</section>`;
 }
+// Ladder candidates by game (owner 2026-10-25: "why are my ladder candidates not separated by game"): games in kickoff
+// order, each game's players softest matchup first, five shown and the rest folded; remembered on this device (nfl-ladv).
+let NLADV = 'game';
+try { NLADV = localStorage.getItem('nfl-ladv') || 'game'; } catch (e) {}
+function ladByGame(cards, row){
+  const by = new Map();
+  for (const c of cards) (by.get(c.g.id) || by.set(c.g.id, []).get(c.g.id)).push(c);
+  return D.games.filter(g => by.has(g.id)).map(g => { const L = by.get(g.id);
+    return `<div class="ladgm"><div class="ladgh"><b>${esc(g.away)} @ ${esc(g.home)}</b> <span class="small muted">${esc(g.kickoff || '')} · ${L.length} player${L.length === 1 ? '' : 's'}</span></div>
+      <div class="ladg">${L.slice(0, 5).map(row).join('')}</div>${L.length > 5 ? `<details class="ladw"><summary>${L.length - 5} more in this game</summary><div class="ladg">${L.slice(5).map(row).join('')}</div></details>` : ''}</div>`; }).join('');
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-nladv]'); if (!b) return;
+  NLADV = b.dataset.nladv; try { localStorage.setItem('nfl-ladv', NLADV); } catch (x) {} render(); });
 // An achievable rung our projection backs (Ladder longshots / Primetime ladders; owner 2026-10-20: "Kittle 130 yards is
 // very unlikely, his price at 60 or 70 would have been good"): 2+ above Kalshi's 50/50 rung with our chance 20-45%
 // (inside our projection's realistic range, about +120 to +400), Kalshi mid 15-45c, spread 5c or less, our chance no
