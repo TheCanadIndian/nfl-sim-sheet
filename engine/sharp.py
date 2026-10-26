@@ -710,22 +710,37 @@ HR_CACHE = os.path.join(M.OUT, "hr_props_{}.json")
 MORNING_HOUR, FAST = 8, 30           # owner 2026-10-23: one early-morning pull for early value, then every 30 min
 
 
-def wanted(games, cache, now, window_h, base_min, bst, slow_h=None, fast_min=None):
+OPEN_PROBE_MIN = 60                    # minutes between opening checks of a game we have no prices for (empty answers are free)
+OPEN_H = {"nfl": 120, "nhl": 36}     # Hard Rock over / unders: how far ahead the opening watch looks
+
+
+def wanted(games, cache, now, window_h, base_min, bst, slow_h=None, fast_min=None, open_h=None):
     """Games due a paid prop pull: inside a game's window (last window_h hours) every FAST minutes while today's credits
     are on pace (books.tight: 75% of the day's allowance spent -> back to base_min, so the pulls nearest each game are
     never the ones the budget cuts); outside it, one pull of every game later today from MORNING_HOUR ET on.
     slow_h: a wider window pulled every base_min before the 30-minute one starts (NBA: every 2 h from 8 h out, every
     30 min in the last 4 h; owner 2026-10-23, 12-game nights). An empty answer (the book hasn't posted yet) stores
-    nothing and is free, so it simply retries next run."""
+    nothing and is free, so it simply retries next run.
+    open_h (owner 2026-10-26: "figure out when books first post lines and do a capture then"): games starting within open_h
+    hours that we have never received prices for are asked hourly (OPEN_PROBE_MIN) -- free while the book hasn't posted --
+    so the first answer with prices is the opening capture (research/opening_lines.py: NBA props were only ever seen from
+    our 8 AM pull, Hard Rock NFL only inside 6 h; openers already 3%+ under the sharp fair beat the close 57% of the time)."""
     et = now.tz_convert("America/New_York")
     morning = et.normalize() + pd.Timedelta(hours=MORNING_HOUR)
     every = base_min if B.tight(bst, now) else (fast_min or FAST)
     out = {}
+    probe = bst.setdefault("open_probe", {})
     for ga, g in games.items():
         st = pd.Timestamp(g["start"]).tz_convert("UTC")
         if st <= now:
             continue
         c = cache.get(str(g["id"]))
+        if open_h and (not c or not c.get("props")) and st <= now + pd.Timedelta(hours=open_h):
+            last = probe.get(str(g["id"]))
+            if not last or now - pd.Timestamp(last) >= pd.Timedelta(minutes=OPEN_PROBE_MIN):
+                probe[str(g["id"])] = now.isoformat()
+                out[ga] = g
+            continue
         if st <= now + pd.Timedelta(hours=window_h):
             if stale(c, now, every):
                 out[ga] = g
@@ -1107,14 +1122,14 @@ def hr_ou_pull(sport, now):
     key, mkts = HR_OU[sport]
     O = (M.ours_nhl if sport == "nhl" else M.ours_nfl)() or {}
     soon = {(g["away"], g["home"]): g for g in O.get("games", [])
-            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+            if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=OPEN_H[sport])}   # NFL 5 days / NHL 36 h: the opening watch
     f = HR_OU_CACHE.format(sport)
     try:
         cache = json.load(open(f))
     except (OSError, ValueError):
         cache = {}
     bst = B.load_state()
-    todo = wanted(soon, cache, now, 6, HR_REFRESH, bst)
+    todo = wanted(soon, cache, now, 6, HR_REFRESH, bst, open_h=OPEN_H[sport])
     if todo:
         r = requests.get(f"https://api.the-odds-api.com/v4/sports/{key}/events", params=dict(apiKey=k), timeout=30)   # free
         for e in (r.json() if r.status_code == 200 else []):
@@ -1385,13 +1400,13 @@ def oa_nba(now):
     if not k or not O:
         return
     games = {(g["away"], g["home"]): g for g in O.get("games", [])
-             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=36)}   # 36 h: the opening watch below
     try:
         cache = json.load(open(NBA_CACHE))
     except (OSError, ValueError):
         cache = {}
     bst = B.load_state()
-    todo = wanted(games, cache, now, NBA_FAST_HOURS, NBA_REFRESH, bst, slow_h=NBA_HOURS)
+    todo = wanted(games, cache, now, NBA_FAST_HOURS, NBA_REFRESH, bst, slow_h=NBA_HOURS, open_h=36)
     if todo:
         r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
         for e in (r.json() if r.status_code == 200 else []):

@@ -790,6 +790,10 @@ def updates():
     <div><dt>What they are</dt><dd>Model changes that didn’t pass their backtest, graded live beside the real projections without changing anything the site shows or bets: NFL quarterback attempts and completions scaled to this season’s results, and three adjustments to NHL goal chances. One is switched on only if it beats the live numbers in both halves of its live record and then passes a re-test on past seasons.</dd></div>
     <div><dt>Latest results</dt><dd><a href="shadow.html">See the shadow tests →</a></dd></div>
   </dl></section>
+  <section id="openers"><h2>Opening lines</h2><dl>
+    <div><dt>What it tracks</dt><dd>When each book first posts a player prop and whether that opening price beat the closing sharp line (opening CLV), next to the same book’s last price. Openers already priced under the sharp fair when posted are graded as bets on the Profit page.</dd></div>
+    <div><dt>Latest results</dt><dd><a href="openers.html">See opening lines →</a></dd></div>
+  </dl></section>
   {section("nfl", "NFL")}
   {section("nhl", "NHL")}
   {section("nba", "NBA")}
