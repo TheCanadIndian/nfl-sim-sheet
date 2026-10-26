@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-26",
 "lock": "2026-10-26T23:00:00+00:00",
-"frozen_at": "2026-10-26T18:55:20.835Z",
+"frozen_at": "2026-10-26T19:11:41.435Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -56,12 +56,32 @@
 "p": 0.06836,
 "d": 18,
 "first": "2026-10-26T23:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
+{
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 8+ reb",
+"p": 0.2128,
+"price": 400,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
 {
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
@@ -80,29 +100,11 @@
 "game",
 "price"
 ]
-},
-{
-"gid": "401909874",
-"start": "2026-10-27T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "jabari smith",
-"lab": "Jabari Smith Jr. 4+ threes",
-"p": 0.2038,
-"price": 471,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
 }
 ],
-"p": 0.05226,
-"d": 25.695,
-"first": "2026-10-26T23:30:00+00:00",
+"p": 0.05458,
+"d": 22.5,
+"first": "2026-10-26T23:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -111,21 +113,22 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909871",
-"start": "2026-10-26T23:30Z",
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
 "kind": "reb",
 "side": "o",
 "line": 7.5,
-"name": "pj washington",
-"lab": "P.J. Washington 8+ reb",
-"p": 0.3846,
-"price": 167,
+"name": "brandon miller",
+"lab": "Brandon Miller 8+ reb",
+"p": 0.2128,
+"price": 400,
 "book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -166,10 +169,9 @@
 ]
 }
 ],
-"p": 0.02089,
-"d": 60.983,
-"first": "2026-10-26T23:30:00+00:00",
-"pick": "longshot",
+"p": 0.01156,
+"d": 114.2,
+"first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
 {
@@ -177,16 +179,16 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909868",
-"start": "2026-10-26T23:00Z",
-"kind": "ast",
+"gid": "401909870",
+"start": "2026-10-26T23:30Z",
+"kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "brandon miller",
-"lab": "Brandon Miller 5+ ast",
-"p": 0.2849,
-"price": 260,
-"book": "Hard Rock",
+"line": 9.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 10+ reb",
+"p": 0.4331,
+"price": 135,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -217,11 +219,11 @@
 "start": "2026-10-27T00:30Z",
 "kind": "fg3m",
 "side": "o",
-"line": 2.5,
-"name": "kevin durant",
-"lab": "Kevin Durant 3+ threes",
-"p": 0.3523,
-"price": 213,
+"line": 3.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. 4+ threes",
+"p": 0.2038,
+"price": 471,
 "book": "Novig",
 "f": [
 "usage",
@@ -231,79 +233,10 @@
 ]
 }
 ],
-"p": 0.0386,
-"d": 30.086,
-"first": "2026-10-26T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909873",
-"start": "2026-10-27T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeousalexander over 6.5 assists",
-"p": 0.4788,
-"price": 120,
-"book": "Novig"
-},
-{
-"gid": "401909875",
-"start": "2026-10-27T01:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "MEM moneyline",
-"p": 0.5114,
-"price": 106,
-"book": "Novig"
-}
-],
-"p": 0.24484,
-"d": 4.532,
-"first": "2026-10-27T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909873",
-"start": "2026-10-27T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 34.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 35+ points",
-"p": 0.3696,
-"price": 198,
-"book": "Kalshi"
-},
-{
-"gid": "401909875",
-"start": "2026-10-27T01:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "MEM moneyline",
-"p": 0.5114,
-"price": 106,
-"book": "Novig"
-}
-],
-"p": 0.18899,
-"d": 6.139,
-"first": "2026-10-27T00:00:00+00:00",
-"pick": "core",
+"p": 0.03394,
+"d": 35.827,
+"first": "2026-10-26T23:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -334,43 +267,6 @@
 "edge": 0.0322
 },
 {
-"gid": "401909868",
-"start": "2026-10-26T23:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "brandon miller",
-"lab": "Brandon Miller over 3.5 assists",
-"p": 0.4309,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0066
-}
-],
-"p": 0.21317,
-"d": 4.776,
-"first": "2026-10-26T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
 "gid": "401909869",
 "start": "2026-10-26T23:00Z",
 "kind": "ast",
@@ -378,7 +274,7 @@
 "line": 2.5,
 "name": "jaden mcdaniels",
 "lab": "Jaden McDaniels over 2.5 assists",
-"p": 0.4906,
+"p": 0.4715,
 "price": 115,
 "book": "Hard Rock",
 "f": [
@@ -393,8 +289,18 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0449
+"edge": 0.0059
+}
+],
+"p": 0.23325,
+"d": 4.407,
+"first": "2026-10-26T23:00:00+00:00",
+"res": null
 },
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
 {
 "gid": "401909870",
 "start": "2026-10-26T23:30Z",
@@ -422,6 +328,32 @@
 "edge": 0.0098
 },
 {
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandon miller",
+"lab": "Brandon Miller over 5.5 rebounds",
+"p": 0.4588,
+"price": 120,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.0073
+},
+{
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
 "kind": "fg3m",
@@ -447,8 +379,8 @@
 "edge": 0.0005
 }
 ],
-"p": 0.1098,
-"d": 9.731,
+"p": 0.10269,
+"d": 9.957,
 "first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
@@ -480,33 +412,6 @@
 "edge": 0.0322
 },
 {
-"gid": "401909868",
-"start": "2026-10-26T23:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "brandon miller",
-"lab": "Brandon Miller over 3.5 assists",
-"p": 0.4309,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0066
-},
-{
 "gid": "401909869",
 "start": "2026-10-26T23:00Z",
 "kind": "ast",
@@ -514,7 +419,7 @@
 "line": 2.5,
 "name": "jaden mcdaniels",
 "lab": "Jaden McDaniels over 2.5 assists",
-"p": 0.4906,
+"p": 0.4715,
 "price": 115,
 "book": "Hard Rock",
 "f": [
@@ -529,7 +434,7 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0449
+"edge": 0.0059
 },
 {
 "gid": "401909870",
@@ -558,6 +463,32 @@
 "edge": 0.0098
 },
 {
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandon miller",
+"lab": "Brandon Miller over 5.5 rebounds",
+"p": 0.4588,
+"price": 120,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.0073
+},
+{
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
 "kind": "fg3m",
@@ -583,8 +514,8 @@
 "edge": 0.0005
 }
 ],
-"p": 0.02341,
-"d": 46.479,
+"p": 0.02395,
+"d": 43.886,
 "first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
@@ -614,27 +545,28 @@
 ]
 },
 {
-"gid": "401909873",
-"start": "2026-10-27T00:00Z",
-"kind": "fg3m",
+"gid": "401909875",
+"start": "2026-10-27T01:00Z",
+"kind": "pts",
 "side": "o",
-"line": 2.5,
-"name": "dillon brooks",
-"lab": "Dillon Brooks over 2.5 threes",
-"p": 0.3227,
-"fair": 0.3248,
-"price": 250,
-"book": "Hard Rock",
+"line": 19.5,
+"name": "jaren jackson",
+"lab": "Jaren Jackson Jr. over 19.5 points",
+"p": 0.3684,
+"fair": 0.3699,
+"price": 160,
+"book": "Novig",
 "sport": "nba",
-"edge": 0.1293,
+"edge": -0.0422,
 "v": [
+"Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (1.5)"
+"one rung above the main line (17.5)"
 ]
 }
 ],
-"p": 0.14372,
-"d": 8.05,
+"p": 0.16368,
+"d": 5.98,
 "first": "2026-10-26T23:30:00+00:00",
 "res": null
 },
@@ -664,6 +596,76 @@
 ]
 },
 {
+"gid": "401909875",
+"start": "2026-10-27T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "jaren jackson",
+"lab": "Jaren Jackson Jr. over 19.5 points",
+"p": 0.3684,
+"fair": 0.3699,
+"price": 160,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0422,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (17.5)"
+]
+},
+{
+"gid": "401909869",
+"start": "2026-10-26T23:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 19.5 points",
+"p": 0.2373,
+"fair": 0.241,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0506,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (15.5)"
+]
+}
+],
+"p": 0.03945,
+"d": 23.92,
+"first": "2026-10-26T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909869",
+"start": "2026-10-26T23:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 19.5 points",
+"p": 0.2373,
+"fair": 0.241,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0506,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (15.5)"
+]
+},
+{
 "gid": "401909873",
 "start": "2026-10-27T00:00Z",
 "kind": "fg3m",
@@ -681,79 +683,11 @@
 "consensus odds drop",
 "one rung above the main line (1.5)"
 ]
-},
-{
-"gid": "401909874",
-"start": "2026-10-27T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "kevin durant",
-"lab": "Kevin Durant over 2.5 threes",
-"p": 0.3523,
-"fair": 0.3529,
-"price": 213,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.1028,
-"v": [
-"consensus odds drop",
-"one rung above the main line (1.5)"
-]
 }
 ],
-"p": 0.05072,
-"d": 25.196,
-"first": "2026-10-26T23:30:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909874",
-"start": "2026-10-27T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "kevin durant",
-"lab": "Kevin Durant over 2.5 threes",
-"p": 0.3523,
-"fair": 0.3529,
-"price": 213,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.1028,
-"v": [
-"consensus odds drop",
-"one rung above the main line (1.5)"
-]
-},
-{
-"gid": "401909876",
-"start": "2026-10-27T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "gui santos",
-"lab": "Gui Santos over 14.5 points",
-"p": 0.2144,
-"fair": 0.2156,
-"price": 413,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0997,
-"v": [
-"consensus line up",
-"one rung above the main line (9.5)",
-"soft matchup"
-]
-}
-],
-"p": 0.07609,
-"d": 16.057,
-"first": "2026-10-27T00:30:00+00:00",
+"p": 0.07828,
+"d": 14.0,
+"first": "2026-10-26T23:00:00+00:00",
 "res": null
 }
 ],
