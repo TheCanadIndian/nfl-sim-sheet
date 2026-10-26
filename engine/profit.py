@@ -521,6 +521,8 @@ def tag_label(e):
         return f"{'Pinnacle' if e.get('msrc') == 'pin' else 'Consensus'} move: {MOVE_SIG.get(e.get('sig'), e.get('sig'))} (experimental)"
     if e.get("src") == "knee":
         return "Ladder knee (experimental)"
+    if e.get("src") == "open":
+        return "Early opener value (experimental)"
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
 
@@ -590,6 +592,14 @@ def tags():
             e = log.setdefault(f"knee|{sport}|{x['g']}|{x['n']}|{x['b']}|{x['bk']}", dict(sport=sport, src="knee", gid=x["g"], name=x["n"], bet=x["b"],
                                book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair") or x.get("p"), m=x.get("fair"), start=st,
                                prev=x.get("prev"), next=x.get("next"), ratio=x.get("ratio")))
+            e.setdefault("start", st)
+        # early-value openers (oddshist.py; owner 2026-10-26): a book's first price at a line already 3-40% under the sharp fair
+        for x in FL.get("openers") or []:
+            st = starts.get(str(x["g"])) or x.get("start")
+            if (st and PL.when(st) <= now) or x.get("o") is None:
+                continue
+            e = log.setdefault(f"open|{sport}|{x['g']}|{x['n']}|{x['b']}|{x['bk']}", dict(sport=sport, src="open", gid=x["g"], name=x["n"], bet=x["b"],
+                               book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair"), m=x.get("fair"), start=st))
             e.setdefault("start", st)
         # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
         for gid, tg in (FL.get("lc") or {}).items():
