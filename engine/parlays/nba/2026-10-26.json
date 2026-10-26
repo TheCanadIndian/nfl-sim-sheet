@@ -1,15 +1,63 @@
 {
 "sport": "nba",
 "date": "2026-10-26",
-"lock": "2026-10-26T23:30:00+00:00",
-"frozen_at": "2026-10-26T14:55:21.441Z",
+"lock": "2026-10-26T23:00:00+00:00",
+"frozen_at": "2026-10-26T15:11:42.596Z",
 "books": [
 "Novig",
 "Kalshi",
 "Hard Rock"
 ],
-"final_at": "2026-10-26T22:30:00+00:00",
+"final_at": "2026-10-26T22:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 4+ ast",
+"p": 0.4176,
+"price": 138,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909871",
+"start": "2026-10-26T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "pj washington",
+"lab": "P.J. Washington 10+ reb",
+"p": 0.265,
+"price": 351,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.11066,
+"d": 10.734,
+"first": "2026-10-26T23:00:00+00:00",
+"pick": "core",
+"res": null
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -22,7 +70,7 @@
 "line": 9.5,
 "name": "pj washington",
 "lab": "P.J. Washington 10+ reb",
-"p": 0.2651,
+"p": 0.265,
 "price": 351,
 "book": "Kalshi",
 "f": [
@@ -41,7 +89,7 @@
 "line": 8.5,
 "name": "andrew nembhard",
 "lab": "Andrew Nembhard 9+ ast",
-"p": 0.2533,
+"p": 0.245,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -52,7 +100,7 @@
 ]
 }
 ],
-"p": 0.06714,
+"p": 0.0649,
 "d": 18.04,
 "first": "2026-10-26T23:30:00+00:00",
 "pick": "longshot",
@@ -60,18 +108,18 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
-"gid": "401909870",
-"start": "2026-10-26T23:30Z",
-"kind": "fg3m",
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard 3+ threes",
-"p": 0.4194,
-"price": 133,
+"line": 3.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 4+ ast",
+"p": 0.4176,
+"price": 138,
 "book": "Novig",
 "f": [
 "usage",
@@ -83,27 +131,42 @@
 {
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 9.5,
-"name": "pj washington",
-"lab": "P.J. Washington 10+ reb",
-"p": 0.2651,
-"price": 351,
-"book": "Kalshi",
+"line": 4.5,
+"name": "kyrie irving",
+"lab": "Kyrie Irving 5+ ast",
+"p": 0.434,
+"price": 130,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game",
-"price"
+"game"
+]
+},
+{
+"gid": "401909873",
+"start": "2026-10-27T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "chet holmgren",
+"lab": "Chet Holmgren 2+ threes",
+"p": 0.2986,
+"price": 245,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
 ]
 }
 ],
-"p": 0.11118,
-"d": 10.508,
-"first": "2026-10-26T23:30:00+00:00",
-"pick": "core",
+"p": 0.05412,
+"d": 18.885,
+"first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
 {
@@ -113,14 +176,14 @@
 {
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "max christie",
-"lab": "Max Christie 6+ reb",
-"p": 0.2338,
-"price": 331,
-"book": "Kalshi",
+"line": 4.5,
+"name": "kyrie irving",
+"lab": "Kyrie Irving 5+ ast",
+"p": 0.434,
+"price": 130,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -136,7 +199,7 @@
 "line": 8.5,
 "name": "andrew nembhard",
 "lab": "Andrew Nembhard 9+ ast",
-"p": 0.2533,
+"p": 0.245,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -154,7 +217,7 @@
 "line": 1.5,
 "name": "chet holmgren",
 "lab": "Chet Holmgren 2+ threes",
-"p": 0.2987,
+"p": 0.2986,
 "price": 245,
 "book": "Novig",
 "f": [
@@ -164,73 +227,93 @@
 ]
 }
 ],
-"p": 0.01769,
-"d": 59.478,
+"p": 0.03174,
+"d": 31.74,
 "first": "2026-10-26T23:30:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
 "legs": [
-{
-"gid": "401909870",
-"start": "2026-10-26T23:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard 3+ threes",
-"p": 0.4194,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
 {
 "gid": "401909871",
 "start": "2026-10-26T23:30Z",
 "kind": "reb",
 "side": "o",
-"line": 5.5,
-"name": "max christie",
-"lab": "Max Christie 6+ reb",
-"p": 0.2338,
-"price": 331,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
+"line": 7.5,
+"name": "pj washington",
+"lab": "P.J. Washington 8+ rebounds",
+"p": 0.4734,
+"price": 146,
+"book": "Kalshi"
+},
+{
+"gid": "401909875",
+"start": "2026-10-27T01:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "MEM moneyline",
+"p": 0.5252,
+"price": 100,
+"book": "Novig"
+}
+],
+"p": 0.2486,
+"d": 4.92,
+"first": "2026-10-26T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909869",
+"start": "2026-10-26T23:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "evan mobley",
+"lab": "Evan Mobley over 2.5 threes",
+"p": 0.1864,
+"fair": 0.1899,
+"price": 567,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.2431,
+"v": [
+"consensus odds drop",
+"one rung above the main line (1.5)",
+"soft matchup"
 ]
 },
 {
-"gid": "401909873",
-"start": "2026-10-27T00:00Z",
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
 "kind": "fg3m",
 "side": "o",
 "line": 1.5,
-"name": "chet holmgren",
-"lab": "Chet Holmgren 2+ threes",
-"p": 0.2987,
-"price": 245,
+"name": "bilal coulibaly",
+"lab": "Bilal Coulibaly over 1.5 threes",
+"p": 0.3062,
+"fair": 0.3093,
+"price": 217,
 "book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
+"sport": "nba",
+"edge": -0.0292,
+"v": [
+"consensus odds drop",
+"one rung above the main line (0.5)"
 ]
 }
 ],
-"p": 0.02929,
-"d": 34.646,
-"first": "2026-10-26T23:30:00+00:00",
+"p": 0.05874,
+"d": 21.144,
+"first": "2026-10-26T23:00:00+00:00",
 "res": null
 }
 ],
