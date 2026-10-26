@@ -262,7 +262,8 @@ def build(sport, cands, now):
 CONF_CARD = "Confluence parlays (experimental)"
 CONF_Q = (.25, .55)                  # leg price as implied chance: about -122 .. +300
 CONF_EDGE = (0.0, .15)               # market-anchored edge at the price
-CONF_VOTES = 3                       # agreeing signals a leg needs
+CONF_VOTES = 4                       # agreeing signals a leg needs (owner 2026-10-25, research/confluence_replay.py Oct 22-25:
+                                     # legs hit 38% at 3+, 42% at 4+, 50% at 5+; 4+ keeps enough parlays)
 CONF_LONG = (20, 100)                # the longshot's payout
 
 
