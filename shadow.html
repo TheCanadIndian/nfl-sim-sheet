@@ -423,7 +423,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <main id="main"></main>
   <footer>Model changes that didn’t pass their backtest, graded live beside the real projections. Nothing here changes what the site shows or bets. A shadow is switched on only if it beats the live numbers in both halves of its live record, and then passes a re-test on past seasons.</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Oct 26, 2026 12:14 AM","nfl":[{"stat":"att","n":169,"weeks":[2,7],"live_pin":2.3951,"shadow_pin":2.3442,"live_mae":6.74,"shadow_mae":6.64,"live_over":0.521,"shadow_over":0.485,"ratio":1.0719,"halves":[-0.0323,-0.0727]},{"stat":"cmp","n":168,"weeks":[2,7],"live_pin":1.5683,"shadow_pin":1.5367,"live_mae":4.55,"shadow_mae":4.46,"live_over":0.524,"shadow_over":0.494,"ratio":1.0703,"halves":[-0.0342,-0.0285]}],"nhl":null}</script>
+<script type="application/json" id="data">{"generated":"Oct 26, 2026 12:29 AM","nfl":[{"stat":"att","n":169,"weeks":[2,7],"live_pin":2.3951,"shadow_pin":2.3442,"live_mae":6.74,"shadow_mae":6.64,"live_over":0.521,"shadow_over":0.485,"ratio":1.0719,"halves":[-0.0323,-0.0727]},{"stat":"cmp","n":168,"weeks":[2,7],"live_pin":1.5683,"shadow_pin":1.5367,"live_mae":4.55,"shadow_mae":4.46,"live_over":0.524,"shadow_over":0.494,"ratio":1.0703,"halves":[-0.0342,-0.0285]}],"nhl":null}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
