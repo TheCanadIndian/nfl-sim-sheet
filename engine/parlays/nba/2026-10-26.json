@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-26",
 "lock": "2026-10-26T23:00:00+00:00",
-"frozen_at": "2026-10-26T17:11:04.157Z",
+"frozen_at": "2026-10-26T17:24:52.213Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -23,13 +23,14 @@
 "name": "cooper flagg",
 "lab": "Cooper Flagg 8+ reb",
 "p": 0.2958,
-"price": 252,
+"price": 266,
 "book": "Kalshi",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -53,7 +54,7 @@
 }
 ],
 "p": 0.09139,
-"d": 11.968,
+"d": 12.444,
 "first": "2026-10-26T23:30:00+00:00",
 "pick": "core",
 "res": null
@@ -62,6 +63,72 @@
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
+{
+"gid": "401909870",
+"start": "2026-10-26T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 10+ reb",
+"p": 0.448,
+"price": 129,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909871",
+"start": "2026-10-26T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "cooper flagg",
+"lab": "Cooper Flagg 8+ reb",
+"p": 0.2958,
+"price": 266,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.13254,
+"d": 8.381,
+"first": "2026-10-26T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 5+ ast",
+"p": 0.282,
+"price": 260,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
 {
 "gid": "401909870",
 "start": "2026-10-26T23:30Z",
@@ -100,74 +167,9 @@
 ]
 }
 ],
-"p": 0.13841,
-"d": 7.786,
-"first": "2026-10-26T23:30:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909870",
-"start": "2026-10-26T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 10+ reb",
-"p": 0.448,
-"price": 129,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909871",
-"start": "2026-10-26T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "cooper flagg",
-"lab": "Cooper Flagg 8+ reb",
-"p": 0.2958,
-"price": 252,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909872",
-"start": "2026-10-27T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "andrew nembhard",
-"lab": "Andrew Nembhard 9+ ast",
-"p": 0.2526,
-"price": 300,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.03348,
-"d": 32.243,
-"first": "2026-10-26T23:30:00+00:00",
+"p": 0.03903,
+"d": 28.03,
+"first": "2026-10-26T23:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -180,12 +182,12 @@
 "start": "2026-10-26T23:00Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
+"line": 4.5,
 "name": "brandon miller",
-"lab": "Brandon Miller 4+ ast",
-"p": 0.4174,
-"price": 138,
-"book": "Novig",
+"lab": "Brandon Miller 5+ ast",
+"p": 0.282,
+"price": 260,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -202,8 +204,8 @@
 "name": "paul george",
 "lab": "Paul George 4+ ast",
 "p": 0.4162,
-"price": 140,
-"book": "Kalshi",
+"price": 138,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -230,44 +232,9 @@
 ]
 }
 ],
-"p": 0.04388,
-"d": 22.848,
+"p": 0.02965,
+"d": 34.272,
 "first": "2026-10-26T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909869",
-"start": "2026-10-26T23:00Z",
-"kind": "spread",
-"side": "away",
-"line": 4.5,
-"name": null,
-"lab": "MIN +4.5",
-"p": 0.5046,
-"price": 111,
-"book": "Novig"
-},
-{
-"gid": "401909875",
-"start": "2026-10-27T01:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "MEM moneyline",
-"p": 0.5142,
-"price": 108,
-"book": "Novig"
-}
-],
-"p": 0.25947,
-"d": 4.389,
-"first": "2026-10-26T23:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -275,15 +242,15 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401909870",
-"start": "2026-10-26T23:30Z",
+"gid": "401909868",
+"start": "2026-10-26T23:00Z",
 "kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum over 6.5 assists",
-"p": 0.5427,
-"price": -111,
+"line": 3.5,
+"name": "brandon miller",
+"lab": "Brandon Miller over 3.5 assists",
+"p": 0.4309,
+"price": 133,
 "book": "Novig",
 "f": [
 "usage",
@@ -295,22 +262,23 @@
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0215
+"edge": 0.0057
 },
 {
-"gid": "401909868",
+"gid": "401909869",
 "start": "2026-10-26T23:00Z",
-"kind": "pts",
+"kind": "ast",
 "side": "o",
-"line": 15.5,
-"name": "grayson allen",
-"lab": "Grayson Allen over 15.5 points",
-"p": 0.5188,
-"price": -108,
-"book": "Novig",
+"line": 2.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 2.5 assists",
+"p": 0.4906,
+"price": 115,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
@@ -320,14 +288,14 @@
 "usage",
 "rotation",
 "game",
-"our model above fair"
+"consensus up"
 ],
 "sport": "nba",
-"edge": 0.0009
+"edge": 0.0461
 }
 ],
-"p": 0.28155,
-"d": 3.661,
+"p": 0.2114,
+"d": 5.01,
 "first": "2026-10-26T23:00:00+00:00",
 "res": null
 },
@@ -424,56 +392,6 @@
 ]
 },
 {
-"gid": "401909869",
-"start": "2026-10-26T23:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "evan mobley",
-"lab": "Evan Mobley over 2.5 threes",
-"p": 0.1724,
-"fair": 0.1754,
-"price": 567,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.1496,
-"v": [
-"consensus odds drop",
-"one rung above the main line (1.5)",
-"soft matchup"
-]
-}
-],
-"p": 0.02698,
-"d": 70.875,
-"first": "2026-10-26T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909869",
-"start": "2026-10-26T23:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "evan mobley",
-"lab": "Evan Mobley over 2.5 threes",
-"p": 0.1724,
-"fair": 0.1754,
-"price": 567,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.1496,
-"v": [
-"consensus odds drop",
-"one rung above the main line (1.5)",
-"soft matchup"
-]
-},
-{
 "gid": "401909875",
 "start": "2026-10-27T01:00Z",
 "kind": "reb",
@@ -493,9 +411,57 @@
 ]
 }
 ],
-"p": 0.06193,
-"d": 19.343,
-"first": "2026-10-26T23:00:00+00:00",
+"p": 0.05432,
+"d": 30.815,
+"first": "2026-10-27T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909875",
+"start": "2026-10-27T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "cameron boozer",
+"lab": "Cameron Boozer over 10.5 rebounds",
+"p": 0.3464,
+"fair": 0.3531,
+"price": 190,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0047,
+"v": [
+"consensus line up",
+"one rung above the main line (9.5)"
+]
+},
+{
+"gid": "401909874",
+"start": "2026-10-27T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "tari eason",
+"lab": "Tari Eason over 6.5 rebounds",
+"p": 0.3225,
+"fair": 0.3238,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0003,
+"v": [
+"consensus line up",
+"one rung above the main line (5.5)"
+]
+}
+],
+"p": 0.11433,
+"d": 8.99,
+"first": "2026-10-27T00:30:00+00:00",
 "res": null
 }
 ],
