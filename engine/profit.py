@@ -512,6 +512,7 @@ def wfair(sport, PR, starts, now, PL):
           f"{sum((dec(e['o']) - 1) if e['res'] == 'W' else -1 for e in done):+.1f}u")
 
 
+DRY_MIN = 3                          # games without a goal (research/player_trends_nhl.py)
 MOVE_SIG = {"line": "line up", "price": "odds drop", "both": "line up + odds drop", "rung": "higher rung outlier"}
 
 
@@ -523,6 +524,8 @@ def tag_label(e):
         return "Ladder knee (experimental)"
     if e.get("src") == "open":
         return "Early opener value (experimental)"
+    if e.get("src") == "dry":
+        return "Goal drought 3+ games (experimental)"
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
 
@@ -601,6 +604,31 @@ def tags():
             e = log.setdefault(f"open|{sport}|{x['g']}|{x['n']}|{x['b']}|{x['bk']}", dict(sport=sport, src="open", gid=x["g"], name=x["n"], bet=x["b"],
                                book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair"), m=x.get("fair"), start=st))
             e.setdefault("start", st)
+        # NHL goal droughts (owner 2026-10-27, research/player_trends_nhl.py): every anytime-goal over at the owner's books for a
+        # player 3+ games without a goal, at its first price (best of Hard Rock / Novig / Kalshi), graded like tags
+        if sport == "nhl":
+            try:
+                DRY = json.load(open(os.path.join(site, "markets", "dry_nhl.json"))).get("games", {})
+            except (OSError, ValueError):
+                DRY = {}
+            for gid, x in DRY.items():
+                st = starts.get(str(gid)) or x.get("start")
+                if st and PL.when(st) <= now:
+                    continue
+                for nm, n in (x.get("dry") or {}).items():
+                    if n < DRY_MIN:
+                        continue
+                    e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(nm) or {}).get("goal") or {}
+                    bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                    if not bo:
+                        continue
+                    _, bk, o = max(bo)
+                    fair = (e_.get("pin") or {}).get("o")
+                    if fair is None:                                  # as in the study: only props the sharp books price
+                        continue
+                    e = log.setdefault(f"dry|{sport}|{gid}|{nm}", dict(sport=sport, src="dry", gid=gid, name=nm, bet="goal", book=bk, o=o,
+                                                                     first=now.isoformat(), p=fair, m=fair, start=st, dry=n))
+                    e.setdefault("start", st)
         # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
         for gid, tg in (FL.get("lc") or {}).items():
             st = starts.get(str(gid))

@@ -218,6 +218,15 @@ def main():
 
     pg = fr.pg[fr.pg.game_id.isin(todo.game_id)].copy()
     pg["e_toi"] = pg.e_np_toi + pg.e_pp_toi
+    # games since his last goal (owner 2026-10-27, research/player_trends_nhl.py: the market overprices players who just
+    # scored and underprices droughts; 3+ games dry +21% on 173 live legs at the owner's books). Chip + Profit tracking only.
+    played = fr.pg[fr.pg.toi.notna() & (fr.pg.toi > 0)].sort_values("date")
+    dry = {}
+    for pid, h in played.groupby("player_id"):
+        gl = h.goals.to_numpy()
+        if len(gl) >= 5:
+            nz = np.nonzero(gl > 0)[0]
+            dry[int(pid)] = int(len(gl) - 1 - nz[-1]) if len(nz) else int(len(gl))
     # Dress 12 F + 6 D by expected ice time, then apply overrides.
     outs = {(o.team, str(o.player).strip().lower()) for o in ov[ov.action == "out"].itertuples()}
     ins = {(o.team, str(o.player).strip().lower()) for o in ov[ov.action == "in"].itertuples()}
@@ -423,7 +432,7 @@ def main():
                               ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3),
                               sog=round(float(r.sog), 2) if "sog" in x and pd.notna(r.sog) else None,
                               so=[round(float(getattr(r, f"sog_o{k}")), 3) for k in ("05", "15", "25", "35", "45")] if "sog" in x and pd.notna(r.sog) else None,
-                              sg=lifts.get((g.game_id, int(r.player_id))))
+                              sg=lifts.get((g.game_id, int(r.player_id))), dry=dry.get(int(r.player_id)))
                          for r in x.itertuples()])
         lam_t = {t: float(-np.log(1 - pg[(pg.game_id == g.game_id) & (pg.team == t)].p_goal.clip(upper=.999)).sum())
                  for t in (g.away, g.home)}
@@ -466,6 +475,15 @@ def main():
     rp = os.path.join(OUT, "pairs_record.json")
     payload["pairs_record"] = json.load(open(rp)) if os.path.exists(rp) else None
     json.dump(payload, open(json_path, "w"), separators=(",", ":"))
+    try:                                                    # profit.tags logs goal overs for 3+ games dry (experimental)
+        import parlays as PL
+        dp = os.path.join(PL.SITE, "markets", "dry_nhl.json")
+        json.dump(dict(generated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+                       games={str(x["id"]): {"start": x.get("start_utc"), "dry": {PL.jsnorm(q["name"]): q["dry"] for s_ in (x["away"], x["home"])
+                                                                                   for q in s_["players"] if q.get("dry") is not None}}
+                              for x in payload["games"]}), open(dp, "w"), separators=(",", ":"))
+    except Exception as e:                                  # noqa: BLE001
+        print(f"dry_nhl.json: skipped ({type(e).__name__}: {e})")
     html = TEMPLATE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS) \
         .replace("__DATA__", json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")).replace("__DATE__", date)
     path = os.path.join(OUT, f"{date}.html")
@@ -785,6 +803,7 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .lchg{display:inline-block;margin-left:6px;border:1px solid var(--faint);border-radius:999px;padding:0 7px;font-size:11px;font-weight:600;white-space:nowrap;vertical-align:1px}
 .lchg.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 55%,transparent)}.lchg.dn{color:#e5a03a;border-color:color-mix(in srgb,#e5a03a 55%,transparent)}
 .lchg.in{color:#7fb2ff;border-color:color-mix(in srgb,#7fb2ff 55%,transparent)}
+.lchg.dry{color:var(--muted);border-color:var(--faint)}
 .lchgl{margin:2px 0 4px}.lchgl b{font-weight:600}
 .pdline b{font-weight:600}
 .pdline .up{color:var(--good)} .pdline .dn{color:var(--bad)}
