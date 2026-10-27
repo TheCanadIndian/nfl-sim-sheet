@@ -530,10 +530,17 @@ function pathLegs(g){
     if (!best[key] || sc > best[key].sc) best[key] = {...L, sc}; }
   return Object.values(best).sort((a, b) => b.sc - a.sc);
 }
+function pathWhy(L, k){
+  return k === 'usage' ? (L.p.pos === 'QB' ? `QB · ${f0(L.p.s.att ? L.p.s.att[MEAN] : 0)} att` : `usage · ${f1((L.p.s.tgt ? L.p.s.tgt[MEAN] : 0) + (L.p.s.car ? L.p.s.car[MEAN] : 0))} touches`)
+    : k === 'matchup' ? `matchup · ${ord(L.r.rank)} most to ${L.k}s` : k === 'rotation' ? L.role : k === 'script' ? `script · ${L.s.name} +${Math.round((L.lift - 1) * 100)}%`
+    : L.ev >= .05 ? `price · +${Math.round(L.ev * 100)}% vs our chance` : 'price · Value tag';
+}
 function pathLongshots(){
   if (!D.dvp || !(window.MKT && MKT.altLadder)) return '';
   const now = Date.now(), per = [];
-  for (const g of D.games){ if (g.sort && new Date(g.sort) <= now) continue; const L = pathLegs(g); if (L.length) per.push(L.slice(0, 3)); }
+  for (const g of D.games){ if (g.sort && new Date(g.sort) <= now) continue; const L = pathLegs(g); if (L.length) per.push(L.slice(0, 3));
+    if (MKT.regPath) L.forEach(x => MKT.regPath({gid: String(g.id), start: g.sort, name: MKT.norm(x.p.n), kind: x.st, line: x.u.l, p: +x.q.toFixed(4), price: x.u.best.o, book: x.u.best.k,
+      sc: x.s.name, us: +x.s.ours.toFixed(3), mk: +x.s.mk.toFixed(3), lift: +x.lift.toFixed(2), f: Object.keys(x.F).filter(k => x.F[k]), why: Object.keys(x.F).filter(k => x.F[k]).map(k => pathWhy(x, k))})); }
   if (per.length < 2) return per.length || D.games.every(g => g.sort && new Date(g.sort) <= now) ? '' : `<section class="panel"><div class="phead"><h2>Path longshots</h2></div><p class="note">Building paths: needs two games with a script our sims rate above the market and legs it feeds. ${D.games.some(g => SCR[g.id] === undefined || SCR[g.id] === 'load') ? 'Loading simulated games…' : 'None today yet.'}</p></section>`;
   const combos = [], walk = (i, pk) => { if (pk.length >= 2) combos.push(pk); if (pk.length === 3) return;
     for (let j = i; j < per.length; j++) for (const L of per[j]) walk(j + 1, [...pk, L]); };
