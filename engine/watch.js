@@ -134,6 +134,7 @@
 .watchpanel h3 .x{margin-left:auto}
 .watchpanel .x{border:0;background:none;color:var(--muted,#95A6B0);cursor:pointer;font-size:14px}
 .watchpanel .wi{border-top:1px solid var(--faint,#22313A);padding:8px 0;display:grid;gap:3px}
+.watchpanel .wg{margin:12px 0 0;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted,#95A6B0)}.watchpanel .wg+.wi{border-top:0}
 .watchpanel .wh{display:flex;gap:6px;align-items:baseline}
 .watchpanel .wh b{flex:1}
 .watchpanel .wm{color:var(--muted,#95A6B0);font-size:12px}
@@ -178,12 +179,39 @@
     const edge = c.fair != null && o != null ? c.fair * dec(o) - 1 : null;
     const hist = (it.h || []).length > 1 ? `<div class="hist">${it.h.map(x => `${tm(x.t)} ${am(x.o)}${x.m != null && x.m !== it.line ? ` (main ${x.m})` : ''}`).join(' → ')}</div>` : '';
     return `<div class="wi"><div class="wh"><b>${esc(it.lab)}</b><button class="x" data-watchdel="${esc(it.id)}" aria-label="Remove">✕</button></div>
-      <div class="wm">${esc(SP[it.sport] || '')}${it.glab ? ' · ' + esc(it.glab) : ''}${it.start ? ' · ' + esc(new Date(it.start).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'})) : ''} · ${esc(it.book)} · added ${tm(it.t)}${it.done ? ' · <b>started</b>' : ''}</div>
+      <div class="wm">${esc(it.book)} · added ${tm(it.t)}${it.done ? ' · <b>started</b>' : ''}</div>
       <div class="wp"><button class="wc" data-watchchart="${esc(it.id)}">${OPEN.has(it.id) ? 'Hide chart' : '📈 Chart'}</button><span>then <b>${am(it.o)}</b></span><span>now <b>${o == null ? (it.done ? am((it.h || []).slice(-1)[0]?.o) : 'not posted') : am(o)}</b></span>${moveO}${moveL}
         ${c.fair != null ? `<span>fair ${pc(c.fair)}${it.fair != null && Math.abs(c.fair - it.fair) >= .01 ? ` <span class="${c.fair > it.fair ? 'up' : 'dn'}">(was ${pc(it.fair)})</span>` : ''}</span>` : ''}
         ${edge != null ? (edge > .6 ? `<span class="wm" title="A claimed edge over 60% is usually a stale or off-market quote (the screener hides these)">edge ? · check price</span>` : `<span class="${edge >= .03 ? 'up' : edge < 0 ? 'dn' : ''}">edge ${edge >= 0 ? '+' : '−'}${Math.abs(Math.round(edge * 100))}%</span>`) : ''}</div>${hist}${OPEN.has(it.id) ? `<div class="wch" data-wch="${esc(it.id)}"></div>` : ''}</div>`;
   }
   const OPEN = new Set();
+  // grouped by game, games in start order (started ones last); owner 2026-10-27: "copy broken down by game"
+  function byGame(){
+    const G = new Map();
+    for (const it of items.slice().sort((a, b) => (a.done - b.done) || (new Date(a.start || 0) - new Date(b.start || 0)))){
+      const k = it.sport + '|' + it.gid; if (!G.has(k)) G.set(k, []); G.get(k).push(it); }
+    return [...G.values()].map(xs => [xs[0], xs]);
+  }
+  const gameHead = g => [SP[g.sport] || '', g.glab || 'Game ' + g.gid, g.start ? new Date(g.start).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '', g.done ? 'started' : ''].filter(Boolean).join(' · ');
+  function copyText(){
+    const out = ['Watchlist · ' + new Date().toLocaleString([], {weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'})];
+    for (const [g, xs] of byGame()){
+      out.push('', gameHead(g));
+      for (const it of xs){
+        const c = it.cur || {}, o = c.o != null ? c.o : it.done ? (it.h || []).slice(-1)[0]?.o : null;
+        const edge = c.fair != null && o != null ? c.fair * dec(o) - 1 : null;
+        out.push(`• ${it.lab} · ${it.book} ${o == null ? 'not posted' : am(o)}${o != null && it.o != null && o !== it.o ? ` (was ${am(it.o)})` : ''}`
+          + (c.fair != null ? ` · fair ${pc(c.fair)}` : '') + (edge != null && edge <= .6 ? ` · edge ${edge >= 0 ? '+' : '−'}${Math.abs(Math.round(edge * 100))}%` : '')
+          + (c.main != null && it.main0 != null && c.main !== it.main0 ? ` · main line ${it.main0} → ${c.main}` : ''));
+      }
+    }
+    return out.join('\n');
+  }
+  function copy(t){
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    const a = document.createElement('textarea'); a.value = t; a.style.position = 'fixed'; a.style.opacity = '0'; document.body.appendChild(a); a.select();
+    try { document.execCommand('copy'); } finally { a.remove(); } return Promise.resolve();
+  }
   function draw(){
     const live = items.filter(x => !x.done).length;
     fab.innerHTML = items.length ? `☆ Watchlist <b>${items.length}</b>` : '☆ Watchlist';
@@ -193,10 +221,9 @@
       panel.innerHTML = `<h3>Watchlist <button class="x" data-watchclose aria-label="Close">✕</button></h3><p class="note">Tap ☆ next to a price in the Screener, on the Markets page’s best lines or on a ladder rung to watch it. Each saved line shows its price then and now, whether the books moved the line, and the fair price and edge, refreshed every minute while a page is open. Saved in this browser.</p>`;
       return;
     }
-    const ord = items.slice().sort((a, b) => (a.done - b.done) || (new Date(a.start || 0) - new Date(b.start || 0)));
-    panel.innerHTML = `<h3>Watchlist · ${items.length} <button class="x" data-watchclose aria-label="Close">✕</button></h3>${ord.map(row).join('')}
+    panel.innerHTML = `<h3>Watchlist · ${items.length} <button class="x" data-watchclose aria-label="Close">✕</button></h3>${byGame().map(([g, xs]) => `<div class="wg">${esc(gameHead(g))}</div>${xs.map(row).join('')}`).join('')}
       <p class="note">Prices refresh every minute while a page is open (the site updates them about every 15 minutes). Fair = the sharp market’s no-vig chance at that line; edge = fair × payout − 1.${live < items.length ? ' Started games keep their last pregame price.' : ''}</p>
-      <div class="acts"><button data-watchclean>Remove started</button><button data-watchclear>Clear all</button></div>`;
+      <div class="acts"><button data-watchcopy>Copy by game</button><button data-watchclean>Remove started</button><button data-watchclear>Clear all</button></div>`;
     panel.querySelectorAll('[data-wch]').forEach(h => { const it = items.find(x => x.id === h.dataset.wch); if (it) openChart(it, h); });
   }
   function rerenderPage(){ try { window.render && window.render(); } catch (e) {} document.querySelectorAll('[data-watch]').forEach(b => { let it; try { it = JSON.parse(b.dataset.watch); } catch (e) { return; } const on = items.some(x => x.id === idOf(it)); b.classList.toggle('on', on); b.textContent = on ? '★' : '☆'; }); }
@@ -216,6 +243,8 @@
     if (e.target.closest('[data-oddsclose]') || (!modal.hidden && !e.target.closest('.oddsmodal'))){ modal.hidden = true; }
     if (e.target.closest('[data-watchclose]')){ panel.hidden = true; draw(); return; }
     const d = e.target.closest('[data-watchdel]'); if (d){ items = items.filter(x => x.id !== d.dataset.watchdel); save(); draw(); rerenderPage(); return; }
+    const cp = e.target.closest('[data-watchcopy]');
+    if (cp){ e.stopPropagation(); copy(copyText()).then(() => { cp.textContent = 'Copied ✓'; }, () => { cp.textContent = 'Copy failed'; }); setTimeout(() => { if (cp.isConnected) cp.textContent = 'Copy by game'; }, 2500); return; }
     if (e.target.closest('[data-watchclean]')){ items = items.filter(x => !x.done); save(); draw(); rerenderPage(); return; }
     if (e.target.closest('[data-watchclear]')){ items = []; save(); draw(); rerenderPage(); return; }
     if (!panel.hidden && !e.target.closest('.watchpanel') && !e.target.closest('.watchfab')){ panel.hidden = true; draw(); }
@@ -225,6 +254,7 @@
     btn(it){ const on = items.some(x => x.id === idOf(it)); return `<button type="button" class="watchadd${on ? ' on' : ''}" data-watch="${esc(JSON.stringify(it))}" title="${on ? 'Remove from' : 'Add to'} watchlist">${on ? '★' : '☆'}</button>`; },
     chartBtn(it){ return `<button type="button" class="chartadd" data-oddschart="${esc(JSON.stringify(it))}" title="How the books' prices moved">📈</button>`; },
     both(it){ return this.btn(it) + this.chartBtn(it); },
+    text: () => copyText(),
   };
   draw();
   try { window.render && window.render(); } catch (e) {}           // pages that rendered before this loaded get their ☆ buttons
