@@ -1,8 +1,8 @@
 {
 "sport": "nba",
 "date": "2026-10-27",
-"lock": "2026-10-27T23:30:00+00:00",
-"frozen_at": "2026-10-27T20:05:23.336Z",
+"lock": "2026-10-28T00:00:00+00:00",
+"frozen_at": "2026-10-27T20:10:36.379Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,20 +15,20 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909877",
-"start": "2026-10-27T23:30Z",
-"kind": "ast",
+"gid": "401909878",
+"start": "2026-10-28T00:00Z",
+"kind": "fg3m",
 "side": "o",
 "line": 3.5,
-"name": "paul george",
-"lab": "Paul George 4+ ast",
-"p": 0.3811,
-"price": 163,
-"book": "Novig",
+"name": "duncan robinson",
+"lab": "Duncan Robinson 4+ threes",
+"p": 0.368,
+"price": 173,
+"book": "Kalshi",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"game"
 ]
 },
 {
@@ -50,9 +50,9 @@
 ]
 }
 ],
-"p": 0.08558,
-"d": 13.15,
-"first": "2026-10-27T23:30:00+00:00",
+"p": 0.08263,
+"d": 13.65,
+"first": "2026-10-28T00:00:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -100,69 +100,6 @@
 "d": 12.05,
 "first": "2026-10-28T00:00:00+00:00",
 "pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909877",
-"start": "2026-10-27T23:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "paul george",
-"lab": "Paul George 4+ ast",
-"p": 0.3811,
-"price": 163,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-},
-{
-"gid": "401909878",
-"start": "2026-10-28T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "karlanthony towns",
-"lab": "Karl-Anthony Towns 2+ threes",
-"p": 0.4113,
-"price": 141,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"game"
-]
-},
-{
-"gid": "401909879",
-"start": "2026-10-28T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "julian champagnie",
-"lab": "Julian Champagnie 4+ threes",
-"p": 0.217,
-"price": 400,
-"book": "Novig",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.03402,
-"d": 31.692,
-"first": "2026-10-27T23:30:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -228,117 +165,6 @@
 "res": null
 },
 {
-"card": "Confluence parlays (experimental)",
-"tier": "4-leg longshot",
-"legs": [
-{
-"gid": "401909878",
-"start": "2026-10-28T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 15.5,
-"name": "john collins",
-"lab": "John Collins over 15.5 points",
-"p": 0.4797,
-"price": 113,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0063
-},
-{
-"gid": "401909879",
-"start": "2026-10-28T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "devin vassell",
-"lab": "Devin Vassell over 2.5 assists",
-"p": 0.4685,
-"price": 115,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0108
-},
-{
-"gid": "401909880",
-"start": "2026-10-28T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "ja morant",
-"lab": "Ja Morant over 6.5 assists",
-"p": 0.4229,
-"price": 141,
-"book": "Novig",
-"f": [
-"usage",
-"game"
-],
-"v": [
-"usage",
-"game",
-"our model above fair",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0321
-},
-{
-"gid": "401909877",
-"start": "2026-10-27T23:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "paul george",
-"lab": "Paul George over 3.5 assists",
-"p": 0.3802,
-"price": 163,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0024
-}
-],
-"p": 0.03614,
-"d": 29.026,
-"first": "2026-10-27T23:30:00+00:00",
-"res": null
-},
-{
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -350,12 +176,12 @@
 "line": 7.5,
 "name": "john collins",
 "lab": "John Collins over 7.5 rebounds",
-"p": 0.4289,
-"fair": 0.439,
+"p": 0.4299,
+"fair": 0.4401,
 "price": 133,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0008,
+"edge": 0.0017,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -370,12 +196,12 @@
 "line": 12.5,
 "name": "devin vassell",
 "lab": "Devin Vassell over 12.5 points",
-"p": 0.4643,
-"fair": 0.4631,
+"p": 0.466,
+"fair": 0.4649,
 "price": 111,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0203,
+"edge": -0.0167,
 "v": [
 "Pinnacle line up",
 "consensus odds drop",
@@ -383,7 +209,7 @@
 ]
 }
 ],
-"p": 0.2033,
+"p": 0.2046,
 "d": 4.916,
 "first": "2026-10-28T00:00:00+00:00",
 "res": null
@@ -400,12 +226,12 @@
 "line": 7.5,
 "name": "john collins",
 "lab": "John Collins over 7.5 rebounds",
-"p": 0.4289,
-"fair": 0.439,
+"p": 0.4299,
+"fair": 0.4401,
 "price": 133,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0008,
+"edge": 0.0017,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -420,12 +246,12 @@
 "line": 12.5,
 "name": "devin vassell",
 "lab": "Devin Vassell over 12.5 points",
-"p": 0.4643,
-"fair": 0.4631,
+"p": 0.466,
+"fair": 0.4649,
 "price": 111,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0203,
+"edge": -0.0167,
 "v": [
 "Pinnacle line up",
 "consensus odds drop",
@@ -453,7 +279,7 @@
 ]
 }
 ],
-"p": 0.05333,
+"p": 0.05367,
 "d": 16.961,
 "first": "2026-10-28T00:00:00+00:00",
 "res": null
