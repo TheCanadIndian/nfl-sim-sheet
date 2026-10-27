@@ -900,10 +900,10 @@ def feed_data():
                 continue
             items.append(dict(date=d["date"], sport=d["sport"], t="parlay", cat="Today’s card" if q.get("pick") else q["card"], tier=q.get("tier"),
                               legs=[dict(lab=L.get("lab"), res=L.get("res"), sport=L.get("sport")) for L in q["legs"]], pay=round(pay, 2), q=q.get("p"),
-                              res=q["res"], net=round(PARLAY * ((pay - 1) if q["res"] == "W" else -1), 2)))
+                              res=q["res"], net=round((STRAIGHT if q.get("tier") == "straight" else PARLAY) * ((pay - 1) if q["res"] == "W" else -1), 2)))
     items.sort(key=lambda x: (x["date"], x["res"] == "W", x["net"]), reverse=True)
     # your bets, last 30 days (the record at the top of the page)
-    staked = sum(STRAIGHT if x["t"] == "bet" else PARLAY for x in items)
+    staked = sum(STRAIGHT if x["t"] == "bet" or x.get("tier") == "straight" else PARLAY for x in items)
     you = dict(n=len(items), w=sum(x["res"] == "W" for x in items), net=round(sum(x["net"] for x in items), 2), staked=staked)
     # what's working: each bet type over the last 30 days, in dollars at the owner's stakes
     by = {}
