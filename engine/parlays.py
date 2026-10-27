@@ -185,6 +185,12 @@ def freeze():
                                final_at=fin.isoformat(), parlays=ps, graded=False), open(fp, "w"), indent=0)
                 print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
         freeze_multi(now)
+        try:                                                         # plus-money slate (slate.py, owner 2026-10-27)
+            import slate as SLT
+            SLT.freeze(now)
+        except Exception as e:                                       # noqa: BLE001
+            print(f"slate: skipped ({type(e).__name__}: {e})")
+            fail_note(f"slate freeze: {type(e).__name__}: {e}")
     finally:
         srv.terminate()
 
@@ -430,7 +436,7 @@ HUB_SKIP = ("Same-game",)                                 # same-game cards stay
 def hub_data():
     today = dt.datetime.now(ET).date().isoformat()
     sports = []
-    for sport in ("nfl", "nhl", "nba", "multi"):
+    for sport in ("nfl", "nhl", "nba", "multi", "slate"):
         fs = sorted(f for f in glob.glob(os.path.join(OUT, sport, "*.json")) if os.path.basename(f)[:10] >= today)
         if not fs:
             continue
@@ -452,13 +458,23 @@ def hub_data():
         L = dict(builder=st.get("builder"), conf=st.get("confluence"), mk=st.get("moveknee"), sw=st.get("sweet"), rows=st.get("rows"), live=st.get("live_rows"), segs=show[:16], changes=st.get("changes", [])[-6:], updated=st.get("updated"))
     except (OSError, ValueError):
         pass
-    return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports, learn=L)
+    SLM = None
+    try:                                                            # the plus-money slate's learning model (slate.py)
+        m = json.load(open(os.path.join(OUT, "slate", "model.json")))
+        SLM = dict(coef=m.get("coef"), se=m.get("se"), live=m.get("live"), record=m.get("record"), n_seed=m.get("n_seed"), n_live=m.get("n_live"), updated=m.get("updated"))
+    except (OSError, ValueError):
+        pass
+    return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports, learn=L, slate=SLM)
 
 
 HUB = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Parlays</title>__FONTS__<style>__CSS__
 .hsw{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}.hsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:5px 14px;font:600 13.5px var(--body);cursor:pointer}
 .hsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.htabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin:0 0 14px;padding:3px;border:1px solid var(--faint);border-radius:12px;background:var(--sunk)}.htabs::-webkit-scrollbar{display:none}
+.htabs button{flex:none;border:0;background:none;color:var(--muted);border-radius:9px;padding:7px 12px;font:600 13.5px var(--body);cursor:pointer;white-space:nowrap}
+.htabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--faint)}.htabs button span{font-size:11.5px;color:var(--muted);margin-left:5px;font-weight:500}
+.slm{width:100%;border-collapse:collapse;font-size:13px}.slm td{padding:4px 6px;border-top:1px solid var(--faint)}.slm td:last-child{text-align:right;white-space:nowrap}
 .hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin:8px 0 4px}
 .hp{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:6px;align-content:start}
 .hp.pick{border-color:color-mix(in srgb,var(--accent) 55%,transparent)}.hp.W{border-color:color-mix(in srgb,var(--good) 60%,transparent)}.hp.L{opacity:.65}
@@ -487,24 +503,27 @@ const tm = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-
 const day = d => new Date(d + 'T12:00:00').toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
 const SP = {nfl: 'NFL', nhl: 'NHL', nba: 'NBA', multi: 'Multi'};
 let F = 'all'; try { F = localStorage.getItem('simhub-v1') || 'all'; } catch (e) {}
+let T = 'card'; try { T = localStorage.getItem('simhub-tab') || 'card'; } catch (e) {}
 function card(q, sport, lab){
-  const st = q.res === 'W' ? `<span class="st W">Won +$${(D.stake * ((q.paid || q.d) - 1)).toFixed(2)}</span>` : q.res === 'L' ? '<span class="st L">Lost</span>' : q.res === 'V' ? '<span class="st">Void</span>'
+  const sk = /straight/.test(q.tier || '') ? 10 : D.stake;
+  const st = q.res === 'W' ? `<span class="st W">Won +$${(sk * ((q.paid || q.d) - 1)).toFixed(2)}</span>` : q.res === 'L' ? '<span class="st L">Lost</span>' : q.res === 'V' ? '<span class="st">Void</span>'
     : new Date(q.first) <= Date.now() ? '<span class="st">Live</span>' : `<span class="st">locks ${tm(q.first)}</span>`;
   const ev = q.p && q.d ? q.p * q.d - 1 : null;
   return `<div class="hp ${q.pick ? 'pick' : ''} ${q.res || ''}"><div class="hh">${q.pick ? `<span class="tg card">Today’s card</span>` : ''}${lab ? `<span class="tg ${/long/i.test(lab) ? 'ls' : ''}">${esc(lab)}</span>` : ''}<span>${esc(q.tier || '')}</span>${st}</div>
     <ul>${q.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i>${sport === 'multi' ? `<span class="sp">${SP[L.sport] || ''}</span>` : ''}<b>${esc(L.lab)}</b><span class="bk">${esc(L.book || '')} ${am(L.price)}</span></li>`).join('')}</ul>
-    <div class="hs">${q.d ? `<span>pays <b>${q.d.toFixed(q.d < 10 ? 1 : 0)}x</b></span><span>$${D.stake} → <b>$${(D.stake * q.d).toFixed(q.d < 10 ? 2 : 0)}</b></span>` : ''}<span>hits <b>${pc(q.p)}</b></span>${ev != null ? `<span class="${ev >= .05 ? 'good' : 'muted'}">edge ${ev >= 0 ? '+' : '−'}${Math.abs(Math.round(ev * 100))}%</span>` : ''}</div></div>`;
+    <div class="hs">${q.d ? `<span>pays <b>${q.d.toFixed(q.d < 10 ? 1 : 0)}x</b></span><span>$${sk} → <b>$${(sk * q.d).toFixed(q.d < 10 ? 2 : 0)}</b></span>` : ''}<span>hits <b>${pc(q.p)}</b></span>${ev != null ? `<span class="${ev >= .05 ? 'good' : 'muted'}">edge ${ev >= 0 ? '+' : '−'}${Math.abs(Math.round(ev * 100))}%</span>` : ''}</div></div>`;
 }
 function render(){
-  const S = D.sports.filter(s => F === 'all' || s.sport === F);
-  const sw = `<div class="hsw">${['all', ...D.sports.map(s => s.sport)].map(k => `<button data-f="${k}" aria-pressed="${F === k}">${k === 'all' ? 'All' : SP[k]}</button>`).join('')}</div>`;
+  const S = D.sports.filter(s => s.sport !== 'slate' && (F === 'all' || s.sport === F));
+  const sw = `<div class="hsw">${['all', ...D.sports.filter(s => s.sport !== 'slate').map(s => s.sport)].map(k => `<button data-f="${k}" aria-pressed="${F === k}">${k === 'all' ? 'All' : SP[k]}</button>`).join('')}</div>`;
   const picks = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.flatMap(c => c.parlays.filter(q => q.pick).map(q => ({q, s, c}))));
   const multi = S.find(s => s.sport === 'multi');
   const sec = (h, sub, body) => `<section class="panel hsec"><div class="phead"><h2>${h}<small>${sub}</small></h2></div>${body}</section>`;
-  let html = sw;
+  const TB = {};
+  let html = '';
   const today = new Date().toLocaleDateString('en-CA');
   const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
-  if (picks.length) html += sec('Today’s cards', `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
+  if (picks.length) TB.card = sec('Today’s cards', `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
   let lrnHtml = '';
   const LRN = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Learning parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
   if (D.learn || LRN.length){
@@ -524,7 +543,7 @@ function render(){
     const B = (D.learn && D.learn.conf) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
     const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
     const why = q => { const v = [...new Set(q.legs.flatMap(L => L.v || []))]; return v.length ? `<p class="note" style="margin:6px 0 0">${q.legs.map(L => `<b>${esc(L.lab.split(' ').slice(0, 2).join(' '))}</b>: ${esc((L.v || []).join(', '))}`).join(' · ')}</p>` : ''; };
-    html += sec(`Confluence parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
+    TB.conf = sec(`Confluence parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
       (CNF.length ? `<div class="hg">${CNF.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">No legs qualify yet today: each needs four or more things agreeing, a price between about −120 and +300 at your books, and a 0-15% edge.</p>')
       + `<details class="how"><summary>How it works</summary><p class="note">Legs where several things agree: our reasons (usage, rotation, matchup, game script / game), our model above the market’s fair price, and the market’s own signals (Pinnacle or our sharp consensus moving the prop up, a Value or LC tag, a ladder knee). A leg needs four or more; a reason the learning record has dropped counts zero, a proven one counts double. Only legs priced about −120 to +300 with a 0-15% edge (longshot legs hit 10% vs 20% priced, and big claimed edges hit 24% vs 40%). The payout comes from stacking near-fair legs: a 2-leg, a 3-leg and a 4-5 leg longshot paying 20-100x, one leg per game. The chance shown is the market’s fair price, not ours. Tracked beside Today’s card; it stays Experimental until 60+ graded parlays are positive in both halves.</p></details>`);
   }
@@ -532,7 +551,7 @@ function render(){
   {
     const B = (D.learn && D.learn.sw) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
     const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
-    html += sec(`Sweet-spot edge parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
+    TB.sweet = sec(`Sweet-spot edge parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
       (SWP.length ? `<div class="hg">${SWP.map(x => card(x.q, x.s.sport, SP[x.s.sport])).join('')}</div>` : '<p class="note">No legs qualify yet today: each needs a 5-40% edge at your books on a leg priced about −120 to +570. They show up once the sharp books price the props, mostly a few hours before the games.</p>')
       + `<details class="how"><summary>How it works</summary><p class="note">Every over at Hard Rock, Novig and Kalshi, main and alternate lines, where our chance (our number blended with the sharp books’ fair price at that line, the site’s usual weights) beats the best price by 5-40%, on legs priced about −120 to +570. One leg per game, its biggest edge; a 2-leg, a 3-leg and a second 2-leg. Why: of every over priced at your books Oct 12-26 (24,944 graded legs, the price 1-3 hours before the start), all legs together lost 29%; this edge returned +16% on 319 legs, positive in both halves, and +23% on the 164 priced in this band. The same edge without our number lost 12%, and chasing line moves lost too. The price band was chosen from that same data, so this stays Experimental until its own graded record holds up.</p></details>`);
   }
@@ -541,11 +560,11 @@ function render(){
     const B = (D.learn && D.learn.mk) || {n: 0};
     const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
     const why = q => `<p class="note" style="margin:6px 0 0">${q.legs.map(L => `<b>${esc(L.lab.split(' over ')[0])}</b>: ${esc((L.v || []).join(' · '))}`).join('<br>')}</p>`;
-    html += sec('NBA sharp move parlays <span class="lst exp">Experimental</span>', `record ${rec} · tracked beside Today’s card`,
+    TB.move = sec('NBA sharp move parlays <span class="lst exp">Experimental</span>', `record ${rec} · tracked beside Today’s card`,
       (MKP.length ? `<div class="hg">${MKP.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">None today: the sharp market hasn’t moved enough NBA props up yet (moves show up through the day, mostly in the last hours before tip).</p>')
       + `<details class="how"><summary>How it works</summary><p class="note">Starts from a prop Pinnacle or our sharp consensus moved up (the line went up, the over got shorter, or both) and takes the first rung above the main line at your best price (Hard Rock, Novig or Kalshi with its fee). Pinnacle moves rank first. In Oct 23-25 NBA markets that rung went 37% vs 32% priced (+13%, 134 bets; small sample), while the main line was +6% and two rungs up −17%; requiring a matchup or tag made every rung worse, so they’re shown as context only. One leg per game, 2 and 3 legs. Experimental and tracked; never on Today’s card.</p></details>`);
   }
-  html += lrnHtml;
+  TB.learn = lrnHtml;
   // everything else the pages build: tracked on the Profit page, not picks (owner 2026-10-25: the section felt like noise)
   const more = [];
   if (multi && multi.cards.length){ const qs = multi.cards.flatMap(c => c.parlays);
@@ -553,11 +572,41 @@ function render(){
   for (const s of S.filter(s => s.sport !== 'multi'))
     for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge) parlays/.test(c.card)))
       more.push(`<details class="hc"><summary>${SP[s.sport]} · ${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`);
-  if (more.length) html += sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
-  if (!D.sports.length) html += '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>';
+  if (more.length) TB.more = sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
+  TB.slate = slateTab();
+  const TABS = [['card', 'Today’s cards'], ['slate', 'Plus-money slate'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
+  const cnt = {card: picks.length, slate: ((D.sports.find(s => s.sport === 'slate') || {cards: []}).cards.reduce((n, c) => n + c.parlays.length, 0))};
+  if (!TB[T]) T = TABS.find(([k]) => TB[k]) ? TABS.find(([k]) => TB[k])[0] : 'card';
+  const bar = `<div class="htabs" role="tablist">${TABS.filter(([k]) => TB[k] || k === 'card').map(([k, lab]) => `<button role="tab" data-t="${k}" aria-selected="${T === k}">${lab}${cnt[k] ? `<span>${cnt[k]}</span>` : ''}</button>`).join('')}</div>`;
+  html = bar + (T === 'slate' ? '' : sw) + (TB[T] || '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>');
   document.getElementById('main').innerHTML = html;
+  const on = document.querySelector('.htabs [aria-selected="true"]'); if (on) on.scrollIntoView({block: 'nearest', inline: 'nearest'});
 }
-document.addEventListener('click', e => { const b = e.target.closest('button[data-f]'); if (!b) return; F = b.dataset.f; try { localStorage.setItem('simhub-v1', F); } catch (x) {} render(); });
+// Plus-money slate (slate.py; owner 2026-10-27): straights + 2-leg parlays, every leg +250 or longer, picked by a learning model
+const FL_ = {gap: 'Our number above the market', pvf: 'Price shorter than the fair', dry3: 'NHL: no goal in 3+ games', hot0: 'NHL: scored last game',
+  tag: 'Value or LC tag', move: 'Sharp market moved it up', alt: 'Alternate line', nba: 'NBA leg', nhl: 'NHL leg', td: 'Anytime TD', goal: 'Anytime goal', far: 'Priced +600 or longer', const: 'Baseline vs the market'};
+function slateTab(){
+  const sl = D.sports.find(s => s.sport === 'slate'), M = D.slate || {};
+  const qs = sl ? sl.cards.flatMap(c => c.parlays) : [];
+  const st = qs.filter(q => /straight/.test(q.tier || '')), pa = qs.filter(q => !/straight/.test(q.tier || ''));
+  const R = M.record || {}, money = v => `${v >= 0 ? '+' : '−'}$${Math.abs(v || 0).toFixed(2)}`;
+  const rec = R.days ? `${R.straight.w}-${R.straight.n - R.straight.w} straights · ${R.parlay.w}-${R.parlay.n - R.parlay.w} parlays · ${money(R.net)} on $${R.staked}` : 'no graded bets yet';
+  const sec = (h, sub, body) => `<section class="panel hsec"><div class="phead"><h2>${h}<small>${sub}</small></h2></div>${body}</section>`;
+  const grid = xs => `<div class="hg">${xs.map(q => card(q, 'slate', (q.legs[0].sport || '').toUpperCase() + (q.legs.length > 1 ? ' · ' + [...new Set(q.legs.map(L => (L.sport || '').toUpperCase()))].join(' + ') : ''))).join('')}</div>`;
+  const C = M.coef || {}, SE = M.se || {};
+  const rows = Object.keys(FL_).filter(k => k in C).map(k => ({k, v: C[k], z: SE[k] ? C[k] / SE[k] : 0})).sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+  const lv = M.live || {};
+  const model = `<details class="hc"><summary>What the model weighs<span>${M.n_seed || 0} seed + ${M.n_live || 0} live graded legs</span></summary>
+    <p class="note">Each leg starts at the sharp market’s fair chance at that line; the model adds what has paid on +250-or-longer legs (refit every night). Positive = that leg hits more often than the market says.${lv.n ? ` Live so far: log-loss ${lv.ll_model} (model) vs ${lv.ll_market} (market alone); its 5%+ edges returned ${lv.picks_ret == null ? '–' : (lv.picks_ret * 100).toFixed(0) + '%'} on ${lv.picks}.` : ''}</p>
+    <div class="tw"><table class="slm"><tbody>${rows.map(r => `<tr><td>${FL_[r.k]}</td><td class="${r.v > 0 ? 'good' : r.v < 0 ? 'bad' : ''}">${r.v > 0 ? '+' : ''}${r.v.toFixed(2)}${Math.abs(r.z) >= 2 ? ' ●' : ''}</td></tr>`).join('')}</tbody></table></div>
+    <p class="note">● = clear in the data so far (2+ standard errors).</p></details>`;
+  const how = `<details class="how"><summary>How it works</summary><p class="note">Every over at Hard Rock, Novig and Kalshi priced +250 to +1000 (main and alternate lines, NBA, NHL and NFL) that the sharp books price. A learning model estimates each one’s real chance: the sharp market’s fair price, adjusted for our projection’s gap to it, the price against the fair, NHL goal droughts (players who just scored have been overpriced, players 3+ games without a goal underpriced), Value / LC tags, sharp line moves, alternate lines and price band. It learns from every graded candidate every night (started from 2,271 graded +250 legs, Oct 12-26). The slate takes legs with a 5-60% edge: the 4 best as straights ($10, one per game) and the best 2-leg parlays from different games ($5), 10 bets at most, a leg in at most 2. Each bet locks 60 minutes before its first game. Walk-forward test on Oct 12-26 (fit on one half of the days, slate built on the other, both ways): +$167 and +$154 — only 6 days each way, so it stays Experimental until its own record holds up. A +250 straight wins about 1 time in 4 and a 2-leg parlay about 1 in 15: expect long dry spells; judge it on profit over weeks.</p></details>`;
+  return sec('Plus-money slate <span class="lst exp">Experimental</span>', `record ${rec}`,
+      (qs.length ? `<div class="eyebrow" style="margin-top:4px">Straights · $10</div>${st.length ? grid(st) : '<p class="note">None yet.</p>'}<div class="eyebrow" style="margin-top:12px">Parlays · $5</div>${pa.length ? grid(pa) : '<p class="note">None yet.</p>'}`
+        : '<p class="note">No legs qualify yet today: each needs a 5%+ edge on a +250-or-longer price at your books, and the sharp books post most player props a few hours before the games.</p>')
+      + model + how);
+}
+document.addEventListener('click', e => { const t = e.target.closest('button[data-t]'); if (t){ T = t.dataset.t; try { localStorage.setItem('simhub-tab', T); } catch (x) {} render(); return; } const b = e.target.closest('button[data-f]'); if (!b) return; F = b.dataset.f; try { localStorage.setItem('simhub-v1', F); } catch (x) {} render(); });
 render();
 </script></body></html>"""
 

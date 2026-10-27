@@ -66,6 +66,7 @@ jobs:
         working-directory: engine
         run: |
           python builder.py grade learn || true
+          python slate.py grade learn || true
           if [ "${{ steps.q.outputs.skip }}" != "true" ]; then python parlays.py freeze || true; fi
           python parlays.py grade || true
           python parlays.py page || true
