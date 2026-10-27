@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-10-27",
 "lock": "2026-10-28T00:00:00+00:00",
-"frozen_at": "2026-10-27T16:56:39.974045+00:00",
+"frozen_at": "2026-10-27T17:10:00.223322+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -22,12 +22,30 @@
 "line": 14.5,
 "name": "victor wembanyama",
 "lab": "Victor Wembanyama 15+ reb",
-"p": 0.2322,
+"p": 0.2245,
 "price": 400,
 "book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909880",
+"start": "2026-10-28T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "collin sexton",
+"lab": "Collin Sexton 15+ pts",
+"p": 0.3268,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
 "game",
 "price"
 ],
@@ -45,28 +63,10 @@
 "price": 228,
 "book": "Novig",
 "sport": "nhl"
-},
-{
-"gid": "401909880",
-"start": "2026-10-28T03:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "collin sexton",
-"lab": "Collin Sexton 15+ pts",
-"p": 0.3329,
-"price": 229,
-"book": "Kalshi",
-"f": [
-"usage",
-"game",
-"price"
-],
-"sport": "nba"
 }
 ],
-"p": 0.02582,
-"d": 53.956,
+"p": 0.0245,
+"d": 55.76,
 "first": "2026-10-28T00:00:00+00:00",
 "res": null
 },
@@ -82,7 +82,7 @@
 "line": 14.5,
 "name": "victor wembanyama",
 "lab": "Victor Wembanyama 15+ reb",
-"p": 0.2322,
+"p": 0.2245,
 "price": 400,
 "book": "Hard Rock",
 "f": [
@@ -93,6 +93,47 @@
 ],
 "sport": "nba"
 },
+{
+"gid": "401909880",
+"start": "2026-10-28T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "collin sexton",
+"lab": "Collin Sexton 15+ pts",
+"p": 0.3268,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026020195",
+"start": "2026-10-28T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "matt boldy",
+"lab": "Matt Boldy to score",
+"p": 0.3893,
+"price": 178,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.02856,
+"d": 47.26,
+"first": "2026-10-28T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
 {
 "gid": "2026020198",
 "start": "2026-10-28T02:30:00Z",
@@ -112,51 +153,10 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "joel eriksson ek",
-"lab": "Joel Eriksson Ek to score",
-"p": 0.3147,
-"price": 239,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.02441,
-"d": 55.596,
-"first": "2026-10-28T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909880",
-"start": "2026-10-28T03:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "collin sexton",
-"lab": "Collin Sexton 15+ pts",
-"p": 0.3329,
-"price": 229,
-"book": "Kalshi",
-"f": [
-"usage",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "2026020195",
-"start": "2026-10-28T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "joel eriksson ek",
-"lab": "Joel Eriksson Ek to score",
-"p": 0.3147,
-"price": 239,
+"name": "matt boldy",
+"lab": "Matt Boldy to score",
+"p": 0.3893,
+"price": 178,
 "book": "Novig",
 "sport": "nhl"
 },
@@ -174,21 +174,26 @@
 "sport": "nhl"
 },
 {
-"gid": "2026020190",
-"start": "2026-10-28T00:00:00Z",
-"kind": "goal",
+"gid": "401909878",
+"start": "2026-10-28T00:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 0.5,
-"name": "adrian kempe",
-"lab": "Adrian Kempe to score",
-"p": 0.3681,
-"price": 182,
+"line": 1.5,
+"name": "karlanthony towns",
+"lab": "Karl-Anthony Towns 2+ threes",
+"p": 0.4093,
+"price": 141,
 "book": "Novig",
-"sport": "nhl"
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"sport": "nba"
 }
 ],
-"p": 0.01279,
-"d": 98.444,
+"p": 0.01765,
+"d": 68.783,
 "first": "2026-10-28T00:00:00+00:00",
 "res": null
 }
