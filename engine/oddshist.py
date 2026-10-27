@@ -168,7 +168,8 @@ def update():
         except (OSError, ValueError):
             H = {}
         starts = starts_of(sport)
-        new = merge(H, snap(P, L, starts), t, starts)
+        snap_cur = snap(P, L, starts)
+        new = merge(H, snap_cur, t, starts)
         try:
             C = json.load(open(CLV_PATH))
         except (OSError, ValueError):
@@ -177,20 +178,37 @@ def update():
         json.dump(C, open(CLV_PATH, "w"), separators=(",", ":"))
         prune(H, t)
         json.dump(H, open(path(sport), "w"), separators=(",", ":"))
-        # early-value openers at the owner's books -> flags (profit.tags logs and grades each first sighting)
-        op = []
+        # early-value openers at the owner's books -> flags (profit.tags logs and grades each first sighting). Kept until the
+        # game starts (owner 2026-10-26: "flag the early openers even if I miss them"), each refreshed with that book's price
+        # now and the fair now; `gone` = the book no longer prices that line.
+        ff = os.path.join(M.SITE, "markets", f"flags_{sport}.json")
+        try:
+            old = json.load(open(ff)).get("openers") or []
+        except (OSError, ValueError):
+            old = []
+        op = [x for x in old if not (x.get("start") and int(dt.datetime.fromisoformat(x["start"]).timestamp() // 60) <= t)]
+        seen = {(x["g"], x["n"], x["k"], x["l"], x["bk"]) for x in op}
+        n_new = 0
         for gid, key, b, o, fair, st in new:
             nm, k, l = key.rsplit("|", 2)
-            if b in OWN and k in LAB and fair is not None and .03 <= fair * dec(o) - 1 <= .40:
-                op.append(dict(g=gid, n=nm, k=k, l=float(l), b=f"over {float(l):g} {LAB[k]}", bk=b, o=o, fair=round(float(fair), 4), start=st))
-        ff = os.path.join(M.SITE, "markets", f"flags_{sport}.json")
+            if b in OWN and k in LAB and fair is not None and .03 <= fair * dec(o) - 1 <= .40 and (gid, nm, k, float(l), b) not in seen:
+                op.append(dict(g=gid, n=nm, k=k, l=float(l), b=f"over {float(l):g} {LAB[k]}", bk=b, o=o, fair=round(float(fair), 4), start=st, t0=t))
+                n_new += 1
+        for x in op:
+            e = (H.get(x["g"]) or {}).get("p", {}).get(f"{x['n']}|{x['k']}|{x['l']:g}") or {}
+            cur = (snap_cur.get(x["g"]) or {}).get(f"{x['n']}|{x['k']}|{x['l']:g}")
+            now = cur[0].get(x["bk"]) if cur else None
+            x["now"] = now
+            x["gone"] = now is None
+            x["fnow"] = e["f"][-1][1] if e.get("f") else x["fair"]
+        op.sort(key=lambda x: (x.get("start") or "", x["n"]))
         try:
             FL = json.load(open(ff))
             FL["openers"] = op
             json.dump(FL, open(ff, "w"), separators=(",", ":"))
         except (OSError, ValueError):
             pass
-        print(f"odds history {sport}: {len(H)} games, {sum(len(g['p']) for g in H.values())} lines, {len(new)} new openers ({len(op)} early value)")
+        print(f"odds history {sport}: {len(H)} games, {sum(len(g['p']) for g in H.values())} lines, {len(new)} new openers ({n_new} new early value, {len(op)} flagged)")
 
 
 def backfill(hours):
@@ -242,6 +260,26 @@ for (const sp of ['nfl', 'nba', 'nhl']){ const R = D.rows.filter(r => r.sport ==
   h += `<section class="panel"><div class="phead"><h2>${SP[sp]}</h2><span class="small muted">${R.reduce((a, r) => a + r.n, 0)} openers scored</span></div><div class="tw"><table class="t"><thead><tr><th class="l">Book</th><th>Openers</th><th>Open CLV</th><th>Beat close</th><th>Late CLV</th><th>Value openers</th><th>Their CLV</th><th>Their beat</th><th>Posted h early</th></tr></thead><tbody>
   ${R.map(r => `<tr><td class="l">${esc(r.book)}</td><td>${r.n}</td><td>${pc(r.clv)}</td><td>${Math.round(r.beat * 100)}%</td><td>${pc(r.late)}</td><td>${r.val_n}</td><td>${r.val_n ? pc(r.val_clv) : '–'}</td><td>${r.val_n ? Math.round(r.val_beat * 100) + '%' : '–'}</td><td>${r.hrs.toFixed(1)}</td></tr>`).join('')}</tbody></table></div></section>`; }
 document.getElementById('main').innerHTML = h || '<section class="panel"><p class="note" style="margin:0">No games scored yet: openers are scored as each game starts.</p></section>';
+// flagged now (owner 2026-10-26: "flag the early openers even if I miss them"): every early-value opener until its game
+// starts, read live from flags_<sport>.json, with the book's price now (or 'line gone')
+const am = o => o == null ? '–' : (o > 0 ? '+' : '') + Math.round(o), pp = p => p == null ? '–' : Math.round(p * 100) + '%';
+const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o, tm = t => new Date(t).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'});
+const BK = {'Hard Rock': 'HR', Novig: 'NV', Kalshi: 'K'};
+const title = s => String(s).replace(/\b\w/g, c => c.toUpperCase());
+Promise.all(['nfl', 'nba', 'nhl'].map(sp => fetch(`markets/flags_${sp}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+  .then(F => (F.openers || []).map(x => ({...x, sport: sp}))))).then(R => {
+  const L = R.flat().filter(x => !x.start || new Date(x.start) > Date.now()).sort((a, b) => (a.start || '').localeCompare(b.start || ''));
+  const row = x => { const e0 = x.fair * dec(x.o) - 1, e1 = x.now != null && x.fnow != null ? x.fnow * dec(x.now) - 1 : null;
+    const wi = {sport: x.sport, gid: x.g, name: x.n, kind: x.k, line: x.l, book: x.bk, o: x.now ?? x.o, fair: x.fnow ?? x.fair, main: null, glab: '', start: x.start, lab: `${title(x.n)} ${x.b}`};
+    return `<tr><td class="l"><b>${esc(title(x.n))}</b> ${esc(x.b)}${window.WATCH && !x.gone ? ' ' + WATCH.both(wi) : ''}<div class="small muted">${SP[x.sport]} · ${x.start ? esc(tm(x.start)) : ''}</div></td>
+      <td><b>${am(x.o)}</b> ${esc(BK[x.bk] || x.bk)}<div class="small muted">${x.t0 ? esc(tm(x.t0 * 60e3)) + ' · ' : ''}${pc(e0)}</div></td>
+      <td>${x.gone ? '<span class="bad">gone</span>' : `<b>${am(x.now)}</b>`}<div class="small muted">${e1 == null ? 'fair ' + pp(x.fnow) : pc(e1)}</div></td></tr>`; };
+  const s = document.createElement('section'); s.className = 'panel';
+  s.innerHTML = `<div class="phead"><h2>Flagged now</h2><span class="small muted">${L.length} early-value opener${L.length === 1 ? '' : 's'} · experimental</span></div>
+    <p class="note">Lines your books posted already 3%+ under the sharp fair. They stay here until the game starts, so you can see them even if you missed the post; the screener’s “Early openers” chip shows the same list.</p>` +
+    (L.length ? `<div class="tw"><table class="t"><thead><tr><th class="l">Bet</th><th>Opened · edge</th><th>Now · edge</th></tr></thead><tbody>${L.map(row).join('')}</tbody></table></div>`
+               : '<p class="note" style="margin:0">None right now. New ones appear here within about 15 minutes of a book posting.</p>');
+  document.getElementById('main').prepend(s); });
 </script>
 """
 
