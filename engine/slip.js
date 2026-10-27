@@ -106,7 +106,7 @@
 
   function gambly(){
     const text = 'Build a ' + legs.length + '-leg parlay: ' + legs.map(L => L.lab + (L.glab ? ` (${L.glab})` : '')).join(', ');
-    return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt: text, autoSubmit: '1'}).toString();
+    return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt: text, autoSubmit: '1'}).toString() + '&utm_campaign=thecanadindian';
   }
   // keep the slip inside what's on screen: wide pages (tables) can make the page wider than a phone, and fixed
   // elements then sit off the right edge. Place from the visual viewport instead.

@@ -231,3 +231,34 @@
   if (items.length) refresh();
   setInterval(() => { if (items.some(x => !x.done)) refresh(); }, 60000);
 })();
+/* GamblyBot (owner 2026-10-26: "use gambly bot to make the parlays under the parlay tab"; 2026-10-27: on every built parlay):
+   every open parlay on any page -- Today's card and the other .dcp cards, payout / value-tag / NHL tables (table.atgp rows),
+   Best shot, the /parlays.html hub cards -- gets a button that opens Gambly's chat with the legs typed in (partner code last)
+   and also copies them, in case the chat opens empty. The viewer clicks it; nothing is clicked for them. */
+(function(){
+  if (/[?&]freeze=1/.test(location.search) || /\/(weeks\/|\d{4}-\d\d-\d\d)/.test(location.pathname)) return;   // frozen / past pages
+  const sp = t => t.replace(/↗/g, '').replace(/\s+/g, ' ').trim();
+  const liLegs = c => [...c.querySelectorAll('ul > li')].filter(li => li.querySelector('b') && !li.classList.contains('pth') && !li.classList.contains('lwhy'))
+    .map(li => { const b = li.querySelector('b'), x = li.cloneNode(true); x.querySelectorAll('b, i, button').forEach(n => n.remove());
+      return [sp(b.textContent), sp(x.textContent)]; });
+  const rowLegs = tr => { const td = tr.querySelector('td.l'); if (!td) return [];
+    return [...td.querySelectorAll(':scope > b')].map(b => { const n = b.nextElementSibling; return [sp(b.textContent), n && n.tagName === 'SPAN' ? sp(n.textContent) : '']; }); };
+  const text = legs => `Build this ${legs.length}-leg parlay:\n` + legs.map(([b, d], i) => `${i + 1}. ${b}${d ? ' (' + d + ')' : ''}`).join('\n');
+  const url = legs => 'https://www.gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt: text(legs), autoSubmit: '1'}).toString() + '&utm_campaign=thecanadindian';
+  const LAB = 'Build in GamblyBot ↗';
+  const put = (host, legs) => { if (legs.length < 2 || host.querySelector(':scope > .gbot')) return;
+    const a = document.createElement('a'); a.className = 'gbot'; a.href = url(legs); a.target = '_blank'; a.rel = 'noopener'; a.textContent = LAB;
+    a.dataset.txt = text(legs); a.title = 'Opens Gambly’s chat with these legs typed in (also copied, to paste if it opens empty)'; host.appendChild(a); };
+  const add = () => {
+    for (const c of document.querySelectorAll('.dcp:not(.W):not(.L):not(.V), .hp:not(.W):not(.L):not(.V)')) put(c, liLegs(c));
+    for (const c of document.querySelectorAll('.bestshot')) put(c.querySelector('.bsum') || c, liLegs(c));
+    for (const tr of document.querySelectorAll('table.atgp tbody tr:not(.slate)')) { const td = tr.querySelector('td.add') || tr.lastElementChild; if (td) put(td, rowLegs(tr)); }
+  };
+  document.addEventListener('click', e => { const a = e.target.closest('a.gbot'); if (!a) return;
+    try { navigator.clipboard.writeText(a.dataset.txt); } catch (err) {}
+    a.classList.add('ok'); a.textContent = 'Opened · legs copied too'; setTimeout(() => { a.classList.remove('ok'); a.textContent = LAB; }, 4000); });
+  const st = document.createElement('style');
+  st.textContent = `.gbot{display:inline-block;justify-self:start;font-size:12px;font-weight:700;color:var(--ink,#E8EEF1);text-decoration:none;border:1px solid var(--faint,#22313A);border-radius:999px;padding:3px 10px;margin-top:6px;white-space:nowrap;cursor:pointer}.gbot:hover{border-color:var(--muted,#95A6B0)}.gbot.ok{color:var(--good,#36D399);border-color:color-mix(in srgb,var(--good,#36D399) 50%,transparent)}td.add .gbot{display:table;margin-top:5px}.bsum .gbot{margin-top:0}`;
+  document.head.appendChild(st);
+  let t = null; new MutationObserver(() => { clearTimeout(t); t = setTimeout(add, 50); }).observe(document.body, {childList: true, subtree: true}); add();
+})();
