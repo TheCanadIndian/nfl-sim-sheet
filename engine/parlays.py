@@ -441,11 +441,24 @@ def hub_data():
         if not fs:
             continue
         d = json.load(open(fs[0]))
+        fin = when(d["final_at"]) if d.get("final_at") else None
+        def lock_of(q):                                             # when this parlay stops changing (owner 2026-10-27: a clear locked time)
+            if not q.get("first"):
+                return None
+            if sport == "slate":
+                return when(q["first"]) - dt.timedelta(minutes=60)  # slate.LOCK_MIN
+            if fin is not None and (sport == "multi" or q.get("pick")):
+                return fin if sport == "multi" else pick_lock(sport, q["pick"], q, fin)
+            if fin is not None and str(q.get("card", "")).startswith(BUILDER_CARDS):
+                return pick_lock(sport, "core", q, fin)
+            return when(q["first"])                                 # the other cards freeze at their first game
         cards = {}
         for q in d["parlays"]:
             if str(q.get("card", "")).startswith(HUB_SKIP):
                 continue
+            lk = lock_of(q)
             cards.setdefault(q["card"], []).append(dict(tier=q.get("tier"), p=q.get("p"), d=q.get("d"), first=q.get("first"), res=q.get("res"),
+                                                         lock=min(lk, when(q["first"])).astimezone(dt.timezone.utc).isoformat() if lk else None,
                                                          paid=q.get("paid"), pick=q.get("pick"),
                                                          legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
                                                                     sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
@@ -475,6 +488,7 @@ HUB = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .htabs button{flex:none;border:0;background:none;color:var(--muted);border-radius:9px;padding:7px 12px;font:600 13.5px var(--body);cursor:pointer;white-space:nowrap}
 .htabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--faint)}.htabs button span{font-size:11.5px;color:var(--muted);margin-left:5px;font-weight:500}
 .slm{width:100%;border-collapse:collapse;font-size:13px}.slm td{padding:4px 6px;border-top:1px solid var(--faint)}.slm td:last-child{text-align:right;white-space:nowrap}
+.lk{margin-left:auto;font-size:12px;font-weight:700;white-space:nowrap;padding:2px 9px;border-radius:999px;border:1px solid color-mix(in srgb,var(--warn,#F5B547) 55%,transparent);color:var(--warn,#F5B547)}.lk.on{border-color:color-mix(in srgb,var(--good,#36D399) 55%,transparent);color:var(--good,#36D399)}
 .hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin:8px 0 4px}
 .hp{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:6px;align-content:start}
 .hp.pick{border-color:color-mix(in srgb,var(--accent) 55%,transparent)}.hp.W{border-color:color-mix(in srgb,var(--good) 60%,transparent)}.hp.L{opacity:.65}
@@ -504,10 +518,16 @@ const day = d => new Date(d + 'T12:00:00').toLocaleDateString([], {weekday: 'sho
 const SP = {nfl: 'NFL', nhl: 'NHL', nba: 'NBA', multi: 'Multi'};
 let F = 'all'; try { F = localStorage.getItem('simhub-v1') || 'all'; } catch (e) {}
 let T = 'card'; try { T = localStorage.getItem('simhub-tab') || 'card'; } catch (e) {}
+// lock time (owner 2026-10-27: 'a clear locked time'): before it the parlay can still be re-picked; after it, it is final
+const dayOf = t => new Date(t).toLocaleDateString('en-CA');
+const lockChip = q => { const t = q.lock || q.first; if (!t) return '';
+  const when_ = (dayOf(t) !== new Date().toLocaleDateString('en-CA') ? new Date(t).toLocaleDateString([], {weekday: 'short'}) + ' ' : '') + tm(t);
+  return new Date(t) <= Date.now() ? `<span class="lk on" title="Final: this parlay won’t change. Place it any time before ${tm(q.first)}.">🔒 Locked · place by ${tm(q.first)}</span>`
+    : `<span class="lk" title="Until then it can still be swapped for a better one; after that it won’t change. First game ${tm(q.first)}.">🔓 Locks ${when_}</span>`; };
 function card(q, sport, lab){
   const sk = /straight/.test(q.tier || '') ? 10 : D.stake;
   const st = q.res === 'W' ? `<span class="st W">Won +$${(sk * ((q.paid || q.d) - 1)).toFixed(2)}</span>` : q.res === 'L' ? '<span class="st L">Lost</span>' : q.res === 'V' ? '<span class="st">Void</span>'
-    : new Date(q.first) <= Date.now() ? '<span class="st">Live</span>' : `<span class="st">locks ${tm(q.first)}</span>`;
+    : new Date(q.first) <= Date.now() ? '<span class="st">Live</span>' : lockChip(q);
   const ev = q.p && q.d ? q.p * q.d - 1 : null;
   return `<div class="hp ${q.pick ? 'pick' : ''} ${q.res || ''}"><div class="hh">${q.pick ? `<span class="tg card">Today’s card</span>` : ''}${lab ? `<span class="tg ${/long/i.test(lab) ? 'ls' : ''}">${esc(lab)}</span>` : ''}<span>${esc(q.tier || '')}</span>${st}</div>
     <ul>${q.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i>${sport === 'multi' ? `<span class="sp">${SP[L.sport] || ''}</span>` : ''}<b>${esc(L.lab)}</b><span class="bk">${esc(L.book || '')} ${am(L.price)}</span></li>`).join('')}</ul>
