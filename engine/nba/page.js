@@ -433,7 +433,9 @@ const nbaLeg = (L, extra) => ({gid: String(L.g.id), start: L.g.start_utc, kind: 
   lab: `${L.p.n} ${Math.ceil(L.u.l)}+ ${NKL[L.st]}`, p: +L.q.toFixed(4), price: L.u.best ? L.u.best.o : L.price, book: L.u.best ? L.u.best.k : 'Kalshi', ...(extra || {})});
 function nbaPathLongshots(){
   const now = Date.now(), per = [];
-  for (const g of D.games){ if (g.start_utc && new Date(g.start_utc) <= now) continue; const L = nbaPathLegs(g); if (L.length) per.push(L.slice(0, 3)); }
+  for (const g of D.games){ if (g.start_utc && new Date(g.start_utc) <= now) continue; const L = nbaPathLegs(g); if (L.length) per.push(L.slice(0, 3));
+    if (MKT.regPath) L.forEach(x => MKT.regPath({gid: String(g.id), start: g.start_utc, name: MKT.norm(x.p.n), kind: x.st, line: x.u.l, p: +x.q.toFixed(4), price: x.u.best.o, book: x.u.best.k,
+      f: Object.keys(x.F).filter(k => x.F[k]), why: Object.entries(x.F).filter(([, t]) => t).map(([k, t]) => `${k} · ${String(t).replace(/<[^>]*>/g, '').replace(/&amp;/g, '&')}`)})); }
   if (per.length < 2) return '';
   const val = c => { const p = c.reduce((s, L) => s * L.q, 1), d = c.reduce((s, L) => s * L.dO, 1); return {c, p, d, nf: c.reduce((s, L) => s + L.nf, 0), ok: p * d - 1 >= 0}; };
   const used = {}, rank = (a, b) => b.nf / b.c.length - a.nf / a.c.length || b.p * b.d - a.p * a.d, combos = nbaCombos(per, 3);
