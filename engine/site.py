@@ -475,6 +475,10 @@ SCREEN_CSS = """
 .sc-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sc-in select,.sc-in input{background:var(--sunk);color:var(--ink);border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font:500 13.5px var(--body)}
 .sc-in input{flex:1 1 180px;min-width:0}.sc-reset{background:none;border:0;color:var(--muted);font:600 12.5px var(--body);cursor:pointer;text-decoration:underline}
+.sc-pre{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 10px}.sc-pc{display:inline-flex;align-items:center;border:1px solid var(--faint);border-radius:999px;overflow:hidden}.sc-pc.on{background:var(--ink);border-color:var(--ink)}
+.sc-pa{background:none;border:0;color:var(--ink);font:600 13px var(--body);padding:5px 4px 5px 12px;cursor:pointer;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sc-pc.on .sc-pa,.sc-pc.on .sc-px2{color:var(--bg)}
+.sc-px2{background:none;border:0;color:var(--muted);font:600 15px var(--body);padding:3px 10px 5px 6px;cursor:pointer;line-height:1}.sc-px2:hover{color:var(--bad)}
+.sc-add{border-style:dashed;color:var(--muted)}.sc-name{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.sc-name input{min-width:0;width:200px;max-width:60vw;padding:5px 10px;border-radius:8px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);font:600 13px var(--body)}
 .sc-count{font-size:13px;color:var(--muted);margin:4px 0 8px}.sc-count b{color:var(--ink)}
 .sc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 14px;align-items:center;padding:9px 4px;border-top:1px solid var(--faint)}
 .sc-who b{font-size:14.5px}.sc-m{font-size:12px;color:var(--muted)}.sc-bet{font-size:13.5px;margin-top:2px}
