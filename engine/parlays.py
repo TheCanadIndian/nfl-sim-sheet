@@ -731,7 +731,8 @@ def nba_game(gid):
                 try:
                     pl[jsnorm(a["athlete"]["displayName"])] = dict(
                         pts=float(x.get("points", 0)), reb=float(x.get("rebounds", 0)), ast=float(x.get("assists", 0)),
-                        fg3m=float(str(x.get("threePointFieldGoalsMade-threePointFieldGoalsAttempted", "0-0")).split("-")[0]))
+                        fg3m=float(str(x.get("threePointFieldGoalsMade-threePointFieldGoalsAttempted", "0-0")).split("-")[0]),
+                        stl=float(x.get("steals", 0)), blk=float(x.get("blocks", 0)))
                 except ValueError:
                     pass
     return dict(home=sc["home"], away=sc["away"], players=pl, zero_missing=False)
@@ -756,6 +757,9 @@ def settle(L, g):
         if not g["zero_missing"]:
             return "V"                                  # didn't dress (NHL box scores list every dressed skater)
         s = {}
+    if L["kind"] in ("dd", "tdbl"):                     # NBA double / triple-double: 10+ in 2 / 3 of pts, reb, ast, stl, blk
+        n10 = sum(1 for k in ("pts", "reb", "ast", "stl", "blk") if s.get(k, 0) >= 10)
+        return "W" if n10 >= (2 if L["kind"] == "dd" else 3) else "L"
     key = {"goal": "goals", "sog": "sog"}.get(L["kind"], L["kind"])
     v = (s.get("rush_td", 0) + s.get("rec_td", 0)) if L["kind"] == "td" else s.get(key, 0)
     line = float(L["line"] if L.get("line") is not None else .5)
