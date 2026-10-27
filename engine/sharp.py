@@ -1542,6 +1542,111 @@ def oa_nba_alt(now):
     json.dump(cache, open(NBA_ALT_CACHE, "w"), separators=(",", ":"))
 
 
+# NBA double-double / triple-double (owner 2026-10-27: "I would like those lines pulled"). Yes prices from ten books in one
+# region (2 credits a game: two markets), the alt-line schedule (morning pull, then hourly in the last 2 h). Published on
+# their own (markets/ddtd_nba.json, the screener and watchlist read it) so the card builders and Profit rows, never tested
+# on these, don't pick them up. Fair = log-odds mean of the two-way books' no-vig (Kalshi, ESPN BET post Yes / No; leave-one-
+# out on the page); ours = share of the saved sims (nba/draws, 1,000 games with every player's full line) with 2+ / 3+ of
+# pts / reb / ast / stl / blk at 10+. Kalshi's Yes price is shown with its 7% fee in.
+DDTD_MKT = {"player_double_double": "dd", "player_triple_double": "tdbl"}
+DDTD_BOOKS = ["novig", "hardrockbet", "kalshi", "draftkings", "fanduel", "betmgm", "williamhill_us", "espnbet", "fanatics", "betrivers"]
+DDTD_CACHE = os.path.join(M.OUT, "oa_ddtd_nba.json")
+
+
+def _ddtd_ours(gid):
+    import base64
+    try:
+        D = json.load(open(os.path.join(M.SITE, "nba", "draws", f"{gid}.json")))
+    except (OSError, ValueError):
+        return {}
+    out = {}
+    for key, st in D.get("p", {}).items():
+        a = [np.frombuffer(base64.b64decode(st[k]["b"]), dtype=np.uint8) for k in ("pts", "reb", "ast", "stl", "blk") if k in st]
+        if len(a) < 3:
+            continue
+        c = sum((x >= 10).astype(int) for x in a)
+        out[jsnorm(key.split("|")[-1])] = dict(dd=round(float((c >= 2).mean()), 4), tdbl=round(float((c >= 3).mean()), 4))
+    return out
+
+
+def oa_nba_ddtd(now):
+    k = B.key()
+    O = M.ours_nba() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+    try:
+        cache = json.load(open(DDTD_CACHE))
+    except (OSError, ValueError):
+        cache = {}
+    bst = B.load_state()
+    todo = wanted(games, cache, now, 2.0, 60, bst, fast_min=60)
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nba"].get(e["away_team"]), B.NAMES["nba"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nba dd / td: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/basketball_nba/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers=",".join(DDTD_BOOKS), markets=",".join(DDTD_MKT), oddsFormat="american", includeLinks="true"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}                                   # {player: {dd|tdbl: {o|u: {book: [odds, link]}}}}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    kind = DDTD_MKT.get(m["key"])
+                    for o in m.get("outcomes", []):
+                        side = {"yes": "o", "no": "u"}.get((o.get("name") or "").lower())
+                        if not kind or not side or not o.get("description"):
+                            continue
+                        bk = "Kalshi" if b["key"] == "kalshi" else NBA_SHORT.get(b["key"], b["key"])
+                        P.setdefault(jsnorm(o["description"]), {}).setdefault(kind, {}).setdefault(side, {})[bk] = [int(o["price"]), _link(o.get("link") or b.get("link"))]
+            if P:
+                cache[str(g["id"])] = dict(fetched=now.isoformat(), start=str(g["start"]), props=P)
+                print(f"odds api nba dd / td: {g['away']} @ {g['home']}: {len(P)} players ({used} credits, {bst.get('remaining')} left)")
+            else:
+                print(f"odds api nba dd / td: {g['away']} @ {g['home']}: not posted yet")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    cache = {gid: c for gid, c in cache.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(M.OUT, exist_ok=True)
+    json.dump(cache, open(DDTD_CACHE, "w"), separators=(",", ":"))
+    fee = lambda o: (lambda q: round(-100 * q / (1 - q)) if q >= .5 else round(100 * (1 - q) / q))((lambda a: a + .07 * a * (1 - a))(1 / dec(o)))
+    out = {}
+    for gid, c in cache.items():
+        if pd.Timestamp(c["start"]).tz_convert("UTC") <= now:
+            continue
+        ours = _ddtd_ours(gid)
+        for nm, kinds in c["props"].items():
+            for kind, x in kinds.items():
+                yes, no = dict(x.get("o") or {}), dict(x.get("u") or {})
+                if not yes:
+                    continue
+                # fair: the median Yes price across every book (3+), less the vig share the two-way books show for this
+                # player (their no-vig / Yes implied). One book's two-way no-vig alone overstated longshots (a Kalshi bet left
+                # only ESPN BET: Queta +944 'edge +59%').
+                ratio = [(lambda a_, b_: (a_ / (a_ + b_)) / a_)(1 / dec(yes[bk][0]), 1 / dec(no[bk][0])) for bk in yes if bk in no]
+                imp = sorted(1 / dec(v[0]) for v in yes.values())
+                if "Kalshi" in yes:
+                    yes["Kalshi"] = [fee(yes["Kalshi"][0]), yes["Kalshi"][1]]
+                e = dict(o=yes, u=no)
+                if len(imp) >= 3 and ratio:
+                    med = lambda a: (sorted(a)[(len(a) - 1) // 2] + sorted(a)[len(a) // 2]) / 2
+                    e["pin"] = dict(o=round(min(.99, med(imp) * med(ratio)), 4), w=len(imp))
+                if (ours.get(nm) or {}).get(kind) is not None:
+                    e["p"] = ours[nm][kind]
+                out.setdefault(gid, {}).setdefault(nm, {})[kind] = e
+    json.dump(dict(sport="nba", fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER,
+                   props=out), open(os.path.join(M.SITE, "markets", "ddtd_nba.json"), "w"), separators=(",", ":"))
+    print(f"odds api nba dd / td: published {sum(len(v) for v in out.values())} players")
+
+
 def write_props(sport, now):
     """Publish PROPS[sport] as <site>/markets/props_<sport>.json, keeping kinds this pull didn't get (< 12 h old)."""
     fp = os.path.join(M.SITE, "markets", f"props_{sport}.json")
@@ -1776,6 +1881,10 @@ def main(argv):
             oa_nba(now)
         except Exception as e:                       # never break the markets run
             print(f"odds api nba props: skipped ({type(e).__name__}: {e})")
+        try:
+            oa_nba_ddtd(now)
+        except Exception as e:                       # noqa: BLE001
+            print(f"odds api nba dd / td: skipped ({type(e).__name__}: {e})")
     try:
         st = json.load(open(STATE))
     except (OSError, ValueError):

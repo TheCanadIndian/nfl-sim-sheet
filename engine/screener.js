@@ -17,11 +17,12 @@
   let MY = OWNER.slice();
   try { const sv = localStorage.getItem('simbooks-v1'); if (sv != null) MY = JSON.parse(sv) || []; } catch (e) {}
   if (!MY.length) MY = OWNER.slice();
-  const WPIN = {nhl: {goal: .2}, nba: {pts: .05, reb: .05, ast: .05, fg3m: .05}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
+  const WPIN = {nhl: {goal: .2}, nba: {pts: .05, reb: .05, ast: .05, fg3m: .05, dd: .05, tdbl: .05}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
   const LAB = {td: 'anytime TD', rec: 'receptions', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', pts: 'points', reb: 'rebounds',
-               ast: 'assists', fg3m: 'threes', goal: 'to score', sog05: 'shots', sog15: 'shots', sog25: 'shots', sog35: 'shots', sog45: 'shots'};
+               ast: 'assists', fg3m: 'threes', goal: 'to score', dd: 'double-double', tdbl: 'triple-double', sog05: 'shots', sog15: 'shots', sog25: 'shots', sog35: 'shots', sog45: 'shots'};
   const STAT = {td: 'TD', rec: 'Receptions', rec_yds: 'Rec yds', rush_yds: 'Rush yds', pass_yds: 'Pass yds', pts: 'Points', reb: 'Rebounds',
-                ast: 'Assists', fg3m: 'Threes', goal: 'Goals', sog: 'Shots on goal'};
+                ast: 'Assists', fg3m: 'Threes', goal: 'Goals', dd: 'Double-double', tdbl: 'Triple-double', sog: 'Shots on goal'};
+  const YES = new Set(['dd', 'tdbl']);                                        // yes / no props without a line (NBA double / triple-double, sharp.oa_nba_ddtd)
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', 'Poly US': 'Polymarket'};
   const NOBET = new Set(['Pinnacle', 'kalshi']);
   const EXCH = ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'];
@@ -118,8 +119,8 @@
             if (!x.o) continue;
             const books = Object.entries(x.o).filter(([b, v]) => !NOBET.has(b) && v && v[0] != null);
             if (!books.length) continue;
-            const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : `over ${x.l} ${LAB[k]}`;
-            const tagBet = k === 'td' ? 'TD' : k === 'goal' ? 'goal' : `over ${x.l} ${LAB[k]}`;
+            const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : YES.has(k) ? LAB[k] : `over ${x.l} ${LAB[k]}`;
+            const tagBet = k === 'td' ? 'TD' : k === 'goal' ? 'goal' : YES.has(k) ? LAB[k] : `over ${x.l} ${LAB[k]}`;
             const prices = books.map(([b, v]) => {
               let fair = null, w = .5, src = '';
               if (x.main && x.pin){ fair = sharpO(x.pin, b); w = (WPIN[sport] || {})[k] ?? .5; src = 'sharp consensus'; }
@@ -145,6 +146,10 @@
       try {
         const [P, F, LV, PA] = await Promise.all(['props', 'flags', 'live', 'paths'].map(f => fetch(`${root}markets/${f}_${sp}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))));
         FETCHED[sp] = P.fetched || null;
+        if (sp === 'nba'){                                                    // double / triple-doubles live in their own file (owner 2026-10-27)
+          const X = await fetch(`${root}markets/ddtd_nba.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+          for (const [g, ps] of Object.entries(X.props || {})) for (const [nm, ks] of Object.entries(ps)) Object.assign(((P.props = P.props || {})[g] = P.props[g] || {})[nm] = P.props[g][nm] || {}, ks);
+        }
         return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}, PA || {}) : [];
       } catch (e) { return []; }
     }));
