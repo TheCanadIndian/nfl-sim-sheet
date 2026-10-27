@@ -26,7 +26,8 @@
   const DATA = {};
   async function load(sport){
     const get = f => fetch(`${base}markets/${f}_${sport}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : null).catch(() => null);
-    const [P, L] = await Promise.all([get('props'), get('live')]);
+    const [P, L, X] = await Promise.all([get('props'), get('live'), sport === 'nba' ? get('ddtd') : null]);
+    if (P && X) for (const [g, ps] of Object.entries(X.props || {})) for (const [nm, ks] of Object.entries(ps)) Object.assign(((P.props = P.props || {})[g] = P.props[g] || {})[nm] = P.props[g][nm] || {}, ks);   // double / triple-doubles
     DATA[sport] = {P, L, at: Date.now()};
   }
   function now(it){
@@ -36,8 +37,8 @@
     if (e){
       const at = (e.l == null && (it.line == null || +it.line === .5)) || (e.l != null && Math.abs(+e.l - +it.line) < 1e-9) ? e : (e.a || {})[String(it.line)] || (e.a || {})[(+it.line).toFixed(1)];
       if (at && at.o && at.o[it.book] && at.o[it.book][0] != null) out.o = at.o[it.book][0];
-      if (at === e && e.pin && e.pin.o != null && Math.abs((e.pin.l ?? e.l) - e.l) < 1e-9) out.fair = e.pin.o;
-      else if (at && at.pin != null) out.fair = at.pin;
+      if (at === e && e.pin && e.pin.o != null && (e.l == null || Math.abs((e.pin.l ?? e.l) - e.l) < 1e-9)) out.fair = e.pin.o;   // no line: yes props (goal, double-double)
+      else if (at && at !== e && at.pin != null) out.fair = at.pin;
     }
     if (out.o == null && it.book === 'Kalshi' && D.L){                    // Kalshi's ladder rungs (ask + fee)
       const r = (D.L.rows || []).find(x => x.s === 'kalshi' && String(x.g) === String(it.gid) && x.k === it.kind && x.l != null && Math.abs(+x.l - +it.line) < 1e-9 && norm(x.n) === norm(it.name));
