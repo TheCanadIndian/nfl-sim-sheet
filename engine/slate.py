@@ -33,8 +33,8 @@ import parlays as PL
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(PL.OUT, "slate")
-MODEL = os.path.join(OUT, "model.json")
-SEED = os.path.join(OUT, "seed.json")
+MODEL = os.path.join(OUT, "meta", "model.json")          # meta/: out of reach of the */*.json day-file scans
+SEED = os.path.join(OUT, "meta", "seed.json")
 CARD_S, CARD_P = "Plus-money slate · straight", "Plus-money slate · parlay"
 ODDS = (250, 1000)                   # every leg's American price (owner: +250 or higher; +1000 cap: the NBA alt-line sink)
 EDGE = (.05, .60)
@@ -221,7 +221,7 @@ def learn():
               coef={k: round(v, 4) for k, v in coef.items()}, se={k: round(v, 4) for k, v in se.items()}, live=rec,
               history=(old.get("history") or [])[-59:] + [dict(date=dt.datetime.now(PL.ET).date().isoformat(), n_live=len(live), **{k: round(v, 3) for k, v in coef.items()})],
               record=record())
-    os.makedirs(OUT, exist_ok=True)
+    os.makedirs(os.path.dirname(MODEL), exist_ok=True)
     json.dump(st, open(MODEL, "w"), indent=0)
     print(f"slate model: {len(seed)} seed + {len(live)} live rows; coef " + ", ".join(f"{k} {v:+.2f}" for k, v in coef.items()) + f"; live {rec}")
 
