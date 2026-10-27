@@ -233,7 +233,7 @@
 })();
 /* GamblyBot (owner 2026-10-26: "use gambly bot to make the parlays under the parlay tab"; 2026-10-27: on every built parlay):
    every open parlay on any page -- Today's card and the other .dcp cards, payout / value-tag / NHL tables (table.atgp rows),
-   Best shot, the /parlays.html hub cards -- gets a button that opens Gambly's chat with the legs typed in (partner code last)
+   NHL pairs, Best shot, the /parlays.html hub cards -- gets a button that opens Gambly's chat with the legs typed in (partner code last)
    and also copies them, in case the chat opens empty. The viewer clicks it; nothing is clicked for them. */
 (function(){
   if (/[?&]freeze=1/.test(location.search) || /\/(weeks\/|\d{4}-\d\d-\d\d)/.test(location.pathname)) return;   // frozen / past pages
@@ -252,13 +252,13 @@
   const add = () => {
     for (const c of document.querySelectorAll('.dcp:not(.W):not(.L):not(.V), .hp:not(.W):not(.L):not(.V)')) put(c, liLegs(c));
     for (const c of document.querySelectorAll('.bestshot')) put(c.querySelector('.bsum') || c, liLegs(c));
-    for (const tr of document.querySelectorAll('table.atgp tbody tr:not(.slate)')) { const td = tr.querySelector('td.add') || tr.lastElementChild; if (td) put(td, rowLegs(tr)); }
+    for (const td of document.querySelectorAll('tbody tr:not(.slate) > td.add')) put(td, rowLegs(td.parentElement));   // payout / pair / combo tables
   };
   document.addEventListener('click', e => { const a = e.target.closest('a.gbot'); if (!a) return;
     try { navigator.clipboard.writeText(a.dataset.txt); } catch (err) {}
     a.classList.add('ok'); a.textContent = 'Opened · legs copied too'; setTimeout(() => { a.classList.remove('ok'); a.textContent = LAB; }, 4000); });
   const st = document.createElement('style');
-  st.textContent = `.gbot{display:inline-block;justify-self:start;font-size:12px;font-weight:700;color:var(--ink,#E8EEF1);text-decoration:none;border:1px solid var(--faint,#22313A);border-radius:999px;padding:3px 10px;margin-top:6px;white-space:nowrap;cursor:pointer}.gbot:hover{border-color:var(--muted,#95A6B0)}.gbot.ok{color:var(--good,#36D399);border-color:color-mix(in srgb,var(--good,#36D399) 50%,transparent)}td.add .gbot{display:table;margin-top:5px}.bsum .gbot{margin-top:0}`;
+  st.textContent = `a.gbot,a.gbot:visited{display:inline-block;justify-self:start;font-size:12px;font-weight:700;color:var(--ink,#E8EEF1)!important;text-decoration:none!important;border:1px solid var(--faint,#22313A)!important;border-radius:999px!important;padding:3px 10px!important;background:none!important;margin-top:6px;white-space:nowrap;cursor:pointer}a.gbot:hover{border-color:var(--muted,#95A6B0)}a.gbot.ok{color:var(--good,#36D399)!important;border-color:color-mix(in srgb,var(--good,#36D399) 50%,transparent)}td.add a.gbot{display:block;width:fit-content;margin-top:5px}.bsum a.gbot{margin-top:0}`;
   document.head.appendChild(st);
   let t = null; new MutationObserver(() => { clearTimeout(t); t = setTimeout(add, 50); }).observe(document.body, {childList: true, subtree: true}); add();
 })();
