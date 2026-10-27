@@ -1,87 +1,87 @@
 {
-"updated": "2026-10-27T04:21:13+00:00",
-"rows": 439,
-"live_rows": 133,
+"updated": "2026-10-27T04:36:23+00:00",
+"rows": 445,
+"live_rows": 139,
 "segments": [
 {
 "seg": "NHL",
-"n": 381,
-"ret": -0.1433,
+"n": 387,
+"ret": -0.1321,
 "h1": -0.1606,
-"h2": -0.1264,
-"z": -1.09,
+"h2": -0.1048,
+"z": -1.01,
 "status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 goals",
-"n": 368,
-"ret": -0.1524,
+"n": 373,
+"ret": -0.1439,
 "h1": -0.1606,
-"h2": -0.1437,
-"z": -1.12,
+"h2": -0.1267,
+"z": -1.07,
 "status": "Dropped"
 },
 {
 "seg": "NHL \u00b7 Novig",
-"n": 361,
-"ret": -0.1117,
+"n": 367,
+"ret": -0.1003,
 "h1": -0.1137,
-"h2": -0.1098,
-"z": -0.81,
+"h2": -0.0876,
+"z": -0.74,
 "status": "Watching"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 longshot",
-"n": 293,
-"ret": -0.1241,
+"n": 296,
+"ret": -0.1329,
 "h1": -0.1423,
-"h2": -0.1015,
-"z": -0.79,
+"h2": -0.1216,
+"z": -0.85,
 "status": "Watching"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 edge 5-10%",
-"n": 269,
-"ret": -0.2686,
+"n": 272,
+"ret": -0.2631,
 "h1": -0.3394,
-"h2": -0.1883,
-"z": -2.02,
+"h2": -0.1784,
+"z": -2.0,
 "status": "Dropped"
 },
 {
-"seg": "NHL \u00b7 goals \u00b7 edge 10-20%",
-"n": 87,
-"ret": 0.2664,
-"h1": 0.4926,
-"h2": 0.0455,
-"z": 0.63,
+"seg": "NHL \u00b7 no path",
+"n": 91,
+"ret": -0.0025,
+"h1": -0.671,
+"h2": 0.3963,
+"z": -0.01,
 "status": "Watching"
 },
 {
-"seg": "NHL \u00b7 no path",
-"n": 85,
-"ret": -0.0439,
-"h1": -0.671,
-"h2": 0.3741,
-"z": -0.21,
+"seg": "NHL \u00b7 goals \u00b7 edge 10-20%",
+"n": 89,
+"ret": 0.2796,
+"h1": 0.4926,
+"h2": 0.0804,
+"z": 0.68,
 "status": "Watching"
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 plus money",
-"n": 74,
-"ret": -0.253,
+"n": 76,
+"ret": -0.1753,
 "h1": -0.2704,
-"h2": -0.243,
-"z": -1.56,
-"status": "Dropped"
+"h2": -0.1229,
+"z": -1.0,
+"status": "Watching"
 },
 {
 "seg": "NHL \u00b7 goalie",
-"n": 58,
-"ret": -0.1795,
+"n": 62,
+"ret": -0.1387,
 "h1": -0.5835,
-"h2": 0.086,
-"z": -0.85,
+"h2": 0.1236,
+"z": -0.69,
 "status": "Watching"
 },
 {
@@ -95,11 +95,20 @@
 },
 {
 "seg": "NHL \u00b7 pp1",
-"n": 52,
-"ret": 0.1411,
+"n": 54,
+"ret": 0.2065,
 "h1": -0.6094,
-"h2": 0.5385,
-"z": 0.53,
+"h2": 0.6144,
+"z": 0.78,
+"status": "Watching"
+},
+{
+"seg": "NHL \u00b7 1 reason",
+"n": 45,
+"ret": 0.124,
+"h1": -0.6094,
+"h2": 0.5286,
+"z": 0.4,
 "status": "Watching"
 },
 {
@@ -112,21 +121,12 @@
 "status": "Watching"
 },
 {
-"seg": "NHL \u00b7 1 reason",
-"n": 43,
-"ret": 0.1763,
-"h1": -0.6094,
-"h2": 0.6418,
-"z": 0.56,
-"status": "Watching"
-},
-{
 "seg": "NHL \u00b7 2 reasons",
-"n": 27,
-"ret": -0.2122,
-"h1": -0.2189,
-"h2": -0.2089,
-"z": -0.88,
+"n": 29,
+"ret": -0.0662,
+"h1": -0.3248,
+"h2": 0.6125,
+"z": -0.25,
 "status": "Learning"
 },
 {
@@ -140,11 +140,11 @@
 },
 {
 "seg": "NHL \u00b7 0 reasons",
-"n": 20,
-"ret": -0.1747,
+"n": 22,
+"ret": -0.0815,
 "h1": -0.8394,
-"h2": 0.49,
-"z": -0.32,
+"h2": 0.55,
+"z": -0.16,
 "status": "Learning"
 },
 {
@@ -301,30 +301,30 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 3+ shots",
+"n": 10,
+"ret": 0.09,
+"h1": -0.3943,
+"h2": 1.22,
+"z": 0.25,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 3+ shots \u00b7 edge 5-10%",
+"n": 10,
+"ret": 0.09,
+"h1": -0.3943,
+"h2": 1.22,
+"z": 0.25,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 3 reasons",
 "n": 9,
 "ret": 0.1611,
 "h1": -1.0,
 "h2": 0.7417,
 "z": 0.25,
-"status": "Learning"
-},
-{
-"seg": "NHL \u00b7 3+ shots",
-"n": 9,
-"ret": -0.0233,
-"h1": -0.3943,
-"h2": 1.275,
-"z": -0.06,
-"status": "Learning"
-},
-{
-"seg": "NHL \u00b7 3+ shots \u00b7 edge 5-10%",
-"n": 9,
-"ret": -0.0233,
-"h1": -0.3943,
-"h2": 1.275,
-"z": -0.06,
 "status": "Learning"
 },
 {
@@ -337,21 +337,21 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
+"n": 8,
+"ret": 0.0463,
+"h1": -1.0,
+"h2": 0.395,
+"z": 0.12,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 rec yds \u00b7 edge 5-10%",
 "n": 8,
 "ret": -0.0371,
 "h1": -0.2293,
 "h2": 0.2833,
 "z": -0.11,
-"status": "Learning"
-},
-{
-"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
-"n": 7,
-"ret": -0.1057,
-"h1": -1.0,
-"h2": 0.252,
-"z": -0.25,
 "status": "Learning"
 },
 {
@@ -707,6 +707,14 @@
 "now": "Watching",
 "n": 49,
 "ret": -0.1682
+},
+{
+"date": "2026-10-27",
+"seg": "NHL \u00b7 goals \u00b7 plus money",
+"was": "Dropped",
+"now": "Watching",
+"n": 76,
+"ret": -0.1753
 }
 ],
 "builder": {
