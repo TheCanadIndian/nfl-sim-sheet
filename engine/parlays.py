@@ -132,8 +132,9 @@ def freeze():
                 lp = LB.build(sport, snap.get("cands"), now)
                 cp = LB.build_confluence(sport, snap.get("cands"), now)          # owner 2026-10-25: run alongside Today's card
                 mp = LB.build_moveknee(sport, snap.get("cands"), now)            # NBA: sharp move up -> one rung above the main line
-                snap["parlays"] = snap.get("parlays", []) + lp + cp + mp
-                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays")
+                sw = LB.build_sweet(sport, snap.get("cands"), now)               # owner 2026-10-27: edge 5-40% legs priced 15-45%
+                snap["parlays"] = snap.get("parlays", []) + lp + cp + mp + sw
+                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays, {len(sw)} sweet-spot parlays")
             except Exception as e:                                   # noqa: BLE001
                 print(f"parlays {sport}: learning builder skipped ({type(e).__name__}: {e})")
             by = {}
@@ -202,7 +203,7 @@ CARD_BOOKS = {"Novig", "Kalshi", "Hard Rock"}           # the owner's books: eve
 CARD_DISCOUNT = {"nhl": .85}
 
 
-BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays")       # builder.py's cards: tracked on their own, never Today's card
+BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays", "Sweet-spot edge parlays")       # builder.py's cards: tracked on their own, never Today's card
 
 
 def _legkey(L):
@@ -448,7 +449,7 @@ def hub_data():
         st = json.load(open(os.path.join(OUT, "learn", "state.json")))
         segs = st.get("segments", [])
         show = [x for x in segs if x["status"] in ("Proven", "Dropped")] + sorted([x for x in segs if x["status"] == "Watching"], key=lambda x: -x["n"])[:6]
-        L = dict(builder=st.get("builder"), conf=st.get("confluence"), mk=st.get("moveknee"), rows=st.get("rows"), live=st.get("live_rows"), segs=show[:16], changes=st.get("changes", [])[-6:], updated=st.get("updated"))
+        L = dict(builder=st.get("builder"), conf=st.get("confluence"), mk=st.get("moveknee"), sw=st.get("sweet"), rows=st.get("rows"), live=st.get("live_rows"), segs=show[:16], changes=st.get("changes", [])[-6:], updated=st.get("updated"))
     except (OSError, ValueError):
         pass
     return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports, learn=L)
@@ -527,6 +528,14 @@ function render(){
       (CNF.length ? `<div class="hg">${CNF.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">No legs qualify yet today: each needs four or more things agreeing, a price between about −120 and +300 at your books, and a 0-15% edge.</p>')
       + `<details class="how"><summary>How it works</summary><p class="note">Legs where several things agree: our reasons (usage, rotation, matchup, game script / game), our model above the market’s fair price, and the market’s own signals (Pinnacle or our sharp consensus moving the prop up, a Value or LC tag, a ladder knee). A leg needs four or more; a reason the learning record has dropped counts zero, a proven one counts double. Only legs priced about −120 to +300 with a 0-15% edge (longshot legs hit 10% vs 20% priced, and big claimed edges hit 24% vs 40%). The payout comes from stacking near-fair legs: a 2-leg, a 3-leg and a 4-5 leg longshot paying 20-100x, one leg per game. The chance shown is the market’s fair price, not ours. Tracked beside Today’s card; it stays Experimental until 60+ graded parlays are positive in both halves.</p></details>`);
   }
+  const SWP = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Sweet-spot edge parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  {
+    const B = (D.learn && D.learn.sw) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    html += sec(`Sweet-spot edge parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
+      (SWP.length ? `<div class="hg">${SWP.map(x => card(x.q, x.s.sport, SP[x.s.sport])).join('')}</div>` : '<p class="note">No legs qualify yet today: each needs a 5-40% edge at your books on a leg priced about −120 to +570. They show up once the sharp books price the props, mostly a few hours before the games.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Every over at Hard Rock, Novig and Kalshi, main and alternate lines, where our chance (our number blended with the sharp books’ fair price at that line, the site’s usual weights) beats the best price by 5-40%, on legs priced about −120 to +570. One leg per game, its biggest edge; a 2-leg, a 3-leg and a second 2-leg. Why: of every over priced at your books Oct 12-26 (24,944 graded legs, the price 1-3 hours before the start), all legs together lost 29%; this edge returned +16% on 319 legs, positive in both halves, and +23% on the 164 priced in this band. The same edge without our number lost 12%, and chasing line moves lost too. The price band was chosen from that same data, so this stays Experimental until its own graded record holds up.</p></details>`);
+  }
   const MKP = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Sharp move parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
   if (MKP.length || (D.learn && D.learn.mk && D.learn.mk.n)){
     const B = (D.learn && D.learn.mk) || {n: 0};
@@ -542,7 +551,7 @@ function render(){
   if (multi && multi.cards.length){ const qs = multi.cards.flatMap(c => c.parlays);
     more.push(`<details class="hc"><summary>Multisport all-day longshots<span>${qs.length}</span></summary><div class="hg">${qs.map(q => card(q, 'multi', '')).join('')}</div></details>`); }
   for (const s of S.filter(s => s.sport !== 'multi'))
-    for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move) parlays/.test(c.card)))
+    for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge) parlays/.test(c.card)))
       more.push(`<details class="hc"><summary>${SP[s.sport]} · ${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`);
   if (more.length) html += sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
   if (!D.sports.length) html += '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>';
