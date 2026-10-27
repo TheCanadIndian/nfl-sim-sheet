@@ -437,7 +437,7 @@ def hub_data():
     today = dt.datetime.now(ET).date().isoformat()
     sports = []
     for sport in ("nfl", "nhl", "nba", "multi", "slate"):
-        fs = sorted(f for f in glob.glob(os.path.join(OUT, sport, "*.json")) if os.path.basename(f)[:10] >= today)
+        fs = sorted(f for f in glob.glob(os.path.join(OUT, sport, "????-??-??.json")) if os.path.basename(f)[:10] >= today)
         if not fs:
             continue
         d = json.load(open(fs[0]))
@@ -460,7 +460,7 @@ def hub_data():
         pass
     SLM = None
     try:                                                            # the plus-money slate's learning model (slate.py)
-        m = json.load(open(os.path.join(OUT, "slate", "model.json")))
+        m = json.load(open(os.path.join(OUT, "slate", "meta", "model.json")))
         SLM = dict(coef=m.get("coef"), se=m.get("se"), live=m.get("live"), record=m.get("record"), n_seed=m.get("n_seed"), n_live=m.get("n_live"), updated=m.get("updated"))
     except (OSError, ValueError):
         pass
@@ -746,7 +746,7 @@ def settle(L, g):
 
 def grade():
     today = dt.datetime.now(ET).date()
-    for fp in sorted(glob.glob(os.path.join(OUT, "*", "*.json"))):
+    for fp in sorted(glob.glob(os.path.join(OUT, "*", "????-??-??.json"))):
         if os.path.basename(os.path.dirname(fp)) == "learn":          # the learning builder's own files (builder.py)
             continue
         d = json.load(open(fp))

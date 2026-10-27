@@ -165,7 +165,7 @@ def seg_stats(rows):
 
 def builder_record(card=CARD):
     ps = []
-    for fp in glob.glob(os.path.join(PL.OUT, "*", "*.json")):
+    for fp in glob.glob(os.path.join(PL.OUT, "*", "????-??-??.json")):
         if os.sep + "learn" + os.sep in fp:
             continue
         d = json.load(open(fp))

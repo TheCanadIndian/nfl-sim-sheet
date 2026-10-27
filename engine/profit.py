@@ -736,7 +736,7 @@ def page_data():
         if st["verdict"] in ("proven", "promising"):
             for e, p_, c_ in zip(y, pnl, clv):
                 rows.append(dict(sport=sp_, cat=WF_CAT, date=_et_day(e.get("start") or e["first"]), pnl=p_, clv=c_))
-    for f in glob.glob(os.path.join(HERE, "parlays", "*", "*.json")):
+    for f in glob.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
         if os.path.basename(os.path.dirname(f)) == "learn":           # the learning builder's own files (builder.py)
             continue
         try:
@@ -879,7 +879,7 @@ def feed_data():
         items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}",
                           book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
     legs = []
-    for f in _g.glob(os.path.join(HERE, "parlays", "*", "*.json")):
+    for f in _g.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
         if os.path.basename(os.path.dirname(f)) == "learn":           # the learning builder's own files (builder.py)
             continue
         try:
