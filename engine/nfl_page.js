@@ -175,7 +175,7 @@ const legLine = (L, script, n) => `<li${n ? ` value="${n}"` : ''}>${esc(L.lab)}$
 function gamblyLink(legs, k, game){
   const ls = legs.slice(0, k).map(L => L.lab).join(', ');
   const prompt = `Build a ${k}-leg ${game ? 'same game parlay for ' + game : 'parlay'}: ${ls}`;
-  return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt, autoSubmit: '1'}).toString();
+  return 'https://gambly.com/chat?' + new URLSearchParams({entry: 'ask-gambly', prompt, autoSubmit: '1'}).toString() + '&utm_campaign=thecanadindian';
 }
 // a card's legs as slip legs (player key looked up on this page; game legs read the saved margin / total)
 function cardSlipLegs(legs, gid){

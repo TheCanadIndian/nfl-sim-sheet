@@ -183,7 +183,6 @@ a.pc.nm,a.pc.nm b{color:var(--muted)}
 .dch .slot.ls{background:color-mix(in srgb,#F2C14E 20%,transparent);color:#F2C14E}.dch .st{margin-left:auto;font-weight:700}.dch .st.W{color:var(--good)}.dch .st.L{color:var(--bad)}
 .dcp ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13.5px}.dcp li{display:flex;gap:8px;align-items:baseline}.dcp li span{margin-left:auto;white-space:nowrap;font-size:12.5px;color:var(--muted)}
 .dcp li i{font-style:normal;width:12px;font-weight:800}.dcp li i.W{color:var(--good)}.dcp li i.L{color:var(--bad)}
-.gbot{justify-self:start;font:inherit;font-size:12px;font-weight:700;color:var(--text);background:none;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;cursor:pointer}.gbot:hover{border-color:var(--muted)}.gbot.ok{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .dcs{display:flex;flex-wrap:wrap;gap:4px 12px;border-top:1px solid var(--faint);padding-top:6px;font-size:13px}.dcs b{font-family:var(--display);font-size:16px}
 .pinv b{color:var(--good);font-weight:800}.pinv.neg b{color:var(--muted);font-weight:600}
 .pev .mine{color:var(--good);font-weight:700}.pev h3 .mine{font-weight:600}
@@ -1231,23 +1230,4 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     }).catch(() => {});
   }
   if (sport){ load(); loadBooks(); timer = setInterval(() => { load(); loadBooks(); }, 120000); }
-  // GamblyBot (owner 2026-10-26: "use gambly bot to make the parlays under the parlay tab"): every open parlay card gets a
-  // button that copies its legs as text and opens Gambly's chat (partner code) to paste them; Gambly has no multi-leg link.
-  // The viewer clicks it; nothing is clicked for them.
-  if (!FREEZE){
-    const GURL = 'https://www.gambly.com/chat?utm_campaign=thecanadindian';
-    const addBots = () => { for (const c of document.querySelectorAll('.dcp:not(.W):not(.L):not(.V)')){ if (c.querySelector('.gbot')) continue;
-      const legs = [...c.querySelectorAll('ul > li')].filter(li => li.querySelector('b') && !li.classList.contains('pth') && !li.classList.contains('lwhy'));
-      if (legs.length < 2) continue;
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'gbot'; b.textContent = 'Build in GamblyBot ↗';
-      b.title = 'Copies these legs and opens Gambly: paste them into the chat to get the bet slip'; c.appendChild(b); } };
-    document.addEventListener('click', e => { const b = e.target.closest('.gbot'); if (!b) return;
-      const c = b.closest('.dcp'), legs = [...c.querySelectorAll('ul > li')].filter(li => li.querySelector('b') && !li.classList.contains('pth') && !li.classList.contains('lwhy'));
-      const txt = `Build this ${legs.length}-leg parlay:\n` + legs.map((li, i) => { const sp = li.querySelector('span');
-        return `${i + 1}. ${li.querySelector('b').textContent.trim()}${sp && sp.textContent.trim() ? ' (' + sp.textContent.trim().replace(/\s+/g, ' ') + ')' : ''}`; }).join('\n');
-      try { navigator.clipboard.writeText(txt); } catch (err) {}
-      window.open(GURL, '_blank', 'noopener');
-      b.classList.add('ok'); b.textContent = 'Copied: paste into the chat'; setTimeout(() => { b.classList.remove('ok'); b.textContent = 'Build in GamblyBot ↗'; }, 4000); });
-    new MutationObserver(() => addBots()).observe(document.body, {childList: true, subtree: true}); addBots();
-  }
 })();
