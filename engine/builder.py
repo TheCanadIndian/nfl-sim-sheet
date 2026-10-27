@@ -202,7 +202,8 @@ def learn():
             changes.append(dict(date=today, seg=s["seg"], was=prev[s["seg"]], now=s["status"], n=s["n"], ret=s["ret"]))
     st = dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), rows=len(rows),
               live_rows=sum(1 for r in rows if r.get("f") is not None), segments=segs, changes=changes[-60:], builder=builder_record(),
-              confluence=builder_record(CONF_CARD), moveknee=builder_record(MK_CARD))
+              confluence=builder_record(CONF_CARD), moveknee=builder_record(MK_CARD),
+              sweet=builder_record(SW_CARD))
     os.makedirs(OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=0)
     print(f"builder: {len(rows)} graded value props ({st['live_rows']} with reasons), {sum(s['status'] == 'Proven' for s in segs)} proven, "
@@ -462,6 +463,84 @@ def moveknee_parlays(legs):
         per_game.setdefault(L["gid"], L)
     pool = list(per_game.values())
     mk = lambda ls, tier: dict(card=MK_CARD, tier=tier, legs=ls, p=round(math.prod(L["fair"] for L in ls), 5), d=round(math.prod(PL.dec(L["price"]) for L in ls), 3))
+    out = []
+    if len(pool) >= 2:
+        out.append(mk(pool[:2], "2 legs"))
+    if len(pool) >= 3:
+        out.append(mk(pool[:3], "3 legs"))
+    if len(pool) >= 5:
+        out.append(mk(pool[2:4], "2 legs"))
+    return out
+
+
+# ---------------------------------------------------------------- 7. sweet-spot edge parlays
+# Owner 2026-10-27: "start tracking and display the card", after research/parlay_reasoning*.py (every over at the owner's
+# books, main + alt lines, Oct 12-26, 24,944 graded legs at the last quote 1-3 h before the start): every leg -29%; the
+# site's market-anchored edge 5-40% +16% on 319 (both halves positive); priced 15-45% (about -120..+570) +23% on 164 --
+# that band was picked from the same data, so EXPERIMENTAL until its own record says otherwise. The market's edge alone
+# (no model) lost 12%: the chance here is the site's (WPIN on ours + the sharp fair at that line), built from the props
+# file exactly as the study did. Main and alt lines; best of Hard Rock / Novig / Kalshi (Unabated's Kalshi price, fee in).
+SW_CARD = "Sweet-spot edge parlays (experimental)"
+SW_EDGE = (.05, .40)
+SW_Q = (.15, .45)                    # the leg's price as implied chance
+SW_W = {"nba": .1, "nfl": .25, "nhl": .5}                      # weight on our number (mkt.js WPIN / the screener)
+SW_WK = {("nhl", "goal"): .2, ("nfl", "td"): 0.0}
+SW_BOOKS = ("Hard Rock", "Novig", "Kalshi")
+
+
+def sweet_legs(sport, cands, now):
+    try:
+        P = json.load(open(os.path.join(PL.SITE, "markets", f"props_{sport}.json")))
+        S = json.load(open(os.path.join(PL.SITE, "markets", "schedule.json")))
+    except (OSError, ValueError):
+        return []
+    start = {str(g["game"]): g["start"] for g in S.get("games", []) if g.get("sport") == sport}
+    disp = {(str(c["gid"]), c["name"]): c.get("lab") for c in cands or [] if c.get("lab")}
+    for c in cands or []:
+        start.setdefault(str(c["gid"]), c.get("start"))
+    legs = []
+    for gid, G in (P.get("props") or {}).items():
+        st = start.get(str(gid))
+        if not st or PL.when(st) <= now:
+            continue
+        for nm, ks in G.items():
+            for k, e in ks.items():
+                ml = e.get("l") if e.get("l") is not None else .5
+                pin = e.get("pin") or {}
+                lines = [(ml, e.get("o") or {}, pin.get("o") if pin.get("o") is not None and pin.get("l", ml) == ml else None, e.get("p"))]
+                for l, a in (e.get("a") or {}).items():
+                    try:
+                        if float(l) != ml:
+                            lines.append((float(l), a.get("o") or {}, a.get("pin"), a.get("p")))
+                    except ValueError:
+                        pass
+                w = SW_WK.get((sport, k), SW_W.get(sport, .5))
+                for l, o, fair, ours in lines:
+                    if fair is None:
+                        continue
+                    bo = [(PL.dec(v[0]), b, v[0]) for b, v in o.items() if b in SW_BOOKS and isinstance(v, list) and v and v[0] is not None]
+                    if not bo:
+                        continue
+                    d, book, price = max(bo)
+                    q = w * ours + (1 - w) * fair if ours is not None else fair
+                    edge = q * d - 1
+                    if not (SW_EDGE[0] <= edge <= SW_EDGE[1] and SW_Q[0] <= 1 / d <= SW_Q[1]):
+                        continue
+                    kind = "sog" if k.startswith("sog") else k
+                    who = disp.get((str(gid), nm)) or " ".join(x.capitalize() for x in nm.split())
+                    what = "anytime TD" if k == "td" else "to score" if k == "goal" else STAT.get(k, k) if k.startswith("sog") else f"over {l:g} {STAT.get(k, k)}"
+                    legs.append(dict(gid=str(gid), start=st, kind=kind, side="o", line=l, name=nm, lab=f"{who} {what}", p=round(q, 4), price=price,
+                                     book=book, sport=sport, edge=round(edge, 4), fair=round(fair, 4), main=l == ml))
+    return legs
+
+
+def build_sweet(sport, cands, now):
+    """One leg per game (its best edge), then a 2-leg, a 3-leg and a second 2-leg (a leg in at most 2)."""
+    best = {}
+    for L in sorted(sweet_legs(sport, cands, now), key=lambda L: -L["edge"]):
+        best.setdefault(L["gid"], L)
+    pool = list(best.values())
+    mk = lambda ls, tier: dict(card=SW_CARD, tier=tier, legs=ls, p=round(math.prod(L["p"] for L in ls), 5), d=round(math.prod(PL.dec(L["price"]) for L in ls), 3))
     out = []
     if len(pool) >= 2:
         out.append(mk(pool[:2], "2 legs"))
