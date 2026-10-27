@@ -49,6 +49,18 @@
   if (!S.v3){ S.alts = true; S.v3 = 1; }
   const save = () => { try { localStorage.setItem('simscreen-v2', JSON.stringify(S)); } catch (e) {} };
   let ROWS = [], FETCHED = {}, SHOW = 60;
+  // saved filter sets (owner 2026-10-27: "save specific filters for the screener"): named snapshots of every filter, this
+  // browser only (localStorage simscreen-presets-v1); one tap applies, × deletes, the one matching the current filters is lit
+  const FKEYS = Object.keys(DEF);
+  let PRE = [], NAMING = false;
+  try { PRE = JSON.parse(localStorage.getItem('simscreen-presets-v1') || '[]') || []; } catch (e) {}
+  const savePre = () => { try { localStorage.setItem('simscreen-presets-v1', JSON.stringify(PRE)); } catch (e) {} };
+  const pick = o => Object.fromEntries(FKEYS.map(k => [k, o[k] ?? DEF[k]]));
+  const same = f => FKEYS.every(k => (f[k] ?? DEF[k]) === S[k]);
+  function suggest(){                                                         // a default name from what's switched on
+    const on = {tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', knee: 'Knees', path: 'Path legs', open: 'Openers', softm: 'Soft', soon: 'Next 6h'};
+    const bits = [S.sport === 'all' ? '' : SP[S.sport], ...Object.keys(on).filter(k => S[k]).map(k => on[k]), S.edge > -99 ? S.edge + '%+' : '', S.stat !== 'all' ? (STAT[S.stat] || S.stat) : '', S.price !== 'all' ? PRICE[S.price][2] : ''].filter(Boolean);
+    return bits.join(' · ').slice(0, 40) || 'My filters'; }
 
   // ---------------------------------------------------------------- data
   const link = (v, partner) => { const u = v && v[1]; if (!u) return null; if (String(u).startsWith('http')) return u;
@@ -199,7 +211,10 @@
         <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
           <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.fair != null ? pc(b.fair) : '—'}</span></div>
         ${b.u ? `<a class="sc-px" href="${esc(b.u)}" target="_blank" rel="noopener">${priceHtml}</a>` : `<span class="sc-px nl">${priceHtml}</span>`}</div>`; };
-    el.innerHTML = `<div class="sc-bar">
+    const preHtml = `<div class="sc-pre"><span class="sc-l">Saved</span>${PRE.map((f, i) => `<span class="sc-pc${same(f.f) ? ' on' : ''}"><button class="sc-pa" data-i="${i}" aria-pressed="${same(f.f)}">${esc(f.n)}</button><button class="sc-px2" data-i="${i}" aria-label="Delete ${esc(f.n)}" title="Delete">×</button></span>`).join('')}
+        ${NAMING ? `<span class="sc-name"><input id="sc-pn" maxlength="40" value="${esc(suggest())}" aria-label="Name for these filters"><button id="sc-ps" class="sc-chip on">Save</button><button id="sc-pc" class="sc-reset">Cancel</button></span>`
+                 : PRE.some(f => same(f.f)) ? '' : `<button id="sc-pnew" class="sc-chip sc-add">+ Save these filters</button>`}</div>`;
+    el.innerHTML = preHtml + `<div class="sc-bar">
         <div class="sc-grp">${chip('sport', 'all', 'All', S.sport === 'all')}${SPORTS.map(s => chip('sport', s, SP[s], S.sport === s)).join('')}</div>
         <div class="sc-grp">${chip('books', 'mine', 'My books', S.books === 'mine')}${chip('books', 'all', 'All books', S.books === 'all')}</div>
         <div class="sc-grp"><span class="sc-l">Edge</span>${[[-100, 'Any'], [0, '0%+'], [3, '3%+'], [5, '5%+'], [10, '10%+']].map(([v, l]) => chip('edge', v, l, +S.edge === v)).join('')}</div>
@@ -214,14 +229,27 @@
       ${V.length > SHOW ? `<button class="sc-more" id="sc-more">Show ${Math.min(60, V.length - SHOW)} more</button>` : ''}`;
   }
   document.addEventListener('click', e => {
-    const c = e.target.closest('.sc-chip');
+    const c = e.target.closest('.sc-chip[data-k]');
     if (c){ const k = c.dataset.k, v = c.dataset.v;
       if (k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'knee' || k === 'open' || k === 'path' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }
+    const pa = e.target.closest('.sc-pa'); if (pa){ S = {...S, ...pick(PRE[+pa.dataset.i].f)}; SHOW = 60; save(); render(); return; }
+    const px = e.target.closest('.sc-px2'); if (px){ PRE.splice(+px.dataset.i, 1); savePre(); render(); return; }
+    if (e.target.id === 'sc-pnew'){ NAMING = true; render(); const i = document.getElementById('sc-pn'); if (i){ i.focus(); i.select(); } return; }
+    if (e.target.id === 'sc-pc'){ NAMING = false; render(); return; }
+    if (e.target.id === 'sc-ps'){ savePreset(); return; }
     if (e.target.id === 'sc-reset'){ S = {...DEF}; SHOW = 60; save(); render(); }
   });
+  function savePreset(){
+    const i = document.getElementById('sc-pn'), n = ((i && i.value) || '').trim() || suggest();
+    const j = PRE.findIndex(f => f.n === n);                                  // same name: replaces it
+    if (j >= 0) PRE[j] = {n, f: pick(S)}; else PRE.push({n, f: pick(S)});
+    if (PRE.length > 12) PRE = PRE.slice(-12);
+    NAMING = false; savePre(); render(); }
+  document.addEventListener('keydown', e => { if (e.target.id !== 'sc-pn') return;
+    if (e.key === 'Enter'){ e.preventDefault(); savePreset(); } else if (e.key === 'Escape'){ NAMING = false; render(); } });
   document.addEventListener('change', e => {
     if (e.target.id === 'sc-stat'){ S.stat = e.target.value; save(); render(); }
     if (e.target.id === 'sc-sort'){ S.sort = e.target.value; save(); render(); }
