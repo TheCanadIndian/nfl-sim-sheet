@@ -418,6 +418,8 @@ def _tag_leg(sport, b):
         return dict(kind="goal", side="o", line=.5) if b == "goal" else None
     if b == "TD":
         return dict(kind="td", side="o", line=.5)
+    if b in ("double-double", "triple-double"):
+        return dict(kind="dd" if b == "double-double" else "tdbl", side="o", line=.5)
     parts = b.split(" ", 2)
     if len(parts) == 3 and parts[0] in ("over", "under") and parts[2] in LAB:
         return dict(kind=LAB[parts[2]], side="o" if parts[0] == "over" else "u", line=float(parts[1]))
@@ -526,6 +528,9 @@ def tag_label(e):
         return "Early opener value (experimental)"
     if e.get("src") == "dry":
         return "Goal drought 3+ games (experimental)"
+    if e.get("src") == "ddtd":
+        w = "Double-double" if e.get("bet") == "double-double" else "Triple-double"
+        return f"{w}: every Yes at your books (baseline)" if e.get("grp") == "all" else f"{w} edge 5%+ (experimental)"
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
 
@@ -629,6 +634,32 @@ def tags():
                     e = log.setdefault(f"dry|{sport}|{gid}|{nm}", dict(sport=sport, src="dry", gid=gid, name=nm, bet="goal", book=bk, o=o,
                                                                      first=now.isoformat(), p=fair, m=fair, start=st, dry=n))
                     e.setdefault("start", st)
+        # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
+        # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
+        # sighting with an edge 5-40% (chance = 5% ours + 95% the books' fair, the screener's NBA weight)
+        if sport == "nba":
+            try:
+                DT = json.load(open(os.path.join(site, "markets", "ddtd_nba.json"))).get("props", {})
+            except (OSError, ValueError):
+                DT = {}
+            for gid, ps in DT.items():
+                st = starts.get(str(gid))
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, ks in ps.items():
+                    for kind, x in ks.items():
+                        fair = (x.get("pin") or {}).get("o")
+                        bo = [(dec(v[0]), b, v[0]) for b, v in (x.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                        if fair is None or not bo:
+                            continue
+                        _, bk, o = max(bo)
+                        bet = "double-double" if kind == "dd" else "triple-double"
+                        q = .05 * x["p"] + .95 * fair if x.get("p") is not None else fair
+                        e = log.setdefault(f"ddtd|all|{gid}|{nm}|{kind}", dict(sport=sport, src="ddtd", grp="all", gid=gid, name=nm, bet=bet, first=now.isoformat(), start=st))
+                        e.update(book=bk, o=o, p=round(q, 4), m=fair)                    # latest pregame price
+                        if .05 <= q * dec(o) - 1 <= .40:
+                            log.setdefault(f"ddtd|edge|{gid}|{nm}|{kind}", dict(sport=sport, src="ddtd", grp="edge", gid=gid, name=nm, bet=bet, book=bk, o=o,
+                                                                                first=now.isoformat(), p=round(q, 4), m=fair, ours=x.get("p"), start=st))
         # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
         for gid, tg in (FL.get("lc") or {}).items():
             st = starts.get(str(gid))
@@ -873,7 +904,7 @@ def feed_data():
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         d0 = _et_day(e.get("start") or e["first"])
-        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under"):
+        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all":
             continue
         dd = dec(e["o"])
         items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}",
