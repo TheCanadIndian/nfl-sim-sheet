@@ -1,5 +1,5 @@
 {
-"updated": "2026-10-28T06:51:27+00:00",
+"updated": "2026-10-28T07:06:18+00:00",
 "rows": 486,
 "live_rows": 180,
 "segments": [
@@ -166,6 +166,33 @@
 "status": "Learning"
 },
 {
+"seg": "NFL \u00b7 fits a path",
+"n": 17,
+"ret": -0.4064,
+"h1": -0.6209,
+"h2": -0.0133,
+"z": -1.63,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 usage",
+"n": 17,
+"ret": -0.4176,
+"h1": -0.6683,
+"h2": 0.1841,
+"z": -1.83,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 Kalshi",
+"n": 17,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": -10.67,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 fits a path",
 "n": 17,
 "ret": 0.0318,
@@ -184,33 +211,6 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 Kalshi",
-"n": 17,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
-"z": -10.67,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 usage",
-"n": 17,
-"ret": -0.4176,
-"h1": -0.6683,
-"h2": 0.1841,
-"z": -1.83,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 fits a path",
-"n": 17,
-"ret": -0.4064,
-"h1": -0.6209,
-"h2": -0.0133,
-"z": -1.63,
-"status": "Learning"
-},
-{
 "seg": "NFL \u00b7 no path",
 "n": 16,
 "ret": -0.0711,
@@ -220,21 +220,21 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 goals \u00b7 edge 20-40%",
-"n": 14,
-"ret": -0.6429,
-"h1": -1.0,
-"h2": -0.5,
-"z": -2.14,
-"status": "Learning"
-},
-{
 "seg": "NFL \u00b7 anytime TD",
 "n": 14,
 "ret": -0.7021,
 "h1": -1.0,
 "h2": -0.6792,
 "z": -2.13,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 goals \u00b7 edge 20-40%",
+"n": 14,
+"ret": -0.6429,
+"h1": -1.0,
+"h2": -0.5,
+"z": -2.14,
 "status": "Learning"
 },
 {
@@ -256,12 +256,21 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 3 reasons",
+"seg": "NFL \u00b7 rec yds",
 "n": 12,
-"ret": -0.1292,
-"h1": -1.0,
-"h2": 0.3063,
-"z": -0.27,
+"ret": 0.1321,
+"h1": -0.041,
+"h2": 0.3051,
+"z": 0.48,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 rec yds \u00b7 coin flip",
+"n": 12,
+"ret": 0.1321,
+"h1": -0.041,
+"h2": 0.3051,
+"z": 0.48,
 "status": "Learning"
 },
 {
@@ -283,30 +292,12 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 rec yds",
+"seg": "NHL \u00b7 3 reasons",
 "n": 12,
-"ret": 0.1321,
-"h1": -0.041,
-"h2": 0.3051,
-"z": 0.48,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 rec yds \u00b7 coin flip",
-"n": 12,
-"ret": 0.1321,
-"h1": -0.041,
-"h2": 0.3051,
-"z": 0.48,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 1 reason",
-"n": 11,
-"ret": -0.6381,
-"h1": -0.6381,
-"h2": null,
-"z": -1.88,
+"ret": -0.1292,
+"h1": -1.0,
+"h2": 0.3063,
+"z": -0.27,
 "status": "Learning"
 },
 {
@@ -328,12 +319,12 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
-"n": 9,
-"ret": 0.1744,
-"h1": -0.2933,
-"h2": 1.11,
-"z": 0.47,
+"seg": "NFL \u00b7 1 reason",
+"n": 11,
+"ret": -0.6381,
+"h1": -0.6381,
+"h2": null,
+"z": -1.88,
 "status": "Learning"
 },
 {
@@ -346,21 +337,21 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
+"n": 9,
+"ret": 0.1744,
+"h1": -0.2933,
+"h2": 1.11,
+"z": 0.47,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 rec yds \u00b7 edge 5-10%",
 "n": 8,
 "ret": -0.0371,
 "h1": -0.2293,
 "h2": 0.2833,
 "z": -0.11,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 0 reasons",
-"n": 7,
-"ret": 0.5546,
-"h1": -1.0,
-"h2": 0.8137,
-"z": 0.85,
 "status": "Learning"
 },
 {
@@ -373,12 +364,12 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 2+ shots",
-"n": 6,
-"ret": 0.2558,
-"h1": 0.8884,
-"h2": -0.3768,
-"z": 0.78,
+"seg": "NFL \u00b7 0 reasons",
+"n": 7,
+"ret": 0.5546,
+"h1": -1.0,
+"h2": 0.8137,
+"z": 0.85,
 "status": "Learning"
 },
 {
@@ -400,6 +391,15 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 2+ shots",
+"n": 6,
+"ret": 0.2558,
+"h1": 0.8884,
+"h2": -0.3768,
+"z": 0.78,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 2+ shots \u00b7 edge 5-10%",
 "n": 5,
 "ret": 0.0769,
@@ -418,12 +418,12 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 rec yds \u00b7 edge 10-20%",
+"seg": "NFL \u00b7 Kalshi",
 "n": 4,
-"ret": 0.4705,
-"h1": 0.9009,
-"h2": 0.327,
-"z": 0.72,
+"ret": 0.96,
+"h1": 1.0348,
+"h2": 0.8852,
+"z": 4.86,
 "status": "Learning"
 },
 {
@@ -445,6 +445,15 @@
 "status": "Learning"
 },
 {
+"seg": "NFL \u00b7 rec yds \u00b7 edge 10-20%",
+"n": 4,
+"ret": 0.4705,
+"h1": 0.9009,
+"h2": 0.327,
+"z": 0.72,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 script",
 "n": 4,
 "ret": 0.0425,
@@ -454,12 +463,30 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 Kalshi",
-"n": 4,
-"ret": 0.96,
-"h1": 1.0348,
-"h2": 0.8852,
-"z": 4.86,
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
+"n": 3,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 longshot",
+"n": 3,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 rush yds \u00b7 edge 5-10%",
+"n": 3,
+"ret": -0.3067,
+"h1": 1.08,
+"h2": -1.0,
+"z": -0.44,
 "status": "Learning"
 },
 {
@@ -481,29 +508,11 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 rush yds \u00b7 edge 5-10%",
-"n": 3,
-"ret": -0.3067,
-"h1": 1.08,
-"h2": -1.0,
-"z": -0.44,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
-"n": 3,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 longshot",
-"n": 3,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
+"seg": "NFL \u00b7 3 reasons",
+"n": 2,
+"ret": 1.0098,
+"h1": 1.0098,
+"h2": null,
 "z": 0.0,
 "status": "Learning"
 },
@@ -544,10 +553,28 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 3 reasons",
-"n": 2,
-"ret": 1.0098,
-"h1": 1.0098,
+"seg": "NFL \u00b7 rush yds \u00b7 edge 10-20%",
+"n": 1,
+"ret": 0.9009,
+"h1": 0.9009,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 2+ shots \u00b7 favorite",
+"n": 1,
+"ret": 0.6061,
+"h1": 0.6061,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NHL \u00b7 2+ shots \u00b7 edge 10-20%",
+"n": 1,
+"ret": 1.15,
+"h1": 1.15,
 "h2": null,
 "z": 0.0,
 "status": "Learning"
@@ -593,33 +620,6 @@
 "n": 1,
 "ret": 0.9091,
 "h1": 0.9091,
-"h2": null,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NHL \u00b7 2+ shots \u00b7 edge 10-20%",
-"n": 1,
-"ret": 1.15,
-"h1": 1.15,
-"h2": null,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NHL \u00b7 2+ shots \u00b7 favorite",
-"n": 1,
-"ret": 0.6061,
-"h1": 0.6061,
-"h2": null,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 rush yds \u00b7 edge 10-20%",
-"n": 1,
-"ret": 0.9009,
-"h1": 0.9009,
 "h2": null,
 "z": 0.0,
 "status": "Learning"
