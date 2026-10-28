@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-28",
 "lock": "2026-10-28T23:00:00+00:00",
-"frozen_at": "2026-10-28T15:55:15.729Z",
+"frozen_at": "2026-10-28T16:00:31.690Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 8.5,
 "name": "jalen brunson",
 "lab": "Jalen Brunson 9+ ast",
-"p": 0.2325,
+"p": 0.2396,
 "price": 375,
 "book": "Hard Rock",
 "f": [
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.05546,
+"p": 0.05715,
 "d": 23.75,
 "first": "2026-10-29T00:00:00+00:00",
 "pick": "longshot",
@@ -134,7 +134,7 @@
 "line": 8.5,
 "name": "jalen brunson",
 "lab": "Jalen Brunson 9+ ast",
-"p": 0.2325,
+"p": 0.2396,
 "price": 375,
 "book": "Hard Rock",
 "f": [
@@ -163,7 +163,7 @@
 ]
 }
 ],
-"p": 0.01313,
+"p": 0.01353,
 "d": 96.401,
 "first": "2026-10-28T23:00:00+00:00",
 "pick": "longshot",
@@ -283,6 +283,53 @@
 "res": null
 },
 {
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909887",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. over 7.5 rebounds",
+"p": 0.4744,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"sport": "nba",
+"edge": 0.0911
+},
+{
+"gid": "401909888",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski over 5.5 rebounds",
+"p": 0.4776,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.0746
+}
+],
+"p": 0.22657,
+"d": 5.175,
+"first": "2026-10-29T00:00:00+00:00",
+"res": null
+},
+{
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -313,6 +360,64 @@
 "edge": 0.1473
 },
 {
+"gid": "401909887",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. over 7.5 rebounds",
+"p": 0.4812,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0911
+}
+],
+"p": 0.21808,
+"d": 5.865,
+"first": "2026-10-28T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909889",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 12.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic over 12.5 rebounds",
+"p": 0.5222,
+"price": 105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"game"
+],
+"v": [
+"usage",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0529
+},
+{
 "gid": "401909882",
 "start": "2026-10-28T23:00Z",
 "kind": "reb",
@@ -335,101 +440,41 @@
 ],
 "sport": "nba",
 "edge": 0.0025
+},
+{
+"gid": "401909888",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski over 5.5 rebounds",
+"p": 0.4857,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0746
 }
 ],
-"p": 0.22859,
-"d": 5.1,
+"p": 0.12793,
+"d": 9.225,
 "first": "2026-10-28T23:00:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401909885",
-"start": "2026-10-28T23:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "desmond bane",
-"lab": "Desmond Bane over 2.5 threes",
-"p": 0.5404,
-"price": -110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0225
-},
-{
-"gid": "401909891",
-"start": "2026-10-29T01:30Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "isaiah hartenstein",
-"lab": "Isaiah Hartenstein over 9.5 rebounds",
-"p": 0.4961,
-"price": -115,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.1046
-},
-{
-"gid": "401909892",
-"start": "2026-10-29T02:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "keaton wagler",
-"lab": "Keaton Wagler over 3.5 assists",
-"p": 0.4899,
-"price": -110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0419
-}
-],
-"p": 0.13134,
-"d": 6.814,
-"first": "2026-10-28T23:30:00+00:00",
-"res": null
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "5-leg longshot",
+"tier": "4-leg longshot",
 "legs": [
 {
 "gid": "401909881",
@@ -458,6 +503,54 @@
 "edge": 0.1473
 },
 {
+"gid": "401909887",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. over 7.5 rebounds",
+"p": 0.4812,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0911
+},
+{
+"gid": "401909889",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 12.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic over 12.5 rebounds",
+"p": 0.5222,
+"price": 105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"game"
+],
+"v": [
+"usage",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0529
+},
+{
 "gid": "401909882",
 "start": "2026-10-28T23:00Z",
 "kind": "reb",
@@ -480,85 +573,10 @@
 ],
 "sport": "nba",
 "edge": 0.0025
-},
-{
-"gid": "401909885",
-"start": "2026-10-28T23:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "desmond bane",
-"lab": "Desmond Bane over 2.5 threes",
-"p": 0.5404,
-"price": -110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0225
-},
-{
-"gid": "401909891",
-"start": "2026-10-29T01:30Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "isaiah hartenstein",
-"lab": "Isaiah Hartenstein over 9.5 rebounds",
-"p": 0.4961,
-"price": -115,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.1046
-},
-{
-"gid": "401909892",
-"start": "2026-10-29T02:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "keaton wagler",
-"lab": "Keaton Wagler over 3.5 assists",
-"p": 0.4899,
-"price": -110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0419
 }
 ],
-"p": 0.03002,
-"d": 34.751,
+"p": 0.05744,
+"d": 24.046,
 "first": "2026-10-28T23:00:00+00:00",
 "res": null
 },
@@ -707,29 +725,29 @@
 ]
 },
 {
-"gid": "401909881",
-"start": "2026-10-28T23:00Z",
-"kind": "pts",
+"gid": "401909889",
+"start": "2026-10-29T00:00Z",
+"kind": "reb",
 "side": "o",
-"line": 14.5,
-"name": "pelle larsson",
-"lab": "Pelle Larsson over 14.5 points",
-"p": 0.2583,
-"fair": 0.2576,
-"price": 260,
+"line": 13.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic over 13.5 rebounds",
+"p": 0.3686,
+"fair": 0.3735,
+"price": 155,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0702,
+"edge": -0.0599,
 "v": [
-"Pinnacle line up",
-"consensus line up",
-"one rung above the main line (10.5)"
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (12.5)"
 ]
 }
 ],
-"p": 0.05845,
-"d": 15.516,
-"first": "2026-10-28T23:00:00+00:00",
+"p": 0.08475,
+"d": 10.991,
+"first": "2026-10-28T23:30:00+00:00",
 "res": null
 },
 {
@@ -811,6 +829,48 @@
 "main": true
 },
 {
+"gid": "401909887",
+"start": "2026-10-29T00:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. over 7.5 rebounds",
+"p": 0.4676,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0755,
+"fair": 0.4812,
+"main": true
+}
+],
+"p": 0.07764,
+"d": 19.354,
+"first": "2026-10-28T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909887",
+"start": "2026-10-29T00:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. over 7.5 rebounds",
+"p": 0.4676,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0755,
+"fair": 0.4812,
+"main": true
+},
+{
 "gid": "401909892",
 "start": "2026-10-29T02:30:00+00:00",
 "kind": "fg3m",
@@ -827,9 +887,9 @@
 "main": false
 }
 ],
-"p": 0.04408,
-"d": 33.66,
-"first": "2026-10-28T23:00:00+00:00",
+"p": 0.12415,
+"d": 9.2,
+"first": "2026-10-29T00:00:00+00:00",
 "res": null
 }
 ],
