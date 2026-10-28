@@ -141,7 +141,11 @@ def tonight(games, out_ids, day=None, names=None, unsure_names=frozenset()):
         for gid, h, a in games:
             for t in (h, a):
                 if t in res:
-                    log.setdefault(str(gid), {})[t] = dict(five=res[t][0], src=res[t][1], via=res[t][2], at=now)
+                    prev = (log.get(str(gid)) or {}).get(t) or {}
+                    e = dict(five=res[t][0], src=res[t][1], via=res[t][2], at=now)
+                    if res[t][1] == "official":                # first run that had the confirmed five (parlays.py NBA card locks)
+                        e["off_at"] = prev.get("off_at") or now
+                    log.setdefault(str(gid), {})[t] = e
         json.dump(dict(list(log.items())[-400:]), open(LOG, "w"), separators=(",", ":"))
     except (OSError, ValueError):
         pass

@@ -119,6 +119,8 @@ def freeze():
         for sport in PAGES:
             if not os.path.exists(os.path.join(SITE, sport, "index.html")):
                 continue
+            if sport == "nba":
+                lu_seen(now)                                         # NBA picks lock once their first game's lineups are confirmed
             snap = snapshot(sport, port, exe)
             if not snap:
                 print(f"parlays {sport}: page gave no parlays (prices not loaded?)")
@@ -248,12 +250,56 @@ NFL_SLATE_LOCK = dt.timedelta(minutes=60)
 # drop and the NHL run at :40 picks them up (2026-10-20: 8 of 22 teams official in the 6:45 PM run, none at 6:15); the NBA
 # runs 30 min before 7 PM tips. Owner 2026-10-21 (later): lock 1 hour before the first game (was 10 min).
 LINEUP_LOCK = {"nhl": dt.timedelta(minutes=60), "nba": dt.timedelta(minutes=60)}
+# NBA picks wait for confirmed lineups instead (owner 2026-10-28: "lets not lock basketball until after lineups and injury
+# are confirmed"): each NBA pick (Today's card and the builder cards) keeps being re-picked until the first freeze that
+# sees NBA.com's Confirmed five for both teams of its first game in the projection run (nba/lineups_log.json `off_at`;
+# Confirmed posts ~30 min before tip, after the injury report's game-time calls). That freeze picks from the confirmed
+# run and the pick locks right after it. No confirmation by tip -> it locks when its first game starts.
+LU_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "nba", "lineups_log.json")
+LU_SEEN_F = os.path.join(SITE, "markets", "lineups_seen_nba.json")
+_LU_SEEN = None
+
+
+def lu_seen(now=None):
+    """{gid: iso time the freeze first saw both teams' confirmed lineups}; with now, adds newly confirmed games."""
+    global _LU_SEEN
+    if _LU_SEEN is None:
+        try:
+            _LU_SEEN = json.load(open(LU_SEEN_F))
+        except (OSError, ValueError):
+            _LU_SEEN = {}
+    if now is not None:
+        try:
+            log = json.load(open(LU_LOG))
+        except (OSError, ValueError):
+            log = {}
+        new = [g for g, d in log.items() if g not in _LU_SEEN and len(d) == 2 and all(v.get("src") == "official" for v in d.values())]
+        for g in new:
+            _LU_SEEN[g] = now.isoformat()
+        if new:
+            _LU_SEEN = dict(list(_LU_SEEN.items())[-300:])
+            os.makedirs(os.path.dirname(LU_SEEN_F), exist_ok=True)
+            json.dump(_LU_SEEN, open(LU_SEEN_F, "w"), separators=(",", ":"))
+            print(f"parlays nba: lineups confirmed for {len(new)} game(s): {', '.join(new)}")
+    return _LU_SEEN
+
+
+def nba_lineup_lock(p):
+    """(lock time, waiting): just after the freeze that saw the first game's confirmed lineups, else its first tip."""
+    first = when(p["first"])
+    gids = {str(L.get("gid")) for L in p["legs"] if L.get("start") and when(L["start"]) <= first}
+    seen = lu_seen()
+    if gids and all(g in seen for g in gids):
+        return min(first, max(when(seen[g]) for g in gids) + dt.timedelta(seconds=1)), False
+    return first, True
 
 
 def pick_lock(sport, slot, p, card_fin):
     """When a pick (or a candidate for a slot) stops changing."""
     if sport == "nfl" and slot == "core":
         return when(p["first"]) - NFL_SLATE_LOCK
+    if sport == "nba":
+        return nba_lineup_lock(p)[0]
     return card_fin
 
 
@@ -337,6 +383,7 @@ def write_card(sport):
                picks=[dict(slot=p["pick"], card=p["card"], tier=p.get("tier"), p=round(p["p"] * CARD_DISCOUNT.get(sport, 1), 4), d=p["d"],
                            first=p["first"], res=p.get("res"), paid=p.get("paid"),
                            lock=pick_lock(sport, p["pick"], p, when(show[2])).astimezone(dt.timezone.utc).isoformat() if show[2] else None,
+                           lw=(sport == "nba" and nba_lineup_lock(p)[1]) or None,
                            legs=[dict(lab=L.get("lab"), price=L.get("price"), book=L.get("book"), p=L.get("p"), res=L.get("res")) for L in p["legs"]])
                       for p in sorted(show[1], key=lambda p: (p["pick"] != "core", p["first"]))])
     os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
@@ -459,6 +506,7 @@ def hub_data():
             lk = lock_of(q)
             cards.setdefault(q["card"], []).append(dict(tier=q.get("tier"), p=q.get("p"), d=q.get("d"), first=q.get("first"), res=q.get("res"),
                                                          lock=min(lk, when(q["first"])).astimezone(dt.timezone.utc).isoformat() if lk else None,
+                                                         lw=bool(sport == "nba" and (q.get("pick") or str(q.get("card", "")).startswith(BUILDER_CARDS)) and q.get("legs") and nba_lineup_lock(q)[1]) or None,
                                                          paid=q.get("paid"), pick=q.get("pick"),
                                                          legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
                                                                     sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
@@ -523,6 +571,7 @@ const dayOf = t => new Date(t).toLocaleDateString('en-CA');
 const lockChip = q => { const t = q.lock || q.first; if (!t) return '';
   const when_ = (dayOf(t) !== new Date().toLocaleDateString('en-CA') ? new Date(t).toLocaleDateString([], {weekday: 'short'}) + ' ' : '') + tm(t);
   return new Date(t) <= Date.now() ? `<span class="lk on" title="Final: this parlay won’t change. Place it any time before ${tm(q.first)}.">🔒 Locked · place by ${tm(q.first)}</span>`
+    : q.lw ? `<span class="lk" title="Re-picked until the confirmed starting lineups and injury calls for its first game are in our numbers (~30 min before tip); then it won’t change.">🔓 Locks after lineups · by ${when_}</span>`
     : `<span class="lk" title="Until then it can still be swapped for a better one; after that it won’t change. First game ${tm(q.first)}.">🔓 Locks ${when_}</span>`; };
 function card(q, sport, lab){
   const sk = /straight/.test(q.tier || '') ? 10 : D.stake;

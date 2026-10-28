@@ -71,7 +71,21 @@ def mark():
     json.dump(state, open(STATE, "w"))
 
 
+def soon(minutes):
+    """Exit 0 when a game tips within `minutes` (nba.yml then starts a markets run so the NBA card re-picks from the
+    fresh lineups right away and can lock; owner 2026-10-28: lock only after lineups and injuries are confirmed)."""
+    now = pd.Timestamp.now(tz="UTC")
+    try:
+        ts = [pd.Timestamp(e["date"]) for e in games_on(pd.Timestamp.now(tz="America/New_York").date())
+              if ((e.get("status") or {}).get("type") or {}).get("state") == "pre"]
+    except Exception:                                                 # noqa: BLE001
+        return 10
+    return 0 if any(0 < (t - now).total_seconds() / 60 <= minutes for t in ts) else 10
+
+
 if __name__ == "__main__":
+    if len(sys.argv) > 2 and sys.argv[1] == "--soon":
+        sys.exit(soon(float(sys.argv[2])))
     if len(sys.argv) > 1 and sys.argv[1] == "--mark":
         mark()
         sys.exit(0)
