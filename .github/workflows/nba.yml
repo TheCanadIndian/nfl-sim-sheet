@@ -30,3 +30,11 @@ jobs:
           cache-name: nba-db
           cache-paths: engine/nba/nba.db
           seed: nba.db.gz
+      # NBA picks lock only after the first game's confirmed lineups are in a run (owner 2026-10-28): when a game tips
+      # within 45 min, start a markets run now so the card re-picks from this run instead of waiting up to 15 min
+      - name: Re-pick the NBA card from fresh lineups
+        if: success()
+        working-directory: engine
+        run: |
+          set +e; python nba/should_run.py --soon 45; rc=$?; set -e
+          if [ $rc -eq 0 ]; then gh workflow run markets.yml || true; fi
