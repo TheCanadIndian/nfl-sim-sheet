@@ -591,7 +591,9 @@ function render(){
   const TB = {};
   let html = '';
   const today = new Date().toLocaleDateString('en-CA');
-  const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
+  const lwOf = s => s.cards.some(c => c.parlays.some(q => q.pick && q.lw && !q.res && new Date(q.first) > Date.now()));
+  const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => s.sport === 'nba' ? `NBA ${lwOf(s) ? 'locks after lineups' : 'final'}`
+    : `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
   if (picks.length) TB.card = sec('Today’s cards', `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
   let lrnHtml = '';
   const LRN = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Learning parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
