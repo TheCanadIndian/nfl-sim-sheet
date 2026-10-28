@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-28",
 "lock": "2026-10-28T23:30:00+00:00",
-"frozen_at": "2026-10-28T23:46:29.503Z",
+"frozen_at": "2026-10-28T23:51:44.302Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -98,18 +98,55 @@
 },
 {
 "card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020201",
+"start": "2026-10-29T01:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "COL moneyline",
+"p": 0.5853,
+"price": -135,
+"book": "Novig"
+},
+{
+"gid": "2026020202",
+"start": "2026-10-29T02:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "darren raddysh",
+"lab": "Darren Raddysh over 2.5 shots",
+"p": 0.5188,
+"price": 108,
+"book": "Novig"
+}
+],
+"p": 0.30367,
+"d": 3.621,
+"first": "2026-10-29T01:00:00+00:00",
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Shots + moneyline parlays",
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026020199",
-"start": "2026-10-28T23:30:00Z",
+"gid": "2026020200",
+"start": "2026-10-29T00:30:00Z",
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "dylan strome",
-"lab": "Dylan Strome over 1.5 shots",
-"p": 0.5837,
-"price": -117,
+"name": "morgan frost",
+"lab": "Morgan Frost over 1.5 shots",
+"p": 0.5086,
+"price": -102,
 "book": "Novig"
 },
 {
@@ -121,74 +158,25 @@
 "name": null,
 "lab": "COL moneyline",
 "p": 0.5853,
-"price": -138,
+"price": -135,
 "book": "Novig"
 },
 {
 "gid": "2026020202",
 "start": "2026-10-29T02:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "SEA moneyline",
-"p": 0.4848,
-"price": 120,
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "darren raddysh",
+"lab": "Darren Raddysh over 2.5 shots",
+"p": 0.5188,
+"price": 108,
 "book": "Novig"
 }
 ],
-"p": 0.16562,
-"d": 7.037,
-"first": "2026-10-28T23:30:00+00:00",
-"pick": "core",
-"res": null,
-"locked": true,
-"final": true
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020199",
-"start": "2026-10-28T23:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "dylan strome",
-"lab": "Dylan Strome over 1.5 shots",
-"p": 0.5837,
-"price": -117,
-"book": "Novig"
-},
-{
-"gid": "2026020201",
-"start": "2026-10-29T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.5407,
-"price": -113,
-"book": "Novig"
-},
-{
-"gid": "2026020202",
-"start": "2026-10-29T02:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "SEA moneyline",
-"p": 0.4848,
-"price": 120,
-"book": "Novig"
-}
-],
-"p": 0.15299,
-"d": 7.691,
-"first": "2026-10-28T23:30:00+00:00",
+"p": 0.15444,
+"d": 7.17,
+"first": "2026-10-29T00:30:00+00:00",
 "pick": "core",
 "res": null,
 "locked": true,
@@ -660,7 +648,7 @@
 "name": "alex ovechkin",
 "lab": "Alex Ovechkin to score",
 "p": 0.2982,
-"price": 239,
+"price": 233,
 "book": "Novig"
 },
 {
@@ -725,29 +713,29 @@
 "gid": "2026020199",
 "start": "2026-10-28T23:30:00Z",
 "kind": "sog",
-"side": "u",
+"side": "o",
 "line": 1.5,
-"name": "pierreluc dubois",
-"lab": "Pierreluc Dubois under 1.5 shots",
-"p": 0.5254,
-"price": 102,
+"name": "dylan strome",
+"lab": "Dylan Strome over 1.5 shots",
+"p": 0.5886,
+"price": -115,
 "book": "Novig"
 },
 {
-"gid": "2026020200",
-"start": "2026-10-29T00:30:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "mattias ekholm",
-"lab": "Mattias Ekholm under 1.5 shots",
-"p": 0.6217,
-"price": -125,
-"book": "Hard Rock"
+"gid": "2026020201",
+"start": "2026-10-29T01:00:00Z",
+"kind": "total",
+"side": "under",
+"line": 6.5,
+"name": null,
+"lab": "NJD-COL under 6.5",
+"p": 0.5536,
+"price": -104,
+"book": "Novig"
 }
 ],
-"p": 0.32665,
-"d": 3.636,
+"p": 0.3258,
+"d": 3.667,
 "first": "2026-10-28T23:30:00+00:00",
 "res": null,
 "locked": true
@@ -847,53 +835,6 @@
 "locked": true
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020199",
-"start": "2026-10-28T23:30:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "pierreluc dubois",
-"lab": "Pierreluc Dubois under 1.5 shots",
-"p": 0.5254,
-"price": 102,
-"book": "Novig"
-},
-{
-"gid": "2026020200",
-"start": "2026-10-29T00:30:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "mattias ekholm",
-"lab": "Mattias Ekholm under 1.5 shots",
-"p": 0.6217,
-"price": -125,
-"book": "Hard Rock"
-},
-{
-"gid": "2026020201",
-"start": "2026-10-29T01:00:00Z",
-"kind": "total",
-"side": "under",
-"line": 6.5,
-"name": null,
-"lab": "NJD-COL under 6.5",
-"p": 0.5536,
-"price": -104,
-"book": "Novig"
-}
-],
-"p": 0.18082,
-"d": 7.132,
-"first": "2026-10-28T23:30:00+00:00",
-"res": null,
-"locked": true
-},
-{
 "card": "Shots + moneyline parlays",
 "tier": "+250 to +600",
 "legs": [
@@ -919,7 +860,7 @@
 "lab": "SEA moneyline",
 "p": 0.4842,
 "price": 120,
-"book": "Novig"
+"book": "ProphetX"
 }
 ],
 "p": 0.28496,
@@ -940,7 +881,7 @@
 "line": 1.5,
 "name": "matvei michkov",
 "lab": "Matvei Michkov over 1.5 shots",
-"p": 0.5787,
+"p": 0.5793,
 "price": -130,
 "book": "DK"
 },
@@ -954,10 +895,10 @@
 "lab": "SEA moneyline",
 "p": 0.4842,
 "price": 120,
-"book": "Novig"
+"book": "ProphetX"
 }
 ],
-"p": 0.28019,
+"p": 0.28048,
 "d": 3.892,
 "first": "2026-10-28T23:30:00+00:00",
 "res": null,
@@ -973,23 +914,23 @@
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "matvei michkov",
-"lab": "Matvei Michkov over 1.5 shots",
-"p": 0.5787,
-"price": -130,
-"book": "DK"
+"name": "dylan strome",
+"lab": "Dylan Strome over 1.5 shots",
+"p": 0.5886,
+"price": -115,
+"book": "Novig"
 },
 {
 "gid": "2026020201",
 "start": "2026-10-29T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.5441,
-"price": -115,
-"book": "theScore"
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "COL moneyline",
+"p": 0.5853,
+"price": -138,
+"book": "Novig"
 },
 {
 "gid": "2026020202",
@@ -1001,11 +942,11 @@
 "lab": "SEA moneyline",
 "p": 0.4842,
 "price": 120,
-"book": "Novig"
+"book": "ProphetX"
 }
 ],
-"p": 0.15246,
-"d": 7.277,
+"p": 0.16678,
+"d": 7.094,
 "first": "2026-10-28T23:30:00+00:00",
 "res": null,
 "locked": true
@@ -1020,22 +961,22 @@
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "dylan strome",
-"lab": "Dylan Strome over 1.5 shots",
-"p": 0.5886,
-"price": -115,
-"book": "Novig"
+"name": "tyson foerster",
+"lab": "Tyson Foerster over 1.5 shots",
+"p": 0.5554,
+"price": -118,
+"book": "ProphetX"
 },
 {
-"gid": "2026020200",
-"start": "2026-10-29T00:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "kasperi kapanen",
-"lab": "Kasperi Kapanen over 1.5 shots",
-"p": 0.5341,
-"price": -111,
+"gid": "2026020201",
+"start": "2026-10-29T01:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "COL moneyline",
+"p": 0.5853,
+"price": -138,
 "book": "Novig"
 },
 {
@@ -1048,46 +989,11 @@
 "lab": "SEA moneyline",
 "p": 0.4842,
 "price": 120,
-"book": "Novig"
+"book": "ProphetX"
 }
 ],
-"p": 0.15219,
-"d": 7.818,
-"first": "2026-10-28T23:30:00+00:00",
-"res": null,
-"locked": true
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "Best shot",
-"legs": [
-{
-"gid": "2026020199",
-"start": "2026-10-28T23:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "dylan strome",
-"lab": "Dylan Strome over 1.5 shots",
-"p": 0.5886,
-"price": -115,
-"book": "Novig"
-},
-{
-"gid": "2026020202",
-"start": "2026-10-29T02:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "SEA moneyline",
-"p": 0.4842,
-"price": 120,
-"book": "Novig"
-}
-],
-"p": 0.28496,
-"d": 4.113,
+"p": 0.15738,
+"d": 7.01,
 "first": "2026-10-28T23:30:00+00:00",
 "res": null,
 "locked": true
@@ -1546,8 +1452,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.35318,
-"d": 2.831,
+"p": 0.35491,
+"d": 2.818,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
 },
@@ -1580,8 +1486,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.32749,
-"d": 3.053,
+"p": 0.33414,
+"d": 2.993,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
 },
@@ -1614,8 +1520,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.25301,
-"d": 3.952,
+"p": 0.25361,
+"d": 3.943,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
 },
@@ -1648,8 +1554,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.21701,
-"d": 4.608,
+"p": 0.21947,
+"d": 4.556,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
 },
@@ -1677,13 +1583,13 @@
 "line": null,
 "name": null,
 "lab": "COL moneyline",
-"p": 0.5853,
+"p": 0.5846,
 "price": -138,
 "book": "Novig"
 }
 ],
-"p": 0.29332,
-"d": 3.409,
+"p": 0.30357,
+"d": 3.294,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 },
@@ -1711,13 +1617,13 @@
 "line": null,
 "name": null,
 "lab": "COL moneyline",
-"p": 0.5853,
+"p": 0.5846,
 "price": -138,
 "book": "Novig"
 }
 ],
-"p": 0.23531,
-"d": 4.25,
+"p": 0.23486,
+"d": 4.258,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 },
@@ -1750,8 +1656,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.21453,
-"d": 4.661,
+"p": 0.21163,
+"d": 4.725,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 },
@@ -1767,7 +1673,7 @@
 "line": 0.5,
 "name": "jack hughes",
 "lab": "Jack Hughes to score",
-"p": 0.3192,
+"p": 0.3195,
 "price": 203,
 "book": "Novig"
 },
@@ -1779,13 +1685,13 @@
 "line": null,
 "name": null,
 "lab": "NJD moneyline",
-"p": 0.4147,
+"p": 0.4154,
 "price": 135,
 "book": "Novig"
 }
 ],
-"p": 0.18601,
-"d": 5.376,
+"p": 0.17997,
+"d": 5.556,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 },
@@ -1818,8 +1724,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.27928,
-"d": 3.581,
+"p": 0.27561,
+"d": 3.628,
 "first": "2026-10-29T02:00:00+00:00",
 "res": null
 },
@@ -1852,8 +1758,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.27518,
-"d": 3.634,
+"p": 0.26996,
+"d": 3.704,
 "first": "2026-10-29T02:00:00+00:00",
 "res": null
 },
@@ -1886,8 +1792,8 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.26002,
-"d": 3.846,
+"p": 0.26278,
+"d": 3.805,
 "first": "2026-10-29T02:00:00+00:00",
 "res": null
 },
@@ -1920,8 +1826,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.25041,
-"d": 3.993,
+"p": 0.25061,
+"d": 3.99,
 "first": "2026-10-29T02:00:00+00:00",
 "res": null
 },
@@ -1942,6 +1848,40 @@
 "book": "Hard Rock"
 },
 {
+"gid": "2026020201",
+"start": "2026-10-29T01:00:00Z",
+"kind": "total",
+"side": "under",
+"line": 6.5,
+"name": null,
+"lab": "NJD-COL under 6.5",
+"p": 0.5529,
+"price": -104,
+"book": "Novig"
+}
+],
+"p": 0.34228,
+"d": 3.531,
+"first": "2026-10-29T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020200",
+"start": "2026-10-29T00:30:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "mattias ekholm",
+"lab": "Mattias Ekholm under 1.5 shots",
+"p": 0.619,
+"price": -125,
+"book": "Hard Rock"
+},
+{
 "gid": "2026020202",
 "start": "2026-10-29T02:00:00Z",
 "kind": "sog",
@@ -1949,12 +1889,12 @@
 "line": 3.5,
 "name": "auston matthews",
 "lab": "Auston Matthews under 3.5 shots",
-"p": 0.5557,
+"p": 0.552,
 "price": -102,
 "book": "Novig"
 }
 ],
-"p": 0.344,
+"p": 0.34168,
 "d": 3.565,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -1971,7 +1911,7 @@
 "line": 1.5,
 "name": "brent burns",
 "lab": "Brent Burns under 1.5 shots",
-"p": 0.6074,
+"p": 0.6035,
 "price": -125,
 "book": "Novig"
 },
@@ -1983,47 +1923,13 @@
 "line": 3.5,
 "name": "auston matthews",
 "lab": "Auston Matthews under 3.5 shots",
-"p": 0.5557,
+"p": 0.552,
 "price": -102,
 "book": "Novig"
 }
 ],
-"p": 0.33753,
+"p": 0.3331,
 "d": 3.565,
-"first": "2026-10-29T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020201",
-"start": "2026-10-29T01:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "cale makar",
-"lab": "Cale Makar under 2.5 shots",
-"p": 0.5867,
-"price": -117,
-"book": "Novig"
-},
-{
-"gid": "2026020202",
-"start": "2026-10-29T02:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 3.5,
-"name": "auston matthews",
-"lab": "Auston Matthews under 3.5 shots",
-"p": 0.5557,
-"price": -102,
-"book": "Novig"
-}
-],
-"p": 0.32603,
-"d": 3.673,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 },
@@ -2051,7 +1957,7 @@
 "line": 2.5,
 "name": "cale makar",
 "lab": "Cale Makar under 2.5 shots",
-"p": 0.5867,
+"p": 0.5859,
 "price": -117,
 "book": "Novig"
 },
@@ -2068,54 +1974,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.18332,
+"p": 0.18306,
 "d": 7.111,
-"first": "2026-10-29T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020200",
-"start": "2026-10-29T00:30:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "mattias ekholm",
-"lab": "Mattias Ekholm under 1.5 shots",
-"p": 0.619,
-"price": -125,
-"book": "Hard Rock"
-},
-{
-"gid": "2026020201",
-"start": "2026-10-29T01:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "sam malinski",
-"lab": "Sam Malinski under 1.5 shots",
-"p": 0.5635,
-"price": -106,
-"book": "Novig"
-},
-{
-"gid": "2026020202",
-"start": "2026-10-29T02:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "brandon montour",
-"lab": "Brandon Montour under 2.5 shots",
-"p": 0.5197,
-"price": 108,
-"book": "Novig"
-}
-],
-"p": 0.18129,
-"d": 7.276,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
 },
@@ -2143,7 +2003,7 @@
 "line": 1.5,
 "name": "brent burns",
 "lab": "Brent Burns under 1.5 shots",
-"p": 0.6074,
+"p": 0.6035,
 "price": -125,
 "book": "Novig"
 },
@@ -2155,13 +2015,59 @@
 "line": 3.5,
 "name": "auston matthews",
 "lab": "Auston Matthews under 3.5 shots",
-"p": 0.5557,
+"p": 0.552,
 "price": -102,
 "book": "Novig"
 }
 ],
-"p": 0.17952,
+"p": 0.17716,
 "d": 7.343,
+"first": "2026-10-29T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020200",
+"start": "2026-10-29T00:30:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "mattias ekholm",
+"lab": "Mattias Ekholm under 1.5 shots",
+"p": 0.619,
+"price": -125,
+"book": "Hard Rock"
+},
+{
+"gid": "2026020201",
+"start": "2026-10-29T01:00:00Z",
+"kind": "total",
+"side": "under",
+"line": 6.5,
+"name": null,
+"lab": "NJD-COL under 6.5",
+"p": 0.5529,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026020202",
+"start": "2026-10-29T02:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "brandon montour",
+"lab": "Brandon Montour under 2.5 shots",
+"p": 0.5164,
+"price": 108,
+"book": "Novig"
+}
+],
+"p": 0.17674,
+"d": 7.344,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
 },
@@ -2177,7 +2083,7 @@
 "line": 1.5,
 "name": "tj hughes",
 "lab": "Tj Hughes over 1.5 shots",
-"p": 0.5409,
+"p": 0.5437,
 "price": -115,
 "book": "Novig"
 },
@@ -2194,7 +2100,7 @@
 "book": "ProphetX"
 }
 ],
-"p": 0.26189,
+"p": 0.26324,
 "d": 4.113,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
@@ -2211,7 +2117,7 @@
 "line": 1.5,
 "name": "kasperi kapanen",
 "lab": "Kasperi Kapanen over 1.5 shots",
-"p": 0.5307,
+"p": 0.5341,
 "price": -111,
 "book": "Novig"
 },
@@ -2228,7 +2134,7 @@
 "book": "ProphetX"
 }
 ],
-"p": 0.25695,
+"p": 0.25859,
 "d": 4.182,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -2245,7 +2151,7 @@
 "line": 1.5,
 "name": "morgan frost",
 "lab": "Morgan Frost over 1.5 shots",
-"p": 0.5164,
+"p": 0.5147,
 "price": -102,
 "book": "Novig"
 },
@@ -2262,7 +2168,7 @@
 "book": "ProphetX"
 }
 ],
-"p": 0.25002,
+"p": 0.2492,
 "d": 4.357,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -2279,7 +2185,7 @@
 "line": 1.5,
 "name": "kasperi kapanen",
 "lab": "Kasperi Kapanen over 1.5 shots",
-"p": 0.5307,
+"p": 0.5341,
 "price": -111,
 "book": "Novig"
 },
@@ -2291,7 +2197,7 @@
 "line": null,
 "name": null,
 "lab": "COL moneyline",
-"p": 0.5853,
+"p": 0.5846,
 "price": -138,
 "book": "Novig"
 },
@@ -2308,7 +2214,7 @@
 "book": "ProphetX"
 }
 ],
-"p": 0.15038,
+"p": 0.15118,
 "d": 7.212,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -2325,7 +2231,7 @@
 "line": 1.5,
 "name": "morgan frost",
 "lab": "Morgan Frost over 1.5 shots",
-"p": 0.5164,
+"p": 0.5147,
 "price": -102,
 "book": "Novig"
 },
@@ -2337,7 +2243,7 @@
 "line": null,
 "name": null,
 "lab": "COL moneyline",
-"p": 0.5853,
+"p": 0.5846,
 "price": -138,
 "book": "Novig"
 },
@@ -2354,7 +2260,7 @@
 "book": "ProphetX"
 }
 ],
-"p": 0.14633,
+"p": 0.14569,
 "d": 7.514,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -2371,7 +2277,7 @@
 "line": 1.5,
 "name": "kasperi kapanen",
 "lab": "Kasperi Kapanen over 1.5 shots",
-"p": 0.5307,
+"p": 0.5341,
 "price": -111,
 "book": "Novig"
 },
@@ -2383,7 +2289,7 @@
 "line": 1.5,
 "name": "tj hughes",
 "lab": "Tj Hughes over 1.5 shots",
-"p": 0.5409,
+"p": 0.5437,
 "price": -115,
 "book": "Novig"
 },
@@ -2400,7 +2306,7 @@
 "book": "ProphetX"
 }
 ],
-"p": 0.13898,
+"p": 0.1406,
 "d": 7.818,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -2429,12 +2335,12 @@
 "line": 1.5,
 "name": "tj hughes",
 "lab": "Tj Hughes over 1.5 shots",
-"p": 0.5409,
+"p": 0.5437,
 "price": -115,
 "book": "Novig"
 }
 ],
-"p": 0.22527,
+"p": 0.22644,
 "d": 4.954,
 "first": "2026-10-29T00:30:00+00:00",
 "res": null
@@ -2485,7 +2391,7 @@
 "line": 0.5,
 "name": "jack hughes",
 "lab": "Jack Hughes to score",
-"p": 0.3209,
+"p": 0.3224,
 "price": null,
 "book": null
 },
@@ -2502,7 +2408,7 @@
 "book": null
 }
 ],
-"p": 0.0656,
+"p": 0.0659,
 "d": 15.2,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
@@ -2531,13 +2437,47 @@
 "line": 0.5,
 "name": "anthony mantha",
 "lab": "Anthony Mantha to score",
-"p": 0.17,
+"p": 0.1712,
 "price": null,
 "book": null
 }
 ],
-"p": 0.0654,
-"d": 15.3,
+"p": 0.0659,
+"d": 15.2,
+"first": "2026-10-29T01:00:00+00:00",
+"res": null
+},
+{
+"card": "2-leg pairs paying 15x+",
+"tier": "Late slate",
+"legs": [
+{
+"gid": "2026020202",
+"start": "2026-10-29T02:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "jordan eberle",
+"lab": "Jordan Eberle to score",
+"p": 0.3057,
+"price": null,
+"book": null
+},
+{
+"gid": "2026020201",
+"start": "2026-10-29T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "timo meier",
+"lab": "Timo Meier to score",
+"p": 0.2126,
+"price": null,
+"book": null
+}
+],
+"p": 0.065,
+"d": 15.4,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 },
@@ -2572,40 +2512,6 @@
 ],
 "p": 0.0647,
 "d": 15.4,
-"first": "2026-10-29T01:00:00+00:00",
-"res": null
-},
-{
-"card": "2-leg pairs paying 15x+",
-"tier": "Late slate",
-"legs": [
-{
-"gid": "2026020202",
-"start": "2026-10-29T02:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "jordan eberle",
-"lab": "Jordan Eberle to score",
-"p": 0.3057,
-"price": null,
-"book": null
-},
-{
-"gid": "2026020201",
-"start": "2026-10-29T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "timo meier",
-"lab": "Timo Meier to score",
-"p": 0.2112,
-"price": null,
-"book": null
-}
-],
-"p": 0.0646,
-"d": 15.5,
 "first": "2026-10-29T01:00:00+00:00",
 "res": null
 }
