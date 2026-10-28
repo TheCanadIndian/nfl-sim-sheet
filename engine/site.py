@@ -919,6 +919,7 @@ function render(){
     try { const {q, ...keepSt} = st; localStorage.setItem('mk-tree', JSON.stringify(keepSt)); } catch (e) {}
     document.getElementById('msub').textContent = 'Overs priced far under fair · every book and prediction market';
     BKV.innerHTML = window.MKT && MKT.offView && MKT.loaded() ? MKT.offView(MKT.games()) : '<p class="muted">Loading prices…</p>';
+    if (window.MKT && MKT.offApply) MKT.offApply();
     return;
   }
   if (bk){
