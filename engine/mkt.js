@@ -37,6 +37,10 @@
   const OV = {g: 'all', m: 'all', q: '', alt: false, view: 'cards', ref: 'sharp', edge: true};
   try { Object.assign(OV, JSON.parse(localStorage.getItem('simov-v1') || '{}')); } catch (e) {}
   const ovSave = () => { try { localStorage.setItem('simov-v1', JSON.stringify({view: OV.view, ref: OV.ref, edge: OV.edge})); } catch (e) {} };
+  // Off market view filters (owner 2026-10-28): search, game, stat, book, main / alt, gap floor, sharp fair only, sort
+  const OFV = {q: '', g: 'all', k: 'all', bk: 'all', ln: 'all', gap: 0, sharp: false, sort: 'gap'};
+  try { Object.assign(OFV, JSON.parse(localStorage.getItem('simoff-v1') || '{}'), {q: '', g: 'all'}); } catch (e) {}
+  const ofvSave = () => { try { const {q, g, ...k} = OFV; localStorage.setItem('simoff-v1', JSON.stringify(k)); } catch (e) {} };
   const WV = {edge: true, mine: false, all: false, long: false};   // Weighted fair tab toggles          // Book odds tab filters                      // the viewer's sportsbooks (this device), [] = all books
   // the owner's books (Novig, Kalshi, Hard Rock) until this device saves its own choice ("all books" saves [] and is kept)
   const OWNER = ['Novig', 'Kalshi', 'Hard Rock'];
@@ -202,6 +206,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
 .offr{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;align-items:baseline;padding:7px 0;border-top:1px solid var(--faint);font-size:13.5px}
 .offr.mine .offn b{color:var(--good)}.offn small,.offp small{display:block;font-size:11.5px;color:var(--muted)}.offn i{font-style:normal;font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px}
 .offp{text-align:right;white-space:nowrap}.offp a{color:inherit}.offg{text-align:right;white-space:nowrap;color:var(--muted);font-size:12.5px}.offg b{display:block;color:var(--good);font-size:14px}
+.offf{display:flex;gap:8px;align-items:center;margin:0 0 6px;min-width:0}.offl{flex:0 0 40px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.offf .ovm{flex:1;min-width:0}.offsep{flex:0 0 1px;align-self:stretch;background:var(--faint);margin:3px 2px}.offcount{margin:2px 0 6px}.offbar select{max-width:100%}
 @media (max-width:640px){.offr{grid-template-columns:1fr auto}.offg{grid-column:1/-1;text-align:left}.offg b{display:inline;margin-left:6px}}
 .vtag.offt{border-color:color-mix(in srgb,#F2C14E 60%,transparent);color:#F2C14E}.vtag.offt i{font-style:normal;font-weight:700;margin-left:2px}
 .why{display:inline-block;font-size:11px;color:var(--muted);border:1px dashed var(--faint);border-radius:999px;padding:0 8px;margin:2px 4px 0 0;white-space:nowrap}.why b{color:var(--ink);font-weight:600}.why.none{opacity:.75}
@@ -909,18 +914,41 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const now = Date.now(), start = Object.fromEntries((games || []).map(g => [String(g.id), g.start]));
       const L = FL.off.filter(x => !start[String(x.g)] || new Date(start[String(x.g)]) > now);
       const link = u => !u ? null : String(u).startsWith('http') ? u : `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${encodeURIComponent((PR && PR.partner) || '')}`;
+      const SK = {goal: 'Goal', td: 'TD', rec: 'Catches', rec_yds: 'Rec yds', rush_yds: 'Rush yds', pass_yds: 'Pass yds', pts: 'Points', reb: 'Rebounds', ast: 'Assists', fg3m: 'Threes',
+                  stl: 'Steals', blk: 'Blocks', dd: 'Double-double', tdbl: 'Triple-double'};
+      const skey = k => String(k).startsWith('sog') ? 'sog' : k, slab = k => k === 'sog' ? 'Shots' : SK[k] || k;
+      const gidx = Object.fromEntries((games || []).map((g, i) => [String(g.id), i]));
+      const SORT = {gap: (a, b) => (b.fair - b.imp) - (a.fair - a.imp), rel: (a, b) => b.fair / b.imp - a.fair / a.imp,
+                    soon: (a, b) => (gidx[String(a.g)] ?? 99) - (gidx[String(b.g)] ?? 99) || (b.fair - b.imp) - (a.fair - a.imp), pay: (a, b) => b.o - a.o};
+      L.sort(SORT[OFV.sort] || SORT.gap);
       const mineF = L.filter(x => mine(x.bk)), rest = L.filter(x => !mine(x.bk));
       const t = new Date(FL.fetched).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
       const row = x => { const u = link(x.u), nm = x.n.replace(/\b\w/g, c => c.toUpperCase()), gap = Math.round((x.fair - x.imp) * 100);
         const price = `${x.o > 0 ? '+' : ''}${x.o} ${esc(FULL[x.bk] || BKS[x.bk] || x.bk)}`;
-        return `<div class="offr${mine(x.bk) ? ' mine' : ''}"><span class="offn"><b>${esc(nm)}</b> ${esc(x.b)}${x.main ? '' : ' <i>alt</i>'}<small>${esc(glab[String(x.g)] || '')}</small></span>
+        return `<div class="offr${mine(x.bk) ? ' mine' : ''}" data-offr data-g="${esc(String(x.g))}" data-k="${esc(skey(x.k))}" data-bk="${esc(x.bk)}" data-my="${mine(x.bk) ? 1 : ''}" data-main="${x.main ? 1 : ''}" data-gap="${gap}" data-c="${x.carried ? 1 : ''}" data-s="${esc(norm(nm + ' ' + (glab[String(x.g)] || '')))}"><span class="offn"><b>${esc(nm)}</b> ${esc(x.b)}${x.main ? '' : ' <i>alt</i>'}<small>${esc(glab[String(x.g)] || '')}</small></span>
           <span class="offp">${u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${price} ↗</a>` : price}<small>${x.dep ? usd(x.dep) + ' within 3¢' : ''}</small></span>
           <span class="offg" title="Price implies ${pc(x.imp)}; fair ${x.carried ? '(carried from the main line by our projection) ' : ''}${pc(x.fair)}">${pc(x.imp)} vs ${x.carried ? '≈' : ''}${pc(x.fair)}<b>+${gap} pts</b></span></div>`; };
+      // filters: chips filter in place (offApply), so typing in the search box keeps its focus
+      const chips = (key, opts) => opts.map(([v, l]) => `<button type="button" data-ofv="${key}" data-v="${esc(String(v))}" aria-pressed="${String(OFV[key]) === String(v)}">${esc(l)}</button>`).join('');
+      const ks = [...new Set(L.map(x => skey(x.k)))], bks = [...new Set(L.map(x => x.bk))].sort((a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99 || a.localeCompare(b));
+      const gs = (games || []).filter(g => L.some(x => String(x.g) === String(g.id)));
+      if (OFV.k !== 'all' && !ks.includes(OFV.k)) OFV.k = 'all';
+      if (!['all', 'mine'].includes(OFV.bk) && !bks.includes(OFV.bk)) OFV.bk = 'all';
+      const bar = L.length ? `<div class="ovc offbar"><input id="off-q" type="search" placeholder="Find a player or team" value="${esc(OFV.q)}" aria-label="Find a player or team">
+          <select id="off-g" aria-label="Game"><option value="all">All games</option>${gs.map(g => `<option value="${esc(String(g.id))}"${OFV.g === String(g.id) ? ' selected' : ''}>${esc(g.label)}</option>`).join('')}</select>
+          <select id="off-sort" aria-label="Sort"><option value="gap"${OFV.sort === 'gap' ? ' selected' : ''}>Biggest gap</option><option value="rel"${OFV.sort === 'rel' ? ' selected' : ''}>Most under fair (%)</option><option value="soon"${OFV.sort === 'soon' ? ' selected' : ''}>Soonest game</option><option value="pay"${OFV.sort === 'pay' ? ' selected' : ''}>Biggest payout</option></select></div>
+        <div class="offf"><span class="offl">Stat</span><div class="ovm">${chips('k', [['all', 'All'], ...ks.map(k => [k, slab(k)])])}</div></div>
+        <div class="offf"><span class="offl">Book</span><div class="ovm">${chips('bk', [['all', 'All'], ['mine', 'Your books'], ...bks.map(b => [b, FULL[b] || BKS[b] || b])])}</div></div>
+        <div class="offf"><span class="offl">Line</span><div class="ovm">${chips('ln', [['all', 'Main + alt'], ['main', 'Main only'], ['alt', 'Alt only']])}</div></div>
+        <div class="offf"><span class="offl">Gap</span><div class="ovm">${chips('gap', [[0, 'Any'], [10, '10+'], [15, '15+'], [20, '20+']])}<span class="offsep"></span><button type="button" data-ofsharp aria-pressed="${OFV.sharp}" title="Hide prices whose fair is carried from the main line by our projection (≈); keep only a fair the books price themselves">Sharp fair only</button></div></div>
+        <p class="small muted offcount" aria-live="polite"></p>` : '';
       return `<section class="panel"><div class="phead"><h2>Off market</h2><span class="small muted">overs priced far under fair · checked ${esc(t)}</span></div>
-        ${L.length ? `${mineF.length ? `<div class="eyebrow" style="margin:4px 0">At your books</div>${mineF.map(row).join('')}` : ''}${rest.length ? `<div class="eyebrow" style="margin:12px 0 4px">Other books and markets</div>${rest.map(row).join('')}` : ''}`
+        ${L.length ? `${bar}${mineF.length ? `<div class="eyebrow offh" style="margin:4px 0">At your books</div>${mineF.map(row).join('')}` : ''}${rest.length ? `<div class="eyebrow offh" style="margin:12px 0 4px">Other books and markets</div>${rest.map(row).join('')}` : ''}
+          <p class="note offnone" hidden>No off-market price matches these filters. <button type="button" class="bkset" data-ofreset>Clear filters</button></p>`
           : '<p class="note">Nothing far off right now: every over is within 8 points of its fair price.</p>'}
         <details class="how"><summary>How this works</summary><p class="note">Every over price at every book, Kalshi and Polymarket, main and alt lines, against the fair chance at that exact line: the sharp consensus at the main line, the books’ own two-way price at an alt line, and where no book prices both sides (most prediction-market rungs) the main line’s fair carried along our projection (shown with ≈, less certain). Listed when the price implies 8+ points less than fair, or 35%+ less on longshots; Kalshi includes its fee. A price this far off is sometimes a stale or wrong line, so check it before betting. Tracked on the Profit page as Off-market prices.</p></details></section>`;
     },
+    offApply: () => offApply(),
     // the player's off-market price on the sport pages (best one; the owner's books first)
     offFlag(gid, name){
       if (!FL || !FL.off || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
@@ -1171,6 +1199,30 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       tr.hidden = !document.querySelector(`tr[data-ovr][data-ovg="${CSS.escape(tr.dataset.ovg)}"]:not([hidden])`);
     for (const b of document.querySelectorAll('[data-ovm-pick]')) b.setAttribute('aria-pressed', b.dataset.ovmPick === OV.m);
   };
+  const offApply = () => {
+    const q = norm(OFV.q || ''), R = [...document.querySelectorAll('[data-offr]')]; if (!R.length) return;
+    let n = 0;
+    for (const r of R){
+      const d = r.dataset;
+      r.hidden = !((OFV.g === 'all' || d.g === OFV.g) && (OFV.k === 'all' || d.k === OFV.k) && (OFV.bk === 'all' || (OFV.bk === 'mine' ? d.my : d.bk === OFV.bk))
+                   && (OFV.ln === 'all' || (OFV.ln === 'main' ? d.main : !d.main)) && +d.gap >= +OFV.gap && (!OFV.sharp || !d.c) && (!q || d.s.includes(q)));
+      if (!r.hidden) n++;
+    }
+    for (const h of document.querySelectorAll('.offh')){ let s = h.nextElementSibling, any = false;
+      while (s && s.matches('[data-offr]')){ if (!s.hidden){ any = true; break; } s = s.nextElementSibling; } h.hidden = !any; }
+    for (const b of document.querySelectorAll('[data-ofv]')) b.setAttribute('aria-pressed', String(OFV[b.dataset.ofv]) === b.dataset.v);
+    for (const b of document.querySelectorAll('[data-ofsharp]')) b.setAttribute('aria-pressed', OFV.sharp);
+    const c = document.querySelector('.offcount'); if (c) c.textContent = n === R.length ? `${R.length} price${R.length === 1 ? '' : 's'}` : `Showing ${n} of ${R.length} prices`;
+    const z = document.querySelector('.offnone'); if (z) z.hidden = n > 0;
+  };
+  document.addEventListener('input', e => { if (e.target.id === 'off-q'){ OFV.q = e.target.value; offApply(); } });
+  document.addEventListener('change', e => { if (e.target.id === 'off-g'){ OFV.g = e.target.value; offApply(); }
+    if (e.target.id === 'off-sort'){ OFV.sort = e.target.value; ofvSave(); rerender(); } });
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('[data-ofv]'); if (b){ OFV[b.dataset.ofv] = b.dataset.ofv === 'gap' ? +b.dataset.v : b.dataset.v; ofvSave(); offApply(); return; }
+    if (e.target.closest && e.target.closest('[data-ofsharp]')){ OFV.sharp = !OFV.sharp; ofvSave(); offApply(); return; }
+    if (e.target.closest && e.target.closest('[data-ofreset]')){ Object.assign(OFV, {q: '', g: 'all', k: 'all', bk: 'all', ln: 'all', gap: 0, sharp: false}); ofvSave(); rerender(); }
+  });
   document.addEventListener('input', e => { if (e.target.id === 'ov-q'){ OV.q = e.target.value; ovApply(); } });
   document.addEventListener('change', e => { if (e.target.id === 'ov-g'){ OV.g = e.target.value; ovApply(); } });
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ovm-pick]'); if (b){ OV.m = b.dataset.ovmPick; ovApply(); } });
