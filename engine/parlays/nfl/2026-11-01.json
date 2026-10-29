@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-29T22:45:36.319Z",
+"frozen_at": "2026-10-29T22:58:53.446Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -115,8 +115,8 @@
 "line": 299.5,
 "name": "jacoby brissett",
 "lab": "Jacoby Brissett 300+ pass yds",
-"p": 0.275,
-"price": 218,
+"p": 0.265,
+"price": 229,
 "book": "Kalshi"
 },
 {
@@ -132,8 +132,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.055,
-"d": 14.339,
+"p": 0.053,
+"d": 14.823,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -148,8 +148,8 @@
 "line": 299.5,
 "name": "jacoby brissett",
 "lab": "Jacoby Brissett 300+ pass yds",
-"p": 0.275,
-"price": 218,
+"p": 0.265,
+"price": 229,
 "book": "Kalshi"
 },
 {
@@ -165,8 +165,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.08525,
-"d": 9.198,
+"p": 0.08215,
+"d": 9.509,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -207,17 +207,50 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "2026_08_LV_NYJ",
+"gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 274.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins 275+ pass yds",
-"p": 0.305,
-"price": 189,
+"line": 59.5,
+"name": "tj hockenson",
+"lab": "T.J. Hockenson 60+ rec yds",
+"p": 0.25,
+"price": 252,
 "book": "Kalshi"
 },
+{
+"gid": "2026_08_KC_DEN",
+"start": "2026-11-01T16:25:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 39.5,
+"name": "jk dobbins",
+"lab": "J.K. Dobbins 40+ rush yds",
+"p": 0.23,
+"price": 296,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "bucky irving",
+"lab": "Bucky Irving 100+ rush yds",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
+}
+],
+"p": 0.01265,
+"d": 55.15,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
@@ -241,121 +274,22 @@
 "p": 0.23,
 "price": 296,
 "book": "Kalshi"
-}
-],
-"p": 0.01754,
-"d": 40.351,
-"first": "2026-11-01T18:00:00+00:00"
 },
-{
-"card": "Ladder longshots (experimental)",
-"tier": "3-leg",
-"legs": [
 {
 "gid": "2026_08_LV_NYJ",
 "start": "2026-11-01T13:00:00",
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins 275+ pass yds",
-"p": 0.305,
-"price": 189,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "tj hockenson",
-"lab": "T.J. Hockenson 60+ rec yds",
-"p": 0.25,
-"price": 252,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_ATL_TB",
-"start": "2026-11-01T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 99.5,
-"name": "bucky irving",
-"lab": "Bucky Irving 100+ rush yds",
-"p": 0.22,
-"price": 296,
+"name": "geno smith",
+"lab": "Geno Smith 275+ pass yds",
+"p": 0.21,
+"price": 313,
 "book": "Kalshi"
 }
 ],
-"p": 0.01678,
-"d": 40.351,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5413,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 19.5,
-"name": "tyler goodson",
-"lab": "Tyler Goodson under 19.5 rush yds",
-"p": 0.5247,
-"price": 104,
-"book": "Novig"
-}
-],
-"p": 0.28399,
-"d": 4.345,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 6.5,
-"name": "amonra st brown",
-"lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4559,
-"price": 144,
-"book": "Novig"
-},
-{
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5413,
-"price": 113,
-"book": "Novig"
-}
-],
-"p": 0.24678,
-"d": 5.197,
+"p": 0.01208,
+"d": 57.51,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -389,6 +323,72 @@
 ],
 "p": 0.23919,
 "d": 4.978,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "mike gesicki",
+"lab": "Mike Gesicki anytime TD",
+"p": 0.308,
+"price": 251,
+"book": "Novig"
+},
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
+"book": "Novig"
+}
+],
+"p": 0.16159,
+"d": 7.16,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts anytime TD",
+"p": 0.284,
+"price": 300,
+"book": "Novig"
+},
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
+"book": "Novig"
+}
+],
+"p": 0.149,
+"d": 8.16,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -441,20 +441,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026_08_TEN_CIN",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5413,
-"price": 113,
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
 "book": "Novig"
 }
 ],
-"p": 0.11692,
-"d": 12.162,
+"p": 0.11332,
+"d": 11.648,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -474,20 +474,20 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_08_TEN_CIN",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5413,
-"price": 113,
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
 "book": "Novig"
 }
 ],
-"p": 0.11367,
-"d": 12.652,
+"p": 0.11018,
+"d": 12.118,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
