@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-29T00:16:26.495Z",
+"frozen_at": "2026-10-29T00:20:43.756Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -229,18 +229,18 @@
 {
 "gid": "2026_08_LV_NYJ",
 "start": "2026-11-01T13:00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "u",
-"line": 5.5,
-"name": "brock bowers",
-"lab": "Brock Bowers under 5.5 receptions",
-"p": 0.4739,
-"price": 127,
+"line": 54.5,
+"name": "garrett wilson",
+"lab": "Garrett Wilson under 54.5 rec yds",
+"p": 0.5263,
+"price": 111,
 "book": "Novig"
 }
 ],
-"p": 0.21284,
-"d": 5.675,
+"p": 0.23636,
+"d": 5.275,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -262,51 +262,18 @@
 {
 "gid": "2026_08_LV_NYJ",
 "start": "2026-11-01T13:00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "u",
-"line": 5.5,
-"name": "brock bowers",
-"lab": "Brock Bowers under 5.5 receptions",
-"p": 0.4739,
-"price": 127,
+"line": 54.5,
+"name": "garrett wilson",
+"lab": "Garrett Wilson under 54.5 rec yds",
+"p": 0.5263,
+"price": 111,
 "book": "Novig"
 }
 ],
-"p": 0.14834,
-"d": 8.104,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_08_KC_DEN",
-"start": "2026-11-01T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "rj harvey",
-"lab": "Rj Harvey anytime TD",
-"p": 0.261,
-"price": 400,
-"book": "Novig"
-},
-{
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 5.5,
-"name": "brock bowers",
-"lab": "Brock Bowers under 5.5 receptions",
-"p": 0.4739,
-"price": 127,
-"book": "Novig"
-}
-],
-"p": 0.12369,
-"d": 11.35,
+"p": 0.16473,
+"d": 7.533,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -340,6 +307,39 @@
 ],
 "p": 0.11722,
 "d": 12.5,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_08_LAC_LA",
+"start": "2026-11-01T16:05:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kimani vidal",
+"lab": "Kimani Vidal anytime TD",
+"p": 0.212,
+"price": 456,
+"book": "Novig"
+},
+{
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 54.5,
+"name": "garrett wilson",
+"lab": "Garrett Wilson under 54.5 rec yds",
+"p": 0.5263,
+"price": 111,
+"book": "Novig"
+}
+],
+"p": 0.11158,
+"d": 11.732,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -27373,6 +27373,47 @@
 ],
 "p": 0.0265,
 "d": null,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "bucky irving",
+"lab": "Bucky Irving over 2.5 receptions",
+"p": 0.4964,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1168,
+"fair": 0.525,
+"main": true
+},
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 8.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 8.5 receptions",
+"p": 0.432,
+"price": 150,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0799,
+"fair": 0.4494,
+"main": false
+}
+],
+"p": 0.21444,
+"d": 5.625,
 "first": "2026-11-01T18:00:00+00:00"
 }
 ],
