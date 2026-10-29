@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-29",
 "lock": "2026-10-30T00:00:00+00:00",
-"frozen_at": "2026-10-29T18:00:44.832Z",
+"frozen_at": "2026-10-29T18:17:47.036Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,8 +22,8 @@
 "line": 1.5,
 "name": "evan mobley",
 "lab": "Evan Mobley 2+ threes",
-"p": 0.3696,
-"price": 174,
+"p": 0.3423,
+"price": 194,
 "book": "Novig",
 "f": [
 "usage",
@@ -49,8 +49,8 @@
 ]
 }
 ],
-"p": 0.08317,
-"d": 13.7,
+"p": 0.07701,
+"d": 14.7,
 "first": "2026-10-30T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -137,8 +137,8 @@
 "line": 1.5,
 "name": "evan mobley",
 "lab": "Evan Mobley over 1.5 threes",
-"p": 0.3688,
-"price": 174,
+"p": 0.34,
+"price": 194,
 "book": "Novig",
 "f": [
 "usage",
@@ -152,11 +152,11 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0128
+"edge": 0.0063
 }
 ],
-"p": 0.1591,
-"d": 6.521,
+"p": 0.14668,
+"d": 6.997,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 },
@@ -259,23 +259,23 @@
 "start": "2026-10-30T00:00Z",
 "kind": "pts",
 "side": "o",
-"line": 19.5,
+"line": 18.5,
 "name": "james harden",
-"lab": "James Harden over 19.5 points",
-"p": 0.4008,
-"fair": 0.401,
-"price": 150,
-"book": "Hard Rock",
+"lab": "James Harden over 18.5 points",
+"p": 0.478,
+"fair": 0.4798,
+"price": -111,
+"book": "Novig",
 "sport": "nba",
-"edge": 0.002,
+"edge": -0.0914,
 "v": [
 "consensus line up + odds drop",
 "one rung above the main line (17.5)"
 ]
 }
 ],
-"p": 0.05214,
-"d": 18.438,
+"p": 0.06239,
+"d": 14.019,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 },
@@ -283,64 +283,6 @@
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401909893",
-"start": "2026-10-30T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "aaron wiggins",
-"lab": "Aaron Wiggins over 3.5 threes",
-"p": 0.3037,
-"price": 350,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.3667,
-"fair": 0.3257,
-"main": false
-},
-{
-"gid": "401909895",
-"start": "2026-10-30T02:00:00+00:00",
-"kind": "pts",
-"side": "o",
-"line": 24.5,
-"name": "ja morant",
-"lab": "Ja Morant over 24.5 points",
-"p": 0.2246,
-"price": 400,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1229,
-"fair": 0.2254,
-"main": false
-}
-],
-"p": 0.06821,
-"d": 22.5,
-"first": "2026-10-30T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401909893",
-"start": "2026-10-30T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "aaron wiggins",
-"lab": "Aaron Wiggins over 3.5 threes",
-"p": 0.3037,
-"price": 350,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.3667,
-"fair": 0.3257,
-"main": false
-},
 {
 "gid": "401909895",
 "start": "2026-10-30T02:00:00+00:00",
@@ -374,8 +316,66 @@
 "main": false
 }
 ],
-"p": 0.02428,
-"d": 69.75,
+"p": 0.07996,
+"d": 15.5,
+"first": "2026-10-30T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909895",
+"start": "2026-10-30T02:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 24.5,
+"name": "ja morant",
+"lab": "Ja Morant over 24.5 points",
+"p": 0.2246,
+"price": 400,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1229,
+"fair": 0.2254,
+"main": false
+},
+{
+"gid": "401909894",
+"start": "2026-10-30T00:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "jeremiah fears",
+"lab": "Jeremiah Fears over 14.5 points",
+"p": 0.356,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1037,
+"fair": 0.3621,
+"main": false
+},
+{
+"gid": "401909893",
+"start": "2026-10-30T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "cj mccollum",
+"lab": "CJ McCollum over 3.5 assists",
+"p": 0.3888,
+"price": 178,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0809,
+"fair": 0.3971,
+"main": false
+}
+],
+"p": 0.03109,
+"d": 43.09,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 }
