@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-10-29",
 "lock": "2026-10-30T00:15:00+00:00",
-"frozen_at": "2026-10-29T11:52:37.926Z",
+"frozen_at": "2026-10-29T12:10:59.459Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 89.5,
 "name": "matthew golden",
 "lab": "Matthew Golden 90+ rec yds",
-"p": 0.2642,
+"p": 0.2657,
 "price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -40,7 +40,7 @@
 "line": 274.5,
 "name": "kyler murray",
 "lab": "Kyler Murray 275+ pass yds",
-"p": 0.237,
+"p": 0.2373,
 "price": 313,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.06262,
+"p": 0.06304,
 "d": 17.8,
 "first": "2026-10-30T00:15:00+00:00",
 "pick": "longshot",
@@ -64,13 +64,13 @@
 {
 "gid": "2026_08_CAR_GB",
 "start": "2026-10-29T20:15:00",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 299.5,
-"name": "jordan love",
-"lab": "Jordan Love 300+ pass yds",
-"p": 0.3233,
-"price": 229,
+"line": 89.5,
+"name": "matthew golden",
+"lab": "Matthew Golden 90+ rec yds",
+"p": 0.2657,
+"price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -80,15 +80,15 @@
 ]
 },
 {
-"gid": "2026_08_MIN_DET",
+"gid": "2026_08_LV_NYJ",
 "start": "2026-11-01T13:00:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 274.5,
-"name": "kyler murray",
-"lab": "Kyler Murray 275+ pass yds",
-"p": 0.237,
-"price": 313,
+"line": 249.5,
+"name": "kirk cousins",
+"lab": "Kirk Cousins 250+ pass yds",
+"p": 0.4484,
+"price": 115,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -98,9 +98,10 @@
 ]
 }
 ],
-"p": 0.07664,
-"d": 13.588,
+"p": 0.11914,
+"d": 9.267,
 "first": "2026-10-30T00:15:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -2132,6 +2133,48 @@
 ],
 "p": 0.026,
 "d": null,
+"first": "2026-10-30T00:15:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_08_CAR_GB",
+"start": "2026-10-30T00:15:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "marshawn lloyd",
+"lab": "Marshawn Lloyd over 2.5 receptions",
+"p": 0.1859,
+"price": 525,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1616,
+"fair": 0.1779,
+"main": false
+},
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "bucky irving",
+"lab": "Bucky Irving over 2.5 receptions",
+"p": 0.5006,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1265,
+"fair": 0.5307,
+"main": true
+}
+],
+"p": 0.09306,
+"d": 14.062,
 "first": "2026-10-30T00:15:00+00:00",
 "res": null
 }
