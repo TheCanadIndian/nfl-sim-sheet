@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-29T20:00:48.667Z",
+"frozen_at": "2026-10-29T20:13:04.628Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 119.5,
 "name": "zay flowers",
 "lab": "Zay Flowers 120+ rec yds",
-"p": 0.2409,
+"p": 0.2406,
 "price": 296,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -41,7 +41,7 @@
 "line": 274.5,
 "name": "geno smith",
 "lab": "Geno Smith 275+ pass yds",
-"p": 0.2669,
+"p": 0.2731,
 "price": 313,
 "book": "Kalshi",
 "sc": "NYJ pulls away",
@@ -53,10 +53,56 @@
 ]
 }
 ],
-"p": 0.0643,
+"p": 0.06572,
 "d": 16.355,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "geno smith",
+"lab": "Geno Smith 275+ pass yds",
+"p": 0.2731,
+"price": 313,
+"book": "Kalshi",
+"sc": "NYJ pulls away",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "aj brown",
+"lab": "A.J. Brown 80+ rec yds",
+"p": 0.2476,
+"price": 266,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script"
+]
+}
+],
+"p": 0.06761,
+"d": 15.116,
+"first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -162,17 +208,50 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "2026_08_KC_DEN",
-"start": "2026-11-01T16:25:00",
-"kind": "rush_yds",
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
 "side": "o",
-"line": 39.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins 40+ rush yds",
-"p": 0.225,
+"line": 274.5,
+"name": "geno smith",
+"lab": "Geno Smith 275+ pass yds",
+"p": 0.21,
 "price": 313,
 "book": "Kalshi"
 },
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "drake maye",
+"lab": "Drake Maye 275+ pass yds",
+"p": 0.28,
+"price": 218,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_KC_DEN",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "bo nix",
+"lab": "Bo Nix 250+ pass yds",
+"p": 0.24,
+"price": 266,
+"book": "Kalshi"
+}
+],
+"p": 0.01411,
+"d": 47.937,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "2026_08_LV_NYJ",
 "start": "2026-11-01T13:00:00",
@@ -196,39 +275,6 @@
 "p": 0.28,
 "price": 218,
 "book": "Kalshi"
-}
-],
-"p": 0.01323,
-"d": 54.082,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_08_KC_DEN",
-"start": "2026-11-01T16:25:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins 40+ rush yds",
-"p": 0.225,
-"price": 313,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "geno smith",
-"lab": "Geno Smith 275+ pass yds",
-"p": 0.21,
-"price": 313,
-"book": "Kalshi"
 },
 {
 "gid": "2026_08_ATL_TB",
@@ -238,31 +284,19 @@
 "line": 274.5,
 "name": "baker mayfield",
 "lab": "Baker Mayfield 275+ pass yds",
-"p": 0.195,
+"p": 0.19,
 "price": 351,
 "book": "Kalshi"
 }
 ],
-"p": 0.00921,
-"d": 76.798,
+"p": 0.01117,
+"d": 59.154,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
 "legs": [
-{
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5087,
-"price": 113,
-"book": "Novig"
-},
 {
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
@@ -271,13 +305,25 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4548,
+"p": 0.4562,
 "price": 144,
+"book": "Novig"
+},
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
 "book": "Novig"
 }
 ],
-"p": 0.23137,
-"d": 5.197,
+"p": 0.23937,
+"d": 4.978,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -293,24 +339,24 @@
 "name": "rico dowdle",
 "lab": "Rico Dowdle anytime TD",
 "p": 0.317,
-"price": 300,
+"price": 292,
 "book": "Novig"
 },
 {
-"gid": "2026_08_TEN_CIN",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5087,
-"price": 113,
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
 "book": "Novig"
 }
 ],
-"p": 0.16126,
-"d": 8.52,
+"p": 0.16631,
+"d": 7.997,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -318,50 +364,38 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_08_CLE_PIT",
+"gid": "2026_08_ATL_TB",
 "start": "2026-11-01T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "rico dowdle",
-"lab": "Rico Dowdle anytime TD",
-"p": 0.317,
-"price": 300,
-"book": "Novig"
+"name": "kyle pitts",
+"lab": "Kyle Pitts anytime TD",
+"p": 0.283,
+"price": 292,
+"book": "Kalshi"
 },
 {
-"gid": "2026_08_MIN_DET",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec",
+"kind": "rush_yds",
 "side": "u",
-"line": 6.5,
-"name": "amonra st brown",
-"lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4548,
-"price": 144,
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
 "book": "Novig"
 }
 ],
-"p": 0.14418,
-"d": 9.76,
+"p": 0.14848,
+"d": 7.997,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 6.5,
-"name": "amonra st brown",
-"lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4548,
-"price": 144,
-"book": "Novig"
-},
 {
 "gid": "2026_08_KC_DEN",
 "start": "2026-11-01T16:25:00",
@@ -371,12 +405,24 @@
 "name": "rj harvey",
 "lab": "Rj Harvey anytime TD",
 "p": 0.262,
-"price": 400,
+"price": 397,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "amonra st brown",
+"lab": "Amonra St Brown under 6.5 receptions",
+"p": 0.4562,
+"price": 144,
 "book": "Novig"
 }
 ],
-"p": 0.11916,
-"d": 12.2,
+"p": 0.11954,
+"d": 12.127,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -396,20 +442,20 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_08_TEN_CIN",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5087,
-"price": 113,
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
 "book": "Novig"
 }
 ],
-"p": 0.10988,
-"d": 11.885,
+"p": 0.11332,
+"d": 11.383,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -419,30 +465,30 @@
 {
 "gid": "2026_08_TEN_CIN",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 15.5,
-"name": "gunnar helm",
-"lab": "Gunnar Helm under 15.5 rec yds",
-"p": 0.5087,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "2026_08_ATL_TB",
-"start": "2026-11-01T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "sean tucker",
-"lab": "Sean Tucker anytime TD",
-"p": 0.206,
-"price": 494,
-"book": "Kalshi"
+"name": "wandale robinson",
+"lab": "Wandale Robinson anytime TD",
+"p": 0.215,
+"price": 456,
+"book": "Novig"
+},
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 19.5,
+"name": "tyler goodson",
+"lab": "Tyler Goodson under 19.5 rush yds",
+"p": 0.5247,
+"price": 104,
+"book": "Novig"
 }
 ],
-"p": 0.10479,
-"d": 12.652,
+"p": 0.1128,
+"d": 11.342,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
