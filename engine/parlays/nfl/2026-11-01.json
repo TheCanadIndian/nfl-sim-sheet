@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-29T13:46:08.292Z",
+"frozen_at": "2026-10-29T13:58:37.508Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -11,37 +11,98 @@
 "final_at": "2026-11-01T16:00:00+00:00",
 "parlays": [
 {
-"card": "Ladder longshots (experimental)",
+"card": "Path longshots",
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_08_BAL_BUF",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 99.5,
-"name": "zay flowers",
-"lab": "Zay Flowers 100+ rec yds",
-"p": 0.355,
-"price": 166,
-"book": "Kalshi"
+"line": 89.5,
+"name": "michael wilson",
+"lab": "Michael Wilson 90+ rec yds",
+"p": 0.2259,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 },
 {
-"gid": "2026_08_LV_NYJ",
+"gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
 "kind": "pass_yds",
 "side": "o",
 "line": 274.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins 275+ pass yds",
-"p": 0.295,
-"price": 198,
-"book": "Kalshi"
+"name": "kyler murray",
+"lab": "Kyler Murray 275+ pass yds",
+"p": 0.2365,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script"
+]
 }
 ],
-"p": 0.10473,
-"d": 7.931,
-"first": "2026-11-01T18:00:00+00:00"
+"p": 0.05343,
+"d": 20.567,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 349.5,
+"name": "dak prescott",
+"lab": "Dak Prescott 350+ pass yds",
+"p": 0.2075,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "kyler murray",
+"lab": "Kyler Murray 275+ pass yds",
+"p": 0.2365,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script"
+]
+}
+],
+"p": 0.04908,
+"d": 21.683,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -81,38 +142,17 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_08_LV_NYJ",
+"gid": "2026_08_BAL_BUF",
 "start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins 275+ pass yds",
-"p": 0.295,
-"price": 198,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rush_yds",
+"kind": "rec_yds",
 "side": "o",
 "line": 99.5,
-"name": "javonte williams",
-"lab": "Javonte Williams 100+ rush yds",
-"p": 0.29,
-"price": 208,
+"name": "zay flowers",
+"lab": "Zay Flowers 100+ rec yds",
+"p": 0.355,
+"price": 166,
 "book": "Kalshi"
-}
-],
-"p": 0.08555,
-"d": 9.179,
-"first": "2026-11-01T18:00:00+00:00"
 },
-{
-"card": "Ladder longshots (experimental)",
-"tier": "3-leg",
-"legs": [
 {
 "gid": "2026_08_CHI_SEA",
 "start": "2026-11-02T20:15:00",
@@ -124,7 +164,49 @@
 "p": 0.27,
 "price": 229,
 "book": "Kalshi"
+}
+],
+"p": 0.09585,
+"d": 8.734,
+"first": "2026-11-01T18:00:00+00:00"
 },
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "javonte williams",
+"lab": "Javonte Williams 100+ rush yds",
+"p": 0.29,
+"price": 208,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "sam darnold",
+"lab": "Sam Darnold 275+ pass yds",
+"p": 0.27,
+"price": 229,
+"book": "Kalshi"
+}
+],
+"p": 0.0783,
+"d": 10.109,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
@@ -148,28 +230,28 @@
 "p": 0.225,
 "price": 280,
 "book": "Kalshi"
+},
+{
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "geno smith",
+"lab": "Geno Smith 275+ pass yds",
+"p": 0.21,
+"price": 313,
+"book": "Kalshi"
 }
 ],
-"p": 0.01458,
-"d": 45.653,
+"p": 0.01134,
+"d": 57.333,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "2026_08_CHI_SEA",
-"start": "2026-11-02T20:15:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "sam darnold",
-"lab": "Sam Darnold 275+ pass yds",
-"p": 0.27,
-"price": 229,
-"book": "Kalshi"
-},
 {
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
@@ -180,6 +262,18 @@
 "lab": "T.J. Hockenson 60+ rec yds",
 "p": 0.24,
 "price": 266,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "bucky irving",
+"lab": "Bucky Irving 100+ rush yds",
+"p": 0.225,
+"price": 280,
 "book": "Kalshi"
 },
 {
@@ -195,8 +289,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01847,
-"d": 39.461,
+"p": 0.01539,
+"d": 45.653,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -244,7 +338,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4559,
+"p": 0.4546,
 "price": 144,
 "book": "Novig"
 },
@@ -261,7 +355,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.24811,
+"p": 0.24738,
 "d": 4.742,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -277,7 +371,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4559,
+"p": 0.4546,
 "price": 144,
 "book": "Novig"
 },
@@ -294,7 +388,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.22934,
+"p": 0.22866,
 "d": 5.197,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -310,7 +404,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4559,
+"p": 0.4546,
 "price": 144,
 "book": "Novig"
 },
@@ -327,7 +421,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.12036,
+"p": 0.12,
 "d": 12.2,
 "first": "2026-11-01T18:00:00+00:00"
 },
