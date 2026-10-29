@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-29",
 "lock": "2026-10-30T00:00:00+00:00",
-"frozen_at": "2026-10-29T22:07:00.908Z",
+"frozen_at": "2026-10-29T22:20:03.540Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -19,16 +19,16 @@
 "start": "2026-10-30T00:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 1.5,
-"name": "evan mobley",
-"lab": "Evan Mobley 2+ threes",
-"p": 0.3472,
-"price": 190,
-"book": "Novig",
+"line": 2.5,
+"name": "onyeka okongwu",
+"lab": "Onyeka Okongwu 3+ threes",
+"p": 0.2031,
+"price": 456,
+"book": "Kalshi",
 "f": [
-"usage",
 "matchup",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -39,7 +39,7 @@
 "line": 6.5,
 "name": "ja morant",
 "lab": "Ja Morant 7+ ast",
-"p": 0.4386,
+"p": 0.4498,
 "price": 141,
 "book": "Novig",
 "f": [
@@ -50,8 +50,8 @@
 ]
 }
 ],
-"p": 0.15228,
-"d": 6.989,
+"p": 0.09134,
+"d": 13.4,
 "first": "2026-10-30T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -82,11 +82,75 @@
 "start": "2026-10-30T02:00Z",
 "kind": "ast",
 "side": "o",
+"line": 6.5,
+"name": "ja morant",
+"lab": "Ja Morant 7+ ast",
+"p": 0.4498,
+"price": 141,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+]
+}
+],
+"p": 0.15618,
+"d": 6.989,
+"first": "2026-10-30T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909893",
+"start": "2026-10-30T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "onyeka okongwu",
+"lab": "Onyeka Okongwu 3+ threes",
+"p": 0.2031,
+"price": 456,
+"book": "Kalshi",
+"f": [
+"matchup",
+"game",
+"price"
+]
+},
+{
+"gid": "401909894",
+"start": "2026-10-30T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "trey murphy",
+"lab": "Trey Murphy III 4+ threes",
+"p": 0.2746,
+"price": 223,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909895",
+"start": "2026-10-30T02:00Z",
+"kind": "ast",
+"side": "o",
 "line": 4.5,
 "name": "damian lillard",
 "lab": "Damian Lillard 5+ ast",
-"p": 0.4008,
-"price": 150,
+"p": 0.4045,
+"price": 147,
 "book": "Novig",
 "f": [
 "usage",
@@ -95,8 +159,8 @@
 ]
 }
 ],
-"p": 0.13915,
-"d": 7.25,
+"p": 0.02255,
+"d": 44.358,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 },
@@ -112,7 +176,7 @@
 "line": 10.5,
 "name": "donovan clingan",
 "lab": "Donovan Clingan over 10.5 rebounds",
-"p": 0.5504,
+"p": 0.5526,
 "price": -115,
 "book": "Hard Rock",
 "f": [
@@ -126,7 +190,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0193
+"edge": 0.0232
 },
 {
 "gid": "401909893",
@@ -154,7 +218,7 @@
 "edge": 0.0069
 }
 ],
-"p": 0.19016,
+"p": 0.19092,
 "d": 5.422,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
@@ -166,21 +230,22 @@
 {
 "gid": "401909895",
 "start": "2026-10-30T02:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 14.5,
+"line": 11.5,
 "name": "donovan clingan",
-"lab": "Donovan Clingan over 14.5 points",
-"p": 0.241,
-"fair": 0.2428,
-"price": 325,
+"lab": "Donovan Clingan over 11.5 rebounds",
+"p": 0.4411,
+"fair": 0.446,
+"price": 140,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0243,
+"edge": 0.0587,
 "v": [
 "Pinnacle odds drop",
-"consensus line up",
-"one rung above the main line (10.5)"
+"consensus odds drop",
+"one rung above the main line (10.5)",
+"soft matchup"
 ]
 },
 {
@@ -191,12 +256,12 @@
 "line": 2.5,
 "name": "onyeka okongwu",
 "lab": "Onyeka Okongwu over 2.5 threes",
-"p": 0.1831,
-"fair": 0.1828,
+"p": 0.2031,
+"fair": 0.2038,
 "price": 456,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.0181,
+"edge": 0.129,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (1.5)",
@@ -204,8 +269,8 @@
 ]
 }
 ],
-"p": 0.04438,
-"d": 23.63,
+"p": 0.09089,
+"d": 13.344,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 },
@@ -216,21 +281,22 @@
 {
 "gid": "401909895",
 "start": "2026-10-30T02:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 14.5,
+"line": 11.5,
 "name": "donovan clingan",
-"lab": "Donovan Clingan over 14.5 points",
-"p": 0.241,
-"fair": 0.2428,
-"price": 325,
+"lab": "Donovan Clingan over 11.5 rebounds",
+"p": 0.4411,
+"fair": 0.446,
+"price": 140,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0243,
+"edge": 0.0587,
 "v": [
 "Pinnacle odds drop",
-"consensus line up",
-"one rung above the main line (10.5)"
+"consensus odds drop",
+"one rung above the main line (10.5)",
+"soft matchup"
 ]
 },
 {
@@ -241,12 +307,12 @@
 "line": 2.5,
 "name": "onyeka okongwu",
 "lab": "Onyeka Okongwu over 2.5 threes",
-"p": 0.1831,
-"fair": 0.1828,
+"p": 0.2031,
+"fair": 0.2038,
 "price": 456,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.0181,
+"edge": 0.129,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (1.5)",
@@ -261,12 +327,12 @@
 "line": 3.5,
 "name": "trey murphy",
 "lab": "Trey Murphy III over 3.5 threes",
-"p": 0.2806,
-"fair": 0.2816,
-"price": 218,
-"book": "Kalshi",
+"p": 0.2746,
+"fair": 0.2753,
+"price": 223,
+"book": "Novig",
 "sport": "nba",
-"edge": -0.1078,
+"edge": -0.1131,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (2.5)",
@@ -274,8 +340,8 @@
 ]
 }
 ],
-"p": 0.0125,
-"d": 75.143,
+"p": 0.02502,
+"d": 43.101,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 },
@@ -286,17 +352,17 @@
 {
 "gid": "401909895",
 "start": "2026-10-30T02:00:00+00:00",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "damian lillard",
-"lab": "Damian Lillard over 4.5 rebounds",
-"p": 0.4269,
-"price": 170,
-"book": "Hard Rock",
+"line": 6.5,
+"name": "ja morant",
+"lab": "Ja Morant over 6.5 assists",
+"p": 0.4544,
+"price": 141,
+"book": "Novig",
 "sport": "nba",
-"edge": 0.1527,
-"fair": 0.4384,
+"edge": 0.0952,
+"fair": 0.4452,
 "main": false
 },
 {
@@ -307,17 +373,17 @@
 "line": 0.5,
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis over 0.5 threes",
-"p": 0.2408,
+"p": 0.2418,
 "price": 350,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0837,
-"fair": 0.2254,
+"edge": 0.0881,
+"fair": 0.2265,
 "main": true
 }
 ],
-"p": 0.1028,
-"d": 12.15,
+"p": 0.10987,
+"d": 10.845,
 "first": "2026-10-30T00:00:00+00:00",
 "res": null
 }
