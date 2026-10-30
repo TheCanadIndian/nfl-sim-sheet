@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-30T15:41:52.373Z",
+"frozen_at": "2026-10-30T15:54:40.020Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -41,7 +41,7 @@
 "line": 299.5,
 "name": "trevor lawrence",
 "lab": "Trevor Lawrence 300+ pass yds",
-"p": 0.2588,
+"p": 0.2586,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -52,7 +52,7 @@
 ]
 }
 ],
-"p": 0.07183,
+"p": 0.07177,
 "d": 15.334,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "longshot"
@@ -60,6 +60,52 @@
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "2026_08_IND_JAX",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "trevor lawrence",
+"lab": "Trevor Lawrence 300+ pass yds",
+"p": 0.2586,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson 80+ rec yds",
+"p": 0.433,
+"price": 101,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script"
+]
+}
+],
+"p": 0.11197,
+"d": 9.065,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_08_BAL_BUF",
@@ -88,7 +134,7 @@
 "line": 249.5,
 "name": "daniel jones",
 "lab": "Daniel Jones 250+ pass yds",
-"p": 0.2267,
+"p": 0.2261,
 "price": 373,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -96,52 +142,6 @@
 "usage",
 "script",
 "price"
-]
-}
-],
-"p": 0.0629,
-"d": 16.082,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_08_IND_JAX",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "trevor lawrence",
-"lab": "Trevor Lawrence 300+ pass yds",
-"p": 0.2588,
-"price": 351,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson 100+ rec yds",
-"p": 0.2864,
-"price": 189,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"script"
 ]
 },
 {
@@ -152,7 +152,7 @@
 "line": 139.5,
 "name": "puka nacua",
 "lab": "Puka Nacua 140+ rec yds",
-"p": 0.2041,
+"p": 0.204,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -163,9 +163,10 @@
 ]
 }
 ],
-"p": 0.01513,
-"d": 68.428,
-"first": "2026-11-01T18:00:00+00:00"
+"p": 0.0128,
+"d": 84.431,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot"
 },
 {
 "card": "Path longshots",
@@ -179,7 +180,7 @@
 "line": 249.5,
 "name": "daniel jones",
 "lab": "Daniel Jones 250+ pass yds",
-"p": 0.2267,
+"p": 0.2261,
 "price": 373,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -190,24 +191,6 @@
 ]
 },
 {
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "kyler murray",
-"lab": "Kyler Murray 275+ pass yds",
-"p": 0.2378,
-"price": 280,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script"
-]
-},
-{
 "gid": "2026_08_LAC_LA",
 "start": "2026-11-01T16:05:00",
 "kind": "rec_yds",
@@ -215,7 +198,7 @@
 "line": 139.5,
 "name": "puka nacua",
 "lab": "Puka Nacua 140+ rec yds",
-"p": 0.2041,
+"p": 0.204,
 "price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -224,11 +207,30 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "aj brown",
+"lab": "A.J. Brown 80+ rec yds",
+"p": 0.2375,
+"price": 296,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script"
+]
 }
 ],
-"p": 0.011,
-"d": 94.364,
-"first": "2026-11-01T18:00:00+00:00"
+"p": 0.01096,
+"d": 98.337,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -259,7 +261,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.04725,
+"p": 0.04704,
 "d": 15.679,
 "first": "2026-11-02T01:20:00+00:00"
 },
@@ -464,7 +466,7 @@
 "line": 32.5,
 "name": "antonio williams",
 "lab": "Antonio Williams under 32.5 rec yds",
-"p": 0.5268,
+"p": 0.5229,
 "price": 104,
 "book": "Novig"
 },
@@ -481,7 +483,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.28011,
+"p": 0.278,
 "d": 4.162,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -497,7 +499,7 @@
 "line": 32.5,
 "name": "antonio williams",
 "lab": "Antonio Williams under 32.5 rec yds",
-"p": 0.5268,
+"p": 0.5229,
 "price": 104,
 "book": "Novig"
 },
@@ -514,7 +516,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.25929,
+"p": 0.25733,
 "d": 4.488,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -530,7 +532,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4655,
+"p": 0.4636,
 "price": 138,
 "book": "Novig"
 },
@@ -547,7 +549,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.24752,
+"p": 0.24648,
 "d": 4.855,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -596,7 +598,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4655,
+"p": 0.4636,
 "price": 138,
 "book": "Novig"
 },
@@ -613,7 +615,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.12104,
+"p": 0.12053,
 "d": 11.9,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -25388,7 +25390,7 @@
 "line": 239.5,
 "name": "kirk cousins",
 "lab": "Kirk Cousins over 239.5 pass yds",
-"p": 0.4947,
+"p": 0.4938,
 "price": 100,
 "book": "Novig",
 "f": [
@@ -25402,10 +25404,10 @@
 "consensus up"
 ],
 "sport": "nfl",
-"edge": 0.0021
+"edge": 0.0007
 }
 ],
-"p": 0.20688,
+"p": 0.20651,
 "d": 4.7,
 "first": "2026-11-01T18:00:00+00:00"
 },
