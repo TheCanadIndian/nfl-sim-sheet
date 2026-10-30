@@ -288,7 +288,9 @@ def main():
 
     # Opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py: a D who played 3+ of
     # his team's last 5 games this season and isn't dressed tonight; 6th+ game only -- summer departures add nothing).
-    # Players facing that team scored 17% more than the 2025-26 closing price implied (relative), 9% live. Profit tracking only.
+    # Players facing that team scored 17% more than the 2025-26 closing price implied (relative), 9% live; the gain is in
+    # players outside their team's top 3 on PP1 (1.18 vs 0.75 priced, live 1.23 vs 0.91; research/nhl_dout_narrow.py).
+    # Profit tracking only (markets/dout_nhl.json 'vs' = that narrowed list).
     d_out = {}
     cur_hist = fr.pg[fr.pg.toi.notna() & (fr.pg.season == int(todo.season.iloc[0]))]
     for (gid, team), x in pg.groupby(["game_id", "team"]):
@@ -508,8 +510,10 @@ def main():
         json.dump(dict(generated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
                        games={str(x["id"]): {"start": x.get("start_utc"),
                                              "out": {s_["team"]: s_["dout"] for s_ in (x["away"], x["home"]) if s_.get("dout")},
+                                             # narrowed (research/nhl_dout_narrow.py): outside his team's top 3 by our chance, on PP1
                                              "vs": [PL.jsnorm(q["name"]) for s_, o_ in ((x["away"], x["home"]), (x["home"], x["away"]))
-                                                    if o_.get("dout") for q in s_["players"]]}
+                                                    if o_.get("dout") for q in sorted(s_["players"], key=lambda q: -q["p"])[3:]
+                                                    if q.get("pp") == "PP1"]}
                               for x in payload["games"]}), open(os.path.join(PL.SITE, "markets", "dout_nhl.json"), "w"), separators=(",", ":"))
     except Exception as e:                                  # noqa: BLE001
         print(f"dout_nhl.json: skipped ({type(e).__name__}: {e})")

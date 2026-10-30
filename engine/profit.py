@@ -529,7 +529,7 @@ def tag_label(e):
     if e.get("src") == "dry":
         return "Goal drought 3+ games (experimental)"
     if e.get("src") == "dout":
-        return "Goal vs a team missing a regular D (experimental)"
+        return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") == "ddtd":
         w = "Double-double" if e.get("bet") == "double-double" else "Triple-double"
         return f"{w}: every Yes at your books (baseline)" if e.get("grp") == "all" else f"{w} edge 5%+ (experimental)"
@@ -637,7 +637,8 @@ def tags():
                                                                      first=now.isoformat(), p=fair, m=fair, start=st, dry=n))
                     e.setdefault("start", st)
         # NHL opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py): every anytime-goal
-        # over at the owner's books for a player whose opponent is missing one (hockey/project.py -> markets/dout_nhl.json),
+        # over at the owner's books for a PP1 player outside his team's top 3 whose opponent is missing one (hockey/project.py
+        # -> markets/dout_nhl.json 'vs'; research/nhl_dout_narrow.py),
         # first price, best of Hard Rock / Novig / Kalshi, sharp-priced props only (as in the study)
         if sport == "nhl":
             try:
