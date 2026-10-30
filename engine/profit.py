@@ -528,6 +528,8 @@ def tag_label(e):
         return "Early opener value (experimental)"
     if e.get("src") == "dry":
         return "Goal drought 3+ games (experimental)"
+    if e.get("src") == "dout":
+        return "Goal vs a team missing a regular D (experimental)"
     if e.get("src") == "ddtd":
         w = "Double-double" if e.get("bet") == "double-double" else "Triple-double"
         return f"{w}: every Yes at your books (baseline)" if e.get("grp") == "all" else f"{w} edge 5%+ (experimental)"
@@ -633,6 +635,29 @@ def tags():
                         continue
                     e = log.setdefault(f"dry|{sport}|{gid}|{nm}", dict(sport=sport, src="dry", gid=gid, name=nm, bet="goal", book=bk, o=o,
                                                                      first=now.isoformat(), p=fair, m=fair, start=st, dry=n))
+                    e.setdefault("start", st)
+        # NHL opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py): every anytime-goal
+        # over at the owner's books for a player whose opponent is missing one (hockey/project.py -> markets/dout_nhl.json),
+        # first price, best of Hard Rock / Novig / Kalshi, sharp-priced props only (as in the study)
+        if sport == "nhl":
+            try:
+                DO = json.load(open(os.path.join(site, "markets", "dout_nhl.json"))).get("games", {})
+            except (OSError, ValueError):
+                DO = {}
+            for gid, x in DO.items():
+                st = starts.get(str(gid)) or x.get("start")
+                if st and PL.when(st) <= now:
+                    continue
+                for nm in x.get("vs") or []:
+                    e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(nm) or {}).get("goal") or {}
+                    bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                    fair = (e_.get("pin") or {}).get("o")
+                    if not bo or fair is None:
+                        continue
+                    _, bk, o = max(bo)
+                    e = log.setdefault(f"dout|{sport}|{gid}|{nm}", dict(sport=sport, src="dout", gid=gid, name=nm, bet="goal", book=bk, o=o,
+                                                                      first=now.isoformat(), p=fair, m=fair, start=st,
+                                                                      dout=", ".join(v for vs in (x.get("out") or {}).values() for v in vs)))
                     e.setdefault("start", st)
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first

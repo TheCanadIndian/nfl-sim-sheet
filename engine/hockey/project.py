@@ -286,6 +286,24 @@ def main():
         pg.loc[x.index, "src"] = src
     pg = pg[keep | pg.forced].copy()
 
+    # Opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py: a D who played 3+ of
+    # his team's last 5 games this season and isn't dressed tonight; 6th+ game only -- summer departures add nothing).
+    # Players facing that team scored 17% more than the 2025-26 closing price implied (relative), 9% live. Profit tracking only.
+    d_out = {}
+    cur_hist = fr.pg[fr.pg.toi.notna() & (fr.pg.season == int(todo.season.iloc[0]))]
+    for (gid, team), x in pg.groupby(["game_id", "team"]):
+        h = cur_hist[cur_hist.team == team]
+        gids = h.drop_duplicates("game_id").sort_values("date").game_id.tolist()
+        if len(gids) < 5:
+            continue
+        last5 = h[h.game_id.isin(gids[-5:]) & (h.pos == "D")]
+        n = last5.groupby("player_id").size()
+        regs = last5[last5.player_id.isin(n.index[n >= 3])].groupby("player_id").agg(m=("np_toi", "mean"), name=("name", "last"))
+        miss = regs[~regs.index.isin(x.player_id)]
+        dressed_d = float(x[x.pos == "D"].e_np_toi.sum())
+        if len(miss) and miss.m.sum() / (miss.m.sum() + dressed_d) > .1:
+            d_out[(gid, team)] = list(miss.sort_values("m", ascending=False).name)
+
     # Power-play units: move expected PP time toward the listed unit's typical time.
     hist = fr.pg[fr.pg.toi.notna() & (fr.pg.season == fr.pg.season[fr.pg.toi.notna()].max())]
     r = hist.groupby(["game_id", "team"]).pp_toi.rank(ascending=False, method="first")
@@ -420,6 +438,7 @@ def main():
                 goalie=gname.get(fut_goalies.get((g.game_id, t)), "unknown"), goalie_id=None if fut_goalies.get((g.game_id, t)) is None else int(fut_goalies[(g.game_id, t)]),
                 goalie_status=goalie_status.get((g.game_id, t), ""), lineup=lineup_note.get((g.game_id, t), ""),
                 lchg=lside.get((g.game_id, t)),
+                dout=d_out.get((g.game_id, t)),
                 gstats=dict(now=gstats(fut_goalies.get((g.game_id, t)), cur_season),
                             last=gstats(fut_goalies.get((g.game_id, t)), prev),
                             rating=round(float(gq_now.get((g.game_id, g.home if t == g.away else g.away), 1.0)), 3)),
@@ -484,6 +503,16 @@ def main():
                               for x in payload["games"]}), open(dp, "w"), separators=(",", ":"))
     except Exception as e:                                  # noqa: BLE001
         print(f"dry_nhl.json: skipped ({type(e).__name__}: {e})")
+    try:                                                    # profit.tags logs goal overs vs a team missing a regular D (experimental)
+        import parlays as PL
+        json.dump(dict(generated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+                       games={str(x["id"]): {"start": x.get("start_utc"),
+                                             "out": {s_["team"]: s_["dout"] for s_ in (x["away"], x["home"]) if s_.get("dout")},
+                                             "vs": [PL.jsnorm(q["name"]) for s_, o_ in ((x["away"], x["home"]), (x["home"], x["away"]))
+                                                    if o_.get("dout") for q in s_["players"]]}
+                              for x in payload["games"]}), open(os.path.join(PL.SITE, "markets", "dout_nhl.json"), "w"), separators=(",", ":"))
+    except Exception as e:                                  # noqa: BLE001
+        print(f"dout_nhl.json: skipped ({type(e).__name__}: {e})")
     html = TEMPLATE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS) \
         .replace("__DATA__", json.dumps(payload, separators=(",", ":")).replace("</", "<\\/")).replace("__DATE__", date)
     path = os.path.join(OUT, f"{date}.html")
