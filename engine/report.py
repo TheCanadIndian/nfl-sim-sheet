@@ -679,7 +679,7 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
 .tdt th .tds:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
 .tdt th .tds .ar{font-size:9px;opacity:.45}
 .tdt th .tds.on{color:var(--ink)}.tdt th .tds.on .ar{opacity:1;color:var(--accent)}
-.tdt .tdname{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:180px;width:1%;box-shadow:1px 0 0 var(--faint)}
+.tdt .tdname{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:180px;max-width:230px;width:1%;box-shadow:1px 0 0 var(--faint)}
 .tdt thead .tdname{z-index:3}
 .tdp{display:flex;gap:10px;align-items:center}
 .tdpn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
