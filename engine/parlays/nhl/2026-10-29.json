@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-29",
 "lock": "2026-10-29T23:00:00+00:00",
-"frozen_at": "2026-10-30T01:50:25.984Z",
+"frozen_at": "2026-10-30T01:55:10.779Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -112,7 +112,8 @@
 "lab": "Evgeni Malkin over 1.5 shots",
 "p": 0.556,
 "price": -117,
-"book": "Novig"
+"book": "Novig",
+"res": "W"
 },
 {
 "gid": "2026020208",
@@ -616,7 +617,8 @@
 "lab": "Dylan Guenther to score",
 "p": 0.3652,
 "price": 167,
-"book": "Novig"
+"book": "Novig",
+"res": "L"
 },
 {
 "gid": "2026020205",
@@ -628,13 +630,14 @@
 "lab": "Dylan Guenther 3+ shots",
 "p": 0.5689,
 "price": -140,
-"book": "theScore"
+"book": "theScore",
+"res": "L"
 }
 ],
 "p": 0.28613,
 "d": 3.495,
 "first": "2026-10-29T23:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -651,7 +654,8 @@
 "lab": "Dylan Guenther to score",
 "p": 0.3652,
 "price": 167,
-"book": "Novig"
+"book": "Novig",
+"res": "L"
 },
 {
 "gid": "2026020205",
@@ -663,13 +667,14 @@
 "lab": "UTA moneyline",
 "p": 0.5363,
 "price": -122,
-"book": "Novig"
+"book": "Novig",
+"res": "W"
 }
 ],
 "p": 0.24796,
 "d": 4.033,
 "first": "2026-10-29T23:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -686,7 +691,8 @@
 "lab": "Rickard Rakell to score",
 "p": 0.3224,
 "price": 213,
-"book": "Novig"
+"book": "Novig",
+"res": "W"
 },
 {
 "gid": "2026020205",
@@ -698,14 +704,16 @@
 "lab": "Rickard Rakell 3+ shots",
 "p": 0.4834,
 "price": 106,
-"book": "Novig"
+"book": "Novig",
+"res": "W"
 }
 ],
 "p": 0.22005,
 "d": 4.544,
 "first": "2026-10-29T23:00:00+00:00",
-"res": null,
-"locked": true
+"res": "W",
+"locked": true,
+"paid": 6.448
 },
 {
 "card": "Same-game combos (experimental)",
@@ -721,7 +729,8 @@
 "lab": "Clayton Keller to score",
 "p": 0.3183,
 "price": 217,
-"book": "Novig"
+"book": "Novig",
+"res": "L"
 },
 {
 "gid": "2026020205",
@@ -733,13 +742,14 @@
 "lab": "UTA moneyline",
 "p": 0.5363,
 "price": -122,
-"book": "Novig"
+"book": "Novig",
+"res": "W"
 }
 ],
 "p": 0.21493,
 "d": 4.653,
 "first": "2026-10-29T23:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -1037,7 +1047,8 @@
 "lab": "Erik Karlsson to score",
 "p": 0.1732,
 "price": null,
-"book": null
+"book": null,
+"res": "W"
 }
 ],
 "p": 0.0666,
@@ -3264,7 +3275,7 @@
 "name": null,
 "lab": "OTT-LAK over 5.5",
 "p": 0.5635,
-"price": -113,
+"price": -115,
 "book": "Novig"
 }
 ],
@@ -3298,7 +3309,7 @@
 "name": null,
 "lab": "OTT-LAK over 5.5",
 "p": 0.5635,
-"price": -113,
+"price": -115,
 "book": "Novig"
 }
 ],
@@ -3553,52 +3564,6 @@
 "gid": "2026020211",
 "start": "2026-10-30T02:00:00Z",
 "kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "leo carlsson",
-"lab": "Leo Carlsson over 2.5 shots",
-"p": 0.4465,
-"price": 138,
-"book": "Novig"
-},
-{
-"gid": "2026020212",
-"start": "2026-10-30T02:00:00Z",
-"kind": "total",
-"side": "over",
-"line": 5.5,
-"name": null,
-"lab": "OTT-LAK over 5.5",
-"p": 0.5635,
-"price": -113,
-"book": "Novig"
-},
-{
-"gid": "2026020213",
-"start": "2026-10-30T02:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "elias pettersson",
-"lab": "Elias Pettersson under 2.5 shots",
-"p": 0.915,
-"price": -175,
-"book": "Hard Rock"
-}
-],
-"p": 0.2302,
-"d": 7.05,
-"first": "2026-10-30T02:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020211",
-"start": "2026-10-30T02:00:00Z",
-"kind": "sog",
 "side": "u",
 "line": 3.5,
 "name": "tage thompson",
@@ -3684,6 +3649,52 @@
 "res": null
 },
 {
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020211",
+"start": "2026-10-30T02:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "jack quinn",
+"lab": "Jack Quinn to score",
+"p": 0.3407,
+"price": 213,
+"book": "Novig"
+},
+{
+"gid": "2026020212",
+"start": "2026-10-30T02:00:00Z",
+"kind": "total",
+"side": "over",
+"line": 5.5,
+"name": null,
+"lab": "OTT-LAK over 5.5",
+"p": 0.5635,
+"price": -115,
+"book": "Novig"
+},
+{
+"gid": "2026020213",
+"start": "2026-10-30T02:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "elias pettersson",
+"lab": "Elias Pettersson under 2.5 shots",
+"p": 0.915,
+"price": -175,
+"book": "Hard Rock"
+}
+],
+"p": 0.17569,
+"d": 9.196,
+"first": "2026-10-30T02:00:00+00:00",
+"res": null
+},
+{
 "card": "Shots + moneyline parlays",
 "tier": "+250 to +600",
 "legs": [
@@ -3708,12 +3719,12 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 }
 ],
 "p": 0.25449,
-"d": 4.2,
+"d": 4.22,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
@@ -3730,8 +3741,8 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 },
 {
 "gid": "2026020213",
@@ -3747,7 +3758,7 @@
 }
 ],
 "p": 0.25108,
-"d": 4.368,
+"d": 4.389,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
@@ -3776,12 +3787,12 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 }
 ],
 "p": 0.25074,
-"d": 4.284,
+"d": 4.304,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
@@ -3810,8 +3821,8 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 },
 {
 "gid": "2026020213",
@@ -3827,7 +3838,7 @@
 }
 ],
 "p": 0.13099,
-"d": 8.736,
+"d": 8.778,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
@@ -3856,8 +3867,8 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 },
 {
 "gid": "2026020213",
@@ -3873,7 +3884,7 @@
 }
 ],
 "p": 0.12905,
-"d": 8.911,
+"d": 8.953,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
@@ -3902,8 +3913,8 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 },
 {
 "gid": "2026020213",
@@ -3919,7 +3930,7 @@
 }
 ],
 "p": 0.11928,
-"d": 9.45,
+"d": 9.495,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
@@ -3927,18 +3938,6 @@
 "card": "Shots + moneyline parlays",
 "tier": "Best shot",
 "legs": [
-{
-"gid": "2026020211",
-"start": "2026-10-30T02:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "beckett sennecke",
-"lab": "Beckett Sennecke over 2.5 shots",
-"p": 0.5217,
-"price": 100,
-"book": "Novig"
-},
 {
 "gid": "2026020212",
 "start": "2026-10-30T02:00:00Z",
@@ -3948,8 +3947,8 @@
 "name": null,
 "lab": "LAK moneyline",
 "p": 0.4878,
-"price": 110,
-"book": "ProphetX"
+"price": 111,
+"book": "Novig"
 },
 {
 "gid": "2026020213",
@@ -3964,8 +3963,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.13099,
-"d": 8.736,
+"p": 0.25108,
+"d": 4.389,
 "first": "2026-10-30T02:00:00+00:00",
 "res": null
 },
