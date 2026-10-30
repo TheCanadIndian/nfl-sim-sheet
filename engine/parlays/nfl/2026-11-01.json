@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-30T20:28:34.452Z",
+"frozen_at": "2026-10-30T20:35:12.685Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -81,15 +81,15 @@
 ]
 },
 {
-"gid": "2026_08_IND_JAX",
-"start": "2026-11-01T13:00:00",
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 249.5,
-"name": "daniel jones",
-"lab": "Daniel Jones 250+ pass yds",
-"p": 0.2289,
-"price": 373,
+"line": 299.5,
+"name": "drake maye",
+"lab": "Drake Maye 300+ pass yds",
+"p": 0.2196,
+"price": 398,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -99,32 +99,14 @@
 ]
 }
 ],
-"p": 0.06353,
-"d": 16.082,
+"p": 0.06094,
+"d": 16.932,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "2026_08_CLE_PIT",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "aaron rodgers",
-"lab": "Aaron Rodgers 275+ pass yds",
-"p": 0.2348,
-"price": 351,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
 {
 "gid": "2026_08_IND_JAX",
 "start": "2026-11-01T13:00:00",
@@ -160,10 +142,28 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "drake maye",
+"lab": "Drake Maye 300+ pass yds",
+"p": 0.2196,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
 }
 ],
-"p": 0.01245,
-"d": 106.786,
+"p": 0.01164,
+"d": 117.914,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -575,12 +575,12 @@
 "line": 0.5,
 "name": "chris rodriguez",
 "lab": "Chris Rodriguez TD",
-"p": 0.2793,
+"p": 0.2801,
 "price": 317,
 "book": "Novig"
 }
 ],
-"p": 0.16331,
+"p": 0.16381,
 "d": 7.645,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "core"
@@ -623,6 +623,39 @@
 "tier": "+300 to +1000",
 "legs": [
 {
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 1.5,
+"name": "brevyn spannford",
+"lab": "Brevyn Spannford under 1.5 receptions",
+"p": 0.4884,
+"price": 120,
+"book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 12.5,
+"name": "tony pollard",
+"lab": "Tony Pollard under 12.5 rec yds",
+"p": 0.5797,
+"price": -117,
+"book": "Novig"
+}
+],
+"p": 0.28316,
+"d": 4.08,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
 "gid": "2026_08_PHI_WAS",
 "start": "2026-11-01T20:20:00",
 "kind": "rec_yds",
@@ -630,7 +663,7 @@
 "line": 43.5,
 "name": "makai lemon",
 "lab": "Makai Lemon under 43.5 rec yds",
-"p": 0.5639,
+"p": 0.5259,
 "price": 104,
 "book": "Novig"
 },
@@ -647,7 +680,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.29985,
+"p": 0.27963,
 "d": 4.162,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -663,7 +696,7 @@
 "line": 43.5,
 "name": "makai lemon",
 "lab": "Makai Lemon under 43.5 rec yds",
-"p": 0.5639,
+"p": 0.5259,
 "price": 104,
 "book": "Novig"
 },
@@ -680,41 +713,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.27545,
+"p": 0.25687,
 "d": 4.488,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_08_IND_JAX",
-"start": "2026-11-01T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "chris rodriguez",
-"lab": "Chris Rodriguez anytime TD",
-"p": 0.326,
-"price": 317,
-"book": "Novig"
-},
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon under 43.5 rec yds",
-"p": 0.5639,
-"price": 104,
-"book": "Novig"
-}
-],
-"p": 0.18385,
-"d": 8.507,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -734,53 +734,53 @@
 "book": "Novig"
 },
 {
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
 "kind": "rec_yds",
 "side": "u",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon under 43.5 rec yds",
-"p": 0.5639,
-"price": 104,
+"line": 12.5,
+"name": "tony pollard",
+"lab": "Tony Pollard under 12.5 rec yds",
+"p": 0.5797,
+"price": -117,
 "book": "Novig"
 }
 ],
-"p": 0.12012,
-"d": 12.362,
-"first": "2026-11-01T21:05:00+00:00"
+"p": 0.12349,
+"d": 11.239,
+"first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon under 43.5 rec yds",
-"p": 0.5639,
-"price": 104,
-"book": "Novig"
-},
-{
-"gid": "2026_08_ATL_TB",
-"start": "2026-11-01T13:00:00",
+"gid": "2026_08_KC_DEN",
+"start": "2026-11-01T16:25:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "sean tucker",
-"lab": "Sean Tucker anytime TD",
-"p": 0.209,
-"price": 488,
+"name": "bo nix",
+"lab": "Bo Nix anytime TD",
+"p": 0.198,
+"price": 525,
+"book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 12.5,
+"name": "tony pollard",
+"lab": "Tony Pollard under 12.5 rec yds",
+"p": 0.5797,
+"price": -117,
 "book": "Novig"
 }
 ],
-"p": 0.11787,
-"d": 11.995,
+"p": 0.11479,
+"d": 11.592,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
