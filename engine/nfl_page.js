@@ -1031,14 +1031,25 @@ const sbar = (v, span = .2) => { if (v == null) return '<span class="muted">–<
   const w = Math.min(50, Math.abs(v) / span * 50);
   return `<span class="sb"><span class="${v >= 0 ? 'good' : 'bad'}">${v >= 0 ? '+' : '−'}${(Math.abs(v) * 100).toFixed(1)}%</span><i><b style="left:${v >= 0 ? 50 : 50 - w}%;width:${w}%;background:${v >= 0 ? 'var(--good)' : 'var(--bad)'}"></b><s></s></i></span>`; };
 const pbar2 = (v, mu) => v == null ? '<span class="muted">–</span>' : `<span class="sb"><span${mu ? ' class="muted"' : ''}>${pct(v)}</span><i class="lf"><b style="width:${v * 100}%"${mu ? ' class="mu"' : ''}></b></i></span>`;
+// TD luck (research/td_layout_study.py + td_luck_check.py, 2026-10-30): players who scored more TDs than their carries and
+// targets predict (season to date, 2+ games) come in under our chance next game, and those with fewer come in over it --
+// 7,264 player-games 2025-26, better log-loss in all three out-of-sample parts, slope ~ -1.0 per TD a game on the odds.
+const TD_LUCK = 1.0;
+function tdLuck(p){
+  const u = D.rz && D.rz.usage && D.rz.usage.season && D.rz.usage.season[p.k], a = p.s.anytime_td && p.s.anytime_td[MEAN];
+  if (!u || u.games < 2 || u.xtd == null || a == null) return null;
+  const gap = Math.max(-.6, Math.min(.6, (u.td - u.xtd) / u.games)), xpg = u.xtd / u.games;
+  const z = Math.log(a / (1 - a)) - TD_LUCK * gap, adj = 1 / (1 + Math.exp(-z));
+  return {tot: u.td - u.xtd, gap, adj, tag: xpg >= .3 && gap <= -.2 ? 'due' : xpg >= .3 && gap >= .2 ? 'hot' : null};
+}
 const TDS = {name: r => r.p.n, rz_car: r => r.u && r.u.rz_car, gl_car: r => r.u && r.u.gl_car, rz_tgt: r => r.u && r.u.rz_tgt, ez_tgt: r => r.u && r.u.ez_tgt,
   opp: r => r.u && r.u.rz_opp_share, proe: r => r.T && r.T.proe, pass: r => r.T && r.T.pass_rate, run: r => r.T && r.T.pass_rate != null ? 1 - r.T.pass_rate : null,
-  dproe: r => r.O && r.O.def_proe, dtd: r => r.R && r.R.td_rate, xtd: r => r.u && r.u.xtd, td: r => r.u && r.u.td, any: r => r.p.s.anytime_td[MEAN]};
+  dproe: r => r.O && r.O.def_proe, dtd: r => r.R && r.R.td_rate, xtd: r => r.u && r.u.xtd, td: r => r.u && r.u.td, luck: r => r.L && r.L.tot, any: r => r.p.s.anytime_td[MEAN], adj: r => r.L ? r.L.adj : r.p.s.anytime_td[MEAN]};
 function tdBoard(g){
   const sc = state.rzscope, TM = (D.rz.teams || {})[sc] || {};
   const pool = state.tdall ? D.players : PL(g);
   const rows = pool.filter(p => p.s.anytime_td && p.s.anytime_td[MEAN] >= .03 && p.pos !== 'QB')
-    .map(p => ({p, u: rzUsage(p), T: TM[p.t], O: TM[p.o], R: rzDefRow(p.o)}));
+    .map(p => ({p, u: rzUsage(p), T: TM[p.t], O: TM[p.o], R: rzDefRow(p.o), L: tdLuck(p)}));
   const key = TDS[state.tds] ? state.tds : 'any', dir = state.tdsd === 'asc' ? 1 : -1;
   rows.sort((a, b) => { const x = TDS[key](a), y = TDS[key](b);
     if (key === 'name') return dir * String(x).localeCompare(String(y));
@@ -1048,30 +1059,39 @@ function tdBoard(g){
   const mxx = Math.max(.5, ...rows.map(r => (r.u && r.u.xtd) || 0));
   const th = (k, lab, tip, cls = '') => `<th class="${k === 'name' ? 'l ' : ''}${cls}"><button class="tds${key === k ? ' on' : ''}" data-tds="${k}"${tip ? ` title="${esc(tip)}"` : ''}>${lab}<span class="ar">${key === k ? (dir > 0 ? '▲' : '▼') : '↕'}</span></button></th>`;
   const dots = n => n == null ? '<span class="muted">–</span>' : `<span class="tdc"><b>${n}</b><span class="dots" aria-hidden="true">${'●'.repeat(Math.min(n, 8))}${n > 8 ? '+' : ''}</span></span>`;
-  const body = rows.map(({p, u, T, O, R}) => {
+  const luckCell = L => !L ? '<span class="muted">–</span>'
+    : `<span class="tdr"><b class="${L.tot <= -.5 ? 'good' : L.tot >= .5 ? 'bad' : ''}">${L.tot >= 0 ? '+' : '−'}${Math.abs(L.tot).toFixed(1)}</b>${L.tag ? `<span class="lk2 ${L.tag}">${L.tag === 'due' ? 'due' : 'ran hot'}</span>` : ''}</span>`;
+  const adjCell = (L, a) => { if (!L) return `<b>${pct(a)}</b>`; const d = L.adj - a;
+    return `<span class="tdr"><b>${pct(L.adj)}</b><span class="tdsub ${d >= .02 ? 'good' : d <= -.02 ? 'bad' : ''}">${Math.abs(d) < .005 ? 'same' : (d > 0 ? '▲ ' : '▼ ') + Math.round(Math.abs(d) * 100) + ' pts'}</span></span>`; };
+  const body = rows.map(({p, u, T, O, R, L}) => {
     const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN];
     const gl = u ? `${u.games} game${u.games === 1 ? '' : 's'}` : 'no games yet';
     return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span></div></div></td>`
       + heat(u ? u.rz_car : null, M.rz_car) + heat(u ? u.gl_car : null, M.gl_car) + heat(u ? u.rz_tgt : null, M.rz_tgt) + heat(u ? u.ez_tgt : null, M.ez_tgt)
       + `<td>${ring(u && u.rz_opp_share, 'Share of his team’s red-zone carries + targets in the games he played')}</td>`
-      + `<td class="gs">${sbar(T && T.proe)}</td><td>${pbar2(T && T.pass_rate)}</td><td>${pbar2(T && T.pass_rate != null ? 1 - T.pass_rate : null, true)}</td>`
+      + `<td class="gs">${sbar(T && T.proe)}</td><td>${pbar2(T && T.pass_rate)}</td>`
       + `<td class="gs">${sbar(O && O.def_proe)}</td>`
       + `<td>${R ? `<span class="tdr"><span class="pill ${R.td_rate >= .6 ? 'good' : R.td_rate < .45 ? 'bad' : ''}">${pct(R.td_rate)}</span><span class="tdsub">${R.td_trips_n ?? '?'} of ${R.trips_n ?? '?'} trips</span></span>` : '<span class="muted">–</span>'}</td>`
-      + `<td class="gs">${u ? `<span class="sb"><span class="xv">${u.xtd.toFixed(2)}</span><i class="lf"><b style="width:${Math.min(100, u.xtd / mxx * 100)}%"></b></i></span>` : '<span class="muted">–</span>'}</td><td>${dots(u ? u.td : null)}</td>`
-      + `<td class="gs"><span class="tdany">${ring(a, 'Our chance he scores a rushing or receiving TD in this game')}<span class="tdsub">fair ${american(a)}</span></span></td>`
+      + `<td class="gs">${u ? `<span class="sb"><span class="xv">${u.xtd.toFixed(2)}</span><i class="lf"><b style="width:${Math.min(100, u.xtd / mxx * 100)}%"></b></i></span>` : '<span class="muted">–</span>'}</td><td>${dots(u ? u.td : null)}</td><td>${luckCell(L)}</td>`
+      + `<td class="gs"><span class="tdany">${ring(a, 'Our chance he scores a rushing or receiving TD in this game')}<span class="tdsub">fair ${american(a)}</span></span></td><td>${adjCell(L, a)}</td>`
       + `<td class="l">${bo ? MKT.prop(p.g, p.n, 'td') : '<span class="muted">–</span>'}</td></tr>`
-      + (state.open === p.k ? `<tr class="xrow"><td colspan="16">${sliderPanel(p)}</td></tr>` : ''); }).join('');
+      + (state.open === p.k ? `<tr class="xrow"><td colspan="17">${sliderPanel(p)}</td></tr>` : ''); }).join('');
   const lab = D.rz.labels[sc];
-  return `<div class="tdbar"><div class="seg" role="group" aria-label="Players"><button data-tdall="0" aria-pressed="${!state.tdall}">This game</button><button data-tdall="1" aria-pressed="${!!state.tdall}">Whole slate</button></div>
+  const best = [...rows].sort((a, b) => (b.L ? b.L.adj : b.p.s.anytime_td[MEAN]) - (a.L ? a.L.adj : a.p.s.anytime_td[MEAN])).slice(0, state.tdall ? 8 : 4);
+  const due = rows.filter(r => r.L && r.L.tag === 'due').sort((a, b) => b.L.adj - a.L.adj).slice(0, state.tdall ? 6 : 4);
+  const chip = r => `<span class="tdread"><b>${esc(r.p.n)}</b> <span class="muted">${esc(r.p.t)}</span> ${pct(r.L ? r.L.adj : r.p.s.anytime_td[MEAN])}${r.L && r.L.tag === 'due' ? ' <span class="lk2 due">due</span>' : r.L && r.L.tag === 'hot' ? ' <span class="lk2 hot">ran hot</span>' : ''}</span>`;
+  const reads = rows.length ? `<div class="tdreads"><div><span class="eyebrow">Most likely to score</span>${best.map(chip).join('')}</div>${due.length ? `<div><span class="eyebrow">Due · under their expected TDs</span>${due.map(chip).join('')}</div>` : ''}
+    <details class="tdhow"><summary class="small">How to read this</summary><p class="small muted">Our chance already counts his red-zone and goal-line work, his team and the defense -- in a 2025-26 test (7,264 player-games) none of those columns added anything once our chance was known. The one that did is <b>TD luck</b>: players well under their expected TDs scored more often than our chance said, and players who ran hot less. <b>Luck-adj.</b> is our chance with that built in. Not a bet rule yet: against Kalshi’s price the ‘due’ group was close to break-even after the fee.</p></details></div>` : '';
+  return reads + `<div class="tdbar"><div class="seg" role="group" aria-label="Players"><button data-tdall="0" aria-pressed="${!state.tdall}">This game</button><button data-tdall="1" aria-pressed="${!!state.tdall}">Whole slate</button></div>
     <span class="small muted">Red zone = inside the 20, goal line = inside the 5 · tap a header to sort</span></div>
     <div class="tw tdw"><table class="t tdt"><thead>
-      <tr class="gh"><th class="tdname"></th><th colspan="5">His red-zone usage</th><th colspan="3" class="gs">His team inside the 20</th><th colspan="2" class="gs">Opponent defense</th><th colspan="2" class="gs">Touchdowns, ${esc(lab)}</th><th colspan="2" class="gs">This game</th></tr>
+      <tr class="gh"><th class="tdname"></th><th colspan="5">His red-zone usage</th><th colspan="2" class="gs">His team inside the 20</th><th colspan="2" class="gs">Opponent defense</th><th colspan="3" class="gs">Touchdowns, ${esc(lab)}</th><th colspan="3" class="gs">This game</th></tr>
       <tr>${th('name', 'Player', '', 'tdname')}${th('rz_car', 'RZ rush att', 'Carries inside the 20')}${th('gl_car', 'GL rush att', 'Carries inside the 5')}${th('rz_tgt', 'RZ targets', 'Targets inside the 20')}${th('ez_tgt', 'EZ targets', 'Targets thrown into the end zone')}${th('opp', 'RZ opp share', 'His share of his team’s red-zone carries + targets in the games he played (red-zone snap counts aren’t in our data)')}`
-      + `${th('proe', 'PROE', 'Pass rate over expected inside the 20: how much more (or less) his team passes than the league in the same down, distance, field spot and game state', 'gs')}${th('pass', 'Pass %')}${th('run', 'Run %')}`
+      + `${th('proe', 'PROE', 'Pass rate over expected inside the 20: how much more (or less) his team passes than the league in the same down, distance, field spot and game state', 'gs')}${th('pass', 'Pass %', 'Share of his team’s plays inside the 20 that were dropbacks (the rest are runs)')}`
       + `${th('dproe', 'Opp RZ PROE allowed', 'How much more offenses pass inside the 20 against this defense than expected', 'gs')}${th('dtd', 'Opp RZ TD rate', 'Red-zone trips that ended in a touchdown against this defense')}`
-      + `${th('xtd', 'Expected TDs', 'The league’s TD rate on each of his carries and targets, by distance to the end zone, added up', 'gs')}${th('td', 'Actual TDs', 'Rushing + receiving touchdowns')}`
-      + `${th('any', 'Anytime TD', 'Our simulated chance he scores a rushing or receiving TD in this game', 'gs')}<th class="l">Best odds</th></tr></thead>
-    <tbody>${body || '<tr><td colspan="16" class="l muted small">No players with a meaningful TD chance.</td></tr>'}</tbody></table></div>`;
+      + `${th('xtd', 'Expected TDs', 'The league’s TD rate on each of his carries and targets, by distance to the end zone, added up', 'gs')}${th('td', 'Actual TDs', 'Rushing + receiving touchdowns')}${th('luck', 'TD luck', 'Actual TDs minus expected TDs this season. Players far under (due) have scored more than our chance next game; far over (ran hot) less -- 2025-26 test, every out-of-sample part')}`
+      + `${th('any', 'Anytime TD', 'Our simulated chance he scores a rushing or receiving TD in this game', 'gs')}${th('adj', 'Luck-adj.', 'Our chance adjusted for TD luck this season (the one table read that beat our model in every test)')}<th class="l">Best odds</th></tr></thead>
+    <tbody>${body || '<tr><td colspan="17" class="l muted small">No players with a meaningful TD chance.</td></tr>'}</tbody></table></div>`;
 }
 /* ---------------- red zone ---------------- */
 const RZP = ['QB','RB','WR','TE'];
