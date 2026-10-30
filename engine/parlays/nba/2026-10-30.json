@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-30",
 "lock": "2026-10-30T23:00:00+00:00",
-"frozen_at": "2026-10-30T16:42:03.067Z",
+"frozen_at": "2026-10-30T16:55:12.028Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,24 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909278",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 8.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 9+ reb",
+"p": 0.4476,
+"price": 133,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
 "gid": "401909279",
 "start": "2026-10-30T23:30Z",
 "kind": "ast",
@@ -31,30 +49,12 @@
 "rotation",
 "price"
 ]
-},
-{
-"gid": "401909283",
-"start": "2026-10-31T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 8+ ast",
-"p": 0.2484,
-"price": 331,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"price"
-]
 }
 ],
-"p": 0.05022,
-"d": 22.628,
+"p": 0.09049,
+"d": 12.232,
 "first": "2026-10-30T23:30:00+00:00",
-"pick": "longshot",
+"pick": "core",
 "res": null
 },
 {
@@ -66,77 +66,12 @@
 "start": "2026-10-30T23:30Z",
 "kind": "reb",
 "side": "o",
-"line": 8.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 9+ reb",
-"p": 0.4476,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909283",
-"start": "2026-10-31T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 8+ ast",
-"p": 0.2484,
-"price": 331,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.1112,
-"d": 10.042,
-"first": "2026-10-30T23:30:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909277",
-"start": "2026-10-30T23:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "brandon miller",
-"lab": "Brandon Miller 4+ ast",
-"p": 0.4238,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909278",
-"start": "2026-10-30T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 8.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum 9+ reb",
-"p": 0.4476,
-"price": 133,
-"book": "Novig",
+"line": 6.5,
+"name": "paul george",
+"lab": "Paul George 7+ reb",
+"p": 0.3137,
+"price": 230,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -163,9 +98,9 @@
 ]
 }
 ],
-"p": 0.03835,
-"d": 28.502,
-"first": "2026-10-30T23:00:00+00:00",
+"p": 0.06341,
+"d": 17.325,
+"first": "2026-10-30T23:30:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -176,14 +111,78 @@
 {
 "gid": "401909277",
 "start": "2026-10-30T23:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
+"line": 7.5,
 "name": "brandon miller",
-"lab": "Brandon Miller 4+ ast",
-"p": 0.4238,
+"lab": "Brandon Miller 8+ reb",
+"p": 0.281,
+"price": 252,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909278",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 8.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 9+ reb",
+"p": 0.4476,
 "price": 133,
 "book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909282",
+"start": "2026-10-31T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "pascal siakam",
+"lab": "Pascal Siakam 2+ threes",
+"p": 0.4477,
+"price": 120,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.05632,
+"d": 18.044,
+"first": "2026-10-30T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909277",
+"start": "2026-10-30T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 8+ reb",
+"p": 0.281,
+"price": 252,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -228,9 +227,43 @@
 ]
 }
 ],
-"p": 0.05951,
-"d": 16.916,
+"p": 0.03946,
+"d": 25.555,
 "first": "2026-10-30T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909279",
+"start": "2026-10-30T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 5+ threes",
+"p": 0.19,
+"price": 351,
+"book": "Kalshi"
+},
+{
+"gid": "401909285",
+"start": "2026-10-31T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 5.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 6+ threes",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
+}
+],
+"p": 0.0418,
+"d": 17.852,
+"first": "2026-10-30T23:30:00+00:00",
 "res": null
 },
 {
