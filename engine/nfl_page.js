@@ -1051,7 +1051,7 @@ function tdBoard(g){
   const body = rows.map(({p, u, T, O, R}) => {
     const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN];
     const gl = u ? `${u.games} game${u.games === 1 ? '' : 's'}` : 'no games yet';
-    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button>${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) : ''}<span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span></div></div></td>`
+    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span></div></div></td>`
       + heat(u ? u.rz_car : null, M.rz_car) + heat(u ? u.gl_car : null, M.gl_car) + heat(u ? u.rz_tgt : null, M.rz_tgt) + heat(u ? u.ez_tgt : null, M.ez_tgt)
       + `<td>${ring(u && u.rz_opp_share, 'Share of his team’s red-zone carries + targets in the games he played')}</td>`
       + `<td class="gs">${sbar(T && T.proe)}</td><td>${pbar2(T && T.pass_rate)}</td><td>${pbar2(T && T.pass_rate != null ? 1 - T.pass_rate : null, true)}</td>`
