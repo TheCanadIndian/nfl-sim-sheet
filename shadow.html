@@ -347,6 +347,47 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
 .t td,.t th{padding-inline:6px}
 .rzline{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;margin-left:12px;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;color:var(--muted)}
 .rzline .mm{margin:0}
+/* Touchdowns tab: red-zone usage table (nfl_page.js tdBoard) */
+.tdbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 10px}
+.tdw{position:relative}
+.tdt{min-width:1040px}
+.tdt td,.tdt th{padding-inline:4px}
+.tdany{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.tdt th,.tdt td{text-align:center;vertical-align:middle}
+.tdt th{text-transform:none;letter-spacing:0;font-size:11.5px}
+.tdt .gh th{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink);font-weight:600;border-bottom:1px solid var(--faint);padding-bottom:4px}
+.tdt .gs{border-left:1px solid var(--faint)}
+.tdt th .tds{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;line-height:1.2;white-space:normal;max-width:84px;justify-content:center;text-align:center}
+.tdt th .tds:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.tdt th .tds .ar{font-size:9px;opacity:.45}
+.tdt th .tds.on{color:var(--ink)}.tdt th .tds.on .ar{opacity:1;color:var(--accent)}
+.tdt .tdname{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:180px;width:1%;box-shadow:1px 0 0 var(--faint)}
+.tdt thead .tdname{z-index:3}
+.tdp{display:flex;gap:10px;align-items:center}
+.tdpn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.tdpn .plink{font-weight:600}
+.tdsub{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.tchip{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border-radius:7px;font-size:10.5px;font-weight:700;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.tdt td.hv{padding-inline:4px}
+.hc{display:block;min-width:38px;padding:5px 0;border-radius:6px;font-weight:600;background:rgba(46,158,91,var(--a,.12));color:var(--ink)}
+.hc.z{background:rgba(214,69,69,.16);color:var(--bad)}
+.ring{position:relative;display:inline-grid;place-items:center;width:38px;height:38px}
+.ring svg{position:absolute;inset:0}
+.ring b{position:relative;font-size:10.5px}
+.sb{display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:56px}
+.sb > span{font-weight:600;font-size:12.5px}
+.sb i{position:relative;display:block;width:100%;height:4px;background:var(--sunk);border-radius:2px}
+.sb i b{position:absolute;top:0;bottom:0;border-radius:2px}
+.sb i s{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted);opacity:.5}
+.sb i.lf b{left:0;background:#a8822f}.sb i.lf b.mu{background:var(--muted)}
+.sb .good{color:var(--good)}.sb .bad{color:var(--bad)}
+.tdr{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.tdr .pill{display:inline-block;padding:2px 8px;border-radius:6px;font-weight:700;font-size:12.5px;box-shadow:inset 0 0 0 1px var(--faint)}
+.tdr .pill.good{color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}.tdr .pill.bad{color:var(--bad);box-shadow:inset 0 0 0 1px var(--bad)}
+.tdc{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px}
+.tdc .dots{font-size:9px;letter-spacing:1px;color:#a8822f}
+.xv{font-variant-numeric:tabular-nums}
+@media (max-width:640px){.tdt .tdname{min-width:150px}.tdsub{white-space:normal}.tchip{width:30px;height:26px;font-size:9.5px}}
 footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
@@ -423,7 +464,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <main id="main"></main>
   <footer>Model changes that didn’t pass their backtest, graded live beside the real projections. Nothing here changes what the site shows or bets. A shadow is switched on only if it beats the live numbers in both halves of its live record, and then passes a re-test on past seasons.</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Oct 29, 2026 9:42 PM","nfl":[{"stat":"att","n":173,"weeks":[2,7],"live_pin":2.3741,"shadow_pin":2.3293,"live_mae":6.67,"shadow_mae":6.57,"live_over":0.52,"shadow_over":0.474,"ratio":1.0719,"halves":[-0.0323,-0.0589]},{"stat":"cmp","n":172,"weeks":[2,7],"live_pin":1.5573,"shadow_pin":1.5295,"live_mae":4.51,"shadow_mae":4.42,"live_over":0.523,"shadow_over":0.488,"ratio":1.0703,"halves":[-0.0342,-0.0208]}],"nhl":[{"model":"live","n":7213,"nights":30,"exp":1148.8,"act":1091,"ll":0.39262,"d":0.0,"halves":[0.0,0.0],"scale":null},{"model":"recal","n":7213,"nights":30,"exp":1134.8,"act":1091,"ll":0.3925,"d":-0.00012,"halves":[-0.00016,-8e-05],"scale":null},{"model":"high","n":7213,"nights":30,"exp":1144.2,"act":1091,"ll":0.39256,"d":-6e-05,"halves":[-8e-05,-3e-05],"scale":null},{"model":"season","n":7213,"nights":30,"exp":1100.2,"act":1091,"ll":0.39251,"d":-0.00011,"halves":[-0.00018,-3e-05],"scale":0.9558}]}</script>
+<script type="application/json" id="data">{"generated":"Oct 30, 2026 1:37 AM","nfl":[{"stat":"att","n":175,"weeks":[2,8],"live_pin":2.3696,"shadow_pin":2.32,"live_mae":6.68,"shadow_mae":6.56,"live_over":0.526,"shadow_over":0.48,"ratio":1.0676,"halves":[-0.0323,-0.0685]},{"stat":"cmp","n":174,"weeks":[2,8],"live_pin":1.559,"shadow_pin":1.5272,"live_mae":4.52,"shadow_mae":4.42,"live_over":0.529,"shadow_over":0.494,"ratio":1.0683,"halves":[-0.0342,-0.0292]}],"nhl":[{"model":"live","n":7213,"nights":30,"exp":1148.8,"act":1091,"ll":0.39262,"d":0.0,"halves":[0.0,0.0],"scale":null},{"model":"recal","n":7213,"nights":30,"exp":1134.8,"act":1091,"ll":0.3925,"d":-0.00012,"halves":[-0.00016,-8e-05],"scale":null},{"model":"high","n":7213,"nights":30,"exp":1144.2,"act":1091,"ll":0.39256,"d":-6e-05,"halves":[-8e-05,-3e-05],"scale":null},{"model":"season","n":7213,"nights":30,"exp":1100.2,"act":1091,"ll":0.39251,"d":-0.00011,"halves":[-0.00018,-3e-05],"scale":0.9558}]}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));

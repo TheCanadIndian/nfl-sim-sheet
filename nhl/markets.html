@@ -346,6 +346,47 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
 .t td,.t th{padding-inline:6px}
 .rzline{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;margin-left:12px;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;color:var(--muted)}
 .rzline .mm{margin:0}
+/* Touchdowns tab: red-zone usage table (nfl_page.js tdBoard) */
+.tdbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 10px}
+.tdw{position:relative}
+.tdt{min-width:1040px}
+.tdt td,.tdt th{padding-inline:4px}
+.tdany{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.tdt th,.tdt td{text-align:center;vertical-align:middle}
+.tdt th{text-transform:none;letter-spacing:0;font-size:11.5px}
+.tdt .gh th{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink);font-weight:600;border-bottom:1px solid var(--faint);padding-bottom:4px}
+.tdt .gs{border-left:1px solid var(--faint)}
+.tdt th .tds{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;line-height:1.2;white-space:normal;max-width:84px;justify-content:center;text-align:center}
+.tdt th .tds:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.tdt th .tds .ar{font-size:9px;opacity:.45}
+.tdt th .tds.on{color:var(--ink)}.tdt th .tds.on .ar{opacity:1;color:var(--accent)}
+.tdt .tdname{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:180px;width:1%;box-shadow:1px 0 0 var(--faint)}
+.tdt thead .tdname{z-index:3}
+.tdp{display:flex;gap:10px;align-items:center}
+.tdpn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.tdpn .plink{font-weight:600}
+.tdsub{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.tchip{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border-radius:7px;font-size:10.5px;font-weight:700;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.tdt td.hv{padding-inline:4px}
+.hc{display:block;min-width:38px;padding:5px 0;border-radius:6px;font-weight:600;background:rgba(46,158,91,var(--a,.12));color:var(--ink)}
+.hc.z{background:rgba(214,69,69,.16);color:var(--bad)}
+.ring{position:relative;display:inline-grid;place-items:center;width:38px;height:38px}
+.ring svg{position:absolute;inset:0}
+.ring b{position:relative;font-size:10.5px}
+.sb{display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:56px}
+.sb > span{font-weight:600;font-size:12.5px}
+.sb i{position:relative;display:block;width:100%;height:4px;background:var(--sunk);border-radius:2px}
+.sb i b{position:absolute;top:0;bottom:0;border-radius:2px}
+.sb i s{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted);opacity:.5}
+.sb i.lf b{left:0;background:#a8822f}.sb i.lf b.mu{background:var(--muted)}
+.sb .good{color:var(--good)}.sb .bad{color:var(--bad)}
+.tdr{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.tdr .pill{display:inline-block;padding:2px 8px;border-radius:6px;font-weight:700;font-size:12.5px;box-shadow:inset 0 0 0 1px var(--faint)}
+.tdr .pill.good{color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}.tdr .pill.bad{color:var(--bad);box-shadow:inset 0 0 0 1px var(--bad)}
+.tdc{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px}
+.tdc .dots{font-size:9px;letter-spacing:1px;color:#a8822f}
+.xv{font-variant-numeric:tabular-nums}
+@media (max-width:640px){.tdt .tdname{min-width:150px}.tdsub{white-space:normal}.tchip{width:30px;height:26px;font-size:9.5px}}
 footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
@@ -567,7 +608,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"nhl","groups":[{"sport":"nhl","source":"kalshi","kind":"all","n":14418,"hit":0.125,"model_ll":0.2891,"market_ll":0.2895,"model_brier":0.0857,"market_brier":0.0856,"bets":846,"bets_won":302,"roi":-0.022},{"sport":"nhl","source":"polymarket","kind":"all","n":912,"hit":0.482,"model_ll":0.6065,"market_ll":0.6095,"model_brier":0.2095,"market_brier":0.2106,"bets":445,"bets_won":229,"roi":0.11},{"sport":"nhl","source":"kalshi","kind":"first_goal","n":6524,"hit":0.029,"model_ll":0.1252,"market_ll":0.1263,"model_brier":0.0278,"market_brier":0.0279,"bets":0,"bets_won":0,"roi":null},{"sport":"nhl","source":"kalshi","kind":"goal","n":6802,"hit":0.153,"model_ll":0.3942,"market_ll":0.3942,"model_brier":0.1209,"market_brier":0.1207,"bets":473,"bets_won":115,"roi":-0.116},{"sport":"nhl","source":"kalshi","kind":"total","n":728,"hit":0.53,"model_ll":0.5954,"market_ll":0.598,"model_brier":0.2044,"market_brier":0.2054,"bets":279,"bets_won":145,"roi":0.073},{"sport":"nhl","source":"kalshi","kind":"win","n":364,"hit":0.5,"model_ll":0.6505,"market_ll":0.6418,"model_brier":0.2293,"market_brier":0.2252,"bets":94,"bets_won":42,"roi":-0.036},{"sport":"nhl","source":"polymarket","kind":"spread","n":187,"hit":0.332,"model_ll":0.6122,"market_ll":0.6114,"model_brier":0.2117,"market_brier":0.2112,"bets":80,"bets_won":33,"roi":0.071},{"sport":"nhl","source":"polymarket","kind":"total","n":580,"hit":0.543,"model_ll":0.5921,"market_ll":0.5995,"model_brier":0.2031,"market_brier":0.2061,"bets":303,"bets_won":168,"roi":0.144},{"sport":"nhl","source":"polymarket","kind":"win","n":145,"hit":0.434,"model_ll":0.6569,"market_ll":0.6471,"model_brier":0.2325,"market_brier":0.2277,"bets":62,"bets_won":28,"roi":-0.022}],"flow":{"mlb":{"value + NO flow":{"bets":2,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":11,"won":1,"roi":-0.307}},"nfl":{"value + NO flow":{"bets":311,"won":70,"roi":-0.182},"value, YES-heavy flow":{"bets":1602,"won":484,"roi":-0.032},"crowded YES (buying YES)":{"bets":851,"won":228,"roi":-0.0}},"nhl":{"value + NO flow":{"bets":46,"won":7,"roi":-0.299},"value, YES-heavy flow":{"bets":217,"won":44,"roi":0.014},"crowded YES (buying YES)":{"bets":3273,"won":550,"roi":-0.069}},"nba":{"value + NO flow":{"bets":238,"won":61,"roi":-0.044},"value, YES-heavy flow":{"bets":1743,"won":637,"roi":-0.043}}}}</script>
+<script type="application/json" id="grdata">{"sport":"nhl","groups":[{"sport":"nhl","source":"kalshi","kind":"all","n":14418,"hit":0.125,"model_ll":0.2891,"market_ll":0.2895,"model_brier":0.0857,"market_brier":0.0856,"bets":846,"bets_won":302,"roi":-0.022},{"sport":"nhl","source":"polymarket","kind":"all","n":912,"hit":0.482,"model_ll":0.6065,"market_ll":0.6095,"model_brier":0.2095,"market_brier":0.2106,"bets":445,"bets_won":229,"roi":0.11},{"sport":"nhl","source":"kalshi","kind":"first_goal","n":6524,"hit":0.029,"model_ll":0.1252,"market_ll":0.1263,"model_brier":0.0278,"market_brier":0.0279,"bets":0,"bets_won":0,"roi":null},{"sport":"nhl","source":"kalshi","kind":"goal","n":6802,"hit":0.153,"model_ll":0.3942,"market_ll":0.3942,"model_brier":0.1209,"market_brier":0.1207,"bets":473,"bets_won":115,"roi":-0.116},{"sport":"nhl","source":"kalshi","kind":"total","n":728,"hit":0.53,"model_ll":0.5954,"market_ll":0.598,"model_brier":0.2044,"market_brier":0.2054,"bets":279,"bets_won":145,"roi":0.073},{"sport":"nhl","source":"kalshi","kind":"win","n":364,"hit":0.5,"model_ll":0.6505,"market_ll":0.6418,"model_brier":0.2293,"market_brier":0.2252,"bets":94,"bets_won":42,"roi":-0.036},{"sport":"nhl","source":"polymarket","kind":"spread","n":187,"hit":0.332,"model_ll":0.6122,"market_ll":0.6114,"model_brier":0.2117,"market_brier":0.2112,"bets":80,"bets_won":33,"roi":0.071},{"sport":"nhl","source":"polymarket","kind":"total","n":580,"hit":0.543,"model_ll":0.5921,"market_ll":0.5995,"model_brier":0.2031,"market_brier":0.2061,"bets":303,"bets_won":168,"roi":0.144},{"sport":"nhl","source":"polymarket","kind":"win","n":145,"hit":0.434,"model_ll":0.6569,"market_ll":0.6471,"model_brier":0.2325,"market_brier":0.2277,"bets":62,"bets_won":28,"roi":-0.022}],"flow":{"mlb":{"value + NO flow":{"bets":2,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":11,"won":1,"roi":-0.307}},"nhl":{"value + NO flow":{"bets":46,"won":7,"roi":-0.299},"value, YES-heavy flow":{"bets":217,"won":44,"roi":0.014},"crowded YES (buying YES)":{"bets":3273,"won":550,"roi":-0.069}},"nba":{"value + NO flow":{"bets":238,"won":61,"roi":-0.044},"value, YES-heavy flow":{"bets":1743,"won":637,"roi":-0.043}},"nfl":{"value + NO flow":{"bets":324,"won":73,"roi":-0.171},"value, YES-heavy flow":{"bets":1633,"won":490,"roi":-0.036},"crowded YES (buying YES)":{"bets":863,"won":232,"roi":0.002}}}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
