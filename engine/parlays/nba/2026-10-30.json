@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-30",
 "lock": "2026-10-30T23:00:00+00:00",
-"frozen_at": "2026-10-30T19:51:45.301Z",
+"frozen_at": "2026-10-30T19:57:27.734Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,53 @@
 ],
 "final_at": "2026-10-30T22:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909280",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson 5+ reb",
+"p": 0.2256,
+"price": 375,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+]
+},
+{
+"gid": "401909282",
+"start": "2026-10-31T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "aaron nesmith",
+"lab": "Aaron Nesmith 4+ threes",
+"p": 0.204,
+"price": 425,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.04603,
+"d": 24.938,
+"first": "2026-10-30T23:30:00+00:00",
+"pick": "longshot",
+"res": null
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -59,53 +106,6 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909278",
-"start": "2026-10-30T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "paul george",
-"lab": "Paul George 7+ reb",
-"p": 0.3065,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909280",
-"start": "2026-10-30T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "jalen brunson",
-"lab": "Jalen Brunson 5+ reb",
-"p": 0.2256,
-"price": 375,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"game",
-"price"
-]
-}
-],
-"p": 0.06914,
-"d": 15.675,
-"first": "2026-10-30T23:30:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
 "tier": "3-leg",
 "legs": [
 {
@@ -116,7 +116,7 @@
 "line": 6.5,
 "name": "paul george",
 "lab": "Paul George 7+ reb",
-"p": 0.3065,
+"p": 0.307,
 "price": 230,
 "book": "Hard Rock",
 "f": [
@@ -149,23 +149,24 @@
 "start": "2026-10-31T00:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 1.5,
-"name": "pascal siakam",
-"lab": "Pascal Siakam 2+ threes",
-"p": 0.4458,
-"price": 120,
-"book": "Novig",
+"line": 3.5,
+"name": "aaron nesmith",
+"lab": "Aaron Nesmith 4+ threes",
+"p": 0.204,
+"price": 425,
+"book": "Kalshi",
 "f": [
-"usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.05577,
-"d": 18.803,
+"p": 0.02556,
+"d": 44.872,
 "first": "2026-10-30T23:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -175,14 +176,14 @@
 {
 "gid": "401909278",
 "start": "2026-10-30T23:30Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard 4+ threes",
-"p": 0.3102,
-"price": 218,
-"book": "Kalshi",
+"line": 6.5,
+"name": "paul george",
+"lab": "Paul George 7+ reb",
+"p": 0.307,
+"price": 230,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -226,10 +227,9 @@
 ]
 }
 ],
-"p": 0.03982,
-"d": 27.984,
+"p": 0.0394,
+"d": 29.04,
 "first": "2026-10-30T23:30:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -256,12 +256,12 @@
 "line": 5.5,
 "name": "luka doncic",
 "lab": "Luka Doncic 6+ threes",
-"p": 0.215,
+"p": 0.21,
 "price": 331,
 "book": "Kalshi"
 }
 ],
-"p": 0.03977,
+"p": 0.03885,
 "d": 21.468,
 "first": "2026-10-30T23:30:00+00:00",
 "res": null
@@ -290,12 +290,12 @@
 "line": 5.5,
 "name": "luka doncic",
 "lab": "Luka Doncic 6+ threes",
-"p": 0.215,
+"p": 0.21,
 "price": 331,
 "book": "Kalshi"
 }
 ],
-"p": 0.03225,
+"p": 0.0315,
 "d": 23.961,
 "first": "2026-10-30T23:30:00+00:00",
 "res": null
@@ -332,6 +332,41 @@
 "p": 0.02775,
 "d": 27.69,
 "first": "2026-10-30T23:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909280",
+"start": "2026-10-30T23:30Z",
+"kind": "spread",
+"side": "home",
+"line": 1.5,
+"name": null,
+"lab": "PHI +1.5",
+"p": 0.4936,
+"price": 117,
+"book": "Novig"
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "jamal shead",
+"lab": "Jamal Shead 1+ threes",
+"p": 0.6512,
+"price": -161,
+"book": "Kalshi"
+}
+],
+"p": 0.3214,
+"d": 3.518,
+"first": "2026-10-30T23:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -412,7 +447,7 @@
 "line": 6.5,
 "name": "caleb wilson",
 "lab": "Caleb Wilson over 6.5 rebounds",
-"p": 0.5245,
+"p": 0.5202,
 "price": 105,
 "book": "Hard Rock",
 "f": [
@@ -421,10 +456,10 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.0753
+"edge": 0.0665
 }
 ],
-"p": 0.25958,
+"p": 0.25745,
 "d": 4.51,
 "first": "2026-10-30T23:30:00+00:00",
 "res": null
@@ -521,6 +556,33 @@
 "edge": 0.0575
 },
 {
+"gid": "401909278",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 4.5 assists",
+"p": 0.4737,
+"price": 113,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0102
+},
+{
 "gid": "401909281",
 "start": "2026-10-30T23:30Z",
 "kind": "ast",
@@ -543,35 +605,10 @@
 ],
 "sport": "nba",
 "edge": 0.0011
-},
-{
-"gid": "401909278",
-"start": "2026-10-30T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "caleb wilson",
-"lab": "Caleb Wilson over 6.5 rebounds",
-"p": 0.5323,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0753
 }
 ],
-"p": 0.10287,
-"d": 11.803,
+"p": 0.09154,
+"d": 12.263,
 "first": "2026-10-30T23:30:00+00:00",
 "res": null
 },
@@ -657,32 +694,35 @@
 "edge": 0.0575
 },
 {
-"gid": "401909281",
+"gid": "401909278",
 "start": "2026-10-30T23:30Z",
 "kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "franz wagner",
-"lab": "Franz Wagner over 6.5 assists",
-"p": 0.4214,
-"price": 145,
-"book": "Hard Rock",
+"line": 4.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 4.5 assists",
+"p": 0.4737,
+"price": 113,
+"book": "Novig",
 "f": [
 "usage",
-"rotation"
+"matchup",
+"rotation",
+"game"
 ],
 "v": [
 "usage",
+"matchup",
 "rotation",
-"consensus up",
-"pinnacle up"
+"game",
+"our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0011
+"edge": 0.0102
 }
 ],
-"p": 0.04328,
-"d": 30.443,
+"p": 0.04866,
+"d": 26.467,
 "first": "2026-10-30T23:30:00+00:00",
 "res": null
 },
