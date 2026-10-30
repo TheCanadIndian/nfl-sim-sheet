@@ -480,6 +480,69 @@ def freeze_multi(now):
 HUB_SKIP = ("Same-game",)                                 # same-game cards stay on each game's page (no book pays their product)
 
 
+# Each book's payout for a parlay's legs (owner 2026-10-30: 'stick with the legs you like but list each book's projected
+# multiplier'): the legs as picked, priced at every book that offers all of them now (main / alt lines, game lines, Kalshi
+# rungs from live_<sport>.json with the 7% fee). 'Projected' = the legs' prices multiplied; a book's own parlay price can
+# differ. Pinnacle is a reference only (never a price to bet).
+MY_BOOKS = ("Hard Rock", "Novig", "Kalshi")
+_MK = {"td": "anytime_td"}
+
+
+def _mk_files(sport, cache):
+    if sport not in cache:
+        ld = lambda f: (lambda x: x)(json.load(open(os.path.join(SITE, "markets", f)))) if os.path.exists(os.path.join(SITE, "markets", f)) else {}
+        try:
+            P, B, K = ld(f"props_{sport}.json").get("props", {}), ld(f"books_{sport}.json").get("games", {}), ld(f"live_{sport}.json").get("rows", [])
+        except (OSError, ValueError):
+            P, B, K = {}, {}, []
+        kal = {}
+        for r in K:
+            if r.get("n") and r.get("ya") and r.get("l") is not None:
+                kal[(str(r["g"]), jsnorm(r["n"]), r["k"], round(float(r["l"]), 1))] = float(r["ya"])
+        cache[sport] = (P, B, kal)
+    return cache[sport]
+
+
+def leg_quotes(L, sport, cache):
+    """{book: decimal odds} for one leg at every book pricing it now."""
+    P, B, kal = _mk_files(L.get("sport") or sport, cache)
+    gid, kind, side, line = str(L.get("gid")), L.get("kind"), L.get("side"), L.get("line")
+    q = {}
+    if kind in ("ml", "spread", "total"):
+        g = B.get(gid) or {}
+        src = g.get("ml", {}).get(side) if kind == "ml" else (g.get(kind, {}).get(f"{float(line):g}") or {}).get(side) if line is not None else None
+        q = {b: v[0] for b, v in (src or {}).items() if isinstance(v, list) and v and v[0] is not None}
+    elif L.get("name"):
+        ks = (P.get(gid) or {}).get(L["name"]) or {}
+        key = f"sog{int(round(float(line) * 10))}" if kind == "sog" and line is not None else kind
+        e = ks.get(key) or {}
+        sd = "o" if side in ("o", "over") else "u"
+        if e:
+            ml = e.get("l") if e.get("l") is not None else .5
+            src = e.get(sd) if line is None or abs(float(line) - float(ml)) < 1e-6 or kind == "sog" else ((e.get("a") or {}).get(f"{float(line):g}") or {}).get(sd)
+            q = {b: v[0] for b, v in (src or {}).items() if isinstance(v, list) and v and v[0] is not None}
+        if sd == "o" and "Kalshi" not in q and line is not None:
+            ya = kal.get((gid, L["name"], _MK.get(kind, kind), round(float(line), 1)))
+            if ya:
+                c = ya + .07 * ya * (1 - ya)
+                if 0 < c < 1:
+                    q["Kalshi"] = round(-100 * c / (1 - c)) if c >= .5 else round(100 * (1 - c) / c)
+    return {b: dec(o) for b, o in q.items() if b != "Pinnacle"}
+
+
+def book_mults(legs, sport, cache):
+    """[[book, multiplier or None, legs priced]] -- the owner's books always (None = a leg not offered), then every other
+    book with all legs, best first."""
+    if not legs:
+        return []
+    qs = [leg_quotes(L, sport, cache) for L in legs]
+    books = set().union(*[set(x) for x in qs])
+    full = {b: round(math.prod(x[b] for x in qs), 2) for b in books if all(b in x for x in qs)}
+    mine = [[b, full.get(b), sum(b in x for x in qs)] for b in MY_BOOKS]
+    rest = sorted(([b, v, len(qs)] for b, v in full.items() if b not in MY_BOOKS), key=lambda r: -r[1])
+    return mine + rest[:4] if full or any(m[2] for m in mine) else []
+
+
 def hub_data():
     today = dt.datetime.now(ET).date().isoformat()
     sports = []
@@ -506,7 +569,7 @@ def hub_data():
             if fin is not None and str(q.get("card", "")).startswith(BUILDER_CARDS):
                 return pick_lock(sport, "core", q, fin)
             return when(q["first"])                                 # the other cards freeze at their first game
-        cards = {}
+        cards, mk_cache = {}, {}
         for q in d["parlays"]:
             if str(q.get("card", "")).startswith(HUB_SKIP):
                 continue
@@ -515,6 +578,7 @@ def hub_data():
                                                          lock=min(lk, when(q["first"])).astimezone(dt.timezone.utc).isoformat() if lk else None,
                                                          lw=bool(sport == "nba" and (q.get("pick") or str(q.get("card", "")).startswith(BUILDER_CARDS)) and q.get("legs") and nba_lineup_lock(q)[1]) or None,
                                                          paid=q.get("paid"), pick=q.get("pick"),
+                                                         bk=book_mults(q["legs"], sport, mk_cache) if q.get("res") is None and q.get("first") and when(q["first"]) > dt.datetime.now(dt.timezone.utc) else None,
                                                          legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
                                                                     sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
         sports.append(dict(sport=sport, date=d["date"], final_at=d.get("final_at"), cards=[dict(card=c, parlays=v) for c, v in cards.items()]))
@@ -553,6 +617,9 @@ HUB = r"""<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .hp ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13.5px}.hp li{display:flex;gap:7px;align-items:baseline}
 .hp li .sp{font-size:10px;font-weight:800;color:var(--muted);width:28px;flex:none}.hp li .bk{margin-left:auto;white-space:nowrap;font-size:12.5px;color:var(--muted)}
 .hp li i{font-style:normal;font-weight:800;width:12px;flex:none}.hp li i.W{color:var(--good)}.hp li i.L{color:var(--bad)}
+.hbx{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}.hbx>span:first-child{color:var(--muted);margin-right:2px}
+.hbx .bq{border:1px solid var(--faint);border-radius:999px;padding:1px 8px;white-space:nowrap;color:var(--muted)}.hbx .bq b{font-family:var(--display);font-size:13px;color:var(--ink);margin-left:3px}
+.hbx .bq.mine{border-color:color-mix(in srgb,var(--ink) 35%,transparent);color:var(--ink)}.hbx .bq.best{border-color:color-mix(in srgb,var(--good) 65%,transparent)}.hbx .bq.best b{color:var(--good)}.hbx .bq.na{opacity:.6}
 .hs{display:flex;flex-wrap:wrap;gap:4px 12px;border-top:1px solid var(--faint);padding-top:6px;font-size:13px}.hs b{font-family:var(--display);font-size:16px}.hs .good{color:var(--good)}
 .hsec h2 small{font-family:var(--body);font-size:12.5px;color:var(--muted);font-weight:500;margin-left:8px;letter-spacing:0;text-transform:none}
 .lst{font-family:var(--body);font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:3px;border:1px solid currentColor}
@@ -580,6 +647,15 @@ const lockChip = q => { const t = q.lock || q.first; if (!t) return '';
   return new Date(t) <= Date.now() ? `<span class="lk on" title="Final: this parlay won’t change. Place it any time before ${tm(q.first)}.">🔒 Locked · place by ${tm(q.first)}</span>`
     : q.lw ? `<span class="lk" title="Re-picked until the confirmed starting lineups and injury calls for its first game are in our numbers (~30 min before tip); then it won’t change.">🔓 Locks after lineups · by ${when_}</span>`
     : `<span class="lk" title="Until then it can still be swapped for a better one; after that it won’t change. First game ${tm(q.first)}.">🔓 Locks ${when_}</span>`; };
+// each book's payout for these legs (owner 2026-10-30): your books always (— = a leg it doesn’t offer), then the best others
+const BKS = {'Hard Rock': 'Hard Rock', Novig: 'Novig', Kalshi: 'Kalshi', DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM'};
+const xf = v => v.toFixed(v < 10 ? 2 : 1) + 'x';
+function bkRow(q){
+  if (!q.bk || !q.bk.length) return '';
+  const n = q.legs.length, best = Math.max(...q.bk.map(r => r[1] || 0));
+  return `<div class="hbx" title="What each book pays for these legs right now, their prices multiplied (a book’s own parlay price can differ). Your books first; — = it doesn’t offer every leg."><span>${n > 1 ? 'Each book pays' : 'At each book'}</span>${q.bk.map(([b, v, k], i) =>
+    `<span class="bq${i < 3 ? ' mine' : ''}${v && v === best ? ' best' : ''}${v ? '' : ' na'}"${v ? '' : ` title="${k} of ${n} leg${n === 1 ? '' : 's'} offered there"`}>${esc(BKS[b] || b)}<b>${v ? xf(v) : '—'}</b></span>`).join('')}</div>`;
+}
 function card(q, sport, lab){
   const sk = /straight/.test(q.tier || '') ? 10 : D.stake;
   const st = q.res === 'W' ? `<span class="st W">Won +$${(sk * ((q.paid || q.d) - 1)).toFixed(2)}</span>` : q.res === 'L' ? '<span class="st L">Lost</span>' : q.res === 'V' ? '<span class="st">Void</span>'
@@ -587,6 +663,7 @@ function card(q, sport, lab){
   const ev = q.p && q.d ? q.p * q.d - 1 : null;
   return `<div class="hp ${q.pick ? 'pick' : ''} ${q.res || ''}"><div class="hh">${q.pick ? `<span class="tg card">Today’s card</span>` : ''}${lab ? `<span class="tg ${/long/i.test(lab) ? 'ls' : ''}">${esc(lab)}</span>` : ''}<span>${esc(q.tier || '')}</span>${st}</div>
     <ul>${q.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i>${sport === 'multi' ? `<span class="sp">${SP[L.sport] || ''}</span>` : ''}<b>${esc(L.lab)}</b><span class="bk">${esc(L.book || '')} ${am(L.price)}</span></li>`).join('')}</ul>
+    ${bkRow(q)}
     <div class="hs">${q.d ? `<span>pays <b>${q.d.toFixed(q.d < 10 ? 1 : 0)}x</b></span><span>$${sk} → <b>$${(sk * q.d).toFixed(q.d < 10 ? 2 : 0)}</b></span>` : ''}<span>hits <b>${pc(q.p)}</b></span>${ev != null ? `<span class="${ev >= .05 ? 'good' : 'muted'}">edge ${ev >= 0 ? '+' : '−'}${Math.abs(Math.round(ev * 100))}%</span>` : ''}</div></div>`;
 }
 function render(){
