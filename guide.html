@@ -386,6 +386,15 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
 .tdc{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px}
 .tdc .dots{font-size:9px;letter-spacing:1px;color:#a8822f}
 .xv{font-variant-numeric:tabular-nums}
+.tdt .good{color:var(--good)}.tdt .bad{color:var(--bad)}
+.lk2{display:inline-block;padding:0 6px;border-radius:999px;font-size:10.5px;font-weight:600;line-height:17px}
+.lk2.due{background:rgba(46,158,91,.16);color:var(--good)}.lk2.hot{background:rgba(214,69,69,.14);color:var(--bad)}
+.tdreads{display:grid;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid var(--faint);border-radius:10px}
+.tdreads > div{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.tdreads .eyebrow{flex:0 0 auto;margin-right:4px}
+.tdreads p{margin:6px 0 0;max-width:900px}
+.tdhow summary{cursor:pointer;color:var(--muted)}
+.tdread{display:inline-flex;gap:5px;align-items:center;padding:3px 9px;border-radius:999px;background:var(--sunk);font-size:12.5px;white-space:nowrap}
 @media (max-width:640px){.tdt .tdname{min-width:150px}.tdsub{white-space:normal}.tchip{width:30px;height:26px;font-size:9.5px}}
 footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
