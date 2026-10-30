@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-10-30",
 "lock": "2026-10-30T22:00:00+00:00",
-"frozen_at": "2026-10-30T19:57:22.157631+00:00",
+"frozen_at": "2026-10-30T20:04:47.551678+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -10,67 +10,6 @@
 ],
 "final_at": "2026-10-30T20:00:00+00:00",
 "parlays": [
-{
-"card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909280",
-"start": "2026-10-30T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "jalen brunson",
-"lab": "Jalen Brunson 5+ reb",
-"p": 0.2256,
-"price": 375,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909282",
-"start": "2026-10-31T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "aaron nesmith",
-"lab": "Aaron Nesmith 4+ threes",
-"p": 0.204,
-"price": 425,
-"book": "Kalshi",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "2026020214",
-"start": "2026-10-30T22:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "mark stone",
-"lab": "Mark Stone to score",
-"p": 0.3247,
-"price": 233,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.01494,
-"d": 83.042,
-"first": "2026-10-30T22:00:00+00:00",
-"res": null
-},
 {
 "card": "Multisport longshots",
 "tier": "3 legs \u00b7 NBA + NHL",
@@ -130,26 +69,27 @@
 "p": 0.0299,
 "d": 40.967,
 "first": "2026-10-30T22:00:00+00:00",
-"res": null
+"res": null,
+"locked": true
 },
 {
 "card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
+"tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909282",
-"start": "2026-10-31T00:00Z",
-"kind": "fg3m",
+"gid": "401909280",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "aaron nesmith",
-"lab": "Aaron Nesmith 4+ threes",
-"p": 0.204,
-"price": 425,
-"book": "Kalshi",
+"line": 4.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson 5+ reb",
+"p": 0.2256,
+"price": 375,
+"book": "Hard Rock",
 "f": [
+"usage",
 "matchup",
-"rotation",
 "game",
 "price"
 ],
@@ -175,25 +115,6 @@
 "sport": "nba"
 },
 {
-"gid": "401909278",
-"start": "2026-10-30T23:30Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "paul george",
-"lab": "Paul George 7+ reb",
-"p": 0.307,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"sport": "nba"
-},
-{
 "gid": "2026020215",
 "start": "2026-10-30T23:00:00Z",
 "kind": "goal",
@@ -207,10 +128,91 @@
 "sport": "nhl"
 }
 ],
-"p": 0.00901,
-"d": 134.167,
+"p": 0.03244,
+"d": 36.784,
 "first": "2026-10-30T23:00:00+00:00",
-"res": null
+"res": null,
+"locked": true
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
+{
+"gid": "401909278",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "paul george",
+"lab": "Paul George 7+ reb",
+"p": 0.3065,
+"price": 230,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
+"gid": "401909282",
+"start": "2026-10-31T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "pascal siakam",
+"lab": "Pascal Siakam 2+ threes",
+"p": 0.4458,
+"price": 120,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes 8+ ast",
+"p": 0.2879,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026020214",
+"start": "2026-10-30T22:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "mark stone",
+"lab": "Mark Stone to score",
+"p": 0.3247,
+"price": 233,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.01277,
+"d": 96.703,
+"first": "2026-10-30T22:00:00+00:00",
+"res": null,
+"locked": true
 }
 ],
 "graded": false
