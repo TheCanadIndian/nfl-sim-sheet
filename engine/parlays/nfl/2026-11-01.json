@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-30T23:26:58.339Z",
+"frozen_at": "2026-10-30T23:31:53.561Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,54 @@
 ],
 "final_at": "2026-11-01T16:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_08_BAL_BUF",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 129.5,
+"name": "zay flowers",
+"lab": "Zay Flowers 130+ rec yds",
+"p": 0.2025,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "drake maye",
+"lab": "Drake Maye 300+ pass yds",
+"p": 0.2177,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.04408,
+"d": 26.145,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot"
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -55,12 +103,11 @@
 ],
 "p": 0.04732,
 "d": 23.677,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "longshot"
+"first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_08_BAL_BUF",
@@ -97,12 +144,30 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "drake maye",
+"lab": "Drake Maye 300+ pass yds",
+"p": 0.2177,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
 }
 ],
-"p": 0.07828,
-"d": 13.44,
+"p": 0.01704,
+"d": 66.93,
 "first": "2026-11-01T18:00:00+00:00",
-"pick": "core"
+"pick": "longshot"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -479,13 +544,13 @@
 {
 "gid": "2026_08_NE_MIA",
 "start": "2026-11-01T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "drake maye",
-"lab": "Drake Maye TD",
-"p": 0.2455,
-"price": 355,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "MIA moneyline",
+"p": 0.2655,
+"price": 308,
 "book": "Novig"
 },
 {
@@ -501,8 +566,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.14358,
-"d": 8.342,
+"p": 0.15526,
+"d": 7.48,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -510,15 +575,15 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_08_BAL_BUF",
+"gid": "2026_08_ATL_TB",
 "start": "2026-11-01T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "keon coleman",
-"lab": "Keon Coleman TD",
-"p": 0.2444,
-"price": 376,
+"name": "kyle pitts",
+"lab": "Kyle Pitts TD",
+"p": 0.2543,
+"price": 335,
 "book": "Novig"
 },
 {
@@ -534,8 +599,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.14293,
-"d": 8.727,
+"p": 0.14868,
+"d": 7.975,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -28423,7 +28488,7 @@
 "line": 4.5,
 "name": "makai lemon",
 "lab": "Makai Lemon over 4.5 receptions",
-"p": 0.5176,
+"p": 0.5128,
 "price": -111,
 "book": "Novig",
 "f": [
@@ -28434,11 +28499,10 @@
 "usage",
 "rotation",
 "our model above fair",
-"consensus up",
 "lc"
 ],
 "sport": "nfl",
-"edge": 0.0627
+"edge": 0.0558
 },
 {
 "gid": "2026_08_LV_NYJ",
@@ -28465,7 +28529,7 @@
 "edge": 0.0007
 }
 ],
-"p": 0.25559,
+"p": 0.25322,
 "d": 3.802,
 "first": "2026-11-01T18:00:00+00:00"
 },
