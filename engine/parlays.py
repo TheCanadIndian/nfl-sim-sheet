@@ -484,7 +484,14 @@ def hub_data():
     today = dt.datetime.now(ET).date().isoformat()
     sports = []
     for sport in ("nfl", "nhl", "nba", "multi", "slate"):
-        fs = sorted(f for f in glob.glob(os.path.join(OUT, sport, "????-??-??.json")) if os.path.basename(f)[:10] >= today)
+        allf = sorted(glob.glob(os.path.join(OUT, sport, "????-??-??.json")))
+        fs = [f for f in allf if os.path.basename(f)[:10] >= today]
+        # keep yesterday's cards (with their results) up until today's are picked (owner 2026-10-30)
+        has_picks = lambda f: any(q.get("pick") or sport in ("multi", "slate") for q in json.load(open(f)).get("parlays", []))
+        yday = (dt.date.fromisoformat(today) - dt.timedelta(days=1)).isoformat()
+        prev = [f for f in allf if os.path.basename(f)[:10] == yday]
+        if prev and has_picks(prev[0]) and not (fs and has_picks(fs[0])):
+            fs = prev
         if not fs:
             continue
         d = json.load(open(fs[0]))
@@ -594,7 +601,8 @@ function render(){
   const lwOf = s => s.cards.some(c => c.parlays.some(q => q.pick && q.lw && !q.res && new Date(q.first) > Date.now()));
   const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => s.sport === 'nba' ? `NBA ${lwOf(s) ? 'locks after lineups' : 'final'}`
     : `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
-  if (picks.length) TB.card = sec('Today’s cards', `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
+  const stale = picks.length && picks.every(x => x.s.date < today);
+  if (picks.length) TB.card = sec(stale ? 'Yesterday’s cards' : 'Today’s cards', stale ? `${picks.length} parlays · today’s picks start building around 7 AM ET` : `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
   else TB.card = sec('Today’s cards', `$${D.stake} each`, `<p class="note">Today’s cards aren’t picked yet. Each day’s cards start building around 7 AM ET and fill in as the books post player props (most NBA / NHL props come in late morning). Yesterday’s cards and their results are on the <a href="profit.html">Profit page</a>.</p>`);
   let lrnHtml = '';
   const LRN = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Learning parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
