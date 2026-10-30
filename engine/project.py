@@ -724,6 +724,8 @@ def matchup_payload(con, fr, todo, keyrows, season, when):
                  "two": M.redzone_defense(fr, [season - 1, season], when, faces)},
         usage={"season": M.redzone_usage(fr, keyrows, [season], when),
                "two": M.redzone_usage(fr, keyrows, [season - 1, season], when)},
+        teams={"season": M.redzone_teams(fr, [season], when),
+               "two": M.redzone_teams(fr, [season - 1, season], when)},
         labels={"season": str(season), "two": f"{season - 1}–{str(season)[2:]}"})
     return dict(players=players, dvp=M.dvp_summary(now, faces), rz=rz)
 

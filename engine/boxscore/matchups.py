@@ -316,6 +316,7 @@ def redzone_defense(fr, seasons, before, faces):
             team=d, faces=faces.get(d), games=g,
             trips=round(float(tr.trips.get(d, 0)) / g, 2),
             td_rate=round(float(tr.td_trips.get(d, 0)) / max(float(tr.trips.get(d, 0)), 1), 3),
+            trips_n=int(tr.trips.get(d, 0)), td_trips_n=int(tr.td_trips.get(d, 0)),
             pos={ps: dict(
                 tgt=round(float(by["tgt"].loc[d, ps]) / g if d in by["tgt"].index else 0, 2),
                 car=round(float(by["car"].loc[d, ps]) / g if d in by["car"].index else 0, 2),
@@ -329,20 +330,71 @@ def redzone_defense(fr, seasons, before, faces):
                                             share=round(float(lg_share[ps]), 3)) for ps in RZ_POS})
 
 
+YD_BINS = [0, 2, 5, 10, 20, 40, 100]
+
+
+def xtd_rates(fr, before, p):
+    """League TD rate per carry / target by distance to the end zone (all loaded seasons before `before`), for each
+    play in `p`: a player's expected TDs = the sum over his carries and targets (owner 2026-10-30: TD usage table)."""
+    h = fr.plays.merge(fr.games[["game_id", "gameday"]], on="game_id")
+    h = h[h.gameday < pd.Timestamp(before)]
+    kind = lambda d: np.where(d.play_type == "run", "run", np.where((d.is_att == 1) & d.receiver_player_id.notna(), "tgt", ""))
+    hb = pd.cut(h.yardline_100, YD_BINS, labels=False)
+    td = np.where(h.play_type == "run", h.rush_touchdown, h.pass_touchdown)
+    rates = pd.Series(td).groupby([kind(h), hb.values]).mean()
+    pb = pd.cut(p.yardline_100, YD_BINS, labels=False)
+    return [float(rates.get((k, b), 0.0)) if k else 0.0 for k, b in zip(kind(p), pb.values)]
+
+
+def _pass_exp(fr, before):
+    """League pass rate inside the 20 by down x distance x field spot x win chance (all loaded seasons before
+    `before`): the expected rate behind PROE (our stored plays have no nflverse xpass)."""
+    h = fr.plays.merge(fr.games[["game_id", "gameday"]], on="game_id")
+    h = h[(h.gameday < pd.Timestamp(before)) & (h.yardline_100 <= RZ_LINE) & h.down.notna()].copy()
+    h["k"] = _pe_key(h)
+    return h.groupby("k").qb_dropback.mean(), float(h.qb_dropback.mean()) if len(h) else .5
+
+
+def _pe_key(d):
+    return (d.down.fillna(1).astype(int).clip(1, 4).astype(str) + "|" + pd.cut(d.ydstogo.fillna(10), [-1, 2, 6, 10, 99], labels=False).astype(str)
+            + "|" + pd.cut(d.yardline_100, [0, 5, 10, 20], labels=False).astype(str) + "|" + pd.cut(d.wp.fillna(.5), [-.01, .2, .4, .6, .8, 1.01], labels=False).astype(str))
+
+
+def redzone_teams(fr, seasons, before):
+    """Per team inside the 20 (seasons, before `before`): pass / run share and pass rate over expected (PROE) on
+    offense, and the PROE offenses ran against it on defense."""
+    p = fr.plays.merge(fr.games[["game_id", "gameday"]], on="game_id")
+    p = p[p.season.isin(seasons) & (p.gameday < pd.Timestamp(before)) & (p.yardline_100 <= RZ_LINE) & p.down.notna()].copy()
+    if p.empty:
+        return None
+    exp, base = _pass_exp(fr, before)
+    p["xp"] = _pe_key(p).map(exp).fillna(base)
+    out = {}
+    for t in sorted(set(p.posteam.dropna()) | set(p.defteam.dropna())):
+        o, d = p[p.posteam == t], p[p.defteam == t]
+        out[t] = dict(plays=int(len(o)), pass_rate=round(float(o.qb_dropback.mean()), 3) if len(o) else None,
+                      proe=round(float((o.qb_dropback - o.xp).mean()), 3) if len(o) else None,
+                      def_proe=round(float((d.qb_dropback - d.xp).mean()), 3) if len(d) else None)
+    return out
+
+
 def redzone_usage(fr, keyrows, seasons, before):
     """Per player (keyed like the page): overall and red-zone usage over `seasons`,
     games before `before`. Shares are of the team's totals in the games he played."""
     p = fr.plays.merge(fr.games[["game_id", "gameday"]], on="game_id")
     p = p[p.season.isin(seasons) & (p.gameday < pd.Timestamp(before))].copy()
     p["rz"] = p.yardline_100 <= RZ_LINE
+    p["ez"] = p.air_yards.notna() & (p.air_yards >= p.yardline_100)          # thrown into the end zone
+    p["xtd"] = xtd_rates(fr, before, p)
     tg = p[(p.is_att == 1) & p.receiver_player_id.notna()]
     ru = p[p.play_type == "run"]
     parts = [
         tg.groupby(["game_id", "posteam", "receiver_player_id"]).agg(
-            tgt=("is_att", "size"), rz_tgt=("rz", "sum"), rec_td=("pass_touchdown", "sum")),
+            tgt=("is_att", "size"), rz_tgt=("rz", "sum"), rec_td=("pass_touchdown", "sum"),
+            ez_tgt=("ez", "sum"), xtd_rec=("xtd", "sum")),
         ru.groupby(["game_id", "posteam", "rusher_player_id"]).agg(
             car=("play_type", "size"), rz_car=("rz", "sum"), gl_car=("yardline_100", lambda s: int((s <= GOAL_LINE).sum())),
-            rush_td=("rush_touchdown", "sum")),
+            rush_td=("rush_touchdown", "sum"), xtd_run=("xtd", "sum")),
     ]
     for x in parts:
         x.index = x.index.set_names(["game_id", "team", "player_id"])
@@ -360,7 +412,8 @@ def redzone_usage(fr, keyrows, seasons, before):
                                       car=("car", "sum"), rz_car=("rz_car", "sum"), gl_car=("gl_car", "sum"),
                                       td=("rec_td", "sum"), rush_td=("rush_td", "sum"), rz_td=("rz_td", "sum"),
                                       team_tgt=("team_tgt", "sum"), team_rz_tgt=("team_rz_tgt", "sum"),
-                                      team_rz_car=("team_rz_car", "sum"))
+                                      team_rz_car=("team_rz_car", "sum"), ez_tgt=("ez_tgt", "sum"),
+                                      xtd=("xtd_rec", "sum"), xtd_run=("xtd_run", "sum"))
     out = {}
     for g, team_, pid, name in keyrows:
         if pid not in agg.index:
@@ -372,7 +425,9 @@ def redzone_usage(fr, keyrows, seasons, before):
             rz_tgt=int(a.rz_tgt), rz_tgt_share=round(a.rz_tgt / a.team_rz_tgt, 3) if a.team_rz_tgt else None,
             rz_car=int(a.rz_car), rz_car_share=round(a.rz_car / a.team_rz_car, 3) if a.team_rz_car else None,
             gl_car=int(a.gl_car), rz_td=int(a.rz_td), td=int(a.td + a.rush_td),
-            rz_opp_pg=round((a.rz_tgt + a.rz_car) / n, 2))
+            rz_opp_pg=round((a.rz_tgt + a.rz_car) / n, 2), ez_tgt=int(a.ez_tgt),
+            rz_opp_share=round((a.rz_tgt + a.rz_car) / (a.team_rz_tgt + a.team_rz_car), 3) if (a.team_rz_tgt + a.team_rz_car) else None,
+            xtd=round(float(a.xtd + a.xtd_run), 2))
     return out
 
 
