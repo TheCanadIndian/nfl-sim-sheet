@@ -1,18 +1,21 @@
 {
- "intercept": -0.04878241930178258,
+ "intercept": -0.310676557258243,
  "coef": {
-  "base": 0.9780471961734338,
-  "form": 0.1063015331011637,
-  "opp": 0.6200377310402736,
-  "home": 0.034188734047465204,
-  "b2b": -0.027066991969085893,
-  "pp": 0.5540903760477749
+  "base": 1.011540044090619,
+  "form": -0.010160255049430779,
+  "opp": 0.6257692253785248,
+  "home": 0.03502582529470001,
+  "b2b": -0.026257082109273116,
+  "pp": 0.5065502943939324,
+  "att_ratio": 0.33272716162384247,
+  "att_form": 0.20770431089727728
  },
- "alpha": 0.07859203525615518,
+ "alpha": 0.07644629239340701,
  "prior_hours": 3.0,
  "pos_rate": {
   "D": 3.9999461951193385,
   "F": 6.706448755799034
  },
- "fit": "2024-25 + 2025-26 skater-games (walk-forward checks: over 1.5/2.5/3.5 within ~1 pt in late 2024-25 and 2025-26)"
+ "fit": "2024-25 + 2025-26 skater-games; attempts (missed + blocked + on goal) added 2026-10-30, research/nhl_sog_attempts.py: over 1.5 + 2.5 + 3.5 log-loss better in all 6 halves of 2024-25 / 2025-26 / 2026-27 walk-forward; intercept shifted by the research frame's offset vs the old live fit (-0.0497)",
+ "att_per_sog": 2.045819706102634
 }
