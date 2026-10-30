@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-30",
 "lock": "2026-10-30T23:00:00+00:00",
-"frozen_at": "2026-10-30T11:54:10.092Z",
+"frozen_at": "2026-10-30T12:11:43.085Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,53 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909278",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "paul george",
+"lab": "Paul George 7+ reb",
+"p": 0.3039,
+"price": 230,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909280",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "og anunoby",
+"lab": "OG Anunoby 8+ reb",
+"p": 0.2339,
+"price": 350,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+]
+}
+],
+"p": 0.07107,
+"d": 14.85,
+"first": "2026-10-30T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
 "gid": "401909277",
 "start": "2026-10-30T23:00Z",
 "kind": "ast",
@@ -22,7 +69,7 @@
 "line": 3.5,
 "name": "brandon miller",
 "lab": "Brandon Miller 4+ ast",
-"p": 0.4151,
+"p": 0.419,
 "price": 135,
 "book": "Novig",
 "f": [
@@ -35,29 +82,94 @@
 {
 "gid": "401909280",
 "start": "2026-10-30T23:30Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "jalen brunson",
-"lab": "Jalen Brunson 4+ threes",
-"p": 0.212,
-"price": 400,
-"book": "Novig",
+"line": 7.5,
+"name": "og anunoby",
+"lab": "OG Anunoby 8+ reb",
+"p": 0.2339,
+"price": 350,
+"book": "Hard Rock",
 "f": [
 "usage",
+"matchup",
 "game",
 "price"
 ]
 }
 ],
-"p": 0.08799,
-"d": 11.75,
+"p": 0.09799,
+"d": 10.575,
 "first": "2026-10-30T23:00:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909277",
+"start": "2026-10-30T23:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "brandon miller",
+"lab": "Brandon Miller 4+ ast",
+"p": 0.419,
+"price": 135,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909278",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "paul george",
+"lab": "Paul George 7+ reb",
+"p": 0.3039,
+"price": 230,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes 7+ ast",
+"p": 0.4074,
+"price": 170,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.05188,
+"d": 20.939,
+"first": "2026-10-30T23:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909277",
@@ -78,25 +190,269 @@
 ]
 },
 {
-"gid": "401909280",
+"gid": "401909278",
 "start": "2026-10-30T23:30Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "jalen brunson",
-"lab": "Jalen Brunson 4+ threes",
-"p": 0.212,
-"price": 400,
+"line": 8.5,
+"name": "jayson tatum",
+"lab": "Jayson Tatum 9+ reb",
+"p": 0.4438,
+"price": 117,
 "book": "Novig",
 "f": [
 "usage",
-"game",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes 7+ ast",
+"p": 0.4074,
+"price": 170,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
 "price"
 ]
 }
 ],
-"p": 0.09403,
-"d": 10.85,
+"p": 0.0802,
+"d": 12.714,
+"first": "2026-10-30T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909280",
+"start": "2026-10-30T23:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "og anunoby",
+"lab": "OG Anunoby over 5.5 rebounds",
+"p": 0.4718,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0161
+},
+{
+"gid": "401909277",
+"start": "2026-10-30T23:00Z",
+"kind": "pts",
+"side": "o",
+"line": 16.5,
+"name": "naz reid",
+"lab": "Naz Reid over 16.5 points",
+"p": 0.5396,
+"price": -110,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0152
+}
+],
+"p": 0.25458,
+"d": 4.105,
+"first": "2026-10-30T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909284",
+"start": "2026-10-31T00:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert over 14.5 points",
+"p": 0.2638,
+"fair": 0.2698,
+"price": 365,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.2268,
+"v": [
+"consensus odds drop",
+"one rung above the main line (9.5)"
+]
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes over 6.5 assists",
+"p": 0.4074,
+"fair": 0.4064,
+"price": 170,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1,
+"v": [
+"consensus odds drop",
+"one rung above the main line (5.5)"
+]
+}
+],
+"p": 0.10965,
+"d": 12.555,
+"first": "2026-10-30T23:30:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909284",
+"start": "2026-10-31T00:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert over 14.5 points",
+"p": 0.2638,
+"fair": 0.2698,
+"price": 365,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.2268,
+"v": [
+"consensus odds drop",
+"one rung above the main line (9.5)"
+]
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes over 6.5 assists",
+"p": 0.4074,
+"fair": 0.4064,
+"price": 170,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1,
+"v": [
+"consensus odds drop",
+"one rung above the main line (5.5)"
+]
+},
+{
+"gid": "401909277",
+"start": "2026-10-30T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "sion james",
+"lab": "Sion James over 4.5 rebounds",
+"p": 0.2918,
+"fair": 0.2889,
+"price": 275,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0941,
+"v": [
+"consensus odds drop",
+"one rung above the main line (3.5)"
+]
+}
+],
+"p": 0.03168,
+"d": 47.081,
+"first": "2026-10-30T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909277",
+"start": "2026-10-30T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "sion james",
+"lab": "Sion James over 4.5 rebounds",
+"p": 0.2918,
+"fair": 0.2889,
+"price": 275,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0941,
+"v": [
+"consensus odds drop",
+"one rung above the main line (3.5)"
+]
+},
+{
+"gid": "401909285",
+"start": "2026-10-31T02:00Z",
+"kind": "pts",
+"side": "o",
+"line": 9.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes over 9.5 points",
+"p": 0.4334,
+"fair": 0.4346,
+"price": 145,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0619,
+"v": [
+"consensus odds drop",
+"one rung above the main line (7.5)"
+]
+}
+],
+"p": 0.12556,
+"d": 9.188,
 "first": "2026-10-30T23:00:00+00:00",
 "res": null
 }
