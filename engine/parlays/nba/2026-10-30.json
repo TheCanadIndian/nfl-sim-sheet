@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-30",
 "lock": "2026-10-30T23:00:00+00:00",
-"frozen_at": "2026-10-30T20:49:38.303Z",
+"frozen_at": "2026-10-30T20:56:45.697Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -37,11 +37,11 @@
 "start": "2026-10-31T00:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 3.5,
+"line": 2.5,
 "name": "aaron nesmith",
-"lab": "Aaron Nesmith 4+ threes",
-"p": 0.2041,
-"price": 425,
+"lab": "Aaron Nesmith 3+ threes",
+"p": 0.3919,
+"price": 181,
 "book": "Kalshi",
 "f": [
 "matchup",
@@ -51,15 +51,62 @@
 ]
 }
 ],
-"p": 0.0466,
-"d": 24.938,
+"p": 0.08948,
+"d": 13.348,
 "first": "2026-10-30T23:30:00+00:00",
-"pick": "longshot",
+"pick": "core",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "401909279",
+"start": "2026-10-30T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 4+ threes",
+"p": 0.4078,
+"price": 159,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909282",
+"start": "2026-10-31T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "aaron nesmith",
+"lab": "Aaron Nesmith 3+ threes",
+"p": 0.3919,
+"price": 181,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.15983,
+"d": 7.278,
+"first": "2026-10-30T23:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909279",
@@ -96,53 +143,6 @@
 "game",
 "price"
 ]
-}
-],
-"p": 0.09309,
-"d": 12.302,
-"first": "2026-10-30T23:30:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909279",
-"start": "2026-10-30T23:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 4+ threes",
-"p": 0.4078,
-"price": 159,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909282",
-"start": "2026-10-31T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "aaron nesmith",
-"lab": "Aaron Nesmith 4+ threes",
-"p": 0.2041,
-"price": 425,
-"book": "Kalshi",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
 },
 {
 "gid": "401909285",
@@ -163,8 +163,8 @@
 ]
 }
 ],
-"p": 0.02039,
-"d": 56.158,
+"p": 0.0228,
+"d": 50.809,
 "first": "2026-10-30T23:30:00+00:00",
 "pick": "longshot",
 "res": null
@@ -333,6 +333,87 @@
 "p": 0.03383,
 "d": 23.708,
 "first": "2026-10-30T23:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909279",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins 4+ assists",
+"p": 0.5489,
+"price": -107,
+"book": "Kalshi"
+},
+{
+"gid": "401909284",
+"start": "2026-10-31T00:00Z",
+"kind": "spread",
+"side": "home",
+"line": -7.5,
+"name": null,
+"lab": "MIN \u22127.5",
+"p": 0.4934,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.27083,
+"d": 4.121,
+"first": "2026-10-30T23:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909279",
+"start": "2026-10-30T23:30Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins 4+ assists",
+"p": 0.5489,
+"price": -107,
+"book": "Kalshi"
+},
+{
+"gid": "401909281",
+"start": "2026-10-30T23:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "jamal shead",
+"lab": "Jamal Shead 1+ threes",
+"p": 0.6514,
+"price": -161,
+"book": "Kalshi"
+},
+{
+"gid": "401909284",
+"start": "2026-10-31T00:00Z",
+"kind": "spread",
+"side": "home",
+"line": -7.5,
+"name": null,
+"lab": "MIN \u22127.5",
+"p": 0.4934,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.17641,
+"d": 6.68,
+"first": "2026-10-30T23:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
