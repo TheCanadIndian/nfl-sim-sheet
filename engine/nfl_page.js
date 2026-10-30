@@ -25,7 +25,7 @@ if (['games','board','dvp','fair','props','agree','parlays'].includes(location.h
 if (state.view === 'wfair') state.view = 'games';      // the Experimental tab is gone (graded in the background on the Profit page)
 if (state.view === 'props' && !D.props.length) state.view = 'games';
 if (state.view === 'rz') { state.view = 'games'; state.group = 'td'; }
-const save = () => { try { localStorage.setItem('simsheet-ui', JSON.stringify({view:state.view, gtab:state.gtab, group:state.group, bstat:state.bstat, bpos:state.bpos, fo:state.fo, dpos:state.dpos, rzscope:state.rzscope})); } catch (e) {} };
+const save = () => { try { localStorage.setItem('simsheet-ui', JSON.stringify({view:state.view, gtab:state.gtab, group:state.group, bstat:state.bstat, bpos:state.bpos, fo:state.fo, dpos:state.dpos, rzscope:state.rzscope, tds:state.tds, tdsd:state.tdsd, tdall:state.tdall})); } catch (e) {} };
 
 document.getElementById('h1').textContent = `Week ${D.week} Sim Sheet`;
 if (D.subtitle){ const n = document.getElementById('subnote'); n.textContent = D.subtitle; n.hidden = false; }
@@ -925,9 +925,9 @@ function gameDetailMain(g){
   <section class="panel" aria-label="Player projections">
     <div class="phead">
       <div class="seg" role="group" aria-label="Stat group">${Object.entries(GROUPS).map(([k,G]) => `<button data-group="${k}" aria-pressed="${k===state.group}">${G.label}</button>`).join('')}</div>
-      ${state.group === 'td' ? `<span class="key">Chance of scoring at least one rushing or receiving TD${D.rz ? ` · red-zone tags from <span class="seg" role="group" aria-label="Seasons" style="display:inline-flex">${['season','two'].map(k => `<button data-rzscope="${k}" aria-pressed="${k===state.rzscope}">${k === 'season' ? D.rz.labels.season + ' only' : D.rz.labels.two}</button>`).join('')}</span>` : ''}</span>` : '<span class="key"><span><i class="kw"></i>8 in 10 games</span><span><i class="kb"></i>middle half</span><span><i class="km"></i>median</span></span>'}
+      ${state.group === 'td' ? `<span class="key">${D.rz && D.rz.teams ? 'Red-zone numbers from' : 'Chance of scoring at least one rushing or receiving TD'}${D.rz ? `${D.rz.teams ? '' : ' · red-zone tags from'} <span class="seg" role="group" aria-label="Seasons" style="display:inline-flex">${['season','two'].map(k => `<button data-rzscope="${k}" aria-pressed="${k===state.rzscope}">${k === 'season' ? D.rz.labels.season + ' only' : D.rz.labels.two}</button>`).join('')}</span>` : ''}</span>` : '<span class="key"><span><i class="kw"></i>8 in 10 games</span><span><i class="kb"></i>middle half</span><span><i class="km"></i>median</span></span>'}
     </div>
-    ${playerTable(g)}
+    ${state.group === 'td' && D.rz && D.rz.teams ? tdBoard(g) : playerTable(g)}
     <p class="muted small" style="margin:0">Tap a player's name to slide the line and see the over/under chance, fair odds and live market prices.</p>
   </section>
   ${matchupPanel(g)}`;
@@ -1015,6 +1015,63 @@ function rzTeamLine(team, opp){
   const parts = RZP.map(ps => { const x = r.pos[ps], cls = x.ratio >= 1.12 ? 'up' : x.ratio <= 1/1.12 ? 'down' : '';
     return `<span class="${cls ? 'mm ' + cls : 'small muted'}" title="${x.td} red-zone TDs allowed to ${RZN[ps]} in ${r.games} games">${cls === 'up' ? '▲ ' : cls === 'down' ? '▼ ' : ''}${ps} ${signPct(x.ratio)}</span>`; }).join(' ');
   return `<span class="rzline">vs ${esc(opp)} D in the red zone (TD rate ${pct(r.td_rate)}): ${parts}</span>`;
+}
+
+/* ---------------- Touchdowns: red-zone usage table (owner 2026-10-30: like a TD usage table he shared) ---------------- */
+const TEAM_C = {ARI:'#97233F',ATL:'#A71930',BAL:'#241773',BUF:'#00338D',CAR:'#0085CA',CHI:'#0B162A',CIN:'#FB4F14',CLE:'#311D00',DAL:'#041E42',DEN:'#FB4F14',
+  DET:'#0076B6',GB:'#203731',HOU:'#03202F',IND:'#002C5F',JAX:'#006778',KC:'#E31837',LA:'#003594',LAC:'#0080C6',LV:'#4b4f52',MIA:'#008E97',MIN:'#4F2683',
+  NE:'#002244',NO:'#9F8958',NYG:'#0B2265',NYJ:'#125740',PHI:'#004C54',PIT:'#FFB612',SEA:'#002244',SF:'#AA0000',TB:'#D50A0A',TEN:'#0C2340',WAS:'#5A1414'};
+const teamChip = t => `<span class="tchip" style="background:${TEAM_C[t] || 'var(--sunk)'};color:${t === 'PIT' ? '#111' : '#fff'}">${esc(t)}</span>`;
+const ring = (v, lab) => { if (v == null) return '<span class="muted">–</span>';
+  const c = v >= .5 ? 'var(--good)' : v >= .25 ? '#c9a227' : '#d9822b', r = 15, L = 2 * Math.PI * r;
+  return `<span class="ring" title="${esc(lab)}"><svg viewBox="0 0 38 38" width="38" height="38" aria-hidden="true"><circle cx="19" cy="19" r="${r}" fill="none" stroke="var(--sunk)" stroke-width="4"/><circle cx="19" cy="19" r="${r}" fill="none" stroke="${c}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(Math.min(1, v) * L).toFixed(1)} ${L.toFixed(1)}" transform="rotate(-90 19 19)"/></svg><b>${pct(v)}</b></span>`; };
+const heat = (v, mx) => v == null ? '<td class="hv"><span class="muted">–</span></td>'
+  : `<td class="hv"><span class="hc${v === 0 ? ' z' : ''}" style="${v ? `--a:${(.12 + .5 * Math.min(1, v / Math.max(mx, 1))).toFixed(2)}` : ''}">${v}</span></td>`;
+const sbar = (v, span = .2) => { if (v == null) return '<span class="muted">–</span>';
+  const w = Math.min(50, Math.abs(v) / span * 50);
+  return `<span class="sb"><span class="${v >= 0 ? 'good' : 'bad'}">${v >= 0 ? '+' : '−'}${(Math.abs(v) * 100).toFixed(1)}%</span><i><b style="left:${v >= 0 ? 50 : 50 - w}%;width:${w}%;background:${v >= 0 ? 'var(--good)' : 'var(--bad)'}"></b><s></s></i></span>`; };
+const pbar2 = (v, mu) => v == null ? '<span class="muted">–</span>' : `<span class="sb"><span${mu ? ' class="muted"' : ''}>${pct(v)}</span><i class="lf"><b style="width:${v * 100}%"${mu ? ' class="mu"' : ''}></b></i></span>`;
+const TDS = {name: r => r.p.n, rz_car: r => r.u && r.u.rz_car, gl_car: r => r.u && r.u.gl_car, rz_tgt: r => r.u && r.u.rz_tgt, ez_tgt: r => r.u && r.u.ez_tgt,
+  opp: r => r.u && r.u.rz_opp_share, proe: r => r.T && r.T.proe, pass: r => r.T && r.T.pass_rate, run: r => r.T && r.T.pass_rate != null ? 1 - r.T.pass_rate : null,
+  dproe: r => r.O && r.O.def_proe, dtd: r => r.R && r.R.td_rate, xtd: r => r.u && r.u.xtd, td: r => r.u && r.u.td, any: r => r.p.s.anytime_td[MEAN]};
+function tdBoard(g){
+  const sc = state.rzscope, TM = (D.rz.teams || {})[sc] || {};
+  const pool = state.tdall ? D.players : PL(g);
+  const rows = pool.filter(p => p.s.anytime_td && p.s.anytime_td[MEAN] >= .03 && p.pos !== 'QB')
+    .map(p => ({p, u: rzUsage(p), T: TM[p.t], O: TM[p.o], R: rzDefRow(p.o)}));
+  const key = TDS[state.tds] ? state.tds : 'any', dir = state.tdsd === 'asc' ? 1 : -1;
+  rows.sort((a, b) => { const x = TDS[key](a), y = TDS[key](b);
+    if (key === 'name') return dir * String(x).localeCompare(String(y));
+    return (x == null) - (y == null) || dir * ((x ?? 0) - (y ?? 0)) || b.p.s.anytime_td[MEAN] - a.p.s.anytime_td[MEAN]; });
+  const mx = k => Math.max(1, ...rows.map(r => (r.u && r.u[k]) || 0));
+  const M = {rz_car: mx('rz_car'), gl_car: mx('gl_car'), rz_tgt: mx('rz_tgt'), ez_tgt: mx('ez_tgt')};
+  const mxx = Math.max(.5, ...rows.map(r => (r.u && r.u.xtd) || 0));
+  const th = (k, lab, tip, cls = '') => `<th class="${k === 'name' ? 'l ' : ''}${cls}"><button class="tds${key === k ? ' on' : ''}" data-tds="${k}"${tip ? ` title="${esc(tip)}"` : ''}>${lab}<span class="ar">${key === k ? (dir > 0 ? '▲' : '▼') : '↕'}</span></button></th>`;
+  const dots = n => n == null ? '<span class="muted">–</span>' : `<span class="tdc"><b>${n}</b><span class="dots" aria-hidden="true">${'●'.repeat(Math.min(n, 8))}${n > 8 ? '+' : ''}</span></span>`;
+  const body = rows.map(({p, u, T, O, R}) => {
+    const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN];
+    const gl = u ? `${u.games} game${u.games === 1 ? '' : 's'}` : 'no games yet';
+    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button>${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) : ''}<span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span></div></div></td>`
+      + heat(u ? u.rz_car : null, M.rz_car) + heat(u ? u.gl_car : null, M.gl_car) + heat(u ? u.rz_tgt : null, M.rz_tgt) + heat(u ? u.ez_tgt : null, M.ez_tgt)
+      + `<td>${ring(u && u.rz_opp_share, 'Share of his team’s red-zone carries + targets in the games he played')}</td>`
+      + `<td class="gs">${sbar(T && T.proe)}</td><td>${pbar2(T && T.pass_rate)}</td><td>${pbar2(T && T.pass_rate != null ? 1 - T.pass_rate : null, true)}</td>`
+      + `<td class="gs">${sbar(O && O.def_proe)}</td>`
+      + `<td>${R ? `<span class="tdr"><span class="pill ${R.td_rate >= .6 ? 'good' : R.td_rate < .45 ? 'bad' : ''}">${pct(R.td_rate)}</span><span class="tdsub">${R.td_trips_n ?? '?'} of ${R.trips_n ?? '?'} trips</span></span>` : '<span class="muted">–</span>'}</td>`
+      + `<td class="gs">${u ? `<span class="sb"><span class="xv">${u.xtd.toFixed(2)}</span><i class="lf"><b style="width:${Math.min(100, u.xtd / mxx * 100)}%"></b></i></span>` : '<span class="muted">–</span>'}</td><td>${dots(u ? u.td : null)}</td>`
+      + `<td class="gs"><span class="tdany">${ring(a, 'Our chance he scores a rushing or receiving TD in this game')}<span class="tdsub">fair ${american(a)}</span></span></td>`
+      + `<td class="l">${bo ? MKT.prop(p.g, p.n, 'td') : '<span class="muted">–</span>'}</td></tr>`
+      + (state.open === p.k ? `<tr class="xrow"><td colspan="16">${sliderPanel(p)}</td></tr>` : ''); }).join('');
+  const lab = D.rz.labels[sc];
+  return `<div class="tdbar"><div class="seg" role="group" aria-label="Players"><button data-tdall="0" aria-pressed="${!state.tdall}">This game</button><button data-tdall="1" aria-pressed="${!!state.tdall}">Whole slate</button></div>
+    <span class="small muted">Red zone = inside the 20, goal line = inside the 5 · tap a header to sort</span></div>
+    <div class="tw tdw"><table class="t tdt"><thead>
+      <tr class="gh"><th class="tdname"></th><th colspan="5">His red-zone usage</th><th colspan="3" class="gs">His team inside the 20</th><th colspan="2" class="gs">Opponent defense</th><th colspan="2" class="gs">Touchdowns, ${esc(lab)}</th><th colspan="2" class="gs">This game</th></tr>
+      <tr>${th('name', 'Player', '', 'tdname')}${th('rz_car', 'RZ rush att', 'Carries inside the 20')}${th('gl_car', 'GL rush att', 'Carries inside the 5')}${th('rz_tgt', 'RZ targets', 'Targets inside the 20')}${th('ez_tgt', 'EZ targets', 'Targets thrown into the end zone')}${th('opp', 'RZ opp share', 'His share of his team’s red-zone carries + targets in the games he played (red-zone snap counts aren’t in our data)')}`
+      + `${th('proe', 'PROE', 'Pass rate over expected inside the 20: how much more (or less) his team passes than the league in the same down, distance, field spot and game state', 'gs')}${th('pass', 'Pass %')}${th('run', 'Run %')}`
+      + `${th('dproe', 'Opp RZ PROE allowed', 'How much more offenses pass inside the 20 against this defense than expected', 'gs')}${th('dtd', 'Opp RZ TD rate', 'Red-zone trips that ended in a touchdown against this defense')}`
+      + `${th('xtd', 'Expected TDs', 'The league’s TD rate on each of his carries and targets, by distance to the end zone, added up', 'gs')}${th('td', 'Actual TDs', 'Rushing + receiving touchdowns')}`
+      + `${th('any', 'Anytime TD', 'Our simulated chance he scores a rushing or receiving TD in this game', 'gs')}<th class="l">Best odds</th></tr></thead>
+    <tbody>${body || '<tr><td colspan="16" class="l muted small">No players with a meaningful TD chance.</td></tr>'}</tbody></table></div>`;
 }
 /* ---------------- red zone ---------------- */
 const RZP = ['QB','RB','WR','TE'];
@@ -1374,6 +1431,8 @@ document.addEventListener('click', e => {
   else if (t.dataset.agroup){ state.agroup = t.dataset.agroup === '1'; render(); }
   else if (t.dataset.drank){ state.drank = t.dataset.drank; render(); }
   else if (t.dataset.rzscope){ state.rzscope = t.dataset.rzscope; render(); }
+  else if (t.dataset.tds){ const k = t.dataset.tds; state.tdsd = state.tds === k ? (state.tdsd === 'asc' ? 'desc' : 'asc') : (k === 'name' ? 'asc' : 'desc'); state.tds = k; render(); }
+  else if (t.dataset.tdall){ state.tdall = t.dataset.tdall === '1'; render(); }
   else if (t.dataset.bflag){ state.bflag = !state.bflag; render(); }
   else if (t.dataset.bpin){ state.bpin = !state.bpin; render(); }
 });
