@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-10-31",
 "lock": "2026-10-31T17:00:00+00:00",
-"frozen_at": "2026-10-31T15:55:11.486Z",
+"frozen_at": "2026-10-31T16:00:31.184Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,329 @@
 ],
 "final_at": "2026-10-31T16:00:00+00:00",
 "parlays": [
+{
+"card": "Anytime-goal parlays",
+"tier": "Best 2-leg",
+"legs": [
+{
+"gid": "2026020219",
+"start": "2026-10-31T18:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "filip forsberg",
+"lab": "Filip Forsberg to score",
+"p": 0.3319,
+"price": 213,
+"book": "Novig"
+},
+{
+"gid": "2026020222",
+"start": "2026-10-31T20:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "macklin celebrini",
+"lab": "Macklin Celebrini to score",
+"p": 0.4194,
+"price": 150,
+"book": "Novig"
+}
+],
+"p": 0.1392,
+"d": 7.825,
+"first": "2026-10-31T18:00:00+00:00",
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020220",
+"start": "2026-10-31T18:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NYI moneyline",
+"p": 0.5377,
+"price": 113,
+"book": "Novig"
+},
+{
+"gid": "2026020226",
+"start": "2026-11-01T02:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "tj hughes",
+"lab": "Tj Hughes over 1.5 shots",
+"p": 0.6366,
+"price": -155,
+"book": "Hard Rock"
+}
+],
+"p": 0.34231,
+"d": 3.504,
+"first": "2026-10-31T18:00:00+00:00",
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020220",
+"start": "2026-10-31T18:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NYI moneyline",
+"p": 0.5377,
+"price": 113,
+"book": "Novig"
+},
+{
+"gid": "2026020224",
+"start": "2026-10-31T23:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "darren raddysh",
+"lab": "Darren Raddysh over 2.5 shots",
+"p": 0.5345,
+"price": 117,
+"book": "Novig"
+},
+{
+"gid": "2026020226",
+"start": "2026-11-01T02:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "tj hughes",
+"lab": "Tj Hughes over 1.5 shots",
+"p": 0.6366,
+"price": -155,
+"book": "Hard Rock"
+}
+],
+"p": 0.18296,
+"d": 7.604,
+"first": "2026-10-31T18:00:00+00:00",
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Triple-green longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026020217",
+"start": "2026-10-31T17:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "casey mittelstadt",
+"lab": "Casey Mittelstadt to score",
+"p": 0.2041,
+"price": 456,
+"book": "Novig"
+},
+{
+"gid": "2026020224",
+"start": "2026-10-31T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "darren raddysh",
+"lab": "Darren Raddysh to score",
+"p": 0.2094,
+"price": 426,
+"book": "Novig"
+}
+],
+"p": 0.04274,
+"d": 29.246,
+"first": "2026-10-31T17:00:00+00:00",
+"pick": "longshot",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026020222",
+"start": "2026-10-31T20:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "will smith",
+"lab": "Will Smith 3+ shots",
+"p": 0.421,
+"price": 135,
+"book": "Novig",
+"f": [
+"usage",
+"pp1",
+"goalie"
+],
+"v": [
+"usage",
+"pp1",
+"goalie",
+"our model above fair"
+],
+"sport": "nhl",
+"edge": 0.0352
+},
+{
+"gid": "2026020221",
+"start": "2026-10-31T20:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "artemi panarin",
+"lab": "Artemi Panarin 3+ shots",
+"p": 0.5362,
+"price": -115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"pp1",
+"goalie"
+],
+"v": [
+"usage",
+"pp1",
+"goalie",
+"our model above fair"
+],
+"sport": "nhl",
+"edge": 0.0228
+}
+],
+"p": 0.22574,
+"d": 4.393,
+"first": "2026-10-31T20:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026020223",
+"start": "2026-10-31T23:00:00+00:00",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "erik karlsson",
+"lab": "Erik Karlsson 3+ shots",
+"p": 0.3849,
+"price": 178,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.07,
+"fair": 0.3458,
+"main": true
+},
+{
+"gid": "2026020219",
+"start": "2026-10-31T18:00:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "pontus holmberg",
+"lab": "Pontus Holmberg to score",
+"p": 0.1786,
+"price": 494,
+"book": "Kalshi",
+"sport": "nhl",
+"edge": 0.0608,
+"fair": 0.1681,
+"main": true
+}
+],
+"p": 0.06874,
+"d": 16.513,
+"first": "2026-10-31T18:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026020223",
+"start": "2026-10-31T23:00:00+00:00",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "erik karlsson",
+"lab": "Erik Karlsson 3+ shots",
+"p": 0.3849,
+"price": 178,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.07,
+"fair": 0.3458,
+"main": true
+},
+{
+"gid": "2026020219",
+"start": "2026-10-31T18:00:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "pontus holmberg",
+"lab": "Pontus Holmberg to score",
+"p": 0.1786,
+"price": 494,
+"book": "Kalshi",
+"sport": "nhl",
+"edge": 0.0608,
+"fair": 0.1681,
+"main": true
+},
+{
+"gid": "2026020220",
+"start": "2026-10-31T18:00:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "brayden schenn",
+"lab": "Brayden Schenn to score",
+"p": 0.231,
+"price": 355,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.051,
+"fair": 0.2226,
+"main": true
+}
+],
+"p": 0.01588,
+"d": 75.135,
+"first": "2026-10-31T18:00:00+00:00",
+"res": null,
+"locked": true
+},
 {
 "card": "Likeliest-scorer parlays (experimental)",
 "tier": "2-leg 6-10x",
@@ -202,41 +525,6 @@
 "p": 0.06577,
 "d": 15.019,
 "first": "2026-10-31T17:00:00+00:00",
-"res": null
-},
-{
-"card": "Anytime-goal parlays",
-"tier": "Best 2-leg",
-"legs": [
-{
-"gid": "2026020219",
-"start": "2026-10-31T18:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "filip forsberg",
-"lab": "Filip Forsberg to score",
-"p": 0.3319,
-"price": 213,
-"book": "Novig"
-},
-{
-"gid": "2026020222",
-"start": "2026-10-31T20:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "macklin celebrini",
-"lab": "Macklin Celebrini to score",
-"p": 0.4194,
-"price": 150,
-"book": "Novig"
-}
-],
-"p": 0.1392,
-"d": 7.825,
-"first": "2026-10-31T18:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -523,40 +811,6 @@
 "p": 0.04934,
 "d": 22.666,
 "first": "2026-10-31T17:00:00+00:00",
-"res": null
-},
-{
-"card": "Anytime-goal parlays",
-"tier": "Round robin",
-"legs": [
-{
-"gid": "2026020222",
-"start": "2026-10-31T20:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "macklin celebrini",
-"lab": "Macklin Celebrini to score",
-"p": 0.4194,
-"price": 150,
-"book": "Novig"
-},
-{
-"gid": "2026020219",
-"start": "2026-10-31T18:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "filip forsberg",
-"lab": "Filip Forsberg to score",
-"p": 0.3319,
-"price": 213,
-"book": "Novig"
-}
-],
-"p": 0.1392,
-"d": 7.825,
-"first": "2026-10-31T18:00:00+00:00",
 "res": null
 },
 {
@@ -2186,27 +2440,15 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026020218",
-"start": "2026-10-31T17:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 2.5,
-"name": "moritz seider",
-"lab": "Moritz Seider under 2.5 shots",
-"p": 0.7099,
-"price": -185,
-"book": "Hard Rock"
-},
-{
-"gid": "2026020222",
+"gid": "2026020221",
 "start": "2026-10-31T20:00:00Z",
 "kind": "sog",
 "side": "u",
-"line": 2.5,
-"name": "jake sanderson",
-"lab": "Jake Sanderson under 2.5 shots",
-"p": 0.6074,
-"price": -105,
+"line": 1.5,
+"name": "drew doughty",
+"lab": "Drew Doughty under 1.5 shots",
+"p": 0.6317,
+"price": -145,
 "book": "Hard Rock"
 },
 {
@@ -2220,46 +2462,23 @@
 "p": 0.694,
 "price": 140,
 "book": "Hard Rock"
-}
-],
-"p": 0.29924,
-"d": 7.219,
-"first": "2026-10-31T17:00:00+00:00",
-"res": null
 },
 {
-"card": "Shots + moneyline parlays",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020220",
-"start": "2026-10-31T18:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "NYI moneyline",
-"p": 0.5377,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "2026020226",
-"start": "2026-11-01T02:00:00Z",
+"gid": "2026020225",
+"start": "2026-11-01T00:00:00Z",
 "kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.6366,
-"price": -155,
+"side": "u",
+"line": 3.5,
+"name": "jason robertson",
+"lab": "Jason Robertson under 3.5 shots",
+"p": 0.6825,
+"price": -115,
 "book": "Hard Rock"
 }
 ],
-"p": 0.34231,
-"d": 3.504,
-"first": "2026-10-31T18:00:00+00:00",
-"pick": "core",
+"p": 0.29924,
+"d": 7.581,
+"first": "2026-10-31T20:00:00+00:00",
 "res": null
 },
 {
@@ -2328,53 +2547,6 @@
 "p": 0.31397,
 "d": 3.784,
 "first": "2026-10-31T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020220",
-"start": "2026-10-31T18:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "NYI moneyline",
-"p": 0.5377,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "2026020224",
-"start": "2026-10-31T23:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "darren raddysh",
-"lab": "Darren Raddysh over 2.5 shots",
-"p": 0.5345,
-"price": 117,
-"book": "Novig"
-},
-{
-"gid": "2026020226",
-"start": "2026-11-01T02:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.6366,
-"price": -155,
-"book": "Hard Rock"
-}
-],
-"p": 0.18296,
-"d": 7.604,
-"first": "2026-10-31T18:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -2466,40 +2638,6 @@
 ],
 "p": 0.17808,
 "d": 7.534,
-"first": "2026-10-31T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "Best shot",
-"legs": [
-{
-"gid": "2026020220",
-"start": "2026-10-31T18:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "NYI moneyline",
-"p": 0.5377,
-"price": 113,
-"book": "Novig"
-},
-{
-"gid": "2026020226",
-"start": "2026-11-01T02:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "tj hughes",
-"lab": "Tj Hughes over 1.5 shots",
-"p": 0.6366,
-"price": -155,
-"book": "Hard Rock"
-}
-],
-"p": 0.34231,
-"d": 3.504,
 "first": "2026-10-31T18:00:00+00:00",
 "res": null
 },
@@ -2916,41 +3054,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026020217",
-"start": "2026-10-31T17:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "casey mittelstadt",
-"lab": "Casey Mittelstadt to score",
-"p": 0.2041,
-"price": 456,
-"book": "Novig"
-},
-{
-"gid": "2026020224",
-"start": "2026-10-31T23:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "darren raddysh",
-"lab": "Darren Raddysh to score",
-"p": 0.2094,
-"price": 426,
-"book": "Novig"
-}
-],
-"p": 0.04274,
-"d": 29.246,
-"first": "2026-10-31T17:00:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Triple-green longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
 "gid": "2026020223",
 "start": "2026-10-31T23:00:00Z",
 "kind": "goal",
@@ -3012,166 +3115,6 @@
 "p": 0.04025,
 "d": 27.133,
 "first": "2026-10-31T17:00:00+00:00",
-"res": null
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026020222",
-"start": "2026-10-31T20:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "will smith",
-"lab": "Will Smith 3+ shots",
-"p": 0.421,
-"price": 135,
-"book": "Novig",
-"f": [
-"usage",
-"pp1",
-"goalie"
-],
-"v": [
-"usage",
-"pp1",
-"goalie",
-"our model above fair"
-],
-"sport": "nhl",
-"edge": 0.0352
-},
-{
-"gid": "2026020221",
-"start": "2026-10-31T20:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "artemi panarin",
-"lab": "Artemi Panarin 3+ shots",
-"p": 0.5362,
-"price": -115,
-"book": "Hard Rock",
-"f": [
-"usage",
-"pp1",
-"goalie"
-],
-"v": [
-"usage",
-"pp1",
-"goalie",
-"our model above fair"
-],
-"sport": "nhl",
-"edge": 0.0228
-}
-],
-"p": 0.22574,
-"d": 4.393,
-"first": "2026-10-31T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026020223",
-"start": "2026-10-31T23:00:00+00:00",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "erik karlsson",
-"lab": "Erik Karlsson 3+ shots",
-"p": 0.3849,
-"price": 178,
-"book": "Novig",
-"sport": "nhl",
-"edge": 0.07,
-"fair": 0.3458,
-"main": true
-},
-{
-"gid": "2026020219",
-"start": "2026-10-31T18:00:00+00:00",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "pontus holmberg",
-"lab": "Pontus Holmberg to score",
-"p": 0.1786,
-"price": 494,
-"book": "Kalshi",
-"sport": "nhl",
-"edge": 0.0608,
-"fair": 0.1681,
-"main": true
-}
-],
-"p": 0.06874,
-"d": 16.513,
-"first": "2026-10-31T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "2026020223",
-"start": "2026-10-31T23:00:00+00:00",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "erik karlsson",
-"lab": "Erik Karlsson 3+ shots",
-"p": 0.3849,
-"price": 178,
-"book": "Novig",
-"sport": "nhl",
-"edge": 0.07,
-"fair": 0.3458,
-"main": true
-},
-{
-"gid": "2026020219",
-"start": "2026-10-31T18:00:00+00:00",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "pontus holmberg",
-"lab": "Pontus Holmberg to score",
-"p": 0.1786,
-"price": 494,
-"book": "Kalshi",
-"sport": "nhl",
-"edge": 0.0608,
-"fair": 0.1681,
-"main": true
-},
-{
-"gid": "2026020220",
-"start": "2026-10-31T18:00:00+00:00",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "brayden schenn",
-"lab": "Brayden Schenn to score",
-"p": 0.231,
-"price": 355,
-"book": "Novig",
-"sport": "nhl",
-"edge": 0.051,
-"fair": 0.2226,
-"main": true
-}
-],
-"p": 0.01588,
-"d": 75.135,
-"first": "2026-10-31T18:00:00+00:00",
 "res": null
 }
 ],
