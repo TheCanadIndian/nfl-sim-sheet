@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-31T15:47:40.746Z",
+"frozen_at": "2026-10-31T15:55:13.789Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -70,7 +70,7 @@
 "line": 274.5,
 "name": "lamar jackson",
 "lab": "Lamar Jackson 275+ pass yds",
-"p": 0.3496,
+"p": 0.3495,
 "price": 198,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -99,7 +99,7 @@
 ]
 }
 ],
-"p": 0.08196,
+"p": 0.08193,
 "d": 13.44,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "core"
@@ -428,15 +428,14 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.2566,
+"p": 0.2596,
 "price": 335,
 "book": "Novig"
 }
 ],
-"p": 0.08914,
+"p": 0.09017,
 "d": 15.529,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "longshot"
+"first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -462,12 +461,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5156,
+"p": 0.5176,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.27947,
+"p": 0.28053,
 "d": 4.635,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -627,12 +626,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5156,
+"p": 0.5176,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.11189,
+"p": 0.11231,
 "d": 12.113,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -28323,8 +28322,8 @@
 "line": 4.5,
 "name": "makai lemon",
 "lab": "Makai Lemon over 4.5 receptions",
-"p": 0.5284,
-"price": -115,
+"p": 0.5369,
+"price": -117,
 "book": "Novig",
 "f": [
 "usage",
@@ -28338,34 +28337,133 @@
 "lc"
 ],
 "sport": "nfl",
-"edge": 0.0603
+"edge": 0.0637
+},
+{
+"gid": "2026_08_BAL_BUF",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 41.5,
+"name": "khalil shakir",
+"lab": "Khalil Shakir over 41.5 rec yds",
+"p": 0.5112,
+"price": -111,
+"book": "Novig",
+"f": [
+"usage",
+"matchup"
+],
+"v": [
+"usage",
+"matchup",
+"our model above fair",
+"consensus up"
+],
+"sport": "nfl",
+"edge": 0.0044
+}
+],
+"p": 0.27446,
+"d": 3.526,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "bucky irving",
+"lab": "Bucky Irving over 2.5 receptions",
+"p": 0.5493,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.2359,
+"fair": 0.5565,
+"main": true
 },
 {
 "gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
+"start": "2026-11-01T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
 "line": 5.5,
 "name": "tee higgins",
 "lab": "Tee Higgins over 5.5 receptions",
-"p": 0.3883,
+"p": 0.4224,
 "price": 156,
 "book": "Novig",
-"f": [
-"matchup"
-],
-"v": [
-"matchup",
-"our model above fair",
-"consensus up",
-"lc"
-],
 "sport": "nfl",
-"edge": 0.0476
+"edge": 0.0814,
+"fair": 0.4059,
+"main": false
 }
 ],
-"p": 0.20518,
-"d": 4.786,
+"p": 0.23202,
+"d": 5.76,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "bucky irving",
+"lab": "Bucky Irving over 2.5 receptions",
+"p": 0.5493,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.2359,
+"fair": 0.5565,
+"main": true
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "tee higgins",
+"lab": "Tee Higgins over 5.5 receptions",
+"p": 0.4224,
+"price": 156,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0814,
+"fair": 0.4059,
+"main": false
+},
+{
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-02T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "saquon barkley",
+"lab": "Saquon Barkley over 2.5 receptions",
+"p": 0.3935,
+"price": 167,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0506,
+"fair": 0.3691,
+"main": true
+}
+],
+"p": 0.0913,
+"d": 15.379,
 "first": "2026-11-01T18:00:00+00:00"
 }
 ],
