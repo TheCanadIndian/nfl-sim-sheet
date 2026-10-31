@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-31T08:39:28.991Z",
+"frozen_at": "2026-10-31T08:57:36.706Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -35,54 +35,6 @@
 ]
 },
 {
-"gid": "2026_08_NE_MIA",
-"start": "2026-11-01T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "drake maye",
-"lab": "Drake Maye 300+ pass yds",
-"p": 0.2196,
-"price": 398,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-}
-],
-"p": 0.04447,
-"d": 26.145,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "longshot"
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_08_BAL_BUF",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 129.5,
-"name": "zay flowers",
-"lab": "Zay Flowers 130+ rec yds",
-"p": 0.2025,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"script",
-"price"
-]
-},
-{
 "gid": "2026_08_CLE_PIT",
 "start": "2026-11-01T13:00:00",
 "kind": "pass_yds",
@@ -90,7 +42,7 @@
 "line": 274.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 275+ pass yds",
-"p": 0.2332,
+"p": 0.2329,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -101,14 +53,14 @@
 ]
 }
 ],
-"p": 0.04722,
+"p": 0.04716,
 "d": 23.677,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "longshot"
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "2026_08_BAL_BUF",
@@ -136,26 +88,8 @@
 "line": 274.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 275+ pass yds",
-"p": 0.2332,
+"p": 0.2329,
 "price": 351,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_08_NE_MIA",
-"start": "2026-11-01T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "drake maye",
-"lab": "Drake Maye 300+ pass yds",
-"p": 0.2196,
-"price": 398,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -165,10 +99,10 @@
 ]
 }
 ],
-"p": 0.01783,
-"d": 66.93,
+"p": 0.0811,
+"d": 13.44,
 "first": "2026-11-01T18:00:00+00:00",
-"pick": "longshot"
+"pick": "core"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -472,7 +406,7 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "2026_08_MIN_DET",
@@ -487,6 +421,28 @@
 "book": "Novig"
 },
 {
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.2037,
+"d": 6.545,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026_08_ATL_TB",
 "start": "2026-11-01T13:00:00",
 "kind": "td",
@@ -497,12 +453,90 @@
 "p": 0.2566,
 "price": 335,
 "book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
 }
 ],
-"p": 0.08939,
-"d": 15.529,
+"p": 0.15006,
+"d": 7.975,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "drake maye",
+"lab": "Drake Maye TD",
+"p": 0.2456,
+"price": 376,
+"book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.14365,
+"d": 8.727,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_08_KC_DEN",
+"start": "2026-11-01T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bo nix",
+"lab": "Bo Nix TD",
+"p": 0.1961,
+"price": 525,
+"book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.1147,
+"d": 11.458,
 "first": "2026-11-01T18:00:00+00:00",
-"pick": "longshot"
+"pick": "core"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -516,7 +550,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4991,
+"p": 0.4971,
 "price": 138,
 "book": "Novig"
 },
@@ -528,12 +562,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5177,
+"p": 0.5182,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.25842,
+"p": 0.25765,
 "d": 4.903,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -549,7 +583,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4991,
+"p": 0.4971,
 "price": 138,
 "book": "Novig"
 },
@@ -566,7 +600,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.24508,
+"p": 0.2441,
 "d": 5.165,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -594,12 +628,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5177,
+"p": 0.5182,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.16308,
+"p": 0.16325,
 "d": 8.24,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -627,12 +661,12 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4991,
+"p": 0.4971,
 "price": 138,
 "book": "Novig"
 }
 ],
-"p": 0.14176,
+"p": 0.14119,
 "d": 11.067,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -660,12 +694,12 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4991,
+"p": 0.4971,
 "price": 138,
 "book": "Novig"
 }
 ],
-"p": 0.13777,
+"p": 0.13721,
 "d": 11.329,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -682,7 +716,7 @@
 "name": "kimani vidal",
 "lab": "Kimani Vidal anytime TD",
 "p": 0.217,
-"price": 488,
+"price": 525,
 "book": "Novig"
 },
 {
@@ -693,13 +727,13 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5177,
+"p": 0.5182,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.11235,
-"d": 12.113,
+"p": 0.11246,
+"d": 12.875,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
