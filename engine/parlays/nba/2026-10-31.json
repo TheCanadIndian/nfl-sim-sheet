@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-31",
 "lock": "2026-10-31T19:00:00+00:00",
-"frozen_at": "2026-10-31T13:57:36.502Z",
+"frozen_at": "2026-10-31T14:06:01.778Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,13 +17,13 @@
 {
 "gid": "401909896",
 "start": "2026-10-31T19:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
+"line": 5.5,
 "name": "jrue holiday",
-"lab": "Jrue Holiday 4+ threes",
-"p": 0.2207,
-"price": 351,
+"lab": "Jrue Holiday 6+ ast",
+"p": 0.42,
+"price": 140,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -51,10 +51,10 @@
 ]
 }
 ],
-"p": 0.04495,
-"d": 27.06,
+"p": 0.08553,
+"d": 14.4,
 "first": "2026-10-31T19:00:00+00:00",
-"pick": "longshot",
+"pick": "core",
 "res": null
 },
 {
@@ -111,13 +111,13 @@
 {
 "gid": "401909896",
 "start": "2026-10-31T19:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
+"line": 5.5,
 "name": "jrue holiday",
-"lab": "Jrue Holiday 4+ threes",
-"p": 0.2207,
-"price": 351,
+"lab": "Jrue Holiday 6+ ast",
+"p": 0.42,
+"price": 140,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -163,8 +163,8 @@
 ]
 }
 ],
-"p": 0.02643,
-"d": 39.744,
+"p": 0.05029,
+"d": 21.15,
 "first": "2026-10-31T19:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -317,27 +317,27 @@
 ]
 },
 {
-"gid": "401909902",
-"start": "2026-11-01T00:30Z",
+"gid": "401909901",
+"start": "2026-11-01T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "kevin durant",
-"lab": "Kevin Durant over 4.5 assists",
-"p": 0.2828,
-"fair": 0.2833,
-"price": 275,
-"book": "Hard Rock",
+"line": 5.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu over 5.5 assists",
+"p": 0.2774,
+"fair": 0.2826,
+"price": 296,
+"book": "Kalshi",
 "sport": "nba",
-"edge": 0.0605,
+"edge": 0.0983,
 "v": [
-"consensus odds drop",
-"one rung above the main line (3.5)"
+"consensus line up",
+"one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.09142,
-"d": 11.25,
+"p": 0.0912,
+"d": 11.88,
 "first": "2026-10-31T23:00:00+00:00",
 "res": null
 },
@@ -366,6 +366,54 @@
 ]
 },
 {
+"gid": "401909901",
+"start": "2026-11-01T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu over 5.5 assists",
+"p": 0.2774,
+"fair": 0.2826,
+"price": 296,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.0983,
+"v": [
+"consensus line up",
+"one rung above the main line (4.5)"
+]
+},
+{
+"gid": "401909902",
+"start": "2026-11-01T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "kevin durant",
+"lab": "Kevin Durant over 4.5 assists",
+"p": 0.2828,
+"fair": 0.2833,
+"price": 275,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0605,
+"v": [
+"consensus odds drop",
+"one rung above the main line (3.5)"
+]
+}
+],
+"p": 0.02584,
+"d": 44.55,
+"first": "2026-10-31T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
 "gid": "401909902",
 "start": "2026-11-01T00:30Z",
 "kind": "ast",
@@ -385,75 +433,27 @@
 ]
 },
 {
-"gid": "401909901",
-"start": "2026-11-01T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu over 5.5 assists",
-"p": 0.2774,
-"fair": 0.2826,
-"price": 270,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0262,
-"v": [
-"consensus line up",
-"one rung above the main line (4.5)"
-]
-}
-],
-"p": 0.02584,
-"d": 41.625,
-"first": "2026-10-31T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909901",
-"start": "2026-11-01T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu over 5.5 assists",
-"p": 0.2774,
-"fair": 0.2826,
-"price": 270,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0262,
-"v": [
-"consensus line up",
-"one rung above the main line (4.5)"
-]
-},
-{
 "gid": "401909900",
 "start": "2026-11-01T00:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 24.5,
-"name": "james harden",
-"lab": "James Harden over 24.5 points",
-"p": 0.2318,
-"fair": 0.2289,
-"price": 331,
-"book": "Kalshi",
+"line": 10.5,
+"name": "jarrett allen",
+"lab": "Jarrett Allen over 10.5 rebounds",
+"p": 0.3436,
+"fair": 0.3474,
+"price": 180,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0008,
+"edge": -0.0381,
 "v": [
 "consensus line up",
-"one rung above the main line (19.5)"
+"one rung above the main line (9.5)"
 ]
 }
 ],
-"p": 0.06469,
-"d": 15.947,
+"p": 0.09842,
+"d": 10.5,
 "first": "2026-11-01T00:00:00+00:00",
 "res": null
 }
