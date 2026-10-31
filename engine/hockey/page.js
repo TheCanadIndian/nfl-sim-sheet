@@ -197,6 +197,56 @@ function atgParlays(){
     ${rrBlock}
     ${[2, 3].map(k => top(k).length ? `<div class="eyebrow" style="margin-top:10px">Best ${k}-leg parlays</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th>Edge</th><th class="l">My parlay</th></tr></thead><tbody>${top(k).map(row).join('')}</tbody></table></div>` : '').join('')}</section>`;
 }
+// Likeliest-scorer parlays (experimental, owner 2026-10-31: 'atgs parlays with a high hit rate and payout';
+// research/nhl_atg_parlay_build.py, 4,510 graded Yes prices at Novig / Kalshi, 130 games Oct 12-30): only our top 3 by
+// usage priced 25%+ (+300 or shorter) were fair or better at your books (+2% on 388, hit 36.6%); longshot legs lost 10%,
+// legs claiming 10%+ edge lost 25% (stale prices), and droughts / our gap / PP1 added nothing beyond the price. So: those
+// legs, likeliest first (not biggest edge), one per game, a leg in at most 2; 2-legs paying 6-10x and 3-legs 15-30x.
+// Replay: 2-leg 11 of 39 vs 6.2 expected, 3-leg 4 of 30 vs 2.0 -- above expectation, noise-level; the legs price ~fair.
+function likelyCard(){
+  if (!(window.MKT && MKT.propBest)) return '';
+  const now = Date.now(), dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o, am = o => (o > 0 ? '+' : '') + o, legs = [];
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const side of [g.away, g.home]) for (const p of side.players){
+      if (!(p.ur && p.ur <= 3)) continue;
+      const b = MKT.propBest(g.id, p.name, 'goal'); if (!b || !b.mine || 1 / dec(b.o) < .25) continue;
+      const q = MKT.blend ? MKT.blend(g.id, p.name, 'goal', p.p) : p.p;
+      if (q * dec(b.o) - 1 > .10) continue;                      // a 10%+ claimed edge is usually a stale price
+      legs.push({g, p, team: side.team, b, q});
+    }
+  }
+  const best = {}; legs.forEach(L => { if (!best[L.g.id] || L.q > best[L.g.id].q) best[L.g.id] = L; });
+  const pool = Object.values(best);
+  const pick = (k, lo, hi, n) => {
+    const C = [], walk = (i, s) => {
+      if (s.length === k){ const d = s.reduce((a, L) => a * dec(L.b.o), 1); if (d >= lo && d < hi) C.push({legs: s, p: s.reduce((a, L) => a * L.q, 1), d}); return; }
+      for (let j = i; j < pool.length; j++) walk(j + 1, [...s, pool[j]]);
+    };
+    walk(0, []);
+    const used = {}, out = [];
+    for (const c of C.sort((a, b) => b.p - a.p)){
+      if (out.length >= n) break;
+      if (c.legs.some(L => (used[L.p.id] || 0) >= 2)) continue;
+      c.legs.forEach(L => used[L.p.id] = (used[L.p.id] || 0) + 1); out.push(c);
+    }
+    return out;
+  };
+  const two = pick(2, 6, 10, 3), three = pick(3, 15, 30, 2);
+  if (!two.length && !three.length) return '';
+  if (MKT.reg){
+    const lg = L => ({gid: String(L.g.id), start: L.g.start_utc, kind: 'goal', side: 'o', line: .5, name: MKT.norm(L.p.name), lab: `${L.p.name} to score`, p: +L.q.toFixed(4), price: L.b.o, book: L.b.k});
+    two.forEach(c => MKT.reg('Likeliest-scorer parlays (experimental)', '2-leg 6-10x', c.legs.map(lg), c.p, c.d));
+    three.forEach(c => MKT.reg('Likeliest-scorer parlays (experimental)', '3-leg 15-30x', c.legs.map(lg), c.p, c.d));
+  }
+  const legSlip = L => ({id: `nhl|${L.g.id}|${L.p.id}|goal1`, sport: 'nhl', g: L.g.id, glab: `${L.g.away.team} @ ${L.g.home.team}`, lab: `${L.p.name} to score`, p: L.q, side: 'over', stat: 'goals', line: .5});
+  const row = c => `<tr><td class="l">${c.legs.map(L => `<b>${esc(L.p.name)}</b> <span class="small muted">${esc(L.team)} · ${pct(L.q)} · ${L.b.u ? `<a href="${esc(L.b.u)}" target="_blank" rel="noopener">${am(L.b.o)} ${esc(L.b.name)} ↗</a>` : `${am(L.b.o)} ${esc(L.b.name)}`}</span>`).join('<br>')}</td>
+    <td class="big">${pct(c.p)}</td><td class="pay">${c.d.toFixed(1)}x</td><td class="l add">${window.SLIP ? SLIP.allBtn(c.legs.map(legSlip), '+ add parlay') : ''}</td></tr>`;
+  const table = (lab, list) => list.length ? `<div class="eyebrow" style="margin-top:10px">${lab}</div><div class="tw"><table class="t pairs atgp"><thead><tr><th class="l">Legs</th><th>Chance</th><th>Pays</th><th class="l">My parlay</th></tr></thead><tbody>${list.map(row).join('')}</tbody></table></div>` : '';
+  return `<section class="panel"><div class="phead"><h2>Likeliest-scorer parlays <span class="exp3">experimental</span></h2><span class="small muted">Priced at ${esc(MKT.myBooks().join(', ') || 'the best book')}</span></div>
+    <details class="how"${innerWidth > 640 ? ' open' : ''}><summary>How these are picked</summary><p class="note">We graded 4,510 anytime-goal prices at your books from Oct 12-30. The only legs that paid their price were our top 3 scorers by usage priced +300 or shorter (hit 37%, +2%); longer shots lost about 10%, and legs that looked like 10%+ edges lost 25% (usually a stale price). Goal droughts, power-play role and our model’s gap to the market added nothing the price didn’t already have. So these parlays use only those legs, likeliest first, one per game: 2-legs paying 6-10x (about 1 in 4 to 1 in 6) and 3-legs paying 15-30x (about 1 in 10). The legs are priced about fair, so expect roughly break-even over time with fewer long dry spells, not a proven edge. Tracked on the Profit page.</p></details>
+    ${table('2-leg · pays 6-10x', two)}${table('3-leg · pays 15-30x', three)}</section>`;
+}
 // parlays by payout tier (mkt.js tierCard): anytime goals from our top 3 per game (30%+), plus game lines
 function tierParlays(){
   if (!(window.MKT && MKT.tierCard)) return '';
@@ -325,7 +375,7 @@ function learnCandsNHL(){
 }
 function playsView(){
   if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNHL(); } catch (e) {}
-  const h = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + foldable(atgParlays() + sameGameCard() + tierParlays() + pairsCard() + tripleCard());
+  const h = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + foldable(likelyCard() + atgParlays() + sameGameCard() + tierParlays() + pairsCard() + tripleCard());
   return h || '<section class="panel"><div class="empty">No plays yet: they appear once sportsbook prices for tonight’s games are in.</div></section>';
 }
 // Longshot two-mans priced at the viewer's books: legs 15-35% to score, chance blended with the exchanges', every
