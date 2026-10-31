@@ -26,6 +26,9 @@
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', 'Poly US': 'Polymarket'};
   const NOBET = new Set(['Pinnacle', 'kalshi']);
   const EXCH = ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'];
+  // NHL anytime goal without Pinnacle (2026-10-31, research/nhl_atg_fourbook.py): sharp.py four_book parts, minus the book being bet
+  const f4O = (e, book) => { const P = Object.entries((e && e.f4 && e.f4.parts) || {}).filter(([bb]) => bb !== book);
+    if (!P.length) return null; const z = P.reduce((s, [, p]) => s + Math.log(p / (1 - p)), 0) / P.length; return 1 / (1 + Math.exp(-z)); };
   const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
   const am = o => (o > 0 ? '+' : '') + Math.round(o);
   const lgt = p => Math.log(p / (1 - p));
@@ -98,7 +101,7 @@
         for (const [k, e] of Object.entries(kinds)){
           if (!LAB[k] || !e) continue;
           const statKey = k.startsWith('sog') ? 'sog' : k;
-          const lines = e.o ? [{l: e.l ?? null, o: e.o, u: e.u, p: e.p, main: true, pin: e.pin && Math.abs((e.pin.l ?? .5) - (e.l ?? .5)) < 1e-9 ? e.pin : null}] : [];
+          const lines = e.o ? [{l: e.l ?? null, o: e.o, u: e.u, p: e.p, main: true, f4: e.f4, pin: e.pin && Math.abs((e.pin.l ?? .5) - (e.l ?? .5)) < 1e-9 ? e.pin : null}] : [];
           for (const [L, a] of Object.entries(e.a || {})) if (+L !== +(e.l ?? -1)) lines.push({l: +L, o: a.o, u: a.u, p: a.p, main: false, apin: a.pin});
           // Kalshi rungs: on the matching line beside the books, else a rung of its own; its fair = the line's carried
           // consensus, else the main line's fair carried by our distribution (log-odds gap, shown with ≈)
@@ -127,6 +130,7 @@
               else if (!x.main && x.apin != null){ fair = x.apin; src = 'sharp consensus, carried to this line'; }
               else if (!x.main && x.carry != null){ fair = x.carry; w = 0; src = '≈ main line’s fair carried by our distribution'; }   // our model is already in the carry: don't count it twice
               else { const tw = twoWay(x.o, x.u); if (tw != null && (x.main || Object.keys(x.u || {}).length >= 2)){ fair = tw; src = 'books’ no-vig median'; }
+                else if (k === 'goal' && f4O(x, b) != null){ fair = f4O(x, b); src = 'four books (Kalshi, FD, Fanatics, DK), hold removed'; }
                 else if (k === 'goal'){ const ex = books.filter(([bb]) => EXCH.includes(bb)).map(([, vv]) => 1 / dec(vv[0])); const m = med(ex); if (m != null){ fair = m / 1.03; src = 'exchanges, less 3%'; } } }
               const q = fair != null ? (x.p != null ? w * x.p + (1 - w) * fair : fair) : null;
               return {b, o: v[0], u: link(v, P.partner), fair, q, w, src, edge: q != null ? q * dec(v[0]) - 1 : null};

@@ -1663,8 +1663,39 @@ def write_props(sport, now):
                             P.setdefault(gid, {}).setdefault(nm, {}).setdefault(k, e)
     except (OSError, ValueError, KeyError):
         pass
+    if sport == "nhl":
+        for g in P.values():
+            for kinds in g.values():
+                e = kinds.get("goal")
+                if e:
+                    f4 = four_book(e.get("o"))
+                    if f4:
+                        e["f4"] = f4
+                    else:
+                        e.pop("f4", None)
     json.dump(dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER, props=P),
               open(fp, "w"), separators=(",", ":"))
+
+
+# NHL anytime-goal fair without Pinnacle (owner 2026-10-31, research/nhl_atg_book_weights.py + nhl_atg_fourbook.py; 4,548
+# player-games Oct 12-30): Kalshi, FanDuel, Fanatics and DraftKings were sharper than the all-book average in both halves
+# (Caesars, theScore, Polymarket worse in both; fitted weights unstable). Each book's hold removed by its own logit shift,
+# averaged in logit; beat the exchanges' median / 1.03 in both halves (-5.3e-4 log-loss, z -1.0; that one ran ~7% high).
+F4_SHIFT = {"Kalshi": -.162, "FD": -.133, "Fanatics": -.178, "DK": -.163}
+
+
+def four_book(o):
+    """{o: fair, parts: {book: hold-removed chance}} from a goal entry's Yes prices, or None."""
+    parts = {}
+    for b, s in F4_SHIFT.items():
+        v = (o or {}).get(b)
+        if isinstance(v, list) and v and v[0] is not None:
+            q = 1 / dec(v[0])
+            parts[b] = round(1 / (1 + math.exp(-(math.log(q / (1 - q)) + s))), 4)
+    if not parts:
+        return None
+    z = sum(math.log(p / (1 - p)) for p in parts.values()) / len(parts)
+    return dict(o=round(1 / (1 + math.exp(-z)), 4), parts=parts)
 
 
 # ---------------------------------------------------------------- Pinnacle / consensus line moves (tracked)

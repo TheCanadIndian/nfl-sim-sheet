@@ -530,6 +530,8 @@ def tag_label(e):
         return "Goal drought 3+ games (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
+    if e.get("src") in ("f4", "fx"):
+        return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
         w = "Double-double" if e.get("bet") == "double-double" else "Triple-double"
         return f"{w}: every Yes at your books (baseline)" if e.get("grp") == "all" else f"{w} edge 5%+ (experimental)"
@@ -660,6 +662,36 @@ def tags():
                                                                       first=now.isoformat(), p=fair, m=fair, start=st,
                                                                       dout=", ".join(v for vs in (x.get("out") or {}).values() for v in vs)))
                     e.setdefault("start", st)
+        # NHL anytime-goal fair without Pinnacle (owner 2026-10-31, research/nhl_atg_fourbook.py): the four-book fair
+        # (sharp.four_book, leaving out the book bet) beside the old exchanges' median / 1.03, on the same props; chance =
+        # 50/50 with ours as the page does without Pinnacle; each first sighting with edge 5-40% at the owner's best book
+        if sport == "nhl":
+            for gid, G_ in (PR.get("props") or {}).items():
+                st = starts.get(str(gid))
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, kinds in G_.items():
+                    e_ = kinds.get("goal") or {}
+                    if (e_.get("pin") or {}).get("o") is not None or e_.get("p") is None:
+                        continue
+                    o_ = e_.get("o") or {}
+                    bo = [(dec(v[0]), b, v[0]) for b, v in o_.items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                    if not bo:
+                        continue
+                    _, bk, o = max(bo)
+                    parts = {b: p_ for b, p_ in ((e_.get("f4") or {}).get("parts") or {}).items() if b != bk}
+                    ex = sorted(1 / dec(v[0]) for b, v in o_.items() if b in ("Novig", "Kalshi", "Polymarket", "Poly US", "ProphetX") and isinstance(v, list) and v and v[0] is not None)
+                    fairs = {"f4": 1 / (1 + math.exp(-sum(math.log(p_ / (1 - p_)) for p_ in parts.values()) / len(parts))) if parts else None,
+                             "fx": float(np.median(ex)) / 1.03 if ex else None}
+                    for src_, fair in fairs.items():
+                        if fair is None:
+                            continue
+                        q = .5 * e_["p"] + .5 * fair
+                        if not .05 <= q * dec(o) - 1 <= .40:
+                            continue
+                        e = log.setdefault(f"{src_}|{sport}|{gid}|{nm}", dict(sport=sport, src=src_, gid=gid, name=nm, bet="goal", book=bk, o=o,
+                                                                            first=now.isoformat(), p=round(q, 4), m=round(fair, 4), start=st))
+                        e.setdefault("start", st)
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
         # sighting with an edge 5-40% (chance = 5% ours + 95% the books' fair, the screener's NBA weight)

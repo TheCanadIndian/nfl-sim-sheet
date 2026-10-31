@@ -66,6 +66,10 @@
   // Weight on our number when the market half is Pinnacle's no-vig line (research/blend_weights.py: 2025-26 closing props, best weight 0-0.4 by half; about 0.2 NHL goals, 0.1 NBA, 0.25 NFL yardage / catches, 0 anytime TD). Without a Pinnacle line the 50/50 with the exchanges tested on Kalshi stays.
   const WPIN = {nhl: {goal: .2}, nba: {pts: .05, reb: .05, ast: .05, fg3m: .05}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
   const wOf = (sp, kind, isPin) => isPin ? ((WPIN[sp] || {})[kind] ?? .5) : .5;
+  // NHL anytime goal without Pinnacle (2026-10-31, research/nhl_atg_fourbook.py): sharp.py four_book's fair from Kalshi,
+  // FanDuel, Fanatics, DraftKings (hold removed per book), leaving out the book being bet; null when none of them prices it
+  const f4O = (e, book) => { const P = Object.entries((e && e.f4 && e.f4.parts) || {}).filter(([b]) => b !== book);
+    if (!P.length) return null; const z = P.reduce((s, [, p]) => s + Math.log(p / (1 - p)), 0) / P.length; return 1 / (1 + Math.exp(-z)); };
   // Sharp consensus (research/consensus_test.py): the log-odds mean of Pinnacle's, Novig's and ProphetX's no-vig at the same line beat Pinnacle alone on NBA props 2025-26 (-0.0023 log-loss, z -2.5, all 4 stats) and NFL 2026 (-0.0021, z -2.3), flat on NFL 2025; tight Kalshi added nothing beyond Novig, so Kalshi stays out. Leave-one-out: a bet at a book is judged against the consensus without that book.
   const lgt = p => Math.log(Math.min(Math.max(p, 1e-4), 1 - 1e-4) / (1 - Math.min(Math.max(p, 1e-4), 1 - 1e-4)));
   const sharpO = (e, book) => { const P = e.pin && e.pin.parts; if (!P) return e.pin.o;
@@ -662,6 +666,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       if (!PR || !PR.props) return null;
       const e = ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || !e.o) return null;
       if (pinOk(e)) return e.pin.o;                     // Pinnacle's two-way no-vig when pulled (NHL anytime goals, ~2 h before puck drop)
+      if (kind === 'goal' && e.f4) return e.f4.o;      // else the four-book fair (Kalshi / FD / Fanatics / DK)
       const q = Object.entries(e.o).filter(([k]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(k)).map(([, v]) => 1 / dec(v[0])).sort((a, b) => a - b);
       if (!q.length) return null;
       const med = q.length % 2 ? q[(q.length - 1) / 2] : (q[q.length / 2 - 1] + q[q.length / 2]) / 2;
@@ -696,7 +701,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
             const b = pick(e[sd]); if (!b) continue;
             const ex = Object.entries(e[sd] || {}).filter(([bk]) => ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].includes(bk)).map(([, v]) => 1 / dec(v[0]));
             const pin = pinOk(e) ? (sd === 'o' ? sharpO(e, b[0]) : 1 - sharpO(e, b[0])) : null;
-            const w = pin != null ? wOf(opts.sport, k, true) : ((opts.wOurs || {})[k] ?? .5), m = pin != null ? pin : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
+            const w = pin != null ? wOf(opts.sport, k, true) : ((opts.wOurs || {})[k] ?? .5), m = pin != null ? pin : k === 'goal' && f4O(e, b[0]) != null ? f4O(e, b[0]) : ex.length ? median(ex) / 1.03 : null, q = m != null ? w * p + (1 - w) * m : p;
             if ((opts.sport === 'nfl' && ['rec', 'rec_yds', 'rush_yds', 'pass_yds'].includes(k) || opts.sport === 'nba') && (p < .5 || (m != null && Math.abs(p - m) < .10))) continue;
             const isSog = k.startsWith('sog');
             const leg = {gid, start: startOf[gid], kind: isSog ? 'sog' : k, side: sd, line: isSog ? +k.slice(3) / 10 : (e.l ?? .5), name: nm,
