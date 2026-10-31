@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-31T00:00:44.571Z",
+"frozen_at": "2026-10-31T00:02:58.446Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -443,6 +443,39 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_08_CLE_PIT",
+"start": "2026-11-01T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "rico dowdle",
+"lab": "Rico Dowdle TD",
+"p": 0.285,
+"price": 292,
+"book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.16667,
+"d": 7.187,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026_08_IND_JAX",
 "start": "2026-11-01T13:00:00",
 "kind": "td",
@@ -503,39 +536,6 @@
 ],
 "p": 0.15526,
 "d": 7.48,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_08_ATL_TB",
-"start": "2026-11-01T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts TD",
-"p": 0.2543,
-"price": 335,
-"book": "Novig"
-},
-{
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 14.5,
-"name": "dohnte meyers",
-"lab": "Dohnte Meyers over 14.5 rec yds",
-"p": 0.5848,
-"price": -120,
-"book": "Kalshi"
-}
-],
-"p": 0.14868,
-"d": 7.975,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -609,32 +609,32 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_08_IND_JAX",
+"gid": "2026_08_CLE_PIT",
 "start": "2026-11-01T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chris rodriguez",
-"lab": "Chris Rodriguez anytime TD",
-"p": 0.33,
-"price": 317,
+"name": "rico dowdle",
+"lab": "Rico Dowdle anytime TD",
+"p": 0.315,
+"price": 292,
 "book": "Novig"
 },
 {
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 19.5,
-"name": "tyler goodson",
-"lab": "Tyler Goodson under 19.5 rush yds",
-"p": 0.5546,
-"price": -111,
-"book": "Kalshi"
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 43.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 43.5 rec yds",
+"p": 0.606,
+"price": -106,
+"book": "Novig"
 }
 ],
-"p": 0.18302,
-"d": 7.927,
+"p": 0.19091,
+"d": 7.618,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -28409,64 +28409,6 @@
 ],
 "p": 0.0181,
 "d": 131.579,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.5176,
-"price": -111,
-"book": "Novig",
-"f": [
-"usage",
-"rotation"
-],
-"v": [
-"usage",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.0627
-},
-{
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 239.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins over 239.5 pass yds",
-"p": 0.4945,
-"price": 100,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"consensus up"
-],
-"sport": "nfl",
-"edge": 0.0017
-}
-],
-"p": 0.25595,
-"d": 3.802,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
