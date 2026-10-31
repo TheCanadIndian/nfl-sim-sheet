@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-10-31",
 "lock": "2026-10-31T19:00:00+00:00",
-"frozen_at": "2026-10-31T23:35:54.720Z",
+"frozen_at": "2026-10-31T23:39:44.737Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -716,70 +716,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909899",
-"start": "2026-11-01T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 10.5,
-"name": "precious achiuwa",
-"lab": "Precious Achiuwa 11+ reb",
-"p": 0.2419,
-"price": 375,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909902",
-"start": "2026-11-01T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 9+ ast",
-"p": 0.2031,
-"price": 500,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.04913,
-"d": 28.5,
-"first": "2026-11-01T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909899",
-"start": "2026-11-01T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 10.5,
-"name": "precious achiuwa",
-"lab": "Precious Achiuwa 11+ reb",
-"p": 0.2419,
-"price": 375,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
 "gid": "401909901",
 "start": "2026-11-01T00:00Z",
 "kind": "reb",
@@ -816,8 +752,8 @@
 ]
 }
 ],
-"p": 0.01355,
-"d": 117.954,
+"p": 0.056,
+"d": 24.833,
 "first": "2026-11-01T00:00:00+00:00",
 "res": null
 },
@@ -828,19 +764,83 @@
 {
 "gid": "401909899",
 "start": "2026-11-01T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "precious achiuwa",
+"lab": "Precious Achiuwa 11+ reb",
+"p": 0.2383,
+"price": 375,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909901",
+"start": "2026-11-01T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "darius acuff",
-"lab": "Darius Acuff Jr. 7+ ast",
-"p": 0.3966,
-"price": 145,
+"line": 7.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 8+ ast",
+"p": 0.2573,
+"price": 313,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909902",
+"start": "2026-11-01T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander 9+ ast",
+"p": 0.2031,
+"price": 500,
 "book": "Hard Rock",
 "f": [
 "usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.01245,
+"d": 117.705,
+"first": "2026-11-01T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909899",
+"start": "2026-11-01T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "precious achiuwa",
+"lab": "Precious Achiuwa 11+ reb",
+"p": 0.2383,
+"price": 375,
+"book": "Hard Rock",
+"f": [
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -880,10 +880,78 @@
 ]
 }
 ],
-"p": 0.02559,
-"d": 47.861,
+"p": 0.01537,
+"d": 92.791,
 "first": "2026-11-01T00:00:00+00:00",
-"pick": "longshot",
+"res": null
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909900",
+"start": "2026-11-01T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "sam merrill",
+"lab": "Sam Merrill 4+ threes",
+"p": 0.15,
+"price": 490,
+"book": "Kalshi"
+},
+{
+"gid": "401909902",
+"start": "2026-11-01T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. 4+ threes",
+"p": 0.165,
+"price": 425,
+"book": "Kalshi"
+}
+],
+"p": 0.02475,
+"d": 31.014,
+"first": "2026-11-01T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909899",
+"start": "2026-11-01T00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "SAC moneyline",
+"p": 0.2769,
+"price": 285,
+"book": "Novig"
+},
+{
+"gid": "401909901",
+"start": "2026-11-01T00:00Z",
+"kind": "pts",
+"side": "o",
+"line": 24.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 25+ points",
+"p": 0.5218,
+"price": 105,
+"book": "Kalshi"
+}
+],
+"p": 0.14446,
+"d": 7.892,
+"first": "2026-11-01T00:00:00+00:00",
+"pick": "core",
 "res": null
 }
 ],
