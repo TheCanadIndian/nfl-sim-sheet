@@ -480,6 +480,10 @@ def main():
     old = json.load(open(json_path)) if os.path.exists(json_path) else {}
     if old:
         kept = [x for x in old["games"] if x["id"] not in set(todo.game_id.astype(int))]
+        fin = set(games[games.state.isin(["OFF", "FINAL"])].game_id.astype(int))   # the current page hides these (page.js OVER)
+        for x in kept:
+            if x["id"] in fin:
+                x["fin"] = True
         payload["games"] = sorted(kept + payload["games"], key=lambda x: x.get("start_utc") or "")
     # nightly 2-leg pairs paying 15x+ (frozen once the night's first game starts, so the record is pregame)
     # split by slate (early / middle / late, Eastern start time); each slate freezes at its own first puck drop
@@ -748,6 +752,7 @@ TEMPLATE = r"""<meta charset="utf-8">
 __FONTS__<style>
 __CSS__
 .gcard{display:grid;gap:14px}
+.game-btn.fin{color:var(--muted);text-decoration:none;border-top:1px dashed var(--faint);border-radius:0 0 7px 7px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}
 .smw{display:grid;gap:26px;grid-template-columns:minmax(0,1fr)}@media(min-width:900px){.smw{grid-template-columns:1fr 1fr}}
 .smb{display:grid;gap:10px;align-content:start;min-width:0}.smb h3{margin:0}.smb h3 small{font-family:var(--body);font-weight:400;font-size:13px;color:var(--muted);letter-spacing:0}
