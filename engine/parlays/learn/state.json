@@ -1,7 +1,7 @@
 {
-"updated": "2026-10-31T02:21:14+00:00",
-"rows": 602,
-"live_rows": 296,
+"updated": "2026-10-31T02:36:21+00:00",
+"rows": 604,
+"live_rows": 298,
 "segments": [
 {
 "seg": "NHL",
@@ -346,6 +346,24 @@
 "status": "Learning"
 },
 {
+"seg": "NBA",
+"n": 10,
+"ret": -0.3641,
+"h1": -0.0455,
+"h2": -0.4437,
+"z": -1.12,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 Hard Rock",
+"n": 10,
+"ret": -0.3641,
+"h1": -0.0455,
+"h2": -0.4437,
+"z": -1.12,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 matchup",
 "n": 9,
 "ret": -0.09,
@@ -364,21 +382,21 @@
 "status": "Learning"
 },
 {
-"seg": "NBA",
+"seg": "NBA \u00b7 fits a path",
 "n": 8,
-"ret": -0.2051,
-"h1": -0.0455,
-"h2": -0.2583,
-"z": -0.53,
+"ret": -0.4989,
+"h1": 0.0023,
+"h2": -1.0,
+"z": -1.52,
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 Hard Rock",
+"seg": "NBA \u00b7 usage",
 "n": 8,
-"ret": -0.2051,
-"h1": -0.0455,
-"h2": -0.2583,
-"z": -0.53,
+"ret": -0.4989,
+"h1": 0.0023,
+"h2": -1.0,
+"z": -1.52,
 "status": "Learning"
 },
 {
@@ -427,20 +445,20 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 fits a path",
+"seg": "NBA \u00b7 game",
 "n": 6,
-"ret": -0.3318,
-"h1": 0.9091,
-"h2": -0.58,
-"z": -0.78,
+"ret": -0.6083,
+"h1": -1.0,
+"h2": -0.4125,
+"z": -1.55,
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 usage",
+"seg": "NBA \u00b7 rotation",
 "n": 6,
 "ret": -0.3318,
-"h1": 0.9091,
-"h2": -0.58,
+"h1": 0.3364,
+"h2": -1.0,
 "z": -0.78,
 "status": "Learning"
 },
@@ -463,12 +481,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 game",
+"seg": "NBA \u00b7 assists",
 "n": 5,
-"ret": -0.53,
+"ret": -1.0,
 "h1": -1.0,
-"h2": -0.2167,
-"z": -1.13,
+"h2": -1.0,
+"z": 0.0,
 "status": "Learning"
 },
 {
@@ -535,20 +553,20 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 assists",
+"seg": "NBA \u00b7 2 reasons",
 "n": 4,
-"ret": -1.0,
-"h1": -1.0,
+"ret": 0.0023,
+"h1": 1.0045,
 "h2": -1.0,
 "z": 0.0,
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 rotation",
+"seg": "NBA \u00b7 assists \u00b7 edge 10-20%",
 "n": 4,
-"ret": 0.0023,
-"h1": 0.9091,
-"h2": -0.3,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
 "z": 0.0,
 "status": "Learning"
 },
@@ -571,21 +589,39 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 2 reasons",
-"n": 3,
-"ret": 0.3364,
-"h1": 0.9091,
-"h2": 0.05,
-"z": 0.5,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 assists \u00b7 edge 10-20%",
+"seg": "NBA \u00b7 3 reasons",
 "n": 3,
 "ret": -1.0,
 "h1": -1.0,
 "h2": -1.0,
 "z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 rebounds",
+"n": 3,
+"ret": 0.4833,
+"h1": 1.1,
+"h2": 0.175,
+"z": 0.65,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 rebounds \u00b7 edge 5-10%",
+"n": 3,
+"ret": 0.4833,
+"h1": 1.1,
+"h2": 0.175,
+"z": 0.65,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 rebounds \u00b7 coin flip",
+"n": 3,
+"ret": 0.4833,
+"h1": 1.1,
+"h2": 0.175,
+"z": 0.65,
 "status": "Learning"
 },
 {
@@ -616,39 +652,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 3 reasons",
+"seg": "NBA \u00b7 assists \u00b7 plus money",
 "n": 2,
 "ret": -1.0,
 "h1": -1.0,
-"h2": null,
+"h2": -1.0,
 "z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 rebounds",
-"n": 2,
-"ret": 1.225,
-"h1": 1.1,
-"h2": 1.35,
-"z": 9.8,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 rebounds \u00b7 edge 5-10%",
-"n": 2,
-"ret": 1.225,
-"h1": 1.1,
-"h2": 1.35,
-"z": 9.8,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 rebounds \u00b7 coin flip",
-"n": 2,
-"ret": 1.225,
-"h1": 1.1,
-"h2": 1.35,
-"z": 9.8,
 "status": "Learning"
 },
 {
@@ -689,15 +698,6 @@
 },
 {
 "seg": "NBA \u00b7 assists \u00b7 edge 5-10%",
-"n": 1,
-"ret": -1.0,
-"h1": -1.0,
-"h2": null,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 assists \u00b7 plus money",
 "n": 1,
 "ret": -1.0,
 "h1": -1.0,
@@ -1021,25 +1021,25 @@
 }
 ],
 "builder": {
-"n": 10,
+"n": 12,
 "w": 1,
-"ret": -0.1546,
+"ret": -0.2955,
 "h1": -1.0,
-"h2": 0.6908,
-"z": -0.18,
-"exp": 2.09,
-"net": -7.73,
+"h2": 0.409,
+"z": -0.42,
+"exp": 2.57,
+"net": -17.73,
 "status": "Experimental"
 },
 "confluence": {
-"n": 9,
+"n": 11,
 "w": 0,
 "ret": -1.0,
 "h1": -1.0,
 "h2": -1.0,
 "z": 0,
-"exp": 1.42,
-"net": -45.0,
+"exp": 1.58,
+"net": -55.0,
 "status": "Experimental"
 },
 "moveknee": {
@@ -1054,14 +1054,14 @@
 "status": "Experimental"
 },
 "sweet": {
-"n": 17,
+"n": 18,
 "w": 1,
-"ret": 0.1448,
-"h1": 1.4327,
+"ret": 0.0812,
+"h1": 1.1624,
 "h2": -1.0,
-"z": 0.13,
-"exp": 1.57,
-"net": 12.31,
+"z": 0.08,
+"exp": 1.65,
+"net": 7.31,
 "status": "Experimental"
 }
 }
