@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-31T17:38:32.116Z",
+"frozen_at": "2026-10-31T17:51:09.401Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -42,7 +42,7 @@
 "line": 274.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 275+ pass yds",
-"p": 0.2337,
+"p": 0.2331,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -53,7 +53,7 @@
 ]
 }
 ],
-"p": 0.04732,
+"p": 0.04721,
 "d": 23.677,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "longshot"
@@ -88,7 +88,7 @@
 "line": 274.5,
 "name": "aaron rodgers",
 "lab": "Aaron Rodgers 275+ pass yds",
-"p": 0.2337,
+"p": 0.2331,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -99,10 +99,9 @@
 ]
 }
 ],
-"p": 0.07828,
+"p": 0.0781,
 "d": 13.44,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "core"
+"first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -405,54 +404,142 @@
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "treveyon henderson",
+"lab": "Treveyon Henderson TD",
+"p": 0.4141,
+"price": 309,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.24217,
+"d": 7.498,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
 "legs": [
 {
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 5.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson under 5.5 receptions",
-"p": 0.547,
-"price": 120,
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.3453,
+"price": 285,
 "book": "Novig"
 },
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.20194,
+"d": 7.058,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts TD",
+"p": 0.2581,
+"price": 335,
+"book": "Novig"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "dohnte meyers",
+"lab": "Dohnte Meyers over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.15091,
+"d": 7.975,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
 {
 "gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
 "kind": "rec",
 "side": "u",
-"line": 3.5,
-"name": "kendrick bourne",
-"lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5172,
-"price": 106,
+"line": 1.5,
+"name": "brevyn spannford",
+"lab": "Brevyn Spannford under 1.5 receptions",
+"p": 0.5058,
+"price": 108,
+"book": "Novig"
+},
+{
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 12.5,
+"name": "roschon johnson",
+"lab": "Roschon Johnson under 12.5 rush yds",
+"p": 0.5453,
+"price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.28291,
-"d": 4.532,
+"p": 0.27577,
+"d": 4.006,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
 "legs": [
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 5.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson under 5.5 receptions",
-"p": 0.547,
-"price": 120,
-"book": "Novig"
-},
 {
 "gid": "2026_08_IND_JAX",
 "start": "2026-11-01T13:00:00",
@@ -464,10 +551,22 @@
 "p": 0.33,
 "price": 308,
 "book": "Novig"
+},
+{
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 12.5,
+"name": "roschon johnson",
+"lab": "Roschon Johnson under 12.5 rush yds",
+"p": 0.5453,
+"price": -108,
+"book": "Novig"
 }
 ],
-"p": 0.18051,
-"d": 8.976,
+"p": 0.17993,
+"d": 7.858,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -487,20 +586,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "rush_yds",
 "side": "u",
-"line": 5.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson under 5.5 receptions",
-"p": 0.547,
-"price": 120,
+"line": 12.5,
+"name": "roschon johnson",
+"lab": "Roschon Johnson under 12.5 rush yds",
+"p": 0.5453,
+"price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.1723,
-"d": 8.976,
+"p": 0.17175,
+"d": 7.858,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -520,38 +619,26 @@
 "book": "Novig"
 },
 {
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "rush_yds",
 "side": "u",
-"line": 5.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson under 5.5 receptions",
-"p": 0.547,
-"price": 120,
+"line": 12.5,
+"name": "roschon johnson",
+"lab": "Roschon Johnson under 12.5 rush yds",
+"p": 0.5453,
+"price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.1187,
-"d": 12.936,
-"first": "2026-11-01T18:00:00+00:00"
+"p": 0.11832,
+"d": 11.324,
+"first": "2026-11-01T21:05:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 5.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson under 5.5 receptions",
-"p": 0.547,
-"price": 120,
-"book": "Novig"
-},
 {
 "gid": "2026_08_ATL_TB",
 "start": "2026-11-01T13:00:00",
@@ -563,10 +650,22 @@
 "p": 0.208,
 "price": 494,
 "book": "Kalshi"
+},
+{
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 12.5,
+"name": "roschon johnson",
+"lab": "Roschon Johnson under 12.5 rush yds",
+"p": 0.5453,
+"price": -108,
+"book": "Novig"
 }
 ],
-"p": 0.11378,
-"d": 13.068,
+"p": 0.11341,
+"d": 11.44,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -593,12 +692,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5172,
+"p": 0.5162,
 "price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.11223,
+"p": 0.11202,
 "d": 12.113,
 "first": "2026-11-01T18:00:00+00:00"
 },
