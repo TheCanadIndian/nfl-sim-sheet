@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-10-31",
 "lock": "2026-10-31T17:00:00+00:00",
-"frozen_at": "2026-10-31T13:27:14.644985+00:00",
+"frozen_at": "2026-10-31T13:40:16.307679+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -10,67 +10,6 @@
 ],
 "final_at": "2026-10-31T15:00:00+00:00",
 "parlays": [
-{
-"card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909902",
-"start": "2026-11-01T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "kevin durant",
-"lab": "Kevin Durant 5+ ast",
-"p": 0.2832,
-"price": 275,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909896",
-"start": "2026-10-31T19:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday 6+ ast",
-"p": 0.4188,
-"price": 140,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"sport": "nba"
-},
-{
-"gid": "2026020218",
-"start": "2026-10-31T17:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "viktor arvidsson",
-"lab": "Viktor Arvidsson to score",
-"p": 0.3261,
-"price": 223,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.03868,
-"d": 29.07,
-"first": "2026-10-31T17:00:00+00:00",
-"res": null
-},
 {
 "card": "Multisport longshots",
 "tier": "3 legs \u00b7 NBA + NHL",
@@ -134,19 +73,38 @@
 },
 {
 "card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
+"tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
+{
+"gid": "401909902",
+"start": "2026-11-01T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "kevin durant",
+"lab": "Kevin Durant 5+ ast",
+"p": 0.2832,
+"price": 275,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
 {
 "gid": "401909896",
 "start": "2026-10-31T19:00Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday 6+ ast",
-"p": 0.4188,
-"price": 140,
-"book": "Kalshi",
+"line": 2.5,
+"name": "toumani camara",
+"lab": "Toumani Camara 3+ threes",
+"p": 0.4464,
+"price": 120,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -155,6 +113,29 @@
 ],
 "sport": "nba"
 },
+{
+"gid": "2026020218",
+"start": "2026-10-31T17:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "viktor arvidsson",
+"lab": "Viktor Arvidsson to score",
+"p": 0.3261,
+"price": 223,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.04123,
+"d": 26.648,
+"first": "2026-10-31T17:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
 {
 "gid": "401909897",
 "start": "2026-10-31T22:00Z",
@@ -175,6 +156,43 @@
 "sport": "nba"
 },
 {
+"gid": "401909896",
+"start": "2026-10-31T19:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "toumani camara",
+"lab": "Toumani Camara 3+ threes",
+"p": 0.4464,
+"price": 120,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
+"gid": "401909901",
+"start": "2026-11-01T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 14.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 15+ reb",
+"p": 0.2197,
+"price": 425,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+],
+"sport": "nba"
+},
+{
 "gid": "2026020221",
 "start": "2026-10-31T20:00:00Z",
 "kind": "goal",
@@ -186,23 +204,10 @@
 "price": 186,
 "book": "Novig",
 "sport": "nhl"
-},
-{
-"gid": "2026020222",
-"start": "2026-10-31T20:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "macklin celebrini",
-"lab": "Macklin Celebrini to score",
-"p": 0.4132,
-"price": 147,
-"book": "Novig",
-"sport": "nhl"
 }
 ],
-"p": 0.0265,
-"d": 39.842,
+"p": 0.01502,
+"d": 77.628,
 "first": "2026-10-31T19:00:00+00:00",
 "res": null
 }
