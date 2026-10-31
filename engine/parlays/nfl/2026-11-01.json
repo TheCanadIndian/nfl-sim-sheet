@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-10-31T15:03:38.542Z",
+"frozen_at": "2026-10-31T15:09:01.374Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -70,14 +70,15 @@
 "line": 274.5,
 "name": "lamar jackson",
 "lab": "Lamar Jackson 275+ pass yds",
-"p": 0.3478,
+"p": 0.3528,
 "price": 198,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"script"
+"script",
+"price"
 ]
 },
 {
@@ -99,7 +100,7 @@
 ]
 }
 ],
-"p": 0.08155,
+"p": 0.08272,
 "d": 13.44,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "core"
@@ -133,46 +134,13 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.0462,
+"p": 0.05221,
 "d": 16.321,
 "first": "2026-11-02T01:20:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
-"legs": [
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 69.5,
-"name": "rachaad white",
-"lab": "Rachaad White 70+ rush yds",
-"p": 0.21,
-"price": 331,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 249.5,
-"name": "tanner mckee",
-"lab": "Tanner McKee 250+ pass yds",
-"p": 0.22,
-"price": 296,
-"book": "Kalshi"
-}
-],
-"p": 0.0462,
-"d": 17.052,
-"first": "2026-11-02T01:20:00+00:00"
-},
-{
-"card": "Primetime ladders (experimental)",
-"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_08_PHI_WAS",
@@ -186,6 +154,27 @@
 "price": 313,
 "book": "Kalshi"
 },
+{
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "jayden daniels",
+"lab": "Jayden Daniels 250+ pass yds",
+"p": 0.21,
+"price": 313,
+"book": "Kalshi"
+}
+],
+"p": 0.0754,
+"d": 17.019,
+"first": "2026-11-02T01:20:00+00:00"
+},
+{
+"card": "Primetime ladders (experimental)",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "2026_08_PHI_WAS",
 "start": "2026-11-01T20:20:00",
@@ -209,10 +198,22 @@
 "p": 0.21,
 "price": 313,
 "book": "Kalshi"
+},
+{
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "tanner mckee",
+"lab": "Tanner McKee 250+ pass yds",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
 }
 ],
-"p": 0.00926,
-"d": 73.356,
+"p": 0.01231,
+"d": 70.346,
 "first": "2026-11-02T01:20:00+00:00"
 },
 {
@@ -455,39 +456,6 @@
 "book": "Novig"
 },
 {
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 43.5 rec yds",
-"p": 0.606,
-"price": -106,
-"book": "Novig"
-}
-],
-"p": 0.32848,
-"d": 4.373,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 43.5 rec yds",
-"p": 0.606,
-"price": -106,
-"book": "Novig"
-},
-{
 "gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
 "kind": "rec",
@@ -500,8 +468,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.31586,
-"d": 4.003,
+"p": 0.28248,
+"d": 4.635,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -509,15 +477,15 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 43.5 rec yds",
-"p": 0.606,
-"price": -106,
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 5.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 5.5 receptions",
+"p": 0.542,
+"price": 125,
 "book": "Novig"
 },
 {
@@ -533,8 +501,41 @@
 "book": "Novig"
 }
 ],
-"p": 0.2968,
-"d": 4.275,
+"p": 0.26543,
+"d": 4.95,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 5.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 5.5 receptions",
+"p": 0.542,
+"price": 125,
+"book": "Novig"
+},
+{
+"gid": "2026_08_IND_JAX",
+"start": "2026-11-01T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "chris rodriguez",
+"lab": "Chris Rodriguez anytime TD",
+"p": 0.33,
+"price": 317,
+"book": "Novig"
+}
+],
+"p": 0.17886,
+"d": 9.383,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -554,36 +555,69 @@
 "book": "Novig"
 },
 {
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 43.5 rec yds",
-"p": 0.606,
-"price": -106,
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 5.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 5.5 receptions",
+"p": 0.542,
+"price": 125,
 "book": "Novig"
 }
 ],
-"p": 0.13151,
-"d": 11.427,
-"first": "2026-11-01T21:05:00+00:00"
+"p": 0.11761,
+"d": 13.23,
+"first": "2026-11-01T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
+"gid": "2026_08_LAC_LA",
+"start": "2026-11-01T16:05:00",
+"kind": "td",
 "side": "o",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 43.5 rec yds",
-"p": 0.606,
-"price": -106,
+"line": 0.5,
+"name": "kimani vidal",
+"lab": "Kimani Vidal anytime TD",
+"p": 0.217,
+"price": 488,
+"book": "Novig"
+},
+{
+"gid": "2026_08_ARI_DAL",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 3.5,
+"name": "kendrick bourne",
+"lab": "Kendrick Bourne under 3.5 receptions",
+"p": 0.5212,
+"price": 106,
+"book": "Novig"
+}
+],
+"p": 0.11309,
+"d": 12.113,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 5.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 5.5 receptions",
+"p": 0.542,
+"price": 125,
 "book": "Novig"
 },
 {
@@ -599,43 +633,9 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.12606,
-"d": 11.544,
+"p": 0.11274,
+"d": 13.365,
 "first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 43.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 43.5 rec yds",
-"p": 0.606,
-"price": -106,
-"book": "Novig"
-},
-{
-"gid": "2026_08_CHI_SEA",
-"start": "2026-11-02T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "caleb williams",
-"lab": "Caleb Williams anytime TD",
-"p": 0.196,
-"price": 488,
-"book": "Novig"
-}
-],
-"p": 0.11879,
-"d": 11.427,
-"first": "2026-11-02T01:20:00+00:00",
-"pick": "core"
 },
 {
 "card": "Cross-game parlays",
