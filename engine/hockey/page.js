@@ -1,4 +1,9 @@
 const D = JSON.parse(document.getElementById('data').textContent);
+// The current-slate page drops games once they're over (owner 2026-10-31, 'like NBA and NFL'): final at the last run
+// (`fin`) or 3 h 15 min past puck drop (regulation + OT + shootout); dated pages keep every game
+const OVER = g => g.fin || (g.start_utc && Date.now() > new Date(g.start_utc).getTime() + 3.25 * 36e5);
+const DONE = /\d{4}-\d{2}-\d{2}\.html$/.test(location.pathname) ? [] : D.games.filter(OVER);
+if (DONE.length) D.games = D.games.filter(g => !OVER(g));
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const pct = p => (p*100).toFixed(1) + '%';
 const odds = o => (o > 0 ? '+' : '') + o;
@@ -485,11 +490,12 @@ function gameCard(g){
 }
 function games(){
   const g = D.games.find(x => x.id === state.game);
-  if (!g) return '<div class="empty">No games.</div>';
+  if (!g) return `<div class="empty">${DONE.length ? `Tonight’s games are over. The next slate posts after the morning run · <a href="results.html">Results</a>` : 'No games.'}</div>`;
   const gsw = `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ['map', 'Shot map']].map(([k, l]) =>
     `<button data-gtab="${k}" aria-pressed="${state.gtab === k}">${l}</button>`).join('')}</div>`;
   const body = state.gtab === 'map' ? shotMapPanel(g) : picksKey() + playerChips() + gameCard(g);
-  return `<div class="games"><nav class="rail" aria-label="Games">${gameList()}</nav><div class="detail">${gsw}${body}</div></div>`;
+  const fin = DONE.length ? `<a class="game-btn fin" href="results.html"><span class="m"><span class="teams">${DONE.length} final</span><span class="line">Results ↗</span></span></a>` : '';
+  return `<div class="games"><nav class="rail" aria-label="Games">${gameList()}${fin}</nav><div class="detail">${gsw}${body}</div></div>`;
 }
 /* ---------------- shot map: where each team shoots vs where the other allows (display only) ---------------- */
 const SM_ZONE = [['inner', 'Net front & low slot'], ['high', 'High slot'], ['perim', 'Outside']];
