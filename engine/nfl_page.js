@@ -1085,6 +1085,10 @@ function tdLuck(p){
 const TDS = {name: r => r.p.n, rz_car: r => r.u && r.u.rz_car, gl_car: r => r.u && r.u.gl_car, rz_tgt: r => r.u && r.u.rz_tgt, ez_tgt: r => r.u && r.u.ez_tgt,
   opp: r => r.u && r.u.rz_opp_share, proe: r => r.T && r.T.proe, pass: r => r.T && r.T.pass_rate, run: r => r.T && r.T.pass_rate != null ? 1 - r.T.pass_rate : null,
   dproe: r => r.O && r.O.def_proe, dtd: r => r.R && r.R.td_rate, xtd: r => r.u && r.u.xtd, td: r => r.u && r.u.td, luck: r => r.L && r.L.tot, any: r => r.p.s.anytime_td[MEAN], adj: r => r.L ? r.L.adj : r.p.s.anytime_td[MEAN]};
+// phones: one card per player, the chance and the price first (owner 2026-11-01: the table left them ~1,000 px off screen)
+const TD_PHONE = window.matchMedia ? matchMedia('(max-width:640px)') : null;
+if (TD_PHONE && TD_PHONE.addEventListener) TD_PHONE.addEventListener('change', () => { if (state.view === 'games' && state.group === 'td') render(); });
+const TD_SORT = [['any', 'Anytime TD'], ['adj', 'Luck-adj.'], ['xtd', 'Expected TDs'], ['td', 'Actual TDs'], ['luck', 'TD luck'], ['rz_car', 'RZ rush att'], ['gl_car', 'GL rush att'], ['rz_tgt', 'RZ targets'], ['ez_tgt', 'EZ targets'], ['opp', 'RZ opp share'], ['name', 'Player']];
 function tdBoard(g){
   const sc = state.rzscope, TM = (D.rz.teams || {})[sc] || {};
   const pool = state.tdall ? D.players : PL(g);
@@ -1122,7 +1126,27 @@ function tdBoard(g){
   const chip = r => `<span class="tdread"><b>${esc(r.p.n)}</b> <span class="muted">${esc(r.p.t)}</span> ${pct(r.L ? r.L.adj : r.p.s.anytime_td[MEAN])}${r.L && r.L.tag === 'due' ? ' <span class="lk2 due">due</span>' : r.L && r.L.tag === 'hot' ? ' <span class="lk2 hot">ran hot</span>' : ''}</span>`;
   const reads = rows.length ? `<div class="tdreads"><div><span class="eyebrow">Most likely to score</span>${best.map(chip).join('')}</div>${due.length ? `<div><span class="eyebrow">Due · under their expected TDs</span>${due.map(chip).join('')}</div>` : ''}
     <details class="tdhow"><summary class="small">How to read this</summary><p class="small muted">Our chance already counts his red-zone and goal-line work, his team and the defense -- in a 2025-26 test (7,264 player-games) none of those columns added anything once our chance was known. The one that did is <b>TD luck</b>: players well under their expected TDs scored more often than our chance said, and players who ran hot less. <b>Luck-adj.</b> is our chance with that built in. Not a bet rule yet: against Kalshi’s price the ‘due’ group was close to break-even after the fee.</p></details></div>` : '';
-  return reads + `<div class="tdbar"><div class="seg" role="group" aria-label="Players"><button data-tdall="0" aria-pressed="${!state.tdall}">This game</button><button data-tdall="1" aria-pressed="${!!state.tdall}">Whole slate</button></div>
+  const seg = `<div class="seg" role="group" aria-label="Players"><button data-tdall="0" aria-pressed="${!state.tdall}">This game</button><button data-tdall="1" aria-pressed="${!!state.tdall}">Whole slate</button></div>`;
+  if (TD_PHONE && TD_PHONE.matches){
+    const tile = (lab, v, st = '') => `<div class="tdkt${st}"><span>${lab}</span><b>${v}</b></div>`;
+    const heatT = (lab, v, m) => v == null ? tile(lab, '–') : `<div class="tdkt hot${v ? '' : ' z'}" style="${v ? `--a:${(.12 + .5 * Math.min(1, v / Math.max(m, 1))).toFixed(2)}` : ''}"><span>${lab}</span><b>${v}</b></div>`;
+    const sgn = v => v == null ? '–' : `<span class="${v >= 0 ? 'good' : 'bad'}">${v >= 0 ? '+' : '−'}${(Math.abs(v) * 100).toFixed(1)}%</span>`;
+    const cards = rows.map(({p, u, T, O, R, L}) => {
+      const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN], d = L ? L.adj - a : 0, on = state.open === p.k;
+      const tags = `${mktTags(p)}${roleChip(p)}`, mx = mxNFL(p) || chips(p);
+      return `<article class="tdk${on ? ' opened' : ''}"><div class="tdkh">${teamChip(p.t)}<div class="tdpn"><button class="plink${on ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)}${u ? ` · ${u.games}g` : ''}</span></div>`
+        + `<div class="tdkc"><b>${pct(a)}</b><span class="tdsub">fair ${american(a)}</span></div></div>`
+        + `<div class="tdkm">${L ? `<span class="tdkl"><span class="tdsub">Luck-adj.</span> <b>${pct(L.adj)}</b>${Math.abs(d) >= .005 ? ` <span class="tdsub ${d >= .02 ? 'good' : d <= -.02 ? 'bad' : ''}">${d > 0 ? '▲' : '▼'} ${Math.round(Math.abs(d) * 100)}</span>` : ''}${L.tag ? ` <span class="lk2 ${L.tag}">${L.tag === 'due' ? 'due' : 'ran hot'}</span>` : ''}</span>` : '<span></span>'}<span class="tdko">${bo ? MKT.prop(p.g, p.n, 'td') : '<span class="muted">–</span>'}</span></div>`
+        + (tags || mx ? `<div class="tdkx"><div class="tdtags">${tags}</div>${mx}</div>` : '')
+        + `<div class="tdks">${heatT('RZ rush', u ? u.rz_car : null, M.rz_car)}${heatT('Goal line', u ? u.gl_car : null, M.gl_car)}${heatT('RZ tgt', u ? u.rz_tgt : null, M.rz_tgt)}${heatT('End zone', u ? u.ez_tgt : null, M.ez_tgt)}`
+        + `${tile('RZ share', u && u.rz_opp_share != null ? pct(u.rz_opp_share) : '–')}${tile('Exp. TDs', u ? u.xtd.toFixed(1) : '–')}${tile('TDs', u ? u.td : '–')}${tile('TD luck', L ? `<span class="${L.tot <= -.5 ? 'good' : L.tot >= .5 ? 'bad' : ''}">${L.tot >= 0 ? '+' : '−'}${Math.abs(L.tot).toFixed(1)}</span>` : '–')}</div>`
+        + `<details class="tdkd"><summary class="small">Team and defense</summary><div class="tdks">${tile('Team PROE', sgn(T && T.proe))}${tile('Pass %', T && T.pass_rate != null ? pct(T.pass_rate) : '–')}${tile('Opp PROE', sgn(O && O.def_proe))}${tile('Opp RZ TD', R ? pct(R.td_rate) : '–')}</div></details>`
+        + (on ? `<div class="tdkp">${sliderPanel(p)}</div>` : '') + `</article>`; }).join('');
+    return reads + `<div class="tdbar">${seg}<label class="tdsort"><span class="small muted">Sort</span><select id="tds-sort" aria-label="Sort players">${TD_SORT.map(([k, l]) => `<option value="${k}"${k === key ? ' selected' : ''}>${esc(l)}</option>`).join('')}</select><button class="tdsdir" data-tds="${key}" aria-label="Flip the order">${dir > 0 ? '▲' : '▼'}</button></label></div>
+      <p class="tdlg small muted">RZ = inside the 20, goal line = inside the 5, ${esc(lab)}. Tap a name to slide a line.</p>
+      <div class="tdks0">${cards || '<div class="small muted">No players with a meaningful TD chance.</div>'}</div>`;
+  }
+  return reads + `<div class="tdbar">${seg}
     <span class="small muted">Red zone = inside the 20, goal line = inside the 5 · tap a header to sort</span></div>
     <div class="tw tdw"><table class="t tdt"><thead>
       <tr class="gh"><th class="tdname"></th><th colspan="5">His red-zone usage</th><th colspan="2" class="gs">His team inside the 20</th><th colspan="2" class="gs">Opponent defense</th><th colspan="3" class="gs">Touchdowns, ${esc(lab)}</th><th colspan="3" class="gs">This game</th></tr>
@@ -1500,6 +1524,7 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   const id = e.target.id;
   if (id === 'bstat'){ state.bstat = e.target.value; render(); }
+  else if (id === 'tds-sort'){ state.tds = e.target.value; state.tdsd = state.tds === 'name' ? 'asc' : 'desc'; render(); }
   else if (id === 'fo-stat'){ const p = byKey[state.fo.key]; state.fo.stat = e.target.value; state.fo.line = defaultLine(state.fo.stat, p.d[state.fo.stat]); render(); }
   else if (id === 'fo-player'){
     const p = D.players.find(x => plabel(x) === e.target.value) || D.players.find(x => x.n.toLowerCase() === e.target.value.trim().toLowerCase());
