@@ -107,6 +107,30 @@ def merge(H, S, t, starts):
     return new
 
 
+def add_backfill(H, sport):
+    """Pinnacle readings pulled after the fact (research/pin_backfill.py) join the front of the chart's Pinnacle line. A file
+    of its own, so a run already under way can't write over them."""
+    try:
+        BF = json.load(open(os.path.join(M.SITE, "markets", f"pin_backfill_{sport}.json")))
+    except (OSError, ValueError):
+        return
+    for gid, G in BF.items():
+        g = H.get(gid)
+        if not g:
+            continue
+        pts = {}
+        for nm, kinds in G.items():
+            for kind, h in kinds.items():
+                for t, l, o, u in h:
+                    a, b = 1 / dec(o), 1 / dec(u)
+                    pts.setdefault(f"{nm}|{kind}|{l:g}", []).append([t, round(a / (a + b), 3)])
+        for key, p in pts.items():
+            e = g["p"].get(key)
+            if e:
+                old = e.get("n", [])
+                e["n"] = [x for x in p if not old or x[0] < old[0][0]] + old
+
+
 def prune(H, t):
     for gid in list(H):
         st = H[gid].get("s")
@@ -178,6 +202,7 @@ def update():
         starts = starts_of(sport)
         snap_cur = snap(P, L, starts)
         new = merge(H, snap_cur, t, starts)
+        add_backfill(H, sport)
         try:
             C = json.load(open(CLV_PATH))
         except (OSError, ValueError):
