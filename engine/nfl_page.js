@@ -299,32 +299,38 @@ function ladderCard(){
       const k = posKey(p), r = dvpRow(k, p.o); if (!r || r.rank > 8) continue;
       const T = (D.teams[g.id] || {})[p.t] || {};
       const extra = [T.win_prob != null && T.win_prob <= .40 ? 'underdog' : null, T.vegas_implied >= 25 ? `team total ${T.vegas_implied}` : null].filter(Boolean);
-      const rungs = window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n) : [];
-      cards.push({g, p, r, k, extra, rungs});
+      // like the NBA's ladder edges (owner 2026-11-01): each rung at Kalshi (fee in) and at Hard Rock / Novig for the same
+      // number, best price bold, best edge first. No 5% floor here: the record is the soft matchup (edge under 5% +6% on 1,919)
+      const rungs = (window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n) : []).map(u => {
+        const opts = [{b: 'Kalshi', price: u.price, pay: 1 / u.cost}, ...Object.entries(u.bk || {}).map(([b, v]) => ({b, price: (v.o > 0 ? '+' : '') + v.o, u: v.u, pay: v.o > 0 ? 1 + v.o / 100 : 1 + 100 / -v.o}))];
+        const best = opts.reduce((a, c) => c.pay > a.pay ? c : a);
+        return {...u, opts, best, edge: u.p != null ? u.p * best.pay - 1 : null}; }).sort((a, b) => (b.edge ?? -9) - (a.edge ?? -9));
+      cards.push({g, p, r, k, extra, rungs, best: rungs.length ? rungs[0].edge ?? -9 : -9});
     }
   }
   if (!cards.length) return '';
-  cards.sort((a, b) => b.extra.length - a.extra.length || a.r.rank - b.r.rank);
+  cards.sort((a, b) => b.best - a.best || a.r.rank - b.r.rank);
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}</span>
       <span class="ladc soft" title="${esc(c.p.o)} gives up the ${ord(c.r.rank)} most to ${c.k === 'WR' ? 'wide receivers' : c.k + 's'} this season (defense vs position)">soft: ${ord(c.r.rank)} most to ${c.k}s</span>${c.extra.map(x => `<span class="ladc">${esc(x)}</span>`).join('')}</div>
-    <div class="ladr">${c.rungs.slice(0, 3).map(u => `<span class="lru" title="Kalshi ${Math.round(u.l + .5)}+ ${KL[u.k]}: price ${Math.round(u.mid * 100)}% · our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}"><b>${Math.round(u.l + .5)}+</b> ${KL[u.k]} <i>${u.price}</i>${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: 'Kalshi', o: Math.round(u.cost >= .5 ? -100 * u.cost / (1 - u.cost) : 100 * (1 - u.cost) / u.cost), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${Math.round(u.l + .5)}+ ${KL[u.k]}`}) : ''}</span>`).join('')}</div></div>`;
+    <div class="ladr">${c.rungs.slice(0, 3).map(u => { const tx = o => `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`, b = u.best, kc = u.cost;
+      return `<span class="lru" title="${Math.round(u.l + .5)}+ ${KL[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}"><b>${Math.round(u.l + .5)}+</b> ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${Math.round(u.l + .5)}+ ${KL[u.k]}`}) : ''}</span>`; }).join('')}</div></div>`;
   const on = cards.filter(c => c.rungs.length), off = cards.filter(c => !c.rungs.length);
   const wait = off.length ? `<details class="ladw"><summary>${on.length ? `${off.length} more` : `${off.length} players`} · Kalshi ladders not posted yet</summary><div class="ladr">${off.map(c =>
       `<span class="lru" title="${esc(c.p.o)}: ${ord(c.r.rank)} most to ${c.k}s${c.extra.length ? ' · ' + c.extra.join(' · ') : ''}"><b>${esc(c.p.n)}</b> <i>${esc(c.p.pos)} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
   return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
-    <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). In Kalshi’s 2026 markets (weeks 1-5), those higher rungs cleared 3-8 points more often than their price said, in both halves of the sample; a second signal (underdog, or a team total of 25+) pointed the same way. The market seems to price the average game against a bad defense but not the ceiling. That is a small sample from one season, so these are tracked on the Profit page to see if it holds, not a recommendation. Defense rankings early in the season rest on only a few games.</p></details>
-    ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['rank', 'Softest first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>` : ''}
+    <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price (tap it to open the bet when the book gives a link). A green % is our chance vs that best price, shown at 5% or more, and players are ordered by it. Rungs without one stay on the list: the record so far is the soft matchup, not our number (2026 through week 8: +8% on 2,885 rungs, up in both halves of the season, and +6% on rungs where we showed under 5%). The market seems to price the average game against a bad defense but not the ceiling. That is one season, and several rungs of one ladder win or lose together, so these are tracked on the Profit page, not a recommendation.</p></details>
+    ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>` : ''}
     ${NLADV === 'game' ? ladByGame(on, row) : `<div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}`}${wait}</section>`;
 }
 // Ladder candidates by game (owner 2026-10-25: "why are my ladder candidates not separated by game"): games in kickoff
-// order, each game's players softest matchup first, five shown and the rest folded; remembered on this device (nfl-ladv).
+// order, each game's players best edge first, five shown and the rest folded; remembered on this device (nfl-ladv).
 let NLADV = 'game';
-try { NLADV = localStorage.getItem('nfl-ladv') || 'game'; } catch (e) {}
+try { NLADV = localStorage.getItem('nfl-ladv') || 'game'; if (NLADV === 'rank') NLADV = 'edge'; } catch (e) {}
 function ladByGame(cards, row){
   const by = new Map();
   for (const c of cards) (by.get(c.g.id) || by.set(c.g.id, []).get(c.g.id)).push(c);
   return D.games.filter(g => by.has(g.id)).map(g => { const L = by.get(g.id);
-    return `<div class="ladgm"><div class="ladgh"><b>${esc(g.away)} @ ${esc(g.home)}</b> <span class="small muted">${esc(g.kickoff || '')} · ${L.length} player${L.length === 1 ? '' : 's'}</span></div>
+    return `<div class="ladgm"><div class="ladgh"><b>${esc(g.away)} @ ${esc(g.home)}</b> <span class="small muted">${esc(g.kickoff || '')} · ${L.length} player${L.length === 1 ? '' : 's'}${L[0].best >= .05 ? ` · best +${Math.round(L[0].best * 100)}%` : ''}</span></div>
       <div class="ladg">${L.slice(0, 5).map(row).join('')}</div>${L.length > 5 ? `<details class="ladw"><summary>${L.length - 5} more in this game</summary><div class="ladg">${L.slice(5).map(row).join('')}</div></details>` : ''}</div>`; }).join('');
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-nladv]'); if (!b) return;
@@ -1066,7 +1072,7 @@ function tdBoard(g){
   const body = rows.map(({p, u, T, O, R, L}) => {
     const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN];
     const gl = u ? `${u.games} game${u.games === 1 ? '' : 's'}` : 'no games yet';
-    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span></div></div></td>`
+    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span><div class="tdtags">${mktTags(p)}${roleChip(p)}</div>${mxNFL(p) || chips(p)}</div></div></td>`
       + heat(u ? u.rz_car : null, M.rz_car) + heat(u ? u.gl_car : null, M.gl_car) + heat(u ? u.rz_tgt : null, M.rz_tgt) + heat(u ? u.ez_tgt : null, M.ez_tgt)
       + `<td>${ring(u && u.rz_opp_share, 'Share of his team’s red-zone carries + targets in the games he played')}</td>`
       + `<td class="gs">${sbar(T && T.proe)}</td><td>${pbar2(T && T.pass_rate)}</td>`
@@ -1346,7 +1352,8 @@ function mxNFL(p){
   return `<div class="mxw">${groups.map(G => `<span class="mxl ${G[0].v > 1 ? 'up' : 'dn'}" title="${esc(G.map(x => x.tip).join(' '))}">${G.map(x => `${x.lab} ${sg(x.v)}`).join(' · ')} <i>vs ${MXG[key]}</i></span>`).join('')}</div>`;
 }
 const roleChip = p => { const r = roleOf2(p); return r ? `<span class="tag arch" title="${esc(r[1])} (display only)">${esc(r[0])}</span>` : ''; };
-const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + (MKT.moveFlag ? MKT.moveFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}${extra}${roleChip(p)}${(() => { const mx = mxNFL(p); return mx || chips(p); })()}</td>`;
+const mktTags = p => `${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + (MKT.moveFlag ? MKT.moveFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}`;
+const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${mktTags(p)}${extra}${roleChip(p)}${mxNFL(p) || chips(p)}</td>`;
 // Market-blind lean, inline (same rule as the Model agreement tab)
 const AGK = Object.fromEntries((D.agree || []).map(r => [r.k + '|' + r.stat, r]));
 function agChip(p, stat){

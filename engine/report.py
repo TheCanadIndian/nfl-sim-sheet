@@ -525,6 +525,7 @@ input[type=search]{min-width:200px}
 .offc{border:1px solid var(--faint);border-radius:999px;padding:3px 10px;font-size:12.5px}.offc a{color:inherit;text-decoration:none}.offc i{font-style:normal;color:var(--muted);margin-left:4px}
 .offc.cheap{border-color:color-mix(in srgb,var(--good) 45%,transparent)}.offc.cheap b{color:var(--good)}.offc.rich b{color:var(--bad)}.offc.mine{border-width:2px}
 .sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
+.lru .ledge{color:var(--good);font-weight:700;margin-left:4px}.lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
@@ -685,6 +686,7 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
 .tdpn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
 .tdpn .plink{font-weight:600}
 .tdsub{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.tdtags{display:flex;flex-wrap:wrap;gap:3px 4px}.tdtags:empty{display:none}.tdpn .mxw{margin:1px 0 0}.tdpn .mxl{white-space:normal}
 .tchip{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border-radius:7px;font-size:10.5px;font-weight:700;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
 .tdt td.hv{padding-inline:4px}
 .hc{display:block;min-width:38px;padding:5px 0;border-radius:6px;font-weight:600;background:rgba(46,158,91,var(--a,.12));color:var(--ink)}
