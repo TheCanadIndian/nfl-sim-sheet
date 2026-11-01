@@ -1174,6 +1174,13 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       }
       return out.sort((a, b) => a.i - b.i);                         // each stat's nearest high rung first
     },
+    // every Kalshi rung of a player's stat, with the same spread rule (the ladder cards' lower-rung dropdown: price check only)
+    ladderAll(gid, pid, name, kinds){
+      kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
+      return forPlayer(gid, pid, name).filter(r => r.s === 'kalshi' && kinds.includes(r.k) && r.l != null && r.ya > 0 && r.yb != null && r.ya - r.yb <= .10)
+        .map(r => ({k: r.k, l: r.l, ya: r.ya, yb: r.yb, mid: (r.ya + r.yb) / 2, p: ours(r, 'vegas'), price: px(r.ya, 'kalshi'),
+          cost: r.ya + .07 * r.ya * (1 - r.ya), bk: booksAt(gid, name, r.k, r.l)}));
+    },
     cell(gid, pid, name, kind, model){                        // compact table cell: price · edge · money each side
       const r = forPlayer(gid, pid, name).filter(x => x.k === kind && (x.l == null || x.l < 1)).sort((a, b) => (a.s === 'kalshi' ? -1 : 1))[0];
       if (!r) return '<span class="muted">–</span>';
