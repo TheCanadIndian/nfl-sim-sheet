@@ -4,7 +4,7 @@ Intraday odds history for the watchlist charts (owner 2026-10-26: "create a line
 move"). Every markets run appends, for each upcoming game, every over price at every book at every line (props file main
 + alt lines; Kalshi's ladder rungs from live_<sport>.json, ask + 7% fee) and the sharp fair at that line -- only when a
 value changed since the last entry. -> site markets/hist_<sport>.json (served beside props_<sport>.json):
-    {gid: {"s": start, "p": {"<name>|<kind>|<line>": {"b": {book: [[t, odds], ...]}, "f": [[t, fair], ...]}}}}
+    {gid: {"s": start, "p": {"<name>|<kind>|<line>": {"b": {book: [[t, odds], ...]}, "f": [[t, fair], ...], "n": [[t, Pinnacle no-vig], ...]}}}}
 t = minutes since the epoch (UTC). Games are dropped 6 h after they start.
 
     python oddshist.py               # append the current snapshot (markets.yml)
@@ -28,7 +28,8 @@ def fee_odds(ya):
 
 
 def snap(P, L, starts):
-    """{gid: {key: ({book: odds}, fair)}} for games not started at the snapshot."""
+    """{gid: {key: ({book: odds}, fair, Pinnacle no-vig)}} for games not started at the snapshot. Pinnacle is its own series, never a
+    book: it is a reference, not a price (owner 2026-11-01: graph it)."""
     out = {}
     for gid, G in (P.get("props") or {}).items():
         for nm, kinds in G.items():
@@ -37,14 +38,16 @@ def snap(P, L, starts):
                 if e.get("o"):                                        # no line (anytime goal / TD): stored at 0.5
                     pin = e.get("pin") or {}
                     l0 = float(e["l"]) if e.get("l") is not None else .5
-                    lines.append((l0, e["o"], pin.get("o") if pin.get("o") is not None and pin.get("l", e.get("l")) == e.get("l") else None))
+                    same = pin.get("o") is not None and pin.get("l", e.get("l")) == e.get("l")
+                    own = (pin.get("pn", (pin.get("parts") or {}).get("Pinnacle")) if "parts" in pin else pin.get("o")) if same else None
+                    lines.append((l0, e["o"], pin.get("o") if same else None, own))
                 for la, a in (e.get("a") or {}).items():
                     if a.get("o"):
-                        lines.append((float(la), a["o"], a.get("pin")))
-                for l, o, fair in lines:
+                        lines.append((float(la), a["o"], a.get("pin"), a.get("pin_p")))
+                for l, o, fair, own in lines:
                     bk = {b: v[0] for b, v in o.items() if isinstance(v, list) and v and v[0] is not None and b != "Pinnacle"}
                     if bk:
-                        out.setdefault(str(gid), {})[f"{nm}|{k}|{l:g}"] = (bk, fair)
+                        out.setdefault(str(gid), {})[f"{nm}|{k}|{l:g}"] = (bk, fair, own)
     for r in (L or {}).get("rows", []):
         if r.get("s") != "kalshi" or r.get("l") is None or not r.get("n") or not r.get("ya") or r.get("yb") is None or not .01 < r["ya"] < .99:
             continue
@@ -52,9 +55,9 @@ def snap(P, L, starts):
             continue
         key = f"{jsnorm(r['n'])}|{r['k']}|{float(r['l']):g}"
         G = out.setdefault(str(r["g"]), {})
-        bk, fair = G.get(key, ({}, None))
+        bk, fair, own = G.get(key, ({}, None, None))
         bk = dict(bk, Kalshi=fee_odds(r["ya"]))
-        G[key] = (bk, fair)
+        G[key] = (bk, fair, own)
     return out
 
 
@@ -84,7 +87,7 @@ def merge(H, S, t, starts):
             continue                                                  # started: keep the pregame history only
         g = H.setdefault(gid, {"s": st, "p": {}})
         g["s"] = st or g.get("s")
-        for key, (bk, fair) in G.items():
+        for key, (bk, fair, own) in G.items():
             e = g["p"].setdefault(key, {"b": {}, "f": []})
             for b, o in bk.items():
                 h = e["b"].setdefault(b, [])
@@ -96,6 +99,11 @@ def merge(H, S, t, starts):
                 fr = round(float(fair), 3)
                 if not e["f"] or e["f"][-1][1] != fr:
                     e["f"].append([t, fr])
+            if own is not None:
+                nv = round(float(own), 3)
+                h = e.setdefault("n", [])
+                if not h or h[-1][1] != nv:
+                    h.append([t, nv])
     return new
 
 

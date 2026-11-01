@@ -813,6 +813,7 @@ PIN_MKT = {"player_reception_yds": "rec_yds", "player_rush_yds": "rush_yds", "pl
 PIN_K = 1.04                          # power exponent when a game has no two-way lines to solve it from
 PIN_HOURS = 24.0                      # games within a day of kickoff (paid plan; was one pull 3.5 h out)
 PIN_REFRESH = 120                     # minutes between pulls of a game (Pinnacle's lines sharpen toward kickoff)
+PIN_NEAR_H, PIN_NEAR_MIN = 6, 30      # every 30 min in the last 6 h (owner 2026-11-01: wants to see Pinnacle move; a move needs two readings before kickoff)
 PIN_CACHE = os.path.join(M.OUT, "pin_props_nfl.json")
 PIN_NFL_LOG = os.path.join(M.OUT, "pin_nfl_history.json")   # every pull kept (closing-line grading in profit.py)
 
@@ -831,7 +832,8 @@ def pin_pull(now):
         cache = json.load(open(PIN_CACHE))
     except (OSError, ValueError):
         cache = {}
-    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, PIN_REFRESH)}
+    near = now + pd.Timedelta(hours=PIN_NEAR_H)
+    todo = {ga: g for ga, g in soon.items() if stale(cache.get(str(g["id"])), now, PIN_NEAR_MIN if pd.Timestamp(g["start"]).tz_convert("UTC") <= near else PIN_REFRESH)}
     if not todo:
         return
     r = requests.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events", params=dict(apiKey=k), timeout=30)
