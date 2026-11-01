@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-01",
 "lock": "2026-11-01T20:30:00+00:00",
-"frozen_at": "2026-11-01T17:53:12.399Z",
+"frozen_at": "2026-11-01T18:07:23.356Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,23 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909903",
+"start": "2026-11-01T20:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard 4+ threes",
+"p": 0.2224,
+"price": 373,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
 "gid": "401909904",
 "start": "2026-11-01T22:00Z",
 "kind": "ast",
@@ -22,7 +39,7 @@
 "line": 3.5,
 "name": "jarace walker",
 "lab": "Jarace Walker 4+ ast",
-"p": 0.24,
+"p": 0.2398,
 "price": 331,
 "book": "Kalshi",
 "f": [
@@ -30,28 +47,12 @@
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401909906",
-"start": "2026-11-02T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "rj barrett",
-"lab": "RJ Barrett 6+ reb",
-"p": 0.4421,
-"price": 120,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.1061,
-"d": 9.482,
-"first": "2026-11-01T22:00:00+00:00",
+"p": 0.05334,
+"d": 20.386,
+"first": "2026-11-01T20:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -61,14 +62,58 @@
 {
 "gid": "401909903",
 "start": "2026-11-01T20:30Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
 "line": 3.5,
 "name": "payton pritchard",
-"lab": "Payton Pritchard 4+ reb",
-"p": 0.4087,
-"price": 138,
-"book": "Novig",
+"lab": "Payton Pritchard 4+ threes",
+"p": 0.2224,
+"price": 373,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909906",
+"start": "2026-11-02T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes 7+ ast",
+"p": 0.3714,
+"price": 165,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.08261,
+"d": 12.535,
+"first": "2026-11-01T20:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909903",
+"start": "2026-11-01T20:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "wendell carter",
+"lab": "Wendell Carter Jr. 2+ threes",
+"p": 0.2507,
+"price": 296,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -83,7 +128,7 @@
 "line": 3.5,
 "name": "jarace walker",
 "lab": "Jarace Walker 4+ ast",
-"p": 0.24,
+"p": 0.2398,
 "price": 331,
 "book": "Kalshi",
 "f": [
@@ -91,10 +136,27 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401909906",
+"start": "2026-11-02T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes 7+ ast",
+"p": 0.3714,
+"price": 165,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.09807,
-"d": 10.258,
+"p": 0.02233,
+"d": 45.229,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 }
