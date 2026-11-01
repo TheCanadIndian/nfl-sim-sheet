@@ -165,7 +165,7 @@
       const who = (g.pl || {})[x.n] || [], k = x.k, cx = who[2] || null;
       const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : YES.has(k) ? LAB[k] || k : x.b;
       out.push({sport, gid: x.g, nm: x.n, name: who[1] || x.n.replace(/\b\w/g, c => c.toUpperCase()), team: who[0] || '', game: g.lab || x.g, start, k, statKey: k.startsWith('sog') ? 'sog' : k,
-                l: x.l, main: !!x.main, ml: null, bet, p: null, offOnly: x, cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(y => y[1] === 'g')),
+                l: x.l, main: !!x.main, ml: null, bet, p: null, offOnly: x, pin: pinm[`${x.g}|${x.n}|${k}`] || null, cons: consm[`${x.g}|${x.n}|${k}`] || null, cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(y => y[1] === 'g')),
                 prices: [{b: x.bk, o: x.o, u: link([x.o, x.u], P.partner), fair: x.fair, q: x.fair, w: 0, src: x.carried ? '≈ main line’s fair carried by our projection' : x.main ? 'sharp consensus' : 'books’ two-way fair at this line',
                           edge: x.fair * dec(x.o) - 1}]});
     }
