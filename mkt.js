@@ -50,15 +50,17 @@
   // Results page can grade them. Each leg: {gid, start, kind, side, line, name, lab, p, price, book}.
   const FREEZE = /[?&]freeze=1(&|$)/.test(location.search);
   if (FREEZE) MY = ['Novig', 'Kalshi', 'Hard Rock'];
-  let FROZEN = [], CANDS = [], PATHS = [];
+  let FROZEN = [], CANDS = [], PATHS = [], LADS = [];
   const reg = (card, tier, legs, p, d) => { if (FREEZE && legs && legs.length) FROZEN.push({card, tier, legs, p: +(+p).toFixed(5), d: d == null ? null : +(+d).toFixed(3)}); };
   // learning builder (builder.py): every over the page could bet at the owner's books, with its path / script reasons (f)
   const regCand = c => { if (FREEZE && c) CANDS.push(c); };
   // every potential Path leg (owner 2026-10-26: filterable in the screener) -> parlays.py -> markets/paths_<sport>.json
   const regPath = c => { if (FREEZE && c) PATHS.push(c); };
+  // every rung in a ladder category (owner 2026-11-01: mark them in the screener) -> parlays.py -> markets/ladders_<sport>.json
+  const regLad = c => { if (FREEZE && c) LADS.push(c); };
   const dumpFrozen = () => { let el = document.getElementById('frozen-parlays');
     if (!el){ el = document.createElement('script'); el.type = 'application/json'; el.id = 'frozen-parlays'; document.body.appendChild(el); }
-    el.textContent = JSON.stringify({generated: new Date().toISOString(), books: MY, prices: BK && BK.fetched, props: PR && PR.fetched, parlays: FROZEN, cands: CANDS, paths: PATHS}); };
+    el.textContent = JSON.stringify({generated: new Date().toISOString(), books: MY, prices: BK && BK.fetched, props: PR && PR.fetched, parlays: FROZEN, cands: CANDS, paths: PATHS, ladders: LADS}); };
   const mine = k => !MY.length || MY.includes(k);
   // Pinnacle's no-vig is on the prop when its line matches ours (TD props have no line: .5). w: 2 two-way (multiplicative), 1 one-way (power)
   const pinHow = (w, pl) => w === 1 ? 'one-way price, power de-vig' : w === 3 ? `carried from Pinnacle’s ${pl != null ? pl + ' ' : ''}line by our distribution’s shape` : 'both sides, multiplicative de-vig';
@@ -287,7 +289,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     }).catch(() => {});
   }
   let rr = null;
-  function rerender(){ clearTimeout(rr); rr = setTimeout(() => { FROZEN = []; CANDS = []; PATHS = []; try { window.render && window.render(); } catch (e) {} if (FREEZE) dumpFrozen(); }, 250); }
+  function rerender(){ clearTimeout(rr); rr = setTimeout(() => { FROZEN = []; CANDS = []; PATHS = []; LADS = []; try { window.render && window.render(); } catch (e) {} if (FREEZE) dumpFrozen(); }, 250); }
 
   // flow badges (Kalshi pre-game taker flow, r.fl: +1 all money bought YES, -1 all NO). Backtests Sep-Oct 2026:
   // VALUE (YES edge) with NO-heavy/mixed flow beat VALUE with YES-heavy flow in MLB HR, NFL yards and NHL goals;
@@ -845,7 +847,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         && Math.abs((x.l ?? .5) - ln) < 1e-9 && x.ya > 0 && x.yb != null && x.ya - x.yb <= .10);
       return r ? {m: (r.ya + r.yb) / 2, w: .5, src: 'Kalshi'} : null;
     },
-    norm, reg, regPath, FREEZE,
+    norm, reg, regPath, regLad, FREEZE,
     // one learning-builder candidate: an over (main line, or yes for TD / goal) priced at the owner's books with the
     // site's anchored chance (sgLeg); f = the page's reasons (keys), fit = whether it fits a script / path (page rule)
     cand(gid, start, name, kind, line, p, f, fit){
