@@ -72,6 +72,21 @@
   const link = (v, partner) => { const u = v && v[1]; if (!u) return null; if (String(u).startsWith('http')) return u;
     return partner === 'thecanadindian' ? `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${partner}` : null; };
   const LADT = {'Ladder candidate': 'Ladder cand', 'Ladder edge': 'Ladder edge', 'Ladder longshot': 'Ladder long', 'Primetime ladder': 'Primetime'};
+  // Lines no sharp or two-way price reaches (owner 2026-11-01: 'I want a real fair'; research/no_fair_study.py): far alt rungs
+  // = the book's ladder moved by the hold it shows at the main line, with the main fair carried by our distribution (NBA fit on
+  // 79 games, both halves; NFL 10 games, too few to fit, plain average). NFL anytime TD with no Pinnacle = the books' median, hold
+  // removed. Shown with ≈; display only: no edge filter, card or bet rule uses them.
+  function estFair(sport, k, e, x, mainFair, books){
+    if (k === 'td'){ const m = sport === 'nfl' && x.main ? med(books.map(([, v]) => 1 / dec(v[0]))) : null;
+      return m != null && books.length >= 3 ? sig(-.0647 + 1.1037 * lgt(m)) : null; }
+    if (x.main || mainFair == null || !(sport === 'nfl' || sport === 'nba')) return null;
+    if (!(x.p > 0 && x.p < 1 && e.p > 0 && e.p < 1)) return null;
+    const zs = books.filter(([b]) => e.o && e.o[b] && e.o[b][0] != null).map(([b, v]) => lgt(1 / dec(v[0])) + lgt(mainFair) - lgt(1 / dec(e.o[b][0])));
+    const zc = lgt(mainFair) + lgt(x.p) - lgt(e.p);
+    if (!zs.length) return sig(sport === 'nba' ? -.065 + 1.1518 * zc : zc);   // the book skips the main line: the carry alone
+    const za = zs.reduce((s, z) => s + z, 0) / zs.length;
+    return sig(sport === 'nba' ? -.0984 + .5245 * za + .6252 * zc : (za + zc) / 2);
+  }
   function build(sport, P, F, LV, PA, LA){
     const out = [], G = GAMES[sport] || {}, now = Date.now();
     // Kalshi's prop ladders are only in live_<sport>.json (asks / bids), not the props file: every rung with a 4c-or-less
@@ -146,8 +161,11 @@
               else { const tw = twoWay(x.o, x.u); if (tw != null && (x.main || Object.keys(x.u || {}).length >= 2)){ fair = tw; src = 'books’ no-vig median'; }
                 else if (k === 'goal' && f4O(x, b) != null){ fair = f4O(x, b); src = 'four books (Kalshi, FD, Fanatics, DK), hold removed'; }
                 else if (k === 'goal'){ const ex = books.filter(([bb]) => EXCH.includes(bb)).map(([, vv]) => 1 / dec(vv[0])); const m = med(ex); if (m != null){ fair = m / 1.03; src = 'exchanges, less 3%'; } } }
+              let est = false;
+              if (fair == null){ const nf = estFair(sport, k, e, x, mainFair, books);
+                if (nf != null){ fair = nf; w = 0; est = true; src = k === 'td' ? '≈ estimated: median of the books, hold removed' : '≈ estimated: the book’s ladder from the main-line fair, with our distribution'; } }
               const q = fair != null ? (x.p != null ? w * x.p + (1 - w) * fair : fair) : null;
-              return {b, o: v[0], u: link(v, P.partner), fair, q, w, src, edge: q != null ? q * dec(v[0]) - 1 : null};
+              return {b, o: v[0], u: link(v, P.partner), fair, q, w, src, est, edge: q != null ? q * dec(v[0]) - 1 : null};
             });
             out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, ml: e.l ?? null, bet, p: x.p,
                       prices, value: tg.v === tagBet, lc: tg.lc === tagBet, pin: pinm[`${gid}|${nm}|${k}`] || null, cons: consm[`${gid}|${nm}|${k}`] || null,
@@ -216,11 +234,11 @@
       if ((S.knee || S.open || S.path) && !kb) continue;
       const best = kb || ps[0], [lo, hi] = PRICE[S.price] || PRICE.all;
       if (best.o < lo || best.o >= hi) continue;
-      if (!S.knee && !S.open && !S.path && !S.lad && !S.offm && S.edge > -99 && !(best.edge != null && best.edge * 100 >= S.edge)) continue;
+      if (!S.knee && !S.open && !S.path && !S.lad && !S.offm && S.edge > -99 && !(best.edge != null && !best.est && best.edge * 100 >= S.edge)) continue;
       if (!r.gone && !r.offOnly && !S.lad && best.edge != null && best.edge > .6) continue;                     // 60%+ claimed edges are stale or broken quotes
       out.push({...r, best, n: ps.length});
     }
-    const key = {edge: r => -(r.best.edge ?? -9), gap: r => -((r.best.q ?? 0) - 1 / dec(r.best.o)), start: r => r.start || 9e15, price: r => -r.best.o}[S.sort] || (r => 0);
+    const key = {edge: r => -(r.best.est ? -9 : r.best.edge ?? -9), gap: r => -(r.best.est ? 0 : (r.best.q ?? 0) - 1 / dec(r.best.o)), start: r => r.start || 9e15, price: r => -r.best.o}[S.sort] || (r => 0);
     return out.sort((a, b) => key(a) - key(b));
   }
   const chip = (k, v, lab, on) => `<button class="sc-chip${on ? ' on' : ''}" data-k="${k}" data-v="${esc(v)}" aria-pressed="${on}">${lab}</button>`;
@@ -253,8 +271,8 @@
       const sl = window.SLIP && b.q != null && !r.gone ? SLIP.btn(leg) : '';
       return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b>${wb} <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
           <div class="sc-bet">${esc(r.bet[0].toUpperCase() + r.bet.slice(1))} ${tags}</div>${cmp}${kl}${xo}${pl}${ol}${r.cx.length ? `<div class="sc-cx">${r.cx.map(x => `<span class="${x[1] === 'g' ? 'g' : x[1] === 'b' ? 'b' : ''}">${esc(x[0])}</span>`).join('')}</div>` : ''}</div>
-        <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
-          <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.fair != null ? pc(b.fair) : '—'}</span></div>
+        <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null || b.est ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (b.est ? '≈' : '') + (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
+          <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.est ? '≈' : ''}${b.fair != null ? pc(b.fair) : '—'}</span></div>
         <div class="sc-act">${b.u ? `<a class="sc-px" href="${esc(b.u)}" target="_blank" rel="noopener">${priceHtml}</a>` : `<span class="sc-px nl">${priceHtml}</span>`}${sl}</div></div>`; };
     const preHtml = `<div class="sc-pre"><span class="sc-l">Saved</span>${PRE.map((f, i) => `<span class="sc-pc${same(f.f) ? ' on' : ''}"><button class="sc-pa" data-i="${i}" aria-pressed="${same(f.f)}">${esc(f.n)}</button><button class="sc-px2" data-i="${i}" aria-label="Delete ${esc(f.n)}" title="Delete">×</button></span>`).join('')}
         ${NAMING ? `<span class="sc-name"><input id="sc-pn" maxlength="40" value="${esc(suggest())}" aria-label="Name for these filters"><button id="sc-ps" class="sc-chip on">Save</button><button id="sc-pc" class="sc-reset">Cancel</button></span>`
