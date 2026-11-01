@@ -1,7 +1,7 @@
 {
-"updated": "2026-11-01T00:56:33+00:00",
-"rows": 639,
-"live_rows": 333,
+"updated": "2026-11-01T01:02:24+00:00",
+"rows": 641,
+"live_rows": 335,
 "segments": [
 {
 "seg": "NHL",
@@ -301,6 +301,24 @@
 "status": "Learning"
 },
 {
+"seg": "NBA",
+"n": 13,
+"ret": -0.5108,
+"h1": -0.1982,
+"h2": -0.7063,
+"z": -1.82,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 Hard Rock",
+"n": 13,
+"ret": -0.5108,
+"h1": -0.1982,
+"h2": -0.7063,
+"z": -1.82,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
 "n": 13,
 "ret": 0.3369,
@@ -346,21 +364,21 @@
 "status": "Learning"
 },
 {
-"seg": "NBA",
+"seg": "NBA \u00b7 fits a path",
 "n": 11,
-"ret": -0.4219,
-"h1": -0.0455,
-"h2": -0.5056,
-"z": -1.41,
+"ret": -0.6355,
+"h1": 0.0023,
+"h2": -1.0,
+"z": -2.32,
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 Hard Rock",
+"seg": "NBA \u00b7 usage",
 "n": 11,
-"ret": -0.4219,
-"h1": -0.0455,
-"h2": -0.5056,
-"z": -1.41,
+"ret": -0.6355,
+"h1": 0.0023,
+"h2": -1.0,
+"z": -2.32,
 "status": "Learning"
 },
 {
@@ -373,21 +391,21 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 fits a path",
+"seg": "NBA \u00b7 game",
 "n": 9,
-"ret": -0.5545,
-"h1": 0.0023,
-"h2": -1.0,
-"z": -1.88,
+"ret": -0.7389,
+"h1": -1.0,
+"h2": -0.53,
+"z": -2.48,
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 usage",
+"seg": "NBA \u00b7 rotation",
 "n": 9,
 "ret": -0.5545,
-"h1": 0.0023,
+"h1": 0.3364,
 "h2": -1.0,
-"z": -1.88,
+"z": -1.66,
 "status": "Learning"
 },
 {
@@ -406,24 +424,6 @@
 "h1": 0.0333,
 "h2": -0.2833,
 "z": -0.27,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 game",
-"n": 7,
-"ret": -0.6643,
-"h1": -1.0,
-"h2": -0.53,
-"z": -1.98,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 rotation",
-"n": 7,
-"ret": -0.4273,
-"h1": 0.3364,
-"h2": -1.0,
-"z": -1.15,
 "status": "Learning"
 },
 {
@@ -490,6 +490,42 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 3 reasons",
+"n": 5,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": -5.0,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 rebounds",
+"n": 5,
+"ret": -0.11,
+"h1": 1.1,
+"h2": -0.4125,
+"z": -0.2,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 rebounds \u00b7 edge 5-10%",
+"n": 5,
+"ret": -0.11,
+"h1": 1.1,
+"h2": -0.4125,
+"z": -0.2,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 rebounds \u00b7 coin flip",
+"n": 5,
+"ret": -0.11,
+"h1": 1.1,
+"h2": -0.4125,
+"z": -0.2,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 3+ shots \u00b7 plus money",
 "n": 5,
 "ret": 0.062,
@@ -553,33 +589,6 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 rebounds",
-"n": 4,
-"ret": 0.1125,
-"h1": 1.1,
-"h2": -0.2167,
-"z": 0.17,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 rebounds \u00b7 edge 5-10%",
-"n": 4,
-"ret": 0.1125,
-"h1": 1.1,
-"h2": -0.2167,
-"z": 0.17,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 rebounds \u00b7 coin flip",
-"n": 4,
-"ret": 0.1125,
-"h1": 1.1,
-"h2": -0.2167,
-"z": 0.17,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 2 reasons",
 "n": 4,
 "ret": 0.0023,
@@ -625,12 +634,21 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 3 reasons",
+"seg": "NBA \u00b7 points",
 "n": 3,
-"ret": -1.0,
+"ret": -0.3636,
 "h1": -1.0,
-"h2": -1.0,
-"z": 0.0,
+"h2": -0.0455,
+"z": -0.57,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 points \u00b7 coin flip",
+"n": 3,
+"ret": -0.3636,
+"h1": -1.0,
+"h2": -0.0455,
+"z": -0.57,
 "status": "Learning"
 },
 {
@@ -661,25 +679,16 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 points",
-"n": 2,
-"ret": -0.0455,
-"h1": -1.0,
-"h2": 0.9091,
-"z": -0.05,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 points \u00b7 coin flip",
-"n": 2,
-"ret": -0.0455,
-"h1": -1.0,
-"h2": 0.9091,
-"z": -0.05,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 4 reasons",
+"n": 2,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": 0.0,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 points \u00b7 edge 5-10%",
 "n": 2,
 "ret": -1.0,
 "h1": -1.0,
@@ -761,15 +770,6 @@
 },
 {
 "seg": "NHL \u00b7 goals \u00b7 coin flip",
-"n": 1,
-"ret": -1.0,
-"h1": -1.0,
-"h2": null,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 points \u00b7 edge 5-10%",
 "n": 1,
 "ret": -1.0,
 "h1": -1.0,
