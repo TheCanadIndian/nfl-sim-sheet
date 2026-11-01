@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T13:00:48.726266+00:00",
+"frozen_at": "2026-11-01T13:17:22.412169+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -17,13 +17,13 @@
 {
 "gid": "2026_08_BAL_BUF",
 "start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 299.5,
-"name": "lamar jackson",
-"lab": "Lamar Jackson 300+ pass yds",
-"p": 0.252,
-"price": 351,
+"line": 79.5,
+"name": "khalil shakir",
+"lab": "Khalil Shakir 80+ rec yds",
+"p": 0.2046,
+"price": 490,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -42,7 +42,74 @@
 "line": 119.5,
 "name": "tee higgins",
 "lab": "Tee Higgins 120+ rec yds",
-"p": 0.2114,
+"p": 0.2081,
+"price": 490,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "401909903",
+"start": "2026-11-01T20:30Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "wendell carter",
+"lab": "Wendell Carter Jr. 15+ pts",
+"p": 0.3331,
+"price": 218,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+],
+"sport": "nba"
+}
+],
+"p": 0.01418,
+"d": 110.696,
+"first": "2026-11-01T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "3 legs \u00b7 NBA + NFL",
+"legs": [
+{
+"gid": "2026_08_BAL_BUF",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "khalil shakir",
+"lab": "Khalil Shakir 80+ rec yds",
+"p": 0.2046,
+"price": 490,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_08_TEN_CIN",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 119.5,
+"name": "tee higgins",
+"lab": "Tee Higgins 120+ rec yds",
+"p": 0.2081,
 "price": 490,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -61,8 +128,8 @@
 "line": 3.5,
 "name": "jarace walker",
 "lab": "Jarace Walker 4+ ast",
-"p": 0.2645,
-"price": 296,
+"p": 0.267,
+"price": 280,
 "book": "Kalshi",
 "f": [
 "matchup",
@@ -72,53 +139,50 @@
 "sport": "nba"
 }
 ],
-"p": 0.01409,
-"d": 105.372,
+"p": 0.01137,
+"d": 132.278,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
 {
 "card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NFL",
+"tier": "4 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_08_BAL_BUF",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"gid": "401909903",
+"start": "2026-11-01T20:30Z",
+"kind": "pts",
 "side": "o",
-"line": 299.5,
-"name": "lamar jackson",
-"lab": "Lamar Jackson 300+ pass yds",
-"p": 0.252,
-"price": 351,
+"line": 14.5,
+"name": "wendell carter",
+"lab": "Wendell Carter Jr. 15+ pts",
+"p": 0.3331,
+"price": 218,
 "book": "Kalshi",
-"sc": "Shootout",
 "f": [
 "usage",
-"matchup",
-"script",
+"rotation",
 "price"
 ],
-"sport": "nfl"
+"sport": "nba"
 },
 {
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"gid": "401909904",
+"start": "2026-11-01T22:00Z",
+"kind": "ast",
 "side": "o",
-"line": 119.5,
-"name": "tee higgins",
-"lab": "Tee Higgins 120+ rec yds",
-"p": 0.2114,
-"price": 490,
+"line": 3.5,
+"name": "jarace walker",
+"lab": "Jarace Walker 4+ ast",
+"p": 0.267,
+"price": 280,
 "book": "Kalshi",
-"sc": "Shootout",
 "f": [
 "matchup",
-"script",
-"price"
+"rotation",
+"game"
 ],
-"sport": "nfl"
+"sport": "nba"
 },
 {
 "gid": "401909905",
@@ -128,7 +192,7 @@
 "line": 2.5,
 "name": "rui hachimura",
 "lab": "Rui Hachimura 3+ threes",
-"p": 0.3716,
+"p": 0.3741,
 "price": 166,
 "book": "Kalshi",
 "f": [
@@ -137,10 +201,29 @@
 "game"
 ],
 "sport": "nba"
+},
+{
+"gid": "2026_08_MIN_DET",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "kyler murray",
+"lab": "Kyler Murray 275+ pass yds",
+"p": 0.249,
+"price": 296,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script"
+],
+"sport": "nfl"
 }
 ],
-"p": 0.0198,
-"d": 70.78,
+"p": 0.00828,
+"d": 127.288,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 }
