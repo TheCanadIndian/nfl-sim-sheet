@@ -38,8 +38,8 @@ BOOKS = ["hardrockbet", "betrivers", "espnbet", "fliff", "ballybet", "betparx", 
 SHORT = {"hardrockbet": "Hard Rock", "novig": "Novig", "draftkings": "DraftKings", "fanduel": "FanDuel", "betmgm": "BetMGM",
          "williamhill_us": "Caesars", "espnbet": "ESPN BET", "betrivers": "BetRivers", "fliff": "Fliff", "ballybet": "Bally Bet", "betparx": "betPARX", "pinnacle": "Pinnacle"}
 COST = 3
-PULL_WINDOW, MIN_GAP = 24, 1.5    # hours: games within a day, refreshed every 90 min (paid plan, 2026-10-18: 20,000 credits a month)
-PLAN = 20000                      # monthly credits (The Odds API base paid tier); the live count comes from the response headers
+PULL_WINDOW, MIN_GAP = 24, 1.5    # hours: games within a day, refreshed every 90 min (paid plan since 2026-10-18; 100,000 credits a month since 2026-11-01)
+PLAN = 100000                      # monthly credits (The Odds API base paid tier); the live count comes from the response headers
 UA_WINDOW, UA_GAP = 24, 20        # Unabated (primary): games within 24 h, at most every 20 minutes
 OA_FRESH = 3                      # hours an Odds API price is shown (pulled far less often)
 
