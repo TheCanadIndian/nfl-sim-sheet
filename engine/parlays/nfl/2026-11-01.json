@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T10:16:40.250Z",
+"frozen_at": "2026-11-01T10:31:03.885Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -34,15 +34,15 @@
 ]
 },
 {
-"gid": "2026_08_BAL_BUF",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 299.5,
-"name": "lamar jackson",
-"lab": "Lamar Jackson 300+ pass yds",
-"p": 0.2576,
-"price": 351,
+"line": 49.5,
+"name": "rhamondre stevenson",
+"lab": "Rhamondre Stevenson 50+ rec yds",
+"p": 0.2125,
+"price": 490,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -53,8 +53,8 @@
 ]
 }
 ],
-"p": 0.07591,
-"d": 19.438,
+"p": 0.06263,
+"d": 25.429,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -82,15 +82,63 @@
 ]
 },
 {
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "hunter henry",
+"lab": "Hunter Henry 80+ rec yds",
+"p": 0.2225,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.06558,
+"d": 22.628,
+"first": "2026-11-01T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
 "gid": "2026_08_BAL_BUF",
+"start": "2026-11-01T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "lamar jackson",
+"lab": "Lamar Jackson 300+ pass yds",
+"p": 0.2576,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 129.5,
-"name": "zay flowers",
-"lab": "Zay Flowers 130+ rec yds",
-"p": 0.22,
-"price": 351,
+"line": 99.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson 100+ rec yds",
+"p": 0.23,
+"price": 208,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -99,12 +147,30 @@
 "rotation",
 "script"
 ]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "rhamondre stevenson",
+"lab": "Rhamondre Stevenson 50+ rec yds",
+"p": 0.2125,
+"price": 490,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 }
 ],
-"p": 0.06483,
-"d": 19.438,
+"p": 0.01259,
+"d": 81.956,
 "first": "2026-11-01T18:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -149,90 +215,26 @@
 ]
 },
 {
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "jared goff",
-"lab": "Jared Goff 325+ pass yds",
-"p": 0.2028,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-}
-],
-"p": 0.01071,
-"d": 124.307,
-"first": "2026-11-01T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 129.5,
-"name": "ceedee lamb",
-"lab": "CeeDee Lamb 130+ rec yds",
-"p": 0.2051,
+"line": 79.5,
+"name": "hunter henry",
+"lab": "Hunter Henry 80+ rec yds",
+"p": 0.2225,
 "price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_08_BAL_BUF",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 129.5,
-"name": "zay flowers",
-"lab": "Zay Flowers 130+ rec yds",
-"p": 0.22,
-"price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"rotation",
-"script"
-]
-},
-{
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "jared goff",
-"lab": "Jared Goff 325+ pass yds",
-"p": 0.2028,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
 "script",
 "price"
 ]
 }
 ],
-"p": 0.00915,
+"p": 0.01176,
 "d": 124.307,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
