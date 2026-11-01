@@ -34,7 +34,7 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 
 /* games view */
 .games{display:grid;grid-template-columns:228px minmax(0,1fr);gap:20px;align-items:start}
-.rail{display:grid;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px)}
+.rail{display:grid;gap:2px;align-content:start;position:sticky;top:calc(var(--tbh,64px) + 8px);max-height:calc(100vh - var(--tbh,64px) - 16px);overflow-y:auto;scrollbar-width:thin;padding-bottom:64px}
 .game-btn{display:grid;gap:4px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:9px 12px;cursor:pointer}
 .game-btn:hover{background:var(--sunk)}
 .game-btn[aria-current="true"]{background:var(--surface);border-color:var(--faint)}
@@ -207,6 +207,7 @@ input[type=search]{min-width:200px}
 .offc{border:1px solid var(--faint);border-radius:999px;padding:3px 10px;font-size:12.5px}.offc a{color:inherit;text-decoration:none}.offc i{font-style:normal;color:var(--muted);margin-left:4px}
 .offc.cheap{border-color:color-mix(in srgb,var(--good) 45%,transparent)}.offc.cheap b{color:var(--good)}.offc.rich b{color:var(--bad)}.offc.mine{border-width:2px}
 .sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
+.ladbody{min-width:0}.lgr{position:sticky;top:var(--tbh,0px);z-index:9;display:flex;gap:6px;overflow-x:auto;padding:8px 0;background:var(--surface);scrollbar-width:none;-webkit-overflow-scrolling:touch}.lgr::-webkit-scrollbar{display:none}.lgr button{flex:none;border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:7px 12px;font:600 13px var(--body);cursor:pointer;white-space:nowrap}.lgr button i{font-style:normal;font-weight:500;color:var(--muted);margin-left:2px}.lgr button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.lgr button[aria-pressed="true"] i{color:inherit;opacity:.75}@media(min-width:861px){.lgr{flex-wrap:wrap}}
 .lsel{font:700 13px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:1px 2px;cursor:pointer}
 .lru .ledge{color:var(--good);font-weight:700;margin-left:4px}.lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
@@ -453,7 +454,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   header .tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
   header .tabs button{white-space:nowrap;flex:0 0 auto}
   .games{grid-template-columns:minmax(0,1fr)!important}
-  .rail{position:static!important;display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .rail{display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
   .rail .game-btn{flex:0 0 auto;min-width:168px;border-color:var(--faint)}
   .two,.fo-res{grid-template-columns:minmax(0,1fr)!important}
   .score .pts{font-size:48px}
@@ -476,7 +477,7 @@ footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
   <main id="main"></main>
   <footer>Model changes that didn’t pass their backtest, graded live beside the real projections. Nothing here changes what the site shows or bets. A shadow is switched on only if it beats the live numbers in both halves of its live record, and then passes a re-test on past seasons.</footer>
 </div>
-<script type="application/json" id="data">{"generated":"Nov 1, 2026 11:16 AM","nfl":[{"stat":"att","n":175,"weeks":[2,8],"live_pin":2.3696,"shadow_pin":2.32,"live_mae":6.68,"shadow_mae":6.56,"live_over":0.526,"shadow_over":0.48,"ratio":1.0676,"halves":[-0.0323,-0.0685]},{"stat":"cmp","n":174,"weeks":[2,8],"live_pin":1.559,"shadow_pin":1.5272,"live_mae":4.52,"shadow_mae":4.42,"live_over":0.529,"shadow_over":0.494,"ratio":1.0683,"halves":[-0.0342,-0.0292]}],"nhl":[{"model":"live","n":7928,"nights":33,"exp":1260.9,"act":1214,"ll":0.3945,"d":0.0,"halves":[0.0,0.0],"scale":null},{"model":"recal","n":7928,"nights":33,"exp":1245.6,"act":1214,"ll":0.39442,"d":-8e-05,"halves":[-0.00016,-1e-05],"scale":null},{"model":"high","n":7928,"nights":33,"exp":1255.9,"act":1214,"ll":0.39447,"d":-4e-05,"halves":[-9e-05,1e-05],"scale":null},{"model":"season","n":7928,"nights":33,"exp":1207.8,"act":1214,"ll":0.3945,"d":-1e-05,"halves":[-0.0002,0.00017],"scale":0.9641}]}</script>
+<script type="application/json" id="data">{"generated":"Nov 1, 2026 11:31 AM","nfl":[{"stat":"att","n":175,"weeks":[2,8],"live_pin":2.3696,"shadow_pin":2.32,"live_mae":6.68,"shadow_mae":6.56,"live_over":0.526,"shadow_over":0.48,"ratio":1.0676,"halves":[-0.0323,-0.0685]},{"stat":"cmp","n":174,"weeks":[2,8],"live_pin":1.559,"shadow_pin":1.5272,"live_mae":4.52,"shadow_mae":4.42,"live_over":0.529,"shadow_over":0.494,"ratio":1.0683,"halves":[-0.0342,-0.0292]}],"nhl":[{"model":"live","n":8069,"nights":33,"exp":1282.1,"act":1238,"ll":0.39459,"d":0.0,"halves":[0.0,0.0],"scale":null},{"model":"recal","n":8069,"nights":33,"exp":1266.5,"act":1238,"ll":0.39451,"d":-7e-05,"halves":[-0.00016,0.0],"scale":null},{"model":"high","n":8069,"nights":33,"exp":1276.9,"act":1238,"ll":0.39456,"d":-3e-05,"halves":[-9e-05,2e-05],"scale":null},{"model":"season","n":8069,"nights":33,"exp":1228.2,"act":1238,"ll":0.3946,"d":2e-05,"halves":[-0.0002,0.00021],"scale":0.9641}]}</script>
 <script>
 const D = JSON.parse(document.getElementById('data').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
