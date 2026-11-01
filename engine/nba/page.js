@@ -529,7 +529,7 @@ function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : gameView();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
-  if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; }
+  if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }
 }
 document.addEventListener('click', e => {
   const t = e.target.closest('button'); if (!t) return;

@@ -95,7 +95,7 @@ BAR_CSS = """
   header .tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
   header .tabs button{white-space:nowrap;flex:0 0 auto}
   .games{grid-template-columns:minmax(0,1fr)!important}
-  .rail{position:static!important;display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .rail{display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
   .rail .game-btn{flex:0 0 auto;min-width:168px;border-color:var(--faint)}
   .two,.fo-res{grid-template-columns:minmax(0,1fr)!important}
   .score .pts{font-size:48px}
