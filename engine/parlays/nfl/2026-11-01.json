@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T08:17:08.346Z",
+"frozen_at": "2026-11-01T08:30:19.534Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -42,7 +42,7 @@
 "name": "geno smith",
 "lab": "Geno Smith 275+ pass yds",
 "p": 0.2788,
-"price": 296,
+"price": 280,
 "book": "Kalshi",
 "sc": "NYJ pulls away",
 "f": [
@@ -54,7 +54,7 @@
 }
 ],
 "p": 0.06985,
-"d": 17.86,
+"d": 17.138,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -91,7 +91,7 @@
 "name": "geno smith",
 "lab": "Geno Smith 275+ pass yds",
 "p": 0.2788,
-"price": 296,
+"price": 280,
 "book": "Kalshi",
 "sc": "NYJ pulls away",
 "f": [
@@ -103,7 +103,7 @@
 }
 ],
 "p": 0.05994,
-"d": 17.86,
+"d": 17.138,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -131,15 +131,33 @@
 ]
 },
 {
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 56.5,
+"name": "breece hall",
+"lab": "Breece Hall 57+ rush yds",
+"p": 0.3962,
+"price": 127,
+"book": "Novig",
+"sc": "NYJ pulls away",
+"f": [
+"usage",
+"matchup",
+"script"
+]
+},
+{
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 324.5,
-"name": "jared goff",
-"lab": "Jared Goff 325+ pass yds",
-"p": 0.2018,
-"price": 425,
+"line": 49.5,
+"name": "jahmyr gibbs",
+"lab": "Jahmyr Gibbs 50+ rec yds",
+"p": 0.252,
+"price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -147,29 +165,12 @@
 "script",
 "price"
 ]
-},
-{
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 109.5,
-"name": "tee higgins",
-"lab": "Tee Higgins 110+ rec yds",
-"p": 0.2475,
-"price": 373,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"matchup",
-"script",
-"price"
-]
 }
 ],
-"p": 0.01251,
-"d": 111.995,
+"p": 0.02502,
+"d": 46.172,
 "first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -179,32 +180,49 @@
 {
 "gid": "2026_08_BAL_BUF",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 129.5,
-"name": "zay flowers",
-"lab": "Zay Flowers 130+ rec yds",
-"p": 0.215,
-"price": 351,
+"line": 299.5,
+"name": "josh allen",
+"lab": "Josh Allen 300+ pass yds",
+"p": 0.28,
+"price": 280,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 56.5,
+"name": "breece hall",
+"lab": "Breece Hall 57+ rush yds",
+"p": 0.3962,
+"price": 127,
+"book": "Novig",
+"sc": "NYJ pulls away",
+"f": [
+"usage",
 "matchup",
-"rotation",
 "script"
 ]
 },
 {
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 324.5,
-"name": "jared goff",
-"lab": "Jared Goff 325+ pass yds",
-"p": 0.2018,
-"price": 425,
+"line": 49.5,
+"name": "jahmyr gibbs",
+"lab": "Jahmyr Gibbs 50+ rec yds",
+"p": 0.252,
+"price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -212,28 +230,10 @@
 "script",
 "price"
 ]
-},
-{
-"gid": "2026_08_TEN_CIN",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 109.5,
-"name": "tee higgins",
-"lab": "Tee Higgins 110+ rec yds",
-"p": 0.2475,
-"price": 373,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"matchup",
-"script",
-"price"
-]
 }
 ],
-"p": 0.01074,
-"d": 111.995,
+"p": 0.02796,
+"d": 38.903,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -312,6 +312,18 @@
 {
 "gid": "2026_08_PHI_WAS",
 "start": "2026-11-01T20:20:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "rachaad white",
+"lab": "Rachaad White 60+ rush yds",
+"p": 0.255,
+"price": 266,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
@@ -319,18 +331,6 @@
 "lab": "Tanner McKee 250+ pass yds",
 "p": 0.25,
 "price": 266,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 59.5,
-"name": "saquon barkley",
-"lab": "Saquon Barkley 60+ rush yds",
-"p": 0.36,
-"price": 159,
 "book": "Kalshi"
 },
 {
@@ -346,8 +346,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.0135,
-"d": 55.875,
+"p": 0.00956,
+"d": 78.932,
 "first": "2026-11-02T01:20:00+00:00",
 "res": null
 },
@@ -470,18 +470,6 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_08_IND_JAX",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "josh downs",
-"lab": "Josh Downs 50+ rec yds",
-"p": 0.3,
-"price": 208,
-"book": "Kalshi"
-},
-{
 "gid": "2026_08_PHI_WAS",
 "start": "2026-11-01T20:20:00",
 "kind": "rec_yds",
@@ -492,10 +480,22 @@
 "p": 0.3,
 "price": 208,
 "book": "Kalshi"
+},
+{
+"gid": "2026_08_IND_JAX",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "josh downs",
+"lab": "Josh Downs 50+ rec yds",
+"p": 0.295,
+"price": 218,
+"book": "Kalshi"
 }
 ],
-"p": 0.0171,
-"d": 44.834,
+"p": 0.01681,
+"d": 46.298,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -516,13 +516,13 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_08_IND_JAX",
-"start": "2026-11-01T13:00:00",
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 49.5,
-"name": "josh downs",
-"lab": "Josh Downs 50+ rec yds",
+"line": 59.5,
+"name": "stefon diggs",
+"lab": "Stefon Diggs 60+ rec yds",
 "p": 0.3,
 "price": 208,
 "book": "Kalshi"
@@ -543,41 +543,6 @@
 "p": 0.01539,
 "d": 49.539,
 "first": "2026-11-01T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_08_NE_MIA",
-"start": "2026-11-01T16:25:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "hunter henry",
-"lab": "Hunter Henry over 4.5 receptions",
-"p": 0.5336,
-"price": 115,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "george pickens",
-"lab": "George Pickens over 4.5 receptions",
-"p": 0.5199,
-"price": 102,
-"book": "Novig"
-}
-],
-"p": 0.27743,
-"d": 4.343,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -619,41 +584,6 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_08_MIN_DET",
-"start": "2026-11-01T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones TD",
-"p": 0.3478,
-"price": 277,
-"book": "Novig"
-},
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "george pickens",
-"lab": "George Pickens over 4.5 receptions",
-"p": 0.5199,
-"price": 102,
-"book": "Novig"
-}
-],
-"p": 0.18084,
-"d": 7.615,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
 "gid": "2026_08_NE_MIA",
 "start": "2026-11-01T16:25:00",
 "kind": "rec",
@@ -681,6 +611,41 @@
 "p": 0.1396,
 "d": 9.782,
 "first": "2026-11-01T18:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "hunter henry",
+"lab": "Hunter Henry over 4.5 receptions",
+"p": 0.5336,
+"price": 115,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_KC_DEN",
+"start": "2026-11-01T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bo nix",
+"lab": "Bo Nix TD",
+"p": 0.1956,
+"price": 488,
+"book": "Novig"
+}
+],
+"p": 0.10439,
+"d": 12.642,
+"first": "2026-11-01T21:25:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -28273,7 +28238,7 @@
 "line": 48.5,
 "name": "wandale robinson",
 "lab": "Wan'Dale Robinson over 48.5 rec yds",
-"p": 0.4768,
+"p": 0.4762,
 "price": 111,
 "book": "Novig",
 "f": [
@@ -28287,7 +28252,7 @@
 "consensus up"
 ],
 "sport": "nfl",
-"edge": 0.0341
+"edge": 0.0332
 },
 {
 "gid": "2026_08_LV_NYJ",
@@ -28338,7 +28303,7 @@
 "edge": 0.0017
 }
 ],
-"p": 0.12954,
+"p": 0.12937,
 "d": 7.531,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
@@ -28404,7 +28369,7 @@
 "line": 48.5,
 "name": "wandale robinson",
 "lab": "Wan'Dale Robinson over 48.5 rec yds",
-"p": 0.4768,
+"p": 0.4762,
 "price": 111,
 "book": "Novig",
 "f": [
@@ -28418,7 +28383,7 @@
 "consensus up"
 ],
 "sport": "nfl",
-"edge": 0.0341
+"edge": 0.0332
 },
 {
 "gid": "2026_08_LV_NYJ",
@@ -28469,7 +28434,7 @@
 "edge": 0.0017
 }
 ],
-"p": 0.03071,
+"p": 0.03068,
 "d": 29.465,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
