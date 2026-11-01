@@ -1739,6 +1739,10 @@ def pin_moves(sport, now):
         S = json.load(open(sf))
     except (OSError, ValueError):
         S = {}
+    try:                                                     # past readings pulled after the fact (research/pin_backfill.py)
+        BF = json.load(open(os.path.join(M.SITE, "markets", f"pin_backfill_{sport}.json")))
+    except (OSError, ValueError):
+        BF = {}
     O = (M.ours_nba if sport == "nba" else M.ours_nfl)() or {}
     start = {str(g["id"]): str(g["start"]) for g in O.get("games", [])}
     LAB = dict(LC_LAB, td="TD")
@@ -1770,6 +1774,11 @@ def pin_moves(sport, now):
                     if l is None or o is None:
                         continue
                     r = rec.setdefault(src, dict(open_l=l, open_o=round(o, 4), open_t=now.isoformat(), at={}))
+                    past = BF.get(str(gid), {}).get(nm, {}).get(k) if src == "pin" and not r.get("bf") else None
+                    if past:                                 # the opening reading is the earliest one, not the first we happened to pull
+                        r.update(open_l=past[0][1], open_o=round(_nv(past[0][2], past[0][3]), 4), bf=1, at={})
+                        for x in past:
+                            r["at"].setdefault(f"{x[1]:g}", round(_nv(x[2], x[3]), 4))
                     r.setdefault("at", {}).setdefault(f"{l:g}", round(o, 4))     # first chance seen at each line
                     r["last_l"], r["last_o"] = l, round(o, 4)
                     sig = None
