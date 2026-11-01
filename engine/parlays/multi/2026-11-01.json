@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T14:48:11.863822+00:00",
+"frozen_at": "2026-11-01T15:02:12.959808+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,20 +15,40 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_08_IND_JAX",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 69.5,
-"name": "keenan allen",
-"lab": "Keenan Allen 70+ rec yds",
-"p": 0.2121,
-"price": 490,
+"line": 324.5,
+"name": "dak prescott",
+"lab": "Dak Prescott 325+ pass yds",
+"p": 0.2925,
+"price": 313,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "chris godwin",
+"lab": "Chris Godwin Jr. 70+ rec yds",
+"p": 0.245,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
 "script",
 "price"
 ],
@@ -52,28 +72,10 @@
 "price"
 ],
 "sport": "nba"
-},
-{
-"gid": "401909903",
-"start": "2026-11-01T20:30Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "wendell carter",
-"lab": "Wendell Carter Jr. 15+ pts",
-"p": 0.3409,
-"price": 208,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"price"
-],
-"sport": "nba"
 }
 ],
-"p": 0.01668,
-"d": 85.954,
+"p": 0.01653,
+"d": 88.102,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -82,15 +84,15 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_08_IND_JAX",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 69.5,
-"name": "keenan allen",
-"lab": "Keenan Allen 70+ rec yds",
-"p": 0.2121,
-"price": 490,
+"line": 324.5,
+"name": "dak prescott",
+"lab": "Dak Prescott 325+ pass yds",
+"p": 0.2925,
+"price": 313,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -101,6 +103,55 @@
 ],
 "sport": "nfl"
 },
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "chris godwin",
+"lab": "Chris Godwin Jr. 70+ rec yds",
+"p": 0.245,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "401909905",
+"start": "2026-11-02T01:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "keaton wagler",
+"lab": "Keaton Wagler 3+ threes",
+"p": 0.2945,
+"price": 218,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+}
+],
+"p": 0.0211,
+"d": 59.232,
+"first": "2026-11-01T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
 {
 "gid": "401909904",
 "start": "2026-11-01T22:00Z",
@@ -121,34 +172,24 @@
 "sport": "nba"
 },
 {
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "rush_yds",
+"gid": "401909905",
+"start": "2026-11-02T01:30Z",
+"kind": "fg3m",
 "side": "o",
-"line": 109.5,
-"name": "braelon allen",
-"lab": "Braelon Allen 110+ rush yds",
-"p": 0.2391,
-"price": 331,
+"line": 2.5,
+"name": "keaton wagler",
+"lab": "Keaton Wagler 3+ threes",
+"p": 0.2945,
+"price": 218,
 "book": "Kalshi",
-"sc": "NYJ pulls away",
 "f": [
 "usage",
 "matchup",
-"script"
+"rotation",
+"game"
 ],
-"sport": "nfl"
-}
-],
-"p": 0.0117,
-"d": 120.279,
-"first": "2026-11-01T18:00:00+00:00",
-"res": null
+"sport": "nba"
 },
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NFL",
-"legs": [
 {
 "gid": "401909903",
 "start": "2026-11-01T20:30Z",
@@ -168,64 +209,22 @@
 "sport": "nba"
 },
 {
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "rush_yds",
+"gid": "2026020231",
+"start": "2026-11-02T01:00:00Z",
+"kind": "goal",
 "side": "o",
-"line": 109.5,
-"name": "braelon allen",
-"lab": "Braelon Allen 110+ rush yds",
-"p": 0.2391,
-"price": 331,
-"book": "Kalshi",
-"sc": "NYJ pulls away",
-"f": [
-"usage",
-"matchup",
-"script"
-],
-"sport": "nfl"
-},
-{
-"gid": "401909905",
-"start": "2026-11-02T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski 6+ ast",
-"p": 0.2833,
-"price": 252,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"sport": "nba"
-},
-{
-"gid": "401909906",
-"start": "2026-11-02T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "rj barrett",
-"lab": "RJ Barrett 6+ reb",
-"p": 0.4229,
-"price": 129,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"sport": "nba"
+"line": 0.5,
+"name": "beckett sennecke",
+"lab": "Beckett Sennecke to score",
+"p": 0.3578,
+"price": 190,
+"book": "Novig",
+"sport": "nhl"
 }
 ],
-"p": 0.00977,
-"d": 107.006,
-"first": "2026-11-01T18:00:00+00:00",
+"p": 0.00829,
+"d": 134.35,
+"first": "2026-11-01T20:30:00+00:00",
 "res": null
 }
 ],
