@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T18:28:10.987Z",
+"frozen_at": "2026-11-01T18:37:47.172Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,18 @@
 "tier": "Best 2-leg",
 "legs": [
 {
+"gid": "2026020227",
+"start": "2026-11-01T18:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "andrei svechnikov",
+"lab": "Andrei Svechnikov to score",
+"p": 0.3351,
+"price": 203,
+"book": "Novig"
+},
+{
 "gid": "2026020228",
 "start": "2026-11-01T20:30:00Z",
 "kind": "goal",
@@ -25,23 +37,11 @@
 "p": 0.325,
 "price": 223,
 "book": "Novig"
-},
-{
-"gid": "2026020230",
-"start": "2026-11-01T23:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "pavel dorofeyev",
-"lab": "Pavel Dorofeyev to score",
-"p": 0.3603,
-"price": 186,
-"book": "Novig"
 }
 ],
-"p": 0.1171,
-"d": 9.238,
-"first": "2026-11-01T20:30:00+00:00",
+"p": 0.10891,
+"d": 9.787,
+"first": "2026-11-01T18:00:00+00:00",
 "pick": "core",
 "res": null,
 "locked": true,
@@ -76,20 +76,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026020230",
-"start": "2026-11-01T23:00:00Z",
+"gid": "2026020229",
+"start": "2026-11-01T21:00:00Z",
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "pavel dorofeyev",
-"lab": "Pavel Dorofeyev to score",
-"p": 0.3603,
-"price": 186,
+"name": "logan cooley",
+"lab": "Logan Cooley to score",
+"p": 0.3485,
+"price": 190,
 "book": "Novig"
 }
 ],
-"p": 0.03924,
-"d": 27.991,
+"p": 0.03796,
+"d": 28.382,
 "first": "2026-11-01T18:00:00+00:00",
 "pick": "longshot",
 "res": null,
@@ -101,22 +101,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026020228",
-"start": "2026-11-01T20:30:00+00:00",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "jordan kyrou",
-"lab": "Jordan Kyrou to score",
-"p": 0.2783,
-"price": 308,
-"book": "Novig",
-"sport": "nhl",
-"edge": 0.1356,
-"fair": 0.2909,
-"main": true
-},
-{
 "gid": "2026020227",
 "start": "2026-11-01T18:00:00+00:00",
 "kind": "goal",
@@ -131,10 +115,26 @@
 "edge": 0.1347,
 "fair": 0.2587,
 "main": true
+},
+{
+"gid": "2026020228",
+"start": "2026-11-01T20:30:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "jordan kyrou",
+"lab": "Jordan Kyrou to score",
+"p": 0.2783,
+"price": 300,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.1134,
+"fair": 0.2909,
+"main": true
 }
 ],
 "p": 0.07033,
-"d": 18.319,
+"d": 17.96,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -144,22 +144,6 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "2026020228",
-"start": "2026-11-01T20:30:00+00:00",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "jordan kyrou",
-"lab": "Jordan Kyrou to score",
-"p": 0.2783,
-"price": 308,
-"book": "Novig",
-"sport": "nhl",
-"edge": 0.1356,
-"fair": 0.2909,
-"main": true
-},
-{
 "gid": "2026020227",
 "start": "2026-11-01T18:00:00+00:00",
 "kind": "goal",
@@ -173,6 +157,22 @@
 "sport": "nhl",
 "edge": 0.1347,
 "fair": 0.2587,
+"main": true
+},
+{
+"gid": "2026020228",
+"start": "2026-11-01T20:30:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "jordan kyrou",
+"lab": "Jordan Kyrou to score",
+"p": 0.2783,
+"price": 300,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.1134,
+"fair": 0.2909,
 "main": true
 },
 {
@@ -183,17 +183,17 @@
 "line": 2.5,
 "name": "leo carlsson",
 "lab": "Leo Carlsson 3+ shots",
-"p": 0.4504,
+"p": 0.4515,
 "price": 140,
 "book": "Hard Rock",
 "sport": "nhl",
-"edge": 0.081,
-"fair": 0.4118,
+"edge": 0.0835,
+"fair": 0.4139,
 "main": true
 }
 ],
-"p": 0.03168,
-"d": 43.966,
+"p": 0.03175,
+"d": 43.104,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -229,6 +229,41 @@
 ],
 "p": 0.16206,
 "d": 6.116,
+"first": "2026-11-01T18:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Likeliest-scorer parlays (experimental)",
+"tier": "2-leg 6-10x",
+"legs": [
+{
+"gid": "2026020227",
+"start": "2026-11-01T18:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "sebastian aho",
+"lab": "Sebastian Aho to score",
+"p": 0.3572,
+"price": 178,
+"book": "Novig"
+},
+{
+"gid": "2026020230",
+"start": "2026-11-01T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "leon draisaitl",
+"lab": "Leon Draisaitl to score",
+"p": 0.4453,
+"price": 117,
+"book": "Novig"
+}
+],
+"p": 0.15904,
+"d": 6.033,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -276,41 +311,6 @@
 ],
 "p": 0.06103,
 "d": 16.33,
-"first": "2026-11-01T18:00:00+00:00",
-"res": null,
-"locked": true
-},
-{
-"card": "Anytime-goal parlays",
-"tier": "Best 2-leg",
-"legs": [
-{
-"gid": "2026020227",
-"start": "2026-11-01T18:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "kyle connor",
-"lab": "Kyle Connor to score",
-"p": 0.3328,
-"price": 203,
-"book": "Novig"
-},
-{
-"gid": "2026020228",
-"start": "2026-11-01T20:30:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "joel eriksson ek",
-"lab": "Joel Eriksson Ek to score",
-"p": 0.325,
-"price": 223,
-"book": "Novig"
-}
-],
-"p": 0.10815,
-"d": 9.787,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -410,7 +410,7 @@
 "name": "andrei svechnikov",
 "lab": "Andrei Svechnikov to score",
 "p": 0.3351,
-"price": 194,
+"price": 203,
 "book": "Novig"
 },
 {
@@ -456,13 +456,13 @@
 "line": 2.5,
 "name": "sebastian aho",
 "lab": "Sebastian Aho 3+ shots",
-"p": 0.4894,
-"price": -106,
+"p": 0.4939,
+"price": -104,
 "book": "Novig"
 }
 ],
-"p": 0.24996,
-"d": 4.001,
+"p": 0.25223,
+"d": 3.965,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -491,13 +491,13 @@
 "line": 2.5,
 "name": "kyle connor",
 "lab": "Kyle Connor 3+ shots",
-"p": 0.5223,
+"p": 0.5206,
 "price": -127,
 "book": "Novig"
 }
 ],
-"p": 0.24824,
-"d": 4.028,
+"p": 0.24741,
+"d": 4.042,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -510,13 +510,60 @@
 "gid": "2026020227",
 "start": "2026-11-01T18:00:00Z",
 "kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "seth jarvis",
+"lab": "Seth Jarvis under 2.5 shots",
+"p": 0.6112,
+"price": -130,
+"book": "Hard Rock"
+},
+{
+"gid": "2026020228",
+"start": "2026-11-01T20:30:00Z",
+"kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "shayne gostisbehere",
-"lab": "Shayne Gostisbehere over 1.5 shots",
-"p": 0.5539,
-"price": -113,
+"name": "alex ovechkin",
+"lab": "Alex Ovechkin over 1.5 shots",
+"p": 0.687,
+"price": -135,
+"book": "Hard Rock"
+},
+{
+"gid": "2026020231",
+"start": "2026-11-02T01:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "shane pinto",
+"lab": "Shane Pinto under 1.5 shots",
+"p": 0.4658,
+"price": 133,
 "book": "Novig"
+}
+],
+"p": 0.19561,
+"d": 7.176,
+"first": "2026-11-01T18:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020227",
+"start": "2026-11-01T18:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "seth jarvis",
+"lab": "Seth Jarvis under 2.5 shots",
+"p": 0.6112,
+"price": -130,
+"book": "Hard Rock"
 },
 {
 "gid": "2026020228",
@@ -535,16 +582,16 @@
 "start": "2026-11-01T23:00:00Z",
 "kind": "sog",
 "side": "u",
-"line": 1.5,
-"name": "vasily podkolzin",
-"lab": "Vasily Podkolzin under 1.5 shots",
-"p": 0.5311,
-"price": 130,
+"line": 2.5,
+"name": "leon draisaitl",
+"lab": "Leon Draisaitl under 2.5 shots",
+"p": 0.4648,
+"price": 135,
 "book": "Hard Rock"
 }
 ],
-"p": 0.2021,
-"d": 7.547,
+"p": 0.19517,
+"d": 7.237,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -557,48 +604,48 @@
 "gid": "2026020227",
 "start": "2026-11-01T18:00:00Z",
 "kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "shayne gostisbehere",
-"lab": "Shayne Gostisbehere over 1.5 shots",
-"p": 0.5539,
-"price": -113,
-"book": "Novig"
+"side": "u",
+"line": 2.5,
+"name": "seth jarvis",
+"lab": "Seth Jarvis under 2.5 shots",
+"p": 0.6112,
+"price": -130,
+"book": "Hard Rock"
 },
 {
 "gid": "2026020228",
 "start": "2026-11-01T20:30:00Z",
 "kind": "sog",
-"side": "o",
+"side": "u",
 "line": 1.5,
-"name": "alex ovechkin",
-"lab": "Alex Ovechkin over 1.5 shots",
-"p": 0.687,
-"price": -135,
+"name": "pierreluc dubois",
+"lab": "Pierreluc Dubois under 1.5 shots",
+"p": 0.592,
+"price": -120,
 "book": "Hard Rock"
 },
 {
-"gid": "2026020231",
-"start": "2026-11-02T01:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "ANA moneyline",
-"p": 0.5086,
-"price": 115,
-"book": "Novig"
+"gid": "2026020230",
+"start": "2026-11-01T23:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "vasily podkolzin",
+"lab": "Vasily Podkolzin under 1.5 shots",
+"p": 0.5311,
+"price": 125,
+"book": "Hard Rock"
 }
 ],
-"p": 0.19353,
-"d": 7.055,
+"p": 0.19217,
+"d": 7.298,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
 },
 {
 "card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "2026020227",
@@ -608,21 +655,9 @@
 "line": 1.5,
 "name": "shayne gostisbehere",
 "lab": "Shayne Gostisbehere over 1.5 shots",
-"p": 0.5539,
+"p": 0.549,
 "price": -113,
 "book": "Novig"
-},
-{
-"gid": "2026020228",
-"start": "2026-11-01T20:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "alex ovechkin",
-"lab": "Alex Ovechkin over 1.5 shots",
-"p": 0.687,
-"price": -135,
-"book": "Hard Rock"
 },
 {
 "gid": "2026020231",
@@ -633,12 +668,12 @@
 "name": null,
 "lab": "ANA moneyline",
 "p": 0.5086,
-"price": 115,
+"price": 113,
 "book": "Novig"
 }
 ],
-"p": 0.19353,
-"d": 7.055,
+"p": 0.27922,
+"d": 4.015,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -656,7 +691,7 @@
 "name": "neal pionk",
 "lab": "Neal Pionk over 1.5 shots",
 "p": 0.4841,
-"price": 113,
+"price": 111,
 "book": "Novig"
 },
 {
@@ -680,12 +715,12 @@
 "name": null,
 "lab": "ANA moneyline",
 "p": 0.5086,
-"price": 115,
+"price": 113,
 "book": "Novig"
 }
 ],
 "p": 0.16915,
-"d": 7.972,
+"d": 7.823,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -1029,6 +1064,40 @@
 "tier": "Best 2-leg",
 "legs": [
 {
+"gid": "2026020228",
+"start": "2026-11-01T20:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "joel eriksson ek",
+"lab": "Joel Eriksson Ek to score",
+"p": 0.325,
+"price": 223,
+"book": "Novig"
+},
+{
+"gid": "2026020230",
+"start": "2026-11-01T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "pavel dorofeyev",
+"lab": "Pavel Dorofeyev to score",
+"p": 0.3603,
+"price": 186,
+"book": "Novig"
+}
+],
+"p": 0.1171,
+"d": 9.238,
+"first": "2026-11-01T20:30:00+00:00",
+"res": null
+},
+{
+"card": "Anytime-goal parlays",
+"tier": "Best 2-leg",
+"legs": [
+{
 "gid": "2026020229",
 "start": "2026-11-01T21:00:00Z",
 "kind": "goal",
@@ -1315,6 +1384,40 @@
 "tier": "Round robin",
 "legs": [
 {
+"gid": "2026020228",
+"start": "2026-11-01T20:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "joel eriksson ek",
+"lab": "Joel Eriksson Ek to score",
+"p": 0.325,
+"price": 223,
+"book": "Novig"
+},
+{
+"gid": "2026020230",
+"start": "2026-11-01T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "pavel dorofeyev",
+"lab": "Pavel Dorofeyev to score",
+"p": 0.3603,
+"price": 186,
+"book": "Novig"
+}
+],
+"p": 0.1171,
+"d": 9.238,
+"first": "2026-11-01T20:30:00+00:00",
+"res": null
+},
+{
+"card": "Anytime-goal parlays",
+"tier": "Round robin",
+"legs": [
+{
 "gid": "2026020229",
 "start": "2026-11-01T21:00:00Z",
 "kind": "goal",
@@ -1369,7 +1472,7 @@
 "name": null,
 "lab": "MIN moneyline",
 "p": 0.501,
-"price": -104,
+"price": -106,
 "book": "Novig"
 }
 ],
@@ -1402,13 +1505,13 @@
 "line": 2.5,
 "name": "joel eriksson ek",
 "lab": "Joel Eriksson Ek 3+ shots",
-"p": 0.5416,
+"p": 0.5381,
 "price": -130,
 "book": "Novig"
 }
 ],
-"p": 0.24976,
-"d": 4.004,
+"p": 0.24814,
+"d": 4.03,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 },
@@ -1437,7 +1540,7 @@
 "name": null,
 "lab": "MIN moneyline",
 "p": 0.501,
-"price": -104,
+"price": -106,
 "book": "Novig"
 }
 ],
@@ -1471,7 +1574,7 @@
 "name": null,
 "lab": "MIN moneyline",
 "p": 0.501,
-"price": -104,
+"price": -106,
 "book": "Novig"
 }
 ],
@@ -1504,13 +1607,13 @@
 "line": 2.5,
 "name": "dylan guenther",
 "lab": "Dylan Guenther 3+ shots",
-"p": 0.5715,
-"price": -133,
+"p": 0.5706,
+"price": -127,
 "book": "Novig"
 }
 ],
-"p": 0.26409,
-"d": 3.787,
+"p": 0.2637,
+"d": 3.792,
 "first": "2026-11-01T21:00:00+00:00",
 "res": null
 },
@@ -1606,13 +1709,13 @@
 "line": 5.5,
 "name": null,
 "lab": "UTA-PHI over 5.5",
-"p": 0.5168,
+"p": 0.5169,
 "price": -130,
 "book": "Hard Rock"
 }
 ],
-"p": 0.23011,
-"d": 4.346,
+"p": 0.23016,
+"d": 4.345,
 "first": "2026-11-01T21:00:00+00:00",
 "res": null
 },
@@ -1640,13 +1743,13 @@
 "line": 2.5,
 "name": "leon draisaitl",
 "lab": "Leon Draisaitl 3+ shots",
-"p": 0.535,
-"price": -138,
+"p": 0.5308,
+"price": -135,
 "book": "Novig"
 }
 ],
-"p": 0.3392,
-"d": 2.948,
+"p": 0.33657,
+"d": 2.971,
 "first": "2026-11-01T23:00:00+00:00",
 "res": null
 },
@@ -1674,13 +1777,13 @@
 "line": 2.5,
 "name": "connor mcdavid",
 "lab": "Connor McDavid 3+ shots",
-"p": 0.5322,
-"price": -127,
+"p": 0.5285,
+"price": -125,
 "book": "Novig"
 }
 ],
-"p": 0.29347,
-"d": 3.407,
+"p": 0.29146,
+"d": 3.431,
 "first": "2026-11-01T23:00:00+00:00",
 "res": null
 },
@@ -1742,13 +1845,13 @@
 "line": 2.5,
 "name": "pavel dorofeyev",
 "lab": "Pavel Dorofeyev 3+ shots",
-"p": 0.5211,
+"p": 0.5223,
 "price": -122,
 "book": "Novig"
 }
 ],
-"p": 0.26322,
-"d": 3.799,
+"p": 0.26387,
+"d": 3.79,
 "first": "2026-11-01T23:00:00+00:00",
 "res": null
 },
@@ -1845,7 +1948,7 @@
 "name": null,
 "lab": "OTT moneyline",
 "p": 0.4925,
-"price": -117,
+"price": -115,
 "book": "Novig"
 }
 ],
@@ -1939,20 +2042,20 @@
 "book": "Hard Rock"
 },
 {
-"gid": "2026020230",
-"start": "2026-11-01T23:00:00Z",
+"gid": "2026020229",
+"start": "2026-11-01T21:00:00Z",
 "kind": "sog",
-"side": "u",
+"side": "o",
 "line": 1.5,
-"name": "vasily podkolzin",
-"lab": "Vasily Podkolzin under 1.5 shots",
-"p": 0.5198,
-"price": 125,
+"name": "barrett hayton",
+"lab": "Barrett Hayton over 1.5 shots",
+"p": 0.52,
+"price": 115,
 "book": "Hard Rock"
 }
 ],
-"p": 0.35709,
-"d": 3.917,
+"p": 0.35724,
+"d": 3.743,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 },
@@ -1973,20 +2076,20 @@
 "book": "Hard Rock"
 },
 {
-"gid": "2026020229",
-"start": "2026-11-01T21:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "barrett hayton",
-"lab": "Barrett Hayton over 1.5 shots",
-"p": 0.5158,
-"price": 115,
-"book": "Hard Rock"
+"gid": "2026020231",
+"start": "2026-11-02T01:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "ANA moneyline",
+"p": 0.5075,
+"price": 113,
+"book": "Novig"
 }
 ],
-"p": 0.35439,
-"d": 3.743,
+"p": 0.34865,
+"d": 3.708,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 },
@@ -2014,7 +2117,7 @@
 "line": 1.5,
 "name": "barrett hayton",
 "lab": "Barrett Hayton over 1.5 shots",
-"p": 0.5158,
+"p": 0.52,
 "price": 115,
 "book": "Hard Rock"
 },
@@ -2031,7 +2134,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.18895,
+"p": 0.19047,
 "d": 7.56,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
@@ -2106,25 +2209,25 @@
 "line": 1.5,
 "name": "barrett hayton",
 "lab": "Barrett Hayton over 1.5 shots",
-"p": 0.5158,
+"p": 0.52,
 "price": 115,
 "book": "Hard Rock"
 },
 {
-"gid": "2026020230",
-"start": "2026-11-01T23:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "vasily podkolzin",
-"lab": "Vasily Podkolzin under 1.5 shots",
-"p": 0.5198,
-"price": 125,
-"book": "Hard Rock"
+"gid": "2026020231",
+"start": "2026-11-02T01:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "ANA moneyline",
+"p": 0.5075,
+"price": 113,
+"book": "Novig"
 }
 ],
-"p": 0.1842,
-"d": 8.421,
+"p": 0.1813,
+"d": 7.972,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 },
@@ -2187,12 +2290,12 @@
 "name": null,
 "lab": "PHI moneyline",
 "p": 0.4216,
-"price": 161,
-"book": "ProphetX"
+"price": 160,
+"book": "Novig"
 }
 ],
 "p": 0.28963,
-"d": 4.543,
+"d": 4.526,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 },
@@ -2208,7 +2311,7 @@
 "line": 1.5,
 "name": "barrett hayton",
 "lab": "Barrett Hayton over 1.5 shots",
-"p": 0.5158,
+"p": 0.52,
 "price": 115,
 "book": "theScore"
 },
@@ -2225,7 +2328,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.26179,
+"p": 0.26389,
 "d": 4.579,
 "first": "2026-11-01T21:00:00+00:00",
 "res": null
@@ -2254,7 +2357,7 @@
 "line": 1.5,
 "name": "barrett hayton",
 "lab": "Barrett Hayton over 1.5 shots",
-"p": 0.5158,
+"p": 0.52,
 "price": 115,
 "book": "theScore"
 },
@@ -2271,7 +2374,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.17985,
+"p": 0.1813,
 "d": 7.972,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
@@ -2300,7 +2403,7 @@
 "line": 1.5,
 "name": "gabe perreault",
 "lab": "Gabe Perreault over 1.5 shots",
-"p": 0.4708,
+"p": 0.4802,
 "price": 120,
 "book": "Novig"
 },
@@ -2317,7 +2420,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.16414,
+"p": 0.16742,
 "d": 8.157,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
@@ -2346,7 +2449,7 @@
 "line": 1.5,
 "name": "jamie drysdale",
 "lab": "Jamie Drysdale over 1.5 shots",
-"p": 0.4319,
+"p": 0.4282,
 "price": 147,
 "book": "Novig"
 },
@@ -2363,7 +2466,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.15058,
+"p": 0.14929,
 "d": 9.158,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
