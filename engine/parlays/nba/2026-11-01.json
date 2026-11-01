@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-01",
 "lock": "2026-11-01T20:30:00+00:00",
-"frozen_at": "2026-11-01T18:07:23.356Z",
+"frozen_at": "2026-11-01T18:15:58.640Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -19,99 +19,10 @@
 "start": "2026-11-01T20:30Z",
 "kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard 4+ threes",
-"p": 0.2224,
-"price": 373,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909904",
-"start": "2026-11-01T22:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "jarace walker",
-"lab": "Jarace Walker 4+ ast",
-"p": 0.2398,
-"price": 331,
-"book": "Kalshi",
-"f": [
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.05334,
-"d": 20.386,
-"first": "2026-11-01T20:30:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909903",
-"start": "2026-11-01T20:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard 4+ threes",
-"p": 0.2224,
-"price": 373,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909906",
-"start": "2026-11-02T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "scottie barnes",
-"lab": "Scottie Barnes 7+ ast",
-"p": 0.3714,
-"price": 165,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.08261,
-"d": 12.535,
-"first": "2026-11-01T20:30:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909903",
-"start": "2026-11-01T20:30Z",
-"kind": "fg3m",
-"side": "o",
 "line": 1.5,
 "name": "wendell carter",
 "lab": "Wendell Carter Jr. 2+ threes",
-"p": 0.2507,
+"p": 0.252,
 "price": 296,
 "book": "Kalshi",
 "f": [
@@ -123,40 +34,72 @@
 {
 "gid": "401909904",
 "start": "2026-11-01T22:00Z",
-"kind": "ast",
+"kind": "pts",
 "side": "o",
-"line": 3.5,
+"line": 14.5,
 "name": "jarace walker",
-"lab": "Jarace Walker 4+ ast",
-"p": 0.2398,
-"price": 331,
+"lab": "Jarace Walker 15+ pts",
+"p": 0.2233,
+"price": 351,
 "book": "Kalshi",
 "f": [
 "matchup",
 "rotation",
 "game"
 ]
+}
+],
+"p": 0.05629,
+"d": 17.86,
+"first": "2026-11-01T20:30:00+00:00",
+"res": null
 },
 {
-"gid": "401909906",
-"start": "2026-11-02T02:00Z",
-"kind": "ast",
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909904",
+"start": "2026-11-01T22:00Z",
+"kind": "pts",
 "side": "o",
-"line": 6.5,
-"name": "scottie barnes",
-"lab": "Scottie Barnes 7+ ast",
-"p": 0.3714,
-"price": 165,
+"line": 21.5,
+"name": "julius randle",
+"lab": "Julius Randle over 21.5 points",
+"p": 0.4641,
+"fair": 0.4711,
+"price": 102,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0625,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (20.5)"
+]
+},
+{
+"gid": "401909903",
+"start": "2026-11-01T20:30Z",
+"kind": "reb",
+"side": "o",
+"line": 8.5,
+"name": "neemias queta",
+"lab": "Neemias Queta over 8.5 rebounds",
+"p": 0.3738,
+"fair": 0.3735,
+"price": 180,
 "book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
+"sport": "nba",
+"edge": 0.0467,
+"v": [
+"consensus odds drop",
+"one rung above the main line (7.5)"
 ]
 }
 ],
-"p": 0.02233,
-"d": 45.229,
+"p": 0.17596,
+"d": 5.656,
 "first": "2026-11-01T20:30:00+00:00",
 "res": null
 }
