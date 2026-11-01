@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T15:02:12.959808+00:00",
+"frozen_at": "2026-11-01T15:16:06.121316+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -35,20 +35,20 @@
 "sport": "nfl"
 },
 {
-"gid": "2026_08_ATL_TB",
+"gid": "2026_08_LV_NYJ",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "o",
-"line": 69.5,
-"name": "chris godwin",
-"lab": "Chris Godwin Jr. 70+ rec yds",
-"p": 0.245,
-"price": 351,
+"line": 109.5,
+"name": "braelon allen",
+"lab": "Braelon Allen 110+ rush yds",
+"p": 0.2429,
+"price": 373,
 "book": "Kalshi",
-"sc": "Shootout",
+"sc": "NYJ pulls away",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "script",
 "price"
 ],
@@ -62,7 +62,7 @@
 "line": 14.5,
 "name": "jarace walker",
 "lab": "Jarace Walker 15+ pts",
-"p": 0.2307,
+"p": 0.2357,
 "price": 373,
 "book": "Kalshi",
 "f": [
@@ -74,8 +74,8 @@
 "sport": "nba"
 }
 ],
-"p": 0.01653,
-"d": 88.102,
+"p": 0.01675,
+"d": 92.4,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -104,6 +104,75 @@
 "sport": "nfl"
 },
 {
+"gid": "401909904",
+"start": "2026-11-01T22:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "jarace walker",
+"lab": "Jarace Walker 15+ pts",
+"p": 0.2357,
+"price": 373,
+"book": "Kalshi",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "chris godwin",
+"lab": "Chris Godwin Jr. 70+ rec yds",
+"p": 0.245,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+}
+],
+"p": 0.01689,
+"d": 88.102,
+"first": "2026-11-01T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NFL",
+"legs": [
+{
+"gid": "2026_08_LV_NYJ",
+"start": "2026-11-01T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 109.5,
+"name": "braelon allen",
+"lab": "Braelon Allen 110+ rush yds",
+"p": 0.2429,
+"price": 373,
+"book": "Kalshi",
+"sc": "NYJ pulls away",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
 "gid": "2026_08_ATL_TB",
 "start": "2026-11-01T13:00:00",
 "kind": "rec_yds",
@@ -131,56 +200,8 @@
 "line": 2.5,
 "name": "keaton wagler",
 "lab": "Keaton Wagler 3+ threes",
-"p": 0.2945,
-"price": 218,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"sport": "nba"
-}
-],
-"p": 0.0211,
-"d": 59.232,
-"first": "2026-11-01T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909904",
-"start": "2026-11-01T22:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "jarace walker",
-"lab": "Jarace Walker 15+ pts",
-"p": 0.2307,
-"price": 373,
-"book": "Kalshi",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909905",
-"start": "2026-11-02T01:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "keaton wagler",
-"lab": "Keaton Wagler 3+ threes",
-"p": 0.2945,
-"price": 218,
+"p": 0.2995,
+"price": 208,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -198,8 +219,8 @@
 "line": 14.5,
 "name": "wendell carter",
 "lab": "Wendell Carter Jr. 15+ pts",
-"p": 0.3409,
-"price": 208,
+"p": 0.336,
+"price": 218,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -207,24 +228,11 @@
 "price"
 ],
 "sport": "nba"
-},
-{
-"gid": "2026020231",
-"start": "2026-11-02T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "beckett sennecke",
-"lab": "Beckett Sennecke to score",
-"p": 0.3578,
-"price": 190,
-"book": "Novig",
-"sport": "nhl"
 }
 ],
-"p": 0.00829,
-"d": 134.35,
-"first": "2026-11-01T20:30:00+00:00",
+"p": 0.00599,
+"d": 208.937,
+"first": "2026-11-01T18:00:00+00:00",
 "res": null
 }
 ],
