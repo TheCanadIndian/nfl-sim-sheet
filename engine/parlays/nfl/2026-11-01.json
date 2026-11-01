@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T01:30:27.708Z",
+"frozen_at": "2026-11-01T01:35:24.782Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,54 @@
 ],
 "final_at": "2026-11-01T16:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_08_BAL_BUF",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 129.5,
+"name": "zay flowers",
+"lab": "Zay Flowers 130+ rec yds",
+"p": 0.2025,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "drake maye",
+"lab": "Drake Maye 300+ pass yds",
+"p": 0.221,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
+}
+],
+"p": 0.04475,
+"d": 26.145,
+"first": "2026-11-01T18:00:00+00:00",
+"pick": "longshot"
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -60,7 +108,7 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_08_BAL_BUF",
@@ -97,12 +145,30 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "drake maye",
+"lab": "Drake Maye 300+ pass yds",
+"p": 0.221,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"script",
+"price"
+]
 }
 ],
-"p": 0.07855,
-"d": 13.44,
+"p": 0.01736,
+"d": 66.93,
 "first": "2026-11-01T18:00:00+00:00",
-"pick": "core"
+"pick": "longshot"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -133,7 +199,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.0462,
+"p": 0.05221,
 "d": 16.321,
 "first": "2026-11-02T01:20:00+00:00"
 },
@@ -144,39 +210,6 @@
 {
 "gid": "2026_08_PHI_WAS",
 "start": "2026-11-01T20:20:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 69.5,
-"name": "rachaad white",
-"lab": "Rachaad White 70+ rush yds",
-"p": 0.21,
-"price": 331,
-"book": "Kalshi"
-},
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 249.5,
-"name": "tanner mckee",
-"lab": "Tanner McKee 250+ pass yds",
-"p": 0.22,
-"price": 296,
-"book": "Kalshi"
-}
-],
-"p": 0.0462,
-"d": 17.052,
-"first": "2026-11-02T01:20:00+00:00"
-},
-{
-"card": "Primetime ladders (experimental)",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_08_PHI_WAS",
-"start": "2026-11-01T20:20:00",
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
@@ -186,6 +219,27 @@
 "price": 313,
 "book": "Kalshi"
 },
+{
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "jayden daniels",
+"lab": "Jayden Daniels 250+ pass yds",
+"p": 0.21,
+"price": 313,
+"book": "Kalshi"
+}
+],
+"p": 0.0754,
+"d": 17.019,
+"first": "2026-11-02T01:20:00+00:00"
+},
+{
+"card": "Primetime ladders (experimental)",
+"tier": "3-leg",
+"legs": [
 {
 "gid": "2026_08_PHI_WAS",
 "start": "2026-11-01T20:20:00",
@@ -209,10 +263,22 @@
 "p": 0.21,
 "price": 313,
 "book": "Kalshi"
+},
+{
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "tanner mckee",
+"lab": "Tanner McKee 250+ pass yds",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
 }
 ],
-"p": 0.00926,
-"d": 73.356,
+"p": 0.01231,
+"d": 70.346,
 "first": "2026-11-02T01:20:00+00:00"
 },
 {
@@ -406,7 +472,7 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"tier": "+600 to +1500",
 "legs": [
 {
 "gid": "2026_08_NE_MIA",
@@ -421,22 +487,54 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_08_ARI_DAL",
+"gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
-"kind": "rec",
+"kind": "td",
 "side": "o",
-"line": 4.5,
-"name": "george pickens",
-"lab": "George Pickens over 4.5 receptions",
-"p": 0.5112,
-"price": 106,
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.3442,
+"price": 285,
 "book": "Novig"
 }
 ],
-"p": 0.23614,
-"d": 5.397,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "core"
+"p": 0.15899,
+"d": 10.087,
+"first": "2026-11-01T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aj brown",
+"lab": "Aj Brown TD",
+"p": 0.4619,
+"price": 162,
+"book": "Kalshi"
+},
+{
+"gid": "2026_08_CHI_SEA",
+"start": "2026-11-02T20:15:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "emanuel wilson",
+"lab": "Emanuel Wilson TD",
+"p": 0.3117,
+"price": 335,
+"book": "Novig"
+}
+],
+"p": 0.14398,
+"d": 11.397,
+"first": "2026-11-01T21:25:00+00:00"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -455,27 +553,6 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "george pickens",
-"lab": "George Pickens over 4.5 receptions",
-"p": 0.5112,
-"price": 106,
-"book": "Novig"
-}
-],
-"p": 0.21171,
-"d": 8.425,
-"first": "2026-11-01T18:00:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
 "gid": "2026_08_MIN_DET",
 "start": "2026-11-01T13:00:00",
 "kind": "td",
@@ -486,56 +563,10 @@
 "p": 0.3442,
 "price": 285,
 "book": "Novig"
-},
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "george pickens",
-"lab": "George Pickens over 4.5 receptions",
-"p": 0.5112,
-"price": 106,
-"book": "Novig"
 }
 ],
-"p": 0.17596,
-"d": 7.931,
-"first": "2026-11-01T18:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_08_CHI_SEA",
-"start": "2026-11-02T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "emanuel wilson",
-"lab": "Emanuel Wilson TD",
-"p": 0.3117,
-"price": 335,
-"book": "Novig"
-},
-{
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "george pickens",
-"lab": "George Pickens over 4.5 receptions",
-"p": 0.5112,
-"price": 106,
-"book": "Novig"
-}
-],
-"p": 0.15935,
-"d": 8.961,
+"p": 0.14253,
+"d": 15.746,
 "first": "2026-11-01T18:00:00+00:00"
 },
 {
@@ -562,12 +593,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5155,
+"p": 0.5146,
 "price": 111,
 "book": "Novig"
 }
 ],
-"p": 0.2844,
+"p": 0.2839,
 "d": 4.101,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -583,7 +614,7 @@
 "line": 12.5,
 "name": "roschon johnson",
 "lab": "Roschon Johnson under 12.5 rush yds",
-"p": 0.5419,
+"p": 0.54,
 "price": -102,
 "book": "Novig"
 },
@@ -595,12 +626,12 @@
 "line": 3.5,
 "name": "kendrick bourne",
 "lab": "Kendrick Bourne under 3.5 receptions",
-"p": 0.5155,
+"p": 0.5146,
 "price": 111,
 "book": "Novig"
 }
 ],
-"p": 0.27932,
+"p": 0.27787,
 "d": 4.179,
 "first": "2026-11-01T18:00:00+00:00"
 },
@@ -694,12 +725,12 @@
 "line": 12.5,
 "name": "roschon johnson",
 "lab": "Roschon Johnson under 12.5 rush yds",
-"p": 0.5419,
+"p": 0.54,
 "price": -102,
 "book": "Novig"
 }
 ],
-"p": 0.12301,
+"p": 0.12258,
 "d": 11.645,
 "first": "2026-11-01T21:25:00+00:00"
 },
