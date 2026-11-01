@@ -75,11 +75,26 @@ def key():
     return k
 
 
+_LIVE_READ = False
+
+
 def load_state():
+    """The saved credit state, with the real balance read once a run: /sports is free and carries the count. The saved
+    number only moved on a paid call, so after the Nov 1 reset it stayed at Oct 31's 2 and every Odds API pull was refused."""
+    global _LIVE_READ
     try:
-        return json.load(open(STATE))
+        st = json.load(open(STATE))
     except (OSError, ValueError):
-        return {}
+        st = {}
+    if not _LIVE_READ and key():
+        _LIVE_READ = True
+        try:
+            left = requests.get("https://api.the-odds-api.com/v4/sports", params=dict(apiKey=key()), timeout=20).headers.get("x-requests-remaining")
+            if left is not None:
+                st["remaining"] = int(float(left))
+        except (requests.RequestException, ValueError):
+            pass
+    return st
 
 
 def allowance(st, now):
