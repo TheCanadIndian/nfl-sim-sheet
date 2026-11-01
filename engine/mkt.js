@@ -997,6 +997,14 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         return `<span class="vtag pmv${c.line && c.price ? ' st' : ''}" title="${tip}">${body}${rungs.length ? ` <i>+${rungs.length} rung${rungs.length === 1 ? '' : 's'}</i>` : ''}</span>`;
       }).join('');
     },
+    // a player's stat moved: every line of that stat carries the tag (owner 2026-11-01, ladder rungs incl. the dropdown's lower ones)
+    statMove(gid, name, k){
+      const M = window.MKT.pinMoves(gid, name).filter(m => m.k === k && m.sig !== 'rung');
+      return ['pin', 'cons'].map(src => { const X = M.filter(m => m.src === src); if (!X.length) return '';
+        const L = X.find(m => m.sig === 'line' || m.sig === 'both'), pr = X.some(m => m.sig === 'price' || m.sig === 'both');
+        const tip = `${src === 'pin' ? 'Pinnacle' : 'Our sharp consensus'}${L ? ` moved the main line up, ${L.from_l} to ${L.to_l}` : ' kept the main line'}${pr ? `${L ? ' and' : ','} the over got shorter` : ''}. Tracked, experimental.`;
+        return `<i class="lmv ${src}" title="${tip}">${src === 'pin' ? 'PIN' : 'CONS'}${L ? ' ▲' : ''}${pr ? ' ▼odds' : ''}</i>`; }).join('');
+    },
     lcFlag(gid, name){
       if (!FL || !FL.lc || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
       const v = (FL.lc[String(gid)] || {})[norm(name)]; if (!v || (MY.length && !MY.includes(v.k))) return '';
