@@ -302,6 +302,8 @@ function lruChip(c, u0){
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
+// a rung in a ladder category, for the screener (freeze mode only)
+const regL = (g, p, u, cat) => { if (window.MKT && MKT.regLad) MKT.regLad({gid: String(g.id), start: g.sort, name: MKT.norm(p.n), kind: u.k, line: u.l, cat, ya: u.ya, p: u.p == null ? null : +u.p.toFixed(4)}); };
 // Game picker above the ladders (owner 2026-11-01: 'scroll between game selections without having to scroll down on the
 // whole slate'): pinned under the top bar, one tap shows that game with every player unfolded; the tap keeps the picker where it was
 let LADG = '';
@@ -332,6 +334,7 @@ function ladderCard(){
       // number, best price bold, best edge first. No 5% floor here: the record is the soft matchup (edge under 5% +6% on 1,919)
       const rungs = (window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n) : []).map(ladPrice).sort((a, b) => (b.edge ?? -9) - (a.edge ?? -9));
       const all = window.MKT && MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n).map(ladPrice) : rungs;
+      rungs.forEach(u => regL(g, p, u, 'Ladder candidate'));
       cards.push({g, p, r, k, extra, rungs, all, best: rungs.length ? rungs[0].edge ?? -9 : -9});
     }
   }
@@ -398,6 +401,7 @@ function ladderLongshots(){
       if (!soft && !tk) continue;
       const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u));
       if (!rungs.length) continue;
+      rungs.forEach(u => regL(g, p, u, 'Ladder longshot'));
       const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || Math.abs(a.p - .30) - Math.abs(b.p - .30))[0];   // ours closest to 30%
       const why = [soft ? `soft: ${ord(r.rank)} most to ${k}s` : null, tk && tk === u.k ? 'Value tag' : tk ? 'Value tag (other stat)' : null].filter(Boolean);
       const sc = (soft ? 2 : 0) + (tk === u.k ? 2 : tk ? 1 : 0);
@@ -453,6 +457,7 @@ function primetimeLadders(){
       if (!soft && !tk && !use) continue;
       const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u));
       if (!rungs.length) continue;
+      rungs.forEach(u => regL(g, p, u, 'Primetime ladder'));
       const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || Math.abs(a.p - .30) - Math.abs(b.p - .30))[0];   // ours closest to 30%
       const why = [soft ? `soft: ${ord(r.rank)} most to ${k}s` : null, tk && tk === u.k ? 'Value tag' : null, !soft && !(tk && tk === u.k) ? 'high usage' : null].filter(Boolean);
       cands.push({g, p, u, why, sc: (soft ? 2 : 0) + (tk === u.k ? 2 : 0)});

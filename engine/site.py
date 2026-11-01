@@ -480,6 +480,8 @@ SCREEN_CSS = """
 .sc-px2{background:none;border:0;color:var(--muted);font:600 15px var(--body);padding:3px 10px 5px 6px;cursor:pointer;line-height:1}.sc-px2:hover{color:var(--bad)}
 .sc-add{border-style:dashed;color:var(--muted)}.sc-name{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.sc-name input{min-width:0;width:200px;max-width:60vw;padding:5px 10px;border-radius:8px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);font:600 13px var(--body)}
 .sc-count{font-size:13px;color:var(--muted);margin:4px 0 8px}.sc-count b{color:var(--ink)}
+.sc-tag.lad{color:var(--accent);border-color:var(--accent)}.sc-cmp{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:4px;font-size:12px}.sc-cmp span{border:1px solid var(--faint);border-radius:5px;padding:1px 6px;color:var(--muted);white-space:nowrap}.sc-cmp span.my{color:var(--ink)}.sc-cmp span.me{border-color:var(--accent);color:var(--ink);font-weight:700}.sc-cmp i{font-style:normal;font-weight:600}.sc-cmp i.g{color:var(--good)}.sc-cmp i.b{color:var(--bad)}
+.sc-act{display:flex;align-items:center;gap:6px;justify-self:end}.sc-act .slipadd{margin:0;min-width:36px;min-height:36px;font-size:16px;line-height:1}
 .sc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 14px;align-items:center;padding:9px 4px;border-top:1px solid var(--faint)}
 .sc-who b{font-size:14.5px}.sc-m{font-size:12px;color:var(--muted)}.sc-bet{font-size:13.5px;margin-top:2px}
 .sc-num{text-align:right;cursor:help}.sc-e{display:block;font-family:var(--display);font-size:19px;font-weight:700}.sc-e.good{color:var(--good)}.sc-e.bad{color:var(--bad)}
@@ -645,10 +647,10 @@ def write_screener():
         G["nba"] = {str(g["id"]): dict(lab=f"{g['away']} @ {g['home']}", start=iso(g.get("start_utc")), pl=pl.get(str(g["id"]), {})) for g in nba.get("games", [])}
     body = (f"<style>{SCREEN_CSS}</style><header><div><div class=\"eyebrow\">NFL · NBA · NHL · overs</div><h1>Odds screener</h1></div></header>"
             "<p class=\"lead\" style=\"margin:0 0 6px\">Every over price on today’s slates against the fair price: tap the chips to narrow it down, tap a price to open the bet. "
-            "Edge = our market-anchored chance × the payout − 1 (same rules as the sport pages: the sharp consensus without the book you’re betting, our number at its tested weight).</p>"
+            "Edge = our market-anchored chance × the payout − 1 (same rules as the sport pages: the sharp consensus without the book you’re betting, our number at its tested weight). Tap + on a row to build a parlay.</p>"
             "<div id=\"screener\"><p class=\"sc-empty\">Loading prices…</p></div>"
             f"<script>window.SCREEN_GAMES = {json.dumps(G, separators=(',', ':')).replace('</', '<' + chr(92) + '/')};</script>"
-            "<script src=\"screener.js\"></script>")
+            "<script src=\"slip.js\"></script><script src=\"screener.js\"></script>")
     write_page("screener.html", "Odds screener · Sim Sheet", "screener", body, depth=0)
 
 

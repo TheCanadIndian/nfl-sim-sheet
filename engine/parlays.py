@@ -128,6 +128,9 @@ def freeze():
             if sport in ("nfl", "nba") and snap.get("paths") is not None:   # every potential Path leg -> the screener's Path legs filter
                 json.dump(dict(generated=now.isoformat(), legs=snap["paths"]), open(os.path.join(SITE, "markets", f"paths_{sport}.json"), "w"), separators=(",", ":"))
                 print(f"parlays {sport}: {len(snap['paths'])} path legs")
+            if sport in ("nfl", "nba") and snap.get("ladders") is not None:  # every rung in a ladder category -> the screener's Ladders filter
+                json.dump(dict(generated=now.isoformat(), legs=snap["ladders"]), open(os.path.join(SITE, "markets", f"ladders_{sport}.json"), "w"), separators=(",", ":"))
+                print(f"parlays {sport}: {len(snap['ladders'])} ladder rungs")
             try:                                                     # learning builder (builder.py): log candidates, add its parlays
                 import builder as LB
                 LB.save_cands(sport, snap.get("cands"), now)

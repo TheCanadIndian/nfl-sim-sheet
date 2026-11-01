@@ -7,6 +7,8 @@
      chance  our number at the WPIN weight + the rest the fair (50/50 without a sharp price)
      edge    chance x the payout - 1; Kalshi prices are fee-adjusted; Pinnacle is a reference, never a price.
    Overs only (the owner plays overs). Value / LC / off-market chips come from flags_<sport>.json.
+   Ladders (owner 2026-11-01): rungs in a ladder category (markets/ladders_<sport>.json, the sport pages' own rules at each
+   freeze) are tagged; the Ladders filter lists them with every book at that number. + on a row adds it to My parlay (slip.js).
    Filters are remembered on this device (localStorage simscreen-v2). Page: screener.html (site.py write_screener). */
 (() => {
   const root = (document.currentScript && document.currentScript.dataset.root) || '';
@@ -47,7 +49,7 @@
   // ---------------------------------------------------------------- state (remembered per device)
   // alt lines on (owner 2026-10-25: "I feel like we are missing prices"): every rung shows; their fair is carried from
   // the main line (shown with ≈ where only our distribution carries it). Devices that had saved 'off' are switched on once.
-  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, offm: false, softm: false, soon: false, alts: true, sort: 'edge'};
+  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', offm: false, softm: false, soon: false, alts: true, sort: 'edge'};
   let S = {...DEF};
   try { Object.assign(S, JSON.parse(localStorage.getItem('simscreen-v2') || '{}')); } catch (e) {}
   if (!S.v3){ S.alts = true; S.v3 = 1; }
@@ -62,14 +64,15 @@
   const pick = o => Object.fromEntries(FKEYS.map(k => [k, o[k] ?? DEF[k]]));
   const same = f => FKEYS.every(k => (f[k] ?? DEF[k]) === S[k]);
   function suggest(){                                                         // a default name from what's switched on
-    const on = {tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', knee: 'Knees', path: 'Path legs', offm: 'Off market', open: 'Openers', softm: 'Soft', soon: 'Next 6h'};
+    const on = {tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', soon: 'Next 6h'};
     const bits = [S.sport === 'all' ? '' : SP[S.sport], ...Object.keys(on).filter(k => S[k]).map(k => on[k]), S.edge > -99 ? S.edge + '%+' : '', S.stat !== 'all' ? (STAT[S.stat] || S.stat) : '', S.price !== 'all' ? PRICE[S.price][2] : ''].filter(Boolean);
     return bits.join(' · ').slice(0, 40) || 'My filters'; }
 
   // ---------------------------------------------------------------- data
   const link = (v, partner) => { const u = v && v[1]; if (!u) return null; if (String(u).startsWith('http')) return u;
     return partner === 'thecanadindian' ? `https://www.gambly.com/deeplink/odds/${u}?utm_campaign=${partner}` : null; };
-  function build(sport, P, F, LV, PA){
+  const LADT = {'Ladder candidate': 'Ladder cand', 'Ladder edge': 'Ladder edge', 'Ladder longshot': 'Ladder long', 'Primetime ladder': 'Primetime'};
+  function build(sport, P, F, LV, PA, LA){
     const out = [], G = GAMES[sport] || {}, now = Date.now();
     // Kalshi's prop ladders are only in live_<sport>.json (asks / bids), not the props file: every rung with a 4c-or-less
     // spread joins its prop's ladder at the ask plus Kalshi's 7% fee (research/kalshi_liquidity_rule.py: 4c+ spreads lost 38%)
@@ -78,6 +81,10 @@
       const q = r.ya + .07 * r.ya * (1 - r.ya), o = q >= .5 ? -100 * q / (1 - q) : 100 * (1 - q) / q;
       ((KAL[`${r.g}|${jn(r.n)}|${r.k}`] = KAL[`${r.g}|${jn(r.n)}|${r.k}`] || {})[+r.l] = {o: Math.round(o), p: r.p && r.p.vegas != null ? r.p.vegas : null}); }
     const props = JSON.parse(JSON.stringify(P.props || {}));
+    const lad = {}, ladBy = {};                                               // ladder rungs (spreads up to 10c: they may not be in KAL)
+    for (const x of (LA && LA.legs) || []){ const c = lad[`${x.gid}|${x.name}|${x.kind}|${x.line}`] = lad[`${x.gid}|${x.name}|${x.kind}|${x.line}`] || {...x, cats: []};
+      if (!c.cats.includes(x.cat)){ c.cats.push(x.cat); if (c.cats.length === 1) (ladBy[`${x.gid}|${x.name}|${x.kind}`] = ladBy[`${x.gid}|${x.name}|${x.kind}`] || []).push(c); }
+      ((props[x.gid] = props[x.gid] || {})[x.name] = props[x.gid][x.name] || {})[x.kind] = props[x.gid][x.name][x.kind] || {o: null, a: {}}; }
     for (const key of Object.keys(KAL)){ const [g, nm, k] = key.split('|');            // Kalshi-only players / stats join too
       ((props[g] = props[g] || {})[nm] = props[g][nm] || {})[k] = props[g][nm][k] || {o: null, a: {}}; }
     const tagsOf = (gid, nm) => { const t = []; const v = ((F.tags || {})[gid] || {})[nm], l = ((F.lc || {})[gid] || {})[nm];
@@ -112,6 +119,13 @@
             const carry = mainFair != null && e.p != null && kx.p != null && e.p > 0 && e.p < 1 && kx.p > 0 && kx.p < 1 ? sig(lgt(mainFair) + lgt(kx.p) - lgt(e.p)) : null;
             lines.push({l: +L, o: {Kalshi: [kx.o, null]}, u: {}, p: kx.p, main: false, apin: null, carry, kal: true});
           }
+          for (const c of ladBy[`${gid}|${nm}|${k}`] || []){                  // a ladder rung with a wider spread than the 4c rule above
+            const q = c.ya + .07 * c.ya * (1 - c.ya), o = Math.round(q >= .5 ? -100 * q / (1 - q) : 100 * (1 - q) / q);
+            const y = lines.find(z => z.l != null && Math.abs(+z.l - +c.line) < 1e-9);
+            if (y){ if (!(y.o || {}).Kalshi) y.o = {...(y.o || {}), Kalshi: [o, null]}; continue; }
+            const carry = mainFair != null && e.p != null && c.p != null && e.p > 0 && e.p < 1 && c.p > 0 && c.p < 1 ? sig(lgt(mainFair) + lgt(c.p) - lgt(e.p)) : null;
+            lines.push({l: c.line, o: {Kalshi: [o, null]}, u: {}, p: c.p, main: false, apin: null, carry, kal: true});
+          }
           // a Kalshi-only knee rung (Kalshi's ladders aren't in the props file): add it so the knee shows
           for (const x of F.knees || []) if (x.g === gid && x.n === nm && x.k === k && x.bk === 'Kalshi' && !lines.some(y => +y.l === +x.l))
             lines.push({l: x.l, o: {Kalshi: [x.o, null]}, u: {}, p: x.p, main: false, apin: x.fair});
@@ -138,7 +152,7 @@
             out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, ml: e.l ?? null, bet, p: x.p,
                       prices, value: tg.v === tagBet, lc: tg.lc === tagBet, pin: pinm[`${gid}|${nm}|${k}`] || null, cons: consm[`${gid}|${nm}|${k}`] || null,
                       cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(x => x[1] === 'g')), off: off.has(`${gid}|${nm}|${k}|${x.l}`) || off.has(`${gid}|${nm}|${k}|${x.l ?? .5}`), knee: knee[`${gid}|${nm}|${k}|${x.l}`] || null,
-                      open: opn[`${gid}|${nm}|${k}|${x.l}`] || null, gone: !!x.gone, path: pth[`${gid}|${nm}|${k}|${x.l}`] || null});
+                      open: opn[`${gid}|${nm}|${k}|${x.l}`] || null, gone: !!x.gone, path: pth[`${gid}|${nm}|${k}|${x.l}`] || null, lad: lad[`${gid}|${nm}|${k}|${x.l}`] || null});
           }
         }
       }
@@ -160,13 +174,13 @@
   async function load(){
     const res = await Promise.all(SPORTS.map(async sp => {
       try {
-        const [P, F, LV, PA] = await Promise.all(['props', 'flags', 'live', 'paths'].map(f => fetch(`${root}markets/${f}_${sp}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))));
+        const [P, F, LV, PA, LA] = await Promise.all(['props', 'flags', 'live', 'paths', 'ladders'].map(f => fetch(`${root}markets/${f}_${sp}.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))));
         FETCHED[sp] = P.fetched || null;
         if (sp === 'nba'){                                                    // double / triple-doubles live in their own file (owner 2026-10-27)
           const X = await fetch(`${root}markets/ddtd_nba.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
           for (const [g, ps] of Object.entries(X.props || {})) for (const [nm, ks] of Object.entries(ps)) Object.assign(((P.props = P.props || {})[g] = P.props[g] || {})[nm] = P.props[g][nm] || {}, ks);
         }
-        return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}, PA || {}) : [];
+        return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}, PA || {}, LA || {}) : [];
       } catch (e) { return []; }
     }));
     ROWS = res.flat();
@@ -181,11 +195,12 @@
     for (const r of ROWS){
       if (S.sport !== 'all' && r.sport !== S.sport) continue;
       if (S.stat !== 'all' && r.statKey !== S.stat) continue;
-      if (!S.alts && !r.main && !(S.knee && r.knee) && !(S.path && r.path) && !S.offm) continue;
+      if (!S.alts && !r.main && !(S.knee && r.knee) && !(S.path && r.path) && !(S.lad && r.lad) && !S.offm) continue;
       if (!!S.offm !== !!r.offOnly) continue;                                 // off-market rows only under their chip, and only them
       if (S.knee && !r.knee) continue;
       if (S.open && !r.open) continue;
       if (S.path && !r.path) continue;
+      if (S.lad && (!r.lad || (S.ladc !== 'all' && !r.lad.cats.includes(S.ladc)))) continue;
       if (r.gone && !S.open) continue;                                       // a pulled line: only in the Early openers list
       if (S.soon && !(r.start && r.start <= soon)) continue;
       if (S.tagged && !(r.value || r.lc || r.off)) continue;
@@ -201,8 +216,8 @@
       if ((S.knee || S.open || S.path) && !kb) continue;
       const best = kb || ps[0], [lo, hi] = PRICE[S.price] || PRICE.all;
       if (best.o < lo || best.o >= hi) continue;
-      if (!S.knee && !S.open && !S.path && !S.offm && S.edge > -99 && !(best.edge != null && best.edge * 100 >= S.edge)) continue;
-      if (!r.gone && !r.offOnly && best.edge != null && best.edge > .6) continue;                     // 60%+ claimed edges are stale or broken quotes
+      if (!S.knee && !S.open && !S.path && !S.lad && !S.offm && S.edge > -99 && !(best.edge != null && best.edge * 100 >= S.edge)) continue;
+      if (!r.gone && !r.offOnly && !S.lad && best.edge != null && best.edge > .6) continue;                     // 60%+ claimed edges are stale or broken quotes
       out.push({...r, best, n: ps.length});
     }
     const key = {edge: r => -(r.best.edge ?? -9), gap: r => -((r.best.q ?? 0) - 1 / dec(r.best.o)), start: r => r.start || 9e15, price: r => -r.best.o}[S.sort] || (r => 0);
@@ -218,22 +233,29 @@
       const tags = [r.value ? '<span class="sc-tag v" title="Value tag on the sport page">Value</span>' : '', r.lc ? '<span class="sc-tag lc" title="LC tag: beats the liquidity-weighted consensus">LC</span>' : '',
                     r.off || r.offOnly ? '<span class="sc-tag off" title="Off-market price: 8+ pts from the fair (often stale; check before betting)">Off</span>' : '',
                     r.pin ? `<span class="sc-tag pin" title="Pinnacle moved this prop${r.pin.line ? ': line up ' + r.pin.line : ''}${r.pin.price ? (r.pin.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">PIN${r.pin.line ? ' ▲' : ''}${r.pin.price ? ' ▼odds' : ''}</span>` : '',
-                    r.cons ? `<span class="sc-tag cons" title="Our sharp consensus (Pinnacle, Novig, ProphetX) moved this prop${r.cons.line ? ': line up ' + r.cons.line : ''}${r.cons.price ? (r.cons.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">CONS${r.cons.line ? ' ▲' : ''}${r.cons.price ? ' ▼odds' : ''}</span>` : '', r.knee ? `<span class="sc-tag knee" title="Ladder knee at ${esc(FULL[r.knee.bk] || r.knee.bk)}: stepping up to this rung costs little, the next one costs a lot (tracked, experimental)">KNEE</span>` : '', r.path ? `<span class="sc-tag path" title="Path leg: ${r.path.f.length} of 5 path reasons (usage, matchup, rotation, ${r.sport === 'nfl' ? 'script' : 'game'}, price) on this rung (experimental)">PATH ${r.path.f.length}/5</span>` : '', r.open ? `<span class="sc-tag open" title="Early opener: ${esc(FULL[r.open.bk] || r.open.bk)} posted this line already 3%+ under the sharp fair (tracked, experimental)">OPEN</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
+                    r.cons ? `<span class="sc-tag cons" title="Our sharp consensus (Pinnacle, Novig, ProphetX) moved this prop${r.cons.line ? ': line up ' + r.cons.line : ''}${r.cons.price ? (r.cons.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">CONS${r.cons.line ? ' ▲' : ''}${r.cons.price ? ' ▼odds' : ''}</span>` : '', r.knee ? `<span class="sc-tag knee" title="Ladder knee at ${esc(FULL[r.knee.bk] || r.knee.bk)}: stepping up to this rung costs little, the next one costs a lot (tracked, experimental)">KNEE</span>` : '', ...(r.lad ? r.lad.cats.map(c => `<span class="sc-tag lad" title="${esc(c)}: this rung is on the sport page’s ${esc(c.toLowerCase())} list (experimental)">${esc(LADT[c] || c)}</span>`) : []), r.path ? `<span class="sc-tag path" title="Path leg: ${r.path.f.length} of 5 path reasons (usage, matchup, rotation, ${r.sport === 'nfl' ? 'script' : 'game'}, price) on this rung (experimental)">PATH ${r.path.f.length}/5</span>` : '', r.open ? `<span class="sc-tag open" title="Early opener: ${esc(FULL[r.open.bk] || r.open.bk)} posted this line already 3%+ under the sharp fair (tracked, experimental)">OPEN</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
       const pl = r.path ? `<div class="sc-path">${r.path.sc ? `<span class="s">${esc(r.path.sc)}: us ${pc(r.path.us)} · market ${pc(r.path.mk)}</span>` : ''}${r.path.why.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : '';
       const ol = r.open ? `<div class="sc-open">Opened <b>${am(r.open.o)}</b> at ${esc(FULL[r.open.bk] || r.open.bk)}${r.open.t0 ? ' ' + esc(tm(r.open.t0 * 60e3)) : ''} · fair then ${pc(r.open.fair)} → ${r.open.gone ? '<span class="bad">line gone</span>' : `now <b>${am(r.open.now)}</b>`}${r.open.fnow != null ? ', fair now ' + pc(r.open.fnow) : ''}</div>` : '';
       const xo = r.offOnly ? `<div class="sc-open">${esc(FULL[r.offOnly.bk] || r.offOnly.bk)} implies ${pc(1 / dec(r.offOnly.o))} vs fair ${r.offOnly.carried ? '≈' : ''}${pc(r.offOnly.fair)} · <b>+${Math.round((r.offOnly.fair - 1 / dec(r.offOnly.o)) * 100)} pts</b>${r.offOnly.dep ? ` · $${Math.round(r.offOnly.dep).toLocaleString()} within 3¢` : ''} · often a stale or wrong line: check it first</div>` : '';
       const kl = r.knee ? `<div class="sc-knee">${esc(FULL[r.knee.bk] || r.knee.bk)} ladder: ${[[...r.knee.prev, 0], [r.knee.l, r.knee.o, 1], [...r.knee.next, 0]].map(([l, o, me]) => `<span${me ? ' class="me"' : ''}>${Math.ceil(l)}+ ${am(o)}</span>`).join('<i>→</i>')}</div>` : '';
+      // Ladders filter: every book at this number, side by side
+      const cmp = S.lad ? `<div class="sc-cmp">${r.prices.slice().sort((a, c) => dec(c.o) - dec(a.o)).map(x => `<span class="${x === b ? 'me' : ''}${MY.includes(x.b) ? ' my' : ''}">${esc(x.b === 'Hard Rock' ? 'HR' : x.b)} ${am(x.o)}${x.edge != null ? ` <i class="${x.edge >= .05 ? 'g' : x.edge < 0 ? 'b' : ''}">${x.edge >= 0 ? '+' : '−'}${Math.abs(Math.round(x.edge * 100))}%</i>` : ''}</span>`).join('')}</div>` : '';
       const tip = `Fair ${b.fair != null ? pc(b.fair) + ' (' + b.src + ')' : 'none'} · ours ${pc(r.p)} · chance ${b.q != null ? pc(b.q) + ' (' + Math.round(b.w * 100) + '% ours)' : '—'} · price implies ${pc(1 / dec(b.o))}`;
       const priceHtml = r.gone ? `<s>${am(b.o)}</s> ${esc(FULL[b.b] || b.b)} · gone` : `<b>${am(b.o)}</b> ${esc(FULL[b.b] || b.b)}${b.u ? ' ↗' : ''}`;
       // watchlist + odds chart (watch.js; owner 2026-10-26): this row's line at the shown book
       const wi = {sport: r.sport, gid: r.gid, name: r.nm, kind: r.k, line: r.l, book: b.b, o: b.o, fair: b.fair, main: r.ml, glab: r.game,
                   start: r.start ? new Date(r.start).toISOString() : null, lab: `${r.name} ${r.bet}`};
       const wb = window.WATCH ? `<span class="sc-w">${WATCH.both(wi)}</span>` : '';
+      // My parlay (slip.js; owner 2026-11-01): the chance is this row's; legs of one game judged in the saved sims (NFL / NBA)
+      const hasSim = (r.sport === 'nfl' || r.sport === 'nba') && r.team;
+      const leg = {id: `scr|${r.sport}|${r.gid}|${r.nm}|${r.k}|${r.l}`, sport: r.sport, g: r.gid, glab: r.game, lab: `${r.name} ${r.bet}`, p: b.q, side: 'over', stat: r.k === 'td' ? 'tds' : r.k, line: r.l ?? .5,
+                   pk: hasSim ? `${r.gid}|${r.team}|${r.name}` : null, model: 'vegas', draws: hasSim ? `${r.sport}/draws/${r.gid}.json` : null, book: b.b, o: b.o, px: Object.fromEntries(r.prices.map(x => [x.b, x.o]))};
+      const sl = window.SLIP && b.q != null && !r.gone ? SLIP.btn(leg) : '';
       return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b>${wb} <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
-          <div class="sc-bet">${esc(r.bet[0].toUpperCase() + r.bet.slice(1))} ${tags}</div>${kl}${xo}${pl}${ol}${r.cx.length ? `<div class="sc-cx">${r.cx.map(x => `<span class="${x[1] === 'g' ? 'g' : x[1] === 'b' ? 'b' : ''}">${esc(x[0])}</span>`).join('')}</div>` : ''}</div>
+          <div class="sc-bet">${esc(r.bet[0].toUpperCase() + r.bet.slice(1))} ${tags}</div>${cmp}${kl}${xo}${pl}${ol}${r.cx.length ? `<div class="sc-cx">${r.cx.map(x => `<span class="${x[1] === 'g' ? 'g' : x[1] === 'b' ? 'b' : ''}">${esc(x[0])}</span>`).join('')}</div>` : ''}</div>
         <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
           <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.fair != null ? pc(b.fair) : '—'}</span></div>
-        ${b.u ? `<a class="sc-px" href="${esc(b.u)}" target="_blank" rel="noopener">${priceHtml}</a>` : `<span class="sc-px nl">${priceHtml}</span>`}</div>`; };
+        <div class="sc-act">${b.u ? `<a class="sc-px" href="${esc(b.u)}" target="_blank" rel="noopener">${priceHtml}</a>` : `<span class="sc-px nl">${priceHtml}</span>`}${sl}</div></div>`; };
     const preHtml = `<div class="sc-pre"><span class="sc-l">Saved</span>${PRE.map((f, i) => `<span class="sc-pc${same(f.f) ? ' on' : ''}"><button class="sc-pa" data-i="${i}" aria-pressed="${same(f.f)}">${esc(f.n)}</button><button class="sc-px2" data-i="${i}" aria-label="Delete ${esc(f.n)}" title="Delete">×</button></span>`).join('')}
         ${NAMING ? `<span class="sc-name"><input id="sc-pn" maxlength="40" value="${esc(suggest())}" aria-label="Name for these filters"><button id="sc-ps" class="sc-chip on">Save</button><button id="sc-pc" class="sc-reset">Cancel</button></span>`
                  : PRE.some(f => same(f.f)) ? '' : `<button id="sc-pnew" class="sc-chip sc-add">+ Save these filters</button>`}</div>`;
@@ -242,7 +264,9 @@
         <div class="sc-grp">${chip('books', 'mine', 'My books', S.books === 'mine')}${chip('books', 'all', 'All books', S.books === 'all')}</div>
         <div class="sc-grp"><span class="sc-l">Edge</span>${[[-100, 'Any'], [0, '0%+'], [3, '3%+'], [5, '5%+'], [10, '10%+']].map(([v, l]) => chip('edge', v, l, +S.edge === v)).join('')}</div>
         <div class="sc-grp">${Object.entries(PRICE).map(([k, v]) => chip('price', k, v[2], S.price === k)).join('')}</div>
-        <div class="sc-grp">${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('offm', 'x', 'Off market', S.offm)}${chip('knee', 'x', 'Ladder knees', S.knee)}${chip('path', 'x', 'Path legs', S.path)}${chip('open', 'x', 'Early openers', S.open)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
+        <div class="sc-grp">${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('offm', 'x', 'Off market', S.offm)}${chip('knee', 'x', 'Ladder knees', S.knee)}${chip('lad', 'x', 'Ladders', S.lad)}${chip('path', 'x', 'Path legs', S.path)}${chip('open', 'x', 'Early openers', S.open)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
+        ${S.lad ? (() => { const n = {}; ROWS.forEach(r => { if (r.lad && (S.sport === 'all' || r.sport === S.sport)) r.lad.cats.forEach(c => { n[c] = (n[c] || 0) + 1; }); });
+          return `<div class="sc-grp"><span class="sc-l">Ladder</span>${chip('ladc', 'all', 'All', S.ladc === 'all')}${Object.keys(n).sort().map(c => chip('ladc', c, `${esc(c)}s · ${n[c]}`, S.ladc === c)).join('')}</div>`; })() : ''}
         <div class="sc-grp sc-in"><select id="sc-stat" aria-label="Stat"><option value="all">Every stat</option>${stats.map(s => `<option value="${s}"${S.stat === s ? ' selected' : ''}>${esc(STAT[s] || s)}</option>`).join('')}</select>
           <input id="sc-q" type="search" placeholder="Player, team or game" value="${esc(S.q)}" aria-label="Search">
           <select id="sc-sort" aria-label="Sort"><option value="edge"${S.sort === 'edge' ? ' selected' : ''}>Best edge</option><option value="gap"${S.sort === 'gap' ? ' selected' : ''}>Biggest gap</option><option value="start"${S.sort === 'start' ? ' selected' : ''}>Starting soonest</option><option value="price"${S.sort === 'price' ? ' selected' : ''}>Biggest payout</option></select>
@@ -254,7 +278,7 @@
   document.addEventListener('click', e => {
     const c = e.target.closest('.sc-chip[data-k]');
     if (c){ const k = c.dataset.k, v = c.dataset.v;
-      if (k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'knee' || k === 'offm' || k === 'open' || k === 'path' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
+      if (k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'knee' || k === 'offm' || k === 'open' || k === 'path' || k === 'lad' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }
@@ -281,6 +305,7 @@
   document.addEventListener('input', e => { if (e.target.id !== 'sc-q') return; clearTimeout(qt);
     qt = setTimeout(() => { S.q = e.target.value; save(); const pos = e.target.selectionStart; render();
       const i = document.getElementById('sc-q'); if (i){ i.focus(); i.setSelectionRange(pos, pos); } }, 250); });
+  window.render = render;                                                     // slip.js redraws the + buttons through this
   load();
   setInterval(load, 5 * 60e3);                                                // prices refresh every ~15 min in the cloud
 })();
