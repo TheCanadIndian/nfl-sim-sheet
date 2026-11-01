@@ -306,6 +306,8 @@ function lruChip(c, u0){
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
+// a rung in a ladder category, for the screener (freeze mode only)
+const regL = (g, p, u, cat) => { if (window.MKT && MKT.regLad) MKT.regLad({gid: String(g.id), start: g.start_utc, name: MKT.norm(p.n), kind: u.k, line: u.l, cat, ya: u.ya, p: u.p == null ? null : +u.p.toFixed(4)}); };
 // Game picker above the ladders (owner 2026-11-01: 'scroll between game selections without having to scroll down on the
 // whole slate'): pinned under the top bar, one tap shows that game with every player unfolded; the tap keeps the picker where it was
 let LADG = '';
@@ -333,6 +335,7 @@ function ladderCard(){
       // shown and ranked is the best of the three
       const rungs = all.map(ladPrice).filter(u => u.edge != null && u.edge >= LEDGE).sort((a, b) => b.edge - a.edge);
       if (!rungs.length) continue;
+      rungs.forEach(u => regL(g, p, u, 'Ladder edge'));
       const R = DVP[p.o + '|' + p.pg] || {};
       cards.push({g, p, R, sts: [...new Set(rungs.map(u => u.k))].filter(st => (mx(p, st) || {}).v >= 1.07), rungs, all: window.MKT && MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n, Object.keys(KLAB)).map(ladPrice) : rungs, best: rungs[0].edge});
     }
@@ -486,6 +489,7 @@ function nbaLadderLongshots(){
         if (!(u.mid >= .15 && u.mid <= .45) || !(u.yb > 0) || u.ya - u.yb > .05) continue;           // achievable: our chance 20-45%
         if (u.p == null || u.p < .20 || u.p > .45 || u.p < u.mid - .02 || !vol(p, u.k)) continue;
         const m = mx(p, u.k), soft = m && m.v >= 1.06; if (!soft && tk !== u.k) continue;
+        regL(g, p, u, 'Ladder longshot');
         const sc = (soft ? 2 : 0) + (tk === u.k ? 2 : 0), L = {g, p, st: u.k, u: {...u, best: null}, q: u.mid, cost: u.cost, price: amO(u.cost), sc, m, tag: tk === u.k};
         if (!best[g.id] || sc > best[g.id].sc || (sc === best[g.id].sc && Math.abs(u.p - .30) < Math.abs(best[g.id].u.p - .30))) best[g.id] = L;
       }

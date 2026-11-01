@@ -1,6 +1,7 @@
 /* My parlay: a build-your-own slip shared by every sport page (one slip across sports, saved in this browser).
    Pages add legs with  SLIP.btn(leg)  (a small "+" button) or  SLIP.addMany(legs).
-   A leg: {id, sport, g, glab, lab, p, side, stat, line, pk, draws, model}
+   A leg: {id, sport, g, glab, lab, p, side, stat, line, pk, draws, model, book, o, px}
+     book, o, px  (screener legs) the price shown when added and every book's price, for 'Each book pays'
      p      chance of the leg from that page's model
      draws  url of the game's saved simulations (NFL / NBA): legs from the same game are then judged in the same
             simulated games (correlation counted); otherwise legs multiply (NHL goals, MLB homers, other games). */
@@ -14,6 +15,17 @@
   const pct = p => p == null ? '–' : (p < .1 ? (Math.round(p * 1000) / 10).toFixed(1) : Math.round(p * 100)) + '%';
   const american = p => { p = Math.min(Math.max(p, 1e-6), 1 - 1e-6); const o = p >= .5 ? -100 * p / (1 - p) : 100 * (1 - p) / p; return (o > 0 ? '+' : '') + Math.round(o); };
   const SPORT = {nfl: 'NFL', nba: 'NBA', nhl: 'NHL', mlb: 'MLB'};
+  const OWN = ['Hard Rock', 'Novig', 'Kalshi'];
+  const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+  const amS = o => (o > 0 ? '+' : '') + o;
+  // the legs at one book, multiplied (a book's own parlay price can differ; same-game legs especially). Only when every leg has prices
+  function payouts(){
+    if (!legs.length || !legs.every(L => L.px)) return null;
+    const R = [...new Set(legs.flatMap(L => Object.keys(L.px)))].map(b => { const k = legs.filter(L => L.px[b] != null).length;
+      return {b, k, m: k === legs.length ? legs.reduce((t, L) => t * dec(L.px[b]), 1) : null}; });
+    const own = OWN.map(b => R.find(x => x.b === b) || {b, k: 0, m: null});
+    return [...own, ...R.filter(x => !OWN.includes(x.b) && x.m != null).sort((a, c) => c.m - a.m).slice(0, 2)];
+  }
 
   // ---- saved simulations (int arrays packed as base64)
   const cache = {};
@@ -94,6 +106,7 @@
 .slippanel .acts a,.slippanel .acts button{font-size:12.5px;border:1px solid var(--faint,#22313A);border-radius:999px;padding:4px 11px;color:var(--ink,#EAF1F4);background:none;text-decoration:none;cursor:pointer}
 .slippanel .note{font-size:11.5px;color:var(--muted,#95A6B0);margin:0}
 .slipfab[hidden],.slippanel[hidden]{display:none!important}
+.slippanel .pays{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12.5px}.slippanel .pays b{font-weight:700}.slippanel .pays .top{color:var(--accent,#36D399)}.slippanel .pays .no{color:var(--muted,#95A6B0)}
 .slipadd{border:1px solid var(--faint,#22313A);background:none;color:var(--accent,#36D399);border-radius:999px;padding:1px 8px;font-size:12px;cursor:pointer;margin-left:6px;white-space:nowrap}
 .slipadd.on{background:var(--accent,#36D399);color:var(--bg,#0A0F12);border-color:var(--accent,#36D399)}`;
   const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -126,12 +139,13 @@
     fab.innerHTML = legs.length ? `My parlay <b>${legs.length}</b>${result ? ` · ${pct(result.p)}` : ''}` : 'My parlay <b>+</b>';
     place();
     if (panel.hidden) return;
-    if (!legs.length){ panel.innerHTML = `<h3>My parlay <button class="x" data-slipclose aria-label="Close">✕</button></h3><p class="note">Tap a "+" next to any line on the NFL, NBA, NHL or MLB pages to add it (NHL: "+ ATG" by each player; NFL / NBA: open a player and use + Over / + Under; MLB: "+" by HR%). Legs from different sports can be combined.</p><div class="acts"><button data-slipclose>Close</button></div>`; return; }
-    const r = result || {};
+    if (!legs.length){ panel.innerHTML = `<h3>My parlay <button class="x" data-slipclose aria-label="Close">✕</button></h3><p class="note">Tap a "+" on any Screener row, or next to any line on the NFL, NBA, NHL or MLB pages, to add it (NHL: "+ ATG" by each player; NFL / NBA: open a player and use + Over / + Under; MLB: "+" by HR%). Legs from different sports can be combined.</p><div class="acts"><button data-slipclose>Close</button></div>`; return; }
+    const r = result || {}, P = payouts(), top = P ? Math.max(0, ...P.map(x => x.m || 0)) : 0;
+    const pays = P ? `<div class="pays"><span class="no">Each book pays</span>${P.map(x => `<span class="${x.m === top && top ? 'top' : x.m == null ? 'no' : ''}" title="${x.m == null ? `${esc(x.b)} has ${x.k} of ${legs.length} legs` : 'Legs multiplied'}">${esc(x.b)} <b>${x.m == null ? '—' : x.m.toFixed(1) + 'x'}</b></span>`).join('')}${r.p && top ? `<span class="${r.p * top >= 1 ? 'top' : 'no'}">best ${r.p * top >= 1 ? '+' : '−'}${Math.abs(Math.round((r.p * top - 1) * 100))}%</span>` : ''}</div>` : '';
     panel.innerHTML = `<h3>My parlay · ${legs.length} leg${legs.length === 1 ? '' : 's'} <button class="x" data-slipclose aria-label="Close">✕</button></h3>
-      <ol>${legs.map(L => `<li><span>${esc(L.lab)} <small>${esc(SPORT[L.sport] || '')}${L.glab ? ' · ' + esc(L.glab) : ''}</small></span><span>${pct(L.p)} <button class="x" data-slipdel="${esc(L.id)}" aria-label="Remove">✕</button></span></li>`).join('')}</ol>
-      <div class="sum"><div><b>${pct(r.p)}</b><span>hits</span></div><div><b>${r.p ? american(r.p) : '–'}</b><span>fair odds</span></div><div><b>${pct(r.indep)}</b><span>if unrelated</span></div></div>
-      <p class="note">${r.linked ? `${r.linked} legs judged together in the same simulated games (their link counts). ` : ''}Other legs multiply. Take a book's parlay only if it pays more than the fair odds.</p>
+      <ol>${legs.map(L => `<li><span>${esc(L.lab)} <small>${L.o != null ? amS(L.o) + ' ' + esc(L.book) + ' · ' : ''}${esc(SPORT[L.sport] || '')}${L.glab ? ' · ' + esc(L.glab) : ''}</small></span><span>${pct(L.p)} <button class="x" data-slipdel="${esc(L.id)}" aria-label="Remove">✕</button></span></li>`).join('')}</ol>
+      <div class="sum"><div><b>${pct(r.p)}</b><span>hits</span></div><div><b>${r.p ? american(r.p) : '–'}</b><span>fair odds</span></div><div><b>${pct(r.indep)}</b><span>if unrelated</span></div></div>${pays}
+      <p class="note">${r.linked ? `${r.linked} legs judged together in the same simulated games (their link counts). ` : ''}Other legs multiply. Take a book's parlay only if it pays more than the fair odds.${P ? ' Payouts are the legs multiplied at prices from when you added them; a book’s own parlay price can differ, same-game ones especially.' : ''}</p>
       <div class="acts"><a href="${esc(gambly())}" target="_blank" rel="noopener">Build in Gambly ↗</a><button data-slipcopy>Copy legs</button><button data-slipclear>Clear</button><button data-slipclose>Close</button></div>`;
   }
   function changed(){ save(); result = null; draw(); compute(); try { window.render && window.render(); } catch (e) {} }
