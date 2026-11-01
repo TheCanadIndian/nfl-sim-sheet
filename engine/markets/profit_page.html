@@ -31,7 +31,7 @@ header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-be
 
 /* games view */
 .games{display:grid;grid-template-columns:228px minmax(0,1fr);gap:20px;align-items:start}
-.rail{display:grid;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px)}
+.rail{display:grid;gap:2px;align-content:start;position:sticky;top:calc(var(--tbh,64px) + 8px);max-height:calc(100vh - var(--tbh,64px) - 16px);overflow-y:auto;scrollbar-width:thin;padding-bottom:64px}
 .game-btn{display:grid;gap:4px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:9px 12px;cursor:pointer}
 .game-btn:hover{background:var(--sunk)}
 .game-btn[aria-current="true"]{background:var(--surface);border-color:var(--faint)}
