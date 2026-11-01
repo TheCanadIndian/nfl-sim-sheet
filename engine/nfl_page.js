@@ -302,6 +302,20 @@ function lruChip(c, u0){
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
+// Game picker above the ladders (owner 2026-11-01: 'scroll between game selections without having to scroll down on the
+// whole slate'): pinned under the top bar, one tap shows that game with every player unfolded; the tap keeps the picker where it was
+let LADG = '';
+function ladRail(cards, games){
+  const n = {}; cards.forEach(c => { n[c.g.id] = (n[c.g.id] || 0) + 1; });
+  const G = games.filter(g => n[g.id]);
+  if (G.length < 2) return '';
+  return `<div class="lgr" role="group" aria-label="Pick a game">${[['', 'All', cards.length], ...G.map(g => [String(g.id), `${g.away} @ ${g.home}`, n[g.id]])].map(([id, t, k]) => `<button type="button" data-lgm="${esc(id)}" aria-pressed="${LADG === id}">${esc(t)} <i>${k}</i></button>`).join('')}</div>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-lgm]'); if (!b) return;
+  const r0 = b.closest('.lgr'), left = r0.scrollLeft, y = r0.getBoundingClientRect().top;
+  LADG = b.dataset.lgm; render();
+  const r = document.querySelector('.lgr'); if (!r) return;
+  r.scrollLeft = left; window.scrollBy(0, r.parentElement.getBoundingClientRect().top - y); });
 function ladderCard(){
   if (!D.dvp) return '';
   const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
@@ -326,13 +340,15 @@ function ladderCard(){
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}</span>
       <span class="ladc soft" title="${esc(c.p.o)} gives up the ${ord(c.r.rank)} most to ${c.k === 'WR' ? 'wide receivers' : c.k + 's'} this season (defense vs position)">soft: ${ord(c.r.rank)} most to ${c.k}s</span>${c.extra.map(x => `<span class="ladc">${esc(x)}</span>`).join('')}</div>
     <div class="ladr">${c.rungs.slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
-  const on = cards.filter(c => c.rungs.length), off = cards.filter(c => !c.rungs.length);
+  const on = cards.filter(c => c.rungs.length);
+  if (!on.some(c => String(c.g.id) === LADG)) LADG = '';
+  const vis = LADG ? on.filter(c => String(c.g.id) === LADG) : on, lim = LADG ? 999 : 8, off = cards.filter(c => !c.rungs.length && (!LADG || String(c.g.id) === LADG));
   const wait = off.length ? `<details class="ladw"><summary>${on.length ? `${off.length} more` : `${off.length} players`} · Kalshi ladders not posted yet</summary><div class="ladr">${off.map(c =>
       `<span class="lru" title="${esc(c.p.o)}: ${ord(c.r.rank)} most to ${c.k}s${c.extra.length ? ' · ' + c.extra.join(' · ') : ''}"><b>${esc(c.p.n)}</b> <i>${esc(c.p.pos)} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
   return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs below the card’s range show our chance, with no edge claimed. A green % is our chance vs that best price, shown at 5% or more, and players are ordered by it. Rungs without one stay on the list: the record so far is the soft matchup, not our number (2026 through week 8: +8% on 2,885 rungs, up in both halves of the season, and +6% on rungs where we showed under 5%). The market seems to price the average game against a bad defense but not the ceiling. That is one season, and several rungs of one ladder win or lose together, so these are tracked on the Profit page, not a recommendation.</p></details>
     ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>` : ''}
-    ${NLADV === 'game' ? ladByGame(on, row) : `<div class="ladg">${on.slice(0, 8).map(row).join('')}</div>${on.length > 8 ? `<details class="ladw"><summary>${on.length - 8} more with ladders</summary><div class="ladg">${on.slice(8).map(row).join('')}</div></details>` : ''}`}${wait}</section>`;
+    <div class="ladbody">${ladRail(on, D.games)}${NLADV === 'game' ? ladByGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more with ladders</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}${wait}</div></section>`;
 }
 // Ladder candidates by game (owner 2026-10-25: "why are my ladder candidates not separated by game"): games in kickoff
 // order, each game's players best edge first, five shown and the rest folded; remembered on this device (nfl-ladv).
@@ -341,9 +357,10 @@ try { NLADV = localStorage.getItem('nfl-ladv') || 'game'; if (NLADV === 'rank') 
 function ladByGame(cards, row){
   const by = new Map();
   for (const c of cards) (by.get(c.g.id) || by.set(c.g.id, []).get(c.g.id)).push(c);
+  const cap = LADG ? 999 : 5;
   return D.games.filter(g => by.has(g.id)).map(g => { const L = by.get(g.id);
     return `<div class="ladgm"><div class="ladgh"><b>${esc(g.away)} @ ${esc(g.home)}</b> <span class="small muted">${esc(g.kickoff || '')} · ${L.length} player${L.length === 1 ? '' : 's'}${L[0].best >= .05 ? ` · best +${Math.round(L[0].best * 100)}%` : ''}</span></div>
-      <div class="ladg">${L.slice(0, 5).map(row).join('')}</div>${L.length > 5 ? `<details class="ladw"><summary>${L.length - 5} more in this game</summary><div class="ladg">${L.slice(5).map(row).join('')}</div></details>` : ''}</div>`; }).join('');
+      <div class="ladg">${L.slice(0, cap).map(row).join('')}</div>${L.length > cap ? `<details class="ladw"><summary>${L.length - cap} more in this game</summary><div class="ladg">${L.slice(cap).map(row).join('')}</div></details>` : ''}</div>`; }).join('');
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-nladv]'); if (!b) return;
   NLADV = b.dataset.nladv; try { localStorage.setItem('nfl-ladv', NLADV); } catch (x) {} render(); });
