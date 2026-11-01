@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-01",
 "lock": "2026-11-01T18:00:00+00:00",
-"frozen_at": "2026-11-01T12:30:49.127256+00:00",
+"frozen_at": "2026-11-01T12:46:43.708523+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,6 +15,27 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert 80+ rec yds",
+"p": 0.2125,
+"price": 425,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
 "gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
 "kind": "pass_yds",
@@ -22,28 +43,8 @@
 "line": 324.5,
 "name": "dak prescott",
 "lab": "Dak Prescott 325+ pass yds",
-"p": 0.2991,
+"p": 0.29,
 "price": 313,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-],
-"sport": "nfl"
-},
-{
-"gid": "2026_08_BAL_BUF",
-"start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "khalil shakir",
-"lab": "Khalil Shakir 80+ rec yds",
-"p": 0.2,
-"price": 490,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -73,8 +74,8 @@
 "sport": "nba"
 }
 ],
-"p": 0.01448,
-"d": 105.022,
+"p": 0.01491,
+"d": 93.452,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 },
@@ -83,35 +84,36 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_08_ARI_DAL",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"gid": "2026_08_PHI_WAS",
+"start": "2026-11-01T20:20:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 324.5,
-"name": "dak prescott",
-"lab": "Dak Prescott 325+ pass yds",
-"p": 0.2991,
-"price": 313,
+"line": 79.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert 80+ rec yds",
+"p": 0.2125,
+"price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
+"rotation",
 "script",
 "price"
 ],
 "sport": "nfl"
 },
 {
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 299.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins 300+ pass yds",
-"p": 0.2075,
-"price": 456,
+"line": 79.5,
+"name": "hunter henry",
+"lab": "Hunter Henry 80+ rec yds",
+"p": 0.2163,
+"price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -141,9 +143,9 @@
 "sport": "nba"
 }
 ],
-"p": 0.01502,
-"d": 98.97,
-"first": "2026-11-01T18:00:00+00:00",
+"p": 0.01112,
+"d": 118.794,
+"first": "2026-11-01T21:25:00+00:00",
 "res": null
 },
 {
@@ -151,15 +153,15 @@
 "tier": "4 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_08_BAL_BUF",
+"gid": "2026_08_ARI_DAL",
 "start": "2026-11-01T13:00:00",
-"kind": "rec_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 79.5,
-"name": "khalil shakir",
-"lab": "Khalil Shakir 80+ rec yds",
-"p": 0.2,
-"price": 490,
+"line": 324.5,
+"name": "dak prescott",
+"lab": "Dak Prescott 325+ pass yds",
+"p": 0.29,
+"price": 313,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -171,20 +173,40 @@
 "sport": "nfl"
 },
 {
-"gid": "2026_08_LV_NYJ",
-"start": "2026-11-01T13:00:00",
-"kind": "pass_yds",
+"gid": "2026_08_NE_MIA",
+"start": "2026-11-01T16:25:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 299.5,
-"name": "kirk cousins",
-"lab": "Kirk Cousins 300+ pass yds",
-"p": 0.2075,
-"price": 456,
+"line": 79.5,
+"name": "hunter henry",
+"lab": "Hunter Henry 80+ rec yds",
+"p": 0.2163,
+"price": 425,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_08_ATL_TB",
+"start": "2026-11-01T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "chris godwin",
+"lab": "Chris Godwin Jr. 70+ rec yds",
+"p": 0.245,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
 "script",
 "price"
 ],
@@ -207,28 +229,10 @@
 "game"
 ],
 "sport": "nba"
-},
-{
-"gid": "401909906",
-"start": "2026-11-02T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "rj barrett",
-"lab": "RJ Barrett 6+ reb",
-"p": 0.4199,
-"price": 129,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"sport": "nba"
 }
 ],
-"p": 0.00652,
-"d": 194.564,
+"p": 0.00575,
+"d": 253.271,
 "first": "2026-11-01T18:00:00+00:00",
 "res": null
 }
