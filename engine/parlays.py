@@ -594,7 +594,12 @@ def hub_data():
     try:                                                            # the plus-money slate's learning model (slate.py)
         m = json.load(open(os.path.join(OUT, "slate", "meta", "model.json")))
         SLM = dict(coef=m.get("coef"), se=m.get("se"), live=m.get("live"), record=m.get("record"), n_seed=m.get("n_seed"), n_live=m.get("n_live"), updated=m.get("updated"))
-    except (OSError, ValueError):
+        # today's check, so a day with no bets reads as a result, not a stale page (owner 2026-11-01: 'not updating')
+        c = list(json.load(open(os.path.join(OUT, "slate", "cands", f"{today}.json")))["cands"].values())
+        last = max(x["seen"] for x in c)
+        c = [x for x in c if x["seen"] == last]
+        SLM["check"] = dict(date=today, n=len(c), at=last, best=round(max(x["q"] * dec(x["price"]) - 1 for x in c), 4))
+    except (OSError, ValueError, KeyError):
         pass
     return dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), stake=CARD_STAKE, sports=sports, learn=L, slate=SLM)
 
@@ -758,7 +763,10 @@ function slateTab(){
     <div class="tw"><table class="slm"><tbody>${rows.map(r => `<tr><td>${FL_[r.k]}</td><td class="${r.v > 0 ? 'good' : r.v < 0 ? 'bad' : ''}">${r.v > 0 ? '+' : ''}${r.v.toFixed(2)}${Math.abs(r.z) >= 2 ? ' ●' : ''}</td></tr>`).join('')}</tbody></table></div>
     <p class="note">● = clear in the data so far (2+ standard errors).</p></details>`;
   const how = `<details class="how"><summary>How it works</summary><p class="note">Every over at Hard Rock, Novig and Kalshi priced +250 to +1000 (main and alternate lines, NBA, NHL and NFL) that the sharp books price. A learning model estimates each one’s real chance: the sharp market’s fair price, adjusted for our projection’s gap to it, the price against the fair, NHL goal droughts (players who just scored have been overpriced, players 3+ games without a goal underpriced), Value / LC tags, sharp line moves, alternate lines and price band. It learns from every graded candidate every night (started from 2,271 graded +250 legs, Oct 12-26). The slate takes legs with a 5-60% edge: the 4 best as straights ($10, one per game) and the best 2-leg parlays from different games ($5), 10 bets at most, a leg in at most 2. Each bet locks 60 minutes before its first game. Walk-forward test on Oct 12-26 (fit on one half of the days, slate built on the other, both ways): +$167 and +$154 — only 6 days each way, so it stays Experimental until its own record holds up. A +250 straight wins about 1 time in 4 and a 2-leg parlay about 1 in 15: expect long dry spells; judge it on profit over weeks.</p></details>`;
-  return sec('Plus-money slate <span class="lst exp">Experimental</span>', `record ${rec}`,
+  const ck = M.check, none = ck && (!sl || sl.date !== ck.date);
+  const clock = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+  const banner = none ? `<p class="note"><b>No bets today so far.</b> Checked ${ck.n} prices at ${clock(ck.at)}: the best edge is ${ck.best >= 0 ? '+' : '−'}${Math.abs(ck.best * 100).toFixed(1)}% and the slate needs 5%. It rechecks about every 15 minutes.${qs.length ? ' Yesterday’s bets are below.' : ''}</p>` : '';
+  return sec('Plus-money slate <span class="lst exp">Experimental</span>', `record ${rec}`, banner +
       (qs.length ? `<div class="eyebrow" style="margin-top:4px">Straights · $10</div>${st.length ? grid(st) : '<p class="note">None yet.</p>'}<div class="eyebrow" style="margin-top:12px">Parlays · $5</div>${pa.length ? grid(pa) : '<p class="note">None yet.</p>'}`
         : '<p class="note">No legs qualify yet today: each needs a 5%+ edge on a +250-or-longer price at your books, and the sharp books post most player props a few hours before the games.</p>')
       + model + how);
