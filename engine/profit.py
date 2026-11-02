@@ -528,6 +528,8 @@ def tag_label(e):
         return "Early opener value (experimental)"
     if e.get("src") == "dry":
         return "Goal drought 3+ games (experimental)"
+    if e.get("src") == "due":
+        return "Goal luck: due (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") in ("f4", "fx"):
@@ -637,6 +639,23 @@ def tags():
                         continue
                     e = log.setdefault(f"dry|{sport}|{gid}|{nm}", dict(sport=sport, src="dry", gid=gid, name=nm, bet="goal", book=bk, o=o,
                                                                      first=now.isoformat(), p=fair, m=fair, start=st, dry=n))
+                    e.setdefault("start", st)
+        # NHL goal luck (owner 2026-11-02, research/nhl_goal_luck.py): every anytime-goal over at the owner's books for a 'due'
+        # player (0.25+ xG a game, 0.10+ a game under it), first price, best of Hard Rock / Novig / Kalshi; fair = sharp, else four books
+        if sport == "nhl":
+            for gid, x in DRY.items():
+                st = starts.get(str(gid)) or x.get("start")
+                if st and PL.when(st) <= now:
+                    continue
+                for nm in x.get("due") or []:
+                    e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(nm) or {}).get("goal") or {}
+                    bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                    fair = (e_.get("pin") or {}).get("o") or (e_.get("f4") or {}).get("o")
+                    if not bo or fair is None:
+                        continue
+                    _, bk, o = max(bo)
+                    e = log.setdefault(f"due|{sport}|{gid}|{nm}", dict(sport=sport, src="due", gid=gid, name=nm, bet="goal", book=bk, o=o,
+                                                                     first=now.isoformat(), p=fair, m=fair, start=st, dry=(x.get("dry") or {}).get(nm)))
                     e.setdefault("start", st)
         # NHL opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py): every anytime-goal
         # over at the owner's books for a PP1 player outside his team's top 3 whose opponent is missing one (hockey/project.py

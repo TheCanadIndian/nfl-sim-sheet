@@ -227,6 +227,14 @@ def main():
         if len(gl) >= 5:
             nz = np.nonzero(gl > 0)[0]
             dry[int(pid)] = int(len(gl) - 1 - nz[-1]) if len(nz) else int(len(gl))
+    # 'due' goal luck (owner 2026-11-02, research/nhl_goal_luck.py): 0.25+ xG a game this season and 0.10+ goals a game under it,
+    # 3+ games: above our chance in all 6 season halves, above the market. Chip + Profit tracking only.
+    due = {}
+    cur = played[played.season == todo.season.iloc[0]]
+    for pid, h in cur.groupby("player_id"):
+        n, g_, x_ = len(h), float(h.goals.sum()), float((h.ixg_np + h.ixg_pp).sum())
+        if n >= 3 and x_ / n >= .25 and (g_ - x_) / n <= -.10:
+            due[int(pid)] = dict(g=int(g_), x=round(x_, 1), n=n)
     # Dress 12 F + 6 D by expected ice time, then apply overrides.
     outs = {(o.team, str(o.player).strip().lower()) for o in ov[ov.action == "out"].itertuples()}
     ins = {(o.team, str(o.player).strip().lower()) for o in ov[ov.action == "in"].itertuples()}
@@ -453,7 +461,7 @@ def main():
                               ur=None if pd.isna(r.u_rank) else int(r.u_rank), um=round(float(r.u_mult), 3),
                               sog=round(float(r.sog), 2) if "sog" in x and pd.notna(r.sog) else None,
                               so=[round(float(getattr(r, f"sog_o{k}")), 3) for k in ("05", "15", "25", "35", "45")] if "sog" in x and pd.notna(r.sog) else None,
-                              sg=lifts.get((g.game_id, int(r.player_id))), dry=dry.get(int(r.player_id)))
+                              sg=lifts.get((g.game_id, int(r.player_id))), dry=dry.get(int(r.player_id)), due=due.get(int(r.player_id)))
                          for r in x.itertuples()])
         lam_t = {t: float(-np.log(1 - pg[(pg.game_id == g.game_id) & (pg.team == t)].p_goal.clip(upper=.999)).sum())
                  for t in (g.away, g.home)}
@@ -505,7 +513,8 @@ def main():
         dp = os.path.join(PL.SITE, "markets", "dry_nhl.json")
         json.dump(dict(generated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
                        games={str(x["id"]): {"start": x.get("start_utc"), "dry": {PL.jsnorm(q["name"]): q["dry"] for s_ in (x["away"], x["home"])
-                                                                                   for q in s_["players"] if q.get("dry") is not None}}
+                                                                                   for q in s_["players"] if q.get("dry") is not None},
+                                             "due": [PL.jsnorm(q["name"]) for s_ in (x["away"], x["home"]) for q in s_["players"] if q.get("due")]}
                               for x in payload["games"]}), open(dp, "w"), separators=(",", ":"))
     except Exception as e:                                  # noqa: BLE001
         print(f"dry_nhl.json: skipped ({type(e).__name__}: {e})")
@@ -842,6 +851,7 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .lchg.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 55%,transparent)}.lchg.dn{color:#e5a03a;border-color:color-mix(in srgb,#e5a03a 55%,transparent)}
 .lchg.in{color:#7fb2ff;border-color:color-mix(in srgb,#7fb2ff 55%,transparent)}
 .lchg.dry{color:var(--muted);border-color:var(--faint)}
+.lchg.due{color:var(--good);border-color:var(--good)}
 .lchgl{margin:2px 0 4px}.lchgl b{font-weight:600}
 .pdline b{font-weight:600}
 .pdline .up{color:var(--good)} .pdline .dn{color:var(--bad)}
