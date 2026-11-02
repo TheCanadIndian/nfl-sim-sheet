@@ -79,7 +79,8 @@ def main(cmd):
         if not os.path.exists(e):
             newer_here.append(r); continue
         t = subprocess.run([GIT, "-C", REPO, "log", "-1", "--format=%ct", "--", os.path.join("engine", r)], capture_output=True, text=True).stdout.strip()
-        (newer_cloud if t and int(t) > os.path.getmtime(os.path.join(HERE, r)) else newer_here).append(r)
+        # 5 min margin: a commit reaches GitHub after its timestamp, so a pull right then copies older data with a later mtime
+        (newer_cloud if t and int(t) + 300 > os.path.getmtime(os.path.join(HERE, r)) else newer_here).append(r)
     if newer_cloud:
         copy(ENGINE, HERE, newer_cloud)
         print(f"kept {len(newer_cloud)} newer cloud state files (copied them to the PC)")
