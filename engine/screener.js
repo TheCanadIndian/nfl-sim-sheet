@@ -61,6 +61,7 @@
   // ready-made filters from what we've tested, on every device (owner 2026-11-02); your own stay under Saved, in this browser
   const QP = [
     {n: 'Best edges', f: {edge: 5, price: 'plus'}, t: 'Edge 5%+ at +150 to +400 at your books. Close to the one slice that held up in both halves: 5-40% edges priced about +120 to +570 made +23% on 164 legs, Oct 12-26. The price band was picked after the fact.'},
+    {n: 'Top gaps, main lines', f: {edge: 5, alts: false, sort: 'gap'}, t: 'Main lines with a 5%+ edge, biggest gap first. Stop after the top 10 a day: those made +22% on 198 bets (37% and 6% by half), hitting 38% vs 33% priced, Oct 12-Nov 1, while the whole list made -5%. Mostly NHL, and three wins are 61% of the profit. Not proven.'},
     {n: 'NFL ladder candidates', f: {sport: 'nfl', lad: true, ladc: 'Ladder candidate'}, t: 'Soft-matchup players’ higher rungs. +8% on 2,885 rungs through week 8, up in both halves. Rungs of one ladder win or lose together.'},
     {n: 'NFL soft + moved', f: {sport: 'nfl', softm: true, consmv: true, alts: false, edge: -100}, t: 'Main-line overs on a soft matchup where the sharp consensus moved. +3% on 107 vs -15% without the soft matchup, weeks 7-8. A lead, not proven.'},
     {n: 'NBA ladders, line up', f: {sport: 'nba', lad: true, consmv: true, consk: 'up'}, t: 'NBA ladder rungs where the consensus moved the main line up. Ladder edge rungs hit 5 of 48, about their price, +12%, Oct 23-Nov 1. Small sample. Avoid CONS ▼ odds rungs: 4 of 141.'},
