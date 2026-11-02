@@ -1822,6 +1822,8 @@ def pin_moves(sport, now):
     except (OSError, ValueError):
         FL = dict(sport=sport, fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), tags={})
     FL["moves"] = moves
+    if sport == "nba":                # no other writer stamps this file, and the page drops flags 12 h old (it had read Oct 21 since then)
+        FL["fetched"] = now.tz_convert("America/New_York").isoformat(timespec="minutes")
     json.dump(FL, open(ff, "w"), separators=(",", ":"))
     print(f"line moves {sport}: {len(S)} props tracked, {len(moves)} live signals "
           f"({', '.join(f'{t} {sum(1 for m in moves if f"{m['src']}:{m['sig']}" == t)}' for t in sorted({f'{m['src']}:{m['sig']}' for m in moves}))})")

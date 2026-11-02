@@ -322,6 +322,9 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-lgm]
   LADG = b.dataset.lgm; render();
   const r = document.querySelector('.lgr'); if (!r) return;
   r.scrollLeft = left; window.scrollBy(0, r.parentElement.getBoundingClientRect().top - y); });
+let LADM = '';
+document.addEventListener('click', e => { const b = e.target.closest('[data-lmf]'); if (!b) return; LADM = b.dataset.lmf; render(); });
+const ladMv = (c, u) => window.MKT && MKT.consKind ? MKT.consKind(c.g.id, c.p.n, u.k) : null;
 function ladderCard(){
   const now = Date.now(), cards = []; let anyLadder = 0;
   for (const g of D.games){
@@ -344,16 +347,18 @@ function ladderCard(){
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${c.p.trend >= 3 ? '<span class="ladc">▲ minutes</span>' : ''}</div>
-    <div class="ladr">${c.rungs.slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
-  if (!cards.some(c => String(c.g.id) === LADG)) LADG = '';
-  const vis = LADG ? cards.filter(c => String(c.g.id) === LADG) : cards, lim = LADG ? 999 : 8;
+    <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
+  if (LADM && !cards.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
+  const cm = LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards;
+  if (!cm.some(c => String(c.g.id) === LADG)) LADG = '';
+  const vis = LADG ? cm.filter(c => String(c.g.id) === LADG) : cm, lim = LADG ? 999 : 8;
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
     : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.' : '';
   return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     ${empty ? `<p class="note" style="margin:0 0 6px">${empty}</p>` : ''}
     <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the best price by 5% or more, for players projected for 20+ minutes. Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price and its edge is the one shown (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs outside the flagged set show our chance, with no edge claimed. Hard Rock’s alt lines refresh in the morning and hourly in the last two hours before tip. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page.</p></details>
-    ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div>` : ''}
-    <div class="ladbody">${ladRail(cards, [...D.games].sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc)))}${LADV === 'game' ? byGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}</div></section>`;
+    ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div>${window.MKT && MKT.consBar ? MKT.consBar(cards, LADM) : ''}` : ''}
+    <div class="ladbody">${ladRail(cm, [...D.games].sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc)))}${LADV === 'game' ? byGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}</div></section>`;
 }
 // Ladder edges grouped by game (owner 2026-10-23: "let me see ladder edges by game"): games in start order, each game's
 // players best edge first, five shown and the rest folded; the view is remembered on this device (nba-ladv).

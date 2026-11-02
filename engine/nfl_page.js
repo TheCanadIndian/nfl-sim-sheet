@@ -318,6 +318,9 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-lgm]
   LADG = b.dataset.lgm; render();
   const r = document.querySelector('.lgr'); if (!r) return;
   r.scrollLeft = left; window.scrollBy(0, r.parentElement.getBoundingClientRect().top - y); });
+let LADM = '';
+document.addEventListener('click', e => { const b = e.target.closest('[data-lmf]'); if (!b) return; LADM = b.dataset.lmf; render(); });
+const ladMv = (c, u) => window.MKT && MKT.consKind ? MKT.consKind(c.g.id, c.p.n, u.k) : null;
 function ladderCard(){
   if (!D.dvp) return '';
   const posKey = p => p.pos === 'QB' ? 'QB' : p.pos === 'RB' ? 'RB' : p.pos === 'TE' ? 'TE' : 'WR';
@@ -342,15 +345,17 @@ function ladderCard(){
   cards.sort((a, b) => b.best - a.best || a.r.rank - b.r.rank);
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}</span>
       <span class="ladc soft" title="${esc(c.p.o)} gives up the ${ord(c.r.rank)} most to ${c.k === 'WR' ? 'wide receivers' : c.k + 's'} this season (defense vs position)">soft: ${ord(c.r.rank)} most to ${c.k}s</span>${c.extra.map(x => `<span class="ladc">${esc(x)}</span>`).join('')}</div>
-    <div class="ladr">${c.rungs.slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
-  const on = cards.filter(c => c.rungs.length);
+    <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
+  const on0 = cards.filter(c => c.rungs.length);
+  if (LADM && !on0.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
+  const on = LADM ? on0.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : on0;
   if (!on.some(c => String(c.g.id) === LADG)) LADG = '';
   const vis = LADG ? on.filter(c => String(c.g.id) === LADG) : on, lim = LADG ? 999 : 8, off = cards.filter(c => !c.rungs.length && (!LADG || String(c.g.id) === LADG));
   const wait = off.length ? `<details class="ladw"><summary>${on.length ? `${off.length} more` : `${off.length} players`} · Kalshi ladders not posted yet</summary><div class="ladr">${off.map(c =>
       `<span class="lru" title="${esc(c.p.o)}: ${ord(c.r.rank)} most to ${c.k}s${c.extra.length ? ' · ' + c.extra.join(' · ') : ''}"><b>${esc(c.p.n)}</b> <i>${esc(c.p.pos)} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
   return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs below the card’s range show our chance, with no edge claimed. A green % is our chance vs that best price, shown at 5% or more, and players are ordered by it. Rungs without one stay on the list: the record so far is the soft matchup, not our number (2026 through week 8: +8% on 2,885 rungs, up in both halves of the season, and +6% on rungs where we showed under 5%). The market seems to price the average game against a bad defense but not the ceiling. That is one season, and several rungs of one ladder win or lose together, so these are tracked on the Profit page, not a recommendation.</p></details>
-    ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>` : ''}
+    ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>${window.MKT && MKT.consBar ? MKT.consBar(on0, LADM) : ''}` : ''}
     <div class="ladbody">${ladRail(on, D.games)}${NLADV === 'game' ? ladByGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more with ladders</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}${wait}</div></section>`;
 }
 // Ladder candidates by game (owner 2026-10-25: "why are my ladder candidates not separated by game"): games in kickoff
