@@ -1,8 +1,8 @@
 {
 "sport": "nba",
 "date": "2026-11-02",
-"lock": "2026-11-03T00:00:00+00:00",
-"frozen_at": "2026-11-02T21:25:46.069Z",
+"lock": "2026-11-03T00:30:00+00:00",
+"frozen_at": "2026-11-02T21:33:04.936Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 5.5,
 "name": "kelly oubre",
 "lab": "Kelly Oubre Jr. 6+ reb",
-"p": 0.4158,
+"p": 0.3783,
 "price": 350,
 "book": "Hard Rock",
 "f": [
@@ -35,15 +35,16 @@
 {
 "gid": "401909917",
 "start": "2026-11-03T01:30Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 8.5,
-"name": "stephon castle",
-"lab": "Stephon Castle 9+ ast",
-"p": 0.2284,
-"price": 400,
-"book": "Hard Rock",
+"line": 2.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 3+ threes",
+"p": 0.3411,
+"price": 213,
+"book": "Novig",
 "f": [
+"usage",
 "matchup",
 "rotation",
 "game",
@@ -51,14 +52,62 @@
 ]
 }
 ],
-"p": 0.09497,
-"d": 22.5,
+"p": 0.12906,
+"d": 14.085,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "401909917",
+"start": "2026-11-03T01:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 3+ threes",
+"p": 0.3411,
+"price": 213,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909919",
+"start": "2026-11-03T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 5.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 6+ threes",
+"p": 0.2642,
+"price": 335,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.09011,
+"d": 13.615,
+"first": "2026-11-03T01:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909909",
@@ -68,7 +117,7 @@
 "line": 5.5,
 "name": "kelly oubre",
 "lab": "Kelly Oubre Jr. 6+ reb",
-"p": 0.4158,
+"p": 0.3783,
 "price": 350,
 "book": "Hard Rock",
 "f": [
@@ -79,15 +128,33 @@
 ]
 },
 {
+"gid": "401909917",
+"start": "2026-11-03T01:30Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 9+ ast",
+"p": 0.2296,
+"price": 400,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
 "gid": "401909919",
 "start": "2026-11-03T03:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski 8+ reb",
-"p": 0.2061,
-"price": 413,
+"line": 5.5,
+"name": "stephen curry",
+"lab": "Stephen Curry 6+ threes",
+"p": 0.2642,
+"price": 335,
 "book": "Novig",
 "f": [
 "usage",
@@ -97,8 +164,8 @@
 ]
 }
 ],
-"p": 0.08567,
-"d": 23.085,
+"p": 0.02294,
+"d": 97.875,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
 },
@@ -114,7 +181,7 @@
 "line": 6.5,
 "name": "caleb wilson",
 "lab": "Caleb Wilson 7+ reb",
-"p": 0.4399,
+"p": 0.4397,
 "price": 135,
 "book": "Hard Rock",
 "f": [
@@ -132,7 +199,7 @@
 "line": 8.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 9+ ast",
-"p": 0.2284,
+"p": 0.2296,
 "price": 400,
 "book": "Hard Rock",
 "f": [
@@ -150,8 +217,8 @@
 "line": 7.5,
 "name": "brandin podziemski",
 "lab": "Brandin Podziemski 8+ reb",
-"p": 0.2061,
-"price": 413,
+"p": 0.2028,
+"price": 426,
 "book": "Novig",
 "f": [
 "usage",
@@ -161,73 +228,8 @@
 ]
 }
 ],
-"p": 0.0207,
-"d": 60.277,
-"first": "2026-11-03T00:30:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909912",
-"start": "2026-11-03T00:30Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "caleb wilson",
-"lab": "Caleb Wilson 7+ reb",
-"p": 0.4399,
-"price": 135,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909917",
-"start": "2026-11-03T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 9+ ast",
-"p": 0.2119,
-"price": 375,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909918",
-"start": "2026-11-03T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "toumani camara",
-"lab": "Toumani Camara 3+ ast",
-"p": 0.2937,
-"price": 250,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.02737,
-"d": 39.069,
+"p": 0.02047,
+"d": 61.805,
 "first": "2026-11-03T00:30:00+00:00",
 "pick": "longshot",
 "res": null
@@ -244,7 +246,7 @@
 "line": 9.5,
 "name": "coby white",
 "lab": "Coby White 10+ points",
-"p": 0.7683,
+"p": 0.7675,
 "price": -228,
 "book": "Kalshi"
 },
@@ -256,12 +258,12 @@
 "line": 4.5,
 "name": "kelly oubre",
 "lab": "Kelly Oubre over 4.5 rebounds",
-"p": 0.5095,
+"p": 0.5047,
 "price": 185,
 "book": "Hard Rock"
 }
 ],
-"p": 0.39148,
+"p": 0.38736,
 "d": 4.1,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -278,7 +280,7 @@
 "line": 9.5,
 "name": "coby white",
 "lab": "Coby White 10+ points",
-"p": 0.7683,
+"p": 0.7675,
 "price": -228,
 "book": "Kalshi"
 },
@@ -290,15 +292,14 @@
 "line": 5.5,
 "name": "kelly oubre",
 "lab": "Kelly Oubre Jr. 6+ rebounds",
-"p": 0.4602,
-"price": 166,
+"p": 0.4202,
+"price": 152,
 "book": "Kalshi"
 }
 ],
-"p": 0.35359,
-"d": 3.827,
+"p": 0.32254,
+"d": 3.625,
 "first": "2026-11-03T00:30:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -306,79 +307,34 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "401909909",
+"gid": "401909908",
 "start": "2026-11-03T00:30Z",
-"kind": "reb",
+"kind": "pts",
 "side": "o",
-"line": 4.5,
-"name": "kelly oubre",
-"lab": "Kelly Oubre over 4.5 rebounds",
-"p": 0.5095,
-"price": 185,
-"book": "Hard Rock"
+"line": 9.5,
+"name": "coby white",
+"lab": "Coby White 10+ points",
+"p": 0.7675,
+"price": -228,
+"book": "Kalshi"
 },
 {
-"gid": "401909920",
-"start": "2026-11-03T03:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "TOR moneyline",
-"p": 0.6606,
-"price": -156,
-"book": "Novig"
+"gid": "401909911",
+"start": "2026-11-03T00:30Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "wendell carter",
+"lab": "Wendell Carter Jr. 15+ points",
+"p": 0.3594,
+"price": 208,
+"book": "Kalshi"
 }
 ],
-"p": 0.33656,
-"d": 4.677,
+"p": 0.2759,
+"d": 4.431,
 "first": "2026-11-03T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909907",
-"start": "2026-11-03T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeousalexander over 5.5 assists",
-"p": 0.5077,
-"price": 108,
-"book": "Novig"
-},
-{
-"gid": "401909908",
-"start": "2026-11-03T00:30Z",
-"kind": "pts",
-"side": "o",
-"line": 9.5,
-"name": "coby white",
-"lab": "Coby White 10+ points",
-"p": 0.7683,
-"price": -228,
-"book": "Kalshi"
-},
-{
-"gid": "401909909",
-"start": "2026-11-03T00:30Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "kelly oubre",
-"lab": "Kelly Oubre over 4.5 rebounds",
-"p": 0.5095,
-"price": 185,
-"book": "Hard Rock"
-}
-],
-"p": 0.19875,
-"d": 8.528,
-"first": "2026-11-03T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -393,7 +349,7 @@
 "line": 9.5,
 "name": "coby white",
 "lab": "Coby White 10+ points",
-"p": 0.7683,
+"p": 0.7675,
 "price": -228,
 "book": "Kalshi"
 },
@@ -405,7 +361,7 @@
 "line": 4.5,
 "name": "kelly oubre",
 "lab": "Kelly Oubre over 4.5 rebounds",
-"p": 0.5095,
+"p": 0.5047,
 "price": 185,
 "book": "Hard Rock"
 },
@@ -417,12 +373,12 @@
 "line": 8.5,
 "name": "wendell carter",
 "lab": "Wendell Carter over 8.5 rebounds",
-"p": 0.5048,
+"p": 0.5049,
 "price": 108,
 "book": "Novig"
 }
 ],
-"p": 0.19764,
+"p": 0.19559,
 "d": 8.528,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -432,17 +388,39 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "401909907",
-"start": "2026-11-03T00:00Z",
-"kind": "ast",
+"gid": "401909909",
+"start": "2026-11-03T00:30Z",
+"kind": "reb",
 "side": "o",
-"line": 5.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeousalexander over 5.5 assists",
-"p": 0.5077,
-"price": 108,
-"book": "Novig"
+"line": 4.5,
+"name": "kelly oubre",
+"lab": "Kelly Oubre over 4.5 rebounds",
+"p": 0.5047,
+"price": 185,
+"book": "Hard Rock"
 },
+{
+"gid": "401909911",
+"start": "2026-11-03T00:30Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "wendell carter",
+"lab": "Wendell Carter Jr. 15+ points",
+"p": 0.3594,
+"price": 208,
+"book": "Kalshi"
+}
+],
+"p": 0.1814,
+"d": 8.778,
+"first": "2026-11-03T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
 {
 "gid": "401909908",
 "start": "2026-11-03T00:30Z",
@@ -451,7 +429,7 @@
 "line": 9.5,
 "name": "coby white",
 "lab": "Coby White 10+ points",
-"p": 0.7683,
+"p": 0.7675,
 "price": -228,
 "book": "Kalshi"
 },
@@ -463,14 +441,27 @@
 "line": 5.5,
 "name": "kelly oubre",
 "lab": "Kelly Oubre Jr. 6+ rebounds",
-"p": 0.4602,
-"price": 166,
+"p": 0.4202,
+"price": 152,
 "book": "Kalshi"
+},
+{
+"gid": "401909911",
+"start": "2026-11-03T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 8.5,
+"name": "wendell carter",
+"lab": "Wendell Carter over 8.5 rebounds",
+"p": 0.5049,
+"price": 108,
+"book": "Novig"
 }
 ],
-"p": 0.17952,
-"d": 7.959,
-"first": "2026-11-03T00:00:00+00:00",
+"p": 0.16286,
+"d": 7.541,
+"first": "2026-11-03T00:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -485,7 +476,7 @@
 "line": 8.5,
 "name": "onyeka okongwu",
 "lab": "Onyeka Okongwu over 8.5 rebounds",
-"p": 0.4391,
+"p": 0.4413,
 "price": 190,
 "book": "Hard Rock",
 "f": [
@@ -493,7 +484,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.2734
+"edge": 0.2797
 },
 {
 "gid": "401909915",
@@ -503,7 +494,7 @@
 "line": 2.5,
 "name": "terrence shannon",
 "lab": "Terrence Shannon Jr. over 2.5 assists",
-"p": 0.4084,
+"p": 0.4093,
 "price": 210,
 "book": "Hard Rock",
 "f": [
@@ -511,10 +502,10 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.266
+"edge": 0.2687
 }
 ],
-"p": 0.17933,
+"p": 0.18062,
 "d": 8.99,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -531,7 +522,7 @@
 "line": 1.5,
 "name": "jase richardson",
 "lab": "Jase Richardson over 1.5 threes",
-"p": 0.4193,
+"p": 0.4191,
 "price": 200,
 "book": "Hard Rock",
 "f": [
@@ -539,7 +530,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.2579
+"edge": 0.2572
 },
 {
 "gid": "401909913",
@@ -549,7 +540,7 @@
 "line": 14.5,
 "name": "pj washington",
 "lab": "P.J. Washington over 14.5 points",
-"p": 0.5268,
+"p": 0.525,
 "price": 120,
 "book": "Hard Rock",
 "f": [
@@ -558,10 +549,10 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.159
+"edge": 0.1551
 }
 ],
-"p": 0.22089,
+"p": 0.22003,
 "d": 6.6,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -573,20 +564,20 @@
 {
 "gid": "401909916",
 "start": "2026-11-03T01:30Z",
-"kind": "fg3m",
+"kind": "pts",
 "side": "o",
-"line": 2.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard over 2.5 threes",
-"p": 0.4564,
-"price": 140,
+"line": 14.5,
+"name": "derrick white",
+"lab": "Derrick White over 14.5 points",
+"p": 0.4699,
+"price": 135,
 "book": "Hard Rock",
 "f": [
 "usage",
 "rotation"
 ],
 "sport": "nba",
-"edge": 0.0955
+"edge": 0.1042
 },
 {
 "gid": "401909914",
@@ -596,7 +587,7 @@
 "line": 2.5,
 "name": "trey murphy",
 "lab": "Trey Murphy III over 2.5 threes",
-"p": 0.473,
+"p": 0.4778,
 "price": 125,
 "book": "Hard Rock",
 "f": [
@@ -605,30 +596,30 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.0643
+"edge": 0.0751
 },
 {
-"gid": "401909908",
-"start": "2026-11-03T00:30Z",
+"gid": "401909920",
+"start": "2026-11-03T03:00Z",
 "kind": "fg3m",
 "side": "o",
 "line": 2.5,
-"name": "grayson allen",
-"lab": "Grayson Allen over 2.5 threes",
-"p": 0.4126,
-"price": 155,
+"name": "jakobe walter",
+"lab": "Ja'Kobe Walter over 2.5 threes",
+"p": 0.4348,
+"price": 145,
 "book": "Hard Rock",
 "f": [
-"usage",
-"rotation"
+"rotation",
+"game"
 ],
 "sport": "nba",
-"edge": 0.0522
+"edge": 0.0654
 }
 ],
-"p": 0.08907,
-"d": 13.77,
-"first": "2026-11-03T00:30:00+00:00",
+"p": 0.09762,
+"d": 12.954,
+"first": "2026-11-03T01:00:00+00:00",
 "res": null
 },
 {
@@ -643,7 +634,7 @@
 "line": 2.5,
 "name": "trey murphy",
 "lab": "Trey Murphy III over 2.5 threes",
-"p": 0.4781,
+"p": 0.4827,
 "price": 125,
 "book": "Hard Rock",
 "f": [
@@ -660,8 +651,44 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0643
+"edge": 0.0751
 },
+{
+"gid": "401909916",
+"start": "2026-11-03T01:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 2.5 threes",
+"p": 0.4435,
+"price": 140,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0671
+}
+],
+"p": 0.21408,
+"d": 5.4,
+"first": "2026-11-03T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
 {
 "gid": "401909911",
 "start": "2026-11-03T00:30Z",
@@ -686,44 +713,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0498
-}
-],
-"p": 0.25688,
-"d": 4.393,
-"first": "2026-11-03T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401909913",
-"start": "2026-11-03T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "cooper flagg",
-"lab": "Cooper Flagg over 1.5 threes",
-"p": 0.5203,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up",
-"lc",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.042
+"edge": 0.0507
 },
 {
 "gid": "401909915",
@@ -751,37 +741,38 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.1435
+"edge": 0.145
 },
 {
-"gid": "401909916",
-"start": "2026-11-03T01:30Z",
+"gid": "401909913",
+"start": "2026-11-03T01:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 2.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard over 2.5 threes",
-"p": 0.4561,
-"price": 140,
+"line": 1.5,
+"name": "cooper flagg",
+"lab": "Cooper Flagg over 1.5 threes",
+"p": 0.5203,
+"price": 105,
 "book": "Hard Rock",
 "f": [
 "usage",
-"rotation"
+"rotation",
+"game"
 ],
 "v": [
 "usage",
 "rotation",
-"our model above fair",
+"game",
 "consensus up",
-"lc"
+"pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0955
+"edge": 0.0428
 }
 ],
-"p": 0.11695,
-"d": 11.562,
-"first": "2026-11-03T01:00:00+00:00",
+"p": 0.13777,
+"d": 9.406,
+"first": "2026-11-03T00:30:00+00:00",
 "res": null
 },
 {
@@ -796,7 +787,7 @@
 "line": 2.5,
 "name": "trey murphy",
 "lab": "Trey Murphy III over 2.5 threes",
-"p": 0.4781,
+"p": 0.4827,
 "price": 125,
 "book": "Hard Rock",
 "f": [
@@ -813,7 +804,33 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0643
+"edge": 0.0751
+},
+{
+"gid": "401909916",
+"start": "2026-11-03T01:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 2.5 threes",
+"p": 0.4435,
+"price": 140,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0671
 },
 {
 "gid": "401909911",
@@ -839,34 +856,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0498
-},
-{
-"gid": "401909913",
-"start": "2026-11-03T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "cooper flagg",
-"lab": "Cooper Flagg over 1.5 threes",
-"p": 0.5203,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up",
-"lc",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.042
+"edge": 0.0507
 },
 {
 "gid": "401909915",
@@ -894,11 +884,11 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.1435
+"edge": 0.145
 }
 ],
-"p": 0.06587,
-"d": 21.163,
+"p": 0.05668,
+"d": 24.776,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
 },
@@ -906,26 +896,6 @@
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401909913",
-"start": "2026-11-03T01:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "max christie",
-"lab": "Max Christie over 14.5 points",
-"p": 0.2135,
-"fair": 0.2159,
-"price": 550,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.388,
-"v": [
-"Pinnacle line up",
-"consensus line up + odds drop",
-"one rung above the main line (9.5)"
-]
-},
 {
 "gid": "401909909",
 "start": "2026-11-03T00:30Z",
@@ -946,9 +916,29 @@
 "one rung above the main line (8.5)",
 "soft matchup"
 ]
+},
+{
+"gid": "401909913",
+"start": "2026-11-03T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "max christie",
+"lab": "Max Christie over 14.5 points",
+"p": 0.2103,
+"fair": 0.2119,
+"price": 550,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.3672,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (9.5)"
+]
 }
 ],
-"p": 0.07585,
+"p": 0.07444,
 "d": 26.0,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -958,26 +948,6 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "401909913",
-"start": "2026-11-03T01:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "max christie",
-"lab": "Max Christie over 14.5 points",
-"p": 0.2135,
-"fair": 0.2159,
-"price": 550,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.388,
-"v": [
-"Pinnacle line up",
-"consensus line up + odds drop",
-"one rung above the main line (9.5)"
-]
-},
-{
 "gid": "401909909",
 "start": "2026-11-03T00:30Z",
 "kind": "reb",
@@ -999,28 +969,48 @@
 ]
 },
 {
-"gid": "401909911",
-"start": "2026-11-03T00:30Z",
+"gid": "401909913",
+"start": "2026-11-03T01:00Z",
 "kind": "pts",
 "side": "o",
-"line": 8.5,
-"name": "bilal coulibaly",
-"lab": "Bilal Coulibaly over 8.5 points",
-"p": 0.4594,
-"fair": 0.4536,
-"price": 127,
-"book": "Novig",
+"line": 14.5,
+"name": "max christie",
+"lab": "Max Christie over 14.5 points",
+"p": 0.2103,
+"fair": 0.2119,
+"price": 550,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0429,
+"edge": 0.3672,
 "v": [
 "Pinnacle line up",
+"consensus line up",
+"one rung above the main line (9.5)"
+]
+},
+{
+"gid": "401909916",
+"start": "2026-11-03T01:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "mitchell robinson",
+"lab": "Mitchell Robinson over 7.5 rebounds",
+"p": 0.3952,
+"fair": 0.3917,
+"price": 180,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1066,
+"v": [
+"Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (7.5)"
+"one rung above the main line (6.5)"
 ]
 }
 ],
-"p": 0.0344,
-"d": 59.02,
+"p": 0.02916,
+"d": 72.8,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
 },
@@ -1029,23 +1019,23 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401909911",
-"start": "2026-11-03T00:30Z",
-"kind": "pts",
+"gid": "401909916",
+"start": "2026-11-03T01:30Z",
+"kind": "reb",
 "side": "o",
-"line": 8.5,
-"name": "bilal coulibaly",
-"lab": "Bilal Coulibaly over 8.5 points",
-"p": 0.4594,
-"fair": 0.4536,
-"price": 127,
-"book": "Novig",
+"line": 7.5,
+"name": "mitchell robinson",
+"lab": "Mitchell Robinson over 7.5 rebounds",
+"p": 0.3952,
+"fair": 0.3917,
+"price": 180,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0429,
+"edge": 0.1066,
 "v": [
-"Pinnacle line up",
+"Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (7.5)"
+"one rung above the main line (6.5)"
 ]
 },
 {
@@ -1056,12 +1046,12 @@
 "line": 5.5,
 "name": "ayo dosunmu",
 "lab": "Ayo Dosunmu over 5.5 assists",
-"p": 0.2775,
-"fair": 0.2797,
+"p": 0.2836,
+"fair": 0.2856,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0408,
+"edge": 0.0637,
 "v": [
 "Pinnacle line up",
 "consensus line up + odds drop",
@@ -1070,31 +1060,15 @@
 ]
 }
 ],
-"p": 0.12687,
-"d": 8.512,
-"first": "2026-11-03T00:30:00+00:00",
+"p": 0.11187,
+"d": 10.5,
+"first": "2026-11-03T01:00:00+00:00",
 "res": null
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401909913",
-"start": "2026-11-03T01:00:00+00:00",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "max christie",
-"lab": "Max Christie over 14.5 points",
-"p": 0.2112,
-"price": 550,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.3726,
-"fair": 0.2159,
-"main": false
-},
 {
 "gid": "401909911",
 "start": "2026-11-03T00:30:00+00:00",
@@ -1103,16 +1077,32 @@
 "line": 9.5,
 "name": "jase richardson",
 "lab": "Jase Richardson over 9.5 points",
-"p": 0.5072,
+"p": 0.5091,
 "price": 170,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3695,
-"fair": 0.5268,
+"edge": 0.3746,
+"fair": 0.531,
+"main": true
+},
+{
+"gid": "401909913",
+"start": "2026-11-03T01:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "max christie",
+"lab": "Max Christie over 14.5 points",
+"p": 0.2088,
+"price": 550,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.357,
+"fair": 0.2119,
 "main": false
 }
 ],
-"p": 0.10712,
+"p": 0.1063,
 "d": 17.55,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -1122,22 +1112,6 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "401909913",
-"start": "2026-11-03T01:00:00+00:00",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "max christie",
-"lab": "Max Christie over 14.5 points",
-"p": 0.2112,
-"price": 550,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.3726,
-"fair": 0.2159,
-"main": false
-},
-{
 "gid": "401909911",
 "start": "2026-11-03T00:30:00+00:00",
 "kind": "pts",
@@ -1145,12 +1119,28 @@
 "line": 9.5,
 "name": "jase richardson",
 "lab": "Jase Richardson over 9.5 points",
-"p": 0.5072,
+"p": 0.5091,
 "price": 170,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3695,
-"fair": 0.5268,
+"edge": 0.3746,
+"fair": 0.531,
+"main": true
+},
+{
+"gid": "401909913",
+"start": "2026-11-03T01:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "max christie",
+"lab": "Max Christie over 14.5 points",
+"p": 0.2088,
+"price": 550,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.357,
+"fair": 0.2119,
 "main": false
 },
 {
@@ -1165,12 +1155,12 @@
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3569,
+"edge": 0.3568,
 "fair": 0.3513,
 "main": false
 }
 ],
-"p": 0.03634,
+"p": 0.03606,
 "d": 70.2,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
@@ -1191,7 +1181,7 @@
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3569,
+"edge": 0.3568,
 "fair": 0.3513,
 "main": false
 },
@@ -1203,16 +1193,16 @@
 "line": 2.5,
 "name": "terrence shannon",
 "lab": "Terrence Shannon Jr. over 2.5 assists",
-"p": 0.4045,
+"p": 0.4055,
 "price": 210,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2539,
-"fair": 0.4123,
+"edge": 0.2571,
+"fair": 0.413,
 "main": true
 }
 ],
-"p": 0.13721,
+"p": 0.13755,
 "d": 12.4,
 "first": "2026-11-03T00:30:00+00:00",
 "res": null
