@@ -400,8 +400,37 @@ def market_rows(sport):
             rows += ladder_rows(date, mk, R, GM)
         if sport == "nba":
             rows += nba_ladder_rows(date, mk, R, GM)
+    if sport == "nba":
+        rows += nba_ladder_move_rows(rows)
     json.dump(dict(sport=sport, rows=rows), open(os.path.join(OUT, f"profit_{sport}.json"), "w"), separators=(",", ":"))
     print(f"profit {sport}: {len(rows)} graded market picks")
+
+
+def nba_ladder_move_rows(rows):
+    """NBA ladder rungs whose prop the sharp consensus moved that day (2026-11-02, research/ladder_consensus.py): the same rungs as
+    the two ladder rows, split by the move: line up / over odds down / both. Later rows, so the bets feed keeps the plain category."""
+    import re
+    sq = lambda s: re.sub(r"[^a-z]", "", (s or "").lower())
+    st = {"points": "pts", "rebounds": "reb", "assists": "ast", "threes": "fg3m"}
+    mv = {}
+    try:
+        tg = json.load(open(os.path.join(OUT, "profit_tags.json")))
+    except (OSError, ValueError):
+        return []
+    for e in tg.values():
+        if e.get("src") != "move" or e.get("msrc") != "cons" or e.get("sport") != "nba" or e.get("sig") == "rung" or not e.get("start"):
+            continue
+        k = next((st[w] for w in (e.get("bet") or "").split() if w in st), None)
+        if k:
+            c = mv.setdefault((_et_day(e["start"]), sq(e["name"]), k), set())
+            c.update({"line": ["up"], "price": ["odds"], "both": ["up", "odds"]}.get(e["sig"], []))
+    out = []
+    for r in rows:
+        base = {"NBA ladder candidates (experimental)": "NBA ladder candidates", "NBA ladder edge (experimental)": "NBA ladder edge"}.get(r["cat"])
+        m = mv.get((r["date"], sq((r.get("title") or "").split(":")[0]), r.get("kind"))) if base else None
+        if m:
+            out.append(dict(r, cat=f"{base} + {'consensus up + odds down' if len(m) == 2 else 'consensus up' if 'up' in m else 'consensus odds down'} (experimental)"))
+    return out
 
 
 # ---------------------------------------------------------------- Value tags: price when tagged, closing price, result
