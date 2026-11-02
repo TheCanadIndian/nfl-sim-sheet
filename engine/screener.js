@@ -58,6 +58,15 @@
   // saved filter sets (owner 2026-10-27: "save specific filters for the screener"): named snapshots of every filter, this
   // browser only (localStorage simscreen-presets-v1); one tap applies, × deletes, the one matching the current filters is lit
   const FKEYS = Object.keys(DEF);
+  // ready-made filters from what we've tested, on every device (owner 2026-11-02); your own stay under Saved, in this browser
+  const QP = [
+    {n: 'Best edges', f: {edge: 5, price: 'plus'}, t: 'Edge 5%+ at +150 to +400 at your books. Close to the one slice that held up in both halves: 5-40% edges priced about +120 to +570 made +23% on 164 legs, Oct 12-26. The price band was picked after the fact.'},
+    {n: 'NFL ladder candidates', f: {sport: 'nfl', lad: true, ladc: 'Ladder candidate'}, t: 'Soft-matchup players’ higher rungs. +8% on 2,885 rungs through week 8, up in both halves. Rungs of one ladder win or lose together.'},
+    {n: 'NFL soft + moved', f: {sport: 'nfl', softm: true, consmv: true, alts: false, edge: -100}, t: 'Main-line overs on a soft matchup where the sharp consensus moved. +3% on 107 vs -15% without the soft matchup, weeks 7-8. A lead, not proven.'},
+    {n: 'NBA ladders, line up', f: {sport: 'nba', lad: true, consmv: true, consk: 'up'}, t: 'NBA ladder rungs where the consensus moved the main line up. Ladder edge rungs hit 5 of 48, about their price, +12%, Oct 23-Nov 1. Small sample. Avoid CONS ▼ odds rungs: 4 of 141.'},
+    {n: 'NHL due', f: {sport: 'nhl', due: true, stat: 'goal', sort: 'start'}, t: 'Anytime goal for players creating 0.25+ xG a game and 0.10+ a game under it. +19% on 256 at your best price, Oct 12-29; stronger with no goal in 3+ games. Not proven.'},
+    {n: 'Starting soon', f: {soon: true, sort: 'start'}, t: 'Edge 5%+ in the next 6 hours, soonest first.'},
+  ];
   let PRE = [], NAMING = false;
   try { PRE = JSON.parse(localStorage.getItem('simscreen-presets-v1') || '[]') || []; } catch (e) {}
   const savePre = () => { try { localStorage.setItem('simscreen-presets-v1', JSON.stringify(PRE)); } catch (e) {} };
@@ -281,7 +290,9 @@
         <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null || b.est ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (b.est ? '≈' : '') + (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
           <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.est ? '≈' : ''}${b.fair != null ? pc(b.fair) : '—'}</span></div>
         <div class="sc-act">${b.u ? `<a class="sc-px" href="${esc(b.u)}" target="_blank" rel="noopener">${priceHtml}</a>` : `<span class="sc-px nl">${priceHtml}</span>`}${sl}</div></div>`; };
-    const preHtml = `<div class="sc-pre"><span class="sc-l">Saved</span>${PRE.map((f, i) => `<span class="sc-pc${same(f.f) ? ' on' : ''}"><button class="sc-pa" data-i="${i}" aria-pressed="${same(f.f)}">${esc(f.n)}</button><button class="sc-px2" data-i="${i}" aria-label="Delete ${esc(f.n)}" title="Delete">×</button></span>`).join('')}
+    const qOn = QP.find(x => same(pick(x.f)));
+    const qpHtml = `<div class="sc-pre"><span class="sc-l">Quick</span>${QP.map((x, i) => `<button class="sc-chip${x === qOn ? ' on' : ''}" data-qp="${i}" aria-pressed="${x === qOn}" title="${esc(x.t)}">${esc(x.n)}</button>`).join('')}</div>${qOn ? `<p class="sc-qn">${esc(qOn.t)}</p>` : ''}`;
+    const preHtml = qpHtml + `<div class="sc-pre"><span class="sc-l">Saved</span>${PRE.map((f, i) => `<span class="sc-pc${same(f.f) ? ' on' : ''}"><button class="sc-pa" data-i="${i}" aria-pressed="${same(f.f)}">${esc(f.n)}</button><button class="sc-px2" data-i="${i}" aria-label="Delete ${esc(f.n)}" title="Delete">×</button></span>`).join('')}
         ${NAMING ? `<span class="sc-name"><input id="sc-pn" maxlength="40" value="${esc(suggest())}" aria-label="Name for these filters"><button id="sc-ps" class="sc-chip on">Save</button><button id="sc-pc" class="sc-reset">Cancel</button></span>`
                  : PRE.some(f => same(f.f)) ? '' : `<button id="sc-pnew" class="sc-chip sc-add">+ Save these filters</button>`}</div>`;
     el.innerHTML = preHtml + `<div class="sc-bar">
@@ -309,6 +320,7 @@
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }
+    const qp = e.target.closest('[data-qp]'); if (qp){ const f = pick(QP[+qp.dataset.qp].f); S = same(f) ? {...DEF} : {...S, ...f}; SHOW = 60; save(); render(); return; }
     const pa = e.target.closest('.sc-pa'); if (pa){ S = {...S, ...pick(PRE[+pa.dataset.i].f)}; SHOW = 60; save(); render(); return; }
     const px = e.target.closest('.sc-px2'); if (px){ PRE.splice(+px.dataset.i, 1); savePre(); render(); return; }
     if (e.target.id === 'sc-pnew'){ NAMING = true; render(); const i = document.getElementById('sc-pn'); if (i){ i.focus(); i.select(); } return; }
