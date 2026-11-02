@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-02",
 "lock": "2026-11-03T00:00:00+00:00",
-"frozen_at": "2026-11-02T17:13:31.003425+00:00",
+"frozen_at": "2026-11-02T17:26:47.410463+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,16 +15,16 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909911",
-"start": "2026-11-03T00:30Z",
-"kind": "pts",
+"gid": "401909915",
+"start": "2026-11-03T01:00Z",
+"kind": "reb",
 "side": "o",
-"line": 19.5,
-"name": "anthony black",
-"lab": "Anthony Black 20+ pts",
-"p": 0.2471,
-"price": 398,
-"book": "Kalshi",
+"line": 14.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert 15+ reb",
+"p": 0.215,
+"price": 475,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
@@ -34,16 +34,16 @@
 "sport": "nba"
 },
 {
-"gid": "401909920",
-"start": "2026-11-03T03:00Z",
-"kind": "ast",
+"gid": "401909918",
+"start": "2026-11-03T02:00Z",
+"kind": "pts",
 "side": "o",
-"line": 7.5,
-"name": "scottie barnes",
-"lab": "Scottie Barnes 8+ ast",
-"p": 0.2864,
-"price": 300,
-"book": "Novig",
+"line": 29.5,
+"name": "deni avdija",
+"lab": "Deni Avdija 30+ pts",
+"p": 0.2375,
+"price": 398,
+"book": "Kalshi",
 "f": [
 "usage",
 "rotation",
@@ -66,8 +66,8 @@
 "sport": "nhl"
 }
 ],
-"p": 0.02177,
-"d": 67.529,
+"p": 0.01571,
+"d": 97.073,
 "first": "2026-11-03T00:00:00+00:00",
 "res": null
 },
@@ -76,117 +76,37 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909911",
-"start": "2026-11-03T00:30Z",
+"gid": "401909915",
+"start": "2026-11-03T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 14.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert 15+ reb",
+"p": 0.215,
+"price": 475,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909918",
+"start": "2026-11-03T02:00Z",
 "kind": "pts",
 "side": "o",
-"line": 19.5,
-"name": "anthony black",
-"lab": "Anthony Black 20+ pts",
-"p": 0.2471,
+"line": 29.5,
+"name": "deni avdija",
+"lab": "Deni Avdija 30+ pts",
+"p": 0.2375,
 "price": 398,
 "book": "Kalshi",
 "f": [
 "usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909918",
-"start": "2026-11-03T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "deni avdija",
-"lab": "Deni Avdija 30+ pts",
-"p": 0.2406,
-"price": 373,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "2026020233",
-"start": "2026-11-03T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "viktor arvidsson",
-"lab": "Viktor Arvidsson to score",
-"p": 0.3076,
-"price": 239,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.01829,
-"d": 79.853,
-"first": "2026-11-03T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909920",
-"start": "2026-11-03T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "scottie barnes",
-"lab": "Scottie Barnes 8+ ast",
-"p": 0.2864,
-"price": 300,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909918",
-"start": "2026-11-03T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "deni avdija",
-"lab": "Deni Avdija 30+ pts",
-"p": 0.2406,
-"price": 373,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909917",
-"start": "2026-11-03T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "stephon castle",
-"lab": "Stephon Castle 9+ ast",
-"p": 0.2247,
-"price": 400,
-"book": "Hard Rock",
-"f": [
-"matchup",
 "rotation",
 "game",
 "price"
@@ -207,9 +127,83 @@
 "sport": "nhl"
 }
 ],
-"p": 0.00502,
-"d": 296.098,
+"p": 0.01657,
+"d": 89.628,
 "first": "2026-11-03T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
+{
+"gid": "401909917",
+"start": "2026-11-03T01:30Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 9+ ast",
+"p": 0.2249,
+"price": 400,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909919",
+"start": "2026-11-03T03:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 8+ reb",
+"p": 0.2136,
+"price": 413,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026020233",
+"start": "2026-11-03T00:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "viktor arvidsson",
+"lab": "Viktor Arvidsson to score",
+"p": 0.3076,
+"price": 239,
+"book": "Novig",
+"sport": "nhl"
+},
+{
+"gid": "2026020234",
+"start": "2026-11-03T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "connor bedard",
+"lab": "Connor Bedard to score",
+"p": 0.3245,
+"price": 213,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.0048,
+"d": 272.164,
+"first": "2026-11-03T00:00:00+00:00",
 "res": null
 }
 ],
