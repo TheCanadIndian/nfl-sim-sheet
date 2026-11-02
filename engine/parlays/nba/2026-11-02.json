@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-02",
 "lock": "2026-11-03T00:00:00+00:00",
-"frozen_at": "2026-11-02T15:57:09.852Z",
+"frozen_at": "2026-11-02T16:13:26.902Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -261,12 +261,12 @@
 "name": null,
 "lab": "CHI moneyline",
 "p": 0.1928,
-"price": 471,
+"price": 456,
 "book": "Novig"
 }
 ],
 "p": 0.148,
-"d": 8.214,
+"d": 7.999,
 "first": "2026-11-03T00:30:00+00:00",
 "pick": "core",
 "res": null
@@ -296,12 +296,12 @@
 "name": null,
 "lab": "CHI moneyline",
 "p": 0.1928,
-"price": 471,
+"price": 456,
 "book": "Novig"
 }
 ],
 "p": 0.1437,
-"d": 8.329,
+"d": 8.11,
 "first": "2026-11-03T00:30:00+00:00",
 "pick": "core",
 "res": null
@@ -317,10 +317,10 @@
 "side": "o",
 "line": 5.5,
 "name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 6+ assists",
-"p": 0.524,
-"price": 101,
-"book": "Kalshi"
+"lab": "Shai Gilgeousalexander over 5.5 assists",
+"p": 0.5076,
+"price": 111,
+"book": "Novig"
 },
 {
 "gid": "401909912",
@@ -331,12 +331,72 @@
 "name": null,
 "lab": "CHI moneyline",
 "p": 0.1928,
-"price": 471,
+"price": 456,
 "book": "Novig"
 }
 ],
-"p": 0.10101,
-"d": 11.477,
+"p": 0.09786,
+"d": 11.732,
+"first": "2026-11-03T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909907",
+"start": "2026-11-03T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander over 5.5 assists",
+"p": 0.4805,
+"price": 111,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.036
+},
+{
+"gid": "401909908",
+"start": "2026-11-03T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "grayson allen",
+"lab": "Grayson Allen over 2.5 threes",
+"p": 0.3939,
+"price": 155,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0099
+}
+],
+"p": 0.18927,
+"d": 5.381,
 "first": "2026-11-03T00:00:00+00:00",
 "res": null
 },
@@ -481,29 +541,28 @@
 ]
 },
 {
-"gid": "401909908",
-"start": "2026-11-03T00:30Z",
-"kind": "fg3m",
+"gid": "401909907",
+"start": "2026-11-03T00:00Z",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "john collins",
-"lab": "John Collins over 2.5 threes",
-"p": 0.124,
-"fair": 0.1237,
-"price": 614,
+"line": 11.5,
+"name": "isaiah hartenstein",
+"lab": "Isaiah Hartenstein over 11.5 rebounds",
+"p": 0.3242,
+"fair": 0.3193,
+"price": 194,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.1148,
+"edge": -0.0468,
 "v": [
 "consensus line up",
-"one rung above the main line (1.5)",
-"soft matchup"
+"one rung above the main line (10.5)"
 ]
 }
 ],
-"p": 0.0405,
-"d": 21.634,
-"first": "2026-11-03T00:30:00+00:00",
+"p": 0.10454,
+"d": 8.908,
+"first": "2026-11-03T00:00:00+00:00",
 "res": null
 },
 {
@@ -527,64 +586,6 @@
 "main": true
 },
 {
-"gid": "401909907",
-"start": "2026-11-03T00:00:00+00:00",
-"kind": "pts",
-"side": "o",
-"line": 8.5,
-"name": "aday mara",
-"lab": "Aday Mara over 8.5 points",
-"p": 0.4548,
-"price": 133,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0598,
-"fair": 0.4649,
-"main": false
-}
-],
-"p": 0.12534,
-"d": 11.37,
-"first": "2026-11-03T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401909910",
-"start": "2026-11-03T00:30:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "dayron sharpe",
-"lab": "Dayron Sharpe over 1.5 threes",
-"p": 0.2756,
-"price": 388,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.3449,
-"fair": 0.3034,
-"main": true
-},
-{
-"gid": "401909907",
-"start": "2026-11-03T00:00:00+00:00",
-"kind": "pts",
-"side": "o",
-"line": 8.5,
-"name": "aday mara",
-"lab": "Aday Mara over 8.5 points",
-"p": 0.4548,
-"price": 133,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0598,
-"fair": 0.4649,
-"main": false
-},
-{
 "gid": "401909918",
 "start": "2026-11-03T02:00:00+00:00",
 "kind": "reb",
@@ -601,9 +602,9 @@
 "main": false
 }
 ],
-"p": 0.05238,
-"d": 28.767,
-"first": "2026-11-03T00:00:00+00:00",
+"p": 0.11517,
+"d": 12.346,
+"first": "2026-11-03T00:30:00+00:00",
 "res": null
 }
 ],
