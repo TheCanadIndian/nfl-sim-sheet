@@ -986,8 +986,27 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       if (!FL || !FL.moves || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return [];
       return FL.moves.filter(m => String(m.g) === String(gid) && m.n === norm(name));
     },
+    // the three consensus cases, one look everywhere legs are picked (owner 2026-11-02): line up / odds down / both
+    consKind(gid, name, k){
+      const X = window.MKT.pinMoves(gid, name).filter(m => m.src === 'cons' && m.k === k && m.sig !== 'rung'); if (!X.length) return null;
+      const up = X.some(m => m.sig === 'line' || m.sig === 'both'), od = X.some(m => m.sig === 'price' || m.sig === 'both');
+      return up && od ? 'both' : up ? 'up' : 'odds';
+    },
+    CONS_LAB: {up: 'CONS ▲ line', odds: 'CONS ▼ odds', both: 'CONS ▲▼ both'},
+    CONS_TIP: {up: 'The sharp consensus moved this main line up.', odds: 'The sharp consensus shortened the over without moving the line. On NBA ladder rungs these hit 4 of 141 vs 13.6 priced, Oct 23-Nov 1 (10 days, tracked).', both: 'The sharp consensus moved the line up and shortened the over.'},
+    // filter row above a ladder card: only the kinds on this slate, with their player counts
+    consBar(cards, on){
+      const n = {up: 0, odds: 0, both: 0}, K = window.MKT;
+      cards.forEach(c => { const S = new Set(c.rungs.map(u => K.consKind(c.g.id, c.p.n, u.k))); for (const k in n) if (S.has(k)) n[k]++; });
+      if (!(n.up + n.odds + n.both)) return '';
+      return `<div class="ladsw" role="group" aria-label="Filter by consensus move"><button type="button" data-lmf="" aria-pressed="${!on}">Any</button>${Object.keys(n).filter(k => n[k]).map(k => `<button type="button" data-lmf="${k}" aria-pressed="${on === k}" title="${K.CONS_TIP[k]}">${K.CONS_LAB[k]} · ${n[k]}</button>`).join('')}</div>`;
+    },
     moveFlag(gid, name){
-      const M = window.MKT.pinMoves(gid, name), P = M.filter(m => m.src === 'pin' && m.sig !== 'rung'); if (!P.length) return '';
+      const M = window.MKT.pinMoves(gid, name), P = M.filter(m => m.src === 'pin' && m.sig !== 'rung');
+      const SL0 = {pts: 'pts', reb: 'reb', ast: 'ast', fg3m: '3PM', rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', td: 'TD'};
+      const cf = [...new Set(M.filter(m => m.src === 'cons' && m.sig !== 'rung').map(m => m.k))].map(k => { const c = window.MKT.consKind(gid, name, k);
+        return `<span class="vtag cmv ${c}" title="${window.MKT.CONS_TIP[c]}">${window.MKT.CONS_LAB[c].replace('CONS', 'CONS ' + (SL0[k] || k))}</span>`; }).join('');
+      if (!P.length) return cf;
       const SL = {pts: 'pts', reb: 'reb', ast: 'ast', fg3m: '3PM', rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', td: 'TD'};
       const by = {}; P.forEach(m => { const c = by[m.k] = by[m.k] || {k: m.k, line: null, price: false}; if (m.sig === 'line' || m.sig === 'both') c.line = m; if (m.sig === 'price' || m.sig === 'both') c.price = true; });
       return Object.values(by).map(c => {
@@ -995,7 +1014,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         const body = `PIN ${c.line ? `▲ ${SL[c.k] || c.k} ${c.line.from_l}→${c.line.to_l}` : `${SL[c.k] || c.k}`}${c.price ? ' · odds ▼' : ''}`;
         const tip = `Pinnacle ${c.line ? `moved ${esc(name)}’s ${SL[c.k] || c.k} line up, ${c.line.from_l} to ${c.line.to_l}` : `kept the line`}${c.price ? `${c.line ? ' and' : ','} the over got shorter (its no-vig chance up 2-3+ pts)` : ''}${c.line && c.price ? ': the strong version of the signal' : ''}.${cons ? ' Our sharp consensus moved the same way.' : ''}${rungs.length ? ' Higher rungs priced above the moved fair at your books: ' + rungs.map(r => `${esc(r.b)} ${r.o > 0 ? '+' : ''}${r.o} ${esc(BKS[r.bk] || r.bk)} (+${Math.round(r.ev * 100)}%)`).join(', ') + '.' : ''} Tracked on the Profit page; not yet a tested rule.`;
         return `<span class="vtag pmv${c.line && c.price ? ' st' : ''}" title="${tip}">${body}${rungs.length ? ` <i>+${rungs.length} rung${rungs.length === 1 ? '' : 's'}</i>` : ''}</span>`;
-      }).join('');
+      }).join('') + cf;
     },
     // a player's stat moved: every line of that stat carries the tag (owner 2026-11-01, ladder rungs incl. the dropdown's lower ones)
     statMove(gid, name, k){
@@ -1003,7 +1022,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return ['pin', 'cons'].map(src => { const X = M.filter(m => m.src === src); if (!X.length) return '';
         const L = X.find(m => m.sig === 'line' || m.sig === 'both'), pr = X.some(m => m.sig === 'price' || m.sig === 'both');
         const tip = `${src === 'pin' ? 'Pinnacle' : 'Our sharp consensus'}${L ? ` moved the main line up, ${L.from_l} to ${L.to_l}` : ' kept the main line'}${pr ? `${L ? ' and' : ','} the over got shorter` : ''}. Tracked, experimental.`;
-        return `<i class="lmv ${src}" title="${tip}">${src === 'pin' ? 'PIN' : 'CONS'}${L ? ' ▲' : ''}${pr ? ' ▼odds' : ''}</i>`; }).join('');
+        if (src === 'cons'){ const c = L && pr ? 'both' : L ? 'up' : 'odds'; return `<i class="lmv cons ${c}" title="${tip}">${window.MKT.CONS_LAB[c]}</i>`; }
+        return `<i class="lmv ${src}" title="${tip}">PIN${L ? ' ▲' : ''}${pr ? ' ▼odds' : ''}</i>`; }).join('');
     },
     lcFlag(gid, name){
       if (!FL || !FL.lc || !FL.fetched || Date.now() - new Date(FL.fetched) > 12 * 3600e3) return '';
