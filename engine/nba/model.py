@@ -242,6 +242,7 @@ class Frames:
         return last
 
 
+USE_THREES = True       # threes.py second opinion blended into fg3m (2026-11-03)
 MIN_NORM = True        # each team's expected minutes add up to a full game (48 x 5)
 TEAM_MIN = 241.0       # 240 + a little overtime
 MIN_CAP = 42.0
@@ -309,6 +310,20 @@ def project(fr, rows, mode="vegas", n=4000, seed=7, live=False):
     pace = np.sqrt(scale)
     for c in ("reb", "ast", "stl", "blk", "tov"):
         mu[c] = mu[c] * pace
+    # threes: geometric mean with the step model (threes.py; walk-forward better in all 4 held-out halves, tails no longer hot)
+    th = None
+    if USE_THREES:
+        try:
+            import threes as TH
+            P = TH.load()
+            F = TH.feats(fr)
+            if P is not None and x.index.isin(F.index).all():
+                xx = x.assign(e_min=em).join(F[[c for c in F.columns if c not in x.columns]])
+                new = TH.mean_new(xx, P, target, x.p_play.to_numpy() if live and "p_play" in x else None)
+                mu["fg3m"] = P["SCALE"] * np.sqrt(np.maximum(new, .01) * np.maximum(mu["fg3m"], .01))
+                th = P
+        except Exception as e:                                   # noqa: BLE001 -- never block the projection
+            print("threes model skipped:", type(e).__name__, e)
     out = x[["game_id", "team", "opp", "player_id", "name", "pos", "pg"]].copy()
     out["e_min"] = em
     for c in STATS:
@@ -321,6 +336,11 @@ def project(fr, rows, mode="vegas", n=4000, seed=7, live=False):
     fac = np.where(em[:, None] > 0, m / np.maximum(em[:, None], 1e-6), 0)
     sims["min"] = m
     for c in STATS:
+        if c == "fg3m" and th is not None:
+            # fitted on games as they happened, so its spread already holds minutes variation: no minutes factor here
+            m3 = np.maximum(mu[c], .01)[:, None]; k = th["K0"] * m3 ** th["G"]
+            sims[c] = rng.negative_binomial(np.broadcast_to(k, (len(x), n)), np.broadcast_to(k / (k + m3), (len(x), n)))
+            continue
         lam = np.maximum(mu[c][:, None] * fac, 1e-6)
         # dispersion grows with the projection: stars' lines are steadier relative to size
         k = DISP[c] * np.clip(mu[c][:, None] / DISP_REF.get(c, 1e9), 1, None) ** DISP_GAMMA

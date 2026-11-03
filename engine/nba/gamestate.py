@@ -41,8 +41,14 @@ def draws(out, rows, n=1000, seed=0):
         top[idx[np.argsort(-em[idx])[:5]]] = True
     mu = {c: out["mu_" + c].to_numpy(float) for c in ST}
     G, U = {}, {}
+    TP = None
+    if M.USE_THREES:
+        import threes as TH
+        TP = TH.load()
     for c in ST:
         k = M.DISP[c] * np.clip(mu[c] / M.DISP_REF.get(c, 1e9), 1, None) ** M.DISP_GAMMA
+        if c == "fg3m" and TP is not None:          # threes.py spread (holds minutes variation: no minutes factor below)
+            k = TP["K0"] * np.maximum(mu[c], .01) ** TP["G"]
         G[c] = rng.gamma(k[:, None] * np.ones((1, n)), 1 / k[:, None])
         U[c] = rng.uniform(size=(len(out), n))
     side = np.where(home, 0, len(ST))
@@ -50,7 +56,7 @@ def draws(out, rows, n=1000, seed=0):
     def run(mfac):
         m = np.clip(em[:, None] * mfac + z * sd[:, None], 0, 48)
         fac = np.where(em[:, None] > 0, m / np.maximum(em[:, None], 1e-6), 0)
-        return {c: SS.poisson.ppf(U[c], np.maximum(mu[c][:, None] * fac * mult[:, side + i].T * G[c], 1e-9))
+        return {c: SS.poisson.ppf(U[c], np.maximum(mu[c][:, None] * (1 if c == "fg3m" and TP is not None else fac) * mult[:, side + i].T * G[c], 1e-9))
                 for i, c in enumerate(ST)}
     o = run(np.ones((len(out), 1)))
     if home.any() and (~home).any():

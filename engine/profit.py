@@ -136,6 +136,29 @@ def nba_ladder_rows(date, mk, R, GM):
             for cat in cats:
                 out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"),
                                 bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if p is None else round(p, 4), won=int(y), pnl=round(y / cy - 1, 4)))
+    # threes, one rung per player (owner 2026-11-03 after research/threes_market.py, KSplit's idea tested: his whole-ladder sizing lost
+    # to one rung per player; our threes = threes.py blend from today): every Kalshi 3PM rung, spread 5c or less, mid 3-97c; chance =
+    # Kalshi's mid recalibrated (logit -.079 + 1.002 logit mid) moved .75 of the way to ours in log-odds; best edge per player, 5-60%
+    if date >= "2026-11-03":
+        lg = lambda v: math.log(v / (1 - v))
+        for key, L in by.items():
+            if key[2] != "fg3m":
+                continue
+            best = None
+            for x in L.values():
+                b_, a_ = x["yes_bid"], x["yes_ask"]; m_ = (a_ + b_) / 2; po = (x.get("ours") or {}).get("vegas")
+                if po is None or a_ - b_ > .05 or not .03 <= m_ <= .97 or a_ >= .97:
+                    continue
+                mk_ = -.0794 + 1.0023 * lg(min(max(m_, .005), .995))
+                q_ = 1 / (1 + math.exp(-(mk_ + .75 * (lg(min(max(po, .002), .998)) - mk_))))
+                cy = a_ + FEE["kalshi"] * a_ * (1 - a_)
+                if .05 <= q_ / cy - 1 <= .6 and (best is None or q_ / cy > best[0]):
+                    best = (q_ / cy, x, cy, q_, m_)
+            if best:
+                y = GM.outcome("nba", best[1], R)
+                if y is not None:
+                    out.append(dict(date=date, sport="nba", cat="NBA threes: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="fg3m",
+                                    title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
     return out
 
 
