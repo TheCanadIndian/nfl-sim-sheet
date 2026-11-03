@@ -567,6 +567,47 @@ def wfair(sport, PR, starts, now, PL):
 
 
 DRY_MIN = 3                          # games without a goal (research/player_trends_nhl.py)
+MB_KINDS = {"pts": "points", "reb": "rebounds", "ast": "assists", "fg3m": "threes"}
+
+
+def multi_fair(e, line, skip, kmid=None):
+    """Multi-book fair at one rung (mkt.js MKT.multiFair; research/ladder_multibook.py): every other source at that number with
+    its hold taken out (two-way no-vig, else the book's over moved by the hold it shows at the main line), Kalshi's mid, the sharp
+    main fair carried up the ladder; mean in log-odds; `skip` = the book being bet. -> (fair, other sources besides the carried fair)."""
+    L = lambda p: math.log(min(max(p, 1e-4), 1 - 1e-4) / (1 - min(max(p, 1e-4), 1 - 1e-4)))
+    ip = lambda o: 100 / (o + 100) if o > 0 else -o / (-o + 100)
+    pin = e.get("pin") or {}
+    pin_m = pin.get("o") if pin.get("l") == e.get("l") else None
+    hold = {}
+    for b, v in (e.get("o") or {}).items():
+        if not v or v[0] is None:
+            continue
+        po, u = ip(v[0]), (e.get("u") or {}).get(b)
+        nv = po / (po + ip(u[0])) if u and u[0] is not None else pin_m
+        if nv is not None:
+            hold[b] = L(po) - L(nv)
+    a = (e.get("a") or {}).get(str(line)) or (e.get("a") or {}).get(f"{float(line):.1f}")
+    if not a:
+        return None, 0
+    parts = []
+    for b, v in (a.get("o") or {}).items():
+        if b in (skip, "Pinnacle") or not v or v[0] is None:
+            continue
+        po, u = ip(v[0]), (a.get("u") or {}).get(b)
+        if u and u[0] is not None:
+            parts.append(po / (po + ip(u[0])))
+        elif b in hold:
+            parts.append(1 / (1 + math.exp(-(L(po) - hold[b]))))
+    if skip != "Kalshi" and kmid is not None:
+        parts.append(kmid)
+    n = len(parts)
+    car = a.get("pin")
+    car = car.get("o") if isinstance(car, dict) else car
+    if car is not None:
+        parts.append(car)
+    if not parts:
+        return None, 0
+    return 1 / (1 + math.exp(-sum(L(x) for x in parts) / len(parts))), n
 MOVE_SIG = {"line": "line up", "price": "odds drop", "both": "line up + odds drop", "rung": "higher rung outlier"}
 
 
@@ -582,6 +623,8 @@ def tag_label(e):
         return "Goal drought 3+ games (experimental)"
     if e.get("src") == "due":
         return "Goal luck: due (experimental)"
+    if e.get("src") == "mbook":
+        return "Ladder: Novig rung 10%+ under the other books’ fair (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") in ("f4", "fx"):
@@ -789,6 +832,46 @@ def tags():
                         if .05 <= q * dec(o) - 1 <= .40:
                             log.setdefault(f"ddtd|edge|{gid}|{nm}|{kind}", dict(sport=sport, src="ddtd", grp="edge", gid=gid, name=nm, bet=bet, book=bk, o=o,
                                                                                 first=now.isoformat(), p=round(q, 4), m=fair, ours=x.get("p"), start=st))
+        # NBA Novig rungs under the multi-book fair (owner 2026-11-03, research/ladder_multibook.py: Novig +73% on 120 at 10%+,
+        # both halves, a lead): every rung above the main line with a Novig price, fair from 2+ other sources (multi_fair, Novig
+        # left out), chance = 30% ours + 70% that fair, edge 10-40%; the best rung per player-stat at its first sighting
+        if sport == "nba":
+            try:
+                LV = json.load(open(os.path.join(site, "markets", "live_nba.json"))).get("rows") or []
+            except (OSError, ValueError):
+                LV = []
+            KM = {(str(r.get("g")), PL.jsnorm(r.get("n") or ""), r.get("k"), float(r["l"])): (r["ya"] + r["yb"]) / 2 for r in LV
+                  if r.get("s") == "kalshi" and r.get("l") is not None and r.get("ya") and r.get("yb") is not None and r["ya"] - r["yb"] <= .05}
+            for gid, G_ in (PR.get("props") or {}).items():
+                st = starts.get(str(gid))
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, kinds in G_.items():
+                    for k, lab in MB_KINDS.items():
+                        e_ = kinds.get(k) or {}
+                        if e_.get("l") is None:
+                            continue
+                        best = None
+                        for ls, a in (e_.get("a") or {}).items():
+                            try:
+                                lf = float(ls)
+                            except ValueError:
+                                continue
+                            nv = (a.get("o") or {}).get("Novig")
+                            if lf <= e_["l"] or not nv or nv[0] is None:
+                                continue
+                            f, n = multi_fair(e_, ls, "Novig", KM.get((str(gid), nm, k, lf)))
+                            if f is None or n < 2:
+                                continue
+                            q = .3 * a["p"] + .7 * f if a.get("p") is not None else f
+                            ed = q * dec(nv[0]) - 1
+                            if .10 <= ed <= .40 and (best is None or ed > best[0]):
+                                best = (ed, lf, nv[0], q, f, n)
+                        if best:
+                            e = log.setdefault(f"mbook|{sport}|{gid}|{nm}|{k}", dict(sport=sport, src="mbook", gid=gid, name=nm, bet=f"over {best[1]:g} {lab}",
+                                                                                     book="Novig", o=best[2], first=now.isoformat(), p=round(best[3], 4),
+                                                                                     m=round(best[4], 4), nsrc=best[5], start=st))
+                            e.setdefault("start", st)
         # liquidity-consensus tags (sharp.lc_tags): logged and graded the same way, as their own category
         for gid, tg in (FL.get("lc") or {}).items():
             st = starts.get(str(gid))
@@ -804,7 +887,7 @@ def tags():
         for key, e in log.items():
             if e["sport"] != sport or e.get("res") is not None:
                 continue
-            if e.get("start") and PL.when(e["start"]) <= now:
+            if e.get("start") and PL.when(e["start"]) <= now or e.get("src") == "mbook":         # alt rungs: the main-line price is no close
                 continue
             L = _tag_leg(sport, e["bet"])
             kind = {"td": "td", "goal": "goal"}.get(L["kind"], L["kind"]) if L else None
