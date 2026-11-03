@@ -1526,5 +1526,209 @@
   "next": 2,
   "minutes": 5.4,
   "dry": false
+ },
+ {
+  "date": "2026-11-03T10:08",
+  "sport": "nfl",
+  "windows": [
+   2025,
+   2026
+  ],
+  "tried": [
+   {
+    "change": {
+     "boxscore.priors.K_REC_TD": 15
+    },
+    "ok": false,
+    "score": 0.00038,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00038,
+      "worst": 0.00107,
+      "in80": 0.8
+     },
+     "2026": {
+      "avg_change": -0.00023,
+      "worst": 0.00152,
+      "in80": 0.791
+     }
+    },
+    "what": "receiving-TD share shrinkage",
+    "was": 20
+   },
+   {
+    "change": {
+     "boxscore.priors.K_REC_TD": 25
+    },
+    "ok": false,
+    "score": 0.00035,
+    "windows": {
+     "2025": {
+      "avg_change": 0.00019,
+      "worst": 0.00099,
+      "in80": 0.799
+     },
+     "2026": {
+      "avg_change": 0.00035,
+      "worst": 0.00128,
+      "in80": 0.786
+     }
+    },
+    "what": "receiving-TD share shrinkage",
+    "was": 20
+   },
+   {
+    "change": {
+     "boxscore.priors.K_RUSH_TD": 10
+    },
+    "ok": false,
+    "score": 0.00018,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00045,
+      "worst": 0.00056,
+      "in80": 0.802
+     },
+     "2026": {
+      "avg_change": 0.00018,
+      "worst": 0.00102,
+      "in80": 0.793
+     }
+    },
+    "what": "rushing-TD share shrinkage",
+    "was": 15
+   },
+   {
+    "change": {
+     "boxscore.priors.K_RUSH_TD": 20
+    },
+    "ok": false,
+    "score": 0.00034,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00021,
+      "worst": 0.00012,
+      "in80": 0.801
+     },
+     "2026": {
+      "avg_change": 0.00034,
+      "worst": 0.00201,
+      "in80": 0.788
+     }
+    },
+    "what": "rushing-TD share shrinkage",
+    "was": 15
+   },
+   {
+    "change": {
+     "boxscore.priors.ROOKIE_USAGE": 0.1
+    },
+    "ok": false,
+    "score": 0.00049,
+    "windows": {
+     "2025": {
+      "avg_change": -6e-05,
+      "worst": 0.00141,
+      "in80": 0.8
+     },
+     "2026": {
+      "avg_change": 0.00049,
+      "worst": 0.00195,
+      "in80": 0.786
+     }
+    },
+    "what": "early-round rookie usage boost",
+    "was": 0.15
+   },
+   {
+    "change": {
+     "boxscore.priors.ROOKIE_USAGE": 0.2
+    },
+    "ok": false,
+    "score": 0.00012,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00037,
+      "worst": 0.00054,
+      "in80": 0.802
+     },
+     "2026": {
+      "avg_change": 0.00012,
+      "worst": 0.00101,
+      "in80": 0.79
+     }
+    },
+    "what": "early-round rookie usage boost",
+    "was": 0.15
+   },
+   {
+    "change": {
+     "boxscore.sim.TD_GAMMA": 0.8
+    },
+    "ok": false,
+    "score": 0.00054,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00011,
+      "worst": 0.00037,
+      "in80": 0.801
+     },
+     "2026": {
+      "avg_change": 0.00054,
+      "worst": 0.00204,
+      "in80": 0.78
+     }
+    },
+    "what": "TD share compression",
+    "was": 0.85
+   },
+   {
+    "change": {
+     "boxscore.sim.TD_GAMMA": 0.9
+    },
+    "ok": false,
+    "score": 0.00017,
+    "windows": {
+     "2025": {
+      "avg_change": -0.00027,
+      "worst": 0.0008,
+      "in80": 0.802
+     },
+     "2026": {
+      "avg_change": 0.00017,
+      "worst": 0.00177,
+      "in80": 0.784
+     }
+    },
+    "what": "TD share compression",
+    "was": 0.85
+   }
+  ],
+  "adopted": null,
+  "baseline": {
+   "2025": {
+    "qs_tgt": 0.4958,
+    "qs_rec": 0.3751,
+    "qs_rec_yds": 4.8256,
+    "qs_car": 0.9096,
+    "qs_rush_yds": 2.7007,
+    "qs_pass_yds": 20.7664,
+    "td_logloss": 0.3976,
+    "in80": 0.8014
+   },
+   "2026": {
+    "qs_tgt": 0.519,
+    "qs_rec": 0.3915,
+    "qs_rec_yds": 5.0436,
+    "qs_car": 0.9228,
+    "qs_rush_yds": 2.6251,
+    "qs_pass_yds": 22.7922,
+    "td_logloss": 0.3948,
+    "in80": 0.7881
+   }
+  },
+  "next": 9,
+  "minutes": 6.7,
+  "dry": false
  }
 ]
