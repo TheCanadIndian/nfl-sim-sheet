@@ -252,7 +252,10 @@ NFL_SLATE_LOCK = dt.timedelta(minutes=60)
 # NHL / NBA cards lock after the first game's lineups (owner 2026-10-21): NHL official rosters post 15-45 min before puck
 # drop and the NHL run at :40 picks them up (2026-10-20: 8 of 22 teams official in the 6:45 PM run, none at 6:15); the NBA
 # runs 30 min before 7 PM tips. Owner 2026-10-21 (later): lock 1 hour before the first game (was 10 min).
-LINEUP_LOCK = {"nhl": dt.timedelta(minutes=60), "nba": dt.timedelta(minutes=60)}
+# NHL 5 hours before the first puck drop since 2026-11-03 (owner: the card changed too much; research/card_replay.py, Oct 19 -
+# Nov 2: the NHL card as it stood 4-6 h before the lock made +64-71% vs +46% at the lock; NBA early cards lost, so it keeps
+# its lineup lock)
+LINEUP_LOCK = {"nhl": dt.timedelta(hours=5), "nba": dt.timedelta(minutes=60)}
 # NBA picks wait for confirmed lineups instead (owner 2026-10-28: "lets not lock basketball until after lineups and injury
 # are confirmed"): each NBA pick (Today's card and the builder cards) keeps being re-picked until the first freeze that
 # sees NBA.com's Confirmed five for both teams of its first game in the projection run (nba/lineups_log.json `off_at`;
