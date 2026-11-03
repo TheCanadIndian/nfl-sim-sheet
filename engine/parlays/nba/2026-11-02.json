@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-02",
 "lock": "2026-11-03T00:30:00+00:00",
-"frozen_at": "2026-11-03T02:57:47.537Z",
+"frozen_at": "2026-11-03T03:00:17.564Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -335,7 +335,8 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0087
+"edge": 0.0087,
+"res": "W"
 },
 {
 "gid": "401909916",
@@ -476,7 +477,8 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0087
+"edge": 0.0087,
+"res": "W"
 }
 ],
 "p": 0.04409,
@@ -519,7 +521,8 @@
 "sport": "nba",
 "edge": 0.1275,
 "fair": 0.4805,
-"main": false
+"main": false,
+"res": "V"
 }
 ],
 "p": 0.15935,
@@ -562,7 +565,8 @@
 "sport": "nba",
 "edge": 0.1275,
 "fair": 0.4805,
-"main": false
+"main": false,
+"res": "V"
 },
 {
 "gid": "401909920",
@@ -1588,6 +1592,52 @@
 "kind": "fg3m",
 "side": "o",
 "line": 2.5,
+"name": "devin booker",
+"lab": "Devin Booker 3+ threes",
+"p": 0.217,
+"price": 313,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909920",
+"start": "2026-11-03T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "brook lopez",
+"lab": "Brook Lopez 3+ threes",
+"p": 0.2914,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.06324,
+"d": 16.52,
+"first": "2026-11-03T03:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909919",
+"start": "2026-11-03T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
 "name": "yaxel lendeborg",
 "lab": "Yaxel Lendeborg 3+ threes",
 "p": 0.3695,
@@ -1620,51 +1670,8 @@
 "p": 0.10768,
 "d": 11.28,
 "first": "2026-11-03T03:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909919",
-"start": "2026-11-03T03:00Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "draymond green",
-"lab": "Draymond Green 7+ reb",
-"p": 0.3031,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909920",
-"start": "2026-11-03T03:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "brook lopez",
-"lab": "Brook Lopez 3+ threes",
-"p": 0.2914,
-"price": 300,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.08831,
-"d": 13.2,
-"first": "2026-11-03T03:00:00+00:00",
-"res": null
+"res": null,
+"locked": true
 }
 ],
 "graded": false
