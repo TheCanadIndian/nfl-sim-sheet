@@ -1189,6 +1189,31 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
     },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
     booksAt(gid, name, kind, line){ return booksAt(gid, name, kind, line); },
+    // multi-book fair at one rung (owner 2026-11-03; research/ladder_multibook.py: the best forecast we have for NBA rungs,
+    // log-loss .3922 vs carried consensus .3932, the book's own price .4045): every other source at that number with its
+    // hold taken out -- two-way no-vig, else the book's over moved by the hold it shows at the main line; Kalshi's mid
+    // (spread 5c or less); the sharp main fair carried up the ladder -- mean in log-odds. skip = the book you'd bet (left out).
+    // {f, n (other sources besides the carried fair), parts}
+    multiFair(gid, pid, name, kind, line, skip){
+      const e = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || line == null) return null;
+      const L = p => Math.log(Math.min(Math.max(p, 1e-4), 1 - 1e-4) / (1 - Math.min(Math.max(p, 1e-4), 1 - 1e-4)));
+      const ip = o => o > 0 ? 100 / (o + 100) : -o / (-o + 100), pinM = e.pin && e.pin.l === e.l ? e.pin.o : null;
+      const hold = {};
+      for (const [b, v] of Object.entries(e.o || {})){ if (!v || v[0] == null) continue;
+        const po = ip(v[0]), u = (e.u || {})[b], nv = u && u[0] != null ? po / (po + ip(u[0])) : pinM; if (nv != null) hold[b] = L(po) - L(nv); }
+      const main = Math.abs((e.l ?? -99) - line) < 1e-9, a = main ? {o: e.o, u: e.u, pin: pinM} : ((e.a || {})[String(line)] || (e.a || {})[(+line).toFixed(1)]);
+      if (!a) return null;
+      const parts = {};
+      for (const [b, v] of Object.entries(a.o || {})){ if (b === skip || b === 'Pinnacle' || !v || v[0] == null) continue;
+        const po = ip(v[0]), u = (a.u || {})[b];
+        if (u && u[0] != null) parts[b] = po / (po + ip(u[0])); else if (hold[b] != null) parts[b] = 1 / (1 + Math.exp(-(L(po) - hold[b]))); }
+      if (skip !== 'Kalshi'){ const k = forPlayer(gid, pid, name).find(r => r.s === 'kalshi' && r.k === kind && r.l != null && Math.abs(r.l - line) < 1e-9 && r.ya > 0 && r.yb != null && r.ya - r.yb <= .05);
+        if (k) parts.Kalshi = (k.ya + k.yb) / 2; }
+      const n = Object.keys(parts).length, car = typeof a.pin === 'number' ? a.pin : (a.pin && a.pin.o);
+      if (car != null && !main) parts['sharp (carried)'] = car; else if (main && pinM != null) parts['sharp'] = pinM;
+      const v = Object.values(parts); if (!v.length) return null;
+      return {f: 1 / (1 + Math.exp(-v.reduce((s, x) => s + L(x), 0) / v.length)), n, parts};
+    },
     ladder(gid, pid, name, kinds){
       kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
       // wide quotes (spread over 10c) say nothing about the price: left out
