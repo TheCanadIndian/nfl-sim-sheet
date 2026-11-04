@@ -472,7 +472,7 @@ def mlb_card():
 SCREEN_CSS = """
 .sc-bar{display:grid;gap:8px;margin:6px 0 10px}.sc-grp{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.sc-l{font-size:12px;color:var(--muted);margin-right:2px}
 .sc-chip{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:5px 12px;font:600 13px var(--body);cursor:pointer}
-.sc-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sc-chip.top{border-color:color-mix(in srgb,var(--good) 60%,transparent);color:var(--good)}.sc-chip.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .sc-in select,.sc-in input{background:var(--sunk);color:var(--ink);border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font:500 13.5px var(--body)}
 .sc-in input{flex:1 1 180px;min-width:0}.sc-reset{background:none;border:0;color:var(--muted);font:600 12.5px var(--body);cursor:pointer;text-decoration:underline}
 .sc-qn{font-size:12.5px;color:var(--muted);margin:-4px 0 10px;max-width:760px;line-height:1.45}
