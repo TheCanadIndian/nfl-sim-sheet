@@ -275,8 +275,6 @@ def build(cands, now):
             a, b = top[i], top[j]
             if (a["sport"], a["gid"]) == (b["sport"], b["gid"]):
                 continue
-            if PL.nba_long(dict(legs=[a, b])):                       # no NBA leg priced under 25% in a parlay (parlays.NBA_MIN_Q)
-                continue
             pairs.append(((a["q"] * PL.dec(a["price"])) * (b["q"] * PL.dec(b["price"])) - 1, a, b))
     pairs.sort(key=lambda t: -t[0])
     for e, a, b in pairs:
