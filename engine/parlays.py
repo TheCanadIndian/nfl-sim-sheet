@@ -142,6 +142,10 @@ def freeze():
                 print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays, {len(sw)} sweet-spot parlays")
             except Exception as e:                                   # noqa: BLE001
                 print(f"parlays {sport}: learning builder skipped ({type(e).__name__}: {e})")
+            nl = sum(1 for p in snap.get("parlays", []) if nba_long(p, sport))
+            if nl:
+                snap["parlays"] = [p for p in snap["parlays"] if not nba_long(p, sport)]
+                print(f"parlays {sport}: {nl} parlays dropped (an NBA leg priced under {NBA_MIN_Q:.0%})")
             by = {}
             for p in snap["parlays"]:
                 starts = [when(L["start"]) for L in p["legs"] if L.get("start")]
@@ -212,6 +216,28 @@ CARD_BOOKS = {"Novig", "Kalshi", "Hard Rock"}           # the owner's books: eve
 # NHL parlays won 19 vs 27 expected (z about -1.6, not settled): the chance shown is cut 15% (half-way), but picking uses
 # the anchored edge itself; cutting 25% left almost no NHL parlay with an edge
 CARD_DISCOUNT = {"nhl": .85}
+# NBA legs priced under 25% stay out of every parlay (owner 2026-11-04 after research/leg_walkforward.py: the site-edge NBA legs
+# hit 11.7% vs 16.6% priced, -34% on 94, Oct 19 - Nov 2; NBA alt legs under 15% lost 55-67% in research/parlay_methods.py).
+# Applied to every frozen card (freeze), the multisport longshots and the slate's parlays; Kalshi prices fee-in.
+NBA_MIN_Q = .25
+
+
+def nba_long(p, sport=None):
+    """True when a parlay (2+ legs) has an NBA leg priced under NBA_MIN_Q."""
+    legs = p.get("legs") or []
+    return len(legs) >= 2 and any((L.get("sport") or sport) == "nba" and L.get("price") is not None and 1 / dec(L["price"]) < NBA_MIN_Q for L in legs)
+
+
+# NHL goal edges are the core of the NHL card (owner 2026-11-04; research/leg_walkforward.py: NHL site-edge legs +244% on 28,
+# research/screener_walkforward.py: NHL settings picked on earlier days +21% on 374, every other sport flat or worse): the NHL
+# card takes parlays whose every leg is an anytime goal with its own edge 3%+ first, then the rest by edge.
+GOAL_CORE_EDGE = .03
+
+
+def goal_core(p):
+    legs = p.get("legs") or []
+    return bool(legs) and all(L.get("kind") == "goal" and L.get("p") and L.get("price") is not None
+                              and L["p"] * dec(L["price"]) - 1 >= GOAL_CORE_EDGE for L in legs)
 
 
 BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays", "Sweet-spot edge parlays")       # builder.py's cards: tracked on their own, never Today's card
@@ -341,7 +367,7 @@ def pick_card(sport, ps, now, final_at=None):
         slot, ev = card_slot(sport, p)
         if slot and (now < lock(p, slot) or none_yet):
             cands.append((slot, ev, p))
-    cands.sort(key=lambda c: -c[1])
+    cands.sort(key=lambda c: (-(sport == "nhl" and goal_core(c[2])), -c[1]))     # NHL: goal-edge parlays first
     count = lambda f: sum(1 for p in ps if p.get("pick") and f(p["pick"]))
 
     def take(ok, cap):
@@ -416,6 +442,8 @@ def multi_parlays(date):
                 continue
             for L in q["legs"]:
                 if L.get("price") is None or L.get("book") not in CARD_BOOKS or str(L.get("side")).lower() in ("u", "under") or not L.get("p"):
+                    continue
+                if sport == "nba" and 1 / dec(L["price"]) < NBA_MIN_Q:
                     continue
                 k = (sport, str(L.get("gid")), L.get("name"), L.get("kind"), L.get("line"))
                 nf = len(L.get("f") or []) or 3                                  # NHL goal legs: usage + edge + price
