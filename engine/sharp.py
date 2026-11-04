@@ -1567,7 +1567,17 @@ def _ddtd_ours(gid):
         if len(a) < 3:
             continue
         c = sum((x >= 10).astype(int) for x in a)
-        out[jsnorm(key.split("|")[-1])] = dict(dd=round(float((c >= 2).mean()), 4), tdbl=round(float((c >= 3).mean()), 4))
+        dd, td = float((c >= 2).mean()), float((c >= 3).mean())
+        e = dict(dd=round(dd, 4), tdbl=round(td, 4), dd_raw=round(dd, 4), tdbl_raw=round(td, 4))
+        h = (D.get("h") or {}).get(key)
+        if h:                                        # his own DD / TD history on top (nba/steps.ddtd_cal, owner 2026-11-04)
+            try:
+                sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "nba"))
+                import steps as STP
+                e["dd"], e["tdbl"] = (round(v, 4) for v in STP.ddtd_cal(dd, td, h))
+            except Exception as ex:                  # noqa: BLE001
+                print("dd / td calibration skipped:", type(ex).__name__, ex)
+        out[jsnorm(key.split("|")[-1])] = e
     return out
 
 
@@ -1643,6 +1653,7 @@ def oa_nba_ddtd(now):
                     e["pin"] = dict(o=round(min(.99, med(imp) * med(ratio)), 4), w=len(imp))
                 if (ours.get(nm) or {}).get(kind) is not None:
                     e["p"] = ours[nm][kind]
+                    e["pr"] = ours[nm][kind + "_raw"]                  # the sims alone (the tracked raw-edge rows use it)
                 out.setdefault(gid, {}).setdefault(nm, {})[kind] = e
     json.dump(dict(sport="nba", fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), partner=U.PARTNER,
                    props=out), open(os.path.join(M.SITE, "markets", "ddtd_nba.json"), "w"), separators=(",", ":"))

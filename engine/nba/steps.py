@@ -120,3 +120,35 @@ def fit():
 
 if __name__ == "__main__":
     fit()
+
+
+# double-double / triple-double history (owner 2026-11-04, research/nba_ddtd_cal.py): our sims had the totals right but not the
+# players -- regular double-doublers ran low (Towns 73% actual vs 55% ours, Jalen Johnson 65 / 49), the rest high; triple-doubles
+# ~30% low (Jokic 51 / 37, Giddey 24 / 12). His own decayed DD / TD rate, shrunk 5 games to the league, on top of the sims' chance:
+# walk-forward log-loss better in every window (DD -15 / -19 / -19e-4, TD -14 / -11). vs Kalshi it adds little (the market knows
+# the history), so it only changes the displayed chance (sharp._ddtd_ours); tracked bets use the raw sims.
+DD_CAL = dict(const=.216, L=1.076, g=.293)                 # logit p = const + L logit(sims) + g (logit dd20 - logit sims)
+TD_CAL = dict(const=.406, L=1.068, g=.667, d=-.584)        # + g (logit td60 - logit sims) + d (logit dd60 - logit sims' DD)
+
+
+def ddtd_hist(fr, rows):
+    """[dd20, td60, dd60] per row of `rows` (Frames.p index): decayed rates before the game, all seasons, carry .8."""
+    import model as M
+    p = fr.p
+    pl = p.played.fillna(0) == 1
+    cnt = sum((p[c].fillna(0) >= 10).astype(int) for c in ("pts", "reb", "ast", "stl", "blk"))
+    q = p[["player_id", "season"]].copy()
+    q["one"] = pl.astype(float); q["dd"] = ((cnt >= 2) & pl).astype(float); q["td"] = ((cnt >= 3) & pl).astype(float)
+    a = M.decayed(q, "player_id", ["one", "dd"], 20, .8).loc[rows.index]
+    b = M.decayed(q, "player_id", ["one", "dd", "td"], 60, .8).loc[rows.index]
+    return np.column_stack([(a.dd + 5 * .07) / (a.one + 5), (b.td + 5 * .005) / (b.one + 5), (b.dd + 5 * .07) / (b.one + 5)])
+
+
+def ddtd_cal(dd, td, h):
+    """Calibrated (dd, td) from the sims' chances and ddtd_hist's [dd20, td60, dd60]."""
+    lg = lambda v: np.log(np.clip(v, .002, .998) / (1 - np.clip(v, .002, .998)))
+    sg = lambda z: 1 / (1 + np.exp(-z))
+    c, t = DD_CAL, TD_CAL
+    pd_ = sg(c["const"] + c["L"] * lg(dd) + c["g"] * (lg(h[0]) - lg(dd)))
+    pt = sg(t["const"] + t["L"] * lg(td) + t["g"] * (lg(h[1]) - lg(td)) + t["d"] * (lg(h[2]) - lg(dd)))
+    return float(pd_), float(pt)

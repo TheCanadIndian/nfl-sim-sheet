@@ -655,6 +655,8 @@ def tag_label(e):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
         w = "Double-double" if e.get("bet") == "double-double" else "Triple-double"
+        if e.get("grp") in ("raw_k", "raw_b"):
+            return f"{w}: our sims 5%+ over the price at {'Kalshi' if e['grp'] == 'raw_k' else 'Hard Rock / Novig'} (experimental)"
         return f"{w}: every Yes at your books (baseline)" if e.get("grp") == "all" else f"{w} edge 5%+ (experimental)"
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
@@ -856,6 +858,20 @@ def tags():
                         if .05 <= q * dec(o) - 1 <= .40:
                             log.setdefault(f"ddtd|edge|{gid}|{nm}|{kind}", dict(sport=sport, src="ddtd", grp="edge", gid=gid, name=nm, bet=bet, book=bk, o=o,
                                                                                 first=now.isoformat(), p=round(q, 4), m=fair, ours=x.get("p"), start=st))
+                        # our sims alone vs the price, double-doubles only (owner 2026-11-04 after research/nba_ddtd_market.py: Kalshi
+                        # KXNBA2D Jan 2026 - now, our raw chance 5%+ over the ask with fee +26% on 286, -9 / +16 / +107 / +90% by half,
+                        # z ~+1.9; the market-anchored blend almost never fires; triple-doubles lost every way): first sighting, Kalshi
+                        # and Hard Rock / Novig apart, edge 5-60%. Breaks the no-raw-model-edges rule, so tracked only.
+                        pr = x.get("pr", x.get("p"))
+                        if kind == "dd" and pr is not None:
+                            for grp, bks in (("raw_k", ("Kalshi",)), ("raw_b", ("Hard Rock", "Novig"))):
+                                bb = [t for t in bo if t[1] in bks]
+                                if not bb:
+                                    continue
+                                d_, bk2, o2 = max(bb)
+                                if .05 <= pr * d_ - 1 <= .60:
+                                    log.setdefault(f"ddtd|{grp}|{gid}|{nm}|{kind}", dict(sport=sport, src="ddtd", grp=grp, gid=gid, name=nm, bet=bet, book=bk2, o=o2,
+                                                                                        first=now.isoformat(), p=pr, m=fair, ours=pr, start=st))
         # NBA Novig rungs under the multi-book fair (owner 2026-11-03, research/ladder_multibook.py: Novig +73% on 120 at 10%+,
         # both halves, a lead): every rung above the main line with a Novig price, fair from 2+ other sources (multi_fair, Novig
         # left out), chance = 30% ours + 70% that fair, edge 10-40%; the best rung per player-stat at its first sighting
