@@ -147,8 +147,9 @@ def chance_stats(season, pids):
     return pd.DataFrame(out, columns=["player_id", "x_gp", "x_season", "x_fg3a", "x_fg3a10", "x_rch", "x_rr", "x_ach", "x_ar", "x_reb", "x_ast", "x_on"])
 
 
-def save_draws(out, sims, n=1000):
-    """First n simulations per player and stat, packed as small ints: <OUT>/draws/<game_id>.json."""
+def save_draws(out, sims, n=1000, hist=None):
+    """First n simulations per player and stat, packed as small ints: <OUT>/draws/<game_id>.json. hist: per-row
+    [dd20, td60, dd60] (steps.ddtd_hist), stored as "h" for the double / triple-double calibration (sharp._ddtd_ours)."""
     import base64
     def pack(x):
         v = np.rint(np.asarray(x, float)[:n]).astype(int)
@@ -158,6 +159,8 @@ def save_draws(out, sims, n=1000):
     by = {}
     for i, r in enumerate(out.itertuples()):
         by.setdefault(int(r.game_id), {"n": n, "p": {}})["p"][f"{r.game_id}|{r.team}|{r.name}"] = {c: pack(sims[c][i]) for c in sims if c != "min"}
+        if hist is not None:
+            by[int(r.game_id)].setdefault("h", {})[f"{r.game_id}|{r.team}|{r.name}"] = [round(float(v), 4) for v in hist[i]]
     d = os.path.join(OUT, "draws")
     os.makedirs(d, exist_ok=True)
     for gid, dd in by.items():
@@ -249,7 +252,13 @@ def main():
                         sv[c][idx] = v
             except Exception as e:
                 print("game-state draws skipped:", type(e).__name__, e)
-            save_draws(out, sv)
+            try:
+                import steps as STP
+                hist = STP.ddtd_hist(fr, rows)
+            except Exception as e:                             # noqa: BLE001
+                hist = None
+                print("dd / td history skipped:", type(e).__name__, e)
+            save_draws(out, sv, hist=hist)
     tab = pd.concat(tabs, ignore_index=True)
     meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play", "lineup"]
                 + [c for c in ["arch"] + [f"dva_{s}" for s in M.DVA_STATS] if c in rows]].copy()
