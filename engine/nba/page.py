@@ -26,6 +26,7 @@ def player_payload(tab, meta, dists):
                         note=None if mm is None else (mm.note or ""), start=None if mm is None else bool(mm.starter == 1),
                         trend=None if mm is None or pd.isna(mm.min_trend) else round(float(mm.min_trend), 1),
                         lu=None if mm is None or "lineup" not in mm.index or not isinstance(mm.lineup, str) else mm.lineup,
+                        ls=None if mm is None or "last_start" not in mm.index or pd.isna(mm.last_start) else int(mm.last_start),
                         gp=None if mm is None else int(mm.games_prior or 0), s=s,
                         ar=None if mm is None or "arch_name" not in mm.index else mm.arch_name,
                         va=None if mm is None or "dva_pts" not in mm.index else {c: round(float(mm["dva_" + c]), 3) for c in ("pts", "fg3m", "stl") if "dva_" + c in mm.index and pd.notna(mm["dva_" + c])},
