@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-04",
 "lock": "2026-11-05T00:00:00+00:00",
-"frozen_at": "2026-11-04T13:25:58.458Z",
+"frozen_at": "2026-11-04T13:41:56.897Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -83,15 +83,15 @@
 ]
 },
 {
-"gid": "401909923",
-"start": "2026-11-05T00:00Z",
-"kind": "ast",
+"gid": "401909929",
+"start": "2026-11-05T01:00Z",
+"kind": "pts",
 "side": "o",
-"line": 3.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 4+ ast",
-"p": 0.2267,
-"price": 425,
+"line": 29.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell 30+ pts",
+"p": 0.2158,
+"price": 456,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -101,8 +101,8 @@
 ]
 }
 ],
-"p": 0.06282,
-"d": 21,
+"p": 0.05981,
+"d": 22.24,
 "first": "2026-11-05T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -130,16 +130,16 @@
 ]
 },
 {
-"gid": "401909928",
+"gid": "401909929",
 "start": "2026-11-05T01:00Z",
 "kind": "pts",
 "side": "o",
-"line": 19.5,
-"name": "ace bailey",
-"lab": "Ace Bailey 20+ pts",
-"p": 0.2253,
-"price": 400,
-"book": "Novig",
+"line": 29.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell 30+ pts",
+"p": 0.2158,
+"price": 456,
+"book": "Kalshi",
 "f": [
 "usage",
 "rotation",
@@ -167,8 +167,8 @@
 ]
 }
 ],
-"p": 0.01476,
-"d": 99.75,
+"p": 0.01414,
+"d": 110.922,
 "first": "2026-11-05T00:00:00+00:00",
 "res": null
 },
@@ -176,6 +176,24 @@
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "401909923",
+"start": "2026-11-05T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "anthony davis",
+"lab": "Anthony Davis 4+ ast",
+"p": 0.2267,
+"price": 425,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
 {
 "gid": "401909928",
 "start": "2026-11-05T01:00Z",
@@ -186,24 +204,6 @@
 "lab": "Ace Bailey 20+ pts",
 "p": 0.2253,
 "price": 400,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909932",
-"start": "2026-11-05T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday 20+ pts",
-"p": 0.203,
-"price": 426,
 "book": "Novig",
 "f": [
 "usage",
@@ -231,9 +231,79 @@
 ]
 }
 ],
-"p": 0.01052,
-"d": 122.295,
+"p": 0.01174,
+"d": 122.063,
+"first": "2026-11-05T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909926",
+"start": "2026-11-05T00:30Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "CHI moneyline",
+"p": 0.1822,
+"price": 506,
+"book": "Novig"
+},
+{
+"gid": "401909929",
+"start": "2026-11-05T01:00Z",
+"kind": "spread",
+"side": "away",
+"line": 2.5,
+"name": null,
+"lab": "CLE +2.5",
+"p": 0.4946,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.09009,
+"d": 12.908,
+"first": "2026-11-05T00:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909929",
+"start": "2026-11-05T01:00Z",
+"kind": "spread",
+"side": "away",
+"line": 2.5,
+"name": null,
+"lab": "CLE +2.5",
+"p": 0.4946,
+"price": 113,
+"book": "Novig"
+},
+{
+"gid": "401909934",
+"start": "2026-11-05T03:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "SAC moneyline",
+"p": 0.1804,
+"price": 488,
+"book": "Novig"
+}
+],
+"p": 0.08922,
+"d": 12.524,
 "first": "2026-11-05T01:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
