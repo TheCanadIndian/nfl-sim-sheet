@@ -60,12 +60,19 @@
   const FKEYS = Object.keys(DEF);
   // ready-made filters from what we've tested, on every device (owner 2026-11-02); your own stay under Saved, in this browser
   const QP = [
-    {n: 'Best edges', f: {edge: 5, price: 'plus'}, t: 'Edge 5%+ at +150 to +400 at your books. Close to the one slice that held up in both halves: 5-40% edges priced about +120 to +570 made +23% on 164 legs, Oct 12-26. The price band was picked after the fact.'},
-    {n: 'Top gaps, main lines', f: {edge: 5, alts: false, sort: 'gap'}, t: 'Main lines with a 5%+ edge, biggest gap first. Stop after the top 10 a day: those made +22% on 198 bets (37% and 6% by half), hitting 38% vs 33% priced, Oct 12-Nov 1, while the whole list made -5%. Mostly NHL, and three wins are 61% of the profit. Not proven.'},
-    {n: 'NFL ladder candidates', f: {sport: 'nfl', lad: true, ladc: 'Ladder candidate'}, t: 'Soft-matchup players’ higher rungs. +8% on 2,885 rungs through week 8, up in both halves. Rungs of one ladder win or lose together.'},
-    {n: 'NFL soft + moved', f: {sport: 'nfl', softm: true, consmv: true, alts: false, edge: -100}, t: 'Main-line overs on a soft matchup where the sharp consensus moved. +3% on 107 vs -15% without the soft matchup, weeks 7-8. A lead, not proven.'},
-    {n: 'NBA ladders, line up', f: {sport: 'nba', lad: true, consmv: true, consk: 'up'}, t: 'NBA ladder rungs where the consensus moved the main line up. Ladder edge rungs hit 5 of 48, about their price, +12%, Oct 23-Nov 1. Small sample. Avoid CONS ▼ odds rungs: 4 of 141.'},
-    {n: 'NHL due', f: {sport: 'nhl', due: true, stat: 'goal', sort: 'start'}, t: 'Anytime goal for players creating 0.25+ xG a game and 0.10+ a game under it. +19% on 256 at your best price, Oct 12-29; stronger with no goal in 3+ games. Not proven.'},
+    {n: 'Best edges · +23%', f: {edge: 5, price: 'plus'}, t: 'Edge 5%+ at +150 to +400 at your books. Close to the one slice that held up in both halves: 5-40% edges priced about +120 to +570 made +23% on 164 legs, Oct 12-26. The price band was picked after the fact.'},
+    {n: 'Top gaps, main lines · +22%', f: {edge: 5, alts: false, sort: 'gap'}, t: 'Main lines with a 5%+ edge, biggest gap first. Stop after the top 10 a day: those made +22% on 198 bets (37% and 6% by half), hitting 38% vs 33% priced, Oct 12-Nov 1, while the whole list made -5%. Mostly NHL, and three wins are 61% of the profit. Not proven.'},
+    {n: 'NFL ladder candidates · +8%', f: {sport: 'nfl', lad: true, ladc: 'Ladder candidate'}, t: 'Soft-matchup players’ higher rungs. +8% on 2,885 rungs through week 8, up in both halves. Rungs of one ladder win or lose together.'},
+    {n: 'NFL soft + moved · +3%', f: {sport: 'nfl', softm: true, consmv: true, alts: false, edge: -100}, t: 'Main-line overs on a soft matchup where the sharp consensus moved. +3% on 107 vs -15% without the soft matchup, weeks 7-8. A lead, not proven.'},
+    {n: 'NBA ladders, line up · +12%', f: {sport: 'nba', lad: true, consmv: true, consk: 'up'}, t: 'NBA ladder rungs where the consensus moved the main line up. Ladder edge rungs hit 5 of 48, about their price, +12%, Oct 23-Nov 1. Small sample. Avoid CONS ▼ odds rungs: 4 of 141.'},
+    {n: 'NHL due · +19%', f: {sport: 'nhl', due: true, stat: 'goal', sort: 'start'}, t: 'Anytime goal for players creating 0.25+ xG a game and 0.10+ a game under it. +19% on 256 at your best price, Oct 12-29; stronger with no goal in 3+ games. Not proven.'},
+    // research/screener_settings.py (owner 2026-11-04: 'test all' -> 'add all and show their return'): every sport x edge floor x price
+    // band x main / alt x stat on 27,223 graded lines Oct 12 - Nov 2 at your best price, one line per player-stat; 55 of 764 settings
+    // were up in both halves (fewer than luck alone would give), so these are the survivors, picked after the fact
+    {n: 'NHL goals 3%+, plus money · +15%', f: {sport: 'nhl', stat: 'goal', edge: 3, price: 'plus', alts: false}, t: 'Anytime goal, edge 3%+, +150 to +400 at your books: +15% on 307 (+17% / +13% by half), hit 31.6% vs 27.1% priced, z +1.5, Oct 12 - Nov 2. Picked from 764 settings after the fact.'},
+    {n: 'Edge 10%+, main lines · +24%', f: {edge: 10, alts: false}, t: 'Every sport, edge 10%+, main lines only: +24% on 351 (+13% / +37%), hit 19.1% vs 16.2% priced, z +1.7, Oct 12 - Nov 2. Mostly NHL goals (307 of 351); the same floor on alt lines lost 16%.'},
+    {n: 'NHL goals 10%+, longshots · +30%', f: {sport: 'nhl', stat: 'goal', edge: 10, price: 'long', alts: false}, t: 'Anytime goal, edge 10%+, +400 and longer: +30% on 250 (+16% / +50%), hit 12.4% vs 10.5% priced, z +1.6, Oct 12 - Nov 2. Long prices: expect long dry spells.'},
+    {n: 'NFL catches 0%+, main · +9%', f: {sport: 'nfl', stat: 'rec', edge: 0, alts: false}, t: 'NFL receptions overs with any positive edge, main lines: +9% on 136 (+13% / +6%), hit 50.7% vs 46.8% priced, z +1.6, weeks 6-9. Small sample.'},
     {n: 'Starting soon', f: {soon: true, sort: 'start'}, t: 'Edge 5%+ in the next 6 hours, soonest first.'},
   ];
   let PRE = [], NAMING = false;
