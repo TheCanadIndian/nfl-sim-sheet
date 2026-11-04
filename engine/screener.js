@@ -146,20 +146,20 @@
           // consensus, else the main line's fair carried by our distribution (log-odds gap, shown with ≈)
           const mainFair = e.pin && e.pin.o != null && e.l != null && Math.abs((e.pin.l ?? .5) - e.l) < 1e-9 ? e.pin.o : null;
           for (const [L, kx] of Object.entries(KAL[`${gid}|${nm}|${k}`] || {})){
-            const x = lines.find(y => y.l != null && Math.abs(+y.l - +L) < 1e-9);
+            const x = lines.find(y => Math.abs(+(y.l ?? .5) - +L) < 1e-9);
             if (x){ if (!(x.o || {}).Kalshi){ x.o = {...(x.o || {}), Kalshi: [kx.o, null]}; x.kal = true; } if (x.p == null) x.p = kx.p; continue; }
             const carry = mainFair != null && e.p != null && kx.p != null && e.p > 0 && e.p < 1 && kx.p > 0 && kx.p < 1 ? sig(lgt(mainFair) + lgt(kx.p) - lgt(e.p)) : null;
             lines.push({l: +L, o: {Kalshi: [kx.o, null]}, u: {}, p: kx.p, main: false, apin: null, carry, kal: true});
           }
           for (const c of ladBy[`${gid}|${nm}|${k}`] || []){                  // a ladder rung with a wider spread than the 4c rule above
             const q = c.ya + .07 * c.ya * (1 - c.ya), o = Math.round(q >= .5 ? -100 * q / (1 - q) : 100 * (1 - q) / q);
-            const y = lines.find(z => z.l != null && Math.abs(+z.l - +c.line) < 1e-9);
+            const y = lines.find(z => Math.abs(+(z.l ?? .5) - +(c.line ?? .5)) < 1e-9);
             if (y){ if (!(y.o || {}).Kalshi) y.o = {...(y.o || {}), Kalshi: [o, null]}; continue; }
             const carry = mainFair != null && e.p != null && c.p != null && e.p > 0 && e.p < 1 && c.p > 0 && c.p < 1 ? sig(lgt(mainFair) + lgt(c.p) - lgt(e.p)) : null;
             lines.push({l: c.line, o: {Kalshi: [o, null]}, u: {}, p: c.p, main: false, apin: null, carry, kal: true});
           }
           // a Kalshi-only knee rung (Kalshi's ladders aren't in the props file): add it so the knee shows
-          for (const x of F.knees || []) if (x.g === gid && x.n === nm && x.k === k && x.bk === 'Kalshi' && !lines.some(y => +y.l === +x.l))
+          for (const x of F.knees || []) if (x.g === gid && x.n === nm && x.k === k && x.bk === 'Kalshi' && !lines.some(y => +(y.l ?? .5) === +(x.l ?? .5)))
             lines.push({l: x.l, o: {Kalshi: [x.o, null]}, u: {}, p: x.p, main: false, apin: x.fair});
           // an opener whose line the book has since pulled: still listed (owner: "flag the early openers even if I miss them")
           for (const x of F.openers || []) if (x.g === gid && x.n === nm && x.k === k && !lines.some(y => y.l != null && +y.l === +x.l))
