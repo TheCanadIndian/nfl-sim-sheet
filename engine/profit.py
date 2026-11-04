@@ -86,6 +86,30 @@ def ladder_rows(date, mk, R, GM):
             po = (r.get("ours") or {}).get("vegas")                      # our chance: the claimed edge is po / cost - 1
             out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"),
                             bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4)))
+    # receiving yards, one rung per player (owner 2026-11-03 after research/nfl_ladders.py market: Kalshi KXNFLRECYDS Oct 2025 - wk 9,
+    # one rung per player +38% on 778 at 5%+ walk-forward, -5 / +13 / +77% by period; catches / rushing / passing lost): every Kalshi
+    # receiving-yards rung, spread 5c or less, mid 3-97c; chance = Kalshi's mid recalibrated (logit .0711 + .9303 logit mid) moved .35
+    # of the way to ours in log-odds (full-sample fixed weights: +30% on 621); best edge per player, 5-60%
+    if date >= "2026-11-03":
+        lg = lambda v: math.log(v / (1 - v))
+        for (g, pid, k), L in by.items():
+            if k != "rec_yds":
+                continue
+            best = None
+            for x in L.values():
+                b_, a_ = x["yes_bid"], x["yes_ask"]; m_ = (a_ + b_) / 2; po = (x.get("ours") or {}).get("vegas")
+                if po is None or a_ - b_ > .05 or not .03 <= m_ <= .97 or a_ >= .97:
+                    continue
+                mk_ = .0711 + .9303 * lg(min(max(m_, .005), .995))
+                q_ = 1 / (1 + math.exp(-(mk_ + .35 * (lg(min(max(po, .002), .998)) - mk_))))
+                cy = a_ + FEE["kalshi"] * a_ * (1 - a_)
+                if .05 <= q_ / cy - 1 <= .6 and (best is None or q_ / cy > best[0]):
+                    best = (q_ / cy, x, cy, q_, m_)
+            if best:
+                y = GM.outcome("nfl", best[1], R)
+                if y is not None:
+                    out.append(dict(date=date, sport="nfl", cat="NFL receiving yards: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="rec_yds",
+                                    title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
     return out
 
 

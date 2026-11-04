@@ -45,10 +45,17 @@ def draws(out, rows, n=1000, seed=0):
     if M.USE_THREES:
         import threes as TH
         TP = TH.load()
+    SP = None
+    if M.USE_STEPS:
+        import steps as STP
+        SP = STP.load()
+    v_min = (sd / np.maximum(em, 1e-6)) ** 2
     for c in ST:
         k = M.DISP[c] * np.clip(mu[c] / M.DISP_REF.get(c, 1e9), 1, None) ** M.DISP_GAMMA
         if c == "fg3m" and TP is not None:          # threes.py spread (holds minutes variation: no minutes factor below)
             k = TP["K0"] * np.maximum(mu[c], .01) ** TP["G"]
+        elif SP is not None and c in SP["nb"]:          # steps.py spread, net of the minutes noise below
+            k = STP.gamma_size(SP, c, mu[c], v_min)
         G[c] = rng.gamma(k[:, None] * np.ones((1, n)), 1 / k[:, None])
         U[c] = rng.uniform(size=(len(out), n))
     side = np.where(home, 0, len(ST))
