@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-04",
 "lock": "2026-11-05T00:00:00+00:00",
-"frozen_at": "2026-11-04T18:26:26.622Z",
+"frozen_at": "2026-11-04T18:43:20.682Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,24 +15,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909929",
-"start": "2026-11-05T01:00Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "donovan mitchell",
-"lab": "Donovan Mitchell 30+ pts",
-"p": 0.2037,
-"price": 456,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
 "gid": "401909932",
 "start": "2026-11-05T02:00Z",
 "kind": "reb",
@@ -49,11 +31,29 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401909934",
+"start": "2026-11-05T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis 20+ pts",
+"p": 0.2157,
+"price": 456,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
 }
 ],
-"p": 0.04256,
+"p": 0.04507,
 "d": 30.914,
-"first": "2026-11-05T01:00:00+00:00",
+"first": "2026-11-05T02:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -62,6 +62,71 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909929",
+"start": "2026-11-05T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell 30+ pts",
+"p": 0.2037,
+"price": 456,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909934",
+"start": "2026-11-05T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis 20+ pts",
+"p": 0.2157,
+"price": 456,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.04395,
+"d": 30.914,
+"first": "2026-11-05T01:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909929",
+"start": "2026-11-05T01:00Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell 30+ pts",
+"p": 0.2037,
+"price": 456,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
 "gid": "401909932",
 "start": "2026-11-05T02:00Z",
 "kind": "reb",
@@ -98,10 +163,9 @@
 ]
 }
 ],
-"p": 0.06633,
-"d": 18.904,
-"first": "2026-11-05T02:00:00+00:00",
-"pick": "longshot",
+"p": 0.01351,
+"d": 105.106,
+"first": "2026-11-05T01:00:00+00:00",
 "res": null
 },
 {
@@ -127,21 +191,21 @@
 ]
 },
 {
-"gid": "401909929",
+"gid": "401909928",
 "start": "2026-11-05T01:00Z",
-"kind": "pts",
+"kind": "fg3m",
 "side": "o",
-"line": 29.5,
-"name": "donovan mitchell",
-"lab": "Donovan Mitchell 30+ pts",
-"p": 0.2037,
-"price": 456,
-"book": "Kalshi",
+"line": 1.5,
+"name": "dejounte murray",
+"lab": "Dejounte Murray 2+ threes",
+"p": 0.4,
+"price": 140,
+"book": "Hard Rock",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
@@ -163,73 +227,9 @@
 ]
 }
 ],
-"p": 0.01642,
-"d": 74.104,
+"p": 0.03224,
+"d": 31.987,
 "first": "2026-11-05T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909922",
-"start": "2026-11-05T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 3.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 4+ reb",
-"p": 0.2539,
-"price": 292,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909926",
-"start": "2026-11-05T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "mikal bridges",
-"lab": "Mikal Bridges 4+ ast",
-"p": 0.2673,
-"price": 351,
-"book": "Kalshi",
-"f": [
-"matchup",
-"game",
-"price"
-]
-},
-{
-"gid": "401909935",
-"start": "2026-11-05T03:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "derrick jones",
-"lab": "Derrick Jones Jr. 6+ reb",
-"p": 0.3003,
-"price": 245,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.02038,
-"d": 60.993,
-"first": "2026-11-05T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -361,6 +361,32 @@
 "edge": 0.0204
 },
 {
+"gid": "401909924",
+"start": "2026-11-05T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 2.5 threes",
+"p": 0.4932,
+"price": 104,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0108
+},
+{
 "gid": "401909930",
 "start": "2026-11-05T01:30Z",
 "kind": "ast",
@@ -383,43 +409,16 @@
 ],
 "sport": "nba",
 "edge": 0.0346
-},
-{
-"gid": "401909922",
-"start": "2026-11-05T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 2.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson over 2.5 rebounds",
-"p": 0.4561,
-"price": 120,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0094
 }
 ],
-"p": 0.08599,
-"d": 12.584,
-"first": "2026-11-05T00:00:00+00:00",
+"p": 0.09299,
+"d": 11.669,
+"first": "2026-11-05T00:30:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "4-leg longshot",
+"tier": "5-leg longshot",
 "legs": [
 {
 "gid": "401909928",
@@ -501,6 +500,32 @@
 "edge": 0.0204
 },
 {
+"gid": "401909924",
+"start": "2026-11-05T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 2.5 threes",
+"p": 0.4932,
+"price": 104,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0108
+},
+{
 "gid": "401909930",
 "start": "2026-11-05T01:30Z",
 "kind": "ast",
@@ -525,8 +550,8 @@
 "edge": 0.0346
 }
 ],
-"p": 0.06198,
-"d": 20.879,
+"p": 0.03057,
+"d": 42.592,
 "first": "2026-11-05T00:30:00+00:00",
 "res": null
 },
