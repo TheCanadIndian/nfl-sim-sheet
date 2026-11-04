@@ -852,6 +852,8 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .lchg.in{color:#7fb2ff;border-color:color-mix(in srgb,#7fb2ff 55%,transparent)}
 .lchg.dry{color:var(--muted);border-color:var(--faint)}
 .lchg.due{color:var(--good);border-color:var(--good)}
+.lchg.dout{color:#F2C14E;border-color:color-mix(in srgb,#F2C14E 55%,transparent)}
+.doutl{margin:2px 0}
 .lchgl{margin:2px 0 4px}.lchgl b{font-weight:600}
 .pdline b{font-weight:600}
 .pdline .up{color:var(--good)} .pdline .dn{color:var(--bad)}
