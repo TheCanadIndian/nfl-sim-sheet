@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-04T22:32:37.005Z",
+"frozen_at": "2026-11-04T22:40:33.046Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -48,6 +48,18 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts TD",
+"p": 0.3026,
+"price": 270,
+"book": "Novig"
+},
+{
 "gid": "2026_09_BUF_MIN",
 "start": "2026-11-09T20:15:00",
 "kind": "td",
@@ -58,21 +70,9 @@
 "p": 0.3347,
 "price": 245,
 "book": "Novig"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts TD",
-"p": 0.3038,
-"price": 270,
-"book": "Novig"
 }
 ],
-"p": 0.10169,
+"p": 0.10129,
 "d": 12.765,
 "first": "2026-11-08T14:30:00+00:00",
 "pick": "core"
@@ -101,12 +101,12 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.3038,
+"p": 0.3026,
 "price": 270,
 "book": "Novig"
 }
 ],
-"p": 0.09259,
+"p": 0.09223,
 "d": 15.762,
 "first": "2026-11-08T14:30:00+00:00"
 },
@@ -115,33 +115,33 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"kind": "rush_yds",
+"gid": "2026_09_TB_CHI",
+"start": "2026-11-08T20:20:00",
+"kind": "rec_yds",
 "side": "u",
-"line": 43.5,
-"name": "josh jacobs",
-"lab": "Josh Jacobs under 43.5 rush yds",
-"p": 0.5458,
-"price": -104,
+"line": 52.5,
+"name": "emeka egbuka",
+"lab": "Emeka Egbuka under 52.5 rec yds",
+"p": 0.57,
+"price": -108,
 "book": "Novig"
 },
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 41.5,
-"name": "antonio williams",
-"lab": "Antonio Williams under 41.5 rec yds",
-"p": 0.5257,
-"price": 108,
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.377,
+"price": 245,
 "book": "Novig"
 }
 ],
-"p": 0.28693,
-"d": 4.08,
-"first": "2026-11-08T18:00:00+00:00"
+"p": 0.21489,
+"d": 6.644,
+"first": "2026-11-09T01:20:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -155,7 +155,7 @@
 "line": 43.5,
 "name": "josh jacobs",
 "lab": "Josh Jacobs under 43.5 rush yds",
-"p": 0.5458,
+"p": 0.544,
 "price": -104,
 "book": "Novig"
 },
@@ -172,7 +172,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.20576,
+"p": 0.20511,
 "d": 6.767,
 "first": "2026-11-08T21:25:00+00:00"
 },
@@ -181,66 +181,33 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 41.5,
-"name": "antonio williams",
-"lab": "Antonio Williams under 41.5 rec yds",
-"p": 0.5257,
-"price": 108,
-"book": "Novig"
-},
-{
-"gid": "2026_09_BUF_MIN",
-"start": "2026-11-09T20:15:00",
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.377,
-"price": 245,
-"book": "Novig"
-}
-],
-"p": 0.1982,
-"d": 7.176,
-"first": "2026-11-08T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bo nix",
-"lab": "Bo Nix anytime TD",
-"p": 0.248,
-"price": 456,
+"name": "kyle pitts",
+"lab": "Kyle Pitts anytime TD",
+"p": 0.331,
+"price": 270,
 "book": "Novig"
 },
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
+"gid": "2026_09_TB_CHI",
+"start": "2026-11-08T20:20:00",
 "kind": "rec_yds",
 "side": "u",
-"line": 41.5,
-"name": "antonio williams",
-"lab": "Antonio Williams under 41.5 rec yds",
-"p": 0.5257,
-"price": 108,
+"line": 52.5,
+"name": "emeka egbuka",
+"lab": "Emeka Egbuka under 52.5 rec yds",
+"p": 0.57,
+"price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.13038,
-"d": 11.565,
-"first": "2026-11-08T18:00:00+00:00"
+"p": 0.18867,
+"d": 7.126,
+"first": "2026-11-08T14:30:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -282,13 +249,25 @@
 {
 "gid": "2026_09_GB_NE",
 "start": "2026-11-08T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "drake maye",
-"lab": "Drake Maye anytime TD",
-"p": 0.297,
-"price": 300,
+"kind": "rush_yds",
+"side": "u",
+"line": 43.5,
+"name": "josh jacobs",
+"lab": "Josh Jacobs under 43.5 rush yds",
+"p": 0.544,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026_09_TB_CHI",
+"start": "2026-11-08T20:20:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 52.5,
+"name": "emeka egbuka",
+"lab": "Emeka Egbuka under 52.5 rec yds",
+"p": 0.57,
+"price": -108,
 "book": "Novig"
 },
 {
@@ -304,9 +283,42 @@
 "book": "Novig"
 }
 ],
-"p": 0.11197,
-"d": 13.8,
+"p": 0.11691,
+"d": 13.033,
 "first": "2026-11-08T21:25:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T13:00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "dylan sampson",
+"lab": "Dylan Sampson anytime TD",
+"p": 0.199,
+"price": 525,
+"book": "Novig"
+},
+{
+"gid": "2026_09_TB_CHI",
+"start": "2026-11-08T20:20:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 52.5,
+"name": "emeka egbuka",
+"lab": "Emeka Egbuka under 52.5 rec yds",
+"p": 0.57,
+"price": -108,
+"book": "Novig"
+}
+],
+"p": 0.11343,
+"d": 12.037,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Cross-game parlays",
