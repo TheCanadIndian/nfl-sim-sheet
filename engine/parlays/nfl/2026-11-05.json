@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T17:11:58.325Z",
+"frozen_at": "2026-11-05T17:23:49.815Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -126,8 +126,20 @@
 },
 {
 "card": "Ladder longshots (experimental)",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
+{
+"gid": "2026_09_DET_MIA",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "jared goff",
+"lab": "Jared Goff 300+ pass yds",
+"p": 0.29,
+"price": 208,
+"book": "Kalshi"
+},
 {
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
@@ -139,41 +151,29 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
-},
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "malik nabers",
-"lab": "Malik Nabers 100+ rec yds",
-"p": 0.26,
-"price": 240,
-"book": "Kalshi"
-},
-{
-"gid": "2026_09_LV_SF",
-"start": "2026-11-08T16:05:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "brock purdy",
-"lab": "Brock Purdy 300+ pass yds",
-"p": 0.225,
-"price": 280,
-"book": "Kalshi"
 }
 ],
-"p": 0.01609,
-"d": 43.935,
+"p": 0.07975,
+"d": 10.463,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
 {
 "card": "Ladder longshots (experimental)",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts 6+ catches",
+"p": 0.25,
+"price": 252,
+"book": "Kalshi"
+},
 {
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
@@ -185,34 +185,10 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
-},
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "malik nabers",
-"lab": "Malik Nabers 100+ rec yds",
-"p": 0.26,
-"price": 240,
-"book": "Kalshi"
-},
-{
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "matthew stafford",
-"lab": "Matthew Stafford 325+ pass yds",
-"p": 0.155,
-"price": 425,
-"book": "Kalshi"
 }
 ],
-"p": 0.01108,
-"d": 60.738,
+"p": 0.06875,
+"d": 11.981,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -3134,7 +3110,7 @@
 "name": "jk dobbins",
 "lab": "J.K. Dobbins over 25.5 rush yds",
 "p": 0.5422,
-"price": -113,
+"price": -115,
 "book": "Novig",
 "f": [
 "usage",
@@ -3145,14 +3121,15 @@
 "usage",
 "matchup",
 "script",
-"our model above fair"
+"our model above fair",
+"consensus up"
 ],
 "sport": "nfl",
-"edge": 0.0964
+"edge": 0.0874
 }
 ],
 "p": 0.27289,
-"d": 3.77,
+"d": 3.739,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -3177,24 +3154,82 @@
 "main": false
 },
 {
-"gid": "2026_09_DEN_CAR",
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-10T01:15:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 13.5,
+"name": "james cook",
+"lab": "James Cook over 13.5 rec yds",
+"p": 0.475,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.159,
+"fair": 0.5,
+"main": false
+}
+],
+"p": 0.10958,
+"d": 12.81,
+"first": "2026-11-06T01:15:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_09_JAX_BAL",
+"start": "2026-11-06T01:15:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 2.5 receptions",
+"p": 0.2307,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.2112,
+"fair": 0.2107,
+"main": false
+},
+{
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-10T01:15:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 13.5,
+"name": "james cook",
+"lab": "James Cook over 13.5 rec yds",
+"p": 0.475,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.159,
+"fair": 0.5,
+"main": false
+},
+{
+"gid": "2026_09_CLE_NO",
 "start": "2026-11-08T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 1.5,
-"name": "marvin mims",
-"lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4544,
-"price": 135,
+"line": 3.5,
+"name": "denzel boston",
+"lab": "Denzel Boston over 3.5 receptions",
+"p": 0.4666,
+"price": 138,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0678,
-"fair": 0.4028,
+"edge": 0.1106,
+"fair": 0.4583,
 "main": true
 }
 ],
-"p": 0.10483,
-"d": 12.338,
+"p": 0.05113,
+"d": 30.488,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 }
