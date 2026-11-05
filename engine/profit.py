@@ -1088,6 +1088,8 @@ def _over_leg(L):
 
 EDGE_BANDS = [(-9, 0, "under 0%"), (0, .05, "0-5%"), (.05, .10, "5-10%"), (.10, .20, "10-20%"), (.20, .40, "20-40%"), (.40, .80, "40-80%"), (.80, 99, "80%+")]
 EDGE_CATS = ("ladder candidates", "ladder edge")
+ODDS_BANDS = [(-99999, 99, "minus money"), (100, 150, "+100–150"), (151, 350, "+151–350"), (351, 600, "+351–600"), (601, 800, "+601–800"),
+              (801, 1200, "+801–1200"), (1201, 1500, "+1201–1500"), (1501, 2500, "+1501–2500"), (2501, 10000, "+2501–10000"), (10001, 10 ** 9, "over +10000")]
 
 
 def edge_bands():
@@ -1204,9 +1206,26 @@ def feed_data():
         for r in L.get("f") or []:
             t = lt.setdefault(("reason", r), dict(sport="path", kind=r, n=0, hit=0, exp=0.0)); t["n"] += 1; t["hit"] += L["y"]; t["exp"] += L["p"] or 0
     legt = sorted((dict(t, exp=round(t["exp"], 1)) for t in lt.values() if t["n"] >= 5), key=lambda t: (t["sport"] == "path", t["sport"], -t["n"]))
+    # results by odds range (owner 2026-11-05, a Discord suggestion: 'categorize wins by odds range'): last 30 days,
+    # straights and parlays apart, per sport and all sports; priced = wins the payouts imply (sum of 1 / payout)
+    def oband(pay):
+        if pay < 2:
+            return 0
+        am = round((pay - 1) * 100)
+        return next(i for i, (lo, hi, _) in enumerate(ODDS_BANDS) if lo <= am <= hi)
+    ob = {}
+    for x in items:
+        if x["date"] < since30 or not x.get("pay"):
+            continue
+        st = x["t"] == "bet" or x.get("tier") == "straight"
+        for sp in (x["sport"], "all"):
+            b = ob.setdefault((sp, "straight" if st else "parlay", oband(x["pay"])), dict(n=0, w=0, exp=0.0, net=0.0, stake=0.0))
+            b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT if st else PARLAY
+    odds = [dict(sport=sp, t=t, lab=ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2), roi=round(b["net"] / b["stake"], 4))
+            for (sp, t, i), b in sorted(ob.items())]
     # every graded bet of the window (a cap cut older days' losers: they sort after winners), compact keys
     items = [x for x in items if x["date"] >= since]          # the day-by-day list: last 14 days
-    return dict(items=items, you=you, types=types, legs=legt, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
+    return dict(items=items, you=you, types=types, legs=legt, odds=odds, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1300,6 +1319,17 @@ function edgeTable(){
     <p class="note" style="margin:8px 0">Each bet grouped by the edge we claimed when it was flagged (our chance against the price; Kalshi with its fee). Hit = how often it won; Ours = the chance we gave it on average. If the big claimed edges hit no more often than the small ones, the model is overconfident there. Fewer than 30 bets in a band is noise.</p>
     <div class="trk">${E.map(tb).join('')}</div></details></section>`;
 }
+function oddsTable(){
+  const O = (FE.odds || []).filter(b => b.sport === FF.s); if (!O.length) return '';
+  const sports = [...new Set((FE.odds || []).map(b => b.sport))].filter(k => k !== 'all');
+  const sw = `<div class="fsw">${['all', ...sports].map(k => `<button data-fs="${k}" aria-pressed="${FF.s === k}">${k === 'all' ? 'All sports' : k.toUpperCase()}</button>`).join('')}</div>`;
+  const tb = (t, lab) => { const R = O.filter(b => b.t === t); if (!R.length) return '';
+    const n = R.reduce((s, b) => s + b.n, 0), w = R.reduce((s, b) => s + b.w, 0), e = R.reduce((s, b) => s + b.exp, 0), net = R.reduce((s, b) => s + b.net, 0);
+    return `<div class="tb"><h3>${lab}</h3><p class="small muted" style="margin:0 0 4px">${n} bets · won ${w} vs ${e.toFixed(0)} priced · ${usd(net)}</p><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${R.map(b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${b.roi >= 0 ? '+' : '−'}${Math.abs(Math.round(b.roi * 100))}%${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`).join('')}</tbody></table></div>`; };
+  return `<section class="panel lt"><div class="phead"><h2>Results by odds</h2><span class="small muted">last 30 days · $${FE.stake.straight} straight, $${FE.stake.parlay} parlay</span></div>${sw}
+    <div class="trk">${tb('straight', 'Straight bets')}${tb('parlay', 'Parlays')}</div>
+    <p class="note" style="margin:8px 0 0">Every bet in Your bets, grouped by the odds it was taken at. Won vs Priced = wins against what the odds imply (the price includes the book’s margin, so winning exactly what’s priced still loses a little). Fewer than 30 bets in a range is noise.</p></section>`;
+}
 function legTable(){
   const L = FE.legs || []; if (!L.length) return '';
   const KL = {rec_yds: 'receiving yds', rush_yds: 'rushing yds', pass_yds: 'passing yds', rec: 'catches', td: 'anytime TD', goal: 'anytime goal', sog: 'shots on goal', pts: 'points', reb: 'rebounds', ast: 'assists', fg3m: 'threes', ml: 'moneyline', spread: 'spread', total: 'total'};
@@ -1329,7 +1359,7 @@ function render(){
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
   const all = `<details class="panel"><summary style="cursor:pointer"><h2 style="display:inline">Every tracked rule</h2> <span class="small muted">all bets incl. unders and the test versions</span></summary>
     <section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>${track}${D.sports.map(sp).join('')}</details>`;
-  document.getElementById('main').innerHTML = you() + working() + feed() + legTable() + edgeTable() + all;
+  document.getElementById('main').innerHTML = you() + working() + oddsTable() + feed() + legTable() + edgeTable() + all;
 }
 render();
 </script></body></html>"""
