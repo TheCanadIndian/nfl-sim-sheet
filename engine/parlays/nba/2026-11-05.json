@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-05",
 "lock": "2026-11-06T02:00:00+00:00",
-"frozen_at": "2026-11-05T18:00:47.801Z",
+"frozen_at": "2026-11-05T18:17:45.627Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,18 +17,19 @@
 {
 "gid": "401909936",
 "start": "2026-11-06T02:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "desmond bane",
-"lab": "Desmond Bane 5+ ast",
-"p": 0.3111,
-"price": 230,
+"line": 6.5,
+"name": "anthony black",
+"lab": "Anthony Black 7+ reb",
+"p": 0.2149,
+"price": 400,
 "book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -50,9 +51,56 @@
 ]
 }
 ],
-"p": 0.13324,
-"d": 7.59,
+"p": 0.09202,
+"d": 11.5,
 "first": "2026-11-06T02:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909936",
+"start": "2026-11-06T02:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jalen green",
+"lab": "Jalen Green 6+ reb",
+"p": 0.2181,
+"price": 400,
+"book": "Novig",
+"f": [
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909937",
+"start": "2026-11-06T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 5+ ast",
+"p": 0.4283,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.09341,
+"d": 11.5,
+"first": "2026-11-06T02:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -62,21 +110,21 @@
 {
 "gid": "401909936",
 "start": "2026-11-06T02:00Z",
-"kind": "pts",
+"kind": "ast",
 "side": "o",
-"line": 23.5,
-"name": "franz wagner",
-"lab": "Franz Wagner over 23.5 points",
-"p": 0.479,
-"fair": 0.4822,
-"price": -122,
-"book": "Novig",
+"line": 5.5,
+"name": "devin booker",
+"lab": "Devin Booker over 5.5 assists",
+"p": 0.4251,
+"fair": 0.4289,
+"price": 155,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.1284,
+"edge": 0.0841,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (22.5)"
+"one rung above the main line (4.5)"
 ]
 },
 {
@@ -89,10 +137,10 @@
 "lab": "Brandin Podziemski over 19.5 points",
 "p": 0.3083,
 "fair": 0.31,
-"price": 203,
-"book": "Novig",
+"price": 208,
+"book": "Kalshi",
 "sport": "nba",
-"edge": -0.0659,
+"edge": -0.0504,
 "v": [
 "consensus odds drop",
 "one rung above the main line (16.5)",
@@ -100,8 +148,50 @@
 ]
 }
 ],
-"p": 0.14948,
-"d": 5.514,
+"p": 0.13296,
+"d": 7.854,
+"first": "2026-11-06T02:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909936",
+"start": "2026-11-06T02:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "oso ighodaro",
+"lab": "Oso Ighodaro over 2.5 assists",
+"p": 0.5266,
+"price": 145,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.2903,
+"fair": 0.5345,
+"main": true
+},
+{
+"gid": "401909937",
+"start": "2026-11-06T03:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "andrew wiggins",
+"lab": "Andrew Wiggins over 4.5 rebounds",
+"p": 0.3992,
+"price": 175,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0979,
+"fair": 0.4112,
+"main": false
+}
+],
+"p": 0.21022,
+"d": 6.738,
 "first": "2026-11-06T02:00:00+00:00",
 "res": null
 }
