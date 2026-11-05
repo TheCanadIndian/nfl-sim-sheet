@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T17:23:49.815Z",
+"frozen_at": "2026-11-05T17:36:48.344Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -126,20 +126,8 @@
 },
 {
 "card": "Ladder longshots (experimental)",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
-{
-"gid": "2026_09_DET_MIA",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "jared goff",
-"lab": "Jared Goff 300+ pass yds",
-"p": 0.29,
-"price": 208,
-"book": "Kalshi"
-},
 {
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
@@ -151,29 +139,41 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
+},
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "malik nabers",
+"lab": "Malik Nabers 100+ rec yds",
+"p": 0.26,
+"price": 240,
+"book": "Kalshi"
+},
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 300+ pass yds",
+"p": 0.255,
+"price": 252,
+"book": "Kalshi"
 }
 ],
-"p": 0.07975,
-"d": 10.463,
+"p": 0.01823,
+"d": 40.735,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
 {
 "card": "Ladder longshots (experimental)",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts 6+ catches",
-"p": 0.25,
-"price": 252,
-"book": "Kalshi"
-},
 {
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
@@ -185,10 +185,34 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
+},
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "malik nabers",
+"lab": "Malik Nabers 100+ rec yds",
+"p": 0.26,
+"price": 240,
+"book": "Kalshi"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 300+ pass yds",
+"p": 0.22,
+"price": 296,
+"book": "Kalshi"
 }
 ],
-"p": 0.06875,
-"d": 11.981,
+"p": 0.01573,
+"d": 45.735,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -3082,7 +3106,7 @@
 "line": 4.5,
 "name": "zay flowers",
 "lab": "Zay Flowers over 4.5 receptions",
-"p": 0.5033,
+"p": 0.5041,
 "price": 100,
 "book": "Hard Rock",
 "f": [
@@ -3099,7 +3123,7 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.0276
+"edge": 0.0289
 },
 {
 "gid": "2026_09_DEN_CAR",
@@ -3121,14 +3145,13 @@
 "usage",
 "matchup",
 "script",
-"our model above fair",
-"consensus up"
+"our model above fair"
 ],
 "sport": "nfl",
 "edge": 0.0874
 }
 ],
-"p": 0.27289,
+"p": 0.27332,
 "d": 3.739,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -3212,24 +3235,24 @@
 "main": false
 },
 {
-"gid": "2026_09_CLE_NO",
+"gid": "2026_09_DEN_CAR",
 "start": "2026-11-08T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 3.5,
-"name": "denzel boston",
-"lab": "Denzel Boston over 3.5 receptions",
-"p": 0.4666,
-"price": 138,
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4544,
+"price": 135,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1106,
-"fair": 0.4583,
+"edge": 0.0678,
+"fair": 0.4028,
 "main": true
 }
 ],
-"p": 0.05113,
-"d": 30.488,
+"p": 0.04979,
+"d": 30.104,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 }
