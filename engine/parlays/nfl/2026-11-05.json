@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T20:30:37.357Z",
+"frozen_at": "2026-11-05T20:48:43.062Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -102,7 +102,7 @@
 "line": 274.5,
 "name": "trevor lawrence",
 "lab": "Trevor Lawrence 275+ pass yds",
-"p": 0.285,
+"p": 0.28,
 "price": 229,
 "book": "Kalshi"
 },
@@ -119,7 +119,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.03589,
+"p": 0.03526,
 "d": 50.4,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -163,18 +163,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts 6+ catches",
-"p": 0.25,
-"price": 252,
-"book": "Kalshi"
-},
-{
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
 "kind": "rec_yds",
@@ -185,9 +173,21 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
+},
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 300+ pass yds",
+"p": 0.26,
+"price": 252,
+"book": "Kalshi"
 }
 ],
-"p": 0.06875,
+"p": 0.0715,
 "d": 11.981,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -3082,7 +3082,7 @@
 "line": 4.5,
 "name": "zay flowers",
 "lab": "Zay Flowers over 4.5 receptions",
-"p": 0.5097,
+"p": 0.5112,
 "price": 100,
 "book": "Hard Rock",
 "f": [
@@ -3099,7 +3099,7 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.0373
+"edge": 0.0395
 },
 {
 "gid": "2026_09_DEN_CAR",
@@ -3109,7 +3109,7 @@
 "line": 25.5,
 "name": "jk dobbins",
 "lab": "J.K. Dobbins over 25.5 rush yds",
-"p": 0.5281,
+"p": 0.5279,
 "price": -113,
 "book": "Novig",
 "f": [
@@ -3124,10 +3124,10 @@
 "our model above fair"
 ],
 "sport": "nfl",
-"edge": 0.0765
+"edge": 0.0762
 }
 ],
-"p": 0.26917,
+"p": 0.26986,
 "d": 3.77,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -3144,12 +3144,70 @@
 "line": 2.5,
 "name": "brian thomas",
 "lab": "Brian Thomas over 2.5 receptions",
-"p": 0.2565,
+"p": 0.2561,
 "price": 425,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.3466,
-"fair": 0.2451,
+"edge": 0.3447,
+"fair": 0.2446,
+"main": false
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T21:05:00+00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 25.5,
+"name": "kimani vidal",
+"lab": "Kimani Vidal over 25.5 rush yds",
+"p": 0.4452,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0862,
+"fair": 0.4802,
+"main": false
+}
+],
+"p": 0.11402,
+"d": 12.81,
+"first": "2026-11-06T01:15:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_09_JAX_BAL",
+"start": "2026-11-06T01:15:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 2.5 receptions",
+"p": 0.2561,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.3447,
+"fair": 0.2446,
+"main": false
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T21:05:00+00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 25.5,
+"name": "kimani vidal",
+"lab": "Kimani Vidal over 25.5 rush yds",
+"p": 0.4452,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0862,
+"fair": 0.4802,
 "main": false
 },
 {
@@ -3169,8 +3227,8 @@
 "main": true
 }
 ],
-"p": 0.11853,
-"d": 12.338,
+"p": 0.05269,
+"d": 30.104,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 }
