@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T23:40:27.051Z",
+"frozen_at": "2026-11-05T23:53:28.786Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -136,7 +136,7 @@
 "line": 299.5,
 "name": "jared goff",
 "lab": "Jared Goff 300+ pass yds",
-"p": 0.285,
+"p": 0.29,
 "price": 208,
 "book": "Kalshi"
 },
@@ -153,7 +153,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.07838,
+"p": 0.07975,
 "d": 10.463,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -3071,19 +3071,67 @@
 "res": null
 },
 {
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_09_JAX_BAL",
+"start": "2026-11-05T20:15:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "parker washington",
+"lab": "Parker Washington anytime TD",
+"p": 0.3977,
+"price": 170,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"script"
+],
+"sport": "nfl",
+"edge": 0.0738
+},
+{
+"gid": "2026_09_DEN_CAR",
+"start": "2026-11-08T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 25.5,
+"name": "jk dobbins",
+"lab": "J.K. Dobbins over 25.5 rush yds",
+"p": 0.5806,
+"price": -122,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"script"
+],
+"sport": "nfl",
+"edge": 0.0565
+}
+],
+"p": 0.2309,
+"d": 4.913,
+"first": "2026-11-06T01:15:00+00:00",
+"res": null
+},
+{
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
 {
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 48.5,
+"line": 4.5,
 "name": "zay flowers",
-"lab": "Zay Flowers over 48.5 rec yds",
-"p": 0.5135,
-"price": -108,
+"lab": "Zay Flowers over 4.5 receptions",
+"p": 0.519,
+"price": -111,
 "book": "Novig",
 "f": [
 "usage",
@@ -3099,36 +3147,36 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.0306
+"edge": 0.0167
 },
 {
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T16:05:00",
+"gid": "2026_09_DEN_CAR",
+"start": "2026-11-08T13:00:00",
 "kind": "rush_yds",
 "side": "o",
-"line": 60.5,
-"name": "woody marks",
-"lab": "Woody Marks over 60.5 rush yds",
-"p": 0.4991,
-"price": -104,
+"line": 25.5,
+"name": "jk dobbins",
+"lab": "J.K. Dobbins over 25.5 rush yds",
+"p": 0.5275,
+"price": -122,
 "book": "Novig",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "script"
 ],
 "v": [
 "usage",
-"rotation",
+"matchup",
 "script",
 "our model above fair"
 ],
 "sport": "nfl",
-"edge": 0.0383
+"edge": 0.0565
 }
 ],
-"p": 0.25629,
-"d": 3.778,
+"p": 0.27377,
+"d": 3.459,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -3144,12 +3192,12 @@
 "line": 2.5,
 "name": "rashod bateman",
 "lab": "Rashod Bateman over 2.5 receptions",
-"p": 0.2822,
+"p": 0.2794,
 "price": 350,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.2699,
-"fair": 0.2579,
+"edge": 0.2574,
+"fair": 0.2542,
 "main": false
 },
 {
@@ -3160,16 +3208,16 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4626,
+"p": 0.4618,
 "price": 138,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.101,
-"fair": 0.4116,
+"edge": 0.0991,
+"fair": 0.4105,
 "main": true
 }
 ],
-"p": 0.13055,
+"p": 0.12903,
 "d": 10.71,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -3186,12 +3234,12 @@
 "line": 2.5,
 "name": "rashod bateman",
 "lab": "Rashod Bateman over 2.5 receptions",
-"p": 0.2822,
+"p": 0.2794,
 "price": 350,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.2699,
-"fair": 0.2579,
+"edge": 0.2574,
+"fair": 0.2542,
 "main": false
 },
 {
@@ -3202,12 +3250,12 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4626,
+"p": 0.4618,
 "price": 138,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.101,
-"fair": 0.4116,
+"edge": 0.0991,
+"fair": 0.4105,
 "main": true
 },
 {
@@ -3227,7 +3275,7 @@
 "main": false
 }
 ],
-"p": 0.06181,
+"p": 0.06109,
 "d": 24.097,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
