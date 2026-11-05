@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-05T18:17:42.121Z",
+"frozen_at": "2026-11-05T18:30:15.615Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,25 +15,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 324.5,
-"name": "matthew stafford",
-"lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2,
-"price": 425,
-"book": "Kalshi",
-"sc": "LA pulls away",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-]
-},
-{
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
@@ -51,44 +32,65 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 325+ pass yds",
+"p": 0.2139,
+"price": 456,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 }
 ],
-"p": 0.05394,
-"d": 21.683,
-"first": "2026-11-08T18:00:00+00:00"
+"p": 0.05769,
+"d": 22.963,
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "longshot"
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_DEN_CAR",
+"gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 274.5,
-"name": "bo nix",
-"lab": "Bo Nix 275+ pass yds",
-"p": 0.2254,
-"price": 373,
+"line": 324.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 325+ pass yds",
+"p": 0.2,
+"price": 425,
 "book": "Kalshi",
-"sc": "Shootout",
+"sc": "LA pulls away",
 "f": [
 "usage",
+"matchup",
 "script",
 "price"
 ]
 },
 {
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 299.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2697,
-"price": 313,
+"line": 324.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 325+ pass yds",
+"p": 0.2139,
+"price": 456,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -99,33 +101,14 @@
 ]
 }
 ],
-"p": 0.06079,
-"d": 19.535,
-"first": "2026-11-08T18:00:00+00:00",
-"pick": "longshot"
+"p": 0.04278,
+"d": 29.19,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 79.5,
-"name": "chase brown",
-"lab": "Chase Brown 80+ rush yds",
-"p": 0.2375,
-"price": 313,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"matchup",
-"script"
-]
-},
 {
 "gid": "2026_09_DEN_CAR",
 "start": "2026-11-08T13:00:00",
@@ -134,7 +117,7 @@
 "line": 274.5,
 "name": "bo nix",
 "lab": "Bo Nix 275+ pass yds",
-"p": 0.2254,
+"p": 0.2258,
 "price": 373,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -162,11 +145,30 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2697,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 }
 ],
-"p": 0.01071,
+"p": 0.01218,
 "d": 102.558,
-"first": "2026-11-08T14:30:00+00:00"
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -206,18 +208,6 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "2026_09_LV_SF",
-"start": "2026-11-08T16:05:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "brock purdy",
-"lab": "Brock Purdy 300+ pass yds",
-"p": 0.22,
-"price": 296,
-"book": "Kalshi"
-},
-{
 "gid": "2026_09_CIN_ATL",
 "start": "2026-11-08T09:30:00",
 "kind": "rec_yds",
@@ -225,7 +215,7 @@
 "line": 39.5,
 "name": "chase brown",
 "lab": "Chase Brown 40+ rec yds",
-"p": 0.195,
+"p": 0.2,
 "price": 351,
 "book": "Kalshi"
 },
@@ -238,12 +228,24 @@
 "name": "dak prescott",
 "lab": "Dak Prescott 300+ pass yds",
 "p": 0.295,
-"price": 198,
+"price": 208,
+"book": "Kalshi"
+},
+{
+"gid": "2026_09_DEN_CAR",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "bo nix",
+"lab": "Bo Nix 250+ pass yds",
+"p": 0.275,
+"price": 218,
 "book": "Kalshi"
 }
 ],
-"p": 0.01266,
-"d": 53.252,
+"p": 0.01623,
+"d": 44.123,
 "first": "2026-11-08T14:30:00+00:00"
 },
 {
@@ -426,7 +428,7 @@
 "line": 3.5,
 "name": "josh jacobs",
 "lab": "Josh Jacobs under 3.5 receptions",
-"p": 0.5391,
+"p": 0.5378,
 "price": -104,
 "book": "Novig"
 },
@@ -443,7 +445,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.27564,
+"p": 0.27499,
 "d": 4.315,
 "first": "2026-11-08T21:25:00+00:00"
 },
