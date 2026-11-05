@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T22:32:36.543Z",
+"frozen_at": "2026-11-05T22:46:14.475Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -129,15 +129,15 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_DET_MIA",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "rec",
 "side": "o",
-"line": 299.5,
-"name": "jared goff",
-"lab": "Jared Goff 300+ pass yds",
-"p": 0.295,
-"price": 198,
+"line": 5.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts 6+ catches",
+"p": 0.25,
+"price": 252,
 "book": "Kalshi"
 },
 {
@@ -153,8 +153,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.08113,
-"d": 10.142,
+"p": 0.06875,
+"d": 11.981,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -163,6 +163,18 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "2026_09_DET_MIA",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "jared goff",
+"lab": "Jared Goff 325+ pass yds",
+"p": 0.185,
+"price": 351,
+"book": "Kalshi"
+},
+{
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
 "kind": "rec_yds",
@@ -173,22 +185,10 @@
 "p": 0.275,
 "price": 240,
 "book": "Kalshi"
-},
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "malik nabers",
-"lab": "Malik Nabers 100+ rec yds",
-"p": 0.25,
-"price": 252,
-"book": "Kalshi"
 }
 ],
-"p": 0.06875,
-"d": 11.981,
+"p": 0.05088,
+"d": 15.342,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -2793,24 +2793,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 25.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins over 25.5 rush yds",
-"p": 0.588,
-"price": -113,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"sport": "nfl",
-"edge": 0.1084
-},
-{
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
 "kind": "rec",
@@ -2828,72 +2810,28 @@
 ],
 "sport": "nfl",
 "edge": 0.0663
-}
-],
-"p": 0.31346,
-"d": 3.77,
-"first": "2026-11-06T01:15:00+00:00",
-"res": null
 },
 {
-"card": "Confluence parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_09_JAX_BAL",
-"start": "2026-11-05T20:15:00",
+"gid": "2026_09_DET_MIA",
+"start": "2026-11-08T13:00:00",
 "kind": "rec",
 "side": "o",
-"line": 4.5,
-"name": "zay flowers",
-"lab": "Zay Flowers over 4.5 receptions",
-"p": 0.5167,
-"price": 100,
+"line": 3.5,
+"name": "sam laporta",
+"lab": "Sam LaPorta over 3.5 receptions",
+"p": 0.5938,
+"price": -130,
 "book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc",
-"pinnacle up"
-],
-"sport": "nfl",
-"edge": 0.0663
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 25.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins over 25.5 rush yds",
-"p": 0.5374,
-"price": -113,
-"book": "Novig",
 "f": [
 "usage",
 "matchup"
 ],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"consensus up"
-],
 "sport": "nfl",
-"edge": 0.1084
+"edge": 0.0507
 }
 ],
-"p": 0.27767,
-"d": 3.77,
+"p": 0.31655,
+"d": 3.538,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -2909,12 +2847,12 @@
 "line": 2.5,
 "name": "brian thomas",
 "lab": "Brian Thomas over 2.5 receptions",
-"p": 0.2601,
+"p": 0.2611,
 "price": 425,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.3654,
-"fair": 0.2475,
+"edge": 0.3709,
+"fair": 0.2489,
 "main": false
 },
 {
@@ -2934,8 +2872,66 @@
 "main": true
 }
 ],
-"p": 0.12006,
+"p": 0.12052,
 "d": 12.495,
+"first": "2026-11-06T01:15:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_09_JAX_BAL",
+"start": "2026-11-06T01:15:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 2.5 receptions",
+"p": 0.2611,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.3709,
+"fair": 0.2489,
+"main": false
+},
+{
+"gid": "2026_09_DEN_CAR",
+"start": "2026-11-08T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4616,
+"price": 138,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0985,
+"fair": 0.4105,
+"main": true
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T21:25:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 8.5,
+"name": "zach charbonnet",
+"lab": "Zach Charbonnet over 8.5 rec yds",
+"p": 0.471,
+"price": 125,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0598,
+"fair": 0.4847,
+"main": false
+}
+],
+"p": 0.05677,
+"d": 28.114,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 }
