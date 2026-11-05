@@ -485,7 +485,7 @@ function gamePlayers(list, gid){
 }
 // Games: NFL-style rail of games + one game at a time, with tabs (Projections / Shot map)
 const UI = (() => { try { return JSON.parse(localStorage.getItem('nhl-ui') || '{}'); } catch (e) { return {}; } })();
-const saveUI = () => { try { localStorage.setItem('nhl-ui', JSON.stringify({gtab: state.gtab, smode: state.smode})); } catch (e) {} };
+const saveUI = () => { try { localStorage.setItem('nhl-ui', JSON.stringify({gtab: state.gtab, smode: state.smode, bcrit: [...(state.bcrit || [])]})); } catch (e) {} };
 state.gtab = UI.gtab === 'map' ? 'map' : 'proj'; state.smode = ['ov', 'off', 'def'].includes(UI.smode) ? UI.smode : 'ov';
 { const m = /^#g(\d+)$/.exec(location.hash), up = D.games.find(g => !g.start_utc || new Date(g.start_utc) > Date.now());
   state.game = m && D.games.some(g => g.id === +m[1]) ? +m[1] : (up || D.games[0] || {}).id; }
@@ -618,14 +618,39 @@ function isValue(p){
   const d = b.o > 0 ? 1 + b.o / 100 : 1 + 100 / -b.o;
   return p.p * d - 1 >= .05;
 }
+// Tracked criteria (owner 2026-11-05: 'a filter or list for the nhl players that match our criterias... for the various things we
+// track'): each one is a signal graded on the Profit page or a card rule; none is proven. Pick chips to list players meeting ALL of them;
+// 'Any tracked' lists everyone meeting at least one, most matches first.
+const CRIT = [
+  ['top3', 'Usage top 3', 'Top 3 in his game by usage rank: the only legs the anytime-goal cards use (top 3 priced 25%+ returned +2% on 388 at Novig / Kalshi).', x => x.ur != null && x.ur <= 3],
+  ['pp1', 'PP1', 'First power-play unit tonight.', x => x.pp === 'PP1'],
+  ['due', 'Due', 'xG .25+ a game and .10+ a game under it this season. Tracked: +19% on 256 at your best price, Oct 12-29.', x => !!x.due],
+  ['dry', 'No goal in 3+', 'No goal in his last 3-9 games. Tracked: +21% on 173 at your books (Oct); the later replay was -8%.', x => x.dry != null && x.dry >= 3 && x.dry <= 9],
+  ['dout', 'vs D out', DOUT_TIP, x => x.vd],
+  ['tg3', 'Triple green', TG3_TIP, x => x.tg],
+  ['val', 'Value tag', 'A Value tag on his anytime goal (sharp books vs your books). Tracked on the Profit page.', x => !!(window.MKT && MKT.flag && MKT.flag(x.gid, x.name))],
+  ['lc', 'LC tag', 'An LC tag on his anytime goal. Tracked on the Profit page.', x => !!(window.MKT && MKT.lcFlag && MKT.lcFlag(x.gid, x.name))],
+  ['edge', 'Edge 5%+', 'Our chance beats the best anytime-goal price at your books by 5%+.', x => isValue(x)],
+];
+state.bcrit = new Set(UI.bcrit || []);
+const critOf = x => CRIT.filter(c => c[3](x)).map(c => c[0]);
+const CTX = new Set(['top3', 'pp1']);   // context filters, not tracked signals: 'Any tracked' skips them
+const anyT = x => x.crit.some(k => !CTX.has(k));
 function board(){
-  const rows = D.games.flatMap(g => [[g.away, g.home], [g.home, g.away]].flatMap(([s, o]) => s.players.map(p => ({...p, orig: p, team: s.team, opp: o.team, gid: g.id}))))
-    .filter(p => !state.bval || isValue(p))
-    .sort((a,b) => state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : state.bsort === 'u' ? ulam(b) - ulam(a) : b.p - a.p);
+  const all = D.games.flatMap(g => [[g.away, g.home], [g.home, g.away]].flatMap(([s, o]) => { const vd = vsDout(s, o);
+    return s.players.map(p => ({...p, orig: p, team: s.team, opp: o.team, gid: g.id, vd: vd.has(p.id), tg: tripleGreen(p, o)})); }));
+  all.forEach(x => { x.crit = critOf(x); });
+  const want = [...state.bcrit].filter(k => k === 'any' || CRIT.some(c => c[0] === k));
+  const rows = all.filter(p => (!state.bval || isValue(p)) && want.every(k => k === 'any' ? anyT(p) : p.crit.includes(k)))
+    .sort((a,b) => (want.includes('any') ? b.crit.filter(k => !CTX.has(k)).length - a.crit.filter(k => !CTX.has(k)).length : 0) || (state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : state.bsort === 'u' ? ulam(b) - ulam(a) : b.p - a.p));
+  const cnt = k => all.filter(x => k === 'any' ? anyT(x) : x.crit.includes(k)).length;
+  const crit = `<div class="crit" role="group" aria-label="Tracked criteria"><span class="small muted">Tracked:</span><button data-bcrit="any" aria-pressed="${want.includes('any')}" title="Players with at least one tracked signal (not counting Usage top 3 / PP1), most signals first">Any tracked <small>${cnt('any')}</small></button>${CRIT.map(c => `<button data-bcrit="${c[0]}" aria-pressed="${want.includes(c[0])}" title="${esc(c[2])}">${esc(c[1])} <small>${cnt(c[0])}</small></button>`).join('')}${want.length ? '<button data-bcrit="clear" class="clr">Clear</button>' : ''}</div>
+    ${want.length ? `<p class="small muted" style="margin:0 0 8px">${rows.length} player${rows.length === 1 ? '' : 's'} ${want.includes('any') ? 'meeting at least one' : 'meeting all picked'} · each is tracked, none proven</p>` : ''}`;
+  const critTags = x => !want.length ? '' : x.crit.filter(k => !['pp1', 'due', 'dry', 'val', 'lc'].includes(k)).map(k => { const c = CRIT.find(c => c[0] === k); return `<span class="lchg crt" title="${esc(c[2])}">${esc(c[1])}</span>`; }).join('');
   const seg = `<div class="phead"><div class="seg" role="group" aria-label="Sort by"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button><button data-bsort="u" aria-pressed="${state.bsort === 'u'}" title="${UTIP}">Usage rank</button></div><div class="seg" role="group" aria-label="Filter"><button data-bval="1" aria-pressed="${!!state.bval}" title="Only players whose best anytime-goal price at your books beats our chance by 5%+ (top-3 usage players; same rule as the green prices)">Value only</button></div><span class="small muted">First goal = chance to score the game's first goal (regulation or overtime)</span></div>`;
   const bv = p => state.bsort === 'pf' ? (p.pf ?? 0) : p.p, bmax = state.bsort === 'pf' ? .12 : .5;
-  return `<section class="panel">${seg}<div class="tw"><table class="t pt"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Team</th><th class="l">Pos</th><th class="l" style="min-width:140px">Chance</th><th>P(goal)</th><th>Fair</th><th>1st goal</th><th>Fair</th><th>Exp. goals</th><th title="${UTIP}">Usage rank</th><th>TOI</th><th class="l">H2H G-A-P</th><th class="l pcd" title="Best anytime-goal price at your books; green = our chance beats it by 5%+">Best odds</th></tr></thead><tbody>
-    ${rows.map((p,i) => `<tr class="${rowCls(p.orig)}"><td class="muted">${i+1}</td><td class="l name">${pickMark(p.orig)}${esc(p.name)}${nhlSlip(p.orig, p.team)}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}<span class="mmeta">${esc(p.team)} vs ${esc(p.opp)} · ${esc(p.pos)}${p.ur ? ` · usage #${p.ur}${(() => { const m = MRANK[p.gid + '|' + p.id], d = m ? m - p.ur : 0; return d ? ` ${d > 0 ? '▲' : '▼'}${Math.abs(d)}` : ''; })()}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${window.MKT && MKT.prop ? `<span class="pcm">${MKT.prop(p.gid, p.name, 'goal')}</span>` : ''}${mtag(p.pos, p.opp)}${whyLine(p.orig)}</td><td class="l">${esc(p.team)} <span class="small muted">vs ${esc(p.opp)}</span></td><td class="l"><span class="pos">${esc(p.pos)}</span></td><td class="l">${bar(bv(p), bmax)}</td><td class="${state.bsort === 'pf' ? '' : 'big'} kp">${pct(p.p)}${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots</small>` : ''}</td><td>${odds(p.fair)}</td><td class="${state.bsort === 'pf' ? 'big' : ''}">${p.pf != null ? pct(p.pf) : '–'}</td><td>${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td>${p.lam.toFixed(2)}</td><td>${urCell(p.orig, p.gid)}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, p.opp)}</td><td class="l pcd">${window.MKT && MKT.prop ? MKT.prop(p.gid, p.name, 'goal') : ''}</td></tr>`).join('')}${!rows.length ? `<tr><td colspan="14" class="l muted">${state.bval ? 'No value plays at your books right now (prices appear once books post tonight’s anytime-goal odds; choose your books under any game’s bets).' : ''}</td></tr>` : ''}
+  return `<section class="panel">${seg}${crit}<div class="tw"><table class="t pt"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Team</th><th class="l">Pos</th><th class="l" style="min-width:140px">Chance</th><th>P(goal)</th><th>Fair</th><th>1st goal</th><th>Fair</th><th>Exp. goals</th><th title="${UTIP}">Usage rank</th><th>TOI</th><th class="l">H2H G-A-P</th><th class="l pcd" title="Best anytime-goal price at your books; green = our chance beats it by 5%+">Best odds</th></tr></thead><tbody>
+    ${rows.map((p,i) => `<tr class="${rowCls(p.orig)}"><td class="muted">${i+1}</td><td class="l name">${pickMark(p.orig)}${esc(p.name)}${nhlSlip(p.orig, p.team)}${window.MKT && MKT.flag ? MKT.flag(p.gid, p.name) + (MKT.lcFlag ? MKT.lcFlag(p.gid, p.name) : '') : ''}${p.pp ? `<span class="pp">${p.pp}</span>` : ''}${dueChip(p)}${dryChip(p)}${critTags(p)}<span class="mmeta">${esc(p.team)} vs ${esc(p.opp)} · ${esc(p.pos)}${p.ur ? ` · usage #${p.ur}${(() => { const m = MRANK[p.gid + '|' + p.id], d = m ? m - p.ur : 0; return d ? ` ${d > 0 ? '▲' : '▼'}${Math.abs(d)}` : ''; })()}` : ''}${p.pf != null ? ` · 1st goal ${pct(p.pf)}` : ''}</span>${window.MKT && MKT.prop ? `<span class="pcm">${MKT.prop(p.gid, p.name, 'goal')}</span>` : ''}${mtag(p.pos, p.opp)}${whyLine(p.orig)}</td><td class="l">${esc(p.team)} <span class="small muted">vs ${esc(p.opp)}</span></td><td class="l"><span class="pos">${esc(p.pos)}</span></td><td class="l">${bar(bv(p), bmax)}</td><td class="${state.bsort === 'pf' ? '' : 'big'} kp">${pct(p.p)}${p.sog != null ? `<small class="kps">${p.sog.toFixed(1)} shots</small>` : ''}</td><td>${odds(p.fair)}</td><td class="${state.bsort === 'pf' ? 'big' : ''}">${p.pf != null ? pct(p.pf) : '–'}</td><td>${p.fair_first != null ? odds(p.fair_first) : '–'}</td><td>${p.lam.toFixed(2)}</td><td>${urCell(p.orig, p.gid)}</td><td class="muted">${p.toi}</td><td class="l">${h2hCell(p.h2h, p.opp)}</td><td class="l pcd">${window.MKT && MKT.prop ? MKT.prop(p.gid, p.name, 'goal') : ''}</td></tr>`).join('')}${!rows.length ? `<tr><td colspan="14" class="l muted">${state.bval ? 'No value plays at your books right now (prices appear once books post tonight’s anytime-goal odds; choose your books under any game’s bets).' : ''}</td></tr>` : ''}
     </tbody></table></div></section>`;
 }
 function posdef(){
@@ -695,6 +720,9 @@ document.addEventListener('click', e => {
     return;
   }
   if (e.target.closest('[data-bval]')){ state.bval = !state.bval; render(); return; }
+  const bc = e.target.closest('button[data-bcrit]');
+  if (bc){ const k = bc.dataset.bcrit; if (k === 'clear') state.bcrit.clear(); else if (state.bcrit.has(k)) state.bcrit.delete(k); else { if (k === 'any') state.bcrit.clear(); else state.bcrit.delete('any'); state.bcrit.add(k); }
+    saveUI(); render(); return; }
   const bs = e.target.closest('button[data-bsort]');
   if (bs){ state.bsort = bs.dataset.bsort; render(); return; }
   const h = e.target.closest('th[data-sort]');

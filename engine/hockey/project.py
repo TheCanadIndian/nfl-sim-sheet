@@ -852,6 +852,8 @@ tr.pick td:first-child,tr.best td:first-child{box-shadow:inset 3px 0 0 var(--acc
 .lchg.in{color:#7fb2ff;border-color:color-mix(in srgb,#7fb2ff 55%,transparent)}
 .lchg.dry{color:var(--muted);border-color:var(--faint)}
 .lchg.due{color:var(--good);border-color:var(--good)}
+.lchg.crt{color:var(--ink);border-color:var(--faint)}
+.crit{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 10px}.crit button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:3px 10px;font:600 12.5px var(--body);cursor:pointer}.crit button small{color:var(--muted);font-weight:600;margin-left:2px}.crit button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.crit button[aria-pressed="true"] small{color:var(--bg);opacity:.75}.crit .clr{border-style:dashed}
 .lchg.dout{color:#F2C14E;border-color:color-mix(in srgb,#F2C14E 55%,transparent)}
 .doutl{margin:2px 0}
 .lchgl{margin:2px 0 4px}.lchgl b{font-weight:600}
