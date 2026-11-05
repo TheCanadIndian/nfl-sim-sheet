@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-05T19:00:44.599Z",
+"frozen_at": "2026-11-05T19:17:56.075Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 49.5,
 "name": "jk dobbins",
 "lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2392,
+"p": 0.2397,
 "price": 373,
 "book": "Kalshi",
 "sc": "DEN pulls away",
@@ -41,7 +41,7 @@
 "line": 324.5,
 "name": "matthew stafford",
 "lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2,
+"p": 0.2059,
 "price": 425,
 "book": "Kalshi",
 "sc": "LA pulls away",
@@ -53,7 +53,7 @@
 ]
 }
 ],
-"p": 0.04785,
+"p": 0.04935,
 "d": 24.833,
 "first": "2026-11-08T18:00:00+00:00",
 "pick": "longshot"
@@ -62,70 +62,6 @@
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 79.5,
-"name": "chase brown",
-"lab": "Chase Brown 80+ rush yds",
-"p": 0.235,
-"price": 331,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"matchup",
-"script"
-]
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2392,
-"price": 373,
-"book": "Kalshi",
-"sc": "DEN pulls away",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-]
-}
-],
-"p": 0.05622,
-"d": 20.386,
-"first": "2026-11-08T14:30:00+00:00"
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 79.5,
-"name": "chase brown",
-"lab": "Chase Brown 80+ rush yds",
-"p": 0.235,
-"price": 331,
-"book": "Kalshi",
-"sc": "CIN pulls away",
-"f": [
-"usage",
-"matchup",
-"script"
-]
-},
 {
 "gid": "2026_09_DEN_CAR",
 "start": "2026-11-08T13:00:00",
@@ -152,7 +88,7 @@
 "line": 324.5,
 "name": "matthew stafford",
 "lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2,
+"p": 0.2059,
 "price": 425,
 "book": "Kalshi",
 "sc": "LA pulls away",
@@ -164,9 +100,9 @@
 ]
 }
 ],
-"p": 0.01066,
-"d": 107.028,
-"first": "2026-11-08T14:30:00+00:00"
+"p": 0.0467,
+"d": 24.833,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -263,6 +199,28 @@
 "book": "Novig"
 },
 {
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.3236,
+"price": 257,
+"book": "Novig"
+}
+],
+"p": 0.09766,
+"d": 12.531,
+"first": "2026-11-09T01:20:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026_09_CIN_ATL",
 "start": "2026-11-08T09:30:00",
 "kind": "td",
@@ -270,13 +228,25 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.2989,
+"p": 0.2976,
 "price": 270,
+"book": "Novig"
+},
+{
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.3236,
+"price": 257,
 "book": "Novig"
 }
 ],
-"p": 0.09019,
-"d": 12.987,
+"p": 0.09631,
+"d": 13.209,
 "first": "2026-11-08T14:30:00+00:00",
 "pick": "core"
 },
@@ -297,28 +267,6 @@
 "book": "Novig"
 },
 {
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "drake maye",
-"lab": "Drake Maye TD",
-"p": 0.2671,
-"price": 317,
-"book": "Novig"
-}
-],
-"p": 0.08059,
-"d": 14.637,
-"first": "2026-11-08T21:25:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
 "gid": "2026_09_CIN_ATL",
 "start": "2026-11-08T09:30:00",
 "kind": "td",
@@ -326,60 +274,15 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.2989,
+"p": 0.2976,
 "price": 270,
 "book": "Novig"
-},
-{
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "drake maye",
-"lab": "Drake Maye TD",
-"p": 0.2671,
-"price": 317,
-"book": "Novig"
 }
 ],
-"p": 0.07982,
-"d": 15.429,
+"p": 0.08981,
+"d": 12.987,
 "first": "2026-11-08T14:30:00+00:00",
-"pick": "longshot"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 60.5,
-"name": "saquon barkley",
-"lab": "Saquon Barkley under 60.5 rush yds",
-"p": 0.6051,
-"price": -111,
-"book": "Novig"
-},
-{
-"gid": "2026_09_ARI_SEA",
-"start": "2026-11-08T16:25:00",
-"kind": "rec",
-"side": "u",
-"line": 6.5,
-"name": "jaxon smithnjigba",
-"lab": "Jaxon Smithnjigba under 6.5 receptions",
-"p": 0.5113,
-"price": 120,
-"book": "Novig"
-}
-],
-"p": 0.30942,
-"d": 4.182,
-"first": "2026-11-08T18:00:00+00:00"
+"pick": "core"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -405,13 +308,13 @@
 "line": 6.5,
 "name": "jaxon smithnjigba",
 "lab": "Jaxon Smithnjigba under 6.5 receptions",
-"p": 0.5113,
-"price": 120,
+"p": 0.51,
+"price": 108,
 "book": "Novig"
 }
 ],
-"p": 0.29088,
-"d": 4.357,
+"p": 0.29011,
+"d": 4.119,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -438,14 +341,47 @@
 "line": 6.5,
 "name": "jaxon smithnjigba",
 "lab": "Jaxon Smithnjigba under 6.5 receptions",
-"p": 0.5113,
-"price": 120,
+"p": 0.51,
+"price": 108,
 "book": "Novig"
 }
 ],
-"p": 0.27687,
-"d": 4.315,
+"p": 0.27614,
+"d": 4.08,
 "first": "2026-11-08T21:25:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "rachaad white",
+"lab": "Rachaad White under 2.5 receptions",
+"p": 0.5262,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smithnjigba under 6.5 receptions",
+"p": 0.51,
+"price": 108,
+"book": "Novig"
+}
+],
+"p": 0.26837,
+"d": 4.16,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",

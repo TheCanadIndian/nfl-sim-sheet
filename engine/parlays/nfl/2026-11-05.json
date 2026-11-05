@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T19:00:44.599Z",
+"frozen_at": "2026-11-05T19:17:56.075Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -3075,6 +3075,24 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "chase brown",
+"lab": "Chase Brown over 19.5 rec yds",
+"p": 0.5931,
+"price": -115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup"
+],
+"sport": "nfl",
+"edge": 0.1088
+},
+{
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
 "kind": "td",
@@ -3092,29 +3110,10 @@
 ],
 "sport": "nfl",
 "edge": 0.063
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 25.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins over 25.5 rush yds",
-"p": 0.5556,
-"price": -111,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"script"
-],
-"sport": "nfl",
-"edge": 0.0562
 }
 ],
-"p": 0.11812,
-"d": 9.505,
+"p": 0.12609,
+"d": 9.348,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 },
@@ -3130,7 +3129,7 @@
 "line": 4.5,
 "name": "zay flowers",
 "lab": "Zay Flowers over 4.5 receptions",
-"p": 0.5101,
+"p": 0.5099,
 "price": 100,
 "book": "Hard Rock",
 "f": [
@@ -3147,7 +3146,7 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.0378
+"edge": 0.0375
 },
 {
 "gid": "2026_09_DEN_CAR",
@@ -3157,7 +3156,7 @@
 "line": 25.5,
 "name": "jk dobbins",
 "lab": "J.K. Dobbins over 25.5 rush yds",
-"p": 0.5075,
+"p": 0.5085,
 "price": -111,
 "book": "Novig",
 "f": [
@@ -3172,10 +3171,10 @@
 "our model above fair"
 ],
 "sport": "nfl",
-"edge": 0.0562
+"edge": 0.0576
 }
 ],
-"p": 0.25888,
+"p": 0.25928,
 "d": 3.802,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
@@ -3189,16 +3188,16 @@
 "start": "2026-11-06T01:15:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 2.5,
+"line": 1.5,
 "name": "brian thomas",
-"lab": "Brian Thomas over 2.5 receptions",
-"p": 0.2269,
-"price": 425,
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4603,
+"price": 145,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1911,
-"fair": 0.2056,
-"main": false
+"edge": 0.1277,
+"fair": 0.4417,
+"main": true
 },
 {
 "gid": "2026_09_DEN_CAR",
@@ -3217,8 +3216,66 @@
 "main": true
 }
 ],
-"p": 0.10408,
-"d": 12.495,
+"p": 0.21114,
+"d": 5.831,
+"first": "2026-11-06T01:15:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_09_JAX_BAL",
+"start": "2026-11-06T01:15:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4603,
+"price": 145,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1277,
+"fair": 0.4417,
+"main": true
+},
+{
+"gid": "2026_09_DEN_CAR",
+"start": "2026-11-08T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4587,
+"price": 138,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0918,
+"fair": 0.4086,
+"main": true
+},
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "denzel boston",
+"lab": "Denzel Boston over 3.5 receptions",
+"p": 0.4115,
+"price": 156,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0534,
+"fair": 0.3848,
+"main": true
+}
+],
+"p": 0.08688,
+"d": 14.927,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 }
