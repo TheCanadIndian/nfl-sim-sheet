@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-05T01:46:14.610Z",
+"frozen_at": "2026-11-05T01:52:38.107Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -49,6 +49,40 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "brandin cooks",
+"lab": "Brandin Cooks TD",
+"p": 0.2865,
+"price": 292,
+"book": "Novig"
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 48.5,
+"name": "michael wilson",
+"lab": "Michael Wilson over 48.5 rec yds",
+"p": 0.5323,
+"price": -102,
+"book": "Novig"
+}
+],
+"p": 0.15249,
+"d": 7.763,
+"first": "2026-11-08T21:05:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026_09_ARI_SEA",
 "start": "2026-11-08T16:25:00",
 "kind": "rec_yds",
@@ -78,38 +112,49 @@
 "first": "2026-11-08T21:25:00+00:00"
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_09_TB_CHI",
-"start": "2026-11-08T20:20:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kenny gainwell",
-"lab": "Kenny Gainwell TD",
-"p": 0.2214,
-"price": 400,
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 50.5,
+"name": "blake corum",
+"lab": "Blake Corum under 50.5 rush yds",
+"p": 0.6,
+"price": -111,
 "book": "Novig"
 },
 {
-"gid": "2026_09_ARI_SEA",
+"gid": "2026_09_GB_NE",
 "start": "2026-11-08T16:25:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 54.5,
+"name": "rhamondre stevenson",
+"lab": "Rhamondre Stevenson under 54.5 rush yds",
+"p": 0.5669,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
 "kind": "rec_yds",
-"side": "o",
-"line": 48.5,
-"name": "michael wilson",
-"lab": "Michael Wilson over 48.5 rec yds",
-"p": 0.5323,
-"price": -102,
+"side": "u",
+"line": 76.5,
+"name": "brock bowers",
+"lab": "Brock Bowers under 76.5 rec yds",
+"p": 0.595,
+"price": -111,
 "book": "Novig"
 }
 ],
-"p": 0.11785,
-"d": 9.902,
-"first": "2026-11-08T21:25:00+00:00",
-"pick": "core"
+"p": 0.20237,
+"d": 6.869,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -124,7 +169,7 @@
 "name": "blake corum",
 "lab": "Blake Corum under 50.5 rush yds",
 "p": 0.6,
-"price": -122,
+"price": -111,
 "book": "Novig"
 },
 {
@@ -141,39 +186,6 @@
 }
 ],
 "p": 0.1986,
-"d": 6.733,
-"first": "2026-11-08T14:30:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 54.5,
-"name": "rhamondre stevenson",
-"lab": "Rhamondre Stevenson under 54.5 rush yds",
-"p": 0.5669,
-"price": -111,
-"book": "Novig"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts anytime TD",
-"p": 0.331,
-"price": 270,
-"book": "Novig"
-}
-],
-"p": 0.18764,
 "d": 7.033,
 "first": "2026-11-08T14:30:00+00:00"
 },
@@ -181,18 +193,6 @@
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
 "legs": [
-{
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 54.5,
-"name": "rhamondre stevenson",
-"lab": "Rhamondre Stevenson under 54.5 rush yds",
-"p": 0.5669,
-"price": -111,
-"book": "Novig"
-},
 {
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
@@ -202,25 +202,37 @@
 "name": "blake corum",
 "lab": "Blake Corum under 50.5 rush yds",
 "p": 0.6,
-"price": -122,
+"price": -111,
 "book": "Novig"
 },
 {
-"gid": "2026_09_ARI_SEA",
-"start": "2026-11-08T16:25:00",
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 76.5,
+"name": "brock bowers",
+"lab": "Brock Bowers under 76.5 rec yds",
+"p": 0.595,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 48.5,
-"name": "michael wilson",
-"lab": "Michael Wilson over 48.5 rec yds",
-"p": 0.5323,
-"price": -102,
+"line": 19.5,
+"name": "chase brown",
+"lab": "Chase Brown over 19.5 rec yds",
+"p": 0.5544,
+"price": -111,
 "book": "Novig"
 }
 ],
-"p": 0.18107,
-"d": 6.85,
-"first": "2026-11-08T18:00:00+00:00"
+"p": 0.19791,
+"d": 6.869,
+"first": "2026-11-08T14:30:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -260,32 +272,32 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 50.5,
-"name": "blake corum",
-"lab": "Blake Corum under 50.5 rush yds",
-"p": 0.6,
-"price": -122,
-"book": "Novig"
-},
-{
-"gid": "2026_09_DAL_IND",
+"gid": "2026_09_DEN_CAR",
 "start": "2026-11-08T13:00:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "daniel jones",
-"lab": "Daniel Jones anytime TD",
-"p": 0.194,
-"price": 567,
+"name": "bo nix",
+"lab": "Bo Nix anytime TD",
+"p": 0.244,
+"price": 456,
+"book": "Novig"
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 99.5,
+"name": "jaxon smithnjigba",
+"lab": "Jaxon Smithnjigba under 99.5 rec yds",
+"p": 0.5238,
+"price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.1164,
-"d": 12.137,
+"p": 0.12781,
+"d": 11.454,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -293,18 +305,6 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_09_CLE_NO",
-"start": "2026-11-08T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "dylan sampson",
-"lab": "Dylan Sampson anytime TD",
-"p": 0.191,
-"price": 525,
-"book": "Novig"
-},
-{
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "rush_yds",
@@ -313,13 +313,37 @@
 "name": "blake corum",
 "lab": "Blake Corum under 50.5 rush yds",
 "p": 0.6,
-"price": -122,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 76.5,
+"name": "brock bowers",
+"lab": "Brock Bowers under 76.5 rec yds",
+"p": 0.595,
+"price": -111,
+"book": "Novig"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts anytime TD",
+"p": 0.331,
+"price": 270,
 "book": "Novig"
 }
 ],
-"p": 0.1146,
-"d": 11.373,
-"first": "2026-11-08T18:00:00+00:00"
+"p": 0.11817,
+"d": 13.37,
+"first": "2026-11-08T14:30:00+00:00"
 },
 {
 "card": "Cross-game parlays",
