@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-05T19:17:56.075Z",
+"frozen_at": "2026-11-05T19:30:50.627Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,17 +15,17 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_DEN_CAR",
+"gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
+"kind": "pass_yds",
 "side": "o",
-"line": 49.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2397,
-"price": 373,
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2697,
+"price": 313,
 "book": "Kalshi",
-"sc": "DEN pulls away",
+"sc": "Shootout",
 "f": [
 "usage",
 "matchup",
@@ -34,6 +34,35 @@
 ]
 },
 {
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 300+ pass yds",
+"p": 0.285,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.07687,
+"d": 17.057,
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
@@ -41,7 +70,7 @@
 "line": 324.5,
 "name": "matthew stafford",
 "lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2059,
+"p": 0.2066,
 "price": 425,
 "book": "Kalshi",
 "sc": "LA pulls away",
@@ -51,16 +80,34 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 300+ pass yds",
+"p": 0.285,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 }
 ],
-"p": 0.04935,
-"d": 24.833,
-"first": "2026-11-08T18:00:00+00:00",
-"pick": "longshot"
+"p": 0.05889,
+"d": 21.683,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_09_DEN_CAR",
@@ -88,7 +135,7 @@
 "line": 324.5,
 "name": "matthew stafford",
 "lab": "Matthew Stafford 325+ pass yds",
-"p": 0.2059,
+"p": 0.2066,
 "price": 425,
 "book": "Kalshi",
 "sc": "LA pulls away",
@@ -98,28 +145,35 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2697,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 }
 ],
-"p": 0.0467,
-"d": 24.833,
+"p": 0.01264,
+"d": 102.558,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "2026_09_DET_MIA",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "jared goff",
-"lab": "Jared Goff 300+ pass yds",
-"p": 0.285,
-"price": 208,
-"book": "Kalshi"
-},
 {
 "gid": "2026_09_CIN_ATL",
 "start": "2026-11-08T09:30:00",
@@ -131,16 +185,40 @@
 "p": 0.25,
 "price": 252,
 "book": "Kalshi"
+},
+{
+"gid": "2026_09_DET_MIA",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "jared goff",
+"lab": "Jared Goff 325+ pass yds",
+"p": 0.185,
+"price": 351,
+"book": "Kalshi"
 }
 ],
-"p": 0.07125,
-"d": 10.843,
+"p": 0.04625,
+"d": 15.9,
 "first": "2026-11-08T14:30:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "matthew stafford",
+"lab": "Matthew Stafford 300+ pass yds",
+"p": 0.26,
+"price": 252,
+"book": "Kalshi"
+},
 {
 "gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
@@ -154,6 +232,27 @@
 "book": "Kalshi"
 },
 {
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.21,
+"price": 313,
+"book": "Kalshi"
+}
+],
+"p": 0.0142,
+"d": 49.426,
+"first": "2026-11-08T18:00:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "3-leg",
+"legs": [
+{
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
@@ -161,25 +260,37 @@
 "line": 299.5,
 "name": "matthew stafford",
 "lab": "Matthew Stafford 300+ pass yds",
-"p": 0.25,
+"p": 0.26,
 "price": 252,
 "book": "Kalshi"
 },
 {
-"gid": "2026_09_DAL_IND",
+"gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "malik nabers",
+"lab": "Malik Nabers 100+ rec yds",
+"p": 0.26,
+"price": 240,
+"book": "Kalshi"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
 "kind": "pass_yds",
 "side": "o",
 "line": 299.5,
-"name": "dak prescott",
-"lab": "Dak Prescott 300+ pass yds",
-"p": 0.29,
-"price": 208,
+"name": "brock purdy",
+"lab": "Brock Purdy 300+ pass yds",
+"p": 0.21,
+"price": 313,
 "book": "Kalshi"
 }
 ],
-"p": 0.01885,
-"d": 36.867,
+"p": 0.0142,
+"d": 49.426,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
