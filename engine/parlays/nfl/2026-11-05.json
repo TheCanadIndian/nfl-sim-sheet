@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-05",
 "lock": "2026-11-06T01:15:00+00:00",
-"frozen_at": "2026-11-05T03:29:50.851Z",
+"frozen_at": "2026-11-05T12:09:19.775Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -129,18 +129,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 79.5,
-"name": "chase brown",
-"lab": "Chase Brown 80+ rush yds",
-"p": 0.215,
-"price": 296,
-"book": "Kalshi"
-},
-{
 "gid": "2026_09_JAX_BAL",
 "start": "2026-11-05T20:15:00",
 "kind": "rec_yds",
@@ -150,6 +138,18 @@
 "lab": "Jakobi Meyers 60+ rec yds",
 "p": 0.28,
 "price": 218,
+"book": "Kalshi"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 79.5,
+"name": "chase brown",
+"lab": "Chase Brown 80+ rush yds",
+"p": 0.215,
+"price": 296,
 "book": "Kalshi"
 }
 ],
@@ -3037,64 +3037,44 @@
 "res": null
 },
 {
-"card": "Confluence parlays (experimental)",
+"card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_09_JAX_BAL",
-"start": "2026-11-05T20:15:00",
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 4.5,
-"name": "zay flowers",
-"lab": "Zay Flowers over 4.5 receptions",
-"p": 0.4795,
-"price": 104,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc"
-],
+"line": 1.5,
+"name": "darnell mooney",
+"lab": "Darnell Mooney over 1.5 receptions",
+"p": 0.4531,
+"price": 155,
+"book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.0118
+"edge": 0.1555,
+"fair": 0.4569,
+"main": true
 },
 {
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "rec_yds",
+"gid": "2026_09_JAX_BAL",
+"start": "2026-11-06T01:15:00+00:00",
+"kind": "rec",
 "side": "o",
-"line": 19.5,
-"name": "chase brown",
-"lab": "Chase Brown over 19.5 rec yds",
-"p": 0.5144,
-"price": -108,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"lc",
-"value"
-],
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.419,
+"price": 160,
+"book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.056
+"edge": 0.0895,
+"fair": 0.3867,
+"main": true
 }
 ],
-"p": 0.24665,
-"d": 3.929,
+"p": 0.18985,
+"d": 6.63,
 "first": "2026-11-06T01:15:00+00:00",
 "res": null
 }
