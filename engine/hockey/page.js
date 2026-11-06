@@ -628,8 +628,10 @@ const fgDec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
 function fgOf(gid, name){
   const G = FG && FG[String(gid)], x = G && G.players && window.MKT && MKT.norm ? G.players[MKT.norm(name)] : null, o = x && x.o;
   if (!o || o.FD == null || o.Bovada == null || o.FD !== o.Bovada) return null;
-  const rest = Object.entries(o).filter(([b]) => b !== 'FD' && b !== 'Bovada').map(([, v]) => 1 / fgDec(v)).sort((a, b) => a - b);
-  if (rest.length < 3) return null;
+  // books at FD's price join the group (+5000 and up needs 3 of them, owner 2026-11-06); every book outside it must be shorter
+  const same = Object.values(o).filter(v => v === o.FD).length;
+  const rest = Object.values(o).filter(v => v !== o.FD).map(v => 1 / fgDec(v)).sort((a, b) => a - b);
+  if (rest.length < 3 || same < (o.FD >= 5000 ? 3 : 2)) return null;
   const fd = 1 / fgDec(o.FD);
   return fd < rest[0] ? {o: o.FD, med: rest[0], hr: o['Hard Rock']} : null;   // longer than every other book (owner 2026-11-06)
 }
@@ -656,7 +658,7 @@ const CRIT = [
   ['lc', 'LC tag', 'An LC tag on his anytime goal. Tracked on the Profit page.', x => !!(window.MKT && MKT.lcFlag && MKT.lcFlag(x.gid, x.name))],
   ['edge', 'Edge 5%+', 'Our chance beats the best anytime-goal price at your books by 5%+.', x => isValue(x)],
   ['np4', 'No-Pin edge: four-book', 'Profit row ‘NHL Goal edge 5%+ without Pinnacle: four-book fair (new)’: Pinnacle has no price, best of Hard Rock / Novig / Kalshi, chance = 50/50 ours with the four-book fair (Kalshi, FanDuel, Fanatics, DraftKings, leaving out the book bet), edge 5-40%. The fair this page uses.', x => !!(x.np && x.np.f4)],
-  ['fgbv', 'FD + Bovada 1st goal', 'NHL first goal: FanDuel and Bovada at the same odds, both longer than every other book (3+ others). Profit row ‘NHL First goal: FanDuel + Bovada same odds, longer than every other book (experimental)’ (bet at FanDuel). Anytime-goal stand-in study: +8% on 1,186 at FD, not proven. Prices from the first-goal pulls (last 3 h before puck drop + the 8 AM ET pull).', x => !!x.fg],
+  ['fgbv', 'FD + Bovada 1st goal', 'NHL first goal: FanDuel and Bovada at the same odds, both longer than every other book (3+ others); at +5000 and up a third book must match their price. Profit row ‘NHL First goal: FanDuel + Bovada same odds, longer than every other book (experimental)’ (bet at FanDuel). Anytime-goal stand-in study: +8% on 1,186 at FD, not proven. Prices from the first-goal pulls (last 3 h before puck drop + the 8 AM ET pull).', x => !!x.fg],
   ['npx', 'No-Pin edge: exchanges (old)', 'Profit row ‘NHL Goal edge 5%+ without Pinnacle: exchanges fair (old)’: same rule with the old fair (median of Novig / Kalshi / Polymarket / ProphetX ÷ 1.03). Kept for comparison only: it loses to the closing price.', x => !!(x.np && x.np.fx)],
 ];
 state.bcrit = new Set(UI.bcrit || []);

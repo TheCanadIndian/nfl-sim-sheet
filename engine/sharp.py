@@ -1935,6 +1935,15 @@ def ladder_knees(sport, now):
 FG_BOOKS = ["fanduel", "bovada", "draftkings", "betmgm", "williamhill_us", "espnbet", "fanatics", "hardrockbet", "betrivers", "betonlineag"]
 FG_SHORT = dict(NBA_SHORT, bovada="Bovada", betonlineag="BetOnline")
 FG_FILE = os.path.join(M.SITE, "markets", "fg_nhl.json")
+# NHL 2+ goals (owner 2026-11-06: 'start tracking 2+ goals to see if we can find an edge'): player_goals + player_goals_alternate,
+# Over 1.5 / 2.5 at 10 books (Hard Rock and Novig incl.) = 2 credits a game, same schedule as the first-goal pull.
+# markets/g2_nhl.json {fetched, games: {gid: {start, fetched, players: {name: {o: {"1.5": {book: odds}, "2.5": {...}}, p: {"1.5": ours}}}}}}
+G2_BOOKS = ["fanduel", "bovada", "draftkings", "betmgm", "williamhill_us", "espnbet", "fanatics", "hardrockbet", "betrivers", "novig"]
+G2_FILE = os.path.join(M.SITE, "markets", "g2_nhl.json")
+
+
+def _pk(lam, k):
+    return 1 - sum(math.exp(-lam) * lam ** i / math.factorial(i) for i in range(k))
 
 
 def fg_nhl(now):
@@ -1950,6 +1959,11 @@ def fg_nhl(now):
         old = {}
     pl = O.get("players")
     pf = {} if pl is None or "p_first" not in pl else {(str(r.game_id), jsnorm(r.name)): float(r.p_first) for r in pl.itertuples()}
+    pg = {} if pl is None else {(str(r.game_id), jsnorm(r.name)): float(r.p_goal) for r in pl.itertuples()}
+    try:
+        old2 = json.load(open(G2_FILE)).get("games") or {}
+    except (OSError, ValueError):
+        old2 = {}
     bst = B.load_state()
     todo = wanted(games, old, now, 3.0, 60, bst, fast_min=60)
     if todo:
@@ -1986,7 +2000,37 @@ def fg_nhl(now):
                       f"{len({b for x in P.values() for b in x['o']})} books ({used} credits, {bst.get('remaining')} left)")
             else:
                 print(f"odds api nhl first goal: {g['away']} @ {g['home']}: not posted yet")
+            # 2+ goals (tracking only)
+            if not B.budget_ok(bst, now):
+                continue
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/icehockey_nhl/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers=",".join(G2_BOOKS), markets="player_goals,player_goals_alternate", oddsFormat="american"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P2 = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    for o in m.get("outcomes", []):
+                        pt, nm = o.get("point"), o.get("description")
+                        if (o.get("name") or "").lower() != "over" or not nm or pt is None or float(pt) < 1:
+                            continue
+                        x = P2.setdefault(jsnorm(nm), {"o": {}, "p": {}})
+                        x["o"].setdefault(str(float(pt)), {})[NBA_SHORT.get(b["key"], FG_SHORT.get(b["key"], b["key"]))] = int(o["price"])
+            for nm, x in P2.items():
+                if (gid, nm) in pg:
+                    lam = -math.log(1 - min(pg[(gid, nm)], .999))
+                    x["p"] = {L: round(_pk(lam, int(float(L) + .5)), 4) for L in x["o"]}
+            if P2:
+                old2[gid] = dict(start=str(g["start"]), fetched=now.isoformat(), players=P2)
+            print(f"odds api nhl 2+ goals: {g['away']} @ {g['home']}: {len(P2)} players ({used} credits)")
         json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    old2 = {gid: c for gid, c in old2.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    json.dump(dict(sport="nhl", fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), games=old2),
+              open(G2_FILE, "w"), separators=(",", ":"))
     old = {gid: c for gid, c in old.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
     os.makedirs(os.path.dirname(FG_FILE), exist_ok=True)
     json.dump(dict(sport="nhl", fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), games=old),
