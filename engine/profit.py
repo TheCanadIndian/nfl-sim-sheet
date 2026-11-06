@@ -652,7 +652,7 @@ def tag_label(e):
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") == "fg":
-        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, above the market (experimental)"
+        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, longer than every other book (experimental)"
     if e.get("src") in ("f4", "fx"):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
@@ -843,6 +843,8 @@ def tags():
                 FG = json.load(open(os.path.join(site, "markets", "fg_nhl.json"))).get("games") or {}
             except (OSError, ValueError):
                 FG = {}
+            for k_ in [k_ for k_ in log if k_.startswith("fg|fdbv|")]:   # the retired median version (a few hours on Nov 6)
+                del log[k_]
             for gid, G_ in FG.items():
                 st = G_.get("start")
                 if not st or PL.when(st) <= now:
@@ -859,9 +861,10 @@ def tags():
                     if len(rest) < 3:
                         continue
                     med = float(np.median(rest))
-                    if o_["FD"] == o_["Bovada"] and fd_ < med:
+                    # owner 2026-11-06 'change it': longer than EVERY other book (the median version matched 87 of 113 players)
+                    if o_["FD"] == o_["Bovada"] and fd_ < min(rest):
                         bk, o = "FD", o_["FD"]
-                        log.setdefault(f"fg|fdbv|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdbv", gid=gid, name=nm, bet="first goal", book=bk, o=o,
+                        log.setdefault(f"fg|fdtop|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdtop", gid=gid, name=nm, bet="first goal", book=bk, o=o,
                                                                   first=now.isoformat(), m=round(med, 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
