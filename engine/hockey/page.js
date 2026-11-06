@@ -621,6 +621,19 @@ function isValue(p){
 // Tracked criteria (owner 2026-11-05: 'a filter or list for the nhl players that match our criterias... for the various things we
 // track'): each one is a signal graded on the Profit page or a card rule; none is proven. Pick chips to list players meeting ALL of them;
 // 'Any tracked' lists everyone meeting at least one, most matches first.
+// NHL first goal, FanDuel + Bovada at the same odds, both longer than the median of 3+ other books (owner 2026-11-06; the same test
+// as profit.tags src 'fg' grp 'fdbv'). markets/fg_nhl.json is read live (sharp.fg_nhl: hourly in the last 3 h + the 8 AM ET pull).
+let FG = null;
+const fgDec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+function fgOf(gid, name){
+  const G = FG && FG[String(gid)], x = G && G.players && window.MKT && MKT.norm ? G.players[MKT.norm(name)] : null, o = x && x.o;
+  if (!o || o.FD == null || o.Bovada == null || o.FD !== o.Bovada) return null;
+  const rest = Object.entries(o).filter(([b]) => b !== 'FD' && b !== 'Bovada').map(([, v]) => 1 / fgDec(v)).sort((a, b) => a - b);
+  if (rest.length < 3) return null;
+  const n = rest.length, med = n % 2 ? rest[(n - 1) / 2] : (rest[n / 2 - 1] + rest[n / 2]) / 2, fd = 1 / fgDec(o.FD);
+  return fd < med ? {o: o.FD, med, hr: o['Hard Rock']} : null;
+}
+try { fetch('../markets/fg_nhl.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d && d.games){ FG = d.games; render(); } }).catch(() => {}); } catch (e) {}
 const CRIT = [
   ['top3', 'Usage top 3', 'Top 3 in his game by usage rank: the only legs the anytime-goal cards use (top 3 priced 25%+ returned +2% on 388 at Novig / Kalshi).', x => x.ur != null && x.ur <= 3],
   ['pp1', 'PP1', 'First power-play unit tonight.', x => x.pp === 'PP1'],
@@ -632,6 +645,7 @@ const CRIT = [
   ['lc', 'LC tag', 'An LC tag on his anytime goal. Tracked on the Profit page.', x => !!(window.MKT && MKT.lcFlag && MKT.lcFlag(x.gid, x.name))],
   ['edge', 'Edge 5%+', 'Our chance beats the best anytime-goal price at your books by 5%+.', x => isValue(x)],
   ['np4', 'No-Pin edge: four-book', 'Profit row ‘NHL Goal edge 5%+ without Pinnacle: four-book fair (new)’: Pinnacle has no price, best of Hard Rock / Novig / Kalshi, chance = 50/50 ours with the four-book fair (Kalshi, FanDuel, Fanatics, DraftKings, leaving out the book bet), edge 5-40%. The fair this page uses.', x => !!(x.np && x.np.f4)],
+  ['fgbv', 'FD + Bovada 1st goal', 'NHL first goal: FanDuel and Bovada at the same odds, both longer than the median of the other books (3+). Profit row ‘NHL First goal: FanDuel + Bovada same odds, above the market (experimental)’ (bet at FanDuel). Anytime-goal stand-in study: +8% on 1,186 at FD, not proven. Prices from the first-goal pulls (last 3 h before puck drop + the 8 AM ET pull).', x => !!x.fg],
   ['npx', 'No-Pin edge: exchanges (old)', 'Profit row ‘NHL Goal edge 5%+ without Pinnacle: exchanges fair (old)’: same rule with the old fair (median of Novig / Kalshi / Polymarket / ProphetX ÷ 1.03). Kept for comparison only: it loses to the closing price.', x => !!(x.np && x.np.fx)],
 ];
 state.bcrit = new Set(UI.bcrit || []);
@@ -641,7 +655,7 @@ const anyT = x => x.crit.some(k => !CTX.has(k));
 function board(){
   const all = D.games.flatMap(g => [[g.away, g.home], [g.home, g.away]].flatMap(([s, o]) => { const vd = vsDout(s, o);
     return s.players.map(p => ({...p, orig: p, team: s.team, opp: o.team, gid: g.id, vd: vd.has(p.id), tg: tripleGreen(p, o)})); }));
-  all.forEach(x => { x.np = window.MKT && MKT.noPinGoal ? MKT.noPinGoal(x.gid, x.name) : null; x.crit = critOf(x); });
+  all.forEach(x => { x.np = window.MKT && MKT.noPinGoal ? MKT.noPinGoal(x.gid, x.name) : null; x.fg = fgOf(x.gid, x.name); x.crit = critOf(x); });
   const want = [...state.bcrit].filter(k => k === 'any' || CRIT.some(c => c[0] === k));
   const rows = all.filter(p => (!state.bval || isValue(p)) && want.every(k => k === 'any' ? anyT(p) : p.crit.includes(k)))
     .sort((a,b) => (want.includes('any') ? b.crit.filter(k => !CTX.has(k)).length - a.crit.filter(k => !CTX.has(k)).length : 0) || (state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : state.bsort === 'u' ? ulam(b) - ulam(a) : b.p - a.p));
@@ -650,7 +664,8 @@ function board(){
     ${want.length ? `<p class="small muted" style="margin:0 0 8px">${rows.length} player${rows.length === 1 ? '' : 's'} ${want.includes('any') ? 'meeting at least one' : 'meeting all picked'} · each is tracked, none proven</p>` : ''}`;
   const critTags = x => !want.length ? '' : x.crit.filter(k => !['pp1', 'due', 'dry', 'val', 'lc'].includes(k)).map(k => { const c = CRIT.find(c => c[0] === k);
     const np = (k === 'np4' || k === 'npx') && x.np && x.np[k === 'np4' ? 'f4' : 'fx'];
-    const lab = np ? `${k === 'np4' ? '4-book' : 'Exch. (old)'} +${Math.round(np.edge * 100)}% ${x.np.k} ${x.np.o > 0 ? '+' : ''}${x.np.o}` : c[1];
+    const fg = k === 'fgbv' && x.fg, so = v => (v > 0 ? '+' : '') + v;
+    const lab = np ? `${k === 'np4' ? '4-book' : 'Exch. (old)'} +${Math.round(np.edge * 100)}% ${x.np.k} ${x.np.o > 0 ? '+' : ''}${x.np.o}` : fg ? `1st goal FD = Bovada ${so(fg.o)} · rest ${so(Math.round(fg.med >= .5 ? -100 * fg.med / (1 - fg.med) : 100 * (1 - fg.med) / fg.med))}${fg.hr != null ? ` · HR ${so(fg.hr)}` : ''}` : c[1];
     return `<span class="lchg crt" title="${esc(c[2] + (np ? ` Fair ${(np.fair * 100).toFixed(1)}%.` : ''))}">${esc(lab)}</span>`; }).join('');
   const seg = `<div class="phead"><div class="seg" role="group" aria-label="Sort by"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button><button data-bsort="u" aria-pressed="${state.bsort === 'u'}" title="${UTIP}">Usage rank</button></div><div class="seg" role="group" aria-label="Filter"><button data-bval="1" aria-pressed="${!!state.bval}" title="Only players whose best anytime-goal price at your books beats our chance by 5%+ (top-3 usage players; same rule as the green prices)">Value only</button></div><span class="small muted">First goal = chance to score the game's first goal (regulation or overtime)</span></div>`;
   const bv = p => state.bsort === 'pf' ? (p.pf ?? 0) : p.p, bmax = state.bsort === 'pf' ? .12 : .5;
