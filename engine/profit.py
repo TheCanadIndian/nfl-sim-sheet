@@ -907,7 +907,11 @@ def tags():
                     q = r["ya"] + .07 * r["ya"] * (1 - r["ya"])
                     kal[(str(r["g"]), _norm(r["n"]))] = (round(-100 * q / (1 - q) if q >= .5 else 100 * (1 - q) / q), (r["ya"] + r["yb"]) / 2,
                                                         (r.get("p") or {}).get("model"))
-            gaps = {}                                    # each book's hold: logit(its anytime Yes) - logit(the anytime fair)
+            k1 = {(str(r["g"]), _norm(r["n"])): ((r["ya"] + r["yb"]) / 2, (r.get("p") or {}).get("model")) for r in LV2
+                  if r.get("s") == "kalshi" and r.get("k") == "goal" and (r.get("l") or .5) < 1 and r.get("n") and r.get("ya")
+                  and r.get("yb") is not None and r["ya"] - r["yb"] <= .04}       # Kalshi 1+ mid: the anytime fair when no book has one
+            kal = {key: v + k1.get(key, (None, None)) for key, v in kal.items()}
+            gaps = {}                                   # each book's hold: logit(its anytime Yes) - logit(the anytime fair)
             for gid, ps in (PR.get("props") or {}).items():
                 for nm, ks in ps.items():
                     e_ = ks.get("goal") or {}
@@ -943,13 +947,23 @@ def tags():
                     d_, bk = max(mine)
                     e = log.setdefault(f"g2|all|{gid}|{nm}", dict(sport=sport, src="g2", grp="all", gid=gid, name=nm, bet="2+ goals", first=now.isoformat(), start=st))
                     e.update(book=bk, o=o2[bk], p=p2)
-                    oth = [q for b, q in src.items() if b != bk]
-                    if p2 is None or len(oth) < 2:
+                    # chance (owner 2026-11-06 'fix the goals issue'; research/nhl_two_goals.py): the Poisson link from the anytime
+                    # chance is right -- 101,185 walk-forward skater-games scored 2+ at 1.69% vs 1.73% Poisson, every season and band,
+                    # NB / logistic no better; Kalshi's own 2+ mids = Poisson of its 1+ mids (48 players, ratio 0.99). The gap vs the
+                    # books was our anytime chance, so: anytime anchored like every NHL goal edge (WPIN .2 ours + .8 Pinnacle, else
+                    # four books, else Kalshi's 1+ mid), then Poisson. 'm' = Poisson of the anytime fair; 'mb' = the books' own 2+ fair.
+                    e1 = ((PR.get("props") or {}).get(str(gid)) or {}).get(nm, {}).get("goal") or {}
+                    fa = (e1.get("pin") or {}).get("o") or (e1.get("f4") or {}).get("o") or (k_[3] if k_ else None)
+                    p1 = e1.get("p") if e1.get("p") is not None else (k_[4] if k_ else None)
+                    if fa is None or p1 is None or not (0 < fa < 1 and 0 < p1 < 1):
                         continue
-                    fair = float(np.median(oth)); ch = .5 * p2 + .5 * fair; edge = ch * d_ - 1
+                    two = lambda q: 1 - (1 - q) * (1 - math.log(1 - q))
+                    ch, fair = two(.2 * p1 + .8 * fa), two(fa); edge = ch * d_ - 1
+                    oth = [q for b, q in src.items() if b != bk]
                     if .05 <= edge <= .40:
                         log.setdefault(f"g2|edge|{gid}|{nm}", dict(sport=sport, src="g2", grp="edge", gid=gid, name=nm, bet="2+ goals", book=bk, o=o2[bk],
-                                                                  first=now.isoformat(), p=round(ch, 4), m=round(fair, 4), ours=p2, start=st))
+                                                                  first=now.isoformat(), p=round(ch, 4), m=round(fair, 4), ours=p2, a1=round(.2 * p1 + .8 * fa, 4),
+                                                                  mb=round(float(np.median(oth)), 4) if len(oth) >= 2 else None, start=st))
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
         # sighting with an edge 5-40% (chance = 5% ours + 95% the books' fair, the screener's NBA weight)
