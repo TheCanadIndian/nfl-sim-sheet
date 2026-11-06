@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-06",
 "lock": "2026-11-07T00:00:00+00:00",
-"frozen_at": "2026-11-06T23:20:38.334Z",
+"frozen_at": "2026-11-06T23:29:29.058Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -311,13 +311,13 @@
 "line": 2.5,
 "name": "jack quinn",
 "lab": "Jack Quinn 3+ shots",
-"p": 0.5185,
+"p": 0.5182,
 "price": -104,
 "book": "Novig"
 }
 ],
-"p": 0.2279,
-"d": 4.388,
+"p": 0.23161,
+"d": 4.318,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -379,13 +379,13 @@
 "line": null,
 "name": null,
 "lab": "MIN moneyline",
-"p": 0.71,
+"p": 0.7075,
 "price": -251,
 "book": "Novig"
 }
 ],
-"p": 0.4122,
-"d": 2.426,
+"p": 0.41482,
+"d": 2.411,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -413,13 +413,13 @@
 "line": null,
 "name": null,
 "lab": "MIN moneyline",
-"p": 0.71,
+"p": 0.7075,
 "price": -251,
 "book": "Novig"
 }
 ],
-"p": 0.33959,
-"d": 2.945,
+"p": 0.33839,
+"d": 2.955,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -447,13 +447,47 @@
 "line": null,
 "name": null,
 "lab": "MIN moneyline",
-"p": 0.71,
+"p": 0.7075,
 "price": -251,
 "book": "Novig"
 }
 ],
-"p": 0.28717,
-"d": 3.482,
+"p": 0.28591,
+"d": 3.498,
+"first": "2026-11-07T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "Goal + over 5.5",
+"legs": [
+{
+"gid": "2026020264",
+"start": "2026-11-07T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "cutter gauthier",
+"lab": "Cutter Gauthier to score",
+"p": 0.3946,
+"price": 147,
+"book": "Novig"
+},
+{
+"gid": "2026020264",
+"start": "2026-11-07T01:00:00Z",
+"kind": "total",
+"side": "over",
+"line": 5.5,
+"name": null,
+"lab": "ANA-CGY over 5.5",
+"p": 0.5731,
+"price": -181,
+"book": "Poly US"
+}
+],
+"p": 0.27658,
+"d": 3.616,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -481,13 +515,13 @@
 "line": 2.5,
 "name": "beckett sennecke",
 "lab": "Beckett Sennecke 3+ shots",
-"p": 0.5186,
+"p": 0.5188,
 "price": -106,
 "book": "Novig"
 }
 ],
-"p": 0.24805,
-"d": 4.031,
+"p": 0.24502,
+"d": 4.081,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -520,48 +554,14 @@
 "book": "Novig"
 }
 ],
-"p": 0.2417,
-"d": 4.137,
+"p": 0.23713,
+"d": 4.217,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
 {
 "card": "Same-game combos (experimental)",
-"tier": "3+ shots + goal",
-"legs": [
-{
-"gid": "2026020264",
-"start": "2026-11-07T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "leo carlsson",
-"lab": "Leo Carlsson to score",
-"p": 0.3117,
-"price": 217,
-"book": "Novig"
-},
-{
-"gid": "2026020264",
-"start": "2026-11-07T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "leo carlsson",
-"lab": "Leo Carlsson 3+ shots",
-"p": 0.4738,
-"price": 127,
-"book": "Novig"
-}
-],
-"p": 0.20619,
-"d": 4.85,
-"first": "2026-11-07T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "Goal + win",
+"tier": "Goal + over 5.5",
 "legs": [
 {
 "gid": "2026020264",
@@ -578,18 +578,18 @@
 {
 "gid": "2026020264",
 "start": "2026-11-07T01:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
+"kind": "total",
+"side": "over",
+"line": 5.5,
 "name": null,
-"lab": "ANA moneyline",
-"p": 0.463,
-"price": 135,
-"book": "Novig"
+"lab": "ANA-CGY over 5.5",
+"p": 0.5731,
+"price": -181,
+"book": "Poly US"
 }
 ],
-"p": 0.20241,
-"d": 4.941,
+"p": 0.23393,
+"d": 4.275,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -618,12 +618,12 @@
 "name": null,
 "lab": "ANA-CGY under 6.5",
 "p": 0.531,
-"price": 113,
+"price": 111,
 "book": "Novig"
 }
 ],
 "p": 0.34367,
-"d": 3.55,
+"d": 3.517,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -652,12 +652,12 @@
 "name": null,
 "lab": "ANA-CGY under 6.5",
 "p": 0.531,
-"price": 113,
+"price": 111,
 "book": "Novig"
 }
 ],
 "p": 0.33919,
-"d": 3.599,
+"d": 3.565,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -732,12 +732,12 @@
 "name": null,
 "lab": "ANA-CGY under 6.5",
 "p": 0.531,
-"price": 113,
+"price": 111,
 "book": "Novig"
 }
 ],
 "p": 0.18415,
-"d": 7.277,
+"d": 7.209,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -824,12 +824,12 @@
 "name": null,
 "lab": "ANA-CGY under 6.5",
 "p": 0.531,
-"price": 113,
+"price": 111,
 "book": "Novig"
 }
 ],
 "p": 0.1766,
-"d": 7.485,
+"d": 7.415,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -840,30 +840,30 @@
 {
 "gid": "2026020262",
 "start": "2026-11-07T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "zach werenski",
-"lab": "Zach Werenski over 2.5 shots",
-"p": 0.5571,
-"price": -120,
-"book": "Novig"
-},
-{
-"gid": "2026020264",
-"start": "2026-11-07T01:00:00Z",
 "kind": "ml",
 "side": "away",
 "line": null,
 "name": null,
-"lab": "ANA moneyline",
-"p": 0.463,
-"price": 135,
+"lab": "CBJ moneyline",
+"p": 0.3914,
+"price": 163,
 "book": "Novig"
+},
+{
+"gid": "2026020263",
+"start": "2026-11-07T01:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 0.5,
+"name": "ivar stenberg",
+"lab": "Ivar Stenberg over 0.5 shots",
+"p": 0.784,
+"price": -210,
+"book": "DK"
 }
 ],
-"p": 0.25792,
-"d": 4.308,
+"p": 0.30682,
+"d": 3.882,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -898,40 +898,6 @@
 ],
 "p": 0.25585,
 "d": 4.588,
-"first": "2026-11-07T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020263",
-"start": "2026-11-07T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "ryan hartman",
-"lab": "Ryan Hartman over 1.5 shots",
-"p": 0.5358,
-"price": 105,
-"book": "theScore"
-},
-{
-"gid": "2026020264",
-"start": "2026-11-07T01:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "ANA moneyline",
-"p": 0.463,
-"price": 135,
-"book": "Novig"
-}
-],
-"p": 0.24807,
-"d": 4.817,
 "first": "2026-11-07T01:00:00+00:00",
 "res": null
 },
@@ -988,13 +954,13 @@
 {
 "gid": "2026020262",
 "start": "2026-11-07T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "zach werenski",
-"lab": "Zach Werenski over 2.5 shots",
-"p": 0.5571,
-"price": -120,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "CBJ moneyline",
+"p": 0.3914,
+"price": 163,
 "book": "Novig"
 },
 {
@@ -1002,28 +968,28 @@
 "start": "2026-11-07T01:00:00Z",
 "kind": "sog",
 "side": "o",
-"line": 1.5,
-"name": "kiefer sherwood",
-"lab": "Kiefer Sherwood over 1.5 shots",
-"p": 0.5526,
-"price": -105,
-"book": "Hard Rock"
+"line": 0.5,
+"name": "ivar stenberg",
+"lab": "Ivar Stenberg over 0.5 shots",
+"p": 0.784,
+"price": -210,
+"book": "DK"
 },
 {
 "gid": "2026020264",
 "start": "2026-11-07T01:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "ANA moneyline",
-"p": 0.463,
-"price": 135,
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "leo carlsson",
+"lab": "Leo Carlsson over 2.5 shots",
+"p": 0.4726,
+"price": 125,
 "book": "Novig"
 }
 ],
-"p": 0.14253,
-"d": 8.412,
+"p": 0.14499,
+"d": 8.735,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -1034,13 +1000,13 @@
 {
 "gid": "2026020262",
 "start": "2026-11-07T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "zach werenski",
-"lab": "Zach Werenski over 2.5 shots",
-"p": 0.5571,
-"price": -120,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "CBJ moneyline",
+"p": 0.3914,
+"price": 163,
 "book": "Novig"
 },
 {
@@ -1048,12 +1014,12 @@
 "start": "2026-11-07T01:00:00Z",
 "kind": "sog",
 "side": "o",
-"line": 1.5,
-"name": "ryan hartman",
-"lab": "Ryan Hartman over 1.5 shots",
-"p": 0.5358,
-"price": 105,
-"book": "theScore"
+"line": 0.5,
+"name": "ivar stenberg",
+"lab": "Ivar Stenberg over 0.5 shots",
+"p": 0.784,
+"price": -210,
+"book": "DK"
 },
 {
 "gid": "2026020264",
@@ -1068,8 +1034,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.1382,
-"d": 8.832,
+"p": 0.14205,
+"d": 9.124,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -1080,30 +1046,30 @@
 {
 "gid": "2026020262",
 "start": "2026-11-07T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "zach werenski",
-"lab": "Zach Werenski over 2.5 shots",
-"p": 0.5571,
-"price": -120,
-"book": "Novig"
-},
-{
-"gid": "2026020264",
-"start": "2026-11-07T01:00:00Z",
 "kind": "ml",
 "side": "away",
 "line": null,
 "name": null,
-"lab": "ANA moneyline",
-"p": 0.463,
-"price": 135,
+"lab": "CBJ moneyline",
+"p": 0.3914,
+"price": 163,
 "book": "Novig"
+},
+{
+"gid": "2026020263",
+"start": "2026-11-07T01:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 0.5,
+"name": "ivar stenberg",
+"lab": "Ivar Stenberg over 0.5 shots",
+"p": 0.784,
+"price": -210,
+"book": "DK"
 }
 ],
-"p": 0.25792,
-"d": 4.308,
+"p": 0.30682,
+"d": 3.882,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -1219,6 +1185,40 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
+"name": "macklin celebrini",
+"lab": "Macklin Celebrini to score",
+"p": 0.3419,
+"price": null,
+"book": null
+},
+{
+"gid": "2026020262",
+"start": "2026-11-07T00:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "mathieu olivier",
+"lab": "Mathieu Olivier to score",
+"p": 0.1936,
+"price": null,
+"book": null
+}
+],
+"p": 0.0662,
+"d": 15.1,
+"first": "2026-11-07T00:00:00+00:00",
+"res": null
+},
+{
+"card": "2-leg pairs paying 15x+",
+"tier": "Middle slate",
+"legs": [
+{
+"gid": "2026020263",
+"start": "2026-11-07T01:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
 "name": "kirill kaprizov",
 "lab": "Kirill Kaprizov to score",
 "p": 0.5383,
@@ -1241,40 +1241,6 @@
 "p": 0.0662,
 "d": 15.1,
 "first": "2026-11-07T01:00:00+00:00",
-"res": null
-},
-{
-"card": "2-leg pairs paying 15x+",
-"tier": "Middle slate",
-"legs": [
-{
-"gid": "2026020263",
-"start": "2026-11-07T01:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "macklin celebrini",
-"lab": "Macklin Celebrini to score",
-"p": 0.3412,
-"price": null,
-"book": null
-},
-{
-"gid": "2026020262",
-"start": "2026-11-07T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "mathieu olivier",
-"lab": "Mathieu Olivier to score",
-"p": 0.1936,
-"price": null,
-"book": null
-}
-],
-"p": 0.0661,
-"d": 15.1,
-"first": "2026-11-07T00:00:00+00:00",
 "res": null
 }
 ],
