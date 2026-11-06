@@ -652,7 +652,7 @@ def tag_label(e):
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") == "fg":
-        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada both 10%+ above the market (experimental)"
+        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, above the market (experimental)"
     if e.get("src") in ("f4", "fx"):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
@@ -836,8 +836,8 @@ def tags():
                         e.setdefault("start", st)
         # NHL first goal scorer (owner 2026-11-06, a Discord idea: 'when Bovada and FD sit above the market at similar odds';
         # sharp.fg_nhl -> markets/fg_nhl.json): every FanDuel price, its last pregame price (baseline); and each first sighting
-        # of FD and Bovada within 10% of each other (implied), both 10%+ longer than the median of the other books (3+), at the
-        # better of the two. Neither is the owner's book, so both stay off the bets feed.
+        # of FD and Bovada at the same odds, both longer than the median of the other books (3+) by any amount (owner 2026-11-06:
+        # 'doesnt have to be 10% just more and the same value'). Neither is the owner's book, so both stay off the bets feed.
         if sport == "nhl":
             try:
                 FG = json.load(open(os.path.join(site, "markets", "fg_nhl.json"))).get("games") or {}
@@ -859,8 +859,8 @@ def tags():
                     if len(rest) < 3:
                         continue
                     med = float(np.median(rest))
-                    if fd_ <= .9 * med and bv_ <= .9 * med and max(fd_, bv_) / min(fd_, bv_) <= 1.1:
-                        bk, o = ("FD", o_["FD"]) if fd_ <= bv_ else ("Bovada", o_["Bovada"])
+                    if o_["FD"] == o_["Bovada"] and fd_ < med:
+                        bk, o = "FD", o_["FD"]
                         log.setdefault(f"fg|fdbv|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdbv", gid=gid, name=nm, bet="first goal", book=bk, o=o,
                                                                   first=now.isoformat(), m=round(med, 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
