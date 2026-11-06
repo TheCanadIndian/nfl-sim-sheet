@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-05",
 "lock": "2026-11-06T02:00:00+00:00",
-"frozen_at": "2026-11-06T00:28:13.177Z",
+"frozen_at": "2026-11-06T00:41:35.179Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 2.5,
 "name": "wendell carter",
 "lab": "Wendell Carter Jr. 3+ ast",
-"p": 0.2687,
+"p": 0.2596,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -40,8 +40,8 @@
 "line": 1.5,
 "name": "draymond green",
 "lab": "Draymond Green 2+ threes",
-"p": 0.2308,
-"price": 398,
+"p": 0.2278,
+"price": 425,
 "book": "Kalshi",
 "f": [
 "matchup",
@@ -51,8 +51,8 @@
 ]
 }
 ],
-"p": 0.06202,
-"d": 17.928,
+"p": 0.05913,
+"d": 18.9,
 "first": "2026-11-06T02:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -69,7 +69,7 @@
 "line": 5.5,
 "name": "jalen green",
 "lab": "Jalen Green 6+ reb",
-"p": 0.2208,
+"p": 0.2217,
 "price": 373,
 "book": "Kalshi",
 "f": [
@@ -86,8 +86,8 @@
 "line": 1.5,
 "name": "draymond green",
 "lab": "Draymond Green 2+ threes",
-"p": 0.2308,
-"price": 398,
+"p": 0.2278,
+"price": 425,
 "book": "Kalshi",
 "f": [
 "matchup",
@@ -97,8 +97,8 @@
 ]
 }
 ],
-"p": 0.05096,
-"d": 23.555,
+"p": 0.05051,
+"d": 24.833,
 "first": "2026-11-06T02:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -107,32 +107,6 @@
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401909936",
-"start": "2026-11-06T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 16.5,
-"name": "jalen green",
-"lab": "Jalen Green over 16.5 points",
-"p": 0.5265,
-"price": -108,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0021
-},
 {
 "gid": "401909937",
 "start": "2026-11-06T03:00Z",
@@ -159,10 +133,35 @@
 ],
 "sport": "nba",
 "edge": 0.0386
+},
+{
+"gid": "401909936",
+"start": "2026-11-06T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "desmond bane",
+"lab": "Desmond Bane over 3.5 assists",
+"p": 0.4605,
+"price": 117,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0028
 }
 ],
-"p": 0.2384,
-"d": 4.43,
+"p": 0.20851,
+"d": 4.991,
 "first": "2026-11-06T02:00:00+00:00",
 "res": null
 },
@@ -171,27 +170,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401909937",
-"start": "2026-11-06T03:00Z",
-"kind": "pts",
-"side": "o",
-"line": 29.5,
-"name": "stephen curry",
-"lab": "Stephen Curry over 29.5 points",
-"p": 0.4197,
-"fair": 0.4274,
-"price": 140,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0074,
-"v": [
-"Pinnacle line up",
-"consensus line up + odds drop",
-"one rung above the main line (27.5)",
-"soft matchup"
-]
-},
-{
 "gid": "401909936",
 "start": "2026-11-06T02:00Z",
 "kind": "pts",
@@ -199,20 +177,41 @@
 "line": 23.5,
 "name": "franz wagner",
 "lab": "Franz Wagner over 23.5 points",
-"p": 0.4769,
-"fair": 0.4797,
+"p": 0.4783,
+"fair": 0.4812,
 "price": 111,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0062,
+"edge": 0.0092,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
 "one rung above the main line (22.5)"
 ]
+},
+{
+"gid": "401909937",
+"start": "2026-11-06T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "stephen curry",
+"lab": "Stephen Curry over 29.5 points",
+"p": 0.4187,
+"fair": 0.4263,
+"price": 140,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0048,
+"v": [
+"Pinnacle line up",
+"consensus line up + odds drop",
+"one rung above the main line (27.5)",
+"soft matchup"
+]
 }
 ],
-"p": 0.20502,
+"p": 0.20514,
 "d": 5.064,
 "first": "2026-11-06T02:00:00+00:00",
 "res": null
