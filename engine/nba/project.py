@@ -331,6 +331,11 @@ def main():
             if x["k"] not in seen:
                 seen.add(x["k"]); merged.append(x)
         payload["players"] = merged
+    try:                                                           # teammate links (teamlink.py): chips + markets/teamlink_nba.json
+        import teamlink as TL
+        TL.write(payload, F.DB, int(fut.season.iloc[0]))
+    except Exception as e:                                         # noqa: BLE001 -- display / tracking only
+        print("teammate links skipped:", type(e).__name__, e)
     json.dump(payload, open(jp, "w"), separators=(",", ":"))
     html = page.render(payload)
     for f in (f"{date}.html", "index.html"):

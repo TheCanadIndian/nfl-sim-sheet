@@ -902,6 +902,14 @@ def nba_game(gid):
                         stl=float(x.get("steals", 0)), blk=float(x.get("blocks", 0)))
                 except ValueError:
                     pass
+    # first field goal of the game (NBA first basket, sharp.fb_nba): the first made shot that isn't a free throw
+    names = {str(a["athlete"]["id"]): jsnorm(a["athlete"]["displayName"]) for team in (s.get("boxscore") or {}).get("players", [])
+             for cat in team.get("statistics", []) for a in cat.get("athletes", []) if a.get("athlete")}
+    fb = next((p for p in s.get("plays", []) if p.get("scoringPlay") and p.get("shootingPlay")
+               and "free throw" not in str((p.get("type") or {}).get("text", "")).lower()), None)
+    fbn = names.get(str((((fb or {}).get("participants") or [{}])[0].get("athlete") or {}).get("id")))
+    if fbn in pl:
+        pl[fbn]["fg"] = 1
     return dict(home=sc["home"], away=sc["away"], players=pl, zero_missing=False)
 
 

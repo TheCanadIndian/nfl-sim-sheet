@@ -47,6 +47,12 @@ function chips(p, g){
       : `<span class="lean r2" title="${off ? 'Not in tonight’s official starting five' : 'Projected to come off the bench tonight'}; started last game. Coming off the bench cuts his minutes about 13% (2025-26 test), ${off ? 'fully applied' : 'applied at 70% until the official lineup posts'}.">▼ bench</span>`; }
   if (p.trend >= 3) h += `<span class="lean g2" title="Minutes trending up: last few games ${f1(p.trend)} above his longer average">▲ min</span>`;
   else if (p.trend <= -3) h += `<span class="lean r2" title="Minutes trending down: last few games ${f1(-p.trend)} below his longer average">▼ min</span>`;
+  if (p.tl){                                               // teammate links (teamlink.py, owner 2026-11-06): a 24+ min teammate out tonight
+    const w = esc((p.tl.w || []).join(', '));
+    if (p.tl.f != null && p.tl.f >= .25) h += `<span class="lean r2" title="${w} out tonight: ${Math.round(p.tl.f * 100)}% of his assisted baskets this season came from ${w}. Scorers this dependent on an out teammate went under the market on points / threes (Kalshi Jan–Nov 2026: 4.8 pts below the price on 691, every period). Tracked on the Profit page, not a rule.">▼ feeder out</span>`;
+    const am = p.s[mode(g)] && p.s[mode(g)].ast ? p.s[mode(g)].ast[MED] : 0;   // only players with assist volume (props exist)
+    if (p.tl.a != null && p.tl.a < .15 && am >= 2) h += `<span class="lean g2" title="${w} out tonight; only ${Math.round(p.tl.a * 100)}% of his assists this season went to ${w}. Passers like this beat the market on assists overs (Kalshi Jan–Nov 2026: +3.8 pts over the price on 759, every period, about +2% after Kalshi’s fee). Tracked on the Profit page, not a rule.">▲ ast free</span>`;
+  }
   const l = lean(p, 'pts');
   if (l && Math.abs(l.edge) >= .03) h += `<span class="lean ${shadeP(.5 + l.edge * 2)}" title="Market-blind model ${l.edge > 0 ? 'higher' : 'lower'} on points at ${l.L}">${l.edge > 0 ? '▲' : '▼'} blind</span>`;
   if (p.gp === 0) h += '<span class="tag" style="color:var(--muted)" title="No NBA games yet: league-average role assumed">new</span>';
