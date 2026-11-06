@@ -1925,6 +1925,74 @@ def ladder_knees(sport, now):
     print(f"ladder knees {sport}: {len(knees)} ({', '.join(f'{b} {sum(1 for x in knees if x['bk'] == b)}' for b in OWN_BOOKS)})")
 
 
+# ---------------------------------------------------------------- NHL first goal scorer (tracking only)
+# Owner 2026-11-06, a Discord idea: 'when Bovada and FD sit above the market at similar odds' for first-goal scorers. We had
+# no first-goal prices; this logs the whole pool (every player, every book) so the idea can be graded on winners AND losers
+# (research/nhl_fd_above.py, the anytime-goal proxy: FD 10%+ longer than the rest + one other book within 10%, -2% at FD on 586,
+# about fair; FD 20%+ longer +40% on 173, z +1.0; FD shorter -30%). One call per game: 10 books = 1 credit. Hourly in the last
+# 3 h + the 8 AM ET pull. markets/fg_nhl.json {fetched, games: {gid: {start, fetched, players: {name: {o: {book: odds}, p}}}}};
+# its git history keeps every pull for the study. Not on any page; profit.tags grades it.
+FG_BOOKS = ["fanduel", "bovada", "draftkings", "betmgm", "williamhill_us", "espnbet", "fanatics", "hardrockbet", "betrivers", "betonlineag"]
+FG_SHORT = dict(NBA_SHORT, bovada="Bovada", betonlineag="BetOnline")
+FG_FILE = os.path.join(M.SITE, "markets", "fg_nhl.json")
+
+
+def fg_nhl(now):
+    k = B.key()
+    O = M.ours_nhl() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+    try:
+        old = json.load(open(FG_FILE)).get("games") or {}
+    except (OSError, ValueError):
+        old = {}
+    pl = O.get("players")
+    pf = {} if pl is None or "p_first" not in pl else {(str(r.game_id), jsnorm(r.name)): float(r.p_first) for r in pl.itertuples()}
+    bst = B.load_state()
+    todo = wanted(games, old, now, 3.0, 60, bst, fast_min=60)
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/icehockey_nhl/events", params=dict(apiKey=k), timeout=30)   # free
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nhl"].get(e["away_team"]), B.NAMES["nhl"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nhl first goal: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/icehockey_nhl/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers=",".join(FG_BOOKS), markets="player_goal_scorer_first", oddsFormat="american"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    for o in m.get("outcomes", []):
+                        nm = o.get("description") or o.get("name")
+                        if not nm or (o.get("name") or "").lower() in ("no", "no goalscorer", "no goal"):
+                            continue
+                        P.setdefault(jsnorm(nm), {"o": {}})["o"][FG_SHORT.get(b["key"], b["key"])] = int(o["price"])
+            gid = str(g["id"])
+            if P:
+                for nm, x in P.items():
+                    if (gid, nm) in pf:
+                        x["p"] = round(pf[(gid, nm)], 4)
+                old[gid] = dict(start=str(g["start"]), fetched=now.isoformat(), players=P)
+                print(f"odds api nhl first goal: {g['away']} @ {g['home']}: {len(P)} players, "
+                      f"{len({b for x in P.values() for b in x['o']})} books ({used} credits, {bst.get('remaining')} left)")
+            else:
+                print(f"odds api nhl first goal: {g['away']} @ {g['home']}: not posted yet")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    old = {gid: c for gid, c in old.items() if pd.Timestamp(c["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    os.makedirs(os.path.dirname(FG_FILE), exist_ok=True)
+    json.dump(dict(sport="nhl", fetched=now.tz_convert("America/New_York").isoformat(timespec="minutes"), games=old),
+              open(FG_FILE, "w"), separators=(",", ":"))
+
+
 def main(argv):
     now = pd.Timestamp.now(tz="UTC")
     if not argv or "nba" in argv:
@@ -2015,6 +2083,10 @@ def main(argv):
             if sport == "nhl":
                 pin_pull_nhl(now)
                 pin_merge_nhl(now)
+                try:
+                    fg_nhl(now)
+                except Exception as e:                       # noqa: BLE001 -- tracking only
+                    print(f"odds api nhl first goal: skipped ({type(e).__name__}: {e})")
         except Exception as e:
             print(f"hard rock {sport}: skipped ({type(e).__name__}: {e})")
     for sport in ("nhl", "nfl", "nba"):                         # sharp consensus last, after every merge

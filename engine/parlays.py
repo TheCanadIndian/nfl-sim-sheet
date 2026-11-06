@@ -834,6 +834,12 @@ def nhl_game(gid):
                 nm = names.get(x["playerId"])
                 if nm:
                     pl[nm] = dict(goals=x.get("goals", 0), sog=x.get("sog", x.get("shots", 0)))
+    # first goal scorer (regulation or overtime; a game decided in the shootout has none, so every first-goal bet loses)
+    fg = next((x for x in pbp.get("plays", []) if x.get("typeDescKey") == "goal"
+               and (x.get("periodDescriptor") or {}).get("periodType") != "SO"), None)
+    fgn = names.get(((fg or {}).get("details") or {}).get("scoringPlayerId"))
+    if fgn in pl:
+        pl[fgn]["fg"] = 1
     return dict(home=box["homeTeam"]["score"], away=box["awayTeam"]["score"], players=pl, zero_missing=False)
 
 
@@ -921,6 +927,8 @@ def settle(L, g):
     if L["kind"] in ("dd", "tdbl"):                     # NBA double / triple-double: 10+ in 2 / 3 of pts, reb, ast, stl, blk
         n10 = sum(1 for k in ("pts", "reb", "ast", "stl", "blk") if s.get(k, 0) >= 10)
         return "W" if n10 >= (2 if L["kind"] == "dd" else 3) else "L"
+    if L["kind"] == "fg":                              # NHL first goal scorer
+        return "W" if s.get("fg") else "L"
     key = {"goal": "goals", "sog": "sog"}.get(L["kind"], L["kind"])
     v = (s.get("rush_td", 0) + s.get("rec_td", 0)) if L["kind"] == "td" else s.get(key, 0)
     line = float(L["line"] if L.get("line") is not None else .5)

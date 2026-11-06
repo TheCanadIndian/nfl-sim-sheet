@@ -491,7 +491,7 @@ def _starts():
 
 def _tag_leg(sport, b):
     if sport == "nhl":
-        return dict(kind="goal", side="o", line=.5) if b == "goal" else None
+        return dict(kind="goal", side="o", line=.5) if b == "goal" else dict(kind="fg", side="o", line=.5) if b == "first goal" else None
     if b == "TD":
         return dict(kind="td", side="o", line=.5)
     if b in ("double-double", "triple-double"):
@@ -651,6 +651,8 @@ def tag_label(e):
         return "Ladder: Novig rung 10%+ under the other books’ fair (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
+    if e.get("src") == "fg":
+        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada both 10%+ above the market (experimental)"
     if e.get("src") in ("f4", "fx"):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
@@ -832,6 +834,35 @@ def tags():
                         e = log.setdefault(f"{src_}|{sport}|{gid}|{nm}", dict(sport=sport, src=src_, gid=gid, name=nm, bet="goal", book=bk, o=o,
                                                                             first=now.isoformat(), p=round(q, 4), m=round(fair, 4), start=st))
                         e.setdefault("start", st)
+        # NHL first goal scorer (owner 2026-11-06, a Discord idea: 'when Bovada and FD sit above the market at similar odds';
+        # sharp.fg_nhl -> markets/fg_nhl.json): every FanDuel price, its last pregame price (baseline); and each first sighting
+        # of FD and Bovada within 10% of each other (implied), both 10%+ longer than the median of the other books (3+), at the
+        # better of the two. Neither is the owner's book, so both stay off the bets feed.
+        if sport == "nhl":
+            try:
+                FG = json.load(open(os.path.join(site, "markets", "fg_nhl.json"))).get("games") or {}
+            except (OSError, ValueError):
+                FG = {}
+            for gid, G_ in FG.items():
+                st = G_.get("start")
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, x in (G_.get("players") or {}).items():
+                    o_ = x.get("o") or {}
+                    if "FD" in o_:
+                        e = log.setdefault(f"fg|all|{gid}|{nm}", dict(sport=sport, src="fg", grp="all", gid=gid, name=nm, bet="first goal", first=now.isoformat(), start=st))
+                        e.update(book="FD", o=o_["FD"], p=x.get("p"))
+                    if "FD" not in o_ or "Bovada" not in o_:
+                        continue
+                    fd_, bv_ = 1 / dec(o_["FD"]), 1 / dec(o_["Bovada"])
+                    rest = [1 / dec(v) for b, v in o_.items() if b not in ("FD", "Bovada")]
+                    if len(rest) < 3:
+                        continue
+                    med = float(np.median(rest))
+                    if fd_ <= .9 * med and bv_ <= .9 * med and max(fd_, bv_) / min(fd_, bv_) <= 1.1:
+                        bk, o = ("FD", o_["FD"]) if fd_ <= bv_ else ("Bovada", o_["Bovada"])
+                        log.setdefault(f"fg|fdbv|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdbv", gid=gid, name=nm, bet="first goal", book=bk, o=o,
+                                                                  first=now.isoformat(), m=round(med, 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
         # sighting with an edge 5-40% (chance = 5% ours + 95% the books' fair, the screener's NBA weight)
@@ -1158,7 +1189,7 @@ def feed_data():
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         d0 = _et_day(e.get("start") or e["first"])
-        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all":
+        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") == "fg":
             continue
         dd = dec(e["o"])
         items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}",
