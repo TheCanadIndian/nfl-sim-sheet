@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-06",
 "lock": "2026-11-07T00:00:00+00:00",
-"frozen_at": "2026-11-06T18:57:21.089Z",
+"frozen_at": "2026-11-06T19:09:46.741Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,46 +15,45 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909294",
-"start": "2026-11-07T03:00Z",
-"kind": "pts",
+"gid": "401909290",
+"start": "2026-11-07T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 19.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday 20+ pts",
-"p": 0.2433,
-"price": 355,
-"book": "Novig",
+"line": 2.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 3+ ast",
+"p": 0.3899,
+"price": 170,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
-"game",
 "price"
 ]
 },
 {
 "gid": "401909295",
 "start": "2026-11-07T03:00Z",
-"kind": "pts",
+"kind": "fg3m",
 "side": "o",
-"line": 19.5,
-"name": "domantas sabonis",
-"lab": "Domantas Sabonis 20+ pts",
-"p": 0.2335,
-"price": 376,
+"line": 1.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 2+ threes",
+"p": 0.4038,
+"price": 147,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 }
 ],
-"p": 0.05681,
-"d": 21.658,
-"first": "2026-11-07T03:00:00+00:00",
-"pick": "longshot",
+"p": 0.15747,
+"d": 6.669,
+"first": "2026-11-07T01:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -62,52 +61,22 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909291",
+"gid": "401909290",
 "start": "2026-11-07T01:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "jared mccain",
-"lab": "Jared McCain 4+ reb",
-"p": 0.4075,
-"price": 144,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909295",
-"start": "2026-11-07T03:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "domantas sabonis",
-"lab": "Domantas Sabonis 20+ pts",
-"p": 0.2335,
-"price": 376,
-"book": "Novig",
+"line": 2.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 3+ ast",
+"p": 0.3899,
+"price": 170,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
-"game",
 "price"
 ]
-}
-],
-"p": 0.09514,
-"d": 11.614,
-"first": "2026-11-07T01:00:00+00:00",
-"pick": "core",
-"res": null
 },
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
 {
 "gid": "401909291",
 "start": "2026-11-07T01:00Z",
@@ -125,112 +94,73 @@
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401909294",
-"start": "2026-11-07T03:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday 20+ pts",
-"p": 0.2433,
-"price": 355,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909295",
-"start": "2026-11-07T03:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 2+ threes",
-"p": 0.4093,
-"price": 140,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.04058,
-"d": 26.645,
+"p": 0.15888,
+"d": 6.588,
 "first": "2026-11-07T01:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
 "legs": [
 {
 "gid": "401909291",
 "start": "2026-11-07T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 5.5,
+"line": 4.5,
 "name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 6+ reb",
-"p": 0.3189,
-"price": 194,
+"lab": "Shai Gilgeous-Alexander over 4.5 rebounds",
+"p": 0.4837,
+"price": 108,
 "book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation",
 "game"
-]
-},
-{
-"gid": "401909294",
-"start": "2026-11-07T03:00Z",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "donovan clingan",
-"lab": "Donovan Clingan 15+ pts",
-"p": 0.3184,
-"price": 313,
-"book": "Kalshi",
-"f": [
+],
+"v": [
+"usage",
+"matchup",
 "rotation",
 "game",
-"price"
-]
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0062
 },
 {
 "gid": "401909295",
 "start": "2026-11-07T03:00Z",
-"kind": "fg3m",
+"kind": "pts",
 "side": "o",
-"line": 1.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 2+ threes",
-"p": 0.4093,
-"price": 140,
-"book": "Kalshi",
+"line": 28.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama over 28.5 points",
+"p": 0.4798,
+"price": 111,
+"book": "Novig",
 "f": [
 "usage",
-"matchup",
 "rotation",
 "game"
-]
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0051
 }
 ],
-"p": 0.04154,
-"d": 29.141,
+"p": 0.23208,
+"d": 4.389,
 "first": "2026-11-07T01:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -330,28 +260,29 @@
 ]
 },
 {
-"gid": "401909288",
-"start": "2026-11-07T00:00Z",
+"gid": "401909294",
+"start": "2026-11-07T03:00Z",
 "kind": "pts",
 "side": "o",
-"line": 13.5,
-"name": "coby white",
-"lab": "Coby White over 13.5 points",
-"p": 0.4474,
-"fair": 0.4486,
-"price": 133,
-"book": "Novig",
+"line": 19.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 19.5 points",
+"p": 0.2182,
+"fair": 0.217,
+"price": 325,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0425,
+"edge": -0.0725,
 "v": [
 "Pinnacle line up",
-"one rung above the main line (12.5)"
+"consensus line up",
+"one rung above the main line (14.5)"
 ]
 }
 ],
-"p": 0.10124,
-"d": 9.696,
-"first": "2026-11-07T00:00:00+00:00",
+"p": 0.04897,
+"d": 17.685,
+"first": "2026-11-07T00:30:00+00:00",
 "res": null
 },
 {
@@ -359,6 +290,26 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401909294",
+"start": "2026-11-07T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 19.5 points",
+"p": 0.2182,
+"fair": 0.217,
+"price": 325,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0725,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (14.5)"
+]
+},
+{
 "gid": "401909288",
 "start": "2026-11-07T00:00Z",
 "kind": "pts",
@@ -376,30 +327,10 @@
 "Pinnacle line up",
 "one rung above the main line (12.5)"
 ]
-},
-{
-"gid": "401909291",
-"start": "2026-11-07T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "isaiah hartenstein",
-"lab": "Isaiah Hartenstein over 4.5 assists",
-"p": 0.2739,
-"fair": 0.2759,
-"price": 230,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": -0.0961,
-"v": [
-"Pinnacle line up",
-"one rung above the main line (3.5)",
-"soft matchup"
-]
 }
 ],
-"p": 0.12377,
-"d": 7.689,
+"p": 0.09735,
+"d": 9.902,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 },
@@ -484,22 +415,22 @@
 {
 "gid": "401909295",
 "start": "2026-11-07T03:00:00+00:00",
-"kind": "pts",
+"kind": "fg3m",
 "side": "o",
-"line": 9.5,
-"name": "precious achiuwa",
-"lab": "Precious Achiuwa over 9.5 points",
-"p": 0.4678,
-"price": 127,
-"book": "Novig",
+"line": 3.5,
+"name": "julian champagnie",
+"lab": "Julian Champagnie over 3.5 threes",
+"p": 0.2356,
+"price": 350,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0619,
-"fair": 0.4677,
+"edge": 0.0603,
+"fair": 0.2379,
 "main": false
 }
 ],
-"p": 0.07552,
-"d": 20.43,
+"p": 0.03804,
+"d": 40.5,
 "first": "2026-11-07T00:00:00+00:00",
 "res": null
 }
