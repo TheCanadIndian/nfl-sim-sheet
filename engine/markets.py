@@ -317,6 +317,9 @@ def player_prob(sport, kind, name, line, g, O):
             pid = int(pm.player_id.iloc[0])
             if kind == "goal" and (line is None or line < 1):
                 out["model"] = float(pm.p_goal.iloc[0])
+            elif kind == "goal":                                # 2+ / 3+ rungs (owner 2026-11-06: 'Kalshi has goal ladders')
+                lam = -math.log(1 - min(float(pm.p_goal.iloc[0]), .999)); k = int(line + .5)
+                out["model"] = 1 - sum(math.exp(-lam) * lam ** i / math.factorial(i) for i in range(k))
             elif kind == "first_goal" and "p_first" in pm:
                 out["model"] = float(pm.p_first.iloc[0])
     else:

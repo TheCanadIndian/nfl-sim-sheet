@@ -491,7 +491,7 @@ def _starts():
 
 def _tag_leg(sport, b):
     if sport == "nhl":
-        return dict(kind="goal", side="o", line=.5) if b == "goal" else dict(kind="fg", side="o", line=.5) if b == "first goal" else None
+        return dict(kind="goal", side="o", line=.5) if b == "goal" else dict(kind="fg", side="o", line=.5) if b == "first goal" else dict(kind="goal", side="o", line=1.5) if b == "2+ goals" else None
     if b == "TD":
         return dict(kind="td", side="o", line=.5)
     if b in ("double-double", "triple-double"):
@@ -663,8 +663,10 @@ def tag_label(e):
         return "Ladder: Novig rung 10%+ under the other books’ fair (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
+    if e.get("src") == "g2":
+        return "2+ goals: every price at your books (baseline)" if e.get("grp") == "all" else "2+ goals: edge 5%+ at your books (experimental)"
     if e.get("src") == "fg":
-        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, longer than every other book (experimental)"
+        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (experimental)"
     if e.get("src") in ("f4", "fx"):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
@@ -866,18 +868,88 @@ def tags():
                     if "FD" in o_:
                         e = log.setdefault(f"fg|all|{gid}|{nm}", dict(sport=sport, src="fg", grp="all", gid=gid, name=nm, bet="first goal", first=now.isoformat(), start=st))
                         e.update(book="FD", o=o_["FD"], p=x.get("p"))
-                    if "FD" not in o_ or "Bovada" not in o_:
+                    if "FD" not in o_ or "Bovada" not in o_ or o_["FD"] != o_["Bovada"]:
                         continue
-                    fd_, bv_ = 1 / dec(o_["FD"]), 1 / dec(o_["Bovada"])
-                    rest = [1 / dec(v) for b, v in o_.items() if b not in ("FD", "Bovada")]
-                    if len(rest) < 3:
+                    # owner 2026-11-06 'change it': FD = Bovada and longer than EVERY other book (the median version matched 87 of 113);
+                    # 'for 5000 and above we are looking for three books at a higher price that agree': +5000 and up needs a third
+                    # book at that same price. Books at FD's price join the group; every book outside it must be shorter.
+                    fd_ = 1 / dec(o_["FD"])
+                    same = [b for b, v in o_.items() if v == o_["FD"]]
+                    rest = [1 / dec(v) for b, v in o_.items() if v != o_["FD"]]
+                    if len(rest) < 3 or len(same) < (3 if o_["FD"] >= 5000 else 2):
                         continue
                     med = float(np.median(rest))
-                    # owner 2026-11-06 'change it': longer than EVERY other book (the median version matched 87 of 113 players)
-                    if o_["FD"] == o_["Bovada"] and fd_ < min(rest):
+                    if fd_ < min(rest):
                         bk, o = "FD", o_["FD"]
                         log.setdefault(f"fg|fdtop|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdtop", gid=gid, name=nm, bet="first goal", book=bk, o=o,
                                                                   first=now.isoformat(), m=round(med, 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
+        # NHL 2+ goals (owner 2026-11-06: 'start tracking 2+ goals to see if we can find an edge'; sharp.fg_nhl -> g2_nhl.json, Kalshi
+        # 2+ rungs from live_nhl.json at the ask + 7% fee, 4c-or-less spread). No sharp book prices it, so the fair = each other
+        # source's price with that book's own hold taken out (its anytime-goal price vs the anytime fair -- Pinnacle else four books
+        # -- the median logit gap over the slate, 5+ players; Kalshi = its mid), median of 2+ sources, leaving out the book bet.
+        # chance = 50/50 ours (Poisson from our anytime chance) + that fair. Baseline: the best of Hard Rock / Novig / Kalshi, its
+        # latest pregame price (off the bets feed); edge: first sighting at 5-40%.
+        if sport == "nhl":
+            try:
+                G2 = json.load(open(os.path.join(site, "markets", "g2_nhl.json"))).get("games") or {}
+            except (OSError, ValueError):
+                G2 = {}
+            try:
+                LV2 = json.load(open(os.path.join(site, "markets", "live_nhl.json"))).get("rows") or []
+            except (OSError, ValueError):
+                LV2 = []
+            lg_ = lambda q: math.log(q / (1 - q))
+            sg_ = lambda z: 1 / (1 + math.exp(-z))
+            kal = {}
+            for r in LV2:
+                if r.get("s") == "kalshi" and r.get("k") == "goal" and r.get("l") is not None and abs(float(r["l"]) - 1.5) < 1e-9 \
+                        and r.get("n") and r.get("ya") and r.get("yb") is not None and r["ya"] - r["yb"] <= .04 and .01 < r["ya"] < .99:
+                    q = r["ya"] + .07 * r["ya"] * (1 - r["ya"])
+                    kal[(str(r["g"]), _norm(r["n"]))] = (round(-100 * q / (1 - q) if q >= .5 else 100 * (1 - q) / q), (r["ya"] + r["yb"]) / 2,
+                                                        (r.get("p") or {}).get("model"))
+            gaps = {}                                    # each book's hold: logit(its anytime Yes) - logit(the anytime fair)
+            for gid, ps in (PR.get("props") or {}).items():
+                for nm, ks in ps.items():
+                    e_ = ks.get("goal") or {}
+                    fa = (e_.get("pin") or {}).get("o") or (e_.get("f4") or {}).get("o")
+                    if not fa or not 0 < fa < 1:
+                        continue
+                    for b, v in (e_.get("o") or {}).items():
+                        if isinstance(v, list) and v and v[0] is not None:
+                            gaps.setdefault(b, []).append(lg_(1 / dec(v[0])) - lg_(fa))
+            hold = {b: float(np.median(v)) for b, v in gaps.items() if len(v) >= 5}
+            for gid, G_ in G2.items():
+                st = G_.get("start")
+                if not st or PL.when(st) <= now:
+                    continue
+                pls = dict(G_.get("players") or {})
+                for (g_, nm) in kal:
+                    if g_ == str(gid):
+                        pls.setdefault(nm, {"o": {}, "p": {}})
+                for nm, x in pls.items():
+                    o2 = dict((x.get("o") or {}).get("1.5") or {})
+                    k_ = kal.get((str(gid), nm))
+                    if k_:
+                        o2["Kalshi"] = k_[0]
+                    p2 = (x.get("p") or {}).get("1.5")
+                    if p2 is None and k_:
+                        p2 = k_[2]
+                    src = {b: sg_(lg_(1 / dec(v)) - hold[b]) for b, v in o2.items() if b in hold and b != "Kalshi"}
+                    if k_:
+                        src["Kalshi"] = k_[1]
+                    mine = [(dec(o2[b]), b) for b in ("Hard Rock", "Novig", "Kalshi") if b in o2]
+                    if not mine:
+                        continue
+                    d_, bk = max(mine)
+                    e = log.setdefault(f"g2|all|{gid}|{nm}", dict(sport=sport, src="g2", grp="all", gid=gid, name=nm, bet="2+ goals", first=now.isoformat(), start=st))
+                    e.update(book=bk, o=o2[bk], p=p2)
+                    oth = [q for b, q in src.items() if b != bk]
+                    if p2 is None or len(oth) < 2:
+                        continue
+                    fair = float(np.median(oth)); ch = .5 * p2 + .5 * fair; edge = ch * d_ - 1
+                    if .05 <= edge <= .40:
+                        log.setdefault(f"g2|edge|{gid}|{nm}", dict(sport=sport, src="g2", grp="edge", gid=gid, name=nm, bet="2+ goals", book=bk, o=o2[bk],
+                                                                  first=now.isoformat(), p=round(ch, 4), m=round(fair, 4), ours=p2, start=st))
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
         # sighting with an edge 5-40% (chance = 5% ours + 95% the books' fair, the screener's NBA weight)
