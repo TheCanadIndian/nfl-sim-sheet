@@ -631,6 +631,8 @@ const CRIT = [
   ['val', 'Value tag', 'A Value tag on his anytime goal (sharp books vs your books). Tracked on the Profit page.', x => !!(window.MKT && MKT.flag && MKT.flag(x.gid, x.name))],
   ['lc', 'LC tag', 'An LC tag on his anytime goal. Tracked on the Profit page.', x => !!(window.MKT && MKT.lcFlag && MKT.lcFlag(x.gid, x.name))],
   ['edge', 'Edge 5%+', 'Our chance beats the best anytime-goal price at your books by 5%+.', x => isValue(x)],
+  ['np4', 'No-Pin edge: four-book', 'Profit row ‘NHL Goal edge 5%+ without Pinnacle: four-book fair (new)’: Pinnacle has no price, best of Hard Rock / Novig / Kalshi, chance = 50/50 ours with the four-book fair (Kalshi, FanDuel, Fanatics, DraftKings, leaving out the book bet), edge 5-40%. The fair this page uses.', x => !!(x.np && x.np.f4)],
+  ['npx', 'No-Pin edge: exchanges (old)', 'Profit row ‘NHL Goal edge 5%+ without Pinnacle: exchanges fair (old)’: same rule with the old fair (median of Novig / Kalshi / Polymarket / ProphetX ÷ 1.03). Kept for comparison only: it loses to the closing price.', x => !!(x.np && x.np.fx)],
 ];
 state.bcrit = new Set(UI.bcrit || []);
 const critOf = x => CRIT.filter(c => c[3](x)).map(c => c[0]);
@@ -639,14 +641,17 @@ const anyT = x => x.crit.some(k => !CTX.has(k));
 function board(){
   const all = D.games.flatMap(g => [[g.away, g.home], [g.home, g.away]].flatMap(([s, o]) => { const vd = vsDout(s, o);
     return s.players.map(p => ({...p, orig: p, team: s.team, opp: o.team, gid: g.id, vd: vd.has(p.id), tg: tripleGreen(p, o)})); }));
-  all.forEach(x => { x.crit = critOf(x); });
+  all.forEach(x => { x.np = window.MKT && MKT.noPinGoal ? MKT.noPinGoal(x.gid, x.name) : null; x.crit = critOf(x); });
   const want = [...state.bcrit].filter(k => k === 'any' || CRIT.some(c => c[0] === k));
   const rows = all.filter(p => (!state.bval || isValue(p)) && want.every(k => k === 'any' ? anyT(p) : p.crit.includes(k)))
     .sort((a,b) => (want.includes('any') ? b.crit.filter(k => !CTX.has(k)).length - a.crit.filter(k => !CTX.has(k)).length : 0) || (state.bsort === 'pf' ? (b.pf ?? 0) - (a.pf ?? 0) : state.bsort === 'u' ? ulam(b) - ulam(a) : b.p - a.p));
   const cnt = k => all.filter(x => k === 'any' ? anyT(x) : x.crit.includes(k)).length;
   const crit = `<div class="crit" role="group" aria-label="Tracked criteria"><span class="small muted">Tracked:</span><button data-bcrit="any" aria-pressed="${want.includes('any')}" title="Players with at least one tracked signal (not counting Usage top 3 / PP1), most signals first">Any tracked <small>${cnt('any')}</small></button>${CRIT.map(c => `<button data-bcrit="${c[0]}" aria-pressed="${want.includes(c[0])}" title="${esc(c[2])}">${esc(c[1])} <small>${cnt(c[0])}</small></button>`).join('')}${want.length ? '<button data-bcrit="clear" class="clr">Clear</button>' : ''}</div>
     ${want.length ? `<p class="small muted" style="margin:0 0 8px">${rows.length} player${rows.length === 1 ? '' : 's'} ${want.includes('any') ? 'meeting at least one' : 'meeting all picked'} · each is tracked, none proven</p>` : ''}`;
-  const critTags = x => !want.length ? '' : x.crit.filter(k => !['pp1', 'due', 'dry', 'val', 'lc'].includes(k)).map(k => { const c = CRIT.find(c => c[0] === k); return `<span class="lchg crt" title="${esc(c[2])}">${esc(c[1])}</span>`; }).join('');
+  const critTags = x => !want.length ? '' : x.crit.filter(k => !['pp1', 'due', 'dry', 'val', 'lc'].includes(k)).map(k => { const c = CRIT.find(c => c[0] === k);
+    const np = (k === 'np4' || k === 'npx') && x.np && x.np[k === 'np4' ? 'f4' : 'fx'];
+    const lab = np ? `${k === 'np4' ? '4-book' : 'Exch. (old)'} +${Math.round(np.edge * 100)}% ${x.np.k} ${x.np.o > 0 ? '+' : ''}${x.np.o}` : c[1];
+    return `<span class="lchg crt" title="${esc(c[2] + (np ? ` Fair ${(np.fair * 100).toFixed(1)}%.` : ''))}">${esc(lab)}</span>`; }).join('');
   const seg = `<div class="phead"><div class="seg" role="group" aria-label="Sort by"><button data-bsort="p" aria-pressed="${state.bsort !== 'pf'}">Anytime goal</button><button data-bsort="pf" aria-pressed="${state.bsort === 'pf'}">First goal</button><button data-bsort="u" aria-pressed="${state.bsort === 'u'}" title="${UTIP}">Usage rank</button></div><div class="seg" role="group" aria-label="Filter"><button data-bval="1" aria-pressed="${!!state.bval}" title="Only players whose best anytime-goal price at your books beats our chance by 5%+ (top-3 usage players; same rule as the green prices)">Value only</button></div><span class="small muted">First goal = chance to score the game's first goal (regulation or overtime)</span></div>`;
   const bv = p => state.bsort === 'pf' ? (p.pf ?? 0) : p.p, bmax = state.bsort === 'pf' ? .12 : .5;
   return `<section class="panel">${seg}${crit}<div class="tw"><table class="t pt"><thead><tr><th>#</th><th class="l">Player</th><th class="l">Team</th><th class="l">Pos</th><th class="l" style="min-width:140px">Chance</th><th>P(goal)</th><th>Fair</th><th>1st goal</th><th>Fair</th><th>Exp. goals</th><th title="${UTIP}">Usage rank</th><th>TOI</th><th class="l">H2H G-A-P</th><th class="l pcd" title="Best anytime-goal price at your books; green = our chance beats it by 5%+">Best odds</th></tr></thead><tbody>

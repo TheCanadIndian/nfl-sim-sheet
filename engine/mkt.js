@@ -617,6 +617,21 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return {k: c[0], name: FULL[c[0]] || BKS[c[0]] || c[0], o: c[1][0], u, mine: !!L.length, w: !!e.w};
     },
     myBooks: () => MY.slice(),
+    // NHL anytime goal without Pinnacle, the Profit rows' rule (profit.py tags, owner 2026-11-05: 'show me both'): props
+    // Pinnacle hasn't priced, best of Hard Rock / Novig / Kalshi, chance = 50/50 ours with the fair, edge 5-40%.
+    // f4 = four-book fair leaving out the book bet (the page's fair); fx = the old exchanges' median / 1.03. {f4, fx, k, o}
+    noPinGoal(gid, name){
+      if (!PR || !PR.props || Date.now() - new Date(PR.fetched) > 12 * 3600e3) return null;
+      const e = ((PR.props[String(gid)] || {})[norm(name)] || {}).goal;
+      if (!e || !e.o || e.p == null || (e.pin && e.pin.o != null)) return null;
+      const bo = ['Hard Rock', 'Novig', 'Kalshi'].filter(b => Array.isArray(e.o[b]) && e.o[b][0] != null).map(b => [dec(e.o[b][0]), b, e.o[b][0]]).sort((a, b) => b[0] - a[0]);
+      if (!bo.length) return null;
+      const [d, k, o] = bo[0];
+      const ex = ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'].filter(b => Array.isArray(e.o[b]) && e.o[b][0] != null).map(b => 1 / dec(e.o[b][0])).sort((a, b) => a - b);
+      const med = ex.length ? (ex.length % 2 ? ex[(ex.length - 1) / 2] : (ex[ex.length / 2 - 1] + ex[ex.length / 2]) / 2) : null;
+      const ed = f => { if (f == null) return null; const x = (.5 * e.p + .5 * f) * d - 1; return x >= .05 && x <= .40 ? {edge: x, fair: f} : null; };
+      return {f4: ed(f4O(e, k)), fx: ed(med != null ? med / 1.03 : null), k, o};
+    },
     // the books' main line for a player prop (props file `l`), for the projected box score's 'above the line' highlight
     propLine(gid, name, kind){
       const e = PR && PR.props && Date.now() - new Date(PR.fetched) < 12 * 3600e3 ? ((PR.props[String(gid)] || {})[norm(name)] || {})[kind] : null;
