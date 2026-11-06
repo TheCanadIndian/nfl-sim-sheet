@@ -635,6 +635,18 @@ def multi_fair(e, line, skip, kmid=None):
 MOVE_SIG = {"line": "line up", "price": "odds drop", "both": "line up + odds drop", "rung": "higher rung outlier"}
 
 
+# NHL first goal odds ranges (owner 2026-11-06: 'give me the odd ranges that are proposed so I can track that as well'), from the
+# Discord write-up: primary +2000..+3500, secondary +3500..+5000, longshot watchlist +5000..+9000 (priority 2 +5000..+6000),
+# shorter-price +1000..+1600, outliers +10000 and up; the gaps between them are their own bands so every price lands in one.
+FG_BANDS = [(-10**9, 999, "under +1000"), (1000, 1600, "+1000 to +1600 (shorter-price)"), (1601, 1999, "+1601 to +1999"),
+            (2000, 3500, "+2000 to +3500 (primary)"), (3501, 4999, "+3501 to +4999 (secondary)"),
+            (5000, 6000, "+5000 to +6000 (longshot)"), (6001, 9999, "+6001 to +9999 (longshot)"), (10000, 10**9, "+10000 and up (outlier)")]
+
+
+def fg_band(o):
+    return next(lab for lo, hi, lab in FG_BANDS if lo <= o <= hi)
+
+
 def tag_label(e):
     """Profit-page category for a logged tag."""
     if e.get("src") == "move":
@@ -1039,6 +1051,9 @@ def page_data():
         clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
         rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)}", date=_et_day(e.get("start") or e["first"]),
                          pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
+        if e.get("src") == "fg":                             # first goal: also one row per proposed odds range (owner 2026-11-06)
+            rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)} · {fg_band(e['o'])}", date=_et_day(e.get("start") or e["first"]),
+                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
         wl = [e for e in json.load(open(os.path.join(OUT, "profit_wfair.json"))).values() if e.get("res") in ("W", "L")]
