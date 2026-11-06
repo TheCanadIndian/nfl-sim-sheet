@@ -492,6 +492,8 @@ def _starts():
 def _tag_leg(sport, b):
     if sport == "nhl":
         return dict(kind="goal", side="o", line=.5) if b == "goal" else dict(kind="fg", side="o", line=.5) if b == "first goal" else dict(kind="goal", side="o", line=1.5) if b == "2+ goals" else None
+    if b == "first basket":                            # NBA first field goal of the game (parlays.nba_game marks it as fg)
+        return dict(kind="fg", side="o", line=.5)
     if b == "TD":
         return dict(kind="td", side="o", line=.5)
     if b in ("double-double", "triple-double"):
@@ -665,6 +667,12 @@ def tag_label(e):
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") == "g2":
         return "2+ goals: every price at your books (baseline)" if e.get("grp") == "all" else "2+ goals: edge 5%+ at your books (experimental)"
+    if e.get("src") == "tl":
+        return ("Teammate link: key teammate out, assists over, under 15% of his assists went to him (experimental)" if e.get("grp") == "afree"
+                else "Teammate link: key teammate out who fed 25%+ of his baskets, points / threes over (expected to lose; experimental)")
+    if e.get("src") == "fb":
+        return {"all": "First basket: every player, best price (baseline)", "low": "First basket: centers and the 4th / 5th scoring starter, best price (experimental)",
+                "edge": "First basket: our flat model 10%+ over the best price (experimental)"}.get(e.get("grp"), "First basket")
     if e.get("src") == "fg":
         return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (experimental)"
     if e.get("src") in ("f4", "fx"):
@@ -777,6 +785,34 @@ def tags():
                     e = log.setdefault(f"dry|{sport}|{gid}|{nm}", dict(sport=sport, src="dry", gid=gid, name=nm, bet="goal", book=bk, o=o,
                                                                      first=now.isoformat(), p=fair, m=fair, start=st, dry=n))
                     e.setdefault("start", st)
+        # NBA teammate links (owner 2026-11-06, research/pbp_factors.py; nba/teamlink.py -> markets/teamlink_nba.json): with a 24+
+        # min teammate out tonight, (afree) his assists over when under 15% of his assists went to that teammate; (fed) his points /
+        # threes over when 25%+ of his assisted baskets came from him (the study's losing side, tracked to confirm). Main line,
+        # first price, best of Hard Rock / Novig / Kalshi; fair = the sharp consensus at that line (none -> not logged)
+        if sport == "nba":
+            try:
+                TLJ = json.load(open(os.path.join(site, "markets", "teamlink_nba.json"))).get("games") or {}
+            except (OSError, ValueError):
+                TLJ = {}
+            inv = {v: k for k, v in LAB.items()}
+            for gid, x in TLJ.items():
+                st = starts.get(str(gid)) or x.get("start")
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, t in (x.get("players") or {}).items():
+                    want = ([("afree", "ast")] if t.get("a") is not None and t["a"] < .15 else []) + \
+                           ([("fed", "pts"), ("fed", "fg3m")] if t.get("f") is not None and t["f"] >= .25 else [])
+                    for grp, k in want:
+                        e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(nm) or {}).get(k) or {}
+                        fair = (e_.get("pin") or {}).get("o")
+                        bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                        if e_.get("l") is None or fair is None or not bo:
+                            continue
+                        _, bk, o = max(bo)
+                        e = log.setdefault(f"tl|{grp}|{gid}|{nm}|{k}", dict(sport=sport, src="tl", grp=grp, gid=gid, name=nm, bet=f"over {e_['l']} {inv[k]}",
+                                                                           book=bk, o=o, first=now.isoformat(), p=fair, m=fair, start=st,
+                                                                           tl=dict(f=t.get("f"), a=t.get("a"))))
+                        e.setdefault("start", st)
         # NHL goal luck (owner 2026-11-02, research/nhl_goal_luck.py): every anytime-goal over at the owner's books for a 'due'
         # player (0.25+ xG a game, 0.10+ a game under it), first price, best of Hard Rock / Novig / Kalshi; fair = sharp, else four books
         if sport == "nhl":
@@ -883,6 +919,34 @@ def tags():
                         bk, o = "FD", o_["FD"]
                         log.setdefault(f"fg|fdtop|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdtop", gid=gid, name=nm, bet="first goal", book=bk, o=o,
                                                                   first=now.isoformat(), m=round(med, 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
+        # NBA first basket (owner 2026-11-06, research/pbp_factors.py: who scores first is far flatter than scoring share --
+        # centers and the 4th / 5th scoring starter score first more than their share; sharp.fb_nba -> markets/fb_nba.json). The best
+        # price across every book for each player (its latest pregame price): every player (baseline), centers + the 4th / 5th
+        # projected scorer among the starters (the study's cheap side), and our flat model 10%+ over that price (first sighting).
+        # Not the owner's books (Hard Rock aside), so all stay off the bets feed.
+        if sport == "nba":
+            try:
+                FB = json.load(open(os.path.join(site, "markets", "fb_nba.json"))).get("games") or {}
+            except (OSError, ValueError):
+                FB = {}
+            for gid, G_ in FB.items():
+                st = G_.get("start")
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, x in (G_.get("players") or {}).items():
+                    o_ = {b: v for b, v in (x.get("o") or {}).items() if v is not None}
+                    if not o_:
+                        continue
+                    bk = max(o_, key=lambda b: dec(o_[b])); o = o_[bk]
+                    base = dict(sport=sport, src="fb", gid=gid, name=nm, bet="first basket", start=st)
+                    e = log.setdefault(f"fb|all|{gid}|{nm}", dict(base, grp="all", first=now.isoformat()))
+                    e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"))
+                    if x.get("r") in (4, 5) or x.get("c"):
+                        e = log.setdefault(f"fb|low|{gid}|{nm}", dict(base, grp="low", first=now.isoformat()))
+                        e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"))
+                    if x.get("p") and x["p"] * dec(o) - 1 >= .10:
+                        log.setdefault(f"fb|edge|{gid}|{nm}", dict(base, grp="edge", first=now.isoformat(), book=bk, o=o, p=x["p"], m=x["p"],
+                                                                   hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c")))
         # NHL 2+ goals (owner 2026-11-06: 'start tracking 2+ goals to see if we can find an edge'; sharp.fg_nhl -> g2_nhl.json, Kalshi
         # 2+ rungs from live_nhl.json at the ask + 7% fee, 4c-or-less spread). No sharp book prices it, so the fair = each other
         # source's price with that book's own hold taken out (its anytime-goal price vs the anytime fair -- Pinnacle else four books
@@ -1330,7 +1394,7 @@ def feed_data():
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         d0 = _et_day(e.get("start") or e["first"])
-        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") == "fg":
+        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb") or (e.get("src") == "tl" and e.get("grp") == "fed"):
             continue
         dd = dec(e["o"])
         items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}",

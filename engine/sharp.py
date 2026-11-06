@@ -1946,6 +1946,92 @@ def _pk(lam, k):
     return 1 - sum(math.exp(-lam) * lam ** i / math.factorial(i) for i in range(k))
 
 
+# ---------------------------------------------------------------- NBA first basket (tracking only)
+# Owner 2026-11-06 ('yes' after research/pbp_factors.py): who scores the first field goal is far flatter than scoring share
+# (4,332 games 2022-26: each team's top scorer 12.1% of the game's first FG, 5th starter 8.0%, centers 12.2%), so if books price
+# it by usage the centers / low-usage starters are the cheap side. One call per game (player_first_basket, 10 books = 1 credit),
+# hourly in the last 3 h + the 8 AM ET pull. markets/fb_nba.json {fetched, games: {gid: {start, fetched, players: {name:
+# {o: {book: odds}, p, r, c}}}}}: p = our flat model (team scores first 50%, then the starter's rank among tonight's starters by
+# projected points: .1205 / .1175 / .0992 / .0845 / .0802, centers x1.12, renormalized to .5 a team; bench .003), r = that rank,
+# c = center. Display-free; profit.tags grades it (src 'fb').
+FB_FILE = os.path.join(M.SITE, "markets", "fb_nba.json")
+FB_RANK = [.1205, .1175, .0992, .0845, .0802]
+
+
+def _fb_ours(players, gid):
+    """{norm name: (p, rank, is_center)} for one game from the NBA payload players."""
+    out = {}
+    pl = [x for x in players if int(x["g"]) == int(gid) and x.get("st") != "Out"]
+    for t in {x["t"] for x in pl}:
+        T = [x for x in pl if x["t"] == t]
+        bx = lambda x: ((x.get("bx") or {}).get("vegas") or {})
+        # likely starters: top 5 by projected minutes, moved by lineup news (lu 'in|...' / 'out|...'); a player who missed his
+        # team's last game still counts (started-last-game alone dropped a returning star)
+        adj = lambda x: bx(x).get("min", 0) + (30 if str(x.get("lu") or "").startswith("in") else -30 if str(x.get("lu") or "").startswith("out") else 0)
+        st = sorted(sorted(T, key=lambda x: -adj(x))[:5], key=lambda x: -bx(x).get("pts", 0))
+        w = [FB_RANK[i] * (1.12 if str(x.get("pos") or "").startswith("C") else 1) for i, x in enumerate(st)]
+        bench = [x for x in T if x not in st]
+        tot = .5 - .003 * len(bench)
+        for i, (x, wi) in enumerate(zip(st, w)):
+            out[jsnorm(x["n"])] = (wi / sum(w) * tot, i + 1, str(x.get("pos") or "").startswith("C"))
+        for x in bench:
+            out[jsnorm(x["n"])] = (.003, None, False)
+    return out
+
+
+def fb_nba(now):
+    k = B.key()
+    O = M.ours_nba() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+    try:
+        old = json.load(open(FB_FILE)).get("games") or {}
+    except (OSError, ValueError):
+        old = {}
+    bst = B.load_state()
+    todo = wanted(games, old, now, 3.0, 60, bst, fast_min=60)
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/basketball_nba/events", params=dict(apiKey=k), timeout=30)   # free
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nba"].get(e["away_team"]), B.NAMES["nba"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nba first basket: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/basketball_nba/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers=",".join(FG_BOOKS), markets="player_first_basket", oddsFormat="american"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    for o in m.get("outcomes", []):
+                        nm = o.get("description") or o.get("name")
+                        if not nm or (o.get("name") or "").lower() in ("no", "no basket"):
+                            continue
+                        P.setdefault(jsnorm(nm), {"o": {}})["o"][FG_SHORT.get(b["key"], b["key"])] = int(o["price"])
+            gid = str(g["id"])
+            if P:
+                ours = _fb_ours(O["players"], gid)
+                for nm, x in P.items():
+                    if nm in ours:
+                        x["p"], x["r"], x["c"] = round(ours[nm][0], 4), ours[nm][1], ours[nm][2]
+                old[gid] = dict(start=str(g["start"]), fetched=now.isoformat(), players=P)
+                print(f"odds api nba first basket: {g['away']} @ {g['home']}: {len(P)} players, "
+                      f"{len({b for x in P.values() for b in x['o']})} books ({used} credits, {bst.get('remaining')} left)")
+            else:
+                print(f"odds api nba first basket: {g['away']} @ {g['home']}: not posted yet")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    old = {g_: v for g_, v in old.items() if pd.Timestamp(v["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    json.dump(dict(fetched=now.isoformat(), games=old), open(FB_FILE, "w"), separators=(",", ":"))
+
+
 def fg_nhl(now):
     k = B.key()
     O = M.ours_nhl() or {}
@@ -2052,6 +2138,10 @@ def main(argv):
             oa_nba_ddtd(now)
         except Exception as e:                       # noqa: BLE001
             print(f"odds api nba dd / td: skipped ({type(e).__name__}: {e})")
+        try:
+            fb_nba(now)
+        except Exception as e:                       # noqa: BLE001 -- tracking only
+            print(f"odds api nba first basket: skipped ({type(e).__name__}: {e})")
     try:
         st = json.load(open(STATE))
     except (OSError, ValueError):

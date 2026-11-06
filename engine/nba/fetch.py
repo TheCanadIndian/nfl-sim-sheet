@@ -231,6 +231,19 @@ def main():
             print(f"{season}: rebound / assist chances for {len(new_o)} games", flush=True)
         except Exception as e:                                       # noqa: BLE001 -- never block the box scores
             print(f"{season}: rebound / assist chances skipped ({type(e).__name__}: {e})")
+        # assists by passer -> scorer and each game's first baskets (teamlink.py, owner 2026-11-06): new games, then earlier ones
+        try:
+            import teamlink as TL
+            new_t = {int(gid): sm for gid, sm in zip(todo.game_id, res) if sm}
+            back = [g for g in TL.missing(con, [int(x) for x in done.game_id]) if g not in new_t][:OPPS_BACKFILL]
+            if back:
+                with ThreadPoolExecutor(max_workers=6) as ex:
+                    for gid, sm in zip(back, ex.map(lambda x: cached(os.path.join(RAW, str(season), f"{x}.json.gz"), f"{API}/summary?event={x}"), back)):
+                        if sm:
+                            new_t[gid] = sm
+            print(f"{season}: assist pairs / first baskets for {TL.store(con, new_t)} games", flush=True)
+        except Exception as e:                                       # noqa: BLE001 -- never block the box scores
+            print(f"{season}: assist pairs skipped ({type(e).__name__}: {e})")
         con.commit()
         print(f"{season}: {len(todo)} new final games, {len(rows)} player lines, {len(lines)} lines ({time.time() - t0:.0f}s)", flush=True)
 
