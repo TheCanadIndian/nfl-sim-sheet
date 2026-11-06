@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-06T14:17:18.164Z",
+"frozen_at": "2026-11-06T14:21:36.847Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -40,7 +40,7 @@
 "line": 324.5,
 "name": "jared goff",
 "lab": "Jared Goff 325+ pass yds",
-"p": 0.2381,
+"p": 0.2379,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -52,7 +52,7 @@
 ]
 }
 ],
-"p": 0.05596,
+"p": 0.0559,
 "d": 19.438,
 "first": "2026-11-08T14:30:00+00:00",
 "pick": "longshot"
@@ -292,7 +292,7 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.2921,
+"p": 0.2926,
 "price": 285,
 "book": "Novig"
 },
@@ -309,7 +309,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.09542,
+"p": 0.09559,
 "d": 13.283,
 "first": "2026-11-08T14:30:00+00:00",
 "pick": "core"
@@ -326,7 +326,7 @@
 "line": 0.5,
 "name": "kyle pitts",
 "lab": "Kyle Pitts TD",
-"p": 0.2921,
+"p": 0.2926,
 "price": 285,
 "book": "Novig"
 },
@@ -343,10 +343,43 @@
 "book": "Novig"
 }
 ],
-"p": 0.09511,
+"p": 0.09527,
 "d": 14.245,
 "first": "2026-11-08T14:30:00+00:00",
 "pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 41.5,
+"name": "antonio williams",
+"lab": "Antonio Williams under 41.5 rec yds",
+"p": 0.5575,
+"price": 111,
+"book": "Novig"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 67.5,
+"name": "george kittle",
+"lab": "George Kittle under 67.5 rec yds",
+"p": 0.5645,
+"price": 106,
+"book": "Novig"
+}
+],
+"p": 0.31468,
+"d": 4.347,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -388,39 +421,6 @@
 {
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "u",
-"line": 41.5,
-"name": "antonio williams",
-"lab": "Antonio Williams under 41.5 rec yds",
-"p": 0.5575,
-"price": 111,
-"book": "Novig"
-},
-{
-"gid": "2026_09_LV_SF",
-"start": "2026-11-08T16:05:00",
-"kind": "rec",
-"side": "u",
-"line": 6.5,
-"name": "brock bowers",
-"lab": "Brock Bowers under 6.5 receptions",
-"p": 0.5273,
-"price": 104,
-"book": "Novig"
-}
-],
-"p": 0.29396,
-"d": 4.304,
-"first": "2026-11-08T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
 "kind": "rush_yds",
 "side": "u",
 "line": 37.5,
@@ -433,19 +433,64 @@
 {
 "gid": "2026_09_LV_SF",
 "start": "2026-11-08T16:05:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "u",
-"line": 6.5,
-"name": "brock bowers",
-"lab": "Brock Bowers under 6.5 receptions",
-"p": 0.5273,
-"price": 104,
+"line": 67.5,
+"name": "george kittle",
+"lab": "George Kittle under 67.5 rec yds",
+"p": 0.5645,
+"price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.2904,
-"d": 4.243,
+"p": 0.31087,
+"d": 4.285,
 "first": "2026-11-08T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
+"legs": [
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 67.5,
+"name": "george kittle",
+"lab": "George Kittle under 67.5 rec yds",
+"p": 0.5645,
+"price": 106,
+"book": "Novig"
+},
+{
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
+"kind": "pass_yds",
+"side": "u",
+"line": 276.5,
+"name": "jordan love",
+"lab": "Jordan Love under 276.5 pass yds",
+"p": 0.6111,
+"price": -113,
+"book": "Novig"
+},
+{
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones anytime TD",
+"p": 0.377,
+"price": 270,
+"book": "Novig"
+}
+],
+"p": 0.13006,
+"d": 14.367,
+"first": "2026-11-08T21:05:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -536,39 +581,6 @@
 "p": 0.12688,
 "d": 14.507,
 "first": "2026-11-08T18:00:00+00:00"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle pitts",
-"lab": "Kyle Pitts anytime TD",
-"p": 0.33,
-"price": 285,
-"book": "Novig"
-},
-{
-"gid": "2026_09_BUF_MIN",
-"start": "2026-11-09T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.377,
-"price": 270,
-"book": "Novig"
-}
-],
-"p": 0.12441,
-"d": 14.245,
-"first": "2026-11-08T14:30:00+00:00"
 },
 {
 "card": "Cross-game parlays",
@@ -29508,12 +29520,12 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4652,
-"price": 135,
+"p": 0.464,
+"price": 138,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0931,
-"fair": 0.4152,
+"edge": 0.1044,
+"fair": 0.4137,
 "main": true
 },
 {
@@ -29524,17 +29536,17 @@
 "line": 1.5,
 "name": "noah gray",
 "lab": "Noah Gray over 1.5 receptions",
-"p": 0.4695,
+"p": 0.469,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.0563,
-"fair": 0.4637,
+"edge": 0.0553,
+"fair": 0.4631,
 "main": true
 }
 ],
-"p": 0.21841,
-"d": 5.288,
+"p": 0.21762,
+"d": 5.355,
 "first": "2026-11-08T18:00:00+00:00"
 }
 ],
