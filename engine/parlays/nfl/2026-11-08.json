@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-06T01:24:13.419Z",
+"frozen_at": "2026-11-06T01:26:40.478Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -13,6 +13,102 @@
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "woody marks",
+"lab": "Woody Marks 100+ rush yds",
+"p": 0.2006,
+"price": 456,
+"book": "Kalshi",
+"sc": "HOU pulls away",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 300+ pass yds",
+"p": 0.2809,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.05637,
+"d": 22.963,
+"first": "2026-11-08T21:05:00+00:00",
+"pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_09_DET_MIA",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 324.5,
+"name": "jared goff",
+"lab": "Jared Goff 325+ pass yds",
+"p": 0.2381,
+"price": 351,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "brock purdy",
+"lab": "Brock Purdy 300+ pass yds",
+"p": 0.2809,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.0669,
+"d": 18.626,
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "2026_09_CIN_ATL",
@@ -40,7 +136,7 @@
 "line": 324.5,
 "name": "jared goff",
 "lab": "Jared Goff 325+ pass yds",
-"p": 0.2382,
+"p": 0.2381,
 "price": 351,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -50,12 +146,30 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "woody marks",
+"lab": "Woody Marks 100+ rush yds",
+"p": 0.2006,
+"price": 456,
+"book": "Kalshi",
+"sc": "HOU pulls away",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+]
 }
 ],
-"p": 0.05598,
-"d": 19.438,
-"first": "2026-11-08T14:30:00+00:00",
-"pick": "longshot"
+"p": 0.01123,
+"d": 108.076,
+"first": "2026-11-08T14:30:00+00:00"
 },
 {
 "card": "Ladder longshots (experimental)",
@@ -29524,18 +29638,19 @@
 "line": 60.5,
 "name": "woody marks",
 "lab": "Woody Marks over 60.5 rush yds",
-"p": 0.5312,
+"p": 0.5313,
 "price": -102,
 "book": "Novig",
 "f": [
 "usage",
-"rotation"
+"rotation",
+"script"
 ],
 "sport": "nfl",
-"edge": 0.0519
+"edge": 0.0522
 }
 ],
-"p": 0.30656,
+"p": 0.30661,
 "d": 3.702,
 "first": "2026-11-08T14:30:00+00:00"
 }
