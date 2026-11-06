@@ -1088,7 +1088,33 @@ def tags():
 
 
 # ---------------------------------------------------------------- page
-def _stats(pnl, clv=None):
+def _kmid(cost, src):
+    """Kalshi's own chance behind a fee-in cost (cost = P + .07 P (1 - P)); Polymarket has no fee."""
+    if cost is None or src != "kalshi":
+        return cost
+    a = .07; b = -(1 + a)
+    return (-(b) - math.sqrt(b * b - 4 * a * cost)) / (2 * a)
+
+
+def _skill(q, mk, y):
+    """Skill vs market (owner 2026-11-06: 'do it' after 'would r squared help'): 1 - Brier(our chance) / Brier(the market's
+    chance at the same bet). Above 0 = our chance forecast these bets better than the price did; 0 = same as the market
+    (rules whose chance is the market fair); below 0 = the market knew more. R-squared for yes / no bets, scored against
+    the price instead of the average."""
+    ok = [(a, b, c) for a, b, c in zip(q, mk, y) if a is not None and b is not None and c is not None and a == a and b == b and c == c]
+    if len(ok) < 30:
+        return None
+    A = np.asarray(ok, float)
+    bm = float(((A[:, 1] - A[:, 2]) ** 2).mean())
+    if bm <= 0:
+        return None
+    d = (A[:, 0] - A[:, 2]) ** 2 - (A[:, 1] - A[:, 2]) ** 2          # per-bet Brier difference (negative = ours better)
+    same = bool(np.allclose(A[:, 0], A[:, 1], atol=5e-4))
+    se = float(d.std(ddof=1) / math.sqrt(len(d))) / bm if len(d) > 1 else None
+    return dict(skill=round(-float(d.mean()) / bm, 4), skill_se=None if se is None else round(se, 4), skill_n=len(ok), skill_same=same)
+
+
+def _stats(pnl, clv=None, q=None, mk=None, y=None):
     n = len(pnl)
     if not n:
         return None
@@ -1111,6 +1137,10 @@ def _stats(pnl, clv=None):
     else:
         v = "unproven"
     out["verdict"] = v
+    if q is not None:
+        sk = _skill(q, mk, y)
+        if sk:
+            out.update(sk)
     return out
 
 
@@ -1128,18 +1158,25 @@ def page_data():
         except (OSError, ValueError):
             print(f"profit page: skipped {os.path.basename(f)}"); continue
         for r in rs:
-            rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=r.get("clv")))
+            # chance + the market's chance: ladder rows store the mid in q and ours in p; the rest store our chance in q
+            if "p" in r:
+                q_, mk_ = r["p"], r.get("q")
+            else:
+                q_, mk_ = r.get("q"), _kmid(r.get("cost"), r["src"])
+            rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=r.get("clv"),
+                             q=q_, mk=mk_, y=r.get("won")))
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         if e.get("res") not in ("W", "L"):
             continue
         d_ = dec(e["o"])
         clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
+        sk = dict(q=e.get("p"), mk=e.get("m"), y=int(e["res"] == "W"))
         rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)}", date=_et_day(e.get("start") or e["first"]),
-                         pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
+                         pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, **sk))
         if e.get("src") == "fg":                             # first goal: also one row per proposed odds range (owner 2026-11-06)
             rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)} · {fg_band(e['o'])}", date=_et_day(e.get("start") or e["first"]),
-                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv))
+                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, **sk))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
         wl = [e for e in json.load(open(os.path.join(OUT, "profit_wfair.json"))).values() if e.get("res") in ("W", "L")]
@@ -1181,7 +1218,7 @@ def page_data():
     for sp, x in df.groupby("sport"):
         cats = []
         for c, y in x.groupby("cat"):
-            s = _stats(y.pnl.values, y.clv.values if y.clv.notna().any() else None)
+            s = _stats(y.pnl.values, y.clv.values if y.clv.notna().any() else None, *((y.q.values, y.mk.values, y.y.values) if "q" in y else ()))
             s30 = _stats(y[y.date >= last30].pnl.values)
             cats.append(dict(cat=c, **s, roi30=s30["roi"] if s30 else None, n30=s30["n"] if s30 else 0))
         cats.sort(key=lambda c: ({"proven": 0, "promising": 1, "unproven": 2, "too early": 3, "losing": 4}[c["verdict"]], -c["n"]))
@@ -1392,7 +1429,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 </style></head><body><div class="wrap">
 <header><div><div class="eyebrow">All sports</div><h1>Profit</h1></div></header>
 <main id="main"></main>
-<footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets); Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets.</footer>
+<footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets); Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets. Skill vs mkt = 1 − Brier score of our chance ÷ Brier score of the market’s chance on the same bets (the market’s fair with the vig out for tags, Kalshi’s price paid without the fee for prediction-market picks): above 0 means our chance forecast these bets better than the price did, with its 95% range.</footer>
 </div><script>
 const D = __DATA__;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
@@ -1400,6 +1437,8 @@ const pc = (v, d = 1) => v == null ? '–' : `<span class="${v >= 0 ? 'rp' : 'rn
 const un = v => v == null ? '–' : `<span class="${v >= 0 ? 'rp' : 'rn'}">${v >= 0 ? '+' : ''}${v.toFixed(1)}u</span>`;
 const VL = {proven: 'Proven', promising: 'Promising', unproven: 'Unproven', 'too early': 'Too early', losing: 'Losing'};
 const vd = v => `<span class="vd ${v === 'too early' ? 'too' : v}">${VL[v]}</span>`;
+const skc = c => c.skill == null ? '<span class="muted">–</span>' : c.skill_same ? '<span class="muted" title="This rule’s chance is the market’s own fair">= market</span>'
+  : `${pc(c.skill, 1)}<small>± ${c.skill_se != null ? (1.96 * c.skill_se * 100).toFixed(1) : '–'}% · ${c.skill_n}</small>`;
 function spark(c){
   if (!c || c.length < 2) return '';
   const ys = c.map(p => p[1]), lo = Math.min(0, ...ys), hi = Math.max(0, ...ys), W = 600, H = 56, X = i => i / (c.length - 1) * W, Y = v => H - 4 - (v - lo) / ((hi - lo) || 1) * (H - 8);
@@ -1481,9 +1520,10 @@ function render(){
   if (!O){ document.getElementById('main').innerHTML = '<section class="panel"><p class="note">Nothing graded yet.</p></section>'; return; }
   const tiles = `<div class="rec"><div><b>${un(O.units)}</b><span>${O.n} bets · all sports</span></div><div><b>${pc(O.roi)}</b><span>return per bet ± ${O.moe != null ? (O.moe * 100).toFixed(1) : '–'}%</span></div><div><b>${pc(O.roi30)}</b><span>last 30 days (${O.n30} bets)</span></div><div><b>${D.sports.reduce((n, s) => n + s.cats.filter(c => c.verdict === 'proven').length, 0)}</b><span>proven profitable bet types</span></div></div>`;
   const sp = s => `<section class="panel"><div class="sph"><h2>${s.sport.toUpperCase()}</h2><span>${un(s.units)} · ${pc(s.roi)} per bet · ${s.n} bets</span></div>${spark(s.curve)}
-    <div class="tw"><table class="t pf"><thead><tr><th class="l">Bet type</th><th>Verdict</th><th>Record</th><th>Return</th><th>Beat close</th><th>Last 30 d</th></tr></thead><tbody>
+    <div class="tw"><table class="t pf"><thead><tr><th class="l">Bet type</th><th>Verdict</th><th>Record</th><th>Return</th><th>Beat close</th><th title="Skill vs market: 1 − Brier(our chance) ÷ Brier(the market’s chance) on these bets. Above 0 = our chance called them better than the price; 0 = the rule uses the market’s own chance; below 0 = the market knew more. Like R-squared for yes / no bets, scored against the price. 30+ bets.">Skill vs mkt</th><th>Last 30 d</th></tr></thead><tbody>
     ${s.cats.map(c => `<tr><td class="l"><b>${esc(c.cat)}</b><small>${c.n} bets · ${un(c.units)}</small></td><td>${vd(c.verdict)}</td><td>${c.won}-${c.n - c.won}</td>
       <td>${pc(c.roi)}<small>± ${c.moe != null ? (c.moe * 100).toFixed(0) : '–'}%</small></td><td>${c.clv != null ? `${pc(c.clv, 1)}<small>${Math.round(c.clv_beat * 100)}% of ${c.clv_n}</small>` : '<span class="muted">–</span>'}</td>
+      <td>${skc(c)}</td>
       <td>${c.n30 ? pc(c.roi30, 0) + `<small>${c.n30} bets</small>` : '<span class="muted">–</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
   const T = D.track || [], by = {}; T.forEach(t => (by[t.base] = by[t.base] || []).push(t));
   const tcell = t => !t.n ? '<span class="wait">waiting for results</span>'
