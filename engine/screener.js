@@ -19,12 +19,12 @@
   let MY = OWNER.slice();
   try { const sv = localStorage.getItem('simbooks-v1'); if (sv != null) MY = JSON.parse(sv) || []; } catch (e) {}
   if (!MY.length) MY = OWNER.slice();
-  const WPIN = {nhl: {goal: .2}, nba: {pts: .05, reb: .05, ast: .05, fg3m: .05, dd: .05, tdbl: .05}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
+  const WPIN = {nhl: {goal: .2, fg: .2}, nba: {pts: .05, reb: .05, ast: .05, fg3m: .05, dd: .05, tdbl: .05}, nfl: {rec: .25, rec_yds: .25, rush_yds: .25, pass_yds: .25, td: 0}};
   const LAB = {td: 'anytime TD', rec: 'receptions', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds', pts: 'points', reb: 'rebounds',
-               ast: 'assists', fg3m: 'threes', goal: 'to score', dd: 'double-double', tdbl: 'triple-double', sog05: 'shots', sog15: 'shots', sog25: 'shots', sog35: 'shots', sog45: 'shots'};
+               ast: 'assists', fg3m: 'threes', goal: 'to score', fg: 'first goal', dd: 'double-double', tdbl: 'triple-double', sog05: 'shots', sog15: 'shots', sog25: 'shots', sog35: 'shots', sog45: 'shots'};
   const STAT = {td: 'TD', rec: 'Receptions', rec_yds: 'Rec yds', rush_yds: 'Rush yds', pass_yds: 'Pass yds', pts: 'Points', reb: 'Rebounds',
-                ast: 'Assists', fg3m: 'Threes', goal: 'Goals', dd: 'Double-double', tdbl: 'Triple-double', sog: 'Shots on goal'};
-  const YES = new Set(['dd', 'tdbl']);                                        // yes / no props without a line (NBA double / triple-double, sharp.oa_nba_ddtd)
+                ast: 'Assists', fg3m: 'Threes', goal: 'Goals', fg: 'First goal', dd: 'Double-double', tdbl: 'Triple-double', sog: 'Shots on goal'};
+  const YES = new Set(['dd', 'tdbl', 'fg']);                                        // yes / no props without a line (NBA double / triple-double, sharp.oa_nba_ddtd)
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', 'Poly US': 'Polymarket'};
   const NOBET = new Set(['Pinnacle', 'kalshi']);
   const EXCH = ['Novig', 'Kalshi', 'Polymarket', 'Poly US', 'ProphetX'];
@@ -140,7 +140,7 @@
         for (const [k, e] of Object.entries(kinds)){
           if (!LAB[k] || !e) continue;
           const statKey = k.startsWith('sog') ? 'sog' : k;
-          const lines = e.o ? [{l: e.l ?? null, o: e.o, u: e.u, p: e.p, main: true, f4: e.f4, pin: e.pin && Math.abs((e.pin.l ?? .5) - (e.l ?? .5)) < 1e-9 ? e.pin : null}] : [];
+          const lines = e.o ? [{l: e.l ?? null, o: e.o, u: e.u, p: e.p, main: true, f4: e.f4, fgn: e.fgn, pin: e.pin && Math.abs((e.pin.l ?? .5) - (e.l ?? .5)) < 1e-9 ? e.pin : null}] : [];
           for (const [L, a] of Object.entries(e.a || {})) if (+L !== +(e.l ?? -1)) lines.push({l: +L, o: a.o, u: a.u, p: a.p, main: false, apin: a.pin});
           // Kalshi rungs: on the matching line beside the books, else a rung of its own; its fair = the line's carried
           // consensus, else the main line's fair carried by our distribution (log-odds gap, shown with ≈)
@@ -168,11 +168,12 @@
             if (!x.o) continue;
             const books = Object.entries(x.o).filter(([b, v]) => !NOBET.has(b) && v && v[0] != null);
             if (!books.length) continue;
-            const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : YES.has(k) ? LAB[k] : `over ${x.l} ${LAB[k]}`;
+            const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : k === 'fg' ? 'first goal' : YES.has(k) ? LAB[k] : `over ${x.l} ${LAB[k]}`;
             const tagBet = k === 'td' ? 'TD' : k === 'goal' ? 'goal' : YES.has(k) ? LAB[k] : `over ${x.l} ${LAB[k]}`;
             const prices = books.map(([b, v]) => {
               let fair = null, w = .5, src = '';
-              if (x.main && x.pin){ fair = sharpO(x.pin, b); w = (WPIN[sport] || {})[k] ?? .5; src = 'sharp consensus'; }
+              if (k === 'fg'){ const o = Object.entries(x.fgn || {}).filter(([bb]) => bb !== b).map(([, q]) => q); fair = o.length >= 2 ? med(o) : null; w = (WPIN[sport] || {}).fg ?? .2; src = 'every other book’s first-goal price, hold removed across the game’s field'; }
+              else if (x.main && x.pin){ fair = sharpO(x.pin, b); w = (WPIN[sport] || {})[k] ?? .5; src = 'sharp consensus'; }
               else if (!x.main && x.apin != null){ fair = x.apin; src = 'sharp consensus, carried to this line'; }
               else if (!x.main && x.carry != null){ fair = x.carry; w = 0; src = '≈ main line’s fair carried by our distribution'; }   // our model is already in the carry: don't count it twice
               else { const tw = twoWay(x.o, x.u); if (tw != null && (x.main || Object.keys(x.u || {}).length >= 2)){ fair = tw; src = 'books’ no-vig median'; }
@@ -217,7 +218,22 @@
         }
         const DU = new Set();                                                 // 'due' goal luck (hockey/project.py -> dry_nhl.json)
         if (sp === 'nhl'){ const X = await fetch(`${root}markets/dry_nhl.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
-          for (const [g, v] of Object.entries(X.games || {})) for (const n of v.due || []) DU.add(`${g}|${n}`); }
+          for (const [g, v] of Object.entries(X.games || {})) for (const n of v.due || []) DU.add(`${g}|${n}`);
+          // first goal scorer (sharp.fg_nhl -> fg_nhl.json, owner 2026-11-06): kind 'fg', Yes only. Fair: each book's prices divided by
+          // its own total over the game's field (books listing 80%+ of the field), x .985 (no goal through OT ~1.5%), then the median
+          // of the other books. Our chance = the projection's p_first (untested: weight .2 like the anytime goal).
+          const FX = await fetch(`${root}markets/fg_nhl.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+          for (const [g, G_] of Object.entries(FX.games || {})){
+            const pl = G_.players || {}, cnt = {}, tot = {};
+            for (const x of Object.values(pl)) for (const [b, v] of Object.entries(x.o || {})){ cnt[b] = (cnt[b] || 0) + 1; tot[b] = (tot[b] || 0) + 1 / dec(v); }
+            const mx = Math.max(0, ...Object.values(cnt)), ok = new Set(Object.keys(cnt).filter(b => cnt[b] >= .8 * mx));
+            for (const [nm, x] of Object.entries(pl)){
+              const o = {}, fgn = {};
+              for (const [b, v] of Object.entries(x.o || {})){ o[b] = [v, null]; if (ok.has(b)) fgn[b] = .985 * (1 / dec(v)) / tot[b]; }
+              ((P.props = P.props || {})[g] = P.props[g] || {})[nm] = P.props[g][nm] || {};
+              P.props[g][nm].fg = {o, p: x.p ?? null, fgn};
+            }
+          } }
         return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}, PA || {}, LA || {}, DU) : [];
       } catch (e) { return []; }
     }));
