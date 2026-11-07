@@ -1388,7 +1388,7 @@ def feed_data():
             if k in seen:
                 continue
             seen.add(k)
-            items.append(dict(date=r["date"], sport=r["sport"], t="bet", cat=r["cat"], title=f"{r.get('title') or ''} {r.get('bet') or ''}".strip(),
+            items.append(dict(date=r["date"], sport=r["sport"], t="bet", cat=r["cat"], title=f"{r.get('title') or ''} {r.get('bet') or ''}".strip(), pn=str(r.get("title") or "").split(":")[0],
                               book="Kalshi" if r.get("src") == "kalshi" else "Polymarket", pay=round(1 / r["cost"], 2) if r.get("cost") else None,
                               q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2)))
     tp = os.path.join(OUT, "profit_tags.json")
@@ -1397,7 +1397,7 @@ def feed_data():
         if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb") or (e.get("src") == "tl" and e.get("grp") == "fed"):
             continue
         dd = dec(e["o"])
-        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}",
+        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}", pn=e.get("name"),
                           book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
     legs = []
     for f in _g.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
@@ -1459,9 +1459,28 @@ def feed_data():
             b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT if st else PARLAY
     odds = [dict(sport=sp, t=t, lab=ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2), roi=round(b["net"] / b["stake"], 4))
             for (sp, t, i), b in sorted(ob.items())]
+    # NBA straights by the player's playstyle archetype, then odds (owner 2026-11-06: 'sort nba straight bets by player
+    # archetype then odds'); archetype = his latest (nba/project.py -> markets/arch_nba.json), 'no player' for game lines
+    try:
+        AR = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "arch_nba.json")))
+    except (OSError, ValueError):
+        AR = {}
+    oa = {}
+    for x in items:
+        if x["date"] < since30 or not x.get("pay") or x["sport"] != "nba" or x["t"] != "bet":
+            continue
+        nm = _norm(x.get("pn") or "")
+        ar = AR.get(nm) or ("no player" if not nm else "unknown")
+        for i in (oband(x["pay"]), -1):
+            b = oa.setdefault((ar, i), dict(n=0, w=0, exp=0.0, net=0.0, stake=0.0))
+            b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
+    odds_arch = [dict(arch=ar, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
+                      roi=round(b["net"] / b["stake"], 4)) for (ar, i), b in sorted(oa.items())]
     # every graded bet of the window (a cap cut older days' losers: they sort after winners), compact keys
+    for x in items:
+        x.pop("pn", None)
     items = [x for x in items if x["date"] >= since]          # the day-by-day list: last 14 days
-    return dict(items=items, you=you, types=types, legs=legt, odds=odds, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
+    return dict(items=items, you=you, types=types, legs=legt, odds=odds, odds_arch=odds_arch, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1483,6 +1502,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .fi .lg{grid-column:2/4;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12.5px}.fi .lg span.W{color:var(--good)}.fi .lg span.L{color:var(--bad)}.fi .lg span.V{color:var(--muted)}
 .lt table{width:100%;border-collapse:collapse;font-size:13px}.lt td,.lt th{padding:4px 6px;border-top:1px solid var(--faint);text-align:right}.lt td:first-child,.lt th:first-child{text-align:left}
 .rp{color:var(--good)}.rn{color:var(--bad)}
+.arq .fgrp{padding-left:0}.arq .tb{min-width:0}.aqw{overflow-x:auto;max-width:100%}.arq td{white-space:nowrap}.arq table{font-size:12.5px}.arq th,.arq td{padding-right:6px}
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .vd.proven{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}.vd.promising{background:color-mix(in srgb,#6CB4FF 22%,transparent);color:#6CB4FF}
 .vd.unproven,.vd.too{background:var(--sunk);color:var(--muted)}.vd.losing{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
@@ -1565,8 +1585,20 @@ function oddsTable(){
     const n = R.reduce((s, b) => s + b.n, 0), w = R.reduce((s, b) => s + b.w, 0), e = R.reduce((s, b) => s + b.exp, 0), net = R.reduce((s, b) => s + b.net, 0);
     return `<div class="tb"><h3>${lab}</h3><p class="small muted" style="margin:0 0 4px">${n} bets · won ${w} vs ${e.toFixed(0)} priced · ${usd(net)}</p><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${R.map(b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${b.roi >= 0 ? '+' : '−'}${Math.abs(Math.round(b.roi * 100))}%${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`).join('')}</tbody></table></div>`; };
   return `<section class="panel lt"><div class="phead"><h2>Results by odds</h2><span class="small muted">last 30 days · $${FE.stake.straight} straight, $${FE.stake.parlay} parlay</span></div>${sw}
-    <div class="trk">${tb('straight', 'Straight bets')}${tb('parlay', 'Parlays')}</div>
+    <div class="trk">${tb('straight', 'Straight bets')}${tb('parlay', 'Parlays')}</div>${FF.s === 'nba' ? archOdds() : ''}
     <p class="note" style="margin:8px 0 0">Every bet in Your bets, grouped by the odds it was taken at. Won vs Priced = wins against what the odds imply (the price includes the book’s margin, so winning exactly what’s priced still loses a little). Fewer than 30 bets in a range is noise.</p></section>`;
+}
+function archOdds(){
+  // NBA straights by the player's playstyle archetype, then odds (owner 2026-11-06)
+  const R = FE.odds_arch || []; if (!R.length) return '';
+  const pc0 = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
+  const tot = R.filter(b => b.lab === 'all').sort((a, b) => b.n - a.n);
+  const trow = b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${pc0(b.roi)}${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`;
+  const one = t => { const B = R.filter(b => b.arch === t.arch && b.lab !== 'all');
+    return `<details class="fgrp"><summary><span class="gl"><b>${esc(t.arch)}</b> <span class="c">${t.n} bets · won ${t.w} vs ${t.exp.toFixed(0)} priced</span></span><span class="net ${t.roi >= 0 ? 'rp' : 'rn'}">${usd(t.net)} · ${pc0(t.roi)}</span></summary>
+      <div class="aqw"><table style="margin:4px 0 6px"><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${B.map(trow).join('')}</tbody></table></div></details>`; };
+  return `<div class="trk arq" style="margin-top:12px"><div class="tb"><h3>NBA straight bets by player archetype</h3>
+    <p class="small muted" style="margin:0 0 6px">The player’s playstyle (from his per-minute stats, the same 8 types as the NBA page chip). Tap one for its odds ranges.</p>${tot.map(one).join('')}</div></div>`;
 }
 function legTable(){
   const L = FE.legs || []; if (!L.length) return '';

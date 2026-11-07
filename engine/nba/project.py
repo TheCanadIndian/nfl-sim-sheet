@@ -167,6 +167,26 @@ def save_draws(out, sims, n=1000, hist=None):
         json.dump(dd, open(os.path.join(d, f"{gid}.json"), "w"), separators=(",", ":"))
 
 
+def write_arch_map(fr):
+    """markets/arch_nba.json {normalized name: archetype} -- each player's latest playstyle archetype (model.Frames, as of
+    his last game in the past 400 days), merged into the old file so players who left the rotation keep theirs. The Profit
+    page groups NBA straight bets by it (owner 2026-11-06: 'sort nba straight bets by player archetype then odds')."""
+    import parlays as PL
+    if fr.arch is None or "arch" not in fr.p:
+        return
+    p = fr.p[(fr.p["min"].fillna(0) > 0) & (fr.p.date >= fr.p.date.max() - pd.Timedelta(days=400))].sort_values("date")
+    last = p.groupby("player_id").tail(1)
+    fn = os.path.join(PL.SITE, "markets", "arch_nba.json")
+    try:
+        old = json.load(open(fn))
+    except (OSError, ValueError):
+        old = {}
+    names = fr.arch["names"]
+    old.update({PL.jsnorm(n): names[int(a)] for n, a in zip(last.name, last.arch) if isinstance(n, str) and pd.notna(a)})
+    json.dump(dict(sorted(old.items())), open(fn, "w"), separators=(",", ":"))
+    print(f"archetype map: {len(old)} players")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date")
@@ -336,6 +356,10 @@ def main():
         TL.write(payload, F.DB, int(fut.season.iloc[0]))
     except Exception as e:                                         # noqa: BLE001 -- display / tracking only
         print("teammate links skipped:", type(e).__name__, e)
+    try:                                                           # archetype map for the Profit page (owner 2026-11-06)
+        write_arch_map(fr)
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("archetype map skipped:", type(e).__name__, e)
     json.dump(payload, open(jp, "w"), separators=(",", ":"))
     html = page.render(payload)
     for f in (f"{date}.html", "index.html"):
