@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-07T02:38:26.608Z",
+"frozen_at": "2026-11-07T02:40:41.564Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,53 +10,6 @@
 ],
 "final_at": "2026-11-08T12:30:00+00:00",
 "parlays": [
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2732,
-"price": 313,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-]
-},
-{
-"gid": "2026_09_BUF_MIN",
-"start": "2026-11-09T20:15:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 119.5,
-"name": "james cook",
-"lab": "James Cook 120+ rush yds",
-"p": 0.2193,
-"price": 425,
-"book": "Kalshi",
-"sc": "BUF pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-}
-],
-"p": 0.05991,
-"d": 21.683,
-"first": "2026-11-08T18:00:00+00:00",
-"pick": "longshot"
-},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -101,11 +54,12 @@
 ],
 "p": 0.07072,
 "d": 17.057,
-"first": "2026-11-08T18:00:00+00:00"
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "longshot"
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "2026_09_CLE_NO",
@@ -142,28 +96,10 @@
 "matchup",
 "script"
 ]
-},
-{
-"gid": "2026_09_BUF_MIN",
-"start": "2026-11-09T20:15:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 119.5,
-"name": "james cook",
-"lab": "James Cook 120+ rush yds",
-"p": 0.2193,
-"price": 425,
-"book": "Kalshi",
-"sc": "BUF pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
 }
 ],
-"p": 0.01135,
-"d": 107.979,
+"p": 0.05178,
+"d": 20.567,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -395,6 +331,39 @@
 {
 "gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 12.5,
+"name": "darnell mooney",
+"lab": "Darnell Mooney over 12.5 rec yds",
+"p": 0.57,
+"price": -115,
+"book": "Hard Rock"
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "michael wilson",
+"lab": "Michael Wilson over 4.5 receptions",
+"p": 0.523,
+"price": 106,
+"book": "Novig"
+}
+],
+"p": 0.29809,
+"d": 3.851,
+"first": "2026-11-08T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
 "kind": "rec",
 "side": "o",
 "line": 3.5,
@@ -419,6 +388,39 @@
 ],
 "p": 0.17314,
 "d": 6.786,
+"first": "2026-11-08T14:30:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 12.5,
+"name": "darnell mooney",
+"lab": "Darnell Mooney over 12.5 rec yds",
+"p": 0.57,
+"price": -115,
+"book": "Hard Rock"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kyle pitts",
+"lab": "Kyle Pitts TD",
+"p": 0.2924,
+"price": 277,
+"book": "Novig"
+}
+],
+"p": 0.16668,
+"d": 7.048,
 "first": "2026-11-08T14:30:00+00:00"
 },
 {
@@ -452,7 +454,8 @@
 ],
 "p": 0.15293,
 "d": 7.766,
-"first": "2026-11-08T14:30:00+00:00"
+"first": "2026-11-08T14:30:00+00:00",
+"pick": "core"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -486,40 +489,6 @@
 "p": 0.15178,
 "d": 8.37,
 "first": "2026-11-08T18:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "drake maye",
-"lab": "Drake Maye TD",
-"p": 0.2563,
-"price": 365,
-"book": "Novig"
-},
-{
-"gid": "2026_09_ARI_SEA",
-"start": "2026-11-08T16:25:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "michael wilson",
-"lab": "Michael Wilson over 4.5 receptions",
-"p": 0.523,
-"price": 106,
-"book": "Novig"
-}
-],
-"p": 0.13406,
-"d": 9.579,
-"first": "2026-11-08T21:25:00+00:00",
 "pick": "core"
 },
 {
