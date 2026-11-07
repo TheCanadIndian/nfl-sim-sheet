@@ -674,7 +674,9 @@ def tag_label(e):
         return {"all": "First basket: every player, best price (baseline)", "low": "First basket: centers and the 4th / 5th scoring starter, best price (experimental)",
                 "edge": "First basket: our flat model 10%+ over the best price (experimental)"}.get(e.get("grp"), "First basket")
     if e.get("src") == "fg":
-        return "First goal: every FanDuel price (baseline)" if e.get("grp") == "all" else "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (experimental)"
+        return {"all": "First goal: every FanDuel price (baseline)",
+                "fdtop_m": "First goal: FanDuel + Bovada longer than every other book, and our chance 15%+ over the fair (narrowed; experimental)"}.get(
+            e.get("grp"), "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (experimental)")
     if e.get("src") in ("f4", "fx"):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
@@ -899,7 +901,16 @@ def tags():
                 st = G_.get("start")
                 if not st or PL.when(st) <= now:
                     continue
-                for nm, x in (G_.get("players") or {}).items():
+                # each book's prices over its own field (books listing 80%+ of it), x .985 (no goal through OT) -- the screener's
+                # first-goal fair; used for the narrowed rule below (owner 2026-11-07: 'narrow down the nhl fgs')
+                PLY = G_.get("players") or {}
+                cnt_, tot_ = {}, {}
+                for x_ in PLY.values():
+                    for b_, v_ in (x_.get("o") or {}).items():
+                        cnt_[b_] = cnt_.get(b_, 0) + 1; tot_[b_] = tot_.get(b_, 0) + 1 / dec(v_)
+                mx_ = max(cnt_.values()) if cnt_ else 0
+                okb = {b_ for b_, n_ in cnt_.items() if n_ >= .8 * mx_}
+                for nm, x in PLY.items():
                     o_ = x.get("o") or {}
                     if "FD" in o_:
                         e = log.setdefault(f"fg|all|{gid}|{nm}", dict(sport=sport, src="fg", grp="all", gid=gid, name=nm, bet="first goal", first=now.isoformat(), start=st))
@@ -919,6 +930,13 @@ def tags():
                         bk, o = "FD", o_["FD"]
                         log.setdefault(f"fg|fdtop|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdtop", gid=gid, name=nm, bet="first goal", book=bk, o=o,
                                                                   first=now.isoformat(), m=round(med, 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
+                        # narrowed (research/nhl_fg_narrow.py, anytime-goal proxy Oct 12 - Nov 5): inside the FD + stand-in shape,
+                        # our chance 3+ pts over the fair returned +139% on 13 (base) / +30% on 77 (loose), both halves -- small.
+                        # Here: our first-goal chance (p) at least 1.15x the other books' normalized fair (the same relative gap)
+                        fo = [.985 * (1 / dec(v_)) / tot_[b_] for b_, v_ in o_.items() if b_ in okb and b_ not in same]
+                        if x.get("p") is not None and len(fo) >= 3 and x["p"] >= 1.15 * float(np.median(fo)):
+                            log.setdefault(f"fg|fdtop_m|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdtop_m", gid=gid, name=nm, bet="first goal", book=bk, o=o,
+                                                                        first=now.isoformat(), m=round(float(np.median(fo)), 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
         # NBA first basket (owner 2026-11-06, research/pbp_factors.py: who scores first is far flatter than scoring share --
         # centers and the 4th / 5th scoring starter score first more than their share; sharp.fb_nba -> markets/fb_nba.json). The best
         # price across every book for each player (its latest pregame price): every player (baseline), centers + the 4th / 5th
