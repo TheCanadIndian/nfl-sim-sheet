@@ -244,7 +244,44 @@ function gameView(){
     ? `<section class="panel"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${pv}<span class="muted small">${mode(g.id) === 'vegas' ? 'With Vegas' : 'Market-blind'} · each player’s simulated average, rounded so team totals hold</span></div>${boxTable(g, g.away)}${boxTable(g, g.home)}
       <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games (the most accurate single guess, and averages add up to the team score). The 11 players with the most expected minutes (about how many play); the rest of the bench’s expected share goes to them so totals match the projected score. Tested on 2024-26 games: points off by 4.4 a player on average. Starters are the five with the most projected minutes; Q = questionable. Highlighted = above the books’ main line for that prop (an over lean; the chips list the line). Points come from his makes (2 × twos + 3 × threes + free throws); shooting splits use his 3P% and FT% this season and last, pulled toward league average on small samples. <a href="boxes.html">How accurate it has been, graded every night →</a></p></section>`
     : `<section class="panel"><div class="phead"><h2>Players</h2>${pv}<span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
-  return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${tables}</div></div>`;
+  return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${fbPanel(g)}${tables}</div></div>`;
+}
+// First basket (owner 2026-11-07: 'build the model and show me who is projected and if they have value'): nba/firstbasket.py
+// -> markets/fb_model_nba.json (our chance: tip records of the projected jumpers x points share, opening-shot share, first-FG
+// share, jumper; research/nba_fb_leads.py) against every book's first-basket price (markets/fb_nba.json, sharp.fb_nba).
+// Value = our chance x the price - 1, 10%+ green. Experimental: the model beat the old flat one in every half of 4 seasons, but
+// its value against real prices is untested (tracked on the Profit page).
+let FBM = null, FBP = null;
+try { fetch('../markets/fb_model_nba.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d && d.games){ FBM = d.games; render(); } }).catch(() => {}); } catch (e) {}
+try { fetch('../markets/fb_nba.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d && d.games){ FBP = d.games; render(); } }).catch(() => {}); } catch (e) {}
+const FBK = {FD: 'FD', Bovada: 'BV', DK: 'DK', MGM: 'MGM', Caesars: 'CZR', 'ESPN BET': 'ESPN', Fanatics: 'FAN', 'Hard Rock': 'HR', BetRivers: 'BR', BetOnline: 'BOL', Novig: 'NV', Kalshi: 'K'};
+let FBALL = false;
+document.addEventListener('click', e => { const b = e.target.closest('[data-fball]'); if (!b) return; FBALL = !FBALL; render(); });
+function fbPanel(g){
+  const Mg = FBM && FBM[String(g.id)];
+  if (!Mg) return '';
+  const Pg = (FBP && FBP[String(g.id)] && FBP[String(g.id)].players) || {};
+  const dec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o, so = o => (o > 0 ? '+' : '') + o;
+  const fo = p => p >= .5 ? Math.round(-100 * p / (1 - p)) : Math.round(100 * (1 - p) / p);
+  const nrm = v => String(v || '').normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z ]/g, '').replace(/\b(jr|sr|ii|iii|iv)\b/g, '').replace(/\s+/g, ' ').trim();
+  const team = {}; D.players.filter(x => x.g === g.id).forEach(x => { team[nrm(x.n)] = [x.t, x.n]; });
+  const R = Object.entries(Mg).filter(([, x]) => x.r).map(([nm, x]) => {
+    const o = (Pg[nm] && Pg[nm].o) || {}, bks = Object.entries(o).sort((a, b) => dec(b[1]) - dec(a[1]));
+    const best = bks[0], hr = o['Hard Rock'], own = ['Hard Rock', 'Novig', 'Kalshi'].filter(b => o[b] != null).sort((a, b) => dec(o[b]) - dec(o[a]))[0];
+    return {nm, x, t: (team[nm] || [])[0] || '', n: (team[nm] || [])[1] || nm, best, own: own ? [own, o[own]] : null, ev: best ? x.p * dec(best[1]) - 1 : null, evo: own ? x.p * dec(o[own]) - 1 : null, all: bks};
+  }).sort((a, b) => b.x.p - a.x.p);
+  if (!R.length) return '';
+  const nv = R.filter(r => r.ev != null && r.ev >= .10).length;
+  const show = FBALL ? R : R.slice(0, 6);
+  const evc = v => v == null ? '<span class="muted">–</span>' : `<b class="${v >= .10 ? 'fbv' : v >= 0 ? '' : 'muted'}">${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v * 100))}%</b>`;
+  const tags = r => `${r.x.j ? '<span class="tag" title="Projected to take the opening tip (most frequent jumper among tonight’s five)">jumper</span>' : ''}${r.x.s1 >= .3 ? `<span class="tag" title="Took his team’s first shot in ${Math.round(r.x.s1 * 100)}% of his starts (decayed, shrunk): the opening play runs through him">opens ${Math.round(r.x.s1 * 100)}%</span>` : ''}${r.x.c ? '<span class="tag">C</span>' : ''}`;
+  return `<section class="panel"><div class="phead"><h2>First basket <span class="exp3">experimental</span></h2><span class="muted small">our chance vs every book · ${nv ? `<b class="fbv">${nv} with value</b>` : 'no value at 10%+'}</span></div>
+    <div class="tw"><table class="t fbt"><thead><tr><th class="l">Player</th><th>Ours</th><th title="Our chance x the best price - 1; green at 10%+">Value</th><th>Best price</th><th title="Best of Hard Rock / Novig / Kalshi, and its value">Your books</th><th>Fair</th></tr></thead><tbody>
+    ${show.map(r => `<tr><td class="l name"><b>${esc(r.n)}</b> <span class="small muted">${esc(r.t)}</span> ${tags(r)}</td><td><b>${(r.x.p * 100).toFixed(1)}%</b></td><td>${evc(r.ev)}</td>
+      <td title="${esc(r.all.map(([b, v]) => `${b} ${so(v)}`).join(' · '))}">${r.best ? `${so(r.best[1])} <span class="small muted">${esc(FBK[r.best[0]] || r.best[0])}</span>` : '<span class="muted">not posted</span>'}</td>
+      <td>${r.own ? `${so(r.own[1])} <span class="small muted">${esc(FBK[r.own[0]] || r.own[0])}</span> ${evc(r.evo)}` : '<span class="muted">–</span>'}</td><td class="muted">${so(fo(r.x.p))}</td></tr>`).join('')}</tbody></table></div>
+    ${R.length > 6 ? `<button class="flagbtn" data-fball="1" aria-pressed="${FBALL}" style="margin-top:6px">${FBALL ? 'Show top 6' : `All ${R.length} starters`}</button>` : ''}
+    <details class="how"><summary>How this works</summary><p class="note">Our chance that he makes the game’s first field goal: who wins the opening tip (each projected jumper’s tip record), then inside his team’s five his share of the scoring, how often he takes his team’s first shot (opening plays repeat), how often he makes it, and whether he jumps. In 5,746 games since 2023 this beat a plain scoring-share model in every half of every season. Value = our chance × the price − 1 (green at 10%+). Prices from every book we pull; Hard Rock / Novig / Kalshi are your books. Untested against real prices: tracked on the Profit page, not a rule.</p></details></section>`;
 }
 let BPIN = false;                                 // board filter: only players Pinnacle has moved (sharp.pin_moves)
 function board(){

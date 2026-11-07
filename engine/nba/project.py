@@ -356,6 +356,11 @@ def main():
         TL.write(payload, F.DB, int(fut.season.iloc[0]))
     except Exception as e:                                         # noqa: BLE001 -- display / tracking only
         print("teammate links skipped:", type(e).__name__, e)
+    try:                                                           # first basket model (firstbasket.py, owner 2026-11-07)
+        import firstbasket as FBM
+        FBM.write(payload, F.DB)
+    except Exception as e:                                         # noqa: BLE001 -- display / tracking only
+        print("first basket model skipped:", type(e).__name__, e)
     try:                                                           # archetype map for the Profit page (owner 2026-11-06)
         write_arch_map(fr)
     except Exception as e:                                         # noqa: BLE001 -- display only
