@@ -1959,7 +1959,14 @@ FB_RANK = [.1205, .1175, .0992, .0845, .0802]
 
 
 def _fb_ours(players, gid):
-    """{norm name: (p, rank, is_center)} for one game from the NBA payload players."""
+    """{norm name: (p, rank, is_center, projected jumper)} for one game. The model (nba/firstbasket.py -> markets/fb_model_nba.json,
+    owner 2026-11-07) when the NBA run wrote it for this game, else the flat model below."""
+    try:
+        Mg = (json.load(open(os.path.join(M.SITE, "markets", "fb_model_nba.json"))).get("games") or {}).get(str(gid))
+    except (OSError, ValueError, AttributeError):
+        Mg = None
+    if Mg:
+        return {nm: (x["p"], x.get("r"), bool(x.get("c")), bool(x.get("j"))) for nm, x in Mg.items()}
     out = {}
     pl = [x for x in players if int(x["g"]) == int(gid) and x.get("st") != "Out"]
     for t in {x["t"] for x in pl}:
@@ -1973,9 +1980,9 @@ def _fb_ours(players, gid):
         bench = [x for x in T if x not in st]
         tot = .5 - .003 * len(bench)
         for i, (x, wi) in enumerate(zip(st, w)):
-            out[jsnorm(x["n"])] = (wi / sum(w) * tot, i + 1, str(x.get("pos") or "").startswith("C"))
+            out[jsnorm(x["n"])] = (wi / sum(w) * tot, i + 1, str(x.get("pos") or "").startswith("C"), False)
         for x in bench:
-            out[jsnorm(x["n"])] = (.003, None, False)
+            out[jsnorm(x["n"])] = (.003, None, False, False)
     return out
 
 
@@ -2021,7 +2028,7 @@ def fb_nba(now):
                 ours = _fb_ours(O["players"], gid)
                 for nm, x in P.items():
                     if nm in ours:
-                        x["p"], x["r"], x["c"] = round(ours[nm][0], 4), ours[nm][1], ours[nm][2]
+                        x["p"], x["r"], x["c"], x["j"] = round(ours[nm][0], 4), ours[nm][1], ours[nm][2], ours[nm][3]
                 old[gid] = dict(start=str(g["start"]), fetched=now.isoformat(), players=P)
                 print(f"odds api nba first basket: {g['away']} @ {g['home']}: {len(P)} players, "
                       f"{len({b for x in P.values() for b in x['o']})} books ({used} credits, {bst.get('remaining')} left)")

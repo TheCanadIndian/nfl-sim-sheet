@@ -28,6 +28,8 @@ KEY_MIN, MIN_N, FED, FREE = 24, 20, .25, .15
 def ensure(con):
     con.execute("CREATE TABLE IF NOT EXISTS assist_pairs (game_id INTEGER, team TEXT, passer TEXT, scorer TEXT, n INTEGER)")
     con.execute("CREATE TABLE IF NOT EXISTS pbp_first (game_id INTEGER, tip TEXT, fg_team TEXT, fg_p TEXT, fp_team TEXT, fp_p TEXT)")
+    # per team: its first shot attempt, its first made FG, its jumper on the opening tip (first-basket model, owner 2026-11-07)
+    con.execute("CREATE TABLE IF NOT EXISTS pbp_open (game_id INTEGER, team TEXT, shot1 TEXT, fg1 TEXT, jumper TEXT, won_tip INTEGER)")
 
 
 def game_rows(gid, sm):
@@ -49,30 +51,54 @@ def game_rows(gid, sm):
                     c[(team, str(p2), str(p1))] += 1
     ap = [(int(gid), t, a, b, n) for (t, a, b), n in c.items()]
     first = (int(gid), tip, fg[0] if fg else None, str(fg[1]) if fg else None, fp[0] if fp else None, str(fp[1]) if fp else None)
-    return ap, first
+    return ap, first, open_rows(gid, rows, tip)
+
+
+def open_rows(gid, rows, tip):
+    """Each team's opening: first shot attempt (no FTs), first made FG, its jumper on the opening tip."""
+    team_of, s1, f1, jb = {}, {}, {}, None
+    for r in rows:
+        team, typ, shot, made, p1, p2, period = r[4], str(r[6] or ""), r[7], r[8], r[13], r[14], r[2]
+        if p1 and team:
+            team_of.setdefault(str(p1), team)
+        if period == 1 and typ == "Jumpball" and jb is None:
+            jb = (str(p1) if p1 else None, str(p2) if p2 else None)
+        if period == 1 and shot and "Free Throw" not in typ and team:
+            s1.setdefault(team, str(p1) if p1 else None)
+            if made:
+                f1.setdefault(team, str(p1) if p1 else None)
+    jt = {}
+    for p in (jb or ()):
+        if p and team_of.get(p):
+            jt[team_of[p]] = p
+    return [(int(gid), t, s1.get(t), f1.get(t), jt.get(t), int(t == tip) if tip else None) for t in set(s1) | set(jt)]
 
 
 def store(con, games):
     """games: {game_id: summary json}. Stores what isn't there yet."""
     ensure(con)
     have = {r[0] for r in con.execute("SELECT game_id FROM pbp_first")}
+    have_o = {r[0] for r in con.execute("SELECT DISTINCT game_id FROM pbp_open")}
     n = 0
     for gid, sm in games.items():
-        if int(gid) in have or not sm:
+        if (int(gid) in have and int(gid) in have_o) or not sm:
             continue
         try:
-            ap, first = game_rows(gid, sm)
+            ap, first, op = game_rows(gid, sm)
         except Exception:                                     # noqa: BLE001 -- one bad summary must not stop the rest
             continue
-        con.executemany("INSERT INTO assist_pairs VALUES (?,?,?,?,?)", ap)
-        con.execute("INSERT INTO pbp_first VALUES (?,?,?,?,?,?)", first)
+        if int(gid) not in have:
+            con.executemany("INSERT INTO assist_pairs VALUES (?,?,?,?,?)", ap)
+            con.execute("INSERT INTO pbp_first VALUES (?,?,?,?,?,?)", first)
+        if int(gid) not in have_o and op:
+            con.executemany("INSERT INTO pbp_open VALUES (?,?,?,?,?,?)", op)
         n += 1
     return n
 
 
 def missing(con, game_ids):
     ensure(con)
-    have = {r[0] for r in con.execute("SELECT game_id FROM pbp_first")}
+    have = {r[0] for r in con.execute("SELECT game_id FROM pbp_first")} & {r[0] for r in con.execute("SELECT DISTINCT game_id FROM pbp_open")}
     return [g for g in game_ids if int(g) not in have]
 
 
