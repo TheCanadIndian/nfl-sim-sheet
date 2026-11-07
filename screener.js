@@ -1,3 +1,18 @@
+// ★ on NBA rows (owner 2026-11-07: 'add the stars to the screener bets as well'): the player's archetype x this stat x the shown
+// price's odds range made money in NBA straights by archetype on the Profit page (markets/arch_odds_nba.json: last 30 days, 20+
+// bets, won more than priced, positive return). Same test as the NBA Ladder edges ★. Picked after the fact: a lead, not a rule.
+let SC_AODDS = null;
+try { fetch('markets/arch_odds_nba.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d && d.cells){ SC_AODDS = d.cells; if (window.render) window.render(); } }).catch(() => {}); } catch (e) {}
+const SC_STN = {pts: 'Points', reb: 'Rebounds', ast: 'Assists', fg3m: 'Threes', dd: 'Double-double', tdbl: 'Triple-double'};
+const SC_OB = [[-1e9, 99, 'minus money'], [100, 150, '+100–150'], [151, 350, '+151–350'], [351, 600, '+351–600'], [601, 800, '+601–800'],
+               [801, 1200, '+801–1200'], [1201, 1500, '+1201–1500'], [1501, 2500, '+1501–2500'], [2501, 10000, '+2501–10000'], [10001, 1e9, 'over +10000']];
+function scStar(r, b){
+  if (!SC_AODDS || r.sport !== 'nba' || !r.ar || !b || b.o == null || !SC_STN[r.k]) return '';
+  const o = +b.o, band = (SC_OB.find(([lo, hi]) => o >= lo && o <= hi) || [])[2];
+  const c = SC_AODDS.find(x => x.a === r.ar && x.s === SC_STN[r.k] && x.b === band);
+  if (!c || c.n < 20 || c.r <= 0 || c.w <= c.e) return '';
+  return ` <b class="sc-star" title="${esc(`${r.ar} · ${SC_STN[r.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
+}
 /* Odds screener (owner 2026-10-22: "a screener for odds that is easy to use"). Every over price on the current slates
    (NFL, NBA, NHL; main and alt lines) at your books or all books, against the fair price, with the same rules as the
    sport pages (mkt.js):
@@ -187,7 +202,7 @@
             });
             out.push({sport, gid, nm, name: disp, team, game: g.lab || gid, start, k, statKey, l: x.l, main: x.main, ml: e.l ?? null, bet, p: x.p,
                       prices, due: k === 'goal' && !!(DU && DU.has(`${gid}|${nm}`)), value: tg.v === tagBet, lc: tg.lc === tagBet, pin: pinm[`${gid}|${nm}|${k}`] || null, cons: consm[`${gid}|${nm}|${k}`] || null,
-                      cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(x => x[1] === 'g')), off: off.has(`${gid}|${nm}|${k}|${x.l}`) || off.has(`${gid}|${nm}|${k}|${x.l ?? .5}`), knee: knee[`${gid}|${nm}|${k}|${x.l}`] || null,
+                      cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], ar: cx && cx.ar || null, soft: !!(cx && ((cx.s || {})[k] || []).some(x => x[1] === 'g')), off: off.has(`${gid}|${nm}|${k}|${x.l}`) || off.has(`${gid}|${nm}|${k}|${x.l ?? .5}`), knee: knee[`${gid}|${nm}|${k}|${x.l}`] || null,
                       open: opn[`${gid}|${nm}|${k}|${x.l}`] || null, gone: !!x.gone, path: pth[`${gid}|${nm}|${k}|${x.l}`] || null, lad: lad[`${gid}|${nm}|${k}|${x.l}`] || null});
           }
         }
@@ -201,7 +216,7 @@
       const who = (g.pl || {})[x.n] || [], k = x.k, cx = who[2] || null;
       const bet = k === 'td' ? 'anytime TD' : k === 'goal' ? 'to score' : YES.has(k) ? LAB[k] || k : x.b;
       out.push({sport, gid: x.g, nm: x.n, name: who[1] || x.n.replace(/\b\w/g, c => c.toUpperCase()), team: who[0] || '', game: g.lab || x.g, start, k, statKey: k.startsWith('sog') ? 'sog' : k,
-                l: x.l, main: !!x.main, ml: null, bet, p: null, offOnly: x, pin: pinm[`${x.g}|${x.n}|${k}`] || null, cons: consm[`${x.g}|${x.n}|${k}`] || null, cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], soft: !!(cx && ((cx.s || {})[k] || []).some(y => y[1] === 'g')),
+                l: x.l, main: !!x.main, ml: null, bet, p: null, offOnly: x, pin: pinm[`${x.g}|${x.n}|${k}`] || null, cons: consm[`${x.g}|${x.n}|${k}`] || null, cx: cx ? [...(cx.c || []), ...((cx.s || {})[k] || [])] : [], ar: cx && cx.ar || null, soft: !!(cx && ((cx.s || {})[k] || []).some(y => y[1] === 'g')),
                 prices: [{b: x.bk, o: x.o, u: link([x.o, x.u], P.partner), fair: x.fair, q: x.fair, w: 0, src: x.carried ? '≈ main line’s fair carried by our projection' : x.main ? 'sharp consensus' : 'books’ two-way fair at this line',
                           edge: x.fair * dec(x.o) - 1}]});
     }
@@ -308,7 +323,7 @@
       const leg = {id: `scr|${r.sport}|${r.gid}|${r.nm}|${r.k}|${r.l}`, sport: r.sport, g: r.gid, glab: r.game, lab: `${r.name} ${r.bet}`, p: b.q, side: 'over', stat: r.k === 'td' ? 'tds' : r.k, line: r.l ?? .5,
                    pk: hasSim ? `${r.gid}|${r.team}|${r.name}` : null, model: 'vegas', draws: hasSim ? `${r.sport}/draws/${r.gid}.json` : null, book: b.b, o: b.o, px: Object.fromEntries(r.prices.map(x => [x.b, x.o]))};
       const sl = window.SLIP && b.q != null && !r.gone ? SLIP.btn(leg) : '';
-      return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b>${wb} <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
+      return `<div class="sc-row"><div class="sc-who"><b>${esc(r.name)}</b>${scStar(r, b)}${wb} <span class="sc-m">${esc(SP[r.sport])} · ${esc(r.team ? r.team + ' · ' : '')}${esc(r.game)} · ${esc(tm(r.start))}</span>
           <div class="sc-bet">${esc(r.bet[0].toUpperCase() + r.bet.slice(1))} ${tags}</div>${cmp}${kl}${xo}${pl}${ol}${r.cx.length ? `<div class="sc-cx">${r.cx.map(x => `<span class="${x[1] === 'g' ? 'g' : x[1] === 'b' ? 'b' : ''}">${esc(x[0])}</span>`).join('')}</div>` : ''}</div>
         <div class="sc-num" title="${esc(tip)}"><span class="sc-e ${ev == null || b.est ? '' : ev >= .05 ? 'good' : ev < 0 ? 'bad' : ''}">${ev == null ? 'no fair' : (b.est ? '≈' : '') + (ev >= 0 ? '+' : '−') + Math.abs(Math.round(ev * 100)) + '%'}</span>
           <span class="sc-s">chance ${b.q != null ? pc(b.q) : '—'} · fair ${b.est ? '≈' : ''}${b.fair != null ? pc(b.fair) : '—'}</span></div>

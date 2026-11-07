@@ -278,7 +278,7 @@ input[type=search]{min-width:200px}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
 .mmeta{display:none}
-.fgo{display:block;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.45;white-space:normal}.fgo b{color:var(--ink);font-weight:600}.fgo .hr{color:var(--good);font-weight:600}
+tr.bgh td{background:var(--sunk);padding:7px 10px;border-top:2px solid var(--faint);font-size:13px;position:sticky;left:0}.fgt{display:inline-block;font-size:10.5px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:999px;padding:0 6px;margin-left:5px;white-space:nowrap;cursor:help}.fgt.on{color:#F2C14E;border-color:#F2C14E}.fgo{display:block;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.45;white-space:normal}.fgo b{color:var(--ink);font-weight:600}.fgo .hr{color:var(--good);font-weight:600}
 .pchips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
 details.pfold{margin-bottom:14px}
 details.pfold > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:1px solid var(--faint);border-radius:12px;background:var(--surface)}
@@ -304,6 +304,7 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
   .pt td.name{display:block;grid-column:1;min-width:0;width:auto;white-space:normal}
   .pt td.kp{display:block;grid-column:2;grid-row:1;text-align:right;font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
   .pt td.kp b{font-weight:700}
+.pt tr.bgh{display:block}.pt tr.bgh td{display:block!important;padding:8px 10px!important;grid-column:1 / -1}
   .pt td.kp .kps{display:block;font-family:var(--body);font-size:11.5px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.3}
   .pt .mmeta{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;line-height:1.35}
   .pt .mmeta b{color:var(--ink);font-weight:600}
@@ -647,7 +648,7 @@ tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)}
       <div><dt>Thin vs tight</dt><dd><b>Thin</b> (2¢+ gap between buy and sell) markets get less attention; so far our NHL scorer chances have beaten the price there, while the market has been sharper in <b>tight</b> (1¢) ones.</dd></div>
     </dl>
   </section>
-<script type="application/json" id="grdata">{"sport":"mlb","groups":[{"sport":"mlb","source":"kalshi","kind":"all","n":662,"hit":0.039,"model_ll":0.1553,"market_ll":0.156,"model_brier":0.0383,"market_brier":0.0381,"bets":18,"bets_won":6,"roi":-0.008},{"sport":"mlb","source":"kalshi","kind":"hr","n":662,"hit":0.039,"model_ll":0.1553,"market_ll":0.156,"model_brier":0.0383,"market_brier":0.0381,"bets":18,"bets_won":6,"roi":-0.008}],"flow":{"nfl":{"value + NO flow":{"bets":478,"won":126,"roi":-0.082},"value, YES-heavy flow":{"bets":2369,"won":737,"roi":-0.024},"crowded YES (buying YES)":{"bets":1122,"won":316,"roi":0.043}},"mlb":{"value + NO flow":{"bets":2,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":11,"won":1,"roi":-0.307}},"nba":{"value + NO flow":{"bets":419,"won":113,"roi":-0.059},"value, YES-heavy flow":{"bets":2667,"won":961,"roi":-0.057}},"nhl":{"value + NO flow":{"bets":57,"won":8,"roi":-0.321},"value, YES-heavy flow":{"bets":292,"won":60,"roi":0.019},"crowded YES (buying YES)":{"bets":4781,"won":815,"roi":-0.052}}}}</script>
+<script type="application/json" id="grdata">{"sport":"mlb","groups":[{"sport":"mlb","source":"kalshi","kind":"all","n":662,"hit":0.039,"model_ll":0.1553,"market_ll":0.156,"model_brier":0.0383,"market_brier":0.0381,"bets":18,"bets_won":6,"roi":-0.008},{"sport":"mlb","source":"kalshi","kind":"hr","n":662,"hit":0.039,"model_ll":0.1553,"market_ll":0.156,"model_brier":0.0383,"market_brier":0.0381,"bets":18,"bets_won":6,"roi":-0.008}],"flow":{"nfl":{"value + NO flow":{"bets":478,"won":126,"roi":-0.082},"value, YES-heavy flow":{"bets":2369,"won":737,"roi":-0.024},"crowded YES (buying YES)":{"bets":1122,"won":316,"roi":0.043}},"mlb":{"value + NO flow":{"bets":2,"won":0,"roi":-1.0},"value, YES-heavy flow":{"bets":11,"won":1,"roi":-0.307}},"nhl":{"value + NO flow":{"bets":57,"won":8,"roi":-0.321},"value, YES-heavy flow":{"bets":292,"won":60,"roi":0.019},"crowded YES (buying YES)":{"bets":4781,"won":815,"roi":-0.052}},"nba":{"value + NO flow":{"bets":419,"won":113,"roi":-0.059},"value, YES-heavy flow":{"bets":2667,"won":961,"roi":-0.057}}}}</script>
 <script>
 const GR = JSON.parse(document.getElementById('grdata').textContent);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
