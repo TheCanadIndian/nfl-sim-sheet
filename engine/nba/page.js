@@ -336,6 +336,11 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-lgm]
   const r = document.querySelector('.lgr'); if (!r) return;
   r.scrollLeft = left; window.scrollBy(0, r.parentElement.getBoundingClientRect().top - y); });
 let LADM = '';
+// ★ filter (owner 2026-11-07: 'filter by star on the ladder edge'): only rungs with a ★ (aStar); remembered on this device
+let LADS = false;
+try { LADS = localStorage.getItem('nba-lads') === '1'; } catch (e) {}
+document.addEventListener('click', e => { const b = e.target.closest('[data-lads]'); if (!b) return;
+  LADS = !LADS; try { localStorage.setItem('nba-lads', LADS ? '1' : '0'); } catch (x) {} render(); });
 document.addEventListener('click', e => { const b = e.target.closest('[data-lmf]'); if (!b) return; LADM = b.dataset.lmf; render(); });
 const ladMv = (c, u) => window.MKT && MKT.consKind ? MKT.consKind(c.g.id, c.p.n, u.k) : null;
 // Selection tags (owner 2026-11-04: 'dont skip anything but add tags for all these criteria'; research/nba_ladder_factors.py +
@@ -406,17 +411,19 @@ function ladderCard(){
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${ladFit(c)}</div><div class="ladtg">${chips(c.p, c.g)}</div>
-    <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
+    <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).filter(u => !LADS || aStar(c.p, u)).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
   if (LADM && !cards.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
-  const cm = LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards;
+  const nStar = cards.filter(c => c.rungs.some(u => aStar(c.p, u))).length;
+  const cm = (LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards).filter(c => !LADS || c.rungs.some(u => (!LADM || ladMv(c, u) === LADM) && aStar(c.p, u)));
   if (!cm.some(c => String(c.g.id) === LADG)) LADG = '';
   const vis = LADG ? cm.filter(c => String(c.g.id) === LADG) : cm, lim = LADG ? 999 : 8;
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
-    : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.' : '';
+    : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.'
+    : LADS && !cm.length ? 'No ladder edge has a ★ right now. Tap ★ only again to see them all.' : '';
   return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     ${empty ? `<p class="note" style="margin:0 0 6px">${empty}</p>` : ''}
     <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the best price by 5% or more, for players projected for 20+ minutes. Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price and its edge is the one shown (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs outside the flagged set show our chance, with no edge claimed. Hard Rock’s alt lines refresh in the morning and hourly in the last two hours before tip. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page. <b>Tags</b> come from a study of every Kalshi NBA rung since January (research only, nothing is filtered): green = up in every period among rungs where our chance beats Kalshi’s ask + fee by 15%+ (the <b>15%+ K</b> tag: starter, away, 24-32 projected minutes, game total 230+, line 10+, threes); red = down (game total under 220, under 24 minutes). Every rung here is already two or more above the 50/50 rung. Hover a tag for its record.</p></details>
-    ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div>${window.MKT && MKT.consBar ? MKT.consBar(cards, LADM) : ''}` : ''}
+    ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div><div class="ladsw" role="group" aria-label="Star filter"><button type="button" data-lads="1" aria-pressed="${LADS}" title="Only rungs whose archetype, stat and odds range made money in NBA straights by archetype on the Profit page (last 30 days, 20+ bets). Picked after the fact: a lead, not a rule.">★ only <i>${nStar}</i></button></div>${window.MKT && MKT.consBar ? MKT.consBar(cards, LADM) : ''}` : ''}
     <div class="ladbody">${ladRail(cm, [...D.games].sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc)))}${LADV === 'game' ? byGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}</div></section>`;
 }
 // Ladder edges grouped by game (owner 2026-10-23: "let me see ladder edges by game"): games in start order, each game's
