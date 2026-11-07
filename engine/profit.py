@@ -1506,7 +1506,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .fi .lg{grid-column:2/4;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12.5px}.fi .lg span.W{color:var(--good)}.fi .lg span.L{color:var(--bad)}.fi .lg span.V{color:var(--muted)}
 .lt table{width:100%;border-collapse:collapse;font-size:13px}.lt td,.lt th{padding:4px 6px;border-top:1px solid var(--faint);text-align:right}.lt td:first-child,.lt th:first-child{text-align:left}
 .rp{color:var(--good)}.rn{color:var(--bad)}
-.arq .fgrp{padding-left:0}.aqs{margin:6px 0 4px}.aqs button{padding:2px 9px;font-size:12px}.aqs small{opacity:.7;font-weight:400}.arq .tb{min-width:0}.aqw{overflow-x:auto;max-width:100%}.arq td{white-space:nowrap}.arq table{font-size:12.5px}.arq th,.arq td{padding-right:6px}
+.arq .fgrp{padding-left:0}.arq .aqin{padding-left:12px}.arq .ast>summary{font-size:13px}.arq table{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:12.5px}.arq td,.arq th{text-align:right;padding:3px 6px 3px 0;border-top:1px solid var(--faint);white-space:nowrap}.arq td:first-child,.arq th:first-child{text-align:left}.aqs{margin:6px 0 4px}.aqs button{padding:2px 9px;font-size:12px}.aqs small{opacity:.7;font-weight:400}.arq .tb{min-width:0}.aqw{overflow-x:auto;max-width:100%}.arq td{white-space:nowrap}.arq table{font-size:12.5px}.arq th,.arq td{padding-right:6px}
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .vd.proven{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}.vd.promising{background:color-mix(in srgb,#6CB4FF 22%,transparent);color:#6CB4FF}
 .vd.unproven,.vd.too{background:var(--sunk);color:var(--muted)}.vd.losing{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
@@ -1589,28 +1589,30 @@ function oddsTable(){
     const n = R.reduce((s, b) => s + b.n, 0), w = R.reduce((s, b) => s + b.w, 0), e = R.reduce((s, b) => s + b.exp, 0), net = R.reduce((s, b) => s + b.net, 0);
     return `<div class="tb"><h3>${lab}</h3><p class="small muted" style="margin:0 0 4px">${n} bets · won ${w} vs ${e.toFixed(0)} priced · ${usd(net)}</p><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${R.map(b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${b.roi >= 0 ? '+' : '−'}${Math.abs(Math.round(b.roi * 100))}%${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`).join('')}</tbody></table></div>`; };
   return `<section class="panel lt"><div class="phead"><h2>Results by odds</h2><span class="small muted">last 30 days · $${FE.stake.straight} straight, $${FE.stake.parlay} parlay</span></div>${sw}
-    <div class="trk">${tb('straight', 'Straight bets')}${tb('parlay', 'Parlays')}</div>${FF.s === 'nba' ? archOdds() : ''}
+    <div class="trk">${tb('straight', 'Straight bets')}${tb('parlay', 'Parlays')}</div>
     <p class="note" style="margin:8px 0 0">Every bet in Your bets, grouped by the odds it was taken at. Won vs Priced = wins against what the odds imply (the price includes the book’s margin, so winning exactly what’s priced still loses a little). Fewer than 30 bets in a range is noise.</p></section>`;
 }
-const AST = {};
-document.addEventListener('click', e => { const b = e.target.closest('button[data-ast]'); if (!b) return;
-  const i = b.dataset.ast.lastIndexOf('|'), ar = b.dataset.ast.slice(0, i), st = b.dataset.ast.slice(i + 1);
-  AST[ar] = st; const y = window.scrollY; render(); window.scrollTo(0, y); });
+const AOPEN = new Set();
+document.addEventListener('toggle', e => { const d = e.target; if (!d.dataset || !d.dataset.ak) return;
+  d.open ? AOPEN.add(d.dataset.ak) : AOPEN.delete(d.dataset.ak); }, true);
 function archOdds(){
-  // NBA straights by the player's playstyle archetype, then odds (owner 2026-11-06)
+  // NBA straights: archetype -> bet type -> odds (owner 2026-11-06: 'sort nba straight bets by player archetype then odds',
+  // 'further break down by bet type', 'archetypes then bet type then odds')
   const R = FE.odds_arch || []; if (!R.length) return '';
   const pc0 = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
-  const tot = R.filter(b => b.lab === 'all' && b.st === 'all').sort((a, b) => b.n - a.n);
   const SO = ['Points', 'Rebounds', 'Assists', 'Threes', 'Double-double', 'Triple-double', 'First basket', 'Game lines', 'Other'];
+  const rec = t => `<span class="c">${t.n} bets · won ${t.w} vs ${t.exp.toFixed(0)} priced</span>`;
+  const net = t => `<span class="net ${t.roi >= 0 ? 'rp' : 'rn'}">${usd(t.net)} · ${pc0(t.roi)}${t.n < 30 ? ' <small class="muted">few</small>' : ''}</span>`;
   const trow = b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${pc0(b.roi)}${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`;
-  const one = t => { const k = AST[t.arch] || 'all', B = R.filter(b => b.arch === t.arch && b.st === k && b.lab !== 'all');
-    const sts = R.filter(b => b.arch === t.arch && b.lab === 'all' && b.st !== 'all').sort((a, b) => SO.indexOf(a.st) - SO.indexOf(b.st));
-    const tk = R.find(b => b.arch === t.arch && b.lab === 'all' && b.st === k) || t;
-    const chips = `<div class="fsw aqs">${[{st: 'all'}, ...sts].map(b => `<button data-ast="${esc(t.arch)}|${esc(b.st)}" aria-pressed="${k === b.st}">${b.st === 'all' ? 'All stats' : esc(b.st)}${b.n != null ? ` <small>${b.n}</small>` : ''}</button>`).join('')}</div>`;
-    return `<details class="fgrp" data-arch="${esc(t.arch)}"${AST[t.arch] ? ' open' : ''}><summary><span class="gl"><b>${esc(t.arch)}</b> <span class="c">${t.n} bets · won ${t.w} vs ${t.exp.toFixed(0)} priced</span></span><span class="net ${t.roi >= 0 ? 'rp' : 'rn'}">${usd(t.net)} · ${pc0(t.roi)}</span></summary>
-      ${chips}${k !== 'all' ? `<p class="small muted" style="margin:0 0 2px">${esc(k)}: ${tk.n} bets · won ${tk.w} vs ${tk.exp.toFixed(0)} priced · <span class="${tk.roi >= 0 ? 'rp' : 'rn'}">${usd(tk.net)} · ${pc0(tk.roi)}</span></p>` : ''}<div class="aqw"><table style="margin:4px 0 6px"><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${B.map(trow).join('')}</tbody></table></div></details>`; };
-  return `<div class="trk arq" style="margin-top:12px"><div class="tb"><h3>NBA straight bets by player archetype</h3>
-    <p class="small muted" style="margin:0 0 6px">The player’s playstyle (from his per-minute stats, the same 8 types as the NBA page chip). Tap one for its odds ranges; the chips split it by stat.</p>${tot.map(one).join('')}</div></div>`;
+  const table = B => `<div class="aqw"><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${B.map(trow).join('')}</tbody></table></div>`;
+  const stat = (a, t) => { const k = a + '|' + t.st;
+    return `<details class="fgrp ast" data-ak="${esc(k)}"${AOPEN.has(k) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.st)}</b> ${rec(t)}</span>${net(t)}</summary>${table(R.filter(b => b.arch === a && b.st === t.st && b.lab !== 'all'))}</details>`; };
+  const arch = t => { const S = R.filter(b => b.arch === t.arch && b.lab === 'all' && b.st !== 'all').sort((x, y) => SO.indexOf(x.st) - SO.indexOf(y.st));
+    return `<details class="fgrp" data-ak="${esc(t.arch)}"${AOPEN.has(t.arch) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.arch)}</b> ${rec(t)}</span>${net(t)}</summary><div class="aqin">${S.map(x => stat(t.arch, x)).join('')}</div></details>`; };
+  const tot = R.filter(b => b.lab === 'all' && b.st === 'all').sort((a, b) => (b.arch === 'All archetypes') - (a.arch === 'All archetypes') || b.n - a.n);
+  return `<section class="panel lt arq"><div class="phead"><h2>NBA straights by archetype</h2><span class="small muted">archetype → bet type → odds · last 30 days · $${FE.stake.straight} a bet</span></div>
+    <p class="note" style="margin:0 0 8px">Every NBA straight in Your bets, grouped by the player’s playstyle (the same 8 types as the NBA page chip), then the stat, then the odds it was taken at (the book’s price, Kalshi with its fee). Tap a row to open it. One prop can count under several tracked rules, and fewer than 30 bets is noise.</p>
+    ${tot.map(arch).join('')}</section>`;
 }
 function legTable(){
   const L = FE.legs || []; if (!L.length) return '';
@@ -1642,7 +1644,7 @@ function render(){
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
   const all = `<details class="panel"><summary style="cursor:pointer"><h2 style="display:inline">Every tracked rule</h2> <span class="small muted">all bets incl. unders and the test versions</span></summary>
     <section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>${track}${D.sports.map(sp).join('')}</details>`;
-  document.getElementById('main').innerHTML = you() + working() + oddsTable() + feed() + legTable() + edgeTable() + all;
+  document.getElementById('main').innerHTML = you() + working() + oddsTable() + archOdds() + feed() + legTable() + edgeTable() + all;
 }
 render();
 </script></body></html>"""
