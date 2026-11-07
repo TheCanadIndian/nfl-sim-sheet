@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-07T21:47:09.955Z",
+"frozen_at": "2026-11-07T21:58:37.698Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -312,7 +312,7 @@
 "line": 2.5,
 "name": "mike gesicki",
 "lab": "Mike Gesicki under 2.5 receptions",
-"p": 0.5144,
+"p": 0.5148,
 "price": 108,
 "book": "Novig"
 },
@@ -324,12 +324,12 @@
 "line": 62.5,
 "name": "dandre swift",
 "lab": "Dandre Swift under 62.5 rush yds",
-"p": 0.5491,
+"p": 0.5499,
 "price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.28243,
+"p": 0.28306,
 "d": 4.006,
 "first": "2026-11-08T14:30:00+00:00"
 },
@@ -345,7 +345,7 @@
 "line": 2.5,
 "name": "mike gesicki",
 "lab": "Mike Gesicki under 2.5 receptions",
-"p": 0.5144,
+"p": 0.5148,
 "price": 108,
 "book": "Novig"
 },
@@ -362,7 +362,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.27967,
+"p": 0.27987,
 "d": 4.08,
 "first": "2026-11-08T14:30:00+00:00"
 },
@@ -378,7 +378,7 @@
 "line": 2.5,
 "name": "mike gesicki",
 "lab": "Mike Gesicki under 2.5 receptions",
-"p": 0.5144,
+"p": 0.5148,
 "price": 108,
 "book": "Novig"
 },
@@ -395,7 +395,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.27006,
+"p": 0.27026,
 "d": 4.202,
 "first": "2026-11-08T14:30:00+00:00"
 },
@@ -456,12 +456,12 @@
 "line": 62.5,
 "name": "dandre swift",
 "lab": "Dandre Swift under 62.5 rush yds",
-"p": 0.5491,
+"p": 0.5499,
 "price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.11366,
+"p": 0.11383,
 "d": 12.037,
 "first": "2026-11-08T21:05:00+00:00"
 },
@@ -31137,7 +31137,7 @@
 "line": 3.5,
 "name": "sam laporta",
 "lab": "Sam LaPorta over 3.5 receptions",
-"p": 0.5957,
+"p": 0.5951,
 "price": -130,
 "book": "Hard Rock",
 "f": [
@@ -31145,10 +31145,10 @@
 "matchup"
 ],
 "sport": "nfl",
-"edge": 0.0538
+"edge": 0.0529
 }
 ],
-"p": 0.33163,
+"p": 0.33129,
 "d": 3.47,
 "first": "2026-11-08T18:00:00+00:00"
 },
@@ -31156,6 +31156,90 @@
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "george kittle",
+"lab": "George Kittle over 69.5 rec yds",
+"p": 0.5011,
+"price": -120,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nfl",
+"edge": 0.0007
+},
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "denzel boston",
+"lab": "Denzel Boston over 3.5 receptions",
+"p": 0.4087,
+"price": 144,
+"book": "Novig",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0502
+}
+],
+"p": 0.2048,
+"d": 4.473,
+"first": "2026-11-08T18:00:00+00:00"
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
+"legs": [
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "george kittle",
+"lab": "George Kittle over 69.5 rec yds",
+"p": 0.5011,
+"price": -120,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nfl",
+"edge": 0.0007
+},
 {
 "gid": "2026_09_CLE_NO",
 "start": "2026-11-08T13:00:00",
@@ -31187,7 +31271,7 @@
 "line": 2.5,
 "name": "xavier hutchinson",
 "lab": "Xavier Hutchinson over 2.5 receptions",
-"p": 0.4106,
+"p": 0.411,
 "price": 138,
 "book": "Novig",
 "f": [
@@ -31200,11 +31284,35 @@
 "lc"
 ],
 "sport": "nfl",
-"edge": 0.0417
+"edge": 0.0424
+},
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 4.5 receptions",
+"p": 0.478,
+"price": 100,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.048
 }
 ],
-"p": 0.16781,
-"d": 5.807,
+"p": 0.04023,
+"d": 21.293,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -31292,16 +31400,16 @@
 "line": 1.5,
 "name": "braelon allen",
 "lab": "Braelon Allen over 1.5 receptions",
-"p": 0.4455,
+"p": 0.4483,
 "price": 141,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0737,
-"fair": 0.4019,
+"edge": 0.0804,
+"fair": 0.4056,
 "main": true
 }
 ],
-"p": 0.10003,
+"p": 0.10066,
 "d": 13.364,
 "first": "2026-11-08T18:00:00+00:00"
 },
@@ -31317,12 +31425,12 @@
 "line": 1.5,
 "name": "braelon allen",
 "lab": "Braelon Allen over 1.5 receptions",
-"p": 0.4455,
+"p": 0.4483,
 "price": 141,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0737,
-"fair": 0.4019,
+"edge": 0.0804,
+"fair": 0.4056,
 "main": true
 },
 {
@@ -31342,7 +31450,7 @@
 "main": true
 }
 ],
-"p": 0.19669,
+"p": 0.19792,
 "d": 5.808,
 "first": "2026-11-08T18:00:00+00:00"
 }
