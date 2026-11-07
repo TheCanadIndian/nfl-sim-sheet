@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-07T02:47:34.034Z",
+"frozen_at": "2026-11-07T02:49:54.825Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,98 @@
 ],
 "final_at": "2026-11-08T12:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "kendre miller",
+"lab": "Kendre Miller 60+ rush yds",
+"p": 0.265,
+"price": 313,
+"book": "Kalshi",
+"sc": "NO pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2732,
+"price": 313,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
+}
+],
+"p": 0.07239,
+"d": 17.057,
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "longshot"
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T13:00:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "kendre miller",
+"lab": "Kendre Miller 60+ rush yds",
+"p": 0.265,
+"price": 313,
+"book": "Kalshi",
+"sc": "NO pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "travis kelce",
+"lab": "Travis Kelce 80+ rec yds",
+"p": 0.2,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script"
+]
+}
+],
+"p": 0.053,
+"d": 20.567,
+"first": "2026-11-08T18:00:00+00:00"
+},
 {
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
@@ -363,8 +455,7 @@
 ],
 "p": 0.16086,
 "d": 7.198,
-"first": "2026-11-08T18:00:00+00:00",
-"pick": "core"
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -424,12 +515,12 @@
 "line": 37.5,
 "name": "jayden daniels",
 "lab": "Jayden Daniels under 37.5 rush yds",
-"p": 0.5151,
+"p": 0.5144,
 "price": 108,
 "book": "Novig"
 }
 ],
-"p": 0.28436,
+"p": 0.28399,
 "d": 4.006,
 "first": "2026-11-08T18:00:00+00:00"
 },
@@ -31214,6 +31305,29 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "xavier hutchinson",
+"lab": "Xavier Hutchinson over 2.5 receptions",
+"p": 0.3919,
+"price": 150,
+"book": "Novig",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0591
+},
+{
 "gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
@@ -31236,35 +31350,10 @@
 ],
 "sport": "nfl",
 "edge": 0.1245
-},
-{
-"gid": "2026_09_LV_SF",
-"start": "2026-11-08T16:05:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 69.5,
-"name": "george kittle",
-"lab": "George Kittle over 69.5 rec yds",
-"p": 0.5049,
-"price": -120,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"our model above fair"
-],
-"sport": "nfl",
-"edge": 0.0862
 }
 ],
-"p": 0.22958,
-"d": 4.07,
+"p": 0.1782,
+"d": 5.55,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
