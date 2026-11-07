@@ -426,6 +426,18 @@ function aStar(p, u){
   return ` <b class="lstar" title="${esc(`${p.ar} · ${ST_NM[u.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
 }
 const ladRungFit = u => (u.p != null && u.cost && u.p / u.cost - 1 >= .15 ? ` <b class="lfit" title="${esc(LFIT.k15)}">15%+ K</b>` : '') + (u.k === 'fg3m' ? ` <b class="lfit" title="${esc(LFIT.fg3m)}">3PM</b>` : '');
+// rungs shown on a player row (top 3 of the flagged set, by the move / star filters)
+const ladShown = c => (LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).filter(u => !LADS || aStar(c.p, u)).slice(0, 3);
+// every rung of his ladder with a ★: the flagged ones first, then the rest of the ladder (lower rungs in the dropdown)
+const starRungs = c => [...c.rungs, ...(c.all || []).filter(u => !c.rungs.some(r => r.k === u.k && r.l === u.l))].filter(u => aStar(c.p, u));
+// owner 2026-11-07: 'if not immediately visible provide the leg that the star would pop up on' -- when none of the shown rungs has a
+// ★ but another rung of his ladder does, show that rung under the row (best first: flagged before the rest)
+function starElse(c){
+  const shown = ladShown(c);
+  if (shown.some(u => aStar(c.p, u))) return '';
+  const u = starRungs(c).find(x => !shown.some(y => y.k === x.k && y.l === x.l));
+  return u ? `<div class="lstarx"><span class="small muted">★ on another rung:</span> ${lruChip(c, u)}</div>` : '';
+}
 function ladderCard(){
   const now = Date.now(), cards = []; let anyLadder = 0;
   for (const g of D.games){
@@ -448,10 +460,10 @@ function ladderCard(){
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${ladFit(c)}</div><div class="ladtg">${chips(c.p, c.g)}</div>
-    <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).filter(u => !LADS || aStar(c.p, u)).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
+    <div class="ladr">${ladShown(c).map(u => lruChip(c, u)).join('')}</div>${starElse(c)}</div>`;
   if (LADM && !cards.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
-  const nStar = cards.filter(c => c.rungs.some(u => aStar(c.p, u))).length;
-  const cm = (LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards).filter(c => !LADS || c.rungs.some(u => (!LADM || ladMv(c, u) === LADM) && aStar(c.p, u)));
+  const nStar = cards.filter(c => starRungs(c).length).length;
+  const cm = (LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards).filter(c => !LADS || starRungs(c).some(u => !LADM || ladMv(c, u) === LADM));
   if (!cm.some(c => String(c.g.id) === LADG)) LADG = '';
   const vis = LADG ? cm.filter(c => String(c.g.id) === LADG) : cm, lim = LADG ? 999 : 8;
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
