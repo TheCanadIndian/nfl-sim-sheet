@@ -315,7 +315,7 @@ function lruChip(c, u0){
   const nve = nvq != null && nvd ? nvq * (nvd > 0 ? 1 + nvd / 100 : 1 + 100 / -nvd) - 1 : null;
   const mfTxt = mf ? ` · fair from ${Object.keys(mf.parts).length} source${Object.keys(mf.parts).length === 1 ? '' : 's'} ${Math.round(mf.f * 100)}% (${Object.entries(mf.parts).map(([k, v]) => `${k} ${Math.round(v * 100)}%`).join(', ')}, without ${b.b})` : '';
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
-  return `<span class="lru" title="${n(u.l)}+ ${KLAB[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}">${num} ${KLAB[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}</span>`;
+  return `<span class="lru" title="${n(u.l)}+ ${KLAB[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}">${num}${aStar(c.p, u)} ${KLAB[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}</span>`;
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
@@ -368,6 +368,21 @@ function ladFit(c){
   return t.join('');
 }
 // per rung: our chance 15%+ over Kalshi's ask + fee (the slice the study starts from), threes
+// ★ = this player's archetype, this stat and this rung's best price fell in an archetype -> bet type -> odds range that made
+// money on the Profit page (NBA straights by archetype, last 30 days, 20+ bets, won more than priced; owner 2026-11-07:
+// 'a star to the profitable markets in the ladder edges'). Picked after the fact: a lead, not a rule.
+let AODDS = null;
+try { fetch('../markets/arch_odds_nba.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d && d.cells){ AODDS = d.cells; render(); } }).catch(() => {}); } catch (e) {}
+const ST_NM = {pts: 'Points', reb: 'Rebounds', ast: 'Assists', fg3m: 'Threes'};
+const OBANDS = [[-99999, 99, 'minus money'], [100, 150, '+100–150'], [151, 350, '+151–350'], [351, 600, '+351–600'], [601, 800, '+601–800'],
+                [801, 1200, '+801–1200'], [1201, 1500, '+1201–1500'], [1501, 2500, '+1501–2500'], [2501, 10000, '+2501–10000'], [10001, 1e9, 'over +10000']];
+function aStar(p, u){
+  if (!AODDS || !p.ar || !u.best) return '';
+  const am = u.best.pay < 2 ? 0 : Math.round((u.best.pay - 1) * 100), band = (OBANDS.find(([lo, hi]) => am >= lo && am <= hi) || [])[2];
+  const c = AODDS.find(x => x.a === p.ar && x.s === ST_NM[u.k] && x.b === (am === 0 ? 'minus money' : band));
+  if (!c || c.n < 20 || c.r <= 0 || c.w <= c.e) return '';
+  return ` <b class="lstar" title="${esc(`${p.ar} · ${ST_NM[u.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
+}
 const ladRungFit = u => (u.p != null && u.cost && u.p / u.cost - 1 >= .15 ? ` <b class="lfit" title="${esc(LFIT.k15)}">15%+ K</b>` : '') + (u.k === 'fg3m' ? ` <b class="lfit" title="${esc(LFIT.fg3m)}">3PM</b>` : '');
 function ladderCard(){
   const now = Date.now(), cards = []; let anyLadder = 0;
@@ -390,7 +405,7 @@ function ladderCard(){
   cards.sort((a, b) => b.best - a.best);
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
-  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${c.p.trend >= 3 ? '<span class="ladc">▲ minutes</span>' : ''}${ladFit(c)}</div>
+  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${ladFit(c)}</div><div class="ladtg">${chips(c.p, c.g)}</div>
     <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
   if (LADM && !cards.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
   const cm = LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards;
