@@ -190,12 +190,7 @@ def freeze():
                                final_at=fin.isoformat(), parlays=ps, graded=False), open(fp, "w"), indent=0)
                 print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
         freeze_multi(now)
-        try:                                                         # plus-money slate (slate.py, owner 2026-10-27)
-            import slate as SLT
-            SLT.freeze(now)
-        except Exception as e:                                       # noqa: BLE001
-            print(f"slate: skipped ({type(e).__name__}: {e})")
-            fail_note(f"slate freeze: {type(e).__name__}: {e}")
+        # the plus-money slate (slate.py) was scratched 2026-11-07 (owner: 'lets scratch the plus money slate'); its graded record stays
     finally:
         srv.terminate()
 
@@ -562,7 +557,7 @@ def book_mults(legs, sport, cache):
 def hub_data():
     today = dt.datetime.now(ET).date().isoformat()
     sports = []
-    for sport in ("nfl", "nhl", "nba", "multi", "slate"):
+    for sport in ("nfl", "nhl", "nba", "multi"):
         allf = sorted(glob.glob(os.path.join(OUT, sport, "????-??-??.json")))
         fs = [f for f in allf if os.path.basename(f)[:10] >= today]
         # keep yesterday's cards (with their results) up until today's are picked (owner 2026-10-30)
@@ -751,8 +746,7 @@ function render(){
     for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge) parlays/.test(c.card)))
       more.push(`<details class="hc"><summary>${SP[s.sport]} · ${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`);
   if (more.length) TB.more = sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
-  TB.slate = slateTab();
-  const TABS = [['card', 'Today’s cards'], ['slate', 'Plus-money slate'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
+  const TABS = [['card', 'Today’s cards'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
   const cnt = {card: picks.length, slate: ((D.sports.find(s => s.sport === 'slate') || {cards: []}).cards.reduce((n, c) => n + c.parlays.length, 0))};
   if (!TB[T]) T = TABS.find(([k]) => TB[k]) ? TABS.find(([k]) => TB[k])[0] : 'card';
   const bar = `<div class="htabs" role="tablist">${TABS.filter(([k]) => TB[k] || k === 'card').map(([k, lab]) => `<button role="tab" data-t="${k}" aria-selected="${T === k}">${lab}${cnt[k] ? `<span>${cnt[k]}</span>` : ''}</button>`).join('')}</div>`;
