@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-07",
 "lock": "2026-11-07T22:00:00+00:00",
-"frozen_at": "2026-11-07T16:24:03.483Z",
+"frozen_at": "2026-11-07T16:30:46.705Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -313,27 +313,28 @@
 ]
 },
 {
-"gid": "401909944",
-"start": "2026-11-08T03:00Z",
-"kind": "ast",
+"gid": "401909939",
+"start": "2026-11-08T00:30Z",
+"kind": "pts",
 "side": "o",
-"line": 2.5,
-"name": "donovan clingan",
-"lab": "Donovan Clingan over 2.5 assists",
-"p": 0.3433,
-"fair": 0.3457,
-"price": 210,
+"line": 14.5,
+"name": "kingston flemings",
+"lab": "Kingston Flemings over 14.5 points",
+"p": 0.2173,
+"fair": 0.219,
+"price": 425,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0642,
+"edge": 0.1407,
 "v": [
-"consensus odds drop",
-"one rung above the main line (1.5)"
+"consensus line up",
+"one rung above the main line (9.5)",
+"LC"
 ]
 }
 ],
-"p": 0.11273,
-"d": 8.68,
+"p": 0.07142,
+"d": 14.7,
 "first": "2026-11-07T22:00:00+00:00",
 "res": null
 },
@@ -362,6 +363,55 @@
 ]
 },
 {
+"gid": "401909939",
+"start": "2026-11-08T00:30Z",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "kingston flemings",
+"lab": "Kingston Flemings over 14.5 points",
+"p": 0.2173,
+"fair": 0.219,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1407,
+"v": [
+"consensus line up",
+"one rung above the main line (9.5)",
+"LC"
+]
+},
+{
+"gid": "401909944",
+"start": "2026-11-08T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "donovan clingan",
+"lab": "Donovan Clingan over 2.5 assists",
+"p": 0.3433,
+"fair": 0.3457,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0642,
+"v": [
+"consensus odds drop",
+"one rung above the main line (1.5)"
+]
+}
+],
+"p": 0.02469,
+"d": 45.57,
+"first": "2026-11-07T22:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
 "gid": "401909944",
 "start": "2026-11-08T03:00Z",
 "kind": "ast",
@@ -400,56 +450,8 @@
 ]
 }
 ],
-"p": 0.05309,
-"d": 16.869,
-"first": "2026-11-07T22:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909940",
-"start": "2026-11-08T01:00Z",
-"kind": "pts",
-"side": "o",
-"line": 10.5,
-"name": "mikal bridges",
-"lab": "Mikal Bridges over 10.5 points",
-"p": 0.468,
-"fair": 0.4709,
-"price": -106,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0906,
-"v": [
-"consensus odds drop",
-"one rung above the main line (9.5)"
-]
-},
-{
-"gid": "401909943",
-"start": "2026-11-08T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "reed sheppard",
-"lab": "Reed Sheppard over 2.5 threes",
-"p": 0.3251,
-"fair": 0.3234,
-"price": 170,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.1223,
-"v": [
-"consensus odds drop",
-"one rung above the main line (1.5)"
-]
-}
-],
-"p": 0.15229,
-"d": 5.247,
+"p": 0.16279,
+"d": 6.025,
 "first": "2026-11-08T01:00:00+00:00",
 "res": null
 },
@@ -457,6 +459,64 @@
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909939",
+"start": "2026-11-08T00:30:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "onyeka okongwu",
+"lab": "Onyeka Okongwu over 11.5 rebounds",
+"p": 0.1908,
+"price": 475,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0973,
+"fair": 0.1832,
+"main": false
+},
+{
+"gid": "401909944",
+"start": "2026-11-08T03:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 29.5,
+"name": "damian lillard",
+"lab": "Damian Lillard over 29.5 points",
+"p": 0.1634,
+"price": 550,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.062,
+"fair": 0.1681,
+"main": false
+}
+],
+"p": 0.03118,
+"d": 37.375,
+"first": "2026-11-08T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909939",
+"start": "2026-11-08T00:30:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "onyeka okongwu",
+"lab": "Onyeka Okongwu over 11.5 rebounds",
+"p": 0.1908,
+"price": 475,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0973,
+"fair": 0.1832,
+"main": false
+},
 {
 "gid": "401909944",
 "start": "2026-11-08T03:00:00+00:00",
@@ -490,9 +550,9 @@
 "main": false
 }
 ],
-"p": 0.05407,
-"d": 20.8,
-"first": "2026-11-08T01:00:00+00:00",
+"p": 0.01032,
+"d": 119.6,
+"first": "2026-11-08T00:30:00+00:00",
 "res": null
 }
 ],
