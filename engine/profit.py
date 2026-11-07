@@ -1475,8 +1475,8 @@ def feed_data():
         nm = _norm(x.get("pn") or "")
         ar = AR.get(nm) or ("no player" if not nm else "unknown")
         st = ST_LAB.get(x.get("st") or "", "Other")
-        for i, k in ((oband(x["pay"]), "all"), (-1, "all"), (oband(x["pay"]), st), (-1, st)):
-            b = oa.setdefault((ar, k, i), dict(n=0, w=0, exp=0.0, net=0.0, stake=0.0))
+        for (a_, i, k) in [(a_, i, k) for a_ in (ar, "All archetypes") for i, k in ((oband(x["pay"]), "all"), (-1, "all"), (oband(x["pay"]), st), (-1, st))]:
+            b = oa.setdefault((a_, k, i), dict(n=0, w=0, exp=0.0, net=0.0, stake=0.0))
             b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
     odds_arch = [dict(arch=ar, st=k, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
                       roi=round(b["net"] / b["stake"], 4)) for (ar, k, i), b in sorted(oa.items())]
