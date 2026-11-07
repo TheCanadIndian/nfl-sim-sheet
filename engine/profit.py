@@ -1480,6 +1480,13 @@ def feed_data():
             b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
     odds_arch = [dict(arch=ar, st=k, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
                       roi=round(b["net"] / b["stake"], 4)) for (ar, k, i), b in sorted(oa.items())]
+    try:                                                     # NBA ladder edges star these (owner 2026-11-07)
+        json.dump(dict(fetched=dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
+                       cells=[dict(a=r["arch"], s=r["st"], b=r["lab"], n=r["n"], w=r["w"], e=r["exp"], r=r["roi"]) for r in odds_arch
+                              if r["arch"] not in ("All archetypes", "unknown", "no player") and r["st"] != "all" and r["lab"] != "all"]),
+                  open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "arch_odds_nba.json"), "w"), separators=(",", ":"))
+    except OSError:
+        pass
     # every graded bet of the window (a cap cut older days' losers: they sort after winners), compact keys
     for x in items:
         x.pop("pn", None); x.pop("st", None)
