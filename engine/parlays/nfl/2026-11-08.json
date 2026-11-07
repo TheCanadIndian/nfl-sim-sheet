@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-07T15:37:05.615Z",
+"frozen_at": "2026-11-07T15:46:38.909Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,24 +15,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_09_CLE_NO",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 59.5,
-"name": "kendre miller",
-"lab": "Kendre Miller 60+ rush yds",
-"p": 0.265,
-"price": 313,
-"book": "Kalshi",
-"sc": "NO pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
-{
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
 "kind": "rec_yds",
@@ -40,7 +22,7 @@
 "line": 79.5,
 "name": "travis kelce",
 "lab": "Travis Kelce 80+ rec yds",
-"p": 0.2163,
+"p": 0.2151,
 "price": 398,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -50,10 +32,28 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 119.5,
+"name": "james cook",
+"lab": "James Cook 120+ rush yds",
+"p": 0.2275,
+"price": 425,
+"book": "Kalshi",
+"sc": "BUF pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
 }
 ],
-"p": 0.05731,
-"d": 20.567,
+"p": 0.04894,
+"d": 26.145,
 "first": "2026-11-08T18:00:00+00:00",
 "pick": "longshot"
 },
@@ -61,24 +61,6 @@
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "2026_09_CLE_NO",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 59.5,
-"name": "kendre miller",
-"lab": "Kendre Miller 60+ rush yds",
-"p": 0.265,
-"price": 313,
-"book": "Kalshi",
-"sc": "NO pulls away",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
 {
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
@@ -97,10 +79,28 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 119.5,
+"name": "james cook",
+"lab": "James Cook 120+ rush yds",
+"p": 0.2275,
+"price": 425,
+"book": "Kalshi",
+"sc": "BUF pulls away",
+"f": [
+"usage",
+"script",
+"price"
+]
 }
 ],
-"p": 0.06824,
-"d": 17.057,
+"p": 0.05858,
+"d": 21.683,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -323,7 +323,8 @@
 ],
 "p": 0.18879,
 "d": 6.733,
-"first": "2026-11-08T18:00:00+00:00"
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -530,6 +531,18 @@
 "tier": "+300 to +1000",
 "legs": [
 {
+"gid": "2026_09_TB_CHI",
+"start": "2026-11-08T20:20:00",
+"kind": "rush_yds",
+"side": "u",
+"line": 62.5,
+"name": "dandre swift",
+"lab": "Dandre Swift under 62.5 rush yds",
+"p": 0.5475,
+"price": -108,
+"book": "Novig"
+},
+{
 "gid": "2026_09_ARI_SEA",
 "start": "2026-11-08T16:25:00",
 "kind": "rec",
@@ -540,28 +553,28 @@
 "p": 0.453,
 "price": 144,
 "book": "Novig"
-},
-{
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 37.5,
-"name": "jayden daniels",
-"lab": "Jayden Daniels under 37.5 rush yds",
-"p": 0.5603,
-"price": 100,
-"book": "Novig"
 }
 ],
-"p": 0.25383,
-"d": 4.88,
-"first": "2026-11-08T18:00:00+00:00"
+"p": 0.24803,
+"d": 4.699,
+"first": "2026-11-08T21:25:00+00:00"
 },
 {
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "kyle juszczyk",
+"lab": "Kyle Juszczyk anytime TD",
+"p": 0.207,
+"price": 545,
+"book": "Novig"
+},
 {
 "gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
@@ -573,34 +586,10 @@
 "p": 0.6224,
 "price": -138,
 "book": "Novig"
-},
-{
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "u",
-"line": 37.5,
-"name": "jayden daniels",
-"lab": "Jayden Daniels under 37.5 rush yds",
-"p": 0.5603,
-"price": 100,
-"book": "Novig"
-},
-{
-"gid": "2026_09_BUF_MIN",
-"start": "2026-11-09T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones anytime TD",
-"p": 0.36,
-"price": 270,
-"book": "Novig"
 }
 ],
-"p": 0.12554,
-"d": 12.762,
+"p": 0.12884,
+"d": 11.124,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -661,7 +650,7 @@
 "name": "kyle juszczyk",
 "lab": "Kyle Juszczyk anytime TD",
 "p": 0.207,
-"price": 525,
+"price": 545,
 "book": "Novig"
 },
 {
@@ -678,9 +667,8 @@
 }
 ],
 "p": 0.12214,
-"d": 11.373,
-"first": "2026-11-08T18:00:00+00:00",
-"pick": "core"
+"d": 11.737,
+"first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Cross-game parlays",
@@ -31251,24 +31239,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.531,
-"price": 100,
-"book": "Novig",
-"f": [
-"usage",
-"rotation"
-],
-"sport": "nfl",
-"edge": 0.062
-},
-{
 "gid": "2026_09_DET_MIA",
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
@@ -31285,10 +31255,28 @@
 ],
 "sport": "nfl",
 "edge": 0.0593
+},
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 39.5 rec yds",
+"p": 0.5592,
+"price": -106,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"sport": "nfl",
+"edge": 0.0868
 }
 ],
-"p": 0.31791,
-"d": 3.538,
+"p": 0.33479,
+"d": 3.438,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -31300,26 +31288,23 @@
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
 "side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.4873,
-"price": 100,
+"line": 3.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 3.5 receptions",
+"p": 0.5473,
+"price": -122,
 "book": "Novig",
 "f": [
-"usage",
-"rotation"
+"usage"
 ],
 "v": [
 "usage",
-"rotation",
 "our model above fair",
-"consensus up",
 "lc",
 "value"
 ],
 "sport": "nfl",
-"edge": 0.062
+"edge": 0.0737
 },
 {
 "gid": "2026_09_HOU_LAC",
@@ -31329,8 +31314,8 @@
 "line": 2.5,
 "name": "xavier hutchinson",
 "lab": "Xavier Hutchinson over 2.5 receptions",
-"p": 0.4021,
-"price": 144,
+"p": 0.4036,
+"price": 141,
 "book": "Novig",
 "f": [
 "usage"
@@ -31342,66 +31327,17 @@
 "lc"
 ],
 "sport": "nfl",
-"edge": 0.0524
+"edge": 0.0421
 }
 ],
-"p": 0.19594,
-"d": 4.88,
+"p": 0.22089,
+"d": 4.385,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "4-leg longshot",
+"tier": "3 legs",
 "legs": [
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 4.5 receptions",
-"p": 0.4873,
-"price": 100,
-"book": "Novig",
-"f": [
-"usage",
-"rotation"
-],
-"v": [
-"usage",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc",
-"value"
-],
-"sport": "nfl",
-"edge": 0.062
-},
-{
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T16:05:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "xavier hutchinson",
-"lab": "Xavier Hutchinson over 2.5 receptions",
-"p": 0.4021,
-"price": 144,
-"book": "Novig",
-"f": [
-"usage"
-],
-"v": [
-"usage",
-"our model above fair",
-"consensus up",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.0524
-},
 {
 "gid": "2026_09_CLE_NO",
 "start": "2026-11-08T13:00:00",
@@ -31424,6 +31360,31 @@
 ],
 "sport": "nfl",
 "edge": 0.0339
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "george kittle",
+"lab": "George Kittle over 69.5 rec yds",
+"p": 0.5,
+"price": -120,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nfl",
+"edge": 0.0817
 },
 {
 "gid": "2026_09_NYJ_KC",
@@ -31451,8 +31412,136 @@
 "edge": 0.0117
 }
 ],
-"p": 0.03774,
-"d": 23.581,
+"p": 0.09629,
+"d": 8.859,
+"first": "2026-11-08T18:00:00+00:00"
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "5-leg longshot",
+"legs": [
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "dallas goedert",
+"lab": "Dallas Goedert over 3.5 receptions",
+"p": 0.5473,
+"price": -122,
+"book": "Novig",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"lc",
+"value"
+],
+"sport": "nfl",
+"edge": 0.0737
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "xavier hutchinson",
+"lab": "Xavier Hutchinson over 2.5 receptions",
+"p": 0.4036,
+"price": 141,
+"book": "Novig",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0421
+},
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "denzel boston",
+"lab": "Denzel Boston over 3.5 receptions",
+"p": 0.3998,
+"price": 144,
+"book": "Novig",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0339
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "george kittle",
+"lab": "George Kittle over 69.5 rec yds",
+"p": 0.5,
+"price": -120,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nfl",
+"edge": 0.0817
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes over 249.5 pass yds",
+"p": 0.4817,
+"price": -102,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"script"
+],
+"v": [
+"usage",
+"matchup",
+"script",
+"our model above fair"
+],
+"sport": "nfl",
+"edge": 0.0117
+}
+],
+"p": 0.02127,
+"d": 38.85,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -31467,12 +31556,12 @@
 "line": 1.5,
 "name": "tank dell",
 "lab": "Tank Dell over 1.5 receptions",
-"p": 0.4842,
-"price": 130,
+"p": 0.4803,
+"price": 133,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1138,
-"fair": 0.4222,
+"edge": 0.1192,
+"fair": 0.417,
 "main": true
 },
 {
@@ -31492,8 +31581,8 @@
 "main": true
 }
 ],
-"p": 0.22506,
-"d": 5.474,
+"p": 0.22324,
+"d": 5.545,
 "first": "2026-11-08T18:00:00+00:00"
 },
 {
@@ -31508,12 +31597,12 @@
 "line": 1.5,
 "name": "tank dell",
 "lab": "Tank Dell over 1.5 receptions",
-"p": 0.4842,
-"price": 130,
+"p": 0.4803,
+"price": 133,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1138,
-"fair": 0.4222,
+"edge": 0.1192,
+"fair": 0.417,
 "main": true
 },
 {
@@ -31549,8 +31638,8 @@
 "main": true
 }
 ],
-"p": 0.10551,
-"d": 12.316,
+"p": 0.10466,
+"d": 12.477,
 "first": "2026-11-08T18:00:00+00:00"
 }
 ],
