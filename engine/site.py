@@ -485,7 +485,7 @@ SCREEN_CSS = """
 .sc-tag.lad{color:var(--accent);border-color:var(--accent)}.sc-cmp{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:4px;font-size:12px}.sc-cmp span{border:1px solid var(--faint);border-radius:5px;padding:1px 6px;color:var(--muted);white-space:nowrap}.sc-cmp span.my{color:var(--ink)}.sc-cmp span.me{border-color:var(--accent);color:var(--ink);font-weight:700}.sc-cmp i{font-style:normal;font-weight:600}.sc-cmp i.g{color:var(--good)}.sc-cmp i.b{color:var(--bad)}
 .sc-act{display:flex;align-items:center;gap:6px;justify-self:end}.sc-act .slipadd{margin:0;min-width:36px;min-height:36px;font-size:16px;line-height:1}
 .sc-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 14px;align-items:center;padding:9px 4px;border-top:1px solid var(--faint)}
-.sc-who b{font-size:14.5px}.sc-m{font-size:12px;color:var(--muted)}.sc-bet{font-size:13.5px;margin-top:2px}
+.sc-who b{font-size:14.5px}.sc-who b.sc-star{color:#F2C14E;font-size:14px;cursor:help}.sc-m{font-size:12px;color:var(--muted)}.sc-bet{font-size:13.5px;margin-top:2px}
 .sc-num{text-align:right;cursor:help}.sc-e{display:block;font-family:var(--display);font-size:19px;font-weight:700}.sc-e.good{color:var(--good)}.sc-e.bad{color:var(--bad)}
 .sc-s{font-size:11.5px;color:var(--muted);white-space:nowrap}
 .sc-px{white-space:nowrap;border:1px solid var(--faint);border-radius:8px;padding:6px 10px;font-size:13px;color:var(--ink);text-decoration:none;min-width:118px;text-align:center}
@@ -541,7 +541,7 @@ def ctx_nba(D):
             if abs(v - 1) >= .08:
                 grp = _ARCH_PL.get(q.get("ar"), _NBA_PL.get(q.get("pg"), "")) if da else _NBA_PL.get(q.get("pg"), "")
                 st_[k] = [[f"{q.get('o')} {_pct(v)} {_NBA_SL[k]} vs {grp}", "g" if v > 1 else "b"]]
-        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_)
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"))
     return out
 
 
