@@ -11,7 +11,8 @@ function scStar(r, b){
   const o = +b.o, band = (SC_OB.find(([lo, hi]) => o >= lo && o <= hi) || [])[2];
   const c = SC_AODDS.find(x => x.a === r.ar && x.s === SC_STN[r.k] && x.b === band);
   if (!c || c.n < 20 || c.r <= 0 || c.w <= c.e) return '';
-  return ` <b class="sc-star" title="${esc(`${r.ar} · ${SC_STN[r.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
+  const e_ = v => String(v).replace(/[&<>"]/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[ch]);
+  return ` <b class="sc-star" title="${e_(`${r.ar} · ${SC_STN[r.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
 }
 /* Odds screener (owner 2026-10-22: "a screener for odds that is easy to use"). Every over price on the current slates
    (NFL, NBA, NHL; main and alt lines) at your books or all books, against the fair price, with the same rules as the
