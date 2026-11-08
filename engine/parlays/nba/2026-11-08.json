@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-08",
 "lock": "2026-11-08T20:30:00+00:00",
-"frozen_at": "2026-11-08T15:38:01.658Z",
+"frozen_at": "2026-11-08T15:53:24.514Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -71,9 +71,9 @@
 "line": 19.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 20+ pts",
-"p": 0.2158,
-"price": 450,
-"book": "Hard Rock",
+"p": 0.2171,
+"price": 456,
+"book": "Kalshi",
 "f": [
 "usage",
 "rotation",
@@ -101,8 +101,8 @@
 ]
 }
 ],
-"p": 0.06513,
-"d": 20.35,
+"p": 0.06552,
+"d": 20.572,
 "first": "2026-11-08T20:30:00+00:00",
 "pick": "longshot",
 "res": null
@@ -119,9 +119,9 @@
 "line": 19.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 20+ pts",
-"p": 0.2158,
-"price": 450,
-"book": "Hard Rock",
+"p": 0.2171,
+"price": 456,
+"book": "Kalshi",
 "f": [
 "usage",
 "rotation",
@@ -167,8 +167,8 @@
 ]
 }
 ],
-"p": 0.01074,
-"d": 130.075,
+"p": 0.0108,
+"d": 131.494,
 "first": "2026-11-08T20:30:00+00:00",
 "res": null
 },
@@ -177,21 +177,21 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909945",
-"start": "2026-11-08T20:30Z",
-"kind": "reb",
+"gid": "401909946",
+"start": "2026-11-08T23:00Z",
+"kind": "pts",
 "side": "o",
-"line": 4.5,
-"name": "norman powell",
-"lab": "Norman Powell 5+ reb",
-"p": 0.2078,
-"price": 375,
-"book": "Hard Rock",
+"line": 14.5,
+"name": "paul reed",
+"lab": "Paul Reed 15+ pts",
+"p": 0.4202,
+"price": 152,
+"book": "Kalshi",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -231,9 +231,9 @@
 ]
 }
 ],
-"p": 0.01767,
-"d": 70.323,
-"first": "2026-11-08T20:30:00+00:00",
+"p": 0.03573,
+"d": 37.308,
+"first": "2026-11-08T23:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -241,6 +241,32 @@
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909945",
+"start": "2026-11-08T20:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jaylen brown",
+"lab": "Jaylen Brown over 1.5 threes",
+"p": 0.5154,
+"price": 105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0513
+},
 {
 "gid": "401909951",
 "start": "2026-11-09T02:00Z",
@@ -267,37 +293,11 @@
 ],
 "sport": "nba",
 "edge": 0.0351
-},
-{
-"gid": "401909950",
-"start": "2026-11-09T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "derrick jones",
-"lab": "Derrick Jones Jr. over 4.5 rebounds",
-"p": 0.4975,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"matchup",
-"rotation",
-"game",
-"our model above fair",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.02
 }
 ],
-"p": 0.24527,
+"p": 0.25409,
 "d": 4.305,
-"first": "2026-11-09T02:00:00+00:00",
+"first": "2026-11-08T20:30:00+00:00",
 "res": null
 },
 {
@@ -312,15 +312,15 @@
 "line": 19.5,
 "name": "duncan robinson",
 "lab": "Duncan Robinson over 19.5 points",
-"p": 0.295,
-"fair": 0.2963,
+"p": 0.3053,
+"fair": 0.3071,
 "price": 239,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0002,
+"edge": 0.0349,
 "v": [
 "Pinnacle line up",
-"consensus line up",
+"consensus line up + odds drop",
 "one rung above the main line (15.5)"
 ]
 },
@@ -332,12 +332,12 @@
 "line": 14.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis over 14.5 points",
-"p": 0.4014,
-"fair": 0.4004,
+"p": 0.4065,
+"fair": 0.4058,
 "price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0166,
+"edge": -0.0041,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -345,7 +345,7 @@
 ]
 }
 ],
-"p": 0.11864,
+"p": 0.12462,
 "d": 8.306,
 "first": "2026-11-08T20:30:00+00:00",
 "res": null
@@ -362,15 +362,15 @@
 "line": 19.5,
 "name": "duncan robinson",
 "lab": "Duncan Robinson over 19.5 points",
-"p": 0.295,
-"fair": 0.2963,
+"p": 0.3053,
+"fair": 0.3071,
 "price": 239,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0002,
+"edge": 0.0349,
 "v": [
 "Pinnacle line up",
-"consensus line up",
+"consensus line up + odds drop",
 "one rung above the main line (15.5)"
 ]
 },
@@ -382,12 +382,12 @@
 "line": 14.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis over 14.5 points",
-"p": 0.4014,
-"fair": 0.4004,
+"p": 0.4065,
+"fair": 0.4058,
 "price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0166,
+"edge": -0.0041,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -415,7 +415,7 @@
 ]
 }
 ],
-"p": 0.04934,
+"p": 0.05183,
 "d": 18.687,
 "first": "2026-11-08T20:30:00+00:00",
 "res": null
