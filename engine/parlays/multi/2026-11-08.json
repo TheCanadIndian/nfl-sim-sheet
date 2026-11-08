@@ -1,8 +1,8 @@
 {
 "sport": "multi",
 "date": "2026-11-08",
-"lock": "2026-11-08T18:00:00+00:00",
-"frozen_at": "2026-11-08T08:20:09.377840+00:00",
+"lock": "2026-11-08T14:30:00+00:00",
+"frozen_at": "2026-11-08T08:30:23.369774+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,25 +15,74 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T16:05:00",
-"kind": "rush_yds",
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
 "side": "o",
-"line": 99.5,
-"name": "woody marks",
-"lab": "Woody Marks 100+ rush yds",
-"p": 0.205,
-"price": 490,
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.274,
+"price": 331,
 "book": "Kalshi",
-"sc": "HOU pulls away",
+"sc": "Shootout",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "script",
 "price"
 ],
 "sport": "nfl"
 },
+{
+"gid": "2026_09_DAL_IND",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "daniel jones",
+"lab": "Daniel Jones 250+ pass yds",
+"p": 0.2975,
+"price": 280,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "401909946",
+"start": "2026-11-08T23:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson 20+ pts",
+"p": 0.2911,
+"price": 270,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+}
+],
+"p": 0.02373,
+"d": 60.599,
+"first": "2026-11-08T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "3 legs \u00b7 NBA + NFL",
+"legs": [
 {
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
@@ -43,6 +92,26 @@
 "name": "patrick mahomes",
 "lab": "Patrick Mahomes 300+ pass yds",
 "p": 0.274,
+"price": 331,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "chase brown",
+"lab": "Chase Brown 40+ rec yds",
+"p": 0.2518,
 "price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -74,78 +143,9 @@
 "sport": "nba"
 }
 ],
-"p": 0.01635,
-"d": 94.087,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NFL",
-"legs": [
-{
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T16:05:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 99.5,
-"name": "woody marks",
-"lab": "Woody Marks 100+ rush yds",
-"p": 0.205,
-"price": 490,
-"book": "Kalshi",
-"sc": "HOU pulls away",
-"f": [
-"usage",
-"rotation",
-"script",
-"price"
-],
-"sport": "nfl"
-},
-{
-"gid": "2026_09_DAL_IND",
-"start": "2026-11-08T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 69.5,
-"name": "keenan allen",
-"lab": "Keenan Allen 70+ rec yds",
-"p": 0.2495,
-"price": 373,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-],
-"sport": "nfl"
-},
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 20+ pts",
-"p": 0.2911,
-"price": 270,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-}
-],
-"p": 0.01489,
-"d": 103.256,
-"first": "2026-11-08T18:00:00+00:00",
+"p": 0.02008,
+"d": 68.732,
+"first": "2026-11-08T14:30:00+00:00",
 "res": null
 }
 ],
