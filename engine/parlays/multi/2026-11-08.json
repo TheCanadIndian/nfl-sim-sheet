@@ -2,13 +2,13 @@
 "sport": "multi",
 "date": "2026-11-08",
 "lock": "2026-11-08T18:00:00+00:00",
-"frozen_at": "2026-11-08T13:31:13.692043+00:00",
+"frozen_at": "2026-11-08T13:46:50.749048+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
 "Novig"
 ],
-"final_at": "2026-11-08T16:00:00+00:00",
+"final_at": "2026-11-08T12:30:00+00:00",
 "parlays": [
 {
 "card": "Multisport longshots",
@@ -22,8 +22,8 @@
 "line": 3.5,
 "name": "zach lavine",
 "lab": "Zach LaVine 4+ ast",
-"p": 0.3077,
-"price": 270,
+"p": 0.3034,
+"price": 285,
 "book": "Novig",
 "f": [
 "usage",
@@ -42,7 +42,7 @@
 "line": 7.5,
 "name": "brook lopez",
 "lab": "Brook Lopez 8+ reb",
-"p": 0.2148,
+"p": 0.2226,
 "price": 400,
 "book": "Hard Rock",
 "f": [
@@ -55,16 +55,16 @@
 "sport": "nba"
 },
 {
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 299.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2813,
-"price": 331,
-"book": "Kalshi",
+"line": 274.5,
+"name": "drew lock",
+"lab": "Drew Lock 275+ pass yds",
+"p": 0.2056,
+"price": 500,
+"book": "Hard Rock",
 "sc": "Shootout",
 "f": [
 "usage",
@@ -75,10 +75,11 @@
 "sport": "nfl"
 }
 ],
-"p": 0.01859,
-"d": 79.735,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
+"p": 0.01389,
+"d": 115.5,
+"first": "2026-11-08T21:25:00+00:00",
+"res": null,
+"locked": true
 },
 {
 "card": "Multisport longshots",
@@ -92,8 +93,8 @@
 "line": 3.5,
 "name": "zach lavine",
 "lab": "Zach LaVine 4+ ast",
-"p": 0.3077,
-"price": 270,
+"p": 0.3034,
+"price": 285,
 "book": "Novig",
 "f": [
 "usage",
@@ -112,7 +113,7 @@
 "line": 7.5,
 "name": "brook lopez",
 "lab": "Brook Lopez 8+ reb",
-"p": 0.2148,
+"p": 0.2226,
 "price": 400,
 "book": "Hard Rock",
 "f": [
@@ -125,15 +126,15 @@
 "sport": "nba"
 },
 {
-"gid": "2026_09_ARI_SEA",
-"start": "2026-11-08T16:25:00",
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 249.5,
-"name": "drew lock",
-"lab": "Drew Lock 250+ pass yds",
-"p": 0.2927,
-"price": 296,
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2813,
+"price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
@@ -145,15 +146,36 @@
 "sport": "nfl"
 }
 ],
-"p": 0.01935,
-"d": 73.26,
-"first": "2026-11-08T21:25:00+00:00",
-"res": null
+"p": 0.019,
+"d": 82.968,
+"first": "2026-11-08T18:00:00+00:00",
+"res": null,
+"locked": true
 },
 {
 "card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NFL + NHL",
+"tier": "4 legs \u00b7 NFL + NHL",
 "legs": [
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "drew lock",
+"lab": "Drew Lock 275+ pass yds",
+"p": 0.2056,
+"price": 500,
+"book": "Hard Rock",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
 {
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
@@ -175,45 +197,6 @@
 "sport": "nfl"
 },
 {
-"gid": "2026_09_ARI_SEA",
-"start": "2026-11-08T16:25:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 249.5,
-"name": "drew lock",
-"lab": "Drew Lock 250+ pass yds",
-"p": 0.2927,
-"price": 296,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-],
-"sport": "nfl"
-},
-{
-"gid": "401909945",
-"start": "2026-11-08T20:30Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "norman powell",
-"lab": "Norman Powell 5+ reb",
-"p": 0.2162,
-"price": 375,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"sport": "nba"
-},
-{
 "gid": "2026020278",
 "start": "2026-11-08T20:30:00Z",
 "kind": "goal",
@@ -225,12 +208,26 @@
 "price": 245,
 "book": "Novig",
 "sport": "nhl"
+},
+{
+"gid": "2026020280",
+"start": "2026-11-08T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel to score",
+"p": 0.3366,
+"price": 208,
+"book": "Novig",
+"sport": "nhl"
 }
 ],
-"p": 0.00549,
-"d": 279.695,
+"p": 0.00601,
+"d": 274.788,
 "first": "2026-11-08T18:00:00+00:00",
-"res": null
+"res": null,
+"locked": true
 }
 ],
 "graded": false
