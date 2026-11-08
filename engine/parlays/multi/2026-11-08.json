@@ -1,8 +1,8 @@
 {
 "sport": "multi",
 "date": "2026-11-08",
-"lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-08T10:02:28.528286+00:00",
+"lock": "2026-11-08T18:00:00+00:00",
+"frozen_at": "2026-11-08T10:18:54.409790+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,6 +15,27 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 109.5,
+"name": "george kittle",
+"lab": "George Kittle 110+ rec yds",
+"p": 0.2259,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
 "gid": "2026_09_DEN_CAR",
 "start": "2026-11-08T13:00:00",
 "kind": "rush_yds",
@@ -52,35 +73,86 @@
 "game"
 ],
 "sport": "nba"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 349.5,
-"name": "joe burrow",
-"lab": "Joe Burrow 350+ pass yds",
-"p": 0.2264,
-"price": 425,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-],
-"sport": "nfl"
 }
 ],
-"p": 0.01534,
-"d": 100.705,
-"first": "2026-11-08T14:30:00+00:00",
+"p": 0.0153,
+"d": 95.526,
+"first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
 {
 "card": "Multisport longshots",
 "tier": "3 legs \u00b7 NBA + NFL",
+"legs": [
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 109.5,
+"name": "george kittle",
+"lab": "George Kittle 110+ rec yds",
+"p": 0.2259,
+"price": 398,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 89.5,
+"name": "rhamondre stevenson",
+"lab": "Rhamondre Stevenson 90+ rush yds",
+"p": 0.2116,
+"price": 490,
+"book": "Kalshi",
+"sc": "NE pulls away",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "401909945",
+"start": "2026-11-08T20:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.285,
+"price": 245,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+}
+],
+"p": 0.01362,
+"d": 101.368,
+"first": "2026-11-08T20:30:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NFL + NHL",
 "legs": [
 {
 "gid": "2026_09_DEN_CAR",
@@ -103,23 +175,37 @@
 "sport": "nfl"
 },
 {
-"gid": "401909945",
-"start": "2026-11-08T20:30Z",
-"kind": "fg3m",
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
 "side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ threes",
-"p": 0.285,
-"price": 245,
-"book": "Novig",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2873,
+"price": 331,
+"book": "Kalshi",
+"sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"rotation",
-"game"
+"script",
+"price"
 ],
-"sport": "nba"
+"sport": "nfl"
+},
+{
+"gid": "2026020280",
+"start": "2026-11-08T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel to score",
+"p": 0.3357,
+"price": 208,
+"book": "Novig",
+"sport": "nhl"
 },
 {
 "gid": "401909946",
@@ -140,8 +226,8 @@
 "sport": "nba"
 }
 ],
-"p": 0.01883,
-"d": 70.973,
+"p": 0.00637,
+"d": 273.089,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 }
