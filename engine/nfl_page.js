@@ -298,7 +298,7 @@ function lruChip(c, u0){
   const u = lo.find(x => x.l === LADSEL[key]) || u0, tracked = c.rungs.some(x => x.k === u.k && x.l === u.l), b = u.best, kc = u.cost;
   const n = l => Math.round(l + .5), tx = o => `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`;
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
-  return `<span class="lru" title="${n(u.l)}+ ${KL[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}">${num} ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${tracked ? (u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : '') : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${n(u.l)}+ ${KL[u.k]}`}) : ''}</span>`;
+  return `<span class="lru" title="${n(u.l)}+ ${KL[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}">${num}${aStar(c.p, u)} ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${tracked ? (u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : '') : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${n(u.l)}+ ${KL[u.k]}`}) : ''}</span>`;
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
@@ -320,6 +320,32 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-lgm]
   r.scrollLeft = left; window.scrollBy(0, r.parentElement.getBoundingClientRect().top - y); });
 let LADM = '';
 document.addEventListener('click', e => { const b = e.target.closest('[data-lmf]'); if (!b) return; LADM = b.dataset.lmf; render(); });
+let RODDS = null, ROLES = null;
+const RST = {rec_yds: 'Receiving yds', rec: 'Catches', rush_yds: 'Rushing yds', pass_yds: 'Passing yds'};
+const ROB = [[-99999, 99, 'minus money'], [100, 150, '+100–150'], [151, 350, '+151–350'], [351, 600, '+351–600'], [601, 800, '+601–800'],
+             [801, 1200, '+801–1200'], [1201, 1500, '+1201–1500'], [1501, 2500, '+1501–2500'], [2501, 10000, '+2501–10000'], [10001, 1e9, 'over +10000']];
+const rnorm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z ]/g, '').replace(/\b(jr|sr|ii|iii|iv)\b/g, '').replace(/\s+/g, ' ').trim();
+function aStar(p, u){
+  if (!RODDS || !ROLES || !u.best) return '';
+  const ro = ROLES[rnorm(p.n)]; if (!ro) return '';
+  const am = u.best.pay < 2 ? 0 : Math.round((u.best.pay - 1) * 100), band = am === 0 ? 'minus money' : (ROB.find(([lo, hi]) => am >= lo && am <= hi) || [])[2];
+  const c = RODDS.find(x => x.a === ro && x.s === RST[u.k] && x.b === band);
+  if (!c || c.n < 20 || c.r <= 0 || c.w <= c.e) return '';
+  return ` <b class="lstar" title="${esc(`${ro} · ${RST[u.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, NFL straights by role, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
+}
+let LADS = false;
+try { LADS = localStorage.getItem('nfl-lads') === '1'; } catch (e) {}
+document.addEventListener('click', e => { const b = e.target.closest('[data-nlads]'); if (!b) return;
+  LADS = !LADS; try { localStorage.setItem('nfl-lads', LADS ? '1' : '0'); } catch (x) {} render(); });
+// rungs shown on a row (top 3 by the move / star filters); every rung of his ladder with a ★ (flagged first, then the dropdown's)
+const ladShown = c => (LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).filter(u => !LADS || aStar(c.p, u)).slice(0, 3);
+const starRungs = c => [...c.rungs, ...(c.all || []).filter(u => !c.rungs.some(r => r.k === u.k && r.l === u.l))].filter(u => aStar(c.p, u));
+function starElse(c){
+  const shown = ladShown(c);
+  if (shown.some(u => aStar(c.p, u))) return '';
+  const u = starRungs(c).find(x => !shown.some(y => y.k === x.k && y.l === x.l));
+  return u ? `<div class="lstarx"><span class="small muted">★ on another rung:</span> ${lruChip(c, u)}</div>` : '';
+}
 const ladMv = (c, u) => window.MKT && MKT.consKind ? MKT.consKind(c.g.id, c.p.n, u.k) : null;
 function ladderCard(){
   if (!D.dvp) return '';
@@ -345,17 +371,19 @@ function ladderCard(){
   cards.sort((a, b) => b.best - a.best || a.r.rank - b.r.rank);
   const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}</span>
       <span class="ladc soft" title="${esc(c.p.o)} gives up the ${ord(c.r.rank)} most to ${c.k === 'WR' ? 'wide receivers' : c.k + 's'} this season (defense vs position)">soft: ${ord(c.r.rank)} most to ${c.k}s</span>${c.extra.map(x => `<span class="ladc">${esc(x)}</span>`).join('')}</div>
-    <div class="ladr">${(LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).slice(0, 3).map(u => lruChip(c, u)).join('')}</div></div>`;
+    <div class="ladr">${ladShown(c).map(u => lruChip(c, u)).join('')}</div>${starElse(c)}</div>`;
   const on0 = cards.filter(c => c.rungs.length);
   if (LADM && !on0.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
-  const on = LADM ? on0.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : on0;
+  const nStar = on0.filter(c => starRungs(c).length).length;
+  const on = (LADM ? on0.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : on0).filter(c => !LADS || starRungs(c).some(u => !LADM || ladMv(c, u) === LADM));
   if (!on.some(c => String(c.g.id) === LADG)) LADG = '';
   const vis = LADG ? on.filter(c => String(c.g.id) === LADG) : on, lim = LADG ? 999 : 8, off = cards.filter(c => !c.rungs.length && (!LADG || String(c.g.id) === LADG));
   const wait = off.length ? `<details class="ladw"><summary>${on.length ? `${off.length} more` : `${off.length} players`} · Kalshi ladders not posted yet</summary><div class="ladr">${off.map(c =>
       `<span class="lru" title="${esc(c.p.o)}: ${ord(c.r.rank)} most to ${c.k}s${c.extra.length ? ' · ' + c.extra.join(' · ') : ''}"><b>${esc(c.p.n)}</b> <i>${esc(c.p.pos)} vs ${esc(c.p.o)}</i></span>`).join('')}</div></details>` : '';
   return `<section class="panel"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     <details class="how"><summary>What this is</summary><p class="note">Players facing one of the 8 defenses that have given up the most to their position this season, with their higher Kalshi rungs (two or more lines above the one priced near 50/50). Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs below the card’s range show our chance, with no edge claimed. A green % is our chance vs that best price, shown at 5% or more, and players are ordered by it. Rungs without one stay on the list: the record so far is the soft matchup, not our number (2026 through week 8: +8% on 2,885 rungs, up in both halves of the season, and +6% on rungs where we showed under 5%). The market seems to price the average game against a bad defense but not the ceiling. That is one season, and several rungs of one ladder win or lose together, so these are tracked on the Profit page, not a recommendation.</p></details>
-    ${on.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div>${window.MKT && MKT.consBar ? MKT.consBar(on0, LADM) : ''}` : ''}
+    ${LADS && !on.length && on0.length ? `<p class="note" style="margin:0 0 6px">No ladder candidate has a ★ right now. Tap ★ only again to see them all.</p>` : ''}
+    ${on0.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div><div class="ladsw" role="group" aria-label="Star filter"><button type="button" data-nlads="1" aria-pressed="${LADS}" title="Only players / rungs whose role, stat and odds range made money in NFL straights by role on the Profit page (last 30 days, 20+ bets). Picked after the fact: a lead, not a rule.">★ only <i>${nStar}</i></button></div>${window.MKT && MKT.consBar ? MKT.consBar(on0, LADM) : ''}` : ''}
     <div class="ladbody">${ladRail(on, D.games)}${NLADV === 'game' ? ladByGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more with ladders</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}${wait}</div></section>`;
 }
 // Ladder candidates by game (owner 2026-10-25: "why are my ladder candidates not separated by game"): games in kickoff
@@ -786,6 +814,11 @@ function mapPanel(g){
 // line rises or falls when the chosen script happens (e.g. the favorite pulls away by 10+).
 const SCR = {};
 const SCR_ROOT = (() => { const el = document.querySelector('script[src*="slip.js"]'); return el ? el.src.replace(/slip\.js.*$/, '') : '../'; })();
+// ★ on ladder rungs (owner 2026-11-08, like the NBA's): the player's role (markets/role_nfl.json) x stat x the rung's best price
+// falls in a range that made money in 'NFL straights by role' on the Profit page (markets/role_odds_nfl.json: 20+ bets, won
+// more than priced, positive return, last 30 days). Picked after the fact: display only.
+try { fetch(SCR_ROOT + 'markets/role_odds_nfl.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d && d.cells){ RODDS = d.cells; render(); } }).catch(() => {});
+      fetch(SCR_ROOT + 'markets/role_nfl.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(d => { if (d){ ROLES = d; render(); } }).catch(() => {}); } catch (e) {}
 function scriptDraws(gid){
   if (SCR[gid] === undefined){
     SCR[gid] = 'load';

@@ -1528,6 +1528,13 @@ def feed_data():
             b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
     odds_role = [dict(arch=ar, st=k, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
                       roi=round(b["net"] / b["stake"], 4)) for (ar, k, i), b in sorted(orl.items())]
+    try:                                                     # NFL ladder candidates star these (owner 2026-11-08)
+        json.dump(dict(fetched=dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
+                       cells=[dict(a=r["arch"], s=r["st"], b=r["lab"], n=r["n"], w=r["w"], e=r["exp"], r=r["roi"]) for r in odds_role
+                              if r["arch"] not in ("All roles", "unknown", "Game lines") and r["st"] != "all" and r["lab"] != "all"]),
+                  open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "role_odds_nfl.json"), "w"), separators=(",", ":"))
+    except OSError:
+        pass
     for x in items:
         if x["date"] < since30 or not x.get("pay") or x["sport"] != "nba" or x["t"] != "bet":
             continue
