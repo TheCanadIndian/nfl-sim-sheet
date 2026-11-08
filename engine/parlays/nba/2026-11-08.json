@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-08",
 "lock": "2026-11-08T20:30:00+00:00",
-"frozen_at": "2026-11-08T22:22:20.517Z",
+"frozen_at": "2026-11-08T22:28:18.067Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,9 +22,9 @@
 "line": 2.5,
 "name": "caleb wilson",
 "lab": "Caleb Wilson 3+ threes",
-"p": 0.4274,
-"price": 134,
-"book": "Kalshi",
+"p": 0.4291,
+"price": 130,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -37,11 +37,11 @@
 "start": "2026-11-09T02:00Z",
 "kind": "ast",
 "side": "o",
-"line": 8.5,
-"name": "darius acuff",
-"lab": "Darius Acuff Jr. 9+ ast",
-"p": 0.2472,
-"price": 325,
+"line": 3.5,
+"name": "zach lavine",
+"lab": "Zach LaVine 4+ ast",
+"p": 0.3085,
+"price": 260,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -52,8 +52,8 @@
 ]
 }
 ],
-"p": 0.10567,
-"d": 9.945,
+"p": 0.13237,
+"d": 8.28,
 "first": "2026-11-08T20:30:00+00:00",
 "pick": "core",
 "res": null,
@@ -72,9 +72,9 @@
 "line": 2.5,
 "name": "caleb wilson",
 "lab": "Caleb Wilson 3+ threes",
-"p": 0.4274,
-"price": 134,
-"book": "Kalshi",
+"p": 0.4291,
+"price": 130,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -87,11 +87,11 @@
 "start": "2026-11-09T02:00Z",
 "kind": "reb",
 "side": "o",
-"line": 6.5,
+"line": 7.5,
 "name": "brook lopez",
-"lab": "Brook Lopez 7+ reb",
-"p": 0.3042,
-"price": 225,
+"lab": "Brook Lopez 8+ reb",
+"p": 0.2011,
+"price": 400,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -105,27 +105,26 @@
 "start": "2026-11-09T02:00Z",
 "kind": "ast",
 "side": "o",
-"line": 9.5,
-"name": "davion mitchell",
-"lab": "Davion Mitchell 10+ ast",
-"p": 0.2646,
+"line": 8.5,
+"name": "darius acuff",
+"lab": "Darius Acuff Jr. 9+ ast",
+"p": 0.2477,
 "price": 325,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
+"rotation",
 "game",
 "price"
 ]
 }
 ],
-"p": 0.03441,
-"d": 32.321,
+"p": 0.02138,
+"d": 48.875,
 "first": "2026-11-08T20:30:00+00:00",
-"pick": "longshot",
 "res": null,
-"locked": true,
-"final": true
+"locked": true
 },
 {
 "card": "Path longshots",
@@ -139,7 +138,7 @@
 "line": 2.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 3+ threes",
-"p": 0.2749,
+"p": 0.2747,
 "price": 228,
 "book": "Novig",
 "f": [
@@ -157,7 +156,7 @@
 "line": 2.5,
 "name": "walker kessler",
 "lab": "Walker Kessler 3+ ast",
-"p": 0.2281,
+"p": 0.2337,
 "price": 425,
 "book": "Hard Rock",
 "f": [
@@ -171,27 +170,80 @@
 "start": "2026-11-09T02:00Z",
 "kind": "ast",
 "side": "o",
-"line": 9.5,
-"name": "davion mitchell",
-"lab": "Davion Mitchell 10+ ast",
-"p": 0.2646,
+"line": 8.5,
+"name": "darius acuff",
+"lab": "Darius Acuff Jr. 9+ ast",
+"p": 0.2477,
 "price": 325,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
+"rotation",
 "game",
 "price"
 ]
 }
 ],
-"p": 0.0166,
+"p": 0.0159,
 "d": 73.185,
 "first": "2026-11-08T20:30:00+00:00",
 "pick": "longshot",
 "res": null,
 "locked": true,
 "final": true
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909951",
+"start": "2026-11-09T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "davion mitchell",
+"lab": "Davion Mitchell over 8.5 assists",
+"p": 0.3765,
+"fair": 0.3766,
+"price": 190,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.092,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (7.5)",
+"soft matchup"
+]
+},
+{
+"gid": "401909945",
+"start": "2026-11-08T20:30Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis over 19.5 points",
+"p": 0.2131,
+"fair": 0.2119,
+"price": 373,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.0082,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (14.5)"
+]
+}
+],
+"p": 0.0798,
+"d": 13.717,
+"first": "2026-11-08T20:30:00+00:00",
+"res": null,
+"locked": true
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
@@ -205,12 +257,12 @@
 "line": 9.5,
 "name": "darius acuff",
 "lab": "Darius Acuff Jr. over 9.5 assists",
-"p": 0.1769,
+"p": 0.1751,
 "price": 550,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1497,
-"fair": 0.1777,
+"edge": 0.1384,
+"fair": 0.1752,
 "main": false
 },
 {
@@ -230,7 +282,7 @@
 "main": true
 }
 ],
-"p": 0.07035,
+"p": 0.06964,
 "d": 18.07,
 "first": "2026-11-08T20:30:00+00:00",
 "res": null,
@@ -245,15 +297,14 @@
 "start": "2026-11-09T02:00Z",
 "kind": "reb",
 "side": "o",
-"line": 7.5,
-"name": "brook lopez",
-"lab": "Brook Lopez 8+ reb",
-"p": 0.213,
-"price": 400,
-"book": "Hard Rock",
+"line": 5.5,
+"name": "max strus",
+"lab": "Max Strus 6+ reb",
+"p": 0.3561,
+"price": 229,
+"book": "Kalshi",
 "f": [
-"usage",
-"matchup",
+"rotation",
 "game",
 "price"
 ]
@@ -266,7 +317,7 @@
 "line": 9.5,
 "name": "davion mitchell",
 "lab": "Davion Mitchell 10+ ast",
-"p": 0.2719,
+"p": 0.2709,
 "price": 325,
 "book": "Hard Rock",
 "f": [
@@ -277,9 +328,10 @@
 ]
 }
 ],
-"p": 0.0579,
-"d": 21.25,
+"p": 0.09644,
+"d": 13.982,
 "first": "2026-11-09T02:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -287,83 +339,19 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909950",
-"start": "2026-11-09T02:00Z",
+"gid": "401909946",
+"start": "2026-11-08T23:00Z",
 "kind": "reb",
 "side": "o",
-"line": 7.5,
-"name": "brook lopez",
-"lab": "Brook Lopez 8+ reb",
-"p": 0.213,
-"price": 400,
+"line": 4.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes 5+ reb",
+"p": 0.2808,
+"price": 275,
 "book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
-"game",
-"price"
-]
-},
-{
-"gid": "401909951",
-"start": "2026-11-09T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "keegan murray",
-"lab": "Keegan Murray 2+ threes",
-"p": 0.4132,
-"price": 147,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
 "rotation",
-"game"
-]
-}
-],
-"p": 0.088,
-"d": 12.35,
-"first": "2026-11-09T02:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909947",
-"start": "2026-11-09T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu 3+ threes",
-"p": 0.2564,
-"price": 285,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-},
-{
-"gid": "401909950",
-"start": "2026-11-09T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "max strus",
-"lab": "Max Strus 6+ reb",
-"p": 0.3518,
-"price": 229,
-"book": "Kalshi",
-"f": [
-"rotation",
-"game",
 "price"
 ]
 },
@@ -375,7 +363,7 @@
 "line": 9.5,
 "name": "davion mitchell",
 "lab": "Davion Mitchell 10+ ast",
-"p": 0.2719,
+"p": 0.2709,
 "price": 325,
 "book": "Hard Rock",
 "f": [
@@ -386,9 +374,9 @@
 ]
 }
 ],
-"p": 0.02452,
-"d": 53.833,
-"first": "2026-11-09T00:00:00+00:00",
+"p": 0.07605,
+"d": 15.938,
+"first": "2026-11-08T23:00:00+00:00",
 "res": null
 },
 {
@@ -396,20 +384,20 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909947",
-"start": "2026-11-09T00:00Z",
-"kind": "fg3m",
+"gid": "401909946",
+"start": "2026-11-08T23:00Z",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu 3+ threes",
-"p": 0.2564,
-"price": 285,
-"book": "Novig",
+"line": 4.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes 5+ reb",
+"p": 0.2808,
+"price": 275,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"price"
 ]
 },
 {
@@ -420,7 +408,7 @@
 "line": 5.5,
 "name": "max strus",
 "lab": "Max Strus 6+ reb",
-"p": 0.3518,
+"p": 0.3561,
 "price": 229,
 "book": "Kalshi",
 "f": [
@@ -437,7 +425,7 @@
 "line": 1.5,
 "name": "keegan murray",
 "lab": "Keegan Murray 2+ threes",
-"p": 0.4132,
+"p": 0.4122,
 "price": 147,
 "book": "Novig",
 "f": [
@@ -448,8 +436,71 @@
 ]
 }
 ],
-"p": 0.03727,
-"d": 31.286,
+"p": 0.04121,
+"d": 30.474,
+"first": "2026-11-08T23:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909947",
+"start": "2026-11-09T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu 3+ threes",
+"p": 0.2576,
+"price": 277,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+},
+{
+"gid": "401909950",
+"start": "2026-11-09T02:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "brook lopez",
+"lab": "Brook Lopez 7+ reb",
+"p": 0.3213,
+"price": 225,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+]
+},
+{
+"gid": "401909951",
+"start": "2026-11-09T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "keegan murray",
+"lab": "Keegan Murray 2+ threes",
+"p": 0.4122,
+"price": 147,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.03411,
+"d": 30.264,
 "first": "2026-11-09T00:00:00+00:00",
 "res": null
 },
@@ -465,7 +516,7 @@
 "line": 2.5,
 "name": "zach lavine",
 "lab": "Zach LaVine over 2.5 assists",
-"p": 0.5361,
+"p": 0.5359,
 "price": 110,
 "book": "Hard Rock",
 "f": [
@@ -475,7 +526,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.1259
+"edge": 0.1253
 },
 {
 "gid": "401909949",
@@ -485,7 +536,7 @@
 "line": 1.5,
 "name": "jaime jaquez",
 "lab": "Jaime Jaquez Jr. over 1.5 threes",
-"p": 0.4084,
+"p": 0.4087,
 "price": 170,
 "book": "Hard Rock",
 "f": [
@@ -493,10 +544,10 @@
 "matchup"
 ],
 "sport": "nba",
-"edge": 0.1028
+"edge": 0.1036
 }
 ],
-"p": 0.21894,
+"p": 0.21902,
 "d": 5.67,
 "first": "2026-11-09T01:00:00+00:00",
 "res": null
@@ -540,7 +591,7 @@
 "line": 5.5,
 "name": "rui hachimura",
 "lab": "Rui Hachimura over 5.5 rebounds",
-"p": 0.4836,
+"p": 0.4849,
 "price": 110,
 "book": "Hard Rock",
 "f": [
@@ -554,252 +605,19 @@
 "matchup",
 "rotation",
 "game",
+"consensus up",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0081
+"edge": 0.0099
 }
 ],
-"p": 0.2433,
+"p": 0.24395,
 "d": 4.41,
 "first": "2026-11-09T02:00:00+00:00",
 "res": null
 },
 {
-"card": "Confluence parlays (experimental)",
-"tier": "4-leg longshot",
-"legs": [
-{
-"gid": "401909951",
-"start": "2026-11-09T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "davion mitchell",
-"lab": "Davion Mitchell over 7.5 assists",
-"p": 0.5031,
-"price": 110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"game",
-"our model above fair",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.057
-},
-{
-"gid": "401909950",
-"start": "2026-11-09T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "rui hachimura",
-"lab": "Rui Hachimura over 5.5 rebounds",
-"p": 0.4836,
-"price": 110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0081
-},
-{
-"gid": "401909949",
-"start": "2026-11-09T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "jaime jaquez",
-"lab": "Jaime Jaquez Jr. over 1.5 threes",
-"p": 0.4169,
-"price": 170,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"consensus up",
-"lc"
-],
-"sport": "nba",
-"edge": 0.1028
-},
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "austin reaves",
-"lab": "Austin Reaves over 2.5 threes",
-"p": 0.4478,
-"price": 125,
-"book": "Novig",
-"f": [
-"usage",
-"rotation"
-],
-"v": [
-"usage",
-"rotation",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0073
-}
-],
-"p": 0.04542,
-"d": 26.791,
-"first": "2026-11-08T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909951",
-"start": "2026-11-09T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "davion mitchell",
-"lab": "Davion Mitchell over 8.5 assists",
-"p": 0.3781,
-"fair": 0.3779,
-"price": 190,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0965,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (7.5)",
-"soft matchup"
-]
-},
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson over 19.5 points",
-"p": 0.2865,
-"fair": 0.2871,
-"price": 245,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0115,
-"v": [
-"Pinnacle line up",
-"consensus line up",
-"one rung above the main line (15.5)"
-]
-}
-],
-"p": 0.1085,
-"d": 10.005,
-"first": "2026-11-08T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401909951",
-"start": "2026-11-09T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 8.5,
-"name": "davion mitchell",
-"lab": "Davion Mitchell over 8.5 assists",
-"p": 0.3781,
-"fair": 0.3779,
-"price": 190,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0965,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (7.5)",
-"soft matchup"
-]
-},
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson over 19.5 points",
-"p": 0.2865,
-"fair": 0.2871,
-"price": 245,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0115,
-"v": [
-"Pinnacle line up",
-"consensus line up",
-"one rung above the main line (15.5)"
-]
-},
-{
-"gid": "401909947",
-"start": "2026-11-09T00:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "darryn peterson",
-"lab": "Darryn Peterson over 19.5 points",
-"p": 0.2796,
-"fair": 0.2877,
-"price": 252,
-"book": "Kalshi",
-"sport": "nba",
-"edge": -0.0158,
-"v": [
-"Pinnacle line up",
-"consensus line up",
-"one rung above the main line (15.5)"
-]
-}
-],
-"p": 0.03121,
-"d": 35.218,
-"first": "2026-11-08T23:00:00+00:00",
-"res": null
-},
-{
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -811,12 +629,12 @@
 "line": 19.5,
 "name": "darryn peterson",
 "lab": "Darryn Peterson over 19.5 points",
-"p": 0.2796,
-"fair": 0.2877,
+"p": 0.2826,
+"fair": 0.2908,
 "price": 252,
 "book": "Kalshi",
 "sport": "nba",
-"edge": -0.0158,
+"edge": -0.0052,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -824,51 +642,35 @@
 ]
 },
 {
-"gid": "401909949",
-"start": "2026-11-09T01:00Z",
-"kind": "reb",
+"gid": "401909946",
+"start": "2026-11-08T23:00Z",
+"kind": "pts",
 "side": "o",
-"line": 8.5,
-"name": "jayson tatum",
-"lab": "Jayson Tatum over 8.5 rebounds",
-"p": 0.3341,
-"fair": 0.3355,
-"price": 185,
-"book": "Hard Rock",
+"line": 19.5,
+"name": "duncan robinson",
+"lab": "Duncan Robinson over 19.5 points",
+"p": 0.2878,
+"fair": 0.2884,
+"price": 245,
+"book": "Novig",
 "sport": "nba",
-"edge": -0.0479,
+"edge": -0.0072,
 "v": [
 "Pinnacle line up",
-"consensus line up + odds drop",
-"one rung above the main line (7.5)"
+"consensus line up",
+"one rung above the main line (15.5)"
 ]
 }
 ],
-"p": 0.09652,
-"d": 10.032,
-"first": "2026-11-09T00:00:00+00:00",
+"p": 0.08387,
+"d": 12.144,
+"first": "2026-11-08T23:00:00+00:00",
 "res": null
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00:00+00:00",
-"kind": "pts",
-"side": "o",
-"line": 14.5,
-"name": "ziaire williams",
-"lab": "Ziaire Williams over 14.5 points",
-"p": 0.1845,
-"price": 506,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.1183,
-"fair": 0.1626,
-"main": false
-},
 {
 "gid": "401909947",
 "start": "2026-11-09T00:00:00+00:00",
@@ -877,17 +679,33 @@
 "line": 8.5,
 "name": "jonathan kuminga",
 "lab": "Jonathan Kuminga over 8.5 rebounds",
-"p": 0.1996,
+"p": 0.1999,
 "price": 450,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0981,
+"edge": 0.0996,
 "fair": 0.1999,
+"main": false
+},
+{
+"gid": "401909946",
+"start": "2026-11-08T23:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 14.5,
+"name": "ziaire williams",
+"lab": "Ziaire Williams over 14.5 points",
+"p": 0.1919,
+"price": 471,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0958,
+"fair": 0.1708,
 "main": false
 }
 ],
-"p": 0.03683,
-"d": 33.33,
+"p": 0.03836,
+"d": 31.405,
 "first": "2026-11-08T23:00:00+00:00",
 "res": null
 }
