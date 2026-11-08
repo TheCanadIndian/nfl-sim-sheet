@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-08",
 "lock": "2026-11-08T18:00:00+00:00",
-"frozen_at": "2026-11-08T12:59:40.074553+00:00",
+"frozen_at": "2026-11-08T13:15:32.182631+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,36 +15,56 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
+"gid": "401909951",
+"start": "2026-11-09T02:00Z",
+"kind": "ast",
 "side": "o",
-"line": 49.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2459,
-"price": 456,
-"book": "Kalshi",
-"sc": "DEN pulls away",
+"line": 3.5,
+"name": "zach lavine",
+"lab": "Zach LaVine 4+ ast",
+"p": 0.3034,
+"price": 285,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
-"script",
+"rotation",
+"game",
 "price"
 ],
-"sport": "nfl"
+"sport": "nba"
 },
 {
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
+"gid": "401909950",
+"start": "2026-11-09T02:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "brook lopez",
+"lab": "Brook Lopez 8+ reb",
+"p": 0.2226,
+"price": 400,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 299.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2873,
-"price": 331,
-"book": "Kalshi",
+"line": 274.5,
+"name": "drew lock",
+"lab": "Drew Lock 275+ pass yds",
+"p": 0.2056,
+"price": 500,
+"book": "Hard Rock",
 "sc": "Shootout",
 "f": [
 "usage",
@@ -53,30 +73,11 @@
 "price"
 ],
 "sport": "nfl"
-},
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 20+ pts",
-"p": 0.2911,
-"price": 270,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
 }
 ],
-"p": 0.02057,
-"d": 88.665,
-"first": "2026-11-08T18:00:00+00:00",
+"p": 0.01389,
+"d": 115.5,
+"first": "2026-11-08T21:25:00+00:00",
 "res": null
 },
 {
@@ -84,17 +85,87 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
+"gid": "401909951",
+"start": "2026-11-09T02:00Z",
+"kind": "ast",
 "side": "o",
-"line": 49.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2459,
-"price": 456,
+"line": 3.5,
+"name": "zach lavine",
+"lab": "Zach LaVine 4+ ast",
+"p": 0.3034,
+"price": 285,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909950",
+"start": "2026-11-09T02:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "brook lopez",
+"lab": "Brook Lopez 8+ reb",
+"p": 0.2226,
+"price": 400,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.2813,
+"price": 331,
 "book": "Kalshi",
-"sc": "DEN pulls away",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+}
+],
+"p": 0.019,
+"d": 82.968,
+"first": "2026-11-08T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NFL + NHL",
+"legs": [
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "drew lock",
+"lab": "Drew Lock 275+ pass yds",
+"p": 0.2056,
+"price": 500,
+"book": "Hard Rock",
+"sc": "Shootout",
 "f": [
 "usage",
 "matchup",
@@ -111,7 +182,7 @@
 "line": 299.5,
 "name": "patrick mahomes",
 "lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2873,
+"p": 0.2813,
 "price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -122,92 +193,6 @@
 "price"
 ],
 "sport": "nfl"
-},
-{
-"gid": "401909951",
-"start": "2026-11-09T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "domantas sabonis",
-"lab": "Domantas Sabonis 20+ pts",
-"p": 0.2577,
-"price": 317,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-}
-],
-"p": 0.01821,
-"d": 99.928,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 20+ pts",
-"p": 0.2911,
-"price": 270,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909951",
-"start": "2026-11-09T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 19.5,
-"name": "domantas sabonis",
-"lab": "Domantas Sabonis 20+ pts",
-"p": 0.2577,
-"price": 317,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909945",
-"start": "2026-11-08T20:30Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "caleb wilson",
-"lab": "Caleb Wilson 7+ reb",
-"p": 0.4415,
-"price": 122,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"sport": "nba"
 },
 {
 "gid": "2026020278",
@@ -221,11 +206,24 @@
 "price": 245,
 "book": "Novig",
 "sport": "nhl"
+},
+{
+"gid": "2026020280",
+"start": "2026-11-08T23:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "brandon hagel",
+"lab": "Brandon Hagel to score",
+"p": 0.3366,
+"price": 208,
+"book": "Novig",
+"sport": "nhl"
 }
 ],
-"p": 0.01022,
-"d": 118.171,
-"first": "2026-11-08T20:30:00+00:00",
+"p": 0.00601,
+"d": 274.788,
+"first": "2026-11-08T18:00:00+00:00",
 "res": null
 }
 ],
