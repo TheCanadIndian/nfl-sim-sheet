@@ -190,7 +190,12 @@ def freeze():
                                final_at=fin.isoformat(), parlays=ps, graded=False), open(fp, "w"), indent=0)
                 print(f"parlays {sport} {date}: {len(locked)} locked, {len(pending)} still updating")
         freeze_multi(now)
-        # the plus-money slate (slate.py) was scratched 2026-11-07 (owner: 'lets scratch the plus money slate'); its graded record stays
+        try:                                                         # plus-money slate (slate.py, owner 2026-10-27; back 2026-11-07)
+            import slate as SLT
+            SLT.freeze(now)
+        except Exception as e:                                       # noqa: BLE001
+            print(f"slate: skipped ({type(e).__name__}: {e})")
+            fail_note(f"slate freeze: {type(e).__name__}: {e}")
     finally:
         srv.terminate()
 
@@ -557,7 +562,7 @@ def book_mults(legs, sport, cache):
 def hub_data():
     today = dt.datetime.now(ET).date().isoformat()
     sports = []
-    for sport in ("nfl", "nhl", "nba", "multi"):
+    for sport in ("nfl", "nhl", "nba", "multi", "slate"):
         allf = sorted(glob.glob(os.path.join(OUT, sport, "????-??-??.json")))
         fs = [f for f in allf if os.path.basename(f)[:10] >= today]
         # keep yesterday's cards (with their results) up until today's are picked (owner 2026-10-30)
@@ -738,6 +743,7 @@ function render(){
       + `<details class="how"><summary>How it works</summary><p class="note">Starts from a prop Pinnacle or our sharp consensus moved up (the line went up, the over got shorter, or both) and takes the first rung above the main line at your best price (Hard Rock, Novig or Kalshi with its fee). Pinnacle moves rank first. In Oct 23-25 NBA markets that rung went 37% vs 32% priced (+13%, 134 bets; small sample), while the main line was +6% and two rungs up −17%; requiring a matchup or tag made every rung worse, so they’re shown as context only. One leg per game, 2 and 3 legs. Experimental and tracked; never on Today’s card.</p></details>`);
   }
   TB.learn = lrnHtml;
+  TB.slate = slateTab();
   // everything else the pages build: tracked on the Profit page, not picks (owner 2026-10-25: the section felt like noise)
   const more = [];
   if (multi && multi.cards.length){ const qs = multi.cards.flatMap(c => c.parlays);
@@ -746,7 +752,7 @@ function render(){
     for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge) parlays/.test(c.card)))
       more.push(`<details class="hc"><summary>${SP[s.sport]} · ${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`);
   if (more.length) TB.more = sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
-  const TABS = [['card', 'Today’s cards'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
+  const TABS = [['card', 'Today’s cards'], ['slate', 'Plus-money slate'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
   const cnt = {card: picks.length, slate: ((D.sports.find(s => s.sport === 'slate') || {cards: []}).cards.reduce((n, c) => n + c.parlays.length, 0))};
   if (!TB[T]) T = TABS.find(([k]) => TB[k]) ? TABS.find(([k]) => TB[k])[0] : 'card';
   const bar = `<div class="htabs" role="tablist">${TABS.filter(([k]) => TB[k] || k === 'card').map(([k, lab]) => `<button role="tab" data-t="${k}" aria-selected="${T === k}">${lab}${cnt[k] ? `<span>${cnt[k]}</span>` : ''}</button>`).join('')}</div>`;
