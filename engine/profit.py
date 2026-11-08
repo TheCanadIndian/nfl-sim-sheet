@@ -966,12 +966,15 @@ def tags():
                     mx_ = (FBM.get(str(gid)) or {}).get(nm)
                     if mx_:
                         x = dict(x, p=mx_["p"], r=mx_.get("r"), c=mx_.get("c"), j=mx_.get("j"), s1=mx_.get("s1"))
-                    base = dict(sport=sport, src="fb", gid=gid, name=nm, bet="first basket", start=st)
+                    # which model priced the row (owner 2026-11-08: old flat rows and the model's were mixed): 'model' = nba/firstbasket.py,
+                    # 'flat' = sharp._fb_ours fallback; j / s1 stored on every row so the 30-day read can split them
+                    mdl = "model" if mx_ else "flat"
+                    base = dict(sport=sport, src="fb", gid=gid, name=nm, bet="first basket", start=st, mdl=mdl)
                     e = log.setdefault(f"fb|all|{gid}|{nm}", dict(base, grp="all", first=now.isoformat()))
-                    e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"))
+                    e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"), s1=x.get("s1"), mdl=mdl)
                     if x.get("r") in (4, 5) or x.get("c"):
                         e = log.setdefault(f"fb|low|{gid}|{nm}", dict(base, grp="low", first=now.isoformat()))
-                        e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"))
+                        e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"), s1=x.get("s1"), mdl=mdl)
                     # from 2026-11-07 the model replaces the flat one: 'edge' (flat) stops; its record stays on the Profit page
                     if mx_ and x["p"] * dec(o) - 1 >= .10:
                         log.setdefault(f"fb|medge|{gid}|{nm}", dict(base, grp="medge", first=now.isoformat(), book=bk, o=o, p=x["p"], m=x["p"],
@@ -984,7 +987,7 @@ def tags():
                                                                        r=x.get("r"), c=x.get("c"), j=x.get("j")))
                     if mx_ and (x.get("j") or (x.get("s1") or 0) >= .3):
                         e = log.setdefault(f"fb|open|{gid}|{nm}", dict(base, grp="open", first=now.isoformat()))
-                        e.update(book=bk, o=o, p=x["p"], m=x["p"], hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"))
+                        e.update(book=bk, o=o, p=x["p"], m=x["p"], hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"), s1=x.get("s1"), mdl=mdl)
         # NHL 2+ goals (owner 2026-11-06: 'start tracking 2+ goals to see if we can find an edge'; sharp.fg_nhl -> g2_nhl.json, Kalshi
         # 2+ rungs from live_nhl.json at the ask + 7% fee, 4c-or-less spread). No sharp book prices it, so the fair = each other
         # source's price with that book's own hold taken out (its anytime-goal price vs the anytime fair -- Pinnacle else four books
