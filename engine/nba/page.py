@@ -126,7 +126,7 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
     </div>
   </header>
   <main id="main"></main>
-  <footer>Each game is simulated thousands of times. Minutes come from recent games (with a trend toward the latest), the current roster and the injury report; players ruled out are removed and their minutes go to teammates by role. Per-minute production is recency-weighted and pulled toward position averages for small samples; the opponent's defense vs the player's position and the game's pace adjust it. <b>With Vegas</b> scales each team's players to the points implied by the spread and total; <b>Market-blind</b> uses each team's own scoring and defense instead. Medians are the coin-flip number; ranges show 8 in 10 games. Tap a name to slide any line. Q / DTD = questionable / day-to-day (projected to play).</footer>
+  <footer><details class="fhow"><summary>How these numbers are made</summary><p>Each game is simulated thousands of times. Minutes come from recent games (with a trend toward the latest), the current roster and the injury report; players ruled out are removed and their minutes go to teammates by role. Per-minute production is recency-weighted and pulled toward position averages for small samples; the opponent's defense vs the player's position and the game's pace adjust it. <b>With Vegas</b> scales each team's players to the points implied by the spread and total; <b>Market-blind</b> uses each team's own scoring and defense instead. Medians are the coin-flip number; ranges show 8 in 10 games. Tap a name to slide any line. Q / DTD = questionable / day-to-day (projected to play).</p></details></footer>
 </div>
 <div id="tip" hidden></div>
 <script type="application/json" id="data">__DATA__</script>

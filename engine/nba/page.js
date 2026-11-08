@@ -469,6 +469,7 @@ function ladderCard(){
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
     : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.'
     : LADS && !cm.length ? 'No ladder edge has a ★ right now. Tap ★ only again to see them all.' : '';
+  if (empty && !cards.length) return `<section class="panel pempty"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2></div><p class="note">${!anyLadder ? 'No Kalshi ladders tight enough yet · usually fill in on game day.' : 'No rung beats its price by 5%+ right now · updates through the day.'}</p></section>`;
   return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
     ${empty ? `<p class="note" style="margin:0 0 6px">${empty}</p>` : ''}
     <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the best price by 5% or more, for players projected for 20+ minutes. Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price and its edge is the one shown (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs outside the flagged set show our chance, with no edge claimed. Hard Rock’s alt lines refresh in the morning and hourly in the last two hours before tip. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page. <b>Tags</b> come from a study of every Kalshi NBA rung since January (research only, nothing is filtered): green = up in every period among rungs where our chance beats Kalshi’s ask + fee by 15%+ (the <b>15%+ K</b> tag: starter, away, 24-32 projected minutes, game total 230+, line 10+, threes); red = down (game total under 220, under 24 minutes). Every rung here is already two or more above the 50/50 rung. Hover a tag for its record.</p></details>
@@ -503,7 +504,7 @@ function tierParlays(){
   }
   const card = MKT.tierCard({sport: 'nba', overOnly: true, title: 'Parlays by payout (your books)', games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.start_utc})),
                        gameLegs, propKinds: KLAB, kalshiKinds: KLAB, minEdge: .05});
-  return card || `<section class="panel"><div class="phead"><h2>Parlays by payout (your books)</h2></div><p class="note">No parlay with an edge on every leg yet. Legs are player props at your books (Kalshi ladders, plus Novig and Hard Rock once they post) and game lines: our chance blended 50/50 with the market (Pinnacle’s no-vig line when it has one), only the side we lean, our number 10+ points from the market, and a 5%+ edge after fees. Props mostly post on game day.</p></section>`;
+  return card || `<section class="panel pempty"><div class="phead"><h2>Parlays by payout (your books)</h2></div><p class="note">No parlay with an edge on every leg yet · props mostly post on game day.</p></section>`;
 }
 // ---------------- NBA longshots (owner 2026-10-20: "similar parlays for the NBA as the NFL") ----------------
 // Path longshots: one leg per game, 2-3 games, each leg needs 3+ of 5 reasons -- usage (30+ projected minutes or a
@@ -647,7 +648,7 @@ function learnCandsNBA(){
 }
 function parlaysView(){
   if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNBA(); } catch (e) {}
-  return (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + ladderCard() + nbaLadderLongshots() + tierParlays();
+  return `<div class="pstack">${(window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + ladderCard() + nbaLadderLongshots() + tierParlays()}</div>`;
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);

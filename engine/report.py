@@ -746,7 +746,7 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
 .tdkp{margin-top:10px;min-width:0;overflow-x:auto}
 .tdread{display:inline-flex;gap:5px;align-items:center;padding:3px 9px;border-radius:999px;background:var(--sunk);font-size:12.5px;white-space:nowrap}
 @media (max-width:640px){.tdt .tdname{min-width:150px}.tdsub{white-space:normal}.tchip{width:30px;height:26px;font-size:9.5px}}
-footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
+.pstack{display:grid;gap:14px;min-width:0}.panel.pempty{padding:14px 16px;gap:6px}.panel.pempty .note{margin:0}footer details.fhow summary{cursor:pointer;color:var(--muted);font-weight:600}footer details.fhow p{margin:8px 0 0}@media (max-width:640px){.pstack .panel{padding:14px}.pstack{gap:12px}}footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
 #tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
 #tip b{font-weight:600}
 @media (max-width:980px){.two{grid-template-columns:1fr}}
