@@ -94,6 +94,7 @@ def nfl(news=False):
     sh(PY, "markets.py", "nfl")
     sh(PY, "grade_markets.py", "nfl")
     sh(PY, "profit.py", "rows", "nfl")          # Profit page: picks under the site's rules
+    sh(PY, "profit.py", "roles")                # NFL player roles for the Profit page's 'NFL straights by role'
     sh(PY, "patterns.py")                    # prop patterns: tracked record
 
 

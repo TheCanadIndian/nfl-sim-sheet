@@ -1367,7 +1367,10 @@ EDGE_BANDS = [(-9, 0, "under 0%"), (0, .05, "0-5%"), (.05, .10, "5-10%"), (.10, 
 EDGE_CATS = ("ladder candidates", "ladder edge")
 ST_LAB = {"pts": "Points", "points": "Points", "reb": "Rebounds", "rebounds": "Rebounds", "ast": "Assists", "assists": "Assists",
           "fg3m": "Threes", "threes": "Threes", "double-double": "Double-double", "triple-double": "Triple-double",
-          "first basket": "First basket", "spread": "Game lines", "total": "Game lines", "win": "Game lines"}
+          "first basket": "First basket", "spread": "Game lines", "total": "Game lines", "win": "Game lines",
+          "rec_yds": "Receiving yds", "rec yds": "Receiving yds", "rec": "Catches", "receptions": "Catches", "rush_yds": "Rushing yds",
+          "rush yds": "Rushing yds", "pass_yds": "Passing yds", "pass yds": "Passing yds", "TD": "Anytime TD", "td": "Anytime TD",
+          "anytime_td": "Anytime TD"}
 ODDS_BANDS = [(-99999, 99, "minus money"), (100, 150, "+100–150"), (151, 350, "+151–350"), (351, 600, "+351–600"), (601, 800, "+601–800"),
               (801, 1200, "+801–1200"), (1201, 1500, "+1201–1500"), (1501, 2500, "+1501–2500"), (2501, 10000, "+2501–10000"), (10001, 10 ** 9, "over +10000")]
 
@@ -1509,7 +1512,22 @@ def feed_data():
         AR = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "arch_nba.json")))
     except (OSError, ValueError):
         AR = {}
-    oa = {}
+    try:                                                     # NFL: role (owner 2026-11-08: 'odds studies done on NFL like we did for NBA')
+        RL = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "role_nfl.json")))
+    except (OSError, ValueError):
+        RL = {}
+    oa, orl = {}, {}
+    for x in items:
+        if x["date"] < since30 or not x.get("pay") or x["t"] != "bet" or x["sport"] != "nfl":
+            continue
+        nm = _norm(x.get("pn") or "")
+        st = ST_LAB.get(x.get("st") or "", "Other")
+        ar = "Game lines" if st == "Game lines" or nm in ("full game", "") else RL.get(nm) or "unknown"
+        for (a_, i, k) in [(a_, i, k) for a_ in (ar, "All roles") for i, k in ((oband(x["pay"]), "all"), (-1, "all"), (oband(x["pay"]), st), (-1, st))]:
+            b = orl.setdefault((a_, k, i), dict(n=0, w=0, exp=0.0, net=0.0, stake=0.0))
+            b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
+    odds_role = [dict(arch=ar, st=k, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
+                      roi=round(b["net"] / b["stake"], 4)) for (ar, k, i), b in sorted(orl.items())]
     for x in items:
         if x["date"] < since30 or not x.get("pay") or x["sport"] != "nba" or x["t"] != "bet":
             continue
@@ -1532,7 +1550,7 @@ def feed_data():
     for x in items:
         x.pop("pn", None); x.pop("st", None)
     items = [x for x in items if x["date"] >= since]          # the day-by-day list: last 14 days
-    return dict(items=items, you=you, types=types, legs=legt, odds=odds, odds_arch=odds_arch, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
+    return dict(items=items, you=you, types=types, legs=legt, odds=odds, odds_arch=odds_arch, odds_role=odds_role, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1643,21 +1661,25 @@ function oddsTable(){
 const AOPEN = new Set();
 document.addEventListener('toggle', e => { const d = e.target; if (!d.dataset || !d.dataset.ak) return;
   d.open ? AOPEN.add(d.dataset.ak) : AOPEN.delete(d.dataset.ak); }, true);
-function archOdds(){
+function archOdds(R0, nfl){
   // NBA straights: archetype -> bet type -> odds (owner 2026-11-06: 'sort nba straight bets by player archetype then odds',
-  // 'further break down by bet type', 'archetypes then bet type then odds')
-  const R = FE.odds_arch || []; if (!R.length) return '';
+  // 'further break down by bet type', 'archetypes then bet type then odds'); NFL: role -> bet type -> odds (owner 2026-11-08)
+  const R = (nfl ? R0 : FE.odds_arch) || []; if (!R.length) return '';
+  const ALL = nfl ? 'All roles' : 'All archetypes', PF = nfl ? 'nfl:' : '';
   const pc0 = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
-  const SO = ['Points', 'Rebounds', 'Assists', 'Threes', 'Double-double', 'Triple-double', 'First basket', 'Game lines', 'Other'];
+  const SO = ['Points', 'Rebounds', 'Assists', 'Threes', 'Double-double', 'Triple-double', 'First basket', 'Receiving yds', 'Catches', 'Rushing yds', 'Passing yds', 'Anytime TD', 'Game lines', 'Other'];
   const rec = t => `<span class="c">${t.n} bets · won ${t.w} vs ${t.exp.toFixed(0)} priced</span>`;
   const net = t => `<span class="net ${t.roi >= 0 ? 'rp' : 'rn'}">${usd(t.net)} · ${pc0(t.roi)}${t.n < 30 ? ' <small class="muted">few</small>' : ''}</span>`;
   const trow = b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${pc0(b.roi)}${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`;
   const table = B => `<div class="aqw"><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${B.map(trow).join('')}</tbody></table></div>`;
-  const stat = (a, t) => { const k = a + '|' + t.st;
+  const stat = (a, t) => { const k = PF + a + '|' + t.st;
     return `<details class="fgrp ast" data-ak="${esc(k)}"${AOPEN.has(k) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.st)}</b> ${rec(t)}</span>${net(t)}</summary>${table(R.filter(b => b.arch === a && b.st === t.st && b.lab !== 'all'))}</details>`; };
   const arch = t => { const S = R.filter(b => b.arch === t.arch && b.lab === 'all' && b.st !== 'all').sort((x, y) => SO.indexOf(x.st) - SO.indexOf(y.st));
-    return `<details class="fgrp" data-ak="${esc(t.arch)}"${AOPEN.has(t.arch) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.arch)}</b> ${rec(t)}</span>${net(t)}</summary><div class="aqin">${S.map(x => stat(t.arch, x)).join('')}</div></details>`; };
-  const tot = R.filter(b => b.lab === 'all' && b.st === 'all').sort((a, b) => (b.arch === 'All archetypes') - (a.arch === 'All archetypes') || b.n - a.n);
+    return `<details class="fgrp" data-ak="${esc(PF + t.arch)}"${AOPEN.has(PF + t.arch) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.arch)}</b> ${rec(t)}</span>${net(t)}</summary><div class="aqin">${S.map(x => stat(t.arch, x)).join('')}</div></details>`; };
+  const tot = R.filter(b => b.lab === 'all' && b.st === 'all').sort((a, b) => (b.arch === ALL) - (a.arch === ALL) || b.n - a.n);
+  if (nfl) return `<section class="panel lt arq"><div class="phead"><h2>NFL straights by role</h2><span class="small muted">role → bet type → odds · last 30 days · $${FE.stake.straight} a bet</span></div>
+    <p class="note" style="margin:0 0 8px">Every NFL straight in Your bets, grouped by the player’s role this season (backs by how much of their work is catches, pass-catching vs blocking tight ends, dual-threat vs pocket QBs, slot vs outside receivers from the depth chart), then the stat, then the odds it was taken at (the book’s price, Kalshi with its fee). Game lines have their own row. Tap a row to open it. One prop can count under several tracked rules, and fewer than 30 bets is noise.</p>
+    ${tot.map(arch).join('')}</section>`;
   return `<section class="panel lt arq"><div class="phead"><h2>NBA straights by archetype</h2><span class="small muted">archetype → bet type → odds · last 30 days · $${FE.stake.straight} a bet</span></div>
     <p class="note" style="margin:0 0 8px">Every NBA straight in Your bets, grouped by the player’s playstyle (the same 8 types as the NBA page chip), then the stat, then the odds it was taken at (the book’s price, Kalshi with its fee). Tap a row to open it. One prop can count under several tracked rules, and fewer than 30 bets is noise.</p>
     ${tot.map(arch).join('')}</section>`;
@@ -1692,7 +1714,7 @@ function render(){
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
   const all = `<details class="panel"><summary style="cursor:pointer"><h2 style="display:inline">Every tracked rule</h2> <span class="small muted">all bets incl. unders and the test versions</span></summary>
     <section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>${track}${D.sports.map(sp).join('')}</details>`;
-  document.getElementById('main').innerHTML = you() + working() + oddsTable() + archOdds() + feed() + legTable() + edgeTable() + all;
+  document.getElementById('main').innerHTML = you() + working() + oddsTable() + archOdds() + archOdds(FE.odds_role, true) + feed() + legTable() + edgeTable() + all;
 }
 render();
 </script></body></html>"""
@@ -1714,11 +1736,63 @@ def page():
     print("profit page:", f"{o['units']:+.1f}u over {o['n']} bets" if o else "empty")
 
 
+def role_map_nfl(db="nfl.db"):
+    """markets/role_nfl.json {normalized name: role} -- each player's 2026 role from his per-game usage so far, the same
+    cut-offs as the NFL page chips (nfl_page.js roleOf2, which uses projections): RB receiving back (targets 30%+ of touches),
+    early-down back (17% or less), three-down back; backup RB under 6 touches a game; TE pass-catching (5+ targets a game)
+    else blocking / low-target TE; QB dual-threat (25+ rush yds a game) / pocket passer; WR slot / outside from his latest
+    depth-chart alignment (projections/weeks/*_matchups.json). Owner 2026-11-08: 'odds studies done on NFL like we did for NBA'.
+    Merged with the old file so players from earlier weeks keep theirs."""
+    import sqlite3, glob as _g
+    import pandas as _pd
+    con = sqlite3.connect(db)
+    season = con.execute("select max(season) from player_week").fetchone()[0]
+    pw = _pd.read_sql("select player_display_name n, position pos, targets, carries, attempts, rushing_yards ry from player_week "
+                      "where season = ? and season_type = 'REG'", con, params=(season,)).fillna(0)
+    al = {}
+    for f in sorted(_g.glob(os.path.join(HERE, "projections", "weeks", f"{season}_wk*_matchups.json"))):
+        try:
+            for k, v in json.load(open(f, encoding="utf-8")).get("players", {}).items():
+                a_ = v.get("align")
+                if isinstance(a_, str) and a_:
+                    al[_norm(k.split("|")[-1])] = a_
+        except (OSError, ValueError):
+            pass
+    roles = {}
+    for (n, pos), d in pw.groupby(["n", "pos"]):
+        g = len(d); t, c, att, ry = d.targets.sum() / g, d.carries.sum() / g, d.attempts.sum() / g, d.ry.sum() / g
+        nm = _norm(n)
+        if pos == "RB":
+            r = "Backup RB" if t + c < 6 else "Receiving back" if t / (t + c) >= .3 else "Early-down back" if t / (t + c) <= .17 else "Three-down back"
+        elif pos == "TE":
+            r = "Pass-catching TE" if t >= 5 else "Blocking / low-target TE"
+        elif pos == "QB":
+            if att < 15:
+                continue
+            r = "Dual-threat QB" if ry >= 25 else "Pocket passer"
+        elif pos == "WR":
+            x = al.get(nm)
+            r = "Slot WR" if x == "Slot" else "Outside WR" if x in ("X", "Z") else "WR"
+        else:
+            continue
+        roles[nm] = r
+    fn = os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "role_nfl.json")
+    try:
+        old = json.load(open(fn, encoding="utf-8"))
+    except (OSError, ValueError):
+        old = {}
+    old.update(roles)
+    json.dump(old, open(fn, "w", encoding="utf-8"), separators=(",", ":"), sort_keys=True)
+    print(f"role_nfl.json: {len(roles)} players this season ({len(old)} kept)")
+
+
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else "page"
     try:
         if cmd == "rows":
             market_rows(sys.argv[2])
+        elif cmd == "roles":
+            role_map_nfl()
         elif cmd == "tags":
             tags()
         elif cmd == "page":
