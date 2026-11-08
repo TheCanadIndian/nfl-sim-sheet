@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-08T09:18:43.342321+00:00",
+"frozen_at": "2026-11-08T09:32:08.708371+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,6 +15,95 @@
 "tier": "3 legs \u00b7 NBA + NFL",
 "legs": [
 {
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "woody marks",
+"lab": "Woody Marks 100+ rush yds",
+"p": 0.2061,
+"price": 490,
+"book": "Kalshi",
+"sc": "HOU pulls away",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.274,
+"price": 331,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "401909945",
+"start": "2026-11-08T20:30Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "norman powell",
+"lab": "Norman Powell 4+ reb",
+"p": 0.3435,
+"price": 198,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+}
+],
+"p": 0.0194,
+"d": 75.778,
+"first": "2026-11-08T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "3 legs \u00b7 NBA + NFL",
+"legs": [
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 99.5,
+"name": "woody marks",
+"lab": "Woody Marks 100+ rush yds",
+"p": 0.2061,
+"price": 490,
+"book": "Kalshi",
+"sc": "HOU pulls away",
+"f": [
+"usage",
+"rotation",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
 "gid": "2026_09_DAL_IND",
 "start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
@@ -22,7 +111,7 @@
 "line": 249.5,
 "name": "daniel jones",
 "lab": "Daniel Jones 250+ pass yds",
-"p": 0.2956,
+"p": 0.2975,
 "price": 280,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -35,23 +124,73 @@
 "sport": "nfl"
 },
 {
-"gid": "401909946",
-"start": "2026-11-08T23:00Z",
-"kind": "pts",
+"gid": "401909945",
+"start": "2026-11-08T20:30Z",
+"kind": "reb",
 "side": "o",
-"line": 19.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 20+ pts",
-"p": 0.2911,
-"price": 270,
-"book": "Novig",
+"line": 3.5,
+"name": "norman powell",
+"lab": "Norman Powell 4+ reb",
+"p": 0.3435,
+"price": 198,
+"book": "Kalshi",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ],
 "sport": "nba"
+}
+],
+"p": 0.02106,
+"d": 66.812,
+"first": "2026-11-08T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NFL",
+"legs": [
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "patrick mahomes",
+"lab": "Patrick Mahomes 300+ pass yds",
+"p": 0.274,
+"price": 331,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
+},
+{
+"gid": "2026_09_DAL_IND",
+"start": "2026-11-08T13:00:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "daniel jones",
+"lab": "Daniel Jones 250+ pass yds",
+"p": 0.2975,
+"price": 280,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+],
+"sport": "nfl"
 },
 {
 "gid": "2026_09_CIN_ATL",
@@ -72,36 +211,6 @@
 "price"
 ],
 "sport": "nfl"
-}
-],
-"p": 0.02114,
-"d": 60.599,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NFL",
-"legs": [
-{
-"gid": "2026_09_DAL_IND",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 249.5,
-"name": "daniel jones",
-"lab": "Daniel Jones 250+ pass yds",
-"p": 0.2956,
-"price": 280,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"matchup",
-"script",
-"price"
-],
-"sport": "nfl"
 },
 {
 "gid": "401909946",
@@ -111,40 +220,20 @@
 "line": 19.5,
 "name": "duncan robinson",
 "lab": "Duncan Robinson 20+ pts",
-"p": 0.2911,
+"p": 0.278,
 "price": 270,
 "book": "Novig",
 "f": [
 "usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909945",
-"start": "2026-11-08T20:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ threes",
-"p": 0.2848,
-"price": 252,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
 "rotation",
 "game"
 ],
 "sport": "nba"
 }
 ],
-"p": 0.02451,
-"d": 49.491,
-"first": "2026-11-08T18:00:00+00:00",
+"p": 0.00557,
+"d": 261.18,
+"first": "2026-11-08T14:30:00+00:00",
 "res": null
 }
 ],
