@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-08",
 "lock": "2026-11-08T14:30:00+00:00",
-"frozen_at": "2026-11-08T14:19:59.159Z",
+"frozen_at": "2026-11-08T14:35:52.106Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 39.5,
 "name": "alvin kamara",
 "lab": "Alvin Kamara over 39.5 rush yds",
-"p": 0.4902,
+"p": 0.4905,
 "price": -110,
 "book": "Hard Rock",
 "f": [
@@ -38,7 +38,7 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.1123
+"edge": 0.1128
 },
 {
 "gid": "2026_09_CIN_ATL",
@@ -68,7 +68,7 @@
 "edge": 0.0253
 }
 ],
-"p": 0.14319,
+"p": 0.14328,
 "d": 6.701,
 "first": "2026-11-08T14:30:00+00:00",
 "res": null,
@@ -86,7 +86,7 @@
 "line": 39.5,
 "name": "alvin kamara",
 "lab": "Alvin Kamara over 39.5 rush yds",
-"p": 0.4902,
+"p": 0.4905,
 "price": -110,
 "book": "Hard Rock",
 "f": [
@@ -102,7 +102,7 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.1123
+"edge": 0.1128
 },
 {
 "gid": "2026_09_CIN_ATL",
@@ -130,33 +130,6 @@
 ],
 "sport": "nfl",
 "edge": 0.0253
-},
-{
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 249.5,
-"name": "patrick mahomes",
-"lab": "Patrick Mahomes over 249.5 pass yds",
-"p": 0.4879,
-"price": 102,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"script"
-],
-"v": [
-"usage",
-"matchup",
-"script",
-"our model above fair",
-"consensus up",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.0169
 },
 {
 "gid": "2026_09_LV_SF",
@@ -182,61 +155,139 @@
 ],
 "sport": "nfl",
 "edge": 0.027
-}
-],
-"p": 0.03409,
-"d": 27.342,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null,
-"locked": true
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 349.5,
-"name": "joe burrow",
-"lab": "Joe Burrow 350+ pass yds",
-"p": 0.2269,
-"price": 398,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
 },
 {
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
 "kind": "pass_yds",
 "side": "o",
-"line": 299.5,
+"line": 249.5,
 "name": "patrick mahomes",
-"lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2827,
-"price": 331,
+"lab": "Patrick Mahomes over 249.5 pass yds",
+"p": 0.4879,
+"price": 102,
 "book": "Kalshi",
-"sc": "Shootout",
 "f": [
 "usage",
 "matchup",
+"script"
+],
+"v": [
+"usage",
+"matchup",
 "script",
-"price"
-]
+"our model above fair",
+"consensus up"
+],
+"sport": "nfl",
+"edge": 0.0119
 }
 ],
-"p": 0.06413,
-"d": 21.464,
+"p": 0.03411,
+"d": 27.342,
 "first": "2026-11-08T14:30:00+00:00",
-"pick": "longshot",
-"final": true,
+"res": null,
+"locked": true
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T21:05:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "tank dell",
+"lab": "Tank Dell over 1.5 receptions",
+"p": 0.4941,
+"price": 127,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1217,
+"fair": 0.4349,
+"main": true
+},
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T18:00:00+00:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "jj mccarthy",
+"lab": "Jj Mccarthy anytime TD",
+"p": 0.2184,
+"price": 400,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.092,
+"fair": 0.2184,
+"main": true
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T14:30:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "bijan robinson",
+"lab": "Bijan Robinson over 4.5 receptions",
+"p": 0.3205,
+"price": 240,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.0898,
+"fair": 0.3134,
+"main": false
+}
+],
+"p": 0.03459,
+"d": 38.59,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T14:30:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "bijan robinson",
+"lab": "Bijan Robinson over 4.5 receptions",
+"p": 0.3205,
+"price": 240,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.0898,
+"fair": 0.3134,
+"main": false
+},
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "denzel boston",
+"lab": "Denzel Boston over 3.5 receptions",
+"p": 0.4251,
+"price": 156,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0884,
+"fair": 0.4009,
+"main": true
+}
+],
+"p": 0.13624,
+"d": 8.704,
+"first": "2026-11-08T14:30:00+00:00",
 "res": null,
 "locked": true
 },
@@ -244,24 +295,6 @@
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"kind": "pass_yds",
-"side": "o",
-"line": 349.5,
-"name": "joe burrow",
-"lab": "Joe Burrow 350+ pass yds",
-"p": 0.2269,
-"price": 398,
-"book": "Kalshi",
-"sc": "Shootout",
-"f": [
-"usage",
-"script",
-"price"
-]
-},
 {
 "gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
@@ -280,13 +313,2687 @@
 "script",
 "price"
 ]
+},
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "drew lock",
+"lab": "Drew Lock 250+ pass yds",
+"p": 0.2927,
+"price": 296,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"script",
+"price"
+]
 }
 ],
-"p": 0.0561,
-"d": 23.555,
-"first": "2026-11-08T14:30:00+00:00",
+"p": 0.07239,
+"d": 18.731,
+"first": "2026-11-08T18:00:00+00:00",
 "pick": "longshot",
 "final": true,
+"res": null,
+"locked": true
+},
+{
+"card": "Cross-game parlays",
+"tier": "Sunday morning (London)",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.666,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.534,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+}
+],
+"p": 0.09896,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Cross-game parlays",
+"tier": "All of Sunday",
+"legs": [
+{
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"lab": "Tyler Allgeier over 49.5 rush yds",
+"p": 0.77,
+"price": 0.47,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "tyler allgeier"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CLE_NO",
+"start": "2026-11-08T13:00:00",
+"lab": "Alvin Kamara over 39.5 rush yds",
+"p": 0.879,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 39.5,
+"name": "alvin kamara"
+},
+{
+"gid": "2026_09_DAL_IND",
+"start": "2026-11-08T13:00:00",
+"lab": "Daniel Jones over 199.5 pass yds",
+"p": 0.679,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "daniel jones"
+},
+{
+"gid": "2026_09_DEN_CAR",
+"start": "2026-11-08T13:00:00",
+"lab": "J.K. Dobbins over 24.5 rush yds",
+"p": 0.769,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 24.5,
+"name": "jk dobbins"
+},
+{
+"gid": "2026_09_DET_MIA",
+"start": "2026-11-08T13:00:00",
+"lab": "Jahmyr Gibbs anytime TD",
+"p": 0.706,
+"price": 0.76,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "jahmyr gibbs"
+},
+{
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
+"lab": "NE wins",
+"p": 0.578,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"lab": "Tank Dell over 14.5 rec yds",
+"p": 0.693,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "tank dell"
+},
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"lab": "Puka Nacua over 89.5 rec yds",
+"p": 0.696,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "puka nacua"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"lab": "Christian McCaffrey anytime TD",
+"p": 0.642,
+"price": 0.73,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "christian mccaffrey"
+},
+{
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
+"lab": "Eli Stowers over 0.5 receptions",
+"p": 0.808,
+"price": 0.58,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "eli stowers"
+},
+{
+"gid": "2026_09_NYJ_KC",
+"start": "2026-11-08T13:00:00",
+"lab": "Braelon Allen over 29.5 rush yds",
+"p": 0.904,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 29.5,
+"name": "braelon allen"
+},
+{
+"gid": "2026_09_TB_CHI",
+"start": "2026-11-08T20:20:00",
+"lab": "CHI wins",
+"p": 0.679,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null
+}
+],
+"p": 0.01221,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Most likely \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.666,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.534,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+}
+],
+"p": 0.1237,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Most likely \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.666,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.534,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.551,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+}
+],
+"p": 0.084,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Most likely \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.666,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.534,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.551,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 74.5 rec yds",
+"p": 0.509,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 74.5,
+"name": "tee higgins"
+}
+],
+"p": 0.0564,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Expected: close game \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "ATL wins",
+"p": 0.366,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+}
+],
+"p": 0.0803,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Expected: close game \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "ATL wins",
+"p": 0.366,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Olamide Zaccheaus over 9.5 rec yds",
+"p": 0.545,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "olamide zaccheaus"
+}
+],
+"p": 0.0457,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Expected: close game \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "ATL wins",
+"p": 0.366,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Olamide Zaccheaus over 9.5 rec yds",
+"p": 0.545,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "olamide zaccheaus"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 24.5 rec yds",
+"p": 0.542,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 24.5,
+"name": "chase brown"
+}
+],
+"p": 0.0262,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Higher lines \u00b7 3 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 5.5 receptions",
+"p": 0.493,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 299.5 pass yds",
+"p": 0.396,
+"price": 0.41,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Ja'Marr Chase over 79.5 rec yds",
+"p": 0.452,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "jamarr chase"
+}
+],
+"p": 0.1528,
+"d": 10.373,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Higher lines \u00b7 4 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 5.5 receptions",
+"p": 0.493,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 299.5 pass yds",
+"p": 0.396,
+"price": 0.41,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Ja'Marr Chase over 79.5 rec yds",
+"p": 0.452,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "jamarr chase"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 2.5 receptions",
+"p": 0.465,
+"price": 0.37,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "jahan dotson"
+}
+],
+"p": 0.074,
+"d": 28.011,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Shootout \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.551,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+}
+],
+"p": 0.1282,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Shootout \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.551,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 74.5 rec yds",
+"p": 0.509,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 74.5,
+"name": "tee higgins"
+}
+],
+"p": 0.0868,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Shootout \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.689,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.551,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 74.5 rec yds",
+"p": 0.509,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 74.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+}
+],
+"p": 0.0574,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "ATL pulls away \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "ATL wins",
+"p": 0.366,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 5.5 receptions",
+"p": 0.493,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 4.5 receptions",
+"p": 0.474,
+"price": 0.41,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "chase brown"
+}
+],
+"p": 0.0425,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "CIN pulls away \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "CIN wins",
+"p": 0.579,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 49.5 rush yds",
+"p": 0.575,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Samaje Perine over 14.5 rush yds",
+"p": 0.552,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 14.5,
+"name": "samaje perine"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.551,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Ja'Marr Chase anytime TD",
+"p": 0.43,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "jamarr chase"
+}
+],
+"p": 0.0641,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Close finish \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 29.5 rec yds",
+"p": 0.537,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "jahan dotson"
+}
+],
+"p": 0.1029,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Close finish \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 29.5 rec yds",
+"p": 0.537,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 24.5 rec yds",
+"p": 0.542,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 24.5,
+"name": "chase brown"
+}
+],
+"p": 0.0601,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays",
+"tier": "Close finish \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.595,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.531,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.569,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.5,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 29.5 rec yds",
+"p": 0.537,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 24.5 rec yds",
+"p": 0.542,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 24.5,
+"name": "chase brown"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Olamide Zaccheaus over 9.5 rec yds",
+"p": 0.545,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "olamide zaccheaus"
+}
+],
+"p": 0.0354,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Most likely \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.655,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "CIN wins",
+"p": 0.634,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 49.5 rush yds",
+"p": 0.585,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+}
+],
+"p": 0.1147,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Most likely \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.655,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "CIN wins",
+"p": 0.634,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 49.5 rush yds",
+"p": 0.585,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.525,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+}
+],
+"p": 0.0758,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Most likely \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Austin Hooper over 0.5 receptions",
+"p": 0.655,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "austin hooper"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "CIN wins",
+"p": 0.634,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 49.5 rush yds",
+"p": 0.585,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.525,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.523,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+}
+],
+"p": 0.0445,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Higher lines \u00b7 3 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 5.5 receptions",
+"p": 0.476,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 299.5 pass yds",
+"p": 0.369,
+"price": 0.41,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Ja'Marr Chase over 79.5 rec yds",
+"p": 0.446,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "jamarr chase"
+}
+],
+"p": 0.1384,
+"d": 10.373,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Higher lines \u00b7 4 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 5.5 receptions",
+"p": 0.476,
+"price": 0.48,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 299.5 pass yds",
+"p": 0.369,
+"price": 0.41,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 299.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Ja'Marr Chase over 79.5 rec yds",
+"p": 0.446,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "jamarr chase"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 29.5 rec yds",
+"p": 0.463,
+"price": 0.36,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "chase brown"
+}
+],
+"p": 0.0683,
+"d": 28.818,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Shootout \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.458,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.523,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+}
+],
+"p": 0.1005,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Shootout \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.458,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.523,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 74.5 rec yds",
+"p": 0.5,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 74.5,
+"name": "tee higgins"
+}
+],
+"p": 0.0684,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Shootout \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.458,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.523,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 74.5 rec yds",
+"p": 0.5,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 74.5,
+"name": "tee higgins"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 5.5 receptions",
+"p": 0.525,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "drake london"
+}
+],
+"p": 0.0452,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "ATL pulls away \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Kyle Pitts over 39.5 rec yds",
+"p": 0.484,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "kyle pitts"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 9.5 rush yds",
+"p": 0.44,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 9.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.487,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+}
+],
+"p": 0.0524,
+"d": 22.124,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "ATL pulls away \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Kyle Pitts over 39.5 rec yds",
+"p": 0.484,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "kyle pitts"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 9.5 rush yds",
+"p": 0.44,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 9.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.487,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Dohnte Meyers over 1.5 receptions",
+"p": 0.539,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "dohnte meyers"
+}
+],
+"p": 0.0288,
+"d": 38.76,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "ATL pulls away \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Kyle Pitts over 39.5 rec yds",
+"p": 0.484,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "kyle pitts"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 9.5 rush yds",
+"p": 0.44,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 9.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.487,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Dohnte Meyers over 1.5 receptions",
+"p": 0.539,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "dohnte meyers"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 29.5 rec yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "jahan dotson"
+}
+],
+"p": 0.0162,
+"d": 74.627,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "CIN pulls away \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "CIN wins",
+"p": 0.634,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Chase Brown over 49.5 rush yds",
+"p": 0.585,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "chase brown"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Samaje Perine over 14.5 rush yds",
+"p": 0.562,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 14.5,
+"name": "samaje perine"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Joe Burrow over 274.5 pass yds",
+"p": 0.523,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 274.5,
+"name": "joe burrow"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Ja'Marr Chase over 79.5 rec yds",
+"p": 0.446,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "jamarr chase"
+}
+],
+"p": 0.0801,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Close finish \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.487,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.458,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+}
+],
+"p": 0.1021,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Close finish \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.487,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.458,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Olamide Zaccheaus over 9.5 rec yds",
+"p": 0.534,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "olamide zaccheaus"
+}
+],
+"p": 0.0585,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Close finish \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Bijan Robinson anytime TD",
+"p": 0.56,
+"price": 0.69,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bijan robinson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Jahan Dotson over 1.5 receptions",
+"p": 0.673,
+"price": 0.62,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jahan dotson"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Michael Penix Jr. over 224.5 pass yds",
+"p": 0.517,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "michael penix"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Drake London over 79.5 rec yds",
+"p": 0.487,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 79.5,
+"name": "drake london"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Over 52.5 total points",
+"p": 0.458,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 52.5,
+"name": null
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Olamide Zaccheaus over 9.5 rec yds",
+"p": 0.534,
+"price": 0.49,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "olamide zaccheaus"
+},
+{
+"gid": "2026_09_CIN_ATL",
+"start": "2026-11-08T09:30:00",
+"lab": "Tee Higgins over 74.5 rec yds",
+"p": 0.5,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 74.5,
+"name": "tee higgins"
+}
+],
+"p": 0.0337,
+"d": null,
+"first": "2026-11-08T14:30:00+00:00",
 "res": null,
 "locked": true
 },
@@ -302,7 +3009,7 @@
 "line": 49.5,
 "name": "jk dobbins",
 "lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2484,
+"p": 0.237,
 "price": 456,
 "book": "Kalshi",
 "sc": "DEN pulls away",
@@ -321,7 +3028,7 @@
 "line": 299.5,
 "name": "patrick mahomes",
 "lab": "Patrick Mahomes 300+ pass yds",
-"p": 0.2827,
+"p": 0.2807,
 "price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -333,7 +3040,7 @@
 ]
 }
 ],
-"p": 0.07021,
+"p": 0.06653,
 "d": 23.964,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
@@ -350,7 +3057,7 @@
 "line": 49.5,
 "name": "jk dobbins",
 "lab": "J.K. Dobbins 50+ rush yds",
-"p": 0.2484,
+"p": 0.237,
 "price": 456,
 "book": "Kalshi",
 "sc": "DEN pulls away",
@@ -381,7 +3088,7 @@
 ]
 }
 ],
-"p": 0.05526,
+"p": 0.05275,
 "d": 29.19,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
@@ -432,7 +3139,7 @@
 "line": 299.5,
 "name": "caleb williams",
 "lab": "Caleb Williams 300+ pass yds",
-"p": 0.21,
+"p": 0.215,
 "price": 331,
 "book": "Kalshi"
 },
@@ -449,7 +3156,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.0588,
+"p": 0.0602,
 "d": 14.159,
 "first": "2026-11-09T01:20:00+00:00",
 "res": null
@@ -478,7 +3185,7 @@
 "line": 299.5,
 "name": "caleb williams",
 "lab": "Caleb Williams 300+ pass yds",
-"p": 0.21,
+"p": 0.215,
 "price": 331,
 "book": "Kalshi"
 },
@@ -495,7 +3202,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.009,
+"p": 0.00922,
 "d": 82.808,
 "first": "2026-11-09T01:20:00+00:00",
 "res": null
@@ -524,12 +3231,12 @@
 "line": 299.5,
 "name": "jared goff",
 "lab": "Jared Goff 300+ pass yds",
-"p": 0.29,
+"p": 0.295,
 "price": 218,
 "book": "Kalshi"
 }
 ],
-"p": 0.0609,
+"p": 0.06195,
 "d": 13.696,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
@@ -580,7 +3287,7 @@
 "line": 299.5,
 "name": "jared goff",
 "lab": "Jared Goff 300+ pass yds",
-"p": 0.29,
+"p": 0.295,
 "price": 218,
 "book": "Kalshi"
 },
@@ -597,7 +3304,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.07105,
+"p": 0.07227,
 "d": 11.62,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
@@ -699,18 +3406,6 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "malik nabers",
-"lab": "Malik Nabers over 5.5 receptions",
-"p": 0.5281,
-"price": 104,
-"book": "Novig"
-},
-{
 "gid": "2026_09_ARI_SEA",
 "start": "2026-11-08T16:25:00",
 "kind": "rec",
@@ -721,11 +3416,23 @@
 "p": 0.5292,
 "price": 100,
 "book": "Novig"
+},
+{
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 33.5,
+"name": "mack hollins",
+"lab": "Mack Hollins over 33.5 rec yds",
+"p": 0.6,
+"price": -115,
+"book": "Hard Rock"
 }
 ],
-"p": 0.27947,
-"d": 4.08,
-"first": "2026-11-08T18:00:00+00:00",
+"p": 0.3175,
+"d": 3.739,
+"first": "2026-11-08T21:25:00+00:00",
 "res": null
 },
 {
@@ -740,7 +3447,42 @@
 "line": 8.5,
 "name": "puka nacua",
 "lab": "Puka Nacua over 8.5 receptions",
-"p": 0.5055,
+"p": 0.5056,
+"price": 117,
+"book": "Novig"
+},
+{
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 33.5,
+"name": "mack hollins",
+"lab": "Mack Hollins over 33.5 rec yds",
+"p": 0.6,
+"price": -115,
+"book": "Hard Rock"
+}
+],
+"p": 0.30337,
+"d": 4.057,
+"first": "2026-11-08T18:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 8.5,
+"name": "puka nacua",
+"lab": "Puka Nacua over 8.5 receptions",
+"p": 0.5056,
 "price": 117,
 "book": "Novig"
 },
@@ -757,43 +3499,43 @@
 "book": "Novig"
 }
 ],
-"p": 0.26751,
+"p": 0.26755,
 "d": 4.34,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
+"gid": "2026_09_BUF_MIN",
+"start": "2026-11-09T20:15:00",
+"kind": "td",
 "side": "o",
-"line": 8.5,
-"name": "puka nacua",
-"lab": "Puka Nacua over 8.5 receptions",
-"p": 0.5055,
-"price": 117,
+"line": 0.5,
+"name": "aaron jones",
+"lab": "Aaron Jones TD",
+"p": 0.3266,
+"price": 277,
 "book": "Novig"
 },
 {
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 5.5,
-"name": "malik nabers",
-"lab": "Malik Nabers over 5.5 receptions",
-"p": 0.5281,
-"price": 104,
-"book": "Novig"
+"line": 33.5,
+"name": "mack hollins",
+"lab": "Mack Hollins over 33.5 rec yds",
+"p": 0.6,
+"price": -115,
+"book": "Hard Rock"
 }
 ],
-"p": 0.26699,
-"d": 4.427,
-"first": "2026-11-08T18:00:00+00:00",
+"p": 0.19594,
+"d": 7.048,
+"first": "2026-11-08T21:25:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -836,41 +3578,6 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "malik nabers",
-"lab": "Malik Nabers over 5.5 receptions",
-"p": 0.5281,
-"price": 104,
-"book": "Novig"
-},
-{
-"gid": "2026_09_BUF_MIN",
-"start": "2026-11-09T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "aaron jones",
-"lab": "Aaron Jones TD",
-"p": 0.3266,
-"price": 277,
-"book": "Novig"
-}
-],
-"p": 0.17247,
-"d": 7.691,
-"first": "2026-11-08T18:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
@@ -878,7 +3585,7 @@
 "line": 8.5,
 "name": "puka nacua",
 "lab": "Puka Nacua over 8.5 receptions",
-"p": 0.5055,
+"p": 0.5056,
 "price": 117,
 "book": "Novig"
 },
@@ -895,7 +3602,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.16509,
+"p": 0.16511,
 "d": 8.181,
 "first": "2026-11-08T18:00:00+00:00",
 "pick": "core",
@@ -906,18 +3613,6 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_09_LV_SF",
-"start": "2026-11-08T16:05:00",
-"kind": "rec",
-"side": "u",
-"line": 1.5,
-"name": "jordan watkins",
-"lab": "Jordan Watkins under 1.5 receptions",
-"p": 0.4763,
-"price": 138,
-"book": "Novig"
-},
-{
 "gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
@@ -925,13 +3620,25 @@
 "line": 2.5,
 "name": "devin singletary",
 "lab": "Devin Singletary under 2.5 receptions",
-"p": 0.594,
+"p": 0.5941,
 "price": -130,
+"book": "Novig"
+},
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 3.5,
+"name": "antonio williams",
+"lab": "Antonio Williams under 3.5 receptions",
+"p": 0.5405,
+"price": 153,
 "book": "Novig"
 }
 ],
-"p": 0.28294,
-"d": 4.211,
+"p": 0.32115,
+"d": 4.476,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
@@ -943,29 +3650,29 @@
 "gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "puka nacua",
-"lab": "Puka Nacua over 8.5 receptions",
-"p": 0.5055,
-"price": 117,
+"side": "u",
+"line": 3.5,
+"name": "antonio williams",
+"lab": "Antonio Williams under 3.5 receptions",
+"p": 0.5405,
+"price": 153,
 "book": "Novig"
 },
 {
 "gid": "2026_09_ARI_SEA",
 "start": "2026-11-08T16:25:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "u",
-"line": 14.5,
-"name": "reggie virgil",
-"lab": "Reggie Virgil under 14.5 rec yds",
-"p": 0.5566,
-"price": -106,
-"book": "Novig"
+"line": 29.5,
+"name": "zach charbonnet",
+"lab": "Zach Charbonnet under 29.5 rush yds",
+"p": 0.5474,
+"price": 102,
+"book": "Kalshi"
 }
 ],
-"p": 0.28136,
-"d": 4.217,
+"p": 0.29588,
+"d": 5.111,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
@@ -973,18 +3680,6 @@
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
 "legs": [
-{
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 8.5,
-"name": "puka nacua",
-"lab": "Puka Nacua over 8.5 receptions",
-"p": 0.5055,
-"price": 117,
-"book": "Novig"
-},
 {
 "gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
@@ -993,59 +3688,25 @@
 "line": 5.5,
 "name": "malik nabers",
 "lab": "Malik Nabers over 5.5 receptions",
-"p": 0.5281,
-"price": 104,
-"book": "Novig"
-}
-],
-"p": 0.26695,
-"d": 4.427,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+1000 to +3000",
-"legs": [
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 2.5,
-"name": "devin singletary",
-"lab": "Devin Singletary under 2.5 receptions",
-"p": 0.594,
-"price": -130,
+"p": 0.5292,
+"price": 102,
 "book": "Novig"
 },
 {
 "gid": "2026_09_ARI_SEA",
 "start": "2026-11-08T16:25:00",
-"kind": "rec_yds",
+"kind": "rush_yds",
 "side": "u",
-"line": 14.5,
-"name": "reggie virgil",
-"lab": "Reggie Virgil under 14.5 rec yds",
-"p": 0.5566,
-"price": -106,
-"book": "Novig"
-},
-{
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "braelon allen",
-"lab": "Braelon Allen anytime TD",
-"p": 0.375,
-"price": 257,
-"book": "Novig"
+"line": 29.5,
+"name": "zach charbonnet",
+"lab": "Zach Charbonnet under 29.5 rush yds",
+"p": 0.5474,
+"price": 102,
+"book": "Kalshi"
 }
 ],
-"p": 0.12398,
-"d": 12.275,
+"p": 0.28964,
+"d": 4.08,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
@@ -1054,32 +3715,32 @@
 "tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_09_NYG_PHI",
+"gid": "2026_09_LA_WAS",
 "start": "2026-11-08T13:00:00",
 "kind": "rec",
 "side": "u",
-"line": 2.5,
-"name": "devin singletary",
-"lab": "Devin Singletary under 2.5 receptions",
-"p": 0.594,
-"price": -130,
+"line": 3.5,
+"name": "antonio williams",
+"lab": "Antonio Williams under 3.5 receptions",
+"p": 0.5405,
+"price": 153,
 "book": "Novig"
 },
 {
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T16:05:00",
+"gid": "2026_09_GB_NE",
+"start": "2026-11-08T16:25:00",
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "xavier hutchinson",
-"lab": "Xavier Hutchinson anytime TD",
-"p": 0.205,
-"price": 567,
+"name": "drake maye",
+"lab": "Drake Maye anytime TD",
+"p": 0.292,
+"price": 344,
 "book": "Novig"
 }
 ],
-"p": 0.12176,
-"d": 11.801,
+"p": 0.15784,
+"d": 11.233,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
@@ -1087,104 +3748,92 @@
 "card": "Value-tag parlays (higher odds)",
 "tier": "+1000 to +3000",
 "legs": [
+{
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 3.5,
+"name": "antonio williams",
+"lab": "Antonio Williams under 3.5 receptions",
+"p": 0.5405,
+"price": 153,
+"book": "Novig"
+},
 {
 "gid": "2026_09_LV_SF",
 "start": "2026-11-08T16:05:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "kyle juszczyk",
-"lab": "Kyle Juszczyk anytime TD",
-"p": 0.2,
-"price": 545,
+"kind": "rec",
+"side": "u",
+"line": 1.5,
+"name": "jordan watkins",
+"lab": "Jordan Watkins under 1.5 receptions",
+"p": 0.4737,
+"price": 141,
 "book": "Novig"
 },
 {
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"kind": "rec",
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "rush_yds",
 "side": "u",
-"line": 2.5,
-"name": "devin singletary",
-"lab": "Devin Singletary under 2.5 receptions",
-"p": 0.594,
-"price": -130,
-"book": "Novig"
+"line": 29.5,
+"name": "zach charbonnet",
+"lab": "Zach Charbonnet under 29.5 rush yds",
+"p": 0.5474,
+"price": 102,
+"book": "Kalshi"
 }
 ],
-"p": 0.1188,
-"d": 11.412,
+"p": 0.14017,
+"d": 12.317,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
 {
-"card": "Cross-game parlays",
-"tier": "Sunday morning (London)",
+"card": "Value-tag parlays (higher odds)",
+"tier": "+1000 to +3000",
 "legs": [
 {
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.666,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.534,
-"price": 0.56,
-"book": "Kalshi",
+"gid": "2026_09_NYG_PHI",
+"start": "2026-11-08T13:00:00",
 "kind": "rec",
 "side": "o",
 "line": 5.5,
-"name": "drake london"
+"name": "malik nabers",
+"lab": "Malik Nabers over 5.5 receptions",
+"p": 0.5292,
+"price": 102,
+"book": "Novig"
 },
 {
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
+"gid": "2026_09_LA_WAS",
+"start": "2026-11-08T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 3.5,
+"name": "antonio williams",
+"lab": "Antonio Williams under 3.5 receptions",
+"p": 0.5405,
+"price": 153,
+"book": "Novig"
+},
+{
+"gid": "2026_09_LV_SF",
+"start": "2026-11-08T16:05:00",
+"kind": "rec",
+"side": "u",
+"line": 1.5,
+"name": "jordan watkins",
+"lab": "Jordan Watkins under 1.5 receptions",
+"p": 0.4737,
+"price": 141,
+"book": "Novig"
 }
 ],
-"p": 0.09896,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
+"p": 0.1355,
+"d": 12.317,
+"first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
 {
@@ -1455,172 +4104,6 @@
 "p": 0.1064,
 "d": null,
 "first": "2026-11-09T01:20:00+00:00",
-"res": null
-},
-{
-"card": "Cross-game parlays",
-"tier": "All of Sunday",
-"legs": [
-{
-"gid": "2026_09_ARI_SEA",
-"start": "2026-11-08T16:25:00",
-"lab": "Tyler Allgeier over 49.5 rush yds",
-"p": 0.77,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "tyler allgeier"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CLE_NO",
-"start": "2026-11-08T13:00:00",
-"lab": "Alvin Kamara over 39.5 rush yds",
-"p": 0.879,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "alvin kamara"
-},
-{
-"gid": "2026_09_DAL_IND",
-"start": "2026-11-08T13:00:00",
-"lab": "Daniel Jones over 199.5 pass yds",
-"p": 0.679,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 199.5,
-"name": "daniel jones"
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"lab": "J.K. Dobbins over 24.5 rush yds",
-"p": 0.769,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 24.5,
-"name": "jk dobbins"
-},
-{
-"gid": "2026_09_DET_MIA",
-"start": "2026-11-08T13:00:00",
-"lab": "Jahmyr Gibbs anytime TD",
-"p": 0.706,
-"price": 0.76,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jahmyr gibbs"
-},
-{
-"gid": "2026_09_GB_NE",
-"start": "2026-11-08T16:25:00",
-"lab": "NE wins",
-"p": 0.578,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T16:05:00",
-"lab": "Tank Dell over 14.5 rec yds",
-"p": 0.693,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 14.5,
-"name": "tank dell"
-},
-{
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
-"lab": "Puka Nacua over 89.5 rec yds",
-"p": 0.696,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 89.5,
-"name": "puka nacua"
-},
-{
-"gid": "2026_09_LV_SF",
-"start": "2026-11-08T16:05:00",
-"lab": "Christian McCaffrey anytime TD",
-"p": 0.642,
-"price": 0.73,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "christian mccaffrey"
-},
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T13:00:00",
-"lab": "Eli Stowers over 0.5 receptions",
-"p": 0.808,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "eli stowers"
-},
-{
-"gid": "2026_09_NYJ_KC",
-"start": "2026-11-08T13:00:00",
-"lab": "Braelon Allen over 29.5 rush yds",
-"p": 0.904,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 29.5,
-"name": "braelon allen"
-},
-{
-"gid": "2026_09_TB_CHI",
-"start": "2026-11-08T20:20:00",
-"lab": "CHI wins",
-"p": 0.679,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null
-}
-],
-"p": 0.01221,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
 "res": null
 },
 {
@@ -2849,1234 +5332,6 @@
 "p": 0.027,
 "d": 161.29,
 "first": "2026-11-08T21:25:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Most likely \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.666,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.534,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-}
-],
-"p": 0.1237,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Most likely \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.666,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.534,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.551,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-}
-],
-"p": 0.084,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Most likely \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.666,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.534,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.551,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 74.5 rec yds",
-"p": 0.509,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 74.5,
-"name": "tee higgins"
-}
-],
-"p": 0.0564,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Expected: close game \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "ATL wins",
-"p": 0.366,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-}
-],
-"p": 0.0803,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Expected: close game \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "ATL wins",
-"p": 0.366,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Olamide Zaccheaus over 9.5 rec yds",
-"p": 0.545,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "olamide zaccheaus"
-}
-],
-"p": 0.0457,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Expected: close game \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "ATL wins",
-"p": 0.366,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Olamide Zaccheaus over 9.5 rec yds",
-"p": 0.545,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "olamide zaccheaus"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 24.5 rec yds",
-"p": 0.542,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "chase brown"
-}
-],
-"p": 0.0262,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Higher lines \u00b7 3 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 5.5 receptions",
-"p": 0.493,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 299.5 pass yds",
-"p": 0.396,
-"price": 0.41,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Ja'Marr Chase over 79.5 rec yds",
-"p": 0.452,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "jamarr chase"
-}
-],
-"p": 0.1528,
-"d": 10.373,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Higher lines \u00b7 4 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 5.5 receptions",
-"p": 0.493,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 299.5 pass yds",
-"p": 0.396,
-"price": 0.41,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Ja'Marr Chase over 79.5 rec yds",
-"p": 0.452,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "jamarr chase"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 2.5 receptions",
-"p": 0.465,
-"price": 0.37,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "jahan dotson"
-}
-],
-"p": 0.074,
-"d": 28.011,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Shootout \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.551,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-}
-],
-"p": 0.1282,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Shootout \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.551,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 74.5 rec yds",
-"p": 0.509,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 74.5,
-"name": "tee higgins"
-}
-],
-"p": 0.0868,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Shootout \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.689,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.551,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 74.5 rec yds",
-"p": 0.509,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 74.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-}
-],
-"p": 0.0574,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "ATL pulls away \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "ATL wins",
-"p": 0.366,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 5.5 receptions",
-"p": 0.493,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 4.5 receptions",
-"p": 0.474,
-"price": 0.41,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "chase brown"
-}
-],
-"p": 0.0425,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "CIN pulls away \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "CIN wins",
-"p": 0.579,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 49.5 rush yds",
-"p": 0.575,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "chase brown"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Samaje Perine over 14.5 rush yds",
-"p": 0.552,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 14.5,
-"name": "samaje perine"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.551,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Ja'Marr Chase anytime TD",
-"p": 0.43,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jamarr chase"
-}
-],
-"p": 0.0641,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Close finish \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 29.5 rec yds",
-"p": 0.537,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "jahan dotson"
-}
-],
-"p": 0.1029,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Close finish \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 29.5 rec yds",
-"p": 0.537,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 24.5 rec yds",
-"p": 0.542,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "chase brown"
-}
-],
-"p": 0.0601,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "Close finish \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.595,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.531,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.569,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.5,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 29.5 rec yds",
-"p": 0.537,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 24.5 rec yds",
-"p": 0.542,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "chase brown"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Olamide Zaccheaus over 9.5 rec yds",
-"p": 0.545,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "olamide zaccheaus"
-}
-],
-"p": 0.0354,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
 "res": null
 },
 {
@@ -18246,1164 +19501,6 @@
 "tier": "Most likely \u00b7 5 legs",
 "legs": [
 {
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.655,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "CIN wins",
-"p": 0.634,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 49.5 rush yds",
-"p": 0.585,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "chase brown"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-}
-],
-"p": 0.1147,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Most likely \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.655,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "CIN wins",
-"p": 0.634,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 49.5 rush yds",
-"p": 0.585,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "chase brown"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.525,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "drake london"
-}
-],
-"p": 0.0758,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Most likely \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Austin Hooper over 0.5 receptions",
-"p": 0.655,
-"price": 0.64,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "austin hooper"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "CIN wins",
-"p": 0.634,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 49.5 rush yds",
-"p": 0.585,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "chase brown"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.525,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.523,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-}
-],
-"p": 0.0445,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Higher lines \u00b7 3 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 5.5 receptions",
-"p": 0.476,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 299.5 pass yds",
-"p": 0.369,
-"price": 0.41,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Ja'Marr Chase over 79.5 rec yds",
-"p": 0.446,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "jamarr chase"
-}
-],
-"p": 0.1384,
-"d": 10.373,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Higher lines \u00b7 4 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 5.5 receptions",
-"p": 0.476,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 299.5 pass yds",
-"p": 0.369,
-"price": 0.41,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 299.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Ja'Marr Chase over 79.5 rec yds",
-"p": 0.446,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "jamarr chase"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 29.5 rec yds",
-"p": 0.463,
-"price": 0.36,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "chase brown"
-}
-],
-"p": 0.0683,
-"d": 28.818,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Shootout \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.458,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.523,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-}
-],
-"p": 0.1005,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Shootout \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.458,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.523,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 74.5 rec yds",
-"p": 0.5,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 74.5,
-"name": "tee higgins"
-}
-],
-"p": 0.0684,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Shootout \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.458,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.523,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 74.5 rec yds",
-"p": 0.5,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 74.5,
-"name": "tee higgins"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 5.5 receptions",
-"p": 0.525,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "drake london"
-}
-],
-"p": 0.0452,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "ATL pulls away \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Kyle Pitts over 39.5 rec yds",
-"p": 0.484,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "kyle pitts"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 9.5 rush yds",
-"p": 0.44,
-"price": 0.45,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 9.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.487,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-}
-],
-"p": 0.0524,
-"d": 22.124,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "ATL pulls away \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Kyle Pitts over 39.5 rec yds",
-"p": 0.484,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "kyle pitts"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 9.5 rush yds",
-"p": 0.44,
-"price": 0.45,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 9.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.487,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Dohnte Meyers over 1.5 receptions",
-"p": 0.539,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "dohnte meyers"
-}
-],
-"p": 0.0288,
-"d": 38.76,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "ATL pulls away \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Kyle Pitts over 39.5 rec yds",
-"p": 0.484,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "kyle pitts"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 9.5 rush yds",
-"p": 0.44,
-"price": 0.45,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 9.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.487,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Dohnte Meyers over 1.5 receptions",
-"p": 0.539,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "dohnte meyers"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 29.5 rec yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "jahan dotson"
-}
-],
-"p": 0.0162,
-"d": 74.627,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "CIN pulls away \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "CIN wins",
-"p": 0.634,
-"price": null,
-"book": null,
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Chase Brown over 49.5 rush yds",
-"p": 0.585,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "chase brown"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Samaje Perine over 14.5 rush yds",
-"p": 0.562,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 14.5,
-"name": "samaje perine"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Joe Burrow over 274.5 pass yds",
-"p": 0.523,
-"price": 0.54,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 274.5,
-"name": "joe burrow"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Ja'Marr Chase over 79.5 rec yds",
-"p": 0.446,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "jamarr chase"
-}
-],
-"p": 0.0801,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Close finish \u00b7 5 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.487,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.458,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-}
-],
-"p": 0.1021,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Close finish \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.487,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.458,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Olamide Zaccheaus over 9.5 rec yds",
-"p": 0.534,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "olamide zaccheaus"
-}
-],
-"p": 0.0585,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Close finish \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Bijan Robinson anytime TD",
-"p": 0.56,
-"price": 0.69,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "bijan robinson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Jahan Dotson over 1.5 receptions",
-"p": 0.673,
-"price": 0.62,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jahan dotson"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Michael Penix Jr. over 224.5 pass yds",
-"p": 0.517,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "michael penix"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Drake London over 79.5 rec yds",
-"p": 0.487,
-"price": 0.5,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 79.5,
-"name": "drake london"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Over 52.5 total points",
-"p": 0.458,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 52.5,
-"name": null
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Olamide Zaccheaus over 9.5 rec yds",
-"p": 0.534,
-"price": 0.49,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "olamide zaccheaus"
-},
-{
-"gid": "2026_09_CIN_ATL",
-"start": "2026-11-08T09:30:00",
-"lab": "Tee Higgins over 74.5 rec yds",
-"p": 0.5,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 74.5,
-"name": "tee higgins"
-}
-],
-"p": 0.0337,
-"d": null,
-"first": "2026-11-08T14:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Most likely \u00b7 5 legs",
-"legs": [
-{
 "gid": "2026_09_CLE_NO",
 "start": "2026-11-08T13:00:00",
 "lab": "Alvin Kamara over 39.5 rush yds",
@@ -32943,7 +33040,7 @@
 "line": 35.5,
 "name": "alvin kamara",
 "lab": "Alvin Kamara over 35.5 rush yds",
-"p": 0.695,
+"p": 0.5975,
 "price": -115,
 "book": "Hard Rock",
 "f": [
@@ -32951,29 +33048,29 @@
 "rotation"
 ],
 "sport": "nfl",
-"edge": 0.2993
+"edge": 0.1171
 },
 {
-"gid": "2026_09_NYJ_KC",
+"gid": "2026_09_NYG_PHI",
 "start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
+"kind": "rec",
 "side": "o",
-"line": 34.5,
-"name": "braelon allen",
-"lab": "Braelon Allen over 34.5 rush yds",
-"p": 0.67,
-"price": -110,
-"book": "Hard Rock",
+"line": 5.5,
+"name": "malik nabers",
+"lab": "Malik Nabers over 5.5 receptions",
+"p": 0.5292,
+"price": 102,
+"book": "Novig",
 "f": [
 "usage",
-"rotation"
+"matchup"
 ],
 "sport": "nfl",
-"edge": 0.2791
+"edge": 0.069
 }
 ],
-"p": 0.46565,
-"d": 3.569,
+"p": 0.3162,
+"d": 3.777,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
@@ -32982,33 +33079,15 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "2026_09_NYG_PHI",
+"gid": "2026_09_NYJ_KC",
 "start": "2026-11-08T13:00:00",
-"kind": "rec",
+"kind": "td",
 "side": "o",
-"line": 5.5,
-"name": "malik nabers",
-"lab": "Malik Nabers over 5.5 receptions",
-"p": 0.528,
-"price": 104,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"sport": "nfl",
-"edge": 0.077
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T13:00:00",
-"kind": "rush_yds",
-"side": "o",
-"line": 25.5,
-"name": "jk dobbins",
-"lab": "J.K. Dobbins over 25.5 rush yds",
-"p": 0.5575,
-"price": -108,
+"line": 0.5,
+"name": "travis kelce",
+"lab": "Travis Kelce anytime TD",
+"p": 0.3878,
+"price": 174,
 "book": "Novig",
 "f": [
 "usage",
@@ -33016,53 +33095,95 @@
 "script"
 ],
 "sport": "nfl",
-"edge": 0.0737
+"edge": 0.0626
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "ladd mcconkey",
+"lab": "Ladd McConkey anytime TD",
+"p": 0.2428,
+"price": 335,
+"book": "Novig",
+"f": [
+"matchup",
+"rotation"
+],
+"sport": "nfl",
+"edge": 0.0562
 }
 ],
-"p": 0.29436,
-"d": 3.929,
+"p": 0.09416,
+"d": 11.919,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "2 legs",
+"tier": "3 legs",
 "legs": [
 {
-"gid": "2026_09_NYG_PHI",
+"gid": "2026_09_DEN_CAR",
 "start": "2026-11-08T13:00:00",
-"kind": "rec",
+"kind": "rush_yds",
 "side": "o",
-"line": 5.5,
-"name": "malik nabers",
-"lab": "Malik Nabers over 5.5 receptions",
-"p": 0.4884,
-"price": 104,
-"book": "Novig",
+"line": 24.5,
+"name": "jk dobbins",
+"lab": "J.K. Dobbins over 24.5 rush yds",
+"p": 0.5015,
+"price": -120,
+"book": "Kalshi",
 "f": [
 "usage",
-"matchup"
+"matchup",
+"script"
 ],
 "v": [
 "usage",
 "matchup",
+"script",
 "our model above fair",
-"lc",
-"value"
+"lc"
 ],
 "sport": "nfl",
-"edge": 0.077
+"edge": 0.0333
 },
 {
-"gid": "2026_09_LA_WAS",
-"start": "2026-11-08T13:00:00",
+"gid": "2026_09_ARI_SEA",
+"start": "2026-11-08T16:25:00",
+"kind": "rush_yds",
+"side": "o",
+"line": 49.5,
+"name": "tyler allgeier",
+"lab": "Tyler Allgeier over 49.5 rush yds",
+"p": 0.4784,
+"price": -102,
+"book": "Kalshi",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0868
+},
+{
+"gid": "2026_09_HOU_LAC",
+"start": "2026-11-08T16:05:00",
 "kind": "rec",
 "side": "o",
-"line": 8.5,
-"name": "puka nacua",
-"lab": "Puka Nacua over 8.5 receptions",
-"p": 0.4633,
-"price": 117,
+"line": 2.5,
+"name": "xavier hutchinson",
+"lab": "Xavier Hutchinson over 2.5 receptions",
+"p": 0.4088,
+"price": 144,
 "book": "Novig",
 "f": [
 "usage"
@@ -33070,157 +33191,15 @@
 "v": [
 "usage",
 "our model above fair",
-"lc",
-"value"
+"consensus up",
+"lc"
 ],
 "sport": "nfl",
-"edge": 0.0927
+"edge": 0.0647
 }
 ],
-"p": 0.22628,
-"d": 4.427,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T21:05:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "tank dell",
-"lab": "Tank Dell over 2.5 receptions",
-"p": 0.3103,
-"price": 350,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.3961,
-"fair": 0.2624,
-"main": false
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "marvin mims",
-"lab": "Marvin Mims over 2.5 receptions",
-"p": 0.2614,
-"price": 400,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.3071,
-"fair": 0.2348,
-"main": false
-}
-],
-"p": 0.08111,
-"d": 22.5,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "2026_09_HOU_LAC",
-"start": "2026-11-08T21:05:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "tank dell",
-"lab": "Tank Dell over 2.5 receptions",
-"p": 0.3103,
-"price": 350,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.3961,
-"fair": 0.2624,
-"main": false
-},
-{
-"gid": "2026_09_DEN_CAR",
-"start": "2026-11-08T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "marvin mims",
-"lab": "Marvin Mims over 2.5 receptions",
-"p": 0.2614,
-"price": 400,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.3071,
-"fair": 0.2348,
-"main": false
-},
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "darnell mooney",
-"lab": "Darnell Mooney over 2.5 receptions",
-"p": 0.2328,
-"price": 425,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.2221,
-"fair": 0.2085,
-"main": false
-}
-],
-"p": 0.01888,
-"d": 118.125,
-"first": "2026-11-08T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_09_NYG_PHI",
-"start": "2026-11-08T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "darnell mooney",
-"lab": "Darnell Mooney over 2.5 receptions",
-"p": 0.2328,
-"price": 425,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.2221,
-"fair": 0.2085,
-"main": false
-},
-{
-"gid": "2026_09_DAL_IND",
-"start": "2026-11-08T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "laquon treadwell",
-"lab": "Laquon Treadwell over 2.5 receptions",
-"p": 0.2777,
-"price": 325,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.1801,
-"fair": 0.2698,
-"main": false
-}
-],
-"p": 0.06465,
-"d": 22.312,
+"p": 0.09808,
+"d": 8.859,
 "first": "2026-11-08T18:00:00+00:00",
 "res": null
 }
