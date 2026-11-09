@@ -804,7 +804,7 @@ def updates():
   </dl></section>
   <section id="winners"><h2>What winners share</h2><dl>
     <div><dt>What it tracks</dt><dd>Every night, the traits of every graded over at your books and every parlay (sport, stat, book, price, claimed edge, signals, reasons, role / archetype, how early it was found), each judged against its price over the last 30 days. A trait that clears the bar is written down that day and graded only on later bets (the forward check), so luck from scanning many traits doesn’t pass as a pattern.</dd></div>
-    <div><dt>Latest results</dt><dd><a href="winners.html">See what winners share →</a></dd></div>
+    <div><dt>Latest results</dt><dd><a href="profit.html#winners">See what winners share →</a></dd></div>
   </dl></section>
   {section("nfl", "NFL")}
   {section("nhl", "NHL")}

@@ -74,10 +74,8 @@ jobs:
         working-directory: engine
         run: |
           python profit.py tags || true
+          python traits.py || true
           python profit.py page || true
-      - name: What winners share (traits.py; rebuilds only when new results are in)
-        working-directory: engine
-        run: python traits.py || true
       - run: |
           git config user.name "sim-sheet-bot"
           git config user.email "sim-sheet-bot@users.noreply.github.com"

@@ -1587,9 +1587,11 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .spark{width:100%;height:56px;display:block;margin:4px 0 10px}
 .sph{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.sph h2{margin-right:auto}
 @media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5){display:none}}
+.ptabs{display:flex;gap:6px;margin:10px 0 14px;flex-wrap:wrap}.ptabs button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:6px 14px;font:600 14px var(--body);cursor:pointer}.ptabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 </style></head><body><div class="wrap">
-<header><div><div class="eyebrow">All sports</div><h1>Profit</h1></div><p class="small" style="margin:6px 0 0"><a href="winners.html">What winners share →</a> <span class="muted">every day: traits of the bets that hit, judged against their price</span></p></header>
-<main id="main"></main>
+<header><div><div class="eyebrow">All sports</div><h1>Profit</h1></div></header>
+<div class="ptabs" role="tablist" aria-label="Profit views"><button type="button" role="tab" data-ptab="main" aria-selected="true">Profit</button><button type="button" role="tab" data-ptab="winners" aria-selected="false">What winners share</button></div>
+<main id="main"></main><div id="wtab" hidden>__WINNERS__</div>
 <footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets); Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets. Skill vs mkt = 1 − Brier score of our chance ÷ Brier score of the market’s chance on the same bets (the market’s fair with the vig out for tags, Kalshi’s price paid without the fee for prediction-market picks): above 0 means our chance forecast these bets better than the price did, with its 95% range.</footer>
 </div><script>
 const D = __DATA__;
@@ -1724,6 +1726,14 @@ function render(){
   document.getElementById('main').innerHTML = you() + working() + oddsTable() + archOdds() + archOdds(FE.odds_role, true) + feed() + legTable() + edgeTable() + all;
 }
 render();
+// tabs (owner 2026-11-09: 'make this a tab under profits'): Profit | What winners share (#winners opens it)
+function ptab(t){ const w = t === 'winners' && document.getElementById('wtab').innerHTML.trim();
+  document.getElementById('main').hidden = !!w; document.getElementById('wtab').hidden = !w;
+  document.querySelectorAll('[data-ptab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.ptab === (w ? 'winners' : 'main')))); }
+document.addEventListener('click', e => { const b = e.target.closest('[data-ptab]'); if (!b) return;
+  ptab(b.dataset.ptab); history.replaceState(null, '', b.dataset.ptab === 'winners' ? '#winners' : location.pathname + location.search); window.scrollTo(0, 0); });
+window.addEventListener('hashchange', () => ptab(location.hash === '#winners' ? 'winners' : 'main'));
+ptab(location.hash === '#winners' ? 'winners' : 'main');
 </script></body></html>"""
 
 
@@ -1735,6 +1745,12 @@ def page():
     spec.loader.exec_module(S)
     d = page_data()
     s = (PAGE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS).replace("__DATA__", json.dumps(d, separators=(",", ":"))))
+    try:
+        import traits
+        wb = traits.body()
+    except Exception as e:                                                      # noqa: BLE001
+        print("profit page: winners tab failed:", e); wb = ""
+    s = s.replace("__WINNERS__", wb or '<section class="panel"><p class="note">No results to compare yet.</p></section>')
     src = os.path.join(OUT, "profit_page.html")
     open(src, "w", encoding="utf-8").write(s)
     site = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")

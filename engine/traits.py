@@ -336,9 +336,20 @@ def build(force=False):
 
 # ---------------------------------------------------------------- page
 def page(D):
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("sim_site", os.path.join(HERE, "site.py"))
-    S = importlib.util.module_from_spec(spec); spec.loader.exec_module(S)
+    """the section now lives as a tab on the Profit page (owner 2026-11-09: 'make this a tab under profits');
+    /winners.html only forwards there"""
+    open(os.path.join(SITE, "winners.html"), "w", encoding="utf-8").write(
+        '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=profit.html#winners">'
+        '<title>What winners share</title><a href="profit.html#winners">What winners share is now a tab on the Profit page →</a>')
+
+
+def body(D=None):
+    """the 'What winners share' tab for profit.py page(); '' when there is no data yet"""
+    if D is None:
+        try:
+            D = json.load(open(os.path.join(OUT, "traits.json"), encoding="utf-8"))
+        except (OSError, ValueError):
+            return ""
     e = html.escape
     pct = lambda v: "–" if v is None else f"{v * 100:+.0f}%"
     cls = lambda v: "" if v is None else ' class="up"' if v > 0 else ' class="dn"'
@@ -393,9 +404,9 @@ def page(D):
 .wn .tc{{border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted)}}.wn ul.lg{{margin:4px 0 0;padding-left:18px;font-size:13.5px}}
 .wn details.how summary{{cursor:pointer;color:var(--muted);font-size:13.5px;margin:8px 0}}
 </style><div class="wn">
-<header class="hero"><h1>What winners share</h1>
-<p class="sub">Every day, every graded over at Hard Rock, Novig and Kalshi (tracked tags, slate picks, every parlay leg) and every cross-game parlay,
-sorted by what they had in common before the game. Updated {e(D["built"][:16].replace("T", " "))} UTC · results through {e(dl)}.</p></header>
+<section class="panel"><div class="phead"><h2>What winners share</h2></div>
+<p class="note" style="margin:0 0 6px">Every day, every graded over at Hard Rock, Novig and Kalshi (tracked tags, slate picks, every parlay leg) and every cross-game parlay,
+sorted by what they had in common before the game. Updated {e(D["built"][:16].replace("T", " "))} UTC · results through {e(dl)}.</p>
 <details class="how" open><summary>How to read this</summary><p class="note">A trait found in most winners is usually just a short price: favorites win most
 of the time and fill every list of winners. So each trait is judged against its price: <b>won vs priced</b> (wins vs what the odds implied) and the
 <b>return</b> at $1 a bet, in both halves of the last {WINDOW} days. About {D["scanned"]} traits are checked every day, so a few will look good by luck.
@@ -413,8 +424,8 @@ settled after that day. A trait that keeps beating its price there is a real lea
 <details class="how"><summary>Winning positions ({y["pos"]["w"]})</summary><ul class="wl">{wl or '<li class="note">None.</li>'}</ul></details>
 <h2>Last {WINDOW} days: positions (legs and straights)</h2>{sect("positions")}
 <h2>Last {WINDOW} days: parlays</h2>{sect("parlays")}
-<p class="note" style="margin-top:24px">Display only: no card, tag or bet rule reads this page. Data: markets/traits.json.</p></div>"""
-    S.write_page("winners.html", "What winners share · Sim Sheet", "profit", body, depth=0)
+<p class="note" style="margin-top:24px">Display only: no card, tag or bet rule reads this page. Data: markets/traits.json.</p></section></div>"""
+    return body
 
 
 if __name__ == "__main__":
