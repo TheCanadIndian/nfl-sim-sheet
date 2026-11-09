@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-09",
 "lock": "2026-11-10T00:00:00+00:00",
-"frozen_at": "2026-11-09T22:44:21.106Z",
+"frozen_at": "2026-11-09T22:49:10.636Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -61,15 +61,15 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909957",
-"start": "2026-11-10T01:30Z",
+"gid": "401909952",
+"start": "2026-11-10T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "kevin durant",
-"lab": "Kevin Durant 6+ ast",
-"p": 0.2184,
-"price": 335,
+"line": 2.5,
+"name": "walker kessler",
+"lab": "Walker Kessler 3+ ast",
+"p": 0.2754,
+"price": 257,
 "book": "Novig",
 "f": [
 "usage",
@@ -97,9 +97,9 @@
 ]
 }
 ],
-"p": 0.07698,
-"d": 18.487,
-"first": "2026-11-10T01:30:00+00:00",
+"p": 0.09709,
+"d": 15.172,
+"first": "2026-11-10T00:00:00+00:00",
 "res": null
 },
 {
@@ -107,14 +107,14 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909955",
-"start": "2026-11-10T00:30Z",
-"kind": "reb",
+"gid": "401909952",
+"start": "2026-11-10T00:00Z",
+"kind": "ast",
 "side": "o",
-"line": 7.5,
-"name": "rj barrett",
-"lab": "RJ Barrett 8+ reb",
-"p": 0.2485,
+"line": 2.5,
+"name": "walker kessler",
+"lab": "Walker Kessler 3+ ast",
+"p": 0.2754,
 "price": 257,
 "book": "Novig",
 "f": [
@@ -161,15 +161,34 @@
 ]
 }
 ],
-"p": 0.02321,
+"p": 0.02573,
 "d": 44.179,
-"first": "2026-11-10T00:30:00+00:00",
+"first": "2026-11-10T00:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
+{
+"gid": "401909955",
+"start": "2026-11-10T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "rj barrett",
+"lab": "RJ Barrett 8+ reb",
+"p": 0.2572,
+"price": 257,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
 {
 "gid": "401909957",
 "start": "2026-11-10T01:30Z",
@@ -186,23 +205,6 @@
 "matchup",
 "rotation",
 "game"
-]
-},
-{
-"gid": "401909958",
-"start": "2026-11-10T02:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "julian champagnie",
-"lab": "Julian Champagnie 4+ threes",
-"p": 0.2937,
-"price": 325,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"price"
 ]
 },
 {
@@ -224,10 +226,9 @@
 ]
 }
 ],
-"p": 0.01961,
-"d": 69.328,
-"first": "2026-11-10T01:30:00+00:00",
-"pick": "longshot",
+"p": 0.01718,
+"d": 58.236,
+"first": "2026-11-10T00:30:00+00:00",
 "res": null
 },
 {
@@ -278,7 +279,7 @@
 "name": null,
 "lab": "LAL moneyline",
 "p": 0.463,
-"price": 130,
+"price": 133,
 "book": "Novig"
 },
 {
@@ -295,7 +296,7 @@
 }
 ],
 "p": 0.3179,
-"d": 4.004,
+"d": 4.056,
 "first": "2026-11-10T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -313,7 +314,7 @@
 "name": null,
 "lab": "LAL moneyline",
 "p": 0.463,
-"price": 130,
+"price": 133,
 "book": "Novig"
 },
 {
@@ -330,7 +331,7 @@
 }
 ],
 "p": 0.29248,
-"d": 3.979,
+"d": 4.031,
 "first": "2026-11-10T00:00:00+00:00",
 "res": null
 },
@@ -347,7 +348,53 @@
 "name": null,
 "lab": "LAL moneyline",
 "p": 0.463,
-"price": 130,
+"price": 133,
+"book": "Novig"
+},
+{
+"gid": "401909957",
+"start": "2026-11-10T01:30Z",
+"kind": "ast",
+"side": "o",
+"line": 1.5,
+"name": "marcus smart",
+"lab": "Marcus Smart 2+ assists",
+"p": 0.6317,
+"price": -137,
+"book": "Kalshi"
+},
+{
+"gid": "401909959",
+"start": "2026-11-10T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 15.5,
+"name": "saddiq bey",
+"lab": "Saddiq Bey over 15.5 points",
+"p": 0.6866,
+"price": -135,
+"book": "Hard Rock"
+}
+],
+"p": 0.20082,
+"d": 7.016,
+"first": "2026-11-10T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909952",
+"start": "2026-11-10T00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "LAL moneyline",
+"p": 0.463,
+"price": 133,
 "book": "Novig"
 },
 {
@@ -376,7 +423,7 @@
 }
 ],
 "p": 0.15619,
-"d": 8.753,
+"d": 8.868,
 "first": "2026-11-10T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -413,40 +460,6 @@
 "p": 0.12313,
 "d": 9.878,
 "first": "2026-11-10T01:30:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "401909952",
-"start": "2026-11-10T00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "LAL moneyline",
-"p": 0.463,
-"price": 130,
-"book": "Novig"
-},
-{
-"gid": "401909959",
-"start": "2026-11-10T03:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "NO moneyline",
-"p": 0.1949,
-"price": 471,
-"book": "Novig"
-}
-],
-"p": 0.09025,
-"d": 13.133,
-"first": "2026-11-10T00:00:00+00:00",
 "res": null
 },
 {
@@ -594,7 +607,7 @@
 "line": 6.5,
 "name": "andrew nembhard",
 "lab": "Andrew Nembhard over 6.5 assists",
-"p": 0.5054,
+"p": 0.5101,
 "price": 110,
 "book": "Hard Rock",
 "f": [
@@ -609,7 +622,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.055
+"edge": 0.0644
 },
 {
 "gid": "401909957",
@@ -638,7 +651,7 @@
 "edge": 0.0017
 }
 ],
-"p": 0.10968,
+"p": 0.1107,
 "d": 9.82,
 "first": "2026-11-10T00:00:00+00:00",
 "res": null
@@ -731,7 +744,7 @@
 "line": 6.5,
 "name": "andrew nembhard",
 "lab": "Andrew Nembhard over 6.5 assists",
-"p": 0.5054,
+"p": 0.5101,
 "price": 110,
 "book": "Hard Rock",
 "f": [
@@ -746,10 +759,10 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.055
+"edge": 0.0644
 }
 ],
-"p": 0.06065,
+"p": 0.06122,
 "d": 20.895,
 "first": "2026-11-10T00:00:00+00:00",
 "res": null
@@ -786,12 +799,12 @@
 "line": 24.5,
 "name": "pascal siakam",
 "lab": "Pascal Siakam over 24.5 points",
-"p": 0.3237,
-"fair": 0.3286,
+"p": 0.3187,
+"fair": 0.3234,
 "price": 240,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1005,
+"edge": 0.0837,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -799,7 +812,7 @@
 ]
 }
 ],
-"p": 0.09395,
+"p": 0.09246,
 "d": 13.6,
 "first": "2026-11-10T01:00:00+00:00",
 "res": null
@@ -836,12 +849,12 @@
 "line": 24.5,
 "name": "pascal siakam",
 "lab": "Pascal Siakam over 24.5 points",
-"p": 0.3237,
-"fair": 0.3286,
+"p": 0.3187,
+"fair": 0.3234,
 "price": 240,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1005,
+"edge": 0.0837,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -869,7 +882,7 @@
 ]
 }
 ],
-"p": 0.03991,
+"p": 0.03928,
 "d": 32.776,
 "first": "2026-11-10T01:00:00+00:00",
 "res": null
@@ -899,28 +912,28 @@
 ]
 },
 {
-"gid": "401909954",
+"gid": "401909952",
 "start": "2026-11-10T00:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 8.5,
-"name": "kevin huerter",
-"lab": "Kevin Huerter over 8.5 points",
-"p": 0.465,
-"fair": 0.464,
-"price": 113,
-"book": "Novig",
+"line": 11.5,
+"name": "walker kessler",
+"lab": "Walker Kessler over 11.5 rebounds",
+"p": 0.446,
+"fair": 0.4451,
+"price": 120,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0096,
+"edge": -0.0189,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (7.5)"
+"one rung above the main line (10.5)"
 ]
 }
 ],
-"p": 0.19711,
-"d": 5.133,
+"p": 0.18908,
+"d": 5.302,
 "first": "2026-11-10T00:00:00+00:00",
 "res": null
 },
@@ -929,6 +942,22 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401909956",
+"start": "2026-11-10T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "ivica zubac",
+"lab": "Ivica Zubac over 11.5 rebounds",
+"p": 0.2431,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.2761,
+"fair": 0.2577,
+"main": false
+},
+{
 "gid": "401909958",
 "start": "2026-11-10T02:00:00+00:00",
 "kind": "fg3m",
@@ -943,26 +972,10 @@
 "edge": 0.2453,
 "fair": 0.2944,
 "main": false
-},
-{
-"gid": "401909956",
-"start": "2026-11-10T01:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "ivica zubac",
-"lab": "Ivica Zubac over 9.5 rebounds",
-"p": 0.4654,
-"price": 165,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.2333,
-"fair": 0.4906,
-"main": true
 }
 ],
-"p": 0.13636,
-"d": 11.262,
+"p": 0.07123,
+"d": 22.312,
 "first": "2026-11-10T01:00:00+00:00",
 "res": null
 },
@@ -971,6 +984,22 @@
 "tier": "3 legs",
 "legs": [
 {
+"gid": "401909956",
+"start": "2026-11-10T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "ivica zubac",
+"lab": "Ivica Zubac over 11.5 rebounds",
+"p": 0.2431,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.2761,
+"fair": 0.2577,
+"main": false
+},
+{
 "gid": "401909958",
 "start": "2026-11-10T02:00:00+00:00",
 "kind": "fg3m",
@@ -985,22 +1014,6 @@
 "edge": 0.2453,
 "fair": 0.2944,
 "main": false
-},
-{
-"gid": "401909956",
-"start": "2026-11-10T01:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "ivica zubac",
-"lab": "Ivica Zubac over 9.5 rebounds",
-"p": 0.4654,
-"price": 165,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.2333,
-"fair": 0.4906,
-"main": true
 },
 {
 "gid": "401909959",
@@ -1019,8 +1032,8 @@
 "main": false
 }
 ],
-"p": 0.05164,
-"d": 34.914,
+"p": 0.02697,
+"d": 69.169,
 "first": "2026-11-10T01:00:00+00:00",
 "res": null
 }
