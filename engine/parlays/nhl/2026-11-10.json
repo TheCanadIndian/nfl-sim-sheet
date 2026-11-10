@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-10",
 "lock": "2026-11-11T00:00:00+00:00",
-"frozen_at": "2026-11-10T22:10:39.976Z",
+"frozen_at": "2026-11-10T22:16:16.288Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -1364,7 +1364,7 @@
 "name": null,
 "lab": "MIN moneyline",
 "p": 0.529,
-"price": -120,
+"price": -117,
 "book": "Novig"
 }
 ],
@@ -1432,7 +1432,7 @@
 "name": null,
 "lab": "MIN moneyline",
 "p": 0.529,
-"price": -120,
+"price": -117,
 "book": "Novig"
 }
 ],
@@ -1466,7 +1466,7 @@
 "name": null,
 "lab": "OTT moneyline",
 "p": 0.4713,
-"price": 102,
+"price": 106,
 "book": "Novig"
 }
 ],
@@ -1500,7 +1500,7 @@
 "name": null,
 "lab": "WSH moneyline",
 "p": 0.5287,
-"price": -104,
+"price": -108,
 "book": "Novig"
 }
 ],
@@ -1908,7 +1908,7 @@
 "name": null,
 "lab": "DET-STL over 5.5",
 "p": 0.5011,
-"price": -120,
+"price": -117,
 "book": "Novig"
 }
 ],
@@ -2055,7 +2055,7 @@
 },
 {
 "card": "Same-game combos (experimental)",
-"tier": "Goal + win",
+"tier": "Goal + over 5.5",
 "legs": [
 {
 "gid": "2026020292",
@@ -2063,27 +2063,27 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "adrian kempe",
-"lab": "Adrian Kempe to score",
-"p": 0.3862,
-"price": 167,
+"name": "artemi panarin",
+"lab": "Artemi Panarin to score",
+"p": 0.3925,
+"price": 156,
 "book": "Novig"
 },
 {
 "gid": "2026020292",
 "start": "2026-11-11T03:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
+"kind": "total",
+"side": "over",
+"line": 5.5,
 "name": null,
-"lab": "LAK moneyline",
-"p": 0.54,
-"price": -120,
-"book": "Novig"
+"lab": "NSH-LAK over 5.5",
+"p": 0.5379,
+"price": -134,
+"book": "Polymarket"
 }
 ],
-"p": 0.25948,
-"d": 3.854,
+"p": 0.26134,
+"d": 3.826,
 "first": "2026-11-11T03:00:00+00:00",
 "res": null
 },
@@ -2400,32 +2400,32 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026020286",
+"gid": "2026020288",
 "start": "2026-11-11T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "jack roslovic",
-"lab": "Jack Roslovic over 1.5 shots",
-"p": 0.6724,
-"price": -190,
-"book": "DK"
-},
-{
-"gid": "2026020290",
-"start": "2026-11-11T01:00:00Z",
 "kind": "ml",
 "side": "away",
 "line": null,
 "name": null,
-"lab": "DET moneyline",
-"p": 0.4349,
-"price": 133,
+"lab": "WSH moneyline",
+"p": 0.5287,
+"price": -108,
+"book": "Novig"
+},
+{
+"gid": "2026020289",
+"start": "2026-11-11T00:30:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "charlie coyle",
+"lab": "Charlie Coyle over 1.5 shots",
+"p": 0.5306,
+"price": -111,
 "book": "Novig"
 }
 ],
-"p": 0.2924,
-"d": 3.556,
+"p": 0.28054,
+"d": 3.661,
 "first": "2026-11-11T00:00:00+00:00",
 "res": null
 },
@@ -2466,12 +2466,12 @@
 "name": null,
 "lab": "WSH moneyline",
 "p": 0.5287,
-"price": -104,
+"price": -108,
 "book": "Novig"
 }
 ],
 "p": 0.16275,
-"d": 7.206,
+"d": 7.075,
 "first": "2026-11-11T00:00:00+00:00",
 "res": null
 },
@@ -2534,7 +2534,7 @@
 "name": null,
 "lab": "WSH moneyline",
 "p": 0.5287,
-"price": -104,
+"price": -108,
 "book": "Novig"
 },
 {
@@ -2563,7 +2563,7 @@
 }
 ],
 "p": 0.16001,
-"d": 7.192,
+"d": 7.062,
 "first": "2026-11-11T00:00:00+00:00",
 "res": null
 },
