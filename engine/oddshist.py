@@ -209,6 +209,11 @@ def update():
             C = {}
         score_openers(sport, H, t, C)
         json.dump(C, open(CLV_PATH, "w"), separators=(",", ":"))
+        try:                                                  # every prop's last pregame price (allprops.py)
+            import allprops
+            allprops.capture(sport, H, t)
+        except Exception as e:                                # noqa: BLE001
+            print(f"allprops capture {sport}: failed ({type(e).__name__}: {e})")
         prune(H, t)
         json.dump(H, open(path(sport), "w"), separators=(",", ":"))
         # early-value openers at the owner's books -> flags (profit.tags logs and grades each first sighting). Kept until the

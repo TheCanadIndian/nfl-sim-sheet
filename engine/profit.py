@@ -1416,6 +1416,45 @@ def edge_bands():
     return out
 
 
+def allprops_cells(sport, since):
+    """Every prop at Hard Rock / Novig / Kalshi (allprops.py), last 30 days -> {(group, stat, band label | 'all'): row}; group
+    'All archetypes' / 'All roles' too. ax = what the cell would win at the rate every group's props at the same stat x odds
+    range won per unit priced (the longshot / vig effect taken out)."""
+    try:
+        A = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", f"allprops_{sport}.json")))
+    except (OSError, ValueError):
+        return {}
+    cell = {}
+    for d, C in (A.get("days") or {}).items():
+        if d < since:
+            continue
+        for k, (n, w, q, f) in C.items():
+            g, st, b = k.rsplit("|", 2)
+            c = cell.setdefault((g, st, int(b)), [0, 0, 0.0, 0.0]); c[0] += n; c[1] += w; c[2] += q; c[3] += f
+    rate = {}
+    for (g, st, b), c in cell.items():
+        r = rate.setdefault((st, b), [0, 0.0]); r[0] += c[1]; r[1] += c[2]
+    ALL = "All archetypes" if sport == "nba" else "All roles"
+    out = {}
+    for (g, st, b), (n, w, q, f) in cell.items():
+        R = rate[(st, b)]; ax = q * R[0] / R[1] if R[1] else q
+        for key in [(g_, s_, l_) for g_ in (g, ALL) for s_ in (st, "all") for l_ in (ODDS_BANDS[b][2], "all")]:
+            o = out.setdefault(key, dict(an=0, aw=0, ae=0.0, ax=0.0)); o["an"] += n; o["aw"] += w; o["ae"] += q; o["ax"] += ax
+    return {k: dict(an=v["an"], aw=v["aw"], ae=round(v["ae"], 1), ax=round(v["ax"], 1)) for k, v in out.items()}
+
+
+def _merge_all(rows, cells):
+    """Every-prop counts onto the straights-by-archetype rows (rows with no bets of ours get n 0)."""
+    ix = {(r["arch"], r["st"], r["lab"]): r for r in rows}
+    for k, v in cells.items():
+        r = ix.get(k)
+        if r is None:
+            r = ix[k] = dict(arch=k[0], st=k[1], lab=k[2], n=0, w=0, exp=0.0, net=0.0, roi=0.0)
+            rows.append(r)
+        r.update(v)
+    return rows
+
+
 def feed_data():
     import glob as _g
     since = (dt.datetime.now(ET).date() - dt.timedelta(days=FEED_DAYS)).isoformat()
@@ -1528,10 +1567,11 @@ def feed_data():
             b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
     odds_role = [dict(arch=ar, st=k, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
                       roi=round(b["net"] / b["stake"], 4)) for (ar, k, i), b in sorted(orl.items())]
+    odds_role = _merge_all(odds_role, allprops_cells("nfl", since30))
     try:                                                     # NFL ladder candidates star these (owner 2026-11-08)
         json.dump(dict(fetched=dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
                        cells=[dict(a=r["arch"], s=r["st"], b=r["lab"], n=r["n"], w=r["w"], e=r["exp"], r=r["roi"]) for r in odds_role
-                              if r["arch"] not in ("All roles", "unknown", "Game lines") and r["st"] != "all" and r["lab"] != "all"]),
+                              if r["arch"] not in ("All roles", "unknown", "Game lines") and r["st"] != "all" and r["lab"] != "all" and r["n"]]),
                   open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "role_odds_nfl.json"), "w"), separators=(",", ":"))
     except OSError:
         pass
@@ -1546,10 +1586,11 @@ def feed_data():
             b["n"] += 1; b["w"] += x["res"] == "W"; b["exp"] += 1 / x["pay"]; b["net"] += x["net"]; b["stake"] += STRAIGHT
     odds_arch = [dict(arch=ar, st=k, lab="all" if i < 0 else ODDS_BANDS[i][2], n=b["n"], w=b["w"], exp=round(b["exp"], 1), net=round(b["net"], 2),
                       roi=round(b["net"] / b["stake"], 4)) for (ar, k, i), b in sorted(oa.items())]
+    odds_arch = _merge_all(odds_arch, allprops_cells("nba", since30))
     try:                                                     # NBA ladder edges star these (owner 2026-11-07)
         json.dump(dict(fetched=dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
                        cells=[dict(a=r["arch"], s=r["st"], b=r["lab"], n=r["n"], w=r["w"], e=r["exp"], r=r["roi"]) for r in odds_arch
-                              if r["arch"] not in ("All archetypes", "unknown", "no player") and r["st"] != "all" and r["lab"] != "all"]),
+                              if r["arch"] not in ("All archetypes", "unknown", "no player") and r["st"] != "all" and r["lab"] != "all" and r["n"]]),
                   open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "arch_odds_nba.json"), "w"), separators=(",", ":"))
     except OSError:
         pass
@@ -1579,7 +1620,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .fi .lg{grid-column:2/4;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12.5px}.fi .lg span.W{color:var(--good)}.fi .lg span.L{color:var(--bad)}.fi .lg span.V{color:var(--muted)}
 .lt table{width:100%;border-collapse:collapse;font-size:13px}.lt td,.lt th{padding:4px 6px;border-top:1px solid var(--faint);text-align:right}.lt td:first-child,.lt th:first-child{text-align:left}
 .rp{color:var(--good)}.rn{color:var(--bad)}
-.arq .fgrp{padding-left:0}.arq .aqin{padding-left:12px}.arq .ast>summary{font-size:13px}.arq table{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:12.5px}.arq td,.arq th{text-align:right;padding:3px 6px 3px 0;border-top:1px solid var(--faint);white-space:nowrap}.arq td:first-child,.arq th:first-child{text-align:left}.aqs{margin:6px 0 4px}.aqs button{padding:2px 9px;font-size:12px}.aqs small{opacity:.7;font-weight:400}.arq .tb{min-width:0}.aqw{overflow-x:auto;max-width:100%}.arq td{white-space:nowrap}.arq table{font-size:12.5px}.arq th,.arq td{padding-right:6px}
+.arq .fgrp{padding-left:0}.arq .aqin{padding-left:12px}.arq .ast>summary{font-size:13px}.arq table{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:12.5px}.arq td,.arq th{text-align:right;padding:3px 6px 3px 0;border-top:1px solid var(--faint);white-space:nowrap}.arq td:first-child,.arq th:first-child{text-align:left}.aqs{margin:6px 0 4px}.aqs button{padding:2px 9px;font-size:12px}.aqs small{opacity:.7;font-weight:400}.arq .tb{min-width:0}.aqw{overflow-x:auto;max-width:100%}.arq td{white-space:nowrap}.arq table{font-size:12.5px}.arq th,.arq td{padding-right:6px}.arq .apx{display:block;font-size:11.5px;color:var(--muted);white-space:normal}.arq th.apc{border-left:1px solid var(--faint);padding-left:6px}.arq td.apc{background:color-mix(in srgb,var(--faint) 35%,transparent)}
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .vd.proven{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}.vd.promising{background:color-mix(in srgb,#6CB4FF 22%,transparent);color:#6CB4FF}
 .vd.unproven,.vd.too{background:var(--sunk);color:var(--muted)}.vd.losing{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
@@ -1677,21 +1718,26 @@ function archOdds(R0, nfl){
   const ALL = nfl ? 'All roles' : 'All archetypes', PF = nfl ? 'nfl:' : '';
   const pc0 = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
   const SO = ['Points', 'Rebounds', 'Assists', 'Threes', 'Double-double', 'Triple-double', 'First basket', 'Receiving yds', 'Catches', 'Rushing yds', 'Passing yds', 'Anytime TD', 'Game lines', 'Other'];
-  const rec = t => `<span class="c">${t.n} bets · won ${t.w} vs ${t.exp.toFixed(0)} priced</span>`;
-  const net = t => `<span class="net ${t.roi >= 0 ? 'rp' : 'rn'}">${usd(t.net)} · ${pc0(t.roi)}${t.n < 30 ? ' <small class="muted">few</small>' : ''}</span>`;
-  const trow = b => `<tr><td>${esc(b.lab)}</td><td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${pc0(b.roi)}${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td></tr>`;
-  const table = B => `<div class="aqw"><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th></tr></thead><tbody>${B.map(trow).join('')}</tbody></table></div>`;
+  // every prop posted (allprops.py, owner 2026-11-09: 'collect all the props that win per archetype per odds range'):
+  // vs mates = won vs what every type's props at the same stat x odds range won per unit priced
+  const mate = t => t.an && t.ax ? t.aw / t.ax - 1 : null;
+  const mc = t => { const v = mate(t); return v == null ? '<span class="muted">–</span>' : `<span class="${v >= 0 ? 'rp' : 'rn'}">${pc0(v)}</span>${t.an < 100 ? ' <small class="muted">few</small>' : ''}`; };
+  const rec = t => `<span class="c">${t.n ? `${t.n} bets · won ${t.w} vs ${t.exp.toFixed(0)} priced` : 'no bets of ours'}${t.an ? `<span class="apx"> · every prop ${t.an.toLocaleString()}: won ${t.aw.toLocaleString()} vs ${Math.round(t.ae).toLocaleString()} priced · vs mates ${mc(t)}</span>` : ''}</span>`;
+  const net = t => t.n ? `<span class="net ${t.roi >= 0 ? 'rp' : 'rn'}">${usd(t.net)} · ${pc0(t.roi)}${t.n < 30 ? ' <small class="muted">few</small>' : ''}</span>` : '<span class="net muted">–</span>';
+  const trow = b => `<tr><td>${esc(b.lab)}</td>${b.n ? `<td>${b.n}</td><td>${b.w}</td><td class="muted">${b.exp.toFixed(1)}</td><td>${usd(b.net)}</td><td class="${b.roi >= 0 ? 'rp' : 'rn'}">${pc0(b.roi)}${b.n < 30 ? ' <small class="muted">few</small>' : ''}</td>` : '<td class="muted">0</td><td></td><td></td><td></td><td></td>'}<td class="apc">${b.an ? `${b.aw}<small class="muted"> / ${b.ae.toFixed(1)} · ${b.an}</small>` : '<span class="muted">–</span>'}</td><td class="apc">${mc(b)}</td></tr>`;
+  const table = B => `<div class="aqw"><table><thead><tr><th>Odds</th><th>Bets</th><th>Won</th><th>Priced</th><th>Net</th><th>Return</th><th class="apc" title="Every over posted at Hard Rock / Novig / Kalshi, last price before the start: won / priced · how many">Every prop</th><th class="apc" title="Won vs what every other type of player’s props at the same stat and odds range won per unit priced. Takes out the longshot / margin effect that makes long prices lose for everyone.">vs mates</th></tr></thead><tbody>${B.map(trow).join('')}</tbody></table></div>`;
   const stat = (a, t) => { const k = PF + a + '|' + t.st;
     return `<details class="fgrp ast" data-ak="${esc(k)}"${AOPEN.has(k) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.st)}</b> ${rec(t)}</span>${net(t)}</summary>${table(R.filter(b => b.arch === a && b.st === t.st && b.lab !== 'all'))}</details>`; };
   const arch = t => { const S = R.filter(b => b.arch === t.arch && b.lab === 'all' && b.st !== 'all').sort((x, y) => SO.indexOf(x.st) - SO.indexOf(y.st));
     return `<details class="fgrp" data-ak="${esc(PF + t.arch)}"${AOPEN.has(PF + t.arch) ? ' open' : ''}><summary><span class="gl"><b>${esc(t.arch)}</b> ${rec(t)}</span>${net(t)}</summary><div class="aqin">${S.map(x => stat(t.arch, x)).join('')}</div></details>`; };
-  const tot = R.filter(b => b.lab === 'all' && b.st === 'all').sort((a, b) => (b.arch === ALL) - (a.arch === ALL) || b.n - a.n);
+  const tot = R.filter(b => b.lab === 'all' && b.st === 'all').sort((a, b) => (b.arch === ALL) - (a.arch === ALL) || b.n - a.n || (b.an || 0) - (a.an || 0));
+  const apn = `<p class="note" style="margin:0 0 8px"><b>Every prop</b> = every over posted at Hard Rock, Novig and Kalshi at its last price before the start, graded (not just ours). <b>vs mates</b> compares a group with every other type of player at the same stat and odds range, so the longshot margin that sinks everyone’s long prices is taken out: +10% = won 10% more than its price-mates. In the first study (Oct 20 – Nov 8 books, Kalshi since January) these mostly flipped from one half to the other; only a few leaned the same way twice (rim protector threes overs overpriced, pass-first guard assists a little underpriced). Under 100 props is noise.</p>`;
   if (nfl) return `<section class="panel lt arq"><div class="phead"><h2>NFL straights by role</h2><span class="small muted">role → bet type → odds · last 30 days · $${FE.stake.straight} a bet</span></div>
     <p class="note" style="margin:0 0 8px">Every NFL straight in Your bets, grouped by the player’s role this season (backs by how much of their work is catches, pass-catching vs blocking tight ends, dual-threat vs pocket QBs, slot vs outside receivers from the depth chart), then the stat, then the odds it was taken at (the book’s price, Kalshi with its fee). Game lines have their own row. Tap a row to open it. One prop can count under several tracked rules, and fewer than 30 bets is noise.</p>
-    ${tot.map(arch).join('')}</section>`;
+    ${apn}${tot.map(arch).join('')}</section>`;
   return `<section class="panel lt arq"><div class="phead"><h2>NBA straights by archetype</h2><span class="small muted">archetype → bet type → odds · last 30 days · $${FE.stake.straight} a bet</span></div>
     <p class="note" style="margin:0 0 8px">Every NBA straight in Your bets, grouped by the player’s playstyle (the same 8 types as the NBA page chip), then the stat, then the odds it was taken at (the book’s price, Kalshi with its fee). Tap a row to open it. One prop can count under several tracked rules, and fewer than 30 bets is noise.</p>
-    ${tot.map(arch).join('')}</section>`;
+    ${apn}${tot.map(arch).join('')}</section>`;
 }
 function legTable(){
   const L = FE.legs || []; if (!L.length) return '';
