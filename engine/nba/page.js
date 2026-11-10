@@ -476,6 +476,47 @@ function ladderCard(){
     ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div><div class="ladsw" role="group" aria-label="Star filter"><button type="button" data-lads="1" aria-pressed="${LADS}" title="Only rungs whose archetype, stat and odds range made money in NBA straights by archetype on the Profit page (last 30 days, 20+ bets). Picked after the fact: a lead, not a rule.">★ only <i>${nStar}</i></button></div>${window.MKT && MKT.consBar ? MKT.consBar(cards, LADM) : ''}` : ''}
     <div class="ladbody">${ladRail(cm, [...D.games].sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc)))}${LADV === 'game' ? byGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}</div></section>`;
 }
+// Threes board (owner 2026-11-09: 'a place to see all the recommended threes mispricing across the board for the day'):
+// every Kalshi 3PM rung on today's slate (spread 5c or less, mid 3-97c) priced by the tracked threes rule (profit.py,
+// research/threes_market.py): Kalshi's mid recalibrated (logit -.0794 + 1.0023 logit mid), moved .75 of the way to our
+// threes (nba/threes.py) in log-odds. The pick = the player's rung with the best edge at Kalshi's ask + fee, 5-60% (what the
+// Profit row 'NBA threes: one rung per player' grades); Hard Rock / Novig at the same number shown, with their edge on that chance.
+const THR_W = .75, lgt = v => Math.log(v / (1 - v)), sgm = z => 1 / (1 + Math.exp(-z)), clp = (v, a, b) => Math.min(Math.max(v, a), b);
+function threesBoard(){
+  if (!(window.MKT && MKT.ladderAll)) return '';
+  const now = Date.now(), rows = [];
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id && x.st !== 'Out')){
+      const R = MKT.ladderAll(g.id, p.id, p.n, ['fg3m']).filter(u => u.p != null && u.ya - u.yb <= .05 && u.mid >= .03 && u.mid <= .97 && u.ya < .97)
+        .map(u => { const mk = -.0794 + 1.0023 * lgt(clp(u.mid, .005, .995)), q = sgm(mk + THR_W * (lgt(clp(u.p, .002, .998)) - mk));
+          const v = ladPrice(u), ek = q / u.cost - 1, eb = q * v.best.pay - 1; return {...v, q, ek, eb}; }).sort((a, b) => a.l - b.l);
+      if (!R.length) continue;
+      const pick = R.filter(u => u.ek >= .05 && u.ek <= .6).sort((a, b) => b.ek - a.ek)[0] || null;
+      const bk = R.filter(u => u.eb >= .05 && u.eb <= .6).sort((a, b) => b.eb - a.eb)[0] || null;
+      rows.push({g, p, R, pick, bk, best: pick ? pick.ek : bk ? bk.eb : Math.max(...R.map(u => u.eb))});
+    }
+  }
+  if (!rows.length) return `<section class="panel pempty"><div class="phead"><h2>Threes board <span class="exp3">experimental</span></h2></div><p class="note">No Kalshi threes ladders tight enough yet · they usually fill in on game day.</p></section>`;
+  rows.sort((a, b) => (!!b.pick - !!a.pick) || (!!b.bk - !!a.bk) || b.best - a.best);
+  const n = l => Math.round(l + .5), tx = o => `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`;
+  const chip = (r, u) => { const pk = r.pick === u, e = Math.max(u.ek, u.eb);
+    return `<span class="lru${pk ? ' thpk' : ''}" title="${n(u.l)}+ threes: threes-rule chance ${Math.round(u.q * 100)}% (ours ${Math.round(u.p * 100)}%, Kalshi mid ${Math.round(u.mid * 100)}%) · Kalshi ${Math.round(u.cost * 100)}% with the fee → edge ${u.ek >= 0 ? '+' : '−'}${Math.abs(Math.round(u.ek * 100))}%${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${pk ? ' · the pick the Profit page grades' : ''}"><b>${n(u.l)}+</b>${pk ? ' <b class="thtag">pick</b>' : ''} ${u.opts.map(o => o === u.best ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')} <i class="lbk">${Math.round(u.q * 100)}%</i>${e >= .05 && e <= .6 ? ` <b class="ledge">+${Math.round(e * 100)}%${u.ek < .05 ? ` ${u.best.b === 'Hard Rock' ? 'HR' : 'NV'}` : ''}</b>` : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(r.g.id), name: r.p.n, kind: 'fg3m', line: u.l, book: u.best.b, o: u.best.b === 'Kalshi' ? Math.round(u.cost >= .5 ? -100 * u.cost / (1 - u.cost) : 100 * (1 - u.cost) / u.cost) : Number(String(u.best.price).replace('+', '')), glab: `${r.g.away} @ ${r.g.home}`, start: r.g.start_utc || null, lab: `${r.p.n} ${n(u.l)}+ threes`}) : ''}</span>`; };
+  const med = p => p.s.vegas && p.s.vegas.fg3m ? p.s.vegas.fg3m[MED] : null;
+  const row = r => `<div class="lad"><div class="ladh"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.t)} vs ${esc(r.p.o)} · ${esc(r.g.start || '')}${med(r.p) != null ? ` · our median ${f0(med(r.p))} 3PM` : ''}</span>${r.p.ar ? ` <span class="ladc">${esc(r.p.ar)}</span>` : ''}</div>
+    <div class="ladr">${(THA ? r.R : r.R.filter(u => u === r.pick || u === r.bk || Math.max(u.ek, u.eb) >= .05 || Math.abs(u.mid - .5) < .2).slice(0, 4)).map(u => chip(r, u)).join('')}</div></div>`;
+  const P = rows.filter(r => r.pick), B = rows.filter(r => !r.pick && r.bk), rest = rows.filter(r => !r.pick && !r.bk);
+  return `<section class="panel"><div class="phead"><h2>Threes board <span class="exp3">experimental</span></h2><span class="small muted">${P.length} pick${P.length === 1 ? '' : 's'} · ${B.length} more at Hard Rock / Novig · ${rows.length} players</span></div>
+    <details class="how"><summary>What this is</summary><p class="note">Every Kalshi threes rung on today’s slate, priced by the tracked threes rule: Kalshi’s own price (slightly recalibrated) moved three-quarters of the way to our threes model, which beat the price on Kalshi’s 3PM ladders since last November in every period (not proven: the edge was small and one test). <b>Pick</b> = each player’s rung with the best edge at Kalshi’s ask with the fee, 5–60%: that is what the Profit row ‘NBA threes: one rung per player, 5%+ edge’ grades. Hard Rock (HR) and Novig (NV) at the same number are shown on the same chance; the bold price is the best and its edge is shown (a book name after the edge = only that book clears 5%). The % chip is the rule’s chance. Hover a rung for the parts.</p></details>
+    <div class="ladsw" role="group" aria-label="Rungs shown"><button type="button" data-tha="1" aria-pressed="${THA}">Every rung</button></div>
+    ${P.length ? `<div class="ladg">${P.map(row).join('')}</div>` : '<p class="note">No rung clears 5% at Kalshi right now · updates with prices.</p>'}
+    ${B.length ? `<details class="ladw"${P.length ? '' : ' open'}><summary>${B.length} more where only Hard Rock / Novig clear 5%</summary><div class="ladg">${B.map(row).join('')}</div></details>` : ''}
+    ${rest.length ? `<details class="ladw"><summary>${rest.length} other player${rest.length === 1 ? '' : 's'} with a threes ladder</summary><div class="ladg">${rest.map(row).join('')}</div></details>` : ''}</section>`;
+}
+let THA = false;
+try { THA = localStorage.getItem('nba-tha') === '1'; } catch (e) {}
+document.addEventListener('click', e => { const b = e.target.closest('[data-tha]'); if (!b) return;
+  THA = !THA; try { localStorage.setItem('nba-tha', THA ? '1' : '0'); } catch (x) {} render(); });
 // Ladder edges grouped by game (owner 2026-10-23: "let me see ladder edges by game"): games in start order, each game's
 // players best edge first, five shown and the rest folded; the view is remembered on this device (nba-ladv).
 let LADV = 'game';
@@ -648,7 +689,7 @@ function learnCandsNBA(){
 }
 function parlaysView(){
   if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNBA(); } catch (e) {}
-  return `<div class="pstack">${(window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + ladderCard() + nbaLadderLongshots() + tierParlays()}</div>`;
+  return `<div class="pstack">${(window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + ladderCard() + threesBoard() + nbaLadderLongshots() + tierParlays()}</div>`;
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
