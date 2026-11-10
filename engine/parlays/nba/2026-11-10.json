@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-10",
 "lock": "2026-11-11T00:30:00+00:00",
-"frozen_at": "2026-11-10T21:36:00.878Z",
+"frozen_at": "2026-11-10T21:42:37.351Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -152,7 +152,7 @@
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis 20+ pts",
 "p": 0.2313,
-"price": 373,
+"price": 398,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -162,7 +162,7 @@
 }
 ],
 "p": 0.02498,
-"d": 56.287,
+"d": 59.262,
 "first": "2026-11-11T02:00:00+00:00",
 "res": null
 },
@@ -214,7 +214,7 @@
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis 20+ pts",
 "p": 0.2313,
-"price": 373,
+"price": 398,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -224,7 +224,7 @@
 }
 ],
 "p": 0.01885,
-"d": 74.498,
+"d": 78.435,
 "first": "2026-11-11T02:00:00+00:00",
 "res": null
 },
@@ -259,41 +259,6 @@
 ],
 "p": 0.26132,
 "d": 4.62,
-"first": "2026-11-11T02:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401909963",
-"start": "2026-11-11T02:00Z",
-"kind": "pts",
-"side": "o",
-"line": 9.5,
-"name": "jaxson hayes",
-"lab": "Jaxson Hayes over 9.5 points",
-"p": 0.5079,
-"price": 120,
-"book": "Hard Rock"
-},
-{
-"gid": "401909964",
-"start": "2026-11-11T03:00Z",
-"kind": "spread",
-"side": "away",
-"line": -6.5,
-"name": null,
-"lab": "ORL \u22126.5",
-"p": 0.5,
-"price": 111,
-"book": "Novig"
-}
-],
-"p": 0.25396,
-"d": 4.642,
 "first": "2026-11-11T02:00:00+00:00",
 "pick": "core",
 "res": null
@@ -458,26 +423,27 @@
 {
 "gid": "401909961",
 "start": "2026-11-11T01:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 18.5,
+"line": 5.5,
 "name": "paul george",
-"lab": "Paul George over 18.5 points",
-"p": 0.4766,
-"fair": 0.484,
-"price": 106,
-"book": "Novig",
+"lab": "Paul George over 5.5 rebounds",
+"p": 0.4086,
+"fair": 0.4155,
+"price": 145,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0182,
+"edge": 0.0011,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (17.5)"
+"one rung above the main line (4.5)",
+"soft matchup"
 ]
 }
 ],
-"p": 0.07492,
-"d": 17.304,
+"p": 0.06432,
+"d": 20.58,
 "first": "2026-11-11T00:30:00+00:00",
 "res": null
 },
@@ -488,21 +454,22 @@
 {
 "gid": "401909961",
 "start": "2026-11-11T01:00Z",
-"kind": "pts",
+"kind": "reb",
 "side": "o",
-"line": 18.5,
+"line": 5.5,
 "name": "paul george",
-"lab": "Paul George over 18.5 points",
-"p": 0.4766,
-"fair": 0.484,
-"price": 106,
-"book": "Novig",
+"lab": "Paul George over 5.5 rebounds",
+"p": 0.4086,
+"fair": 0.4155,
+"price": 145,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0182,
+"edge": 0.0011,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (17.5)"
+"one rung above the main line (4.5)",
+"soft matchup"
 ]
 },
 {
@@ -526,8 +493,8 @@
 ]
 }
 ],
-"p": 0.23242,
-"d": 4.08,
+"p": 0.19952,
+"d": 4.852,
 "first": "2026-11-11T01:00:00+00:00",
 "res": null
 },
@@ -628,6 +595,48 @@
 ],
 "p": 0.0308,
 "d": 63.788,
+"first": "2026-11-11T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909960",
+"start": "2026-11-11T00:30:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "andre drummond",
+"lab": "Andre Drummond over 9.5 rebounds",
+"p": 0.2218,
+"price": 425,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1647,
+"fair": 0.2232,
+"main": false
+},
+{
+"gid": "401909961",
+"start": "2026-11-11T01:00:00+00:00",
+"kind": "pts",
+"side": "o",
+"line": 6.5,
+"name": "sam hauser",
+"lab": "Sam Hauser over 6.5 points",
+"p": 0.4378,
+"price": 153,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.1076,
+"fair": 0.4369,
+"main": false
+}
+],
+"p": 0.0971,
+"d": 13.283,
 "first": "2026-11-11T00:30:00+00:00",
 "res": null
 }
