@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-09",
 "lock": "2026-11-10T01:00:00+00:00",
-"frozen_at": "2026-11-10T02:12:54.783Z",
+"frozen_at": "2026-11-10T02:18:32.104Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -1050,40 +1050,6 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "brock boeser",
-"lab": "Brock Boeser to score",
-"p": 0.3212,
-"price": 223,
-"book": "Novig"
-},
-{
-"gid": "2026020284",
-"start": "2026-11-10T02:30:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "VAN moneyline",
-"p": 0.4411,
-"price": 130,
-"book": "Novig"
-}
-],
-"p": 0.19564,
-"d": 5.112,
-"first": "2026-11-10T02:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "Goal + win",
-"legs": [
-{
-"gid": "2026020284",
-"start": "2026-11-10T02:30:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
 "name": "trevor zegras",
 "lab": "Trevor Zegras to score",
 "p": 0.277,
@@ -1098,13 +1064,47 @@
 "line": null,
 "name": null,
 "lab": "PHI moneyline",
-"p": 0.5589,
+"p": 0.5669,
 "price": -133,
 "book": "Novig"
 }
 ],
-"p": 0.19386,
-"d": 5.158,
+"p": 0.19662,
+"d": 5.086,
+"first": "2026-11-10T02:30:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "Goal + win",
+"legs": [
+{
+"gid": "2026020284",
+"start": "2026-11-10T02:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "brock boeser",
+"lab": "Brock Boeser to score",
+"p": 0.3212,
+"price": 223,
+"book": "Novig"
+},
+{
+"gid": "2026020284",
+"start": "2026-11-10T02:30:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "VAN moneyline",
+"p": 0.4331,
+"price": 130,
+"book": "Novig"
+}
+],
+"p": 0.19211,
+"d": 5.205,
 "first": "2026-11-10T02:30:00+00:00",
 "res": null
 },
@@ -1132,13 +1132,13 @@
 "line": null,
 "name": null,
 "lab": "VAN moneyline",
-"p": 0.4411,
+"p": 0.4331,
 "price": 130,
 "book": "Novig"
 }
 ],
-"p": 0.18324,
-"d": 5.457,
+"p": 0.17994,
+"d": 5.557,
 "first": "2026-11-10T02:30:00+00:00",
 "res": null
 },
@@ -1322,40 +1322,6 @@
 "kind": "sog",
 "side": "u",
 "line": 1.5,
-"name": "liam ohgren",
-"lab": "Liam Ohgren under 1.5 shots",
-"p": 0.6285,
-"price": -140,
-"book": "Hard Rock"
-},
-{
-"gid": "2026020285",
-"start": "2026-11-10T03:00:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
-"name": "jacob trouba",
-"lab": "Jacob Trouba under 1.5 shots",
-"p": 0.4746,
-"price": 120,
-"book": "Novig"
-}
-],
-"p": 0.29834,
-"d": 3.771,
-"first": "2026-11-10T02:30:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020284",
-"start": "2026-11-10T02:30:00Z",
-"kind": "sog",
-"side": "u",
-"line": 1.5,
 "name": "elias pettersson",
 "lab": "Elias Pettersson under 1.5 shots",
 "p": 0.5887,
@@ -1377,6 +1343,74 @@
 ],
 "p": 0.27941,
 "d": 4.95,
+"first": "2026-11-10T02:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020284",
+"start": "2026-11-10T02:30:00Z",
+"kind": "total",
+"side": "under",
+"line": 6.5,
+"name": null,
+"lab": "PHI-VAN under 6.5",
+"p": 0.5525,
+"price": -106,
+"book": "Novig"
+},
+{
+"gid": "2026020285",
+"start": "2026-11-10T03:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "jacob trouba",
+"lab": "Jacob Trouba under 1.5 shots",
+"p": 0.4746,
+"price": 120,
+"book": "Novig"
+}
+],
+"p": 0.26227,
+"d": 4.275,
+"first": "2026-11-10T02:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020284",
+"start": "2026-11-10T02:30:00Z",
+"kind": "spread",
+"side": "away",
+"line": -1.5,
+"name": null,
+"lab": "PHI \u22121.5",
+"p": 0.3644,
+"price": 194,
+"book": "Novig"
+},
+{
+"gid": "2026020285",
+"start": "2026-11-10T03:00:00Z",
+"kind": "spread",
+"side": "away",
+"line": -1.5,
+"name": null,
+"lab": "NYI \u22121.5",
+"p": 0.3655,
+"price": 190,
+"book": "Novig"
+}
+],
+"p": 0.13319,
+"d": 8.526,
 "first": "2026-11-10T02:30:00+00:00",
 "res": null
 },
