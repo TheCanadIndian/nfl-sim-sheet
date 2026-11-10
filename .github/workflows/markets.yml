@@ -74,6 +74,7 @@ jobs:
         working-directory: engine
         run: |
           python profit.py tags || true
+          python allprops.py || true
           python traits.py || true
           python profit.py page || true
       - run: |
