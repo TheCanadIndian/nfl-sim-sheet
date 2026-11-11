@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-11",
 "lock": "2026-11-12T00:00:00+00:00",
-"frozen_at": "2026-11-11T14:24:50.828Z",
+"frozen_at": "2026-11-11T14:29:37.293Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,14 +22,15 @@
 "line": 6.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 7+ ast",
-"p": 0.3878,
+"p": 0.3976,
 "price": 165,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -51,9 +52,10 @@
 ]
 }
 ],
-"p": 0.15369,
+"p": 0.15757,
 "d": 6.757,
 "first": "2026-11-12T01:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -68,7 +70,7 @@
 "line": 2.5,
 "name": "og anunoby",
 "lab": "OG Anunoby 3+ threes",
-"p": 0.4213,
+"p": 0.4183,
 "price": 134,
 "book": "Kalshi",
 "f": [
@@ -86,18 +88,19 @@
 "line": 6.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 7+ ast",
-"p": 0.3878,
+"p": 0.3976,
 "price": 165,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.1634,
+"p": 0.16631,
 "d": 6.201,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
@@ -177,7 +180,7 @@
 "line": 2.5,
 "name": "og anunoby",
 "lab": "OG Anunoby 3+ threes",
-"p": 0.4213,
+"p": 0.4183,
 "price": 134,
 "book": "Kalshi",
 "f": [
@@ -223,7 +226,7 @@
 ]
 }
 ],
-"p": 0.05474,
+"p": 0.05434,
 "d": 18.673,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
@@ -240,7 +243,7 @@
 "line": 1.5,
 "name": "karlanthony towns",
 "lab": "Karl-Anthony Towns over 1.5 threes",
-"p": 0.4569,
+"p": 0.4591,
 "price": 120,
 "book": "Hard Rock",
 "f": [
@@ -257,7 +260,7 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0068
+"edge": 0.0114
 },
 {
 "gid": "401909973",
@@ -285,7 +288,7 @@
 "edge": 0.1328
 }
 ],
-"p": 0.23306,
+"p": 0.23419,
 "d": 4.033,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
@@ -381,6 +384,54 @@
 ]
 },
 {
+"gid": "401909972",
+"start": "2026-11-12T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "dejounte murray",
+"lab": "Dejounte Murray over 5.5 rebounds",
+"p": 0.3751,
+"fair": 0.3774,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.1559,
+"v": [
+"consensus odds drop",
+"one rung above the main line (4.5)"
+]
+}
+],
+"p": 0.04068,
+"d": 18.833,
+"first": "2026-11-12T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909972",
+"start": "2026-11-12T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "dejounte murray",
+"lab": "Dejounte Murray over 5.5 rebounds",
+"p": 0.3751,
+"fair": 0.3774,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.1559,
+"v": [
+"consensus odds drop",
+"one rung above the main line (4.5)"
+]
+},
+{
 "gid": "401909971",
 "start": "2026-11-12T01:00Z",
 "kind": "fg3m",
@@ -400,8 +451,8 @@
 ]
 }
 ],
-"p": 0.02424,
-"d": 32.225,
+"p": 0.08488,
+"d": 8.662,
 "first": "2026-11-12T01:00:00+00:00",
 "res": null
 },
