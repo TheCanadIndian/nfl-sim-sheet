@@ -1,8 +1,8 @@
 {
 "sport": "multi",
 "date": "2026-11-11",
-"lock": "2026-11-12T00:30:00+00:00",
-"frozen_at": "2026-11-11T15:19:57.069587+00:00",
+"lock": "2026-11-12T00:00:00+00:00",
+"frozen_at": "2026-11-11T15:25:39.705357+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,25 +15,6 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909973",
-"start": "2026-11-12T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "franz wagner",
-"lab": "Franz Wagner 8+ reb",
-"p": 0.3568,
-"price": 198,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
 "gid": "401909971",
 "start": "2026-11-12T01:00Z",
 "kind": "ast",
@@ -41,54 +22,12 @@
 "line": 8.5,
 "name": "luka doncic",
 "lab": "Luka Doncic 9+ ast",
-"p": 0.3535,
+"p": 0.3534,
 "price": 200,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "2026020296",
-"start": "2026-11-12T02:30:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "mitch marner",
-"lab": "Mitch Marner to score",
-"p": 0.2918,
-"price": 292,
-"book": "Novig",
-"sport": "nhl"
-}
-],
-"p": 0.0368,
-"d": 35.045,
-"first": "2026-11-12T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Multisport longshots",
-"tier": "3 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "401909973",
-"start": "2026-11-12T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "franz wagner",
-"lab": "Franz Wagner 8+ reb",
-"p": 0.3568,
-"price": 198,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
 "game",
 "price"
 ],
@@ -102,7 +41,7 @@
 "line": 6.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 7+ ast",
-"p": 0.3891,
+"p": 0.3918,
 "price": 165,
 "book": "Hard Rock",
 "f": [
@@ -127,14 +66,14 @@
 "sport": "nhl"
 }
 ],
-"p": 0.04051,
-"d": 30.956,
+"p": 0.0404,
+"d": 31.164,
 "first": "2026-11-12T01:00:00+00:00",
 "res": null
 },
 {
 "card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
+"tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
 "gid": "401909971",
@@ -144,7 +83,7 @@
 "line": 8.5,
 "name": "luka doncic",
 "lab": "Luka Doncic 9+ ast",
-"p": 0.3535,
+"p": 0.3534,
 "price": 200,
 "book": "Hard Rock",
 "f": [
@@ -156,6 +95,48 @@
 "sport": "nba"
 },
 {
+"gid": "401909972",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "trey murphy",
+"lab": "Trey Murphy III 4+ ast",
+"p": 0.3959,
+"price": 155,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
+"gid": "2026020296",
+"start": "2026-11-12T02:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "mitch marner",
+"lab": "Mitch Marner to score",
+"p": 0.2918,
+"price": 292,
+"book": "Novig",
+"sport": "nhl"
+}
+],
+"p": 0.04083,
+"d": 29.988,
+"first": "2026-11-12T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
+{
 "gid": "401909969",
 "start": "2026-11-12T01:00Z",
 "kind": "ast",
@@ -163,7 +144,7 @@
 "line": 6.5,
 "name": "stephon castle",
 "lab": "Stephon Castle 7+ ast",
-"p": 0.3891,
+"p": 0.3918,
 "price": 165,
 "book": "Hard Rock",
 "f": [
@@ -182,9 +163,28 @@
 "line": 3.5,
 "name": "trey murphy",
 "lab": "Trey Murphy III 4+ ast",
-"p": 0.3956,
+"p": 0.3959,
 "price": 155,
 "book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
+"gid": "401909967",
+"start": "2026-11-12T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "og anunoby",
+"lab": "OG Anunoby 3+ threes",
+"p": 0.4174,
+"price": 134,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -207,9 +207,9 @@
 "sport": "nhl"
 }
 ],
-"p": 0.01592,
-"d": 71.156,
-"first": "2026-11-12T00:30:00+00:00",
+"p": 0.01894,
+"d": 55.502,
+"first": "2026-11-12T00:00:00+00:00",
 "res": null
 }
 ],
