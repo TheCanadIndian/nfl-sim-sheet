@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-11",
 "lock": "2026-11-12T00:00:00+00:00",
-"frozen_at": "2026-11-11T18:25:29.151Z",
+"frozen_at": "2026-11-11T18:42:49.900Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -179,15 +179,16 @@
 "kind": "fg3m",
 "side": "o",
 "line": 2.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas 3+ threes",
-"p": 0.2902,
-"price": 275,
-"book": "Hard Rock",
+"name": "og anunoby",
+"lab": "OG Anunoby 3+ threes",
+"p": 0.4208,
+"price": 135,
+"book": "Novig",
 "f": [
+"usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
@@ -209,26 +210,25 @@
 ]
 },
 {
-"gid": "401909972",
-"start": "2026-11-12T01:00Z",
+"gid": "401909974",
+"start": "2026-11-12T02:30Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "trey murphy",
-"lab": "Trey Murphy III 4+ ast",
-"p": 0.3912,
-"price": 146,
-"book": "Kalshi",
+"line": 4.5,
+"name": "amen thompson",
+"lab": "Amen Thompson 5+ ast",
+"p": 0.2991,
+"price": 260,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"price"
 ]
 }
 ],
-"p": 0.03835,
-"d": 26.384,
+"p": 0.04253,
+"d": 24.196,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
 },
@@ -298,6 +298,32 @@
 "tier": "3 legs",
 "legs": [
 {
+"gid": "401909971",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "luka doncic",
+"lab": "Luka Doncic over 7.5 assists",
+"p": 0.4721,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"our model above fair",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0174
+},
+{
 "gid": "401909966",
 "start": "2026-11-12T00:00Z",
 "kind": "reb",
@@ -347,31 +373,6 @@
 ],
 "sport": "nba",
 "edge": 0.0308
-},
-{
-"gid": "401909971",
-"start": "2026-11-12T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "luka doncic",
-"lab": "Luka Doncic over 7.5 assists",
-"p": 0.4721,
-"price": 115,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0174
 }
 ],
 "p": 0.1265,
@@ -435,6 +436,32 @@
 "edge": 0.0401
 },
 {
+"gid": "401909971",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "luka doncic",
+"lab": "Luka Doncic over 7.5 assists",
+"p": 0.4721,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"our model above fair",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0174
+},
+{
 "gid": "401909966",
 "start": "2026-11-12T00:00Z",
 "kind": "reb",
@@ -484,31 +511,6 @@
 ],
 "sport": "nba",
 "edge": 0.0308
-},
-{
-"gid": "401909971",
-"start": "2026-11-12T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "luka doncic",
-"lab": "Luka Doncic over 7.5 assists",
-"p": 0.4721,
-"price": 115,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0174
 }
 ],
 "p": 0.02973,
@@ -663,28 +665,29 @@
 ]
 },
 {
-"gid": "401909967",
-"start": "2026-11-12T00:00Z",
-"kind": "fg3m",
+"gid": "401909974",
+"start": "2026-11-12T02:30Z",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas over 2.5 threes",
-"p": 0.2902,
-"fair": 0.2832,
-"price": 275,
+"line": 6.5,
+"name": "draymond green",
+"lab": "Draymond Green over 6.5 rebounds",
+"p": 0.2823,
+"fair": 0.2863,
+"price": 210,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0882,
+"edge": -0.1249,
 "v": [
-"consensus odds drop",
-"one rung above the main line (1.5)"
+"Pinnacle odds drop",
+"consensus line up",
+"one rung above the main line (5.5)"
 ]
 }
 ],
-"p": 0.12634,
-"d": 8.325,
-"first": "2026-11-12T00:00:00+00:00",
+"p": 0.12772,
+"d": 6.882,
+"first": "2026-11-12T01:00:00+00:00",
 "res": null
 },
 {
@@ -708,24 +711,24 @@
 "main": false
 },
 {
-"gid": "401909974",
-"start": "2026-11-12T02:30:00+00:00",
+"gid": "401909968",
+"start": "2026-11-12T00:00:00+00:00",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "yaxel lendeborg",
-"lab": "Yaxel Lendeborg over 5.5 assists",
-"p": 0.4103,
-"price": 220,
+"line": 4.5,
+"name": "payton pritchard",
+"lab": "Payton Pritchard over 4.5 assists",
+"p": 0.4171,
+"price": 190,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3131,
-"fair": 0.4375,
-"main": false
+"edge": 0.2096,
+"fair": 0.4209,
+"main": true
 }
 ],
-"p": 0.22439,
-"d": 8.0,
+"p": 0.22811,
+"d": 7.25,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
 },
@@ -749,48 +752,6 @@
 "fair": 0.5571,
 "main": false
 },
-{
-"gid": "401909974",
-"start": "2026-11-12T02:30:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "yaxel lendeborg",
-"lab": "Yaxel Lendeborg over 5.5 assists",
-"p": 0.4103,
-"price": 220,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.3131,
-"fair": 0.4375,
-"main": false
-},
-{
-"gid": "401909968",
-"start": "2026-11-12T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "payton pritchard",
-"lab": "Payton Pritchard over 4.5 assists",
-"p": 0.4171,
-"price": 190,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.2096,
-"fair": 0.4209,
-"main": true
-}
-],
-"p": 0.09359,
-"d": 23.2,
-"first": "2026-11-12T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
 {
 "gid": "401909968",
 "start": "2026-11-12T00:00:00+00:00",
@@ -824,8 +785,8 @@
 "main": false
 }
 ],
-"p": 0.15512,
-"d": 8.99,
+"p": 0.08483,
+"d": 22.475,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
 }
