@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-11",
 "lock": "2026-11-12T00:30:00+00:00",
-"frozen_at": "2026-11-11T19:10:39.588051+00:00",
+"frozen_at": "2026-11-11T19:27:27.210617+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,6 +15,25 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
+"gid": "401909971",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 9+ ast",
+"p": 0.3717,
+"price": 200,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
 "gid": "401909975",
 "start": "2026-11-12T03:00Z",
 "kind": "ast",
@@ -25,25 +44,6 @@
 "p": 0.4341,
 "price": 153,
 "book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909973",
-"start": "2026-11-12T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "desmond bane",
-"lab": "Desmond Bane 4+ ast",
-"p": 0.3981,
-"price": 170,
-"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
@@ -66,8 +66,8 @@
 "sport": "nhl"
 }
 ],
-"p": 0.05181,
-"d": 24.865,
+"p": 0.04837,
+"d": 27.628,
 "first": "2026-11-12T00:30:00+00:00",
 "res": null
 },
@@ -76,34 +76,34 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909975",
-"start": "2026-11-12T03:00Z",
+"gid": "401909971",
+"start": "2026-11-12T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 6+ ast",
-"p": 0.4341,
-"price": 153,
-"book": "Novig",
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 9+ ast",
+"p": 0.3717,
+"price": 200,
+"book": "Hard Rock",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "game",
 "price"
 ],
 "sport": "nba"
 },
 {
-"gid": "401909972",
-"start": "2026-11-12T01:00Z",
-"kind": "reb",
+"gid": "401909973",
+"start": "2026-11-12T02:00Z",
+"kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 7+ reb",
-"p": 0.4278,
-"price": 150,
+"line": 3.5,
+"name": "desmond bane",
+"lab": "Desmond Bane 4+ ast",
+"p": 0.3981,
+"price": 170,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -127,8 +127,8 @@
 "sport": "nhl"
 }
 ],
-"p": 0.05568,
-"d": 23.023,
+"p": 0.04436,
+"d": 29.484,
 "first": "2026-11-12T00:30:00+00:00",
 "res": null
 },
@@ -136,6 +136,25 @@
 "card": "Multisport longshots",
 "tier": "4 legs \u00b7 NBA + NHL",
 "legs": [
+{
+"gid": "401909975",
+"start": "2026-11-12T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander 6+ ast",
+"p": 0.4341,
+"price": 153,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
 {
 "gid": "401909973",
 "start": "2026-11-12T02:00Z",
@@ -163,7 +182,7 @@
 "line": 6.5,
 "name": "zion williamson",
 "lab": "Zion Williamson 7+ reb",
-"p": 0.4278,
+"p": 0.424,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -171,25 +190,6 @@
 "rotation",
 "game",
 "price"
-],
-"sport": "nba"
-},
-{
-"gid": "401909969",
-"start": "2026-11-12T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "stephon castle",
-"lab": "Stephon Castle 7+ ast",
-"p": 0.3867,
-"price": 165,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
 ],
 "sport": "nba"
 },
@@ -207,8 +207,8 @@
 "sport": "nhl"
 }
 ],
-"p": 0.02192,
-"d": 56.703,
+"p": 0.02439,
+"d": 54.136,
 "first": "2026-11-12T01:00:00+00:00",
 "res": null
 }
