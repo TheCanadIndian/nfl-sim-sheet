@@ -2,7 +2,7 @@
 "sport": "multi",
 "date": "2026-11-11",
 "lock": "2026-11-12T00:00:00+00:00",
-"frozen_at": "2026-11-11T12:54:38.271340+00:00",
+"frozen_at": "2026-11-11T13:11:35.059067+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,21 +15,41 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909973",
-"start": "2026-11-12T02:00Z",
-"kind": "pts",
+"gid": "401909972",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 24.5,
-"name": "desmond bane",
-"lab": "Desmond Bane 25+ pts",
-"p": 0.2435,
-"price": 313,
-"book": "Kalshi",
+"line": 4.5,
+"name": "trey murphy",
+"lab": "Trey Murphy III 5+ ast",
+"p": 0.2523,
+"price": 325,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909971",
+"start": "2026-11-12T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "austin reaves",
+"lab": "Austin Reaves 6+ reb",
+"p": 0.2499,
+"price": 335,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
 ],
 "sport": "nba"
 },
@@ -41,28 +61,15 @@
 "line": 0.5,
 "name": "mitch marner",
 "lab": "Mitch Marner to score",
-"p": 0.2887,
+"p": 0.2895,
 "price": 292,
-"book": "Novig",
-"sport": "nhl"
-},
-{
-"gid": "2026020293",
-"start": "2026-11-12T00:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "brandon hagel",
-"lab": "Brandon Hagel to score",
-"p": 0.3836,
-"price": 167,
 "book": "Novig",
 "sport": "nhl"
 }
 ],
-"p": 0.02697,
-"d": 43.226,
-"first": "2026-11-12T00:00:00+00:00",
+"p": 0.01825,
+"d": 72.471,
+"first": "2026-11-12T01:00:00+00:00",
 "res": null
 },
 {
@@ -70,16 +77,36 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "401909973",
-"start": "2026-11-12T02:00Z",
-"kind": "pts",
+"gid": "401909972",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 24.5,
-"name": "desmond bane",
-"lab": "Desmond Bane 25+ pts",
-"p": 0.2435,
-"price": 313,
-"book": "Kalshi",
+"line": 4.5,
+"name": "trey murphy",
+"lab": "Trey Murphy III 5+ ast",
+"p": 0.2523,
+"price": 325,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909969",
+"start": "2026-11-12T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 7+ ast",
+"p": 0.3858,
+"price": 165,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -96,32 +123,94 @@
 "line": 0.5,
 "name": "mitch marner",
 "lab": "Mitch Marner to score",
-"p": 0.2887,
+"p": 0.2895,
 "price": 292,
 "book": "Novig",
 "sport": "nhl"
+}
+],
+"p": 0.02818,
+"d": 44.149,
+"first": "2026-11-12T01:00:00+00:00",
+"res": null
 },
 {
-"gid": "401909967",
-"start": "2026-11-12T00:00Z",
+"card": "Multisport longshots",
+"tier": "4 legs \u00b7 NBA + NHL",
+"legs": [
+{
+"gid": "401909971",
+"start": "2026-11-12T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "austin reaves",
+"lab": "Austin Reaves 6+ reb",
+"p": 0.2499,
+"price": 335,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"game",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909969",
+"start": "2026-11-12T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "karlanthony towns",
-"lab": "Karl-Anthony Towns 4+ ast",
-"p": 0.4375,
-"price": 130,
+"line": 6.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 7+ ast",
+"p": 0.3858,
+"price": 165,
 "book": "Hard Rock",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game"
 ],
 "sport": "nba"
+},
+{
+"gid": "401909967",
+"start": "2026-11-12T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "og anunoby",
+"lab": "OG Anunoby 3+ threes",
+"p": 0.4214,
+"price": 133,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba"
+},
+{
+"gid": "2026020294",
+"start": "2026-11-12T00:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "joel farabee",
+"lab": "Joel Farabee to score",
+"p": 0.2821,
+"price": 257,
+"book": "Novig",
+"sport": "nhl"
 }
 ],
-"p": 0.03076,
-"d": 37.236,
+"p": 0.01146,
+"d": 95.887,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
 }
