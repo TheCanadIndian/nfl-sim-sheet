@@ -329,9 +329,22 @@ def player_prob(sport, kind, name, line, g, O):
                 for mod in ("vegas", "blind"):
                     v = p_over((p.get("d") or {}).get(mod, {}).get(kind), line)
                     if v is not None:
-                        out[mod] = v
+                        out[mod] = pts_tail(v) if kind == "pts" else v
                 break
     return out, pid
+
+
+def pts_tail(v):
+    """Edge audit fix H (owner 2026-11-11; research/edge_audit_tails.py): NBA points rungs above a player's median were too fat in
+    the far tail (rungs we put under 5% hit 1.1% vs our 2.0%). logit p' = .216 + 1.196 logit p (fit on the 2025-26 walk-forward),
+    applied fully below 30% and faded out by 50% so a ladder stays in order through the median. Unseen 2026-27 log-loss
+    .2522 -> .2504. Rebounds / assists / threes were already calibrated."""
+    if v is None or v >= .5 or v <= 0:
+        return v
+    x = min(max(v, 1e-4), 1 - 1e-4)
+    r = 1 / (1 + math.exp(-(.216 + 1.196 * math.log(x / (1 - x)))))
+    w = min(max((.5 - v) / .2, 0.0), 1.0)
+    return w * r + (1 - w) * v
 
 
 def make_row(source, sport, g, kind, ticker, title, line, ours, yb, ya, extra):

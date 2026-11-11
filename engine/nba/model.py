@@ -40,6 +40,10 @@ USE_PRESEASON, PRE_A, PRE_A_NEW, PRE_K = True, 0.2, 0.4, 5
 # 0.860 of his projected minutes in his first 5 games (2024-25 / 2025-26 / 2026-27); his e_min x PRE_NT_NOPRE (fit 2024-25),
 # fading to 1 by game PRE_K. Unseen 2025-26 / 2026-27: their minutes MSE 77.3 -> 72.6 / 56.6 -> 49.3, every opening row better.
 PRE_NT_NOPRE = 0.926
+# Edge audit fix I (owner 2026-11-11): a player whose preseason minutes fell under PRE_DROP (60%) of his last-season role (Tre Jones,
+# Jrue Holiday) still played 0.918 / 0.890 / 0.867 of projected minutes after fix A (2024-25 / 2025-26 / 2026-27): an extra
+# x PRE_DROP_F (fit 2024-25), fading by game PRE_K. Unseen 2025-26 / 2026-27: their minutes MSE 66.0 -> 64.0 / 59.7 -> 56.5.
+PRE_DROP, PRE_DROP_F = 0.6, 0.918
 RATE_HL = 25.0                                    # per-minute production memory (games)
 CARRY = 0.6                                       # last season's weight entering a new season
 K_SCALE = 0.05    # multiplies K_MIN; tuned on 2024-25 (1.0 under-projected stars ~11%, over bench ~12%)
@@ -121,6 +125,8 @@ def preseason_blend(p, pre, n_season):
     out = np.where(ok & (a > 0), np.exp((1 - a) * np.log(e) + a * np.log(pm)), p.e_min.to_numpy())
     nt0 = (new_team.to_numpy() == 1) & ~ok & (fade > 0)                       # new team, no preseason to read (fix F)
     out = np.where(nt0, out * (1 - (1 - PRE_NT_NOPRE) * fade), out)
+    drop = ok & (pm / e < PRE_DROP) & (fade > 0)                               # preseason far under last season's role (fix I)
+    out = np.where(drop, out * (1 - (1 - PRE_DROP_F) * fade), out)
     return pd.Series(out, index=p.index).clip(0, 44)
 
 
