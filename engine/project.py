@@ -446,6 +446,67 @@ def rb_targets(res, players, rng):
         pl["rec_yds"][:, j] = np.round(pl["rec_yds"][:, j] * f)
 
 
+# Projection audit fixes (owner 2026-11-11 'yes'; research/proj_audit.py, proj_audit2.py, proj_audit3.py: frozen pregame
+# projections vs box scores, fit on all of 2025, tested on 2026 weeks 1-4 and 5-9).
+# 1) Targets / catches regress to the mean: low-projected receivers beat their projection (targets 1.6x in the lowest fifth),
+#    the top ones fall a little short. Each player's chance at every line becomes sigmoid(a + b logit(P(X >= k)) + c log(his
+#    mean / the average)); his simulated draws are re-mapped to that ladder by randomized quantile mapping (ranks kept, so his
+#    links to the other stats in the same simulation hold), catches capped at targets. Held-out log-loss on the ladder lines:
+#    targets -39 / -23e-4 (lines a book would post -67 / -37), catches -8 / -18 (-31 / -14). Receiving yards were mixed: untouched.
+SIZE_RECAL = {"tgt": (0.1306, 1.0929, -0.3104, 3.2794), "rec": (0.0762, 1.0838, -0.2993, 2.2446)}   # a, b, c, average mean
+# 2) Touchdowns ran low in both seasons by position (2025 QB 1.24 / RB 1.03 / WR 1.10 / TE 1.25; 2026 1.12 / 1.04 / 1.14 / 1.33):
+#    his chance of no TD becomes P(0)^scale (the scale fit on 2025): 2026 anytime-TD log-loss -30 / -15e-4 by half. Draws with
+#    no TD get one (rushing or receiving in his own mix). Applied after the first-TD shares; team points are left as simulated.
+TD_SCALE = {"QB": 1.237, "RB": 1.029, "WR": 1.099, "TE": 1.25}
+
+
+def _remap_counts(x, a, b, c, avg, v):
+    """Draws x (ints) -> draws whose ladder is sigmoid(a + b logit S(k) + c log(mean / avg)); v = shared uniforms."""
+    x = np.asarray(x).astype(int)
+    m = float(x.mean())
+    if m < .05:
+        return x
+    top = int(x.max()) + 3
+    pmf = np.bincount(x, minlength=top + 1) / len(x)
+    S = np.clip(1 - np.concatenate([[0.0], np.cumsum(pmf)[:-1]]), 1e-5, 1 - 1e-5)    # S[k] = P(X >= k)
+    z = np.log(S / (1 - S))
+    S2 = 1 / (1 + np.exp(-(a + b * z + c * np.log(m / avg))))
+    S2[0] = 1.0
+    S2 = np.minimum.accumulate(S2)
+    F_old = np.cumsum(pmf)                                       # P(X <= k)
+    F_new = np.append(1 - S2[1:], 1.0)                           # P(X' <= k)
+    lo = np.where(x > 0, F_old[np.maximum(x - 1, 0)], 0.0)
+    u = lo + v * (F_old[x] - lo)
+    return np.minimum(np.searchsorted(F_new, u, side="left"), len(F_new) - 1)
+
+
+def size_recal(res, rng):
+    pl = res["players"]
+    v = rng.random(pl["tgt"].shape)
+    for j in range(pl["tgt"].shape[1]):
+        a, b, c, avg = SIZE_RECAL["tgt"]
+        pl["tgt"][:, j] = _remap_counts(pl["tgt"][:, j], a, b, c, avg, v[:, j])
+        a, b, c, avg = SIZE_RECAL["rec"]
+        pl["rec"][:, j] = np.minimum(_remap_counts(pl["rec"][:, j], a, b, c, avg, v[:, j]), pl["tgt"][:, j])
+
+
+def td_scale(res, players, rng):
+    pl = res["players"]
+    for j, p in enumerate(players):
+        s = TD_SCALE.get(p.pos, 1.0)
+        rt, ut = pl["rec_td"][:, j], pl["rush_td"][:, j]
+        none = (rt + ut) == 0
+        p0 = float(none.mean())
+        if s <= 1 or p0 <= 0 or p0 >= 1:
+            continue
+        flip = none & (rng.random(none.shape) < 1 - p0 ** (s - 1))      # P(0) -> P(0) x P(0)^(s - 1) = P(0)^s
+        mr, mu = float(rt.mean()), float(ut.mean())
+        share_rec = mr / (mr + mu) if mr + mu > 0 else (0.0 if p.pos == "QB" else 1.0)
+        rec_side = rng.random(none.shape) < share_rec
+        pl["rec_td"][:, j] = rt + (flip & rec_side)
+        pl["rush_td"][:, j] = ut + (flip & ~rec_side)
+
+
 DIST_STATS = ["pass_yds", "att", "cmp", "pass_td", "ints", "rush_yds", "car", "tgt", "rec",
               "rec_yds", "tds"]
 
@@ -598,6 +659,9 @@ def main():
             apply_bias(res_, BIAS, brng)
         margin = h["points"] - a["points"]
         first = first_td(h, a, hi.team, ai.team, abs(hash(g.game_id)) % 2**32)
+        for res_, t_ in ((h, hi), (a, ai)):                     # projection audit fixes (SIZE_RECAL, TD_SCALE)
+            size_recal(res_, brng)
+            td_scale(res_, t_.players, brng)
         if not args.played:                                     # same-game parlays by game script (sgp.py), both models
             try:
                 sgps[g.game_id] = sgp.game_parlays(g.game_id, h, a, hi, ai, g)
