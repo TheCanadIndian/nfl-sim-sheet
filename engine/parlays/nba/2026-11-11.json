@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-11",
 "lock": "2026-11-12T00:00:00+00:00",
-"frozen_at": "2026-11-11T18:42:49.900Z",
+"frozen_at": "2026-11-11T18:55:33.709Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,19 +15,19 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909972",
+"gid": "401909971",
 "start": "2026-11-12T01:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 7+ reb",
-"p": 0.4285,
-"price": 150,
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 9+ ast",
+"p": 0.3608,
+"price": 200,
 "book": "Hard Rock",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "game",
 "price"
 ]
@@ -40,7 +40,7 @@
 "line": 3.5,
 "name": "desmond bane",
 "lab": "Desmond Bane 4+ ast",
-"p": 0.3983,
+"p": 0.3979,
 "price": 170,
 "book": "Hard Rock",
 "f": [
@@ -51,8 +51,8 @@
 ]
 }
 ],
-"p": 0.17065,
-"d": 6.75,
+"p": 0.14358,
+"d": 8.1,
 "first": "2026-11-12T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -62,33 +62,33 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909969",
+"gid": "401909971",
 "start": "2026-11-12T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "stephon castle",
-"lab": "Stephon Castle 7+ ast",
-"p": 0.3768,
-"price": 165,
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 9+ ast",
+"p": 0.3608,
+"price": 200,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
-"rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
-"gid": "401909973",
-"start": "2026-11-12T02:00Z",
-"kind": "ast",
+"gid": "401909972",
+"start": "2026-11-12T01:00Z",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "desmond bane",
-"lab": "Desmond Bane 4+ ast",
-"p": 0.3983,
-"price": 170,
+"line": 6.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 7+ reb",
+"p": 0.4274,
+"price": 150,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -98,8 +98,8 @@
 ]
 }
 ],
-"p": 0.15009,
-"d": 7.155,
+"p": 0.15423,
+"d": 7.5,
 "first": "2026-11-12T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -116,27 +116,9 @@
 "line": 2.5,
 "name": "og anunoby",
 "lab": "OG Anunoby 3+ threes",
-"p": 0.4208,
+"p": 0.421,
 "price": 135,
 "book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909969",
-"start": "2026-11-12T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "stephon castle",
-"lab": "Stephon Castle 7+ ast",
-"p": 0.3768,
-"price": 165,
-"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -152,8 +134,26 @@
 "line": 6.5,
 "name": "zion williamson",
 "lab": "Zion Williamson 7+ reb",
-"p": 0.4285,
+"p": 0.4274,
 "price": 150,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909973",
+"start": "2026-11-12T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "desmond bane",
+"lab": "Desmond Bane 4+ ast",
+"p": 0.3979,
+"price": 170,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -163,8 +163,8 @@
 ]
 }
 ],
-"p": 0.06794,
-"d": 15.569,
+"p": 0.07161,
+"d": 15.863,
 "first": "2026-11-12T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -181,7 +181,7 @@
 "line": 2.5,
 "name": "og anunoby",
 "lab": "OG Anunoby 3+ threes",
-"p": 0.4208,
+"p": 0.421,
 "price": 135,
 "book": "Novig",
 "f": [
@@ -194,14 +194,14 @@
 {
 "gid": "401909969",
 "start": "2026-11-12T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 1.5,
-"name": "dylan harper",
-"lab": "Dylan Harper 2+ threes",
-"p": 0.3378,
-"price": 186,
-"book": "Novig",
+"line": 6.5,
+"name": "stephon castle",
+"lab": "Stephon Castle 7+ ast",
+"p": 0.3725,
+"price": 165,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -217,7 +217,7 @@
 "line": 4.5,
 "name": "amen thompson",
 "lab": "Amen Thompson 5+ ast",
-"p": 0.2991,
+"p": 0.3106,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -227,9 +227,10 @@
 ]
 }
 ],
-"p": 0.04253,
-"d": 24.196,
+"p": 0.0487,
+"d": 22.419,
 "first": "2026-11-12T00:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -259,7 +260,7 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0439
+"edge": 0.0437
 },
 {
 "gid": "401909972",
@@ -285,7 +286,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0401
+"edge": 0.0395
 }
 ],
 "p": 0.23498,
@@ -321,7 +322,7 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0174
+"edge": 0.0161
 },
 {
 "gid": "401909966",
@@ -345,7 +346,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0379
+"edge": 0.0371
 },
 {
 "gid": "401909967",
@@ -372,7 +373,7 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0308
+"edge": 0.0312
 }
 ],
 "p": 0.1265,
@@ -407,7 +408,7 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0439
+"edge": 0.0437
 },
 {
 "gid": "401909972",
@@ -433,7 +434,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0401
+"edge": 0.0395
 },
 {
 "gid": "401909971",
@@ -459,7 +460,7 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0174
+"edge": 0.0161
 },
 {
 "gid": "401909966",
@@ -483,7 +484,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0379
+"edge": 0.0371
 },
 {
 "gid": "401909967",
@@ -510,7 +511,7 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0308
+"edge": 0.0312
 }
 ],
 "p": 0.02973,
@@ -551,12 +552,12 @@
 "line": 5.5,
 "name": "jeremiah fears",
 "lab": "Jeremiah Fears over 5.5 assists",
-"p": 0.3996,
+"p": 0.3991,
 "fair": 0.4064,
 "price": 156,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.023,
+"edge": 0.0217,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -602,12 +603,12 @@
 "line": 5.5,
 "name": "jeremiah fears",
 "lab": "Jeremiah Fears over 5.5 assists",
-"p": 0.3996,
+"p": 0.3991,
 "fair": 0.4064,
 "price": 156,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.023,
+"edge": 0.0217,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -627,7 +628,7 @@
 "price": 122,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0224,
+"edge": -0.0223,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -657,7 +658,7 @@
 "price": 122,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0224,
+"edge": -0.0223,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -672,12 +673,12 @@
 "line": 6.5,
 "name": "draymond green",
 "lab": "Draymond Green over 6.5 rebounds",
-"p": 0.2823,
-"fair": 0.2863,
+"p": 0.2859,
+"fair": 0.2898,
 "price": 210,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.1249,
+"edge": -0.1137,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -685,7 +686,7 @@
 ]
 }
 ],
-"p": 0.12772,
+"p": 0.12928,
 "d": 6.882,
 "first": "2026-11-12T01:00:00+00:00",
 "res": null
@@ -702,11 +703,11 @@
 "line": 7.5,
 "name": "andre drummond",
 "lab": "Andre Drummond over 7.5 rebounds",
-"p": 0.5469,
+"p": 0.5466,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3671,
+"edge": 0.3664,
 "fair": 0.5571,
 "main": false
 },
@@ -718,16 +719,16 @@
 "line": 4.5,
 "name": "payton pritchard",
 "lab": "Payton Pritchard over 4.5 assists",
-"p": 0.4171,
+"p": 0.418,
 "price": 190,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2096,
+"edge": 0.2121,
 "fair": 0.4209,
 "main": true
 }
 ],
-"p": 0.22811,
+"p": 0.22848,
 "d": 7.25,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
@@ -744,11 +745,11 @@
 "line": 7.5,
 "name": "andre drummond",
 "lab": "Andre Drummond over 7.5 rebounds",
-"p": 0.5469,
+"p": 0.5466,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3671,
+"edge": 0.3664,
 "fair": 0.5571,
 "main": false
 },
@@ -760,11 +761,11 @@
 "line": 4.5,
 "name": "payton pritchard",
 "lab": "Payton Pritchard over 4.5 assists",
-"p": 0.4171,
+"p": 0.418,
 "price": 190,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2096,
+"edge": 0.2121,
 "fair": 0.4209,
 "main": true
 },
@@ -776,16 +777,16 @@
 "line": 3.5,
 "name": "egor demin",
 "lab": "Egor Demin over 3.5 assists",
-"p": 0.3719,
+"p": 0.3727,
 "price": 210,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1529,
+"edge": 0.1555,
 "fair": 0.3783,
 "main": false
 }
 ],
-"p": 0.08483,
+"p": 0.08515,
 "d": 22.475,
 "first": "2026-11-12T00:00:00+00:00",
 "res": null
