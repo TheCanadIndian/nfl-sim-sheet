@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-10",
 "lock": "2026-11-11T00:30:00+00:00",
-"frozen_at": "2026-11-11T02:46:46.337Z",
+"frozen_at": "2026-11-11T02:50:27.248Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -581,7 +581,9 @@
 "d": 19.688,
 "first": "2026-11-11T03:00:00+00:00",
 "pick": "longshot",
-"res": null
+"res": null,
+"locked": true,
+"final": true
 },
 {
 "card": "Path longshots",
@@ -627,7 +629,9 @@
 "d": 12.232,
 "first": "2026-11-11T03:00:00+00:00",
 "pick": "core",
-"res": null
+"res": null,
+"locked": true,
+"final": true
 },
 {
 "card": "Confluence parlays (experimental)",
@@ -688,6 +692,52 @@
 ],
 "p": 0.21526,
 "d": 4.625,
+"first": "2026-11-11T03:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909964",
+"start": "2026-11-11T03:00Z",
+"kind": "pts",
+"side": "o",
+"line": 19.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis 20+ pts",
+"p": 0.2115,
+"price": 398,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909965",
+"start": "2026-11-11T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 7+ ast",
+"p": 0.2009,
+"price": 425,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.04248,
+"d": 26.145,
 "first": "2026-11-11T03:00:00+00:00",
 "res": null
 }
