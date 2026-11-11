@@ -153,16 +153,23 @@ def nba_ladder_rows(date, mk, R, GM):
                 continue
             ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
             p = (r.get("ours") or {}).get("vegas")
+            # fix J (owner 2026-11-11): the card's anchored chance (nba/page.js ladAnchor), tracked beside the raw-model row
+            pa = None
+            if p is not None and date >= "2026-11-11":
+                cl = lambda v: min(max(v, .002), .998)
+                pa = 1 / (1 + math.exp(-(.049 + .749 * math.log(cl(mid(r)) / (1 - cl(mid(r)))) + .233 * math.log(cl(p) / (1 - cl(p))))))
             cats = (["NBA ladder candidates (experimental)"] if key in soft else []) + \
-                   (["NBA ladder edge (experimental)"] if key[:2] in play and p is not None and p / cy - 1 >= .05 else [])
+                   (["NBA ladder edge (experimental)"] if key[:2] in play and p is not None and p / cy - 1 >= .05 else []) + \
+                   (["NBA ladder edge · anchored (experimental)"] if key[:2] in play and pa is not None and pa / cy - 1 >= .05 else [])
             if not cats:
                 continue
             y = GM.outcome("nba", r, R)
             if y is None:
                 continue
             for cat in cats:
+                pc = pa if cat.endswith("anchored (experimental)") else p
                 out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"),
-                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if p is None else round(p, 4), won=int(y), pnl=round(y / cy - 1, 4)))
+                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if pc is None else round(pc, 4), won=int(y), pnl=round(y / cy - 1, 4)))
     # threes, one rung per player (owner 2026-11-03 after research/threes_market.py, KSplit's idea tested: his whole-ladder sizing lost
     # to one rung per player; our threes = threes.py blend from today): every Kalshi 3PM rung, spread 5c or less, mid 3-97c; chance =
     # Kalshi's mid recalibrated (logit -.079 + 1.002 logit mid) moved .75 of the way to ours in log-odds; best edge per player, 5-60%
