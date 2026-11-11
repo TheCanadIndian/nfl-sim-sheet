@@ -29,6 +29,13 @@ STATS = ["pts", "reb", "ast", "fg3m", "stl", "blk", "tov", "fga", "fta"]
 SHOW = ["min", "pts", "reb", "ast", "fg3m", "stl", "blk", "tov", "pra"]
 
 MIN_HL, MIN_LONG_HL, MIN_RAMP = 4.0, 20.0, 6     # minutes memory (games); games to trust this season
+# Preseason role (edge audit fix A, owner 2026-11-11; research/edge_audit_nba_preseason.py): the biggest NBA ladder edges came
+# from opening-night minutes built on last season's role (Tre Jones / Jrue Holiday projected 30-35, off the bench in preseason,
+# played 13-21). For a player's first PRE_K regular-season games, e_min is blended in log scale with his preseason minutes (2+
+# preseason games, his last two counted double): weight PRE_A (PRE_A_NEW on a new team), fading to 0 by game PRE_K. Fit on the
+# 2024-25 opening only; on the 2025-26 and 2026-27 openings (unseen) minutes MSE 48.2 -> 45.8 / 47.1 -> 44.8, rung log-loss
+# pts -12 / -14e-4, reb -39 / -40, ast -7 / 0, nothing worse.
+USE_PRESEASON, PRE_A, PRE_A_NEW, PRE_K = True, 0.2, 0.4, 5
 RATE_HL = 25.0                                    # per-minute production memory (games)
 CARRY = 0.6                                       # last season's weight entering a new season
 K_SCALE = 0.05    # multiplies K_MIN; tuned on 2024-25 (1.0 under-projected stars ~11%, over bench ~12%)
@@ -77,6 +84,38 @@ def load(db=DB):
     return g, p
 
 
+def preseason(g, p):
+    """Each player's preseason minutes per season: weighted mean over preseason games he played (his last two count double)."""
+    pg = g[g.game_type == 1][["game_id", "season", "date"]]
+    x = p.merge(pg, on="game_id")
+    x = x[(x.dnp == 0) & (x["min"] > 0)].sort_values("date")
+    if x.empty:
+        return pd.DataFrame(columns=["season", "player_id", "pre_min", "n_pre"])
+    x["w"] = np.where(x.groupby(["season", "player_id"]).date.rank(ascending=False, method="first") <= 2, 2.0, 1.0)
+    x["wm"] = x.w * x["min"]
+    a = x.groupby(["season", "player_id"]).agg(wm=("wm", "sum"), w=("w", "sum"), n_pre=("min", "size")).reset_index()
+    a["pre_min"] = a.wm / a.w
+    return a[["season", "player_id", "pre_min", "n_pre"]]
+
+
+def preseason_blend(p, pre, n_season):
+    """e_min blended with preseason minutes for a player's first PRE_K games (see USE_PRESEASON)."""
+    x = p[["player_id", "season", "team", "date"]].copy()
+    x["n_season"] = n_season.to_numpy()
+    x = x.merge(pre, on=["season", "player_id"], how="left")
+    x.index = p.index
+    o = x.sort_values(["player_id", "date"])
+    prev = o.groupby("player_id").team.shift(1)
+    first = o.groupby(["player_id", "season"]).cumcount() == 0
+    nt = pd.Series(np.where(first & prev.notna() & (prev != o.team), 1.0, np.nan), index=o.index)
+    new_team = nt.groupby([o.player_id, o.season]).transform("max").fillna(0).reindex(p.index)
+    e = p.e_min.astype(float).clip(lower=1).to_numpy()
+    pm = x.pre_min.astype(float).fillna(1).clip(lower=1).to_numpy()
+    ok = (x.n_pre.fillna(0) >= 2).to_numpy()
+    a = np.where(new_team.to_numpy() == 1, PRE_A_NEW, PRE_A) * np.clip(1 - x.n_season.to_numpy() / PRE_K, 0, 1)
+    return pd.Series(np.where(ok & (a > 0), np.exp((1 - a) * np.log(e) + a * np.log(pm)), p.e_min.to_numpy()), index=p.index).clip(0, 44)
+
+
 def decayed(df, key, cols, hl, carry):
     d = 0.5 ** (1.0 / hl)
     v = df[cols].to_numpy(float)
@@ -99,6 +138,7 @@ class Frames:
 
     def __init__(self, db=DB, future=None, future_players=None):
         g, p = load(db)
+        self.pre = preseason(g, p)
         g = g[g.game_type.isin([2, 3])]
         if future is not None:
             g = pd.concat([g[~g.game_id.isin(future.game_id)], future.assign(state="SCHEDULED", game_type=2)], ignore_index=True)
@@ -162,6 +202,8 @@ class Frames:
         n_season = p.groupby(["player_id", "season"]).one.cumsum() - p.one
         w = np.clip(n_season / MIN_RAMP, 0, 1)
         p["e_min"] = (w * short + (1 - w) * long_).clip(0, 44)
+        if USE_PRESEASON and getattr(self, "pre", None) is not None and len(self.pre):
+            p["e_min"] = preseason_blend(p, self.pre, n_season)
         p["min_trend"] = (short - long_).where(n_season >= 3)        # only once this season has a few games
         p["games_prior"] = p.groupby("player_id").one.cumsum() - p.one
         # how often he gets into the game when he's in uniform (box-score rows incl. DNP-coach's decision)

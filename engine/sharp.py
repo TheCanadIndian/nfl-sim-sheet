@@ -316,6 +316,16 @@ def apply_consensus(sport, now):
                 e = PR.get("props", {}).get(gid, {}).get(nm, {}).get(kind)
                 parts = ((e or {}).get("pin") or {}).get("parts")
                 if not parts:
+                    if sport == "nfl" and kind == "td":
+                        # edge audit fix C (owner 2026-11-11): an anytime TD with no Pinnacle price used our number alone (448 tags
+                        # won 51 vs 51.3 priced vs 66.8 ours). Fair = the other books' median Yes with the hold removed (screener
+                        # estFair, fit Oct 12 - Nov 1; on Nov 2 - 10 games log-loss .3325 vs ours .3404), chance = that fair (TD
+                        # weight on ours is 0, as with Pinnacle); fewer than 3 other books -> no market reference -> no tag
+                        f = td_books_fair(e, v.get("k"))
+                        if f is None:
+                            FL["tags"][gid].pop(nm, None)
+                        else:
+                            rejudge(FL, gid, nm, v, 0.0, f)
                     continue
                 po = cons_of(parts, exclude=v.get("k"), sport=sport)
                 rejudge(FL, gid, nm, v, WPIN.get(sport, {}).get(kind, .5), po if side == "over" else 1 - po)
@@ -468,12 +478,36 @@ def off_market(sport, PR):
 
 
 def rejudge(FL, gid, nm, v, w, pin):
-    """A Value tag with Pinnacle's no-vig as the market half at weight w on ours: keep it only if it still clears the bar."""
+    """A Value tag with Pinnacle's no-vig as the market half at weight w on ours: keep it only if it still clears the bar.
+    qerr (edge audit fix B, owner 2026-11-11): the tagged price sits 15+ pts under that fair -- a stale or broken quote more
+    often than value (Hard Rock overs at +575 minutes before kickoff, the books closing at -120); the pages show it as
+    'off market: check the price' instead of a Value edge."""
     v["m"], v["pin"], v["wp"] = round(pin, 4), round(pin, 4), w
     if v.get("p") is None or v.get("o") is None:
         return
     if (w * v["p"] + (1 - w) * pin) * dec(v["o"]) - 1 < FL.get("min_ev", .05):
         FL["tags"][gid].pop(nm, None)
+        return
+    if pin - 1 / dec(v["o"]) >= QERR_GAP:
+        v["qerr"] = 1
+    else:
+        v.pop("qerr", None)
+
+
+QERR_GAP = .15
+
+
+def td_books_fair(e, skip=None):
+    """NFL anytime-TD fair with no Pinnacle price: the median Yes implied of the books other than `skip` (3+), hold removed
+    by research/no_fair_study.py's fit (logit -.0647 + 1.1037 logit median); None without 3 other books."""
+    if not e:
+        return None
+    ip = lambda o: 100 / (o + 100) if o > 0 else -o / (-o + 100)
+    xs = sorted(ip(v[0]) for b, v in (e.get("o") or {}).items() if b not in (skip, "Pinnacle") and v and v[0] is not None)
+    if len(xs) < 3:
+        return None
+    m = min(max(float(np.median(xs)), .003), .997)
+    return 1 / (1 + math.exp(-(-.0647 + 1.1037 * math.log(m / (1 - m)))))
 
 
 def judge(p, odds, nv=None, blend=False):

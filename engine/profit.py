@@ -781,7 +781,7 @@ def tags():
                     continue
                 key = f"{sport}|{gid}|{nm}|{v['b']}"
                 e = log.setdefault(key, dict(sport=sport, gid=gid, name=nm, bet=v["b"], book=v["k"], o=v["o"], first=now.isoformat(),
-                                             p=v.get("p"), m=v.get("m"), start=st))
+                                             p=v.get("p"), m=v.get("m"), start=st, **({"qerr": 1} if v.get("qerr") else {})))
                 e.setdefault("start", st)
         # off-market prices (sharp.off_market): each first sighting, graded like tags
         for x in FL.get("off") or []:

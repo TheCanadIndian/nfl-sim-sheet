@@ -1074,6 +1074,13 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         if (!c || q * dec(c.o) - 1 < min) return '';
         o = c;
       }
+      // edge audit fix B (owner 2026-11-11): a price 15+ pts under the sharp fair is a stale or broken quote more often than
+      // value (Hard Rock overs at +575 minutes before kickoff, the books closing at -120): shown as off market, check the price
+      if (o && o.o != null && v.m != null && v.m - 1 / dec(o.o) >= .15){
+        const qt = `Off market: ${esc(FULL[o.k] || o.k)} ${o.o > 0 ? '+' : ''}${o.o} implies ${Math.round(100 / dec(o.o))}% vs the sharp fair ${Math.round(v.m * 100)}% for ${esc(name)} ${esc(b)}. A gap this big is usually a stale or broken quote, so check the price is real before betting (the ones seen so far won at about the fair rate).`;
+        return o.u ? `<a class="vtag offt" href="${esc(o.u)}" target="_blank" rel="noopener" title="${qt}">Off market · check price · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)} ↗</a>`
+          : `<span class="vtag offt" title="${qt}">Off market · check price · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)}</span>`;
+      }
       const tip = `Value: ${o ? esc(FULL[o.k] || o.k) : 'at least one major sportsbook'} pays ${Math.round(min * 100)}%+ more than our fair price for ${esc(name)} ${esc(b)} (checked ${esc(t)}; skipped when we're far from the market, which usually means news). Not yet a proven edge: we're tracking how these do.`;
       if (o && o.u)                                          // price, book and a bet link
         return `<a class="vtag" href="${esc(o.u)}" target="_blank" rel="noopener" title="${tip} Tap to open this bet.${v.pin != null ? ` Pinnacle's no-vig chance: ${(v.pin * 100).toFixed(1)}%.` : ''}">Value · ${esc(b)} <b>${o.o > 0 ? '+' : ''}${o.o}</b> ${esc(BKS[o.k] || o.k)} ↗${v.pin != null ? (() => { const pe = v.pin * dec(o.o) - 1; return ` <span class="pinv${pe > 0 ? '' : ' neg'}">Pin ${(v.pin * 100).toFixed(0)}% · <b>${pe > 0 ? '+' : ''}${(pe * 100).toFixed(1)}%</b></span>`; })() : ''}</a>`;
