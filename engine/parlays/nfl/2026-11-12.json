@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-12",
 "lock": "2026-11-13T01:15:00+00:00",
-"frozen_at": "2026-11-11T16:12:37.398Z",
+"frozen_at": "2026-11-11T16:42:42.131Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -42,6 +42,40 @@
 "p": 0.05843,
 "d": 13.451,
 "first": "2026-11-13T01:15:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4176,
+"price": 160,
+"book": "Novig"
+},
+{
+"gid": "2026_10_WAS_NYG",
+"start": "2026-11-12T20:15:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "van jefferson",
+"lab": "Van Jefferson over 1.5 receptions",
+"p": 0.4203,
+"price": 150,
+"book": "Novig"
+}
+],
+"p": 0.17551,
+"d": 6.5,
+"first": "2026-11-13T01:15:00+00:00",
+"pick": "core"
 },
 {
 "card": "Same-game parlays",
@@ -2816,30 +2850,45 @@
 "first": "2026-11-13T01:15:00+00:00"
 },
 {
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
 "legs": [
 {
 "gid": "2026_10_WAS_NYG",
 "start": "2026-11-13T01:15:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "van jefferson",
+"lab": "Van Jefferson over 14.5 rec yds",
+"p": 0.439,
+"price": 203,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.3302,
+"fair": 0.4087,
+"main": false
+},
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "van jefferson",
-"lab": "Van Jefferson over 1.5 receptions",
-"p": 0.4202,
-"price": 150,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4125,
+"price": 160,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0504,
-"fair": 0.3809,
+"edge": 0.0726,
+"fair": 0.3766,
 "main": true
 }
 ],
-"p": 0.4202,
-"d": 2.5,
-"first": "2026-11-13T01:15:00+00:00",
-"pick": "straight"
+"p": 0.18109,
+"d": 7.878,
+"first": "2026-11-13T01:15:00+00:00"
 }
 ],
 "graded": false
