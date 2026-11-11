@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-12",
 "lock": "2026-11-13T01:15:00+00:00",
-"frozen_at": "2026-11-11T19:27:39.430Z",
+"frozen_at": "2026-11-11T19:35:06.487Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -11,9 +11,21 @@
 "final_at": "2026-11-12T23:15:00+00:00",
 "parlays": [
 {
-"card": "Ladder longshots (experimental)",
+"card": "Primetime ladders (experimental)",
 "tier": "2-leg",
 "legs": [
+{
+"gid": "2026_10_WAS_NYG",
+"start": "2026-11-12T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 99.5,
+"name": "malik nabers",
+"lab": "Malik Nabers 100+ rec yds",
+"p": 0.235,
+"price": 296,
+"book": "Kalshi"
+},
 {
 "gid": "2026_10_WAS_NYG",
 "start": "2026-11-12T20:15:00",
@@ -25,7 +37,16 @@
 "p": 0.27,
 "price": 240,
 "book": "Kalshi"
+}
+],
+"p": 0.05938,
+"d": 13.451,
+"first": "2026-11-13T01:15:00+00:00"
 },
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
 {
 "gid": "2026_10_NE_DET",
 "start": "2026-11-15T09:30:00",
@@ -37,16 +58,7 @@
 "p": 0.305,
 "price": 189,
 "book": "Kalshi"
-}
-],
-"p": 0.08235,
-"d": 9.842,
-"first": "2026-11-13T01:15:00+00:00"
 },
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
 {
 "gid": "2026_10_WAS_NYG",
 "start": "2026-11-12T20:15:00",
@@ -58,23 +70,45 @@
 "p": 0.27,
 "price": 240,
 "book": "Kalshi"
-},
-{
-"gid": "2026_10_SEA_LV",
-"start": "2026-11-15T16:05:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "tre tucker",
-"lab": "Tre Tucker 40+ rec yds",
-"p": 0.305,
-"price": 189,
-"book": "Kalshi"
 }
 ],
 "p": 0.08235,
 "d": 9.842,
 "first": "2026-11-13T01:15:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4174,
+"price": 160,
+"book": "Novig"
+},
+{
+"gid": "2026_10_WAS_NYG",
+"start": "2026-11-12T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 7.5,
+"name": "van jefferson",
+"lab": "Van Jefferson over 7.5 rec yds",
+"p": 0.545,
+"price": -106,
+"book": "Novig"
+}
+],
+"p": 0.2275,
+"d": 5.053,
+"first": "2026-11-13T01:15:00+00:00",
+"pick": "core"
 },
 {
 "card": "Parlays by payout (your books)",
