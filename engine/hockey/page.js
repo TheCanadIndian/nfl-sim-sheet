@@ -319,7 +319,6 @@ function tripleCard(){
   for (let i = 0; i < legs.length; i++) for (let j = i + 1; j < legs.length; j++){
     const a = legs[i], c = legs[j];
     if (a.g.id === c.g.id || a.p.p < .15 || a.p.p > .35 || c.p.p < .15 || c.p.p > .35) continue;
-    if (window.MKT && MKT.legOk && !(a.b && c.b && MKT.legOk({kind: 'goal', price: a.b.o}, 'nhl') && MKT.legOk({kind: 'goal', price: c.b.o}, 'nhl'))) continue;   // the one leg rule
     const pr = a.p.p * c.p.p; if (pr > 1 / 12) continue;
     pairs.push({legs: [a, c], p: pr, d: a.b && c.b ? dec(a.b.o) * dec(c.b.o) : 1 / pr});
   }

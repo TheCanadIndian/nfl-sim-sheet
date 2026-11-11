@@ -264,8 +264,13 @@ def leg_ok(L, sport=None):
     return q is not None and LEG_Q[0] <= q <= LEG_Q[1]
 
 
+# cards the leg rule leaves alone: same-game (not bettable anyway) and Triple-green longshots (owner 2026-11-11 'exempt triple
+# green': the one card whose legs beat their price, 1.29 on 41 legs, though many are priced under 25%)
+LEG_RULE_EXEMPT = ("Same-game", "Triple-green longshots")
+
+
 def parlay_ok(p, sport):
-    return str(p.get("card", "")).startswith("Same-game") or (bool(p.get("legs")) and all(leg_ok(L, sport) for L in p["legs"]))
+    return str(p.get("card", "")).startswith(LEG_RULE_EXEMPT) or (bool(p.get("legs")) and all(leg_ok(L, sport) for L in p["legs"]))
 
 
 def cap_reuse(ps):
