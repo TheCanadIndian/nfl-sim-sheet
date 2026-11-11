@@ -432,7 +432,7 @@ function ladderLongshots(){
       if (!((p.s.tgt && p.s.tgt[MEAN] >= 3) || (p.s.car && p.s.car[MEAN] >= 8) || (p.s.att && p.s.att[MEAN] >= 20))) continue;
       const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null;
       if (!soft && !tk) continue;
-      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u));
+      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u) && (!MKT.legOk || MKT.legOk({kind: u.k, price: u.cost}, 'nfl')));   // + the one leg rule
       if (!rungs.length) continue;
       rungs.forEach(u => regL(g, p, u, 'Ladder longshot'));
       const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || Math.abs(a.p - .30) - Math.abs(b.p - .30))[0];   // ours closest to 30%
@@ -488,7 +488,7 @@ function primetimeLadders(){
     for (const p of pool){
       const k = posKey(p), r = dvpRow(k, p.o), soft = !!(r && r.rank <= 8), tk = MKT.tagKind ? MKT.tagKind(g.id, p.n) : null, use = top.has(p);
       if (!soft && !tk && !use) continue;
-      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u));
+      const rungs = MKT.ladder(g.id, p.id, p.n).filter(u => rungOk(p, u) && (!MKT.legOk || MKT.legOk({kind: u.k, price: u.cost}, 'nfl')));   // + the one leg rule
       if (!rungs.length) continue;
       rungs.forEach(u => regL(g, p, u, 'Primetime ladder'));
       const u = rungs.sort((a, b) => (b.k === tk) - (a.k === tk) || Math.abs(a.p - .30) - Math.abs(b.p - .30))[0];   // ours closest to 30%
@@ -581,6 +581,7 @@ function pathLegs(g){
         if (!u.best || (main && u.l < main.l - 1e-9)) continue;                     // overs at or above the main line, at the owner's books
         const dO = u.best.o > 0 ? 1 + u.best.o / 100 : 1 + 100 / -u.best.o;
         if (dO < 2.0 || dO > 6) continue;                                          // achievable legs: about +100 to +500                                          // longshot legs: +150 to +900
+        if (MKT.legOk && !MKT.legOk({kind: st, price: u.best.o}, 'nfl')) continue;  // the one leg rule (25-55%, no passing / rushing)
         let fair = u.fair; if (fair == null && gap != null && u.p > 0 && u.p < 1) fair = sg(lg(u.p) + gap);
         const m = fair ?? u.mid, w = fair != null ? (main ? main.w : .25) : .5;
         if (m == null) continue;                                                    // never our number alone

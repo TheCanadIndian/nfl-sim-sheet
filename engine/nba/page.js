@@ -589,6 +589,7 @@ function nbaPathLegs(g){
         if (!u.best) continue;
         const dO = u.best.o > 0 ? 1 + u.best.o / 100 : 1 + 100 / -u.best.o;
         if (dO < 2.0 || dO > 6) continue;                                          // achievable legs: about +100 to +500
+        if (MKT.legOk && !MKT.legOk({kind: st, price: u.best.o}, 'nba')) continue;  // the one leg rule (25-55%, no points)
         let fair = u.fair; if (fair == null && gap != null && u.p > 0 && u.p < 1) fair = sg(lg(u.p) + gap);
         const mk = fair ?? u.mid, w = fair != null ? (main ? main.w : u.w) : .5;
         if (mk == null) continue;
@@ -650,6 +651,7 @@ function nbaLadderLongshots(){
       for (const u of MKT.ladder(g.id, p.id, p.n, Object.keys(NKL))){
         if (!(u.mid >= .15 && u.mid <= .45) || !(u.yb > 0) || u.ya - u.yb > .05) continue;           // achievable: our chance 20-45%
         if (u.p == null || u.p < .20 || u.p > .45 || u.p < u.mid - .02 || !vol(p, u.k)) continue;
+        if (MKT.legOk && !MKT.legOk({kind: u.k, price: u.cost}, 'nba')) continue;   // the one leg rule
         const m = mx(p, u.k), soft = m && m.v >= 1.06; if (!soft && tk !== u.k) continue;
         regL(g, p, u, 'Ladder longshot');
         const sc = (soft ? 2 : 0) + (tk === u.k ? 2 : 0), L = {g, p, st: u.k, u: {...u, best: null}, q: u.mid, cost: u.cost, price: amO(u.cost), sc, m, tag: tk === u.k};

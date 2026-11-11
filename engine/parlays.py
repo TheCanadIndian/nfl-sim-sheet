@@ -138,8 +138,9 @@ def freeze():
                 cp = LB.build_confluence(sport, snap.get("cands"), now)          # owner 2026-10-25: run alongside Today's card
                 mp = LB.build_moveknee(sport, snap.get("cands"), now)            # NBA: sharp move up -> one rung above the main line
                 sw = LB.build_sweet(sport, snap.get("cands"), now)               # owner 2026-10-27: edge 5-40% legs priced 15-45%
-                snap["parlays"] = snap.get("parlays", []) + lp + cp + mp + sw
-                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays, {len(sw)} sweet-spot parlays")
+                ne = LB.build_nfl_edge(sport, snap.get("cands"), now)            # owner 2026-11-11: NFL edge rule as straights
+                snap["parlays"] = snap.get("parlays", []) + lp + cp + mp + sw + ne
+                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays, {len(sw)} sweet-spot parlays, {len(ne)} NFL edge straights")
             except Exception as e:                                   # noqa: BLE001
                 print(f"parlays {sport}: learning builder skipped ({type(e).__name__}: {e})")
             by = {}
@@ -166,23 +167,27 @@ def freeze():
                           or (str(p.get("card", "")).startswith(BUILDER_CARDS) and now >= pick_lock(sport, "core", p, fin))]
                 lk = {tuple(sorted(_legkey(L) for L in p["legs"])) for p in locked}
                 pending = [p for p in by.get(date, []) if when(p["first"]) > now and tuple(sorted(_legkey(L) for L in p["legs"])) not in lk]
+                n0 = len(pending)
+                pending = [p for p in pending if parlay_ok(p, sport)]                 # the one leg rule (LEG_Q / LEG_BAN)
+                if n0 != len(pending):
+                    print(f"parlays {sport} {date}: leg rule dropped {n0 - len(pending)} of {n0} parlays")
                 # learning / confluence parlays: at most 3 a day each; once some lock, new ones only from other games (and
                 # not past their lock)
                 keep = list(pending)
                 for bc in BUILDER_CARDS:
                     LP = lambda q: str(q.get("card", "")).startswith(bc)
                     lgids = {str(L.get("gid")) for q in locked if LP(q) for L in q["legs"]}
-                    room = 3 - sum(1 for q in locked if LP(q))
+                    room = BUILDER_CAP.get(bc, 3) - sum(1 for q in locked if LP(q))
                     nxt = []
                     for q in keep:
                         if LP(q):
-                            if room <= 0 or now >= pick_lock(sport, "core", q, fin) or any(str(L.get("gid")) in lgids for L in q["legs"]):
+                            if room <= 0 or now >= pick_lock(sport, "core", q, fin) or (bc != NFL_EDGE_CARD and any(str(L.get("gid")) in lgids for L in q["legs"])):
                                 continue
                             room -= 1
                         nxt.append(q)
                     keep = nxt
                 pending = keep
-                ps = pick_card(sport, locked + pending, now, fin)
+                ps = cap_reuse(pick_card(sport, locked + pending, now, fin))      # a leg in at most LEG_REUSE parlays
                 if not ps or (old and ps == old["parlays"]):
                     continue
                 os.makedirs(os.path.dirname(fp), exist_ok=True)
@@ -224,7 +229,71 @@ def goal_core(p):
                               and L["p"] * dec(L["price"]) - 1 >= GOAL_CORE_EDGE for L in legs)
 
 
-BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays", "Sweet-spot edge parlays")       # builder.py's cards: tracked on their own, never Today's card
+NFL_EDGE_CARD = "NFL edge straights (experimental)"
+BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays", "Sweet-spot edge parlays", NFL_EDGE_CARD)   # builder.py's cards: tracked on their own
+BUILDER_CAP = {NFL_EDGE_CARD: 8}                     # per sport-day; 3 for the other builder cards
+NFL_STRAIGHTS = 6                                    # NFL Today's card: up to 6 straights from NFL_EDGE_CARD ...
+CARD_N_SPORT = {"nfl": 2}                            # ... and 2 core parlays, no longshot (favor straights until legs break even)
+
+# One leg rule for every builder (owner 2026-11-11: 'carry on with proposed changes 2-4'; research/parlay_audit.py, 2,175
+# distinct legs Oct 8 - Nov 10: every leg any builder used hit 0.915 of its price; priced 25-55% 0.98-0.99, under 25% 0.81;
+# NBA points overs 0.69, NFL passing yds 0.42, rushing 0.67, touchdowns 0.70). Every leg of a tracked parlay (page cards,
+# builder.py, the multisport longshots, the plus-money slate) must be priced 25-55% as an implied chance (about +300 .. -122,
+# Kalshi with its fee) and not in LEG_BAN. Same-game cards (not bettable at any book) keep their own rules.
+LEG_Q = (.25, .55)
+LEG_BAN = {"nba": {"pts"}, "nfl": {"pass_yds", "rush_yds"}}
+LEG_BAN_ALL = {"td", "anytime_td", "first_td"}
+# and a leg sits in at most LEG_REUSE tracked parlays a day per sport (the audit: 2.3 on average, up to 22; on 28 of 34 days one
+# leg decided 5+ parlays): locked parlays first, then Today's card, then the builder cards, then the rest by edge
+LEG_REUSE = 2
+
+
+def leg_q(L):
+    pr = L.get("price")
+    if pr is None:
+        return None
+    pr = float(pr)
+    return pr if abs(pr) < 1 else 1 / dec(pr)                       # same-game Kalshi legs store a chance
+
+
+def leg_ok(L, sport=None):
+    k = str(L.get("kind") or "")
+    if k in LEG_BAN_ALL or k in LEG_BAN.get(L.get("sport") or sport, ()):
+        return False
+    q = leg_q(L)
+    return q is not None and LEG_Q[0] <= q <= LEG_Q[1]
+
+
+def parlay_ok(p, sport):
+    return str(p.get("card", "")).startswith("Same-game") or (bool(p.get("legs")) and all(leg_ok(L, sport) for L in p["legs"]))
+
+
+def cap_reuse(ps):
+    """Drop pending parlays that would put a leg in more than LEG_REUSE tracked parlays (locked / picked ones always stay)."""
+    def prio(p):
+        if p.get("locked"):
+            return (0, 0)
+        if p.get("pick"):
+            return (1, 0)
+        ev = p["p"] * p["d"] - 1 if p.get("p") and p.get("d") else -9
+        return (2 if str(p.get("card", "")).startswith(BUILDER_CARDS) else 3, -ev)
+    used, keep = {}, set()
+    for p in sorted(ps, key=prio):
+        if str(p.get("card", "")).startswith("Same-game"):
+            keep.add(id(p)); continue
+        ks = [_legkey(L) for L in p["legs"]]
+        if not (p.get("locked") or p.get("pick")) and any(used.get(k, 0) >= LEG_REUSE for k in ks):
+            continue
+        for k in ks:
+            used[k] = used.get(k, 0) + 1
+        keep.add(id(p))
+    return [p for p in ps if id(p) in keep]
+
+
+def nfl_edge_core(p):
+    """Every leg passes the NFL edge rule (its own chance x price 5-40% over)."""
+    legs = p.get("legs") or []
+    return bool(legs) and all(L.get("p") and L.get("price") is not None and .05 <= L["p"] * dec(L["price"]) - 1 <= .40 for L in legs)
 
 
 def _legkey(L):
@@ -312,7 +381,7 @@ def nba_lineup_lock(p):
 
 def pick_lock(sport, slot, p, card_fin):
     """When a pick (or a candidate for a slot) stops changing."""
-    if sport == "nfl" and slot == "core":
+    if sport == "nfl" and slot in ("core", "straight"):
         return when(p["first"]) - NFL_SLATE_LOCK
     if sport == "nba":
         return nba_lineup_lock(p)[0]
@@ -351,7 +420,7 @@ def pick_card(sport, ps, now, final_at=None):
         slot, ev = card_slot(sport, p)
         if slot and (now < lock(p, slot) or none_yet):
             cands.append((slot, ev, p))
-    cands.sort(key=lambda c: (-(sport == "nhl" and goal_core(c[2])), -c[1]))     # NHL: goal-edge parlays first
+    cands.sort(key=lambda c: (-(sport == "nhl" and goal_core(c[2])), -(sport == "nfl" and nfl_edge_core(c[2])), -c[1]))  # NHL goal-edge / NFL edge-rule parlays first
     count = lambda f: sum(1 for p in ps if p.get("pick") and f(p["pick"]))
 
     def take(ok, cap):
@@ -367,10 +436,27 @@ def pick_card(sport, ps, now, final_at=None):
             sets.add(k)
             for L in p["legs"]:
                 used[_legkey(L)] = used.get(_legkey(L), 0) + 1
-    take(lambda x: x == "longshot", lambda: 1 - count(lambda x: x == "longshot"))
-    take(lambda x: x == "core", lambda: CARD_CORE - count(lambda x: x == "core"))
-    take(lambda x: x == "core", lambda: CARD_N - count(lambda x: True))     # no longshot today: a 4th core pick
-    take(lambda x: True, lambda: CARD_N - count(lambda x: True))            # still short of 4 (few core parlays): more longshots
+    n_par = CARD_N_SPORT.get(sport, CARD_N)                                 # NFL: 2 parlays + straights (favor straights)
+    par = lambda: count(lambda x: x != "straight")
+    if sport not in CARD_N_SPORT:
+        take(lambda x: x == "longshot", lambda: 1 - count(lambda x: x == "longshot"))
+    take(lambda x: x == "core", lambda: min(CARD_CORE, n_par) - count(lambda x: x == "core"))
+    take(lambda x: x == "core", lambda: n_par - par())                      # no longshot today: a 4th core pick
+    if sport not in CARD_N_SPORT:
+        take(lambda x: True, lambda: n_par - par())                         # still short of 4 (few core parlays): more longshots
+    if sport == "nfl":                                                      # straights from the NFL edge rule, soonest first
+        have = {_legkey(L) for p in ps if p.get("pick") == "straight" for L in p["legs"]}
+        n = count(lambda x: x == "straight")
+        for p in sorted((q for q in ps if q.get("card") == NFL_EDGE_CARD and not q.get("pick") and when(q["first"]) > now), key=lambda q: q["first"]):
+            if n >= NFL_STRAIGHTS:
+                break
+            k = _legkey(p["legs"][0])
+            if k in have or (now >= lock(p, "straight") and not none_yet):
+                continue
+            p["pick"] = "straight"
+            if now >= lock(p, "straight"):
+                p["final"] = True
+            have.add(k); n += 1
     return ps
 
 
@@ -390,18 +476,18 @@ def write_card(sport):
                 rec["n"] += 1
                 rec["w"] += win
                 rec["l"] += not win
-                rec["net"] += CARD_STAKE * (((p.get("paid") or p["d"]) - 1) if win else -1)
+                rec["net"] += (10 if p["pick"] == "straight" else CARD_STAKE) * (((p.get("paid") or p["d"]) - 1) if win else -1)
         if picks:
             days.append((d["date"], picks, d.get("final_at")))
     show = next(((dd, ps, fa) for dd, ps, fa in days if dd >= today), days[-1] if days else (None, [], None))
     out = dict(sport=sport, stake=CARD_STAKE, date=show[0], final_at=show[2], updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
                record=dict(rec, net=round(rec["net"], 2)),
-               picks=[dict(slot=p["pick"], card=p["card"], tier=p.get("tier"), p=round(p["p"] * CARD_DISCOUNT.get(sport, 1), 4), d=p["d"],
+               picks=[dict(slot=p["pick"], card=p["card"], tier=p.get("tier"), stake=10 if p["pick"] == "straight" else CARD_STAKE, p=round(p["p"] * CARD_DISCOUNT.get(sport, 1), 4), d=p["d"],
                            first=p["first"], res=p.get("res"), paid=p.get("paid"),
                            lock=pick_lock(sport, p["pick"], p, when(show[2])).astimezone(dt.timezone.utc).isoformat() if show[2] else None,
                            lw=(sport == "nba" and nba_lineup_lock(p)[1]) or None,
                            legs=[dict(lab=L.get("lab"), price=L.get("price"), book=L.get("book"), p=L.get("p"), res=L.get("res")) for L in p["legs"]])
-                      for p in sorted(show[1], key=lambda p: (p["pick"] != "core", p["first"]))])
+                      for p in sorted(show[1], key=lambda p: ({"straight": 0, "core": 1}.get(p["pick"], 2), p["first"]))])
     os.makedirs(os.path.join(SITE, "markets"), exist_ok=True)
     json.dump(out, open(os.path.join(SITE, "markets", f"card_{sport}.json"), "w"), separators=(",", ":"))
     return out
@@ -425,7 +511,7 @@ def multi_parlays(date):
             if q.get("card") not in cards:
                 continue
             for L in q["legs"]:
-                if L.get("price") is None or L.get("book") not in CARD_BOOKS or str(L.get("side")).lower() in ("u", "under") or not L.get("p"):
+                if L.get("price") is None or L.get("book") not in CARD_BOOKS or str(L.get("side")).lower() in ("u", "under") or not L.get("p")                         or not leg_ok(L, sport):
                     continue
                 k = (sport, str(L.get("gid")), L.get("name"), L.get("kind"), L.get("line"))
                 nf = len(L.get("f") or []) or 3                                  # NHL goal legs: usage + edge + price

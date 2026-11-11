@@ -220,6 +220,8 @@ def build(sport, cands, now):
     for c in cands or []:
         if not c.get("fit") or not (EDGE[0] <= c["edge"] <= EDGE[1]) or not c.get("start") or PL.when(c["start"]) <= now:
             continue
+        if not PL.leg_ok(dict(kind="sog" if str(c["kind"]).startswith("sog") else c["kind"], price=c.get("price")), sport):
+            continue                                                  # the one leg rule (parlays.LEG_Q / LEG_BAN)
         F = features(sport, c)
         if any(status.get(f) == "Dropped" for f in F[1:]):              # the bare sport segment informs, never blocks
             continue
@@ -315,6 +317,8 @@ def build_confluence(sport, cands, now):
             continue
         q = 1 / PL.dec(c["price"])
         if not CONF_Q[0] <= q <= CONF_Q[1] or not CONF_EDGE[0] <= (c.get("edge") or -1) <= CONF_EDGE[1]:
+            continue
+        if not PL.leg_ok(dict(kind="sog" if str(c["kind"]).startswith("sog") else c["kind"], price=c["price"]), sport):
             continue
         F = features(sport, c)
         if any(status.get(f) == "Dropped" for f in F[1:5]):            # a dropped stat / book / band never plays
@@ -443,8 +447,8 @@ def moveknee_legs(sport, cands, now, step=1):
             continue                                                  # never our number alone
         chance = MK_WPIN * ours + (1 - MK_WPIN) * fair if ours is not None else fair
         edge = chance * PL.dec(o1) - 1
-        if edge > .40:
-            continue                                                  # 40%+ claimed edges are stale quotes / model error
+        if edge > .40 or not PL.leg_ok(dict(kind=k, price=o1), sport):
+            continue                                                  # 40%+ claimed edges are stale quotes / model error; the leg rule
         conf = (["soft matchup"] if "matchup" in (c.get("f") or []) else []) + (["Value"] if tagged("tags", gid, nm, k) else []) + (["LC"] if tagged("lc", gid, nm, k) else [])
         why = sorted(f"{'Pinnacle' if s_ == 'pin' else 'consensus'} {'line up' if g_ == 'line' else 'odds drop' if g_ == 'price' else 'line up + odds drop'}" for s_, g_ in mv)
         score = (int(any(s_ == "pin" for s_, _ in mv)), int(any(g_ == "both" for _, g_ in mv) or len({s_ for s_, _ in mv}) > 1), edge)
@@ -488,7 +492,7 @@ SW_WK = {("nhl", "goal"): .2, ("nfl", "td"): 0.0}
 SW_BOOKS = ("Hard Rock", "Novig", "Kalshi")
 
 
-def sweet_legs(sport, cands, now):
+def sweet_legs(sport, cands, now, q_band=SW_Q, edge_band=SW_EDGE, main_only=False):
     try:
         P = json.load(open(os.path.join(PL.SITE, "markets", f"props_{sport}.json")))
         S = json.load(open(os.path.join(PL.SITE, "markets", "schedule.json")))
@@ -516,7 +520,7 @@ def sweet_legs(sport, cands, now):
                         pass
                 w = SW_WK.get((sport, k), SW_W.get(sport, .5))
                 for l, o, fair, ours in lines:
-                    if fair is None:
+                    if fair is None or (main_only and l != ml):
                         continue
                     bo = [(PL.dec(v[0]), b, v[0]) for b, v in o.items() if b in SW_BOOKS and isinstance(v, list) and v and v[0] is not None]
                     if not bo:
@@ -524,9 +528,11 @@ def sweet_legs(sport, cands, now):
                     d, book, price = max(bo)
                     q = w * ours + (1 - w) * fair if ours is not None else fair
                     edge = q * d - 1
-                    if not (SW_EDGE[0] <= edge <= SW_EDGE[1] and SW_Q[0] <= 1 / d <= SW_Q[1]):
+                    if not (edge_band[0] <= edge <= edge_band[1] and q_band[0] <= 1 / d <= q_band[1]):
                         continue
                     kind = "sog" if k.startswith("sog") else k
+                    if not PL.leg_ok(dict(kind=kind, price=price), sport):
+                        continue                                      # the one leg rule (parlays.LEG_Q / LEG_BAN)
                     who = disp.get((str(gid), nm)) or " ".join(x.capitalize() for x in nm.split())
                     what = "anytime TD" if k == "td" else "to score" if k == "goal" else STAT.get(k, k) if k.startswith("sog") else f"over {l:g} {STAT.get(k, k)}"
                     legs.append(dict(gid=str(gid), start=st, kind=kind, side="o", line=l, name=nm, lab=f"{who} {what}", p=round(q, 4), price=price,
@@ -548,6 +554,28 @@ def build_sweet(sport, cands, now):
         out.append(mk(pool[:3], "3 legs"))
     if len(pool) >= 5:
         out.append(mk(pool[2:4], "2 legs"))
+    return out
+
+
+# ---------------------------------------------------------------- 8. NFL edge straights
+# Owner 2026-11-11 ('carry on with proposed changes 2-4': build the NFL card around the NFL edge rule, favor straights).
+# research/new_edges.py + the follow-up check: the site's NFL edge rule (chance = .25 ours + .75 the sharp fair at that line,
+# edge 5-40%, best of Hard Rock / Novig / Kalshi) on every over in the props snapshots Oct 15 - Nov 8: +13.0% on 412 (both
+# halves +); after the one leg rule (catches / receiving yards, priced 25-55%) +22.8% on 211 (+13.9 / +28.2); main lines one
+# per player +33% on 59 (~6 a day; alt lines +12%, h1 -19%). Ranking by claimed edge did not help (top edge per game -8%;
+# top 6 a day by edge +18% vs random +25%), so every qualifying main line goes in, soonest first. Main lines were chosen
+# after looking: EXPERIMENTAL. Each is a $10 straight (tier 'straight', one leg), at most 8 a day; the NFL Today's card
+# takes up to 6 of them (parlays.NFL_STRAIGHTS) beside 2 parlays.
+def build_nfl_edge(sport, cands, now):
+    if sport != "nfl":
+        return []
+    legs = sweet_legs(sport, cands, now, q_band=PL.LEG_Q, edge_band=SW_EDGE, main_only=True)
+    best = {}
+    for L in sorted(legs, key=lambda L: -L["edge"]):                   # one per player (both his stats can't both go)
+        best.setdefault((L["gid"], L["name"]), L)
+    out = []
+    for L in sorted(best.values(), key=lambda L: L["start"])[:PL.BUILDER_CAP.get(PL.NFL_EDGE_CARD, 8)]:
+        out.append(dict(card=PL.NFL_EDGE_CARD, tier="straight", legs=[L], p=L["p"], d=round(PL.dec(L["price"]), 3)))
     return out
 
 

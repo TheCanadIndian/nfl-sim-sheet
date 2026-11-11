@@ -137,6 +137,8 @@ def candidates(now):
                         if not ODDS[0] <= price <= ODDS[1]:
                             continue
                         kind = "sog" if k.startswith("sog") else k
+                        if not PL.leg_ok(dict(kind=kind, price=price), sport):
+                            continue                          # the one leg rule (parlays.LEG_Q: +250 .. +300 here)
                         dry = ((DRY.get(str(gid)) or {}).get("dry") or {}).get(nm) if sport == "nhl" else None
                         x = feats(sport, kind, fair, ours, 1 / d, l != ml, dry, (str(gid), nm) in tag, (str(gid), nm) in mv)
                         q = chance(m["coef"], fair, x) if m else fair

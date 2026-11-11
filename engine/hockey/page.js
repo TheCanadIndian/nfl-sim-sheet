@@ -172,6 +172,7 @@ function atgParlays(){
     for (const side of [g.away, g.home]) for (const p of side.players){
       if (!(p.ur && p.ur <= 3) || p.p < .30) continue;              // our top 3, and 30%+ (shorter droughts, same calibration)
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b) continue;
+      if (MKT.legOk && !MKT.legOk({kind: 'goal', price: b.o}, 'nhl')) continue;   // the one leg rule (priced 25-55%)
       const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null;
       // 50/50 ours and the exchanges (Kalshi 2026: 3,822 graded legs, top-3 legs +10%); 20/80 with Pinnacle when pulled (2025-26 closing props)
       const q = MKT.blend ? MKT.blend(g.id, p.name, 'goal', p.p) : m != null ? .5 * p.p + .5 * m : p.p;
@@ -229,6 +230,7 @@ function likelyCard(){
     for (const side of [g.away, g.home]) for (const p of side.players){
       if (!(p.ur && p.ur <= 3)) continue;
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b || !b.mine || 1 / dec(b.o) < .25) continue;
+      if (MKT.legOk && !MKT.legOk({kind: 'goal', price: b.o}, 'nhl')) continue;   // the one leg rule
       const q = MKT.blend ? MKT.blend(g.id, p.name, 'goal', p.p) : p.p;
       if (q * dec(b.o) - 1 > .10) continue;                      // a 10%+ claimed edge is usually a stale price
       legs.push({g, p, team: side.team, b, q});
@@ -317,6 +319,7 @@ function tripleCard(){
   for (let i = 0; i < legs.length; i++) for (let j = i + 1; j < legs.length; j++){
     const a = legs[i], c = legs[j];
     if (a.g.id === c.g.id || a.p.p < .15 || a.p.p > .35 || c.p.p < .15 || c.p.p > .35) continue;
+    if (window.MKT && MKT.legOk && !(a.b && c.b && MKT.legOk({kind: 'goal', price: a.b.o}, 'nhl') && MKT.legOk({kind: 'goal', price: c.b.o}, 'nhl'))) continue;   // the one leg rule
     const pr = a.p.p * c.p.p; if (pr > 1 / 12) continue;
     pairs.push({legs: [a, c], p: pr, d: a.b && c.b ? dec(a.b.o) * dec(c.b.o) : 1 / pr});
   }
@@ -407,6 +410,7 @@ function pricedLongshots(){
     for (const side of [g.away, g.home]) for (const p of side.players){
       if (p.p < .15 || p.p > .35 || !(p.ur && p.ur <= 3)) continue;  // our top 3 per game only: everyone else has lost on Kalshi
       const b = MKT.propBest(g.id, p.name, 'goal'); if (!b || !b.mine) continue;
+      if (MKT.legOk && !MKT.legOk({kind: 'goal', price: b.o}, 'nhl')) continue;   // the one leg rule
       const m = MKT.propMarket ? MKT.propMarket(g.id, p.name, 'goal') : null, q = MKT.blend ? MKT.blend(g.id, p.name, 'goal', p.p) : m != null ? .5 * p.p + .5 * m : p.p;
       if (q * dec(b.o) - 1 <= 0) continue;
       legs.push({g, p, team: side.team, b, q, m});

@@ -58,6 +58,14 @@
   const regPath = c => { if (FREEZE && c) PATHS.push(c); };
   // every rung in a ladder category (owner 2026-11-01: mark them in the screener) -> parlays.py -> markets/ladders_<sport>.json
   const regLad = c => { if (FREEZE && c) LADS.push(c); };
+  // One leg rule for every parlay builder (owner 2026-11-11; parlays.py LEG_Q / LEG_BAN, research/parlay_audit.py: every leg the
+  // builders used hit 0.915 of its price; priced 25-55% 0.98-0.99, under 25% 0.81; NBA points 0.69, NFL passing 0.42, rushing
+  // 0.67, TDs 0.70): a leg is priced 25-55% as an implied chance (Kalshi with its fee) and isn't one of those markets.
+  // parlays.freeze applies the same rule (and a leg in at most 2 tracked parlays a day) to everything it tracks.
+  const LEG_Q = [.25, .55], LEG_BAN = {nba: ['pts'], nfl: ['pass_yds', 'rush_yds']}, LEG_BAN_ALL = ['td', 'anytime_td', 'first_td'];
+  const legOk = (L, sport) => { if (!L || L.price == null) return false; const k = String(L.kind || '');
+    if (LEG_BAN_ALL.includes(k) || (LEG_BAN[L.sport || sport] || []).includes(k)) return false;
+    const pr = +L.price, q = Math.abs(pr) < 1 ? pr : 1 / dec(pr); return q >= LEG_Q[0] && q <= LEG_Q[1]; };
   const dumpFrozen = () => { let el = document.getElementById('frozen-parlays');
     if (!el){ el = document.createElement('script'); el.type = 'application/json'; el.id = 'frozen-parlays'; document.body.appendChild(el); }
     el.textContent = JSON.stringify({generated: new Date().toISOString(), books: MY, prices: BK && BK.fetched, props: PR && PR.fetched, parlays: FROZEN, cands: CANDS, paths: PATHS, ladders: LADS}); };
@@ -774,7 +782,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         }
         legs.push(...Object.values(bestBy));
       }
-      const good = legs.filter(L => L.ev > (opts.minEdge || 0));
+      const good = legs.filter(L => L.ev > (opts.minEdge || 0) && legOk(L.leg, opts.sport));   // the one leg rule
       if (!MY.length && !opts.anyBook) return `<section class="panel"><div class="phead"><h2>${esc(opts.title || 'Parlays by payout')}</h2></div><p class="note">Choose your sportsbooks first (the "all books ▾" button under any game's bets): these parlays are priced only at the books you can bet.</p></section>`;
       // per game: the 3 best-edge legs
       const by = {}; good.sort((a, b) => b.ev - a.ev).forEach(L => { (by[L.gid] = by[L.gid] || []).length < 3 && by[L.gid].push(L); });
@@ -827,6 +835,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
           if (!kind) continue;
           const side = sp[0] === 'under' ? 'u' : 'o', line = kind === 'td' || kind === 'goal' ? .5 : +sp[1];
           const name = nm.replace(/\b\w/g, x => x.toUpperCase()), lab = `${name} ${b === 'TD' ? 'anytime TD' : b}`;
+          if (!legOk({kind, price: c.o}, opts.sport)) continue;            // the one leg rule
           (by[gid] = by[gid] || []).push({gid, q, ev, c, lab,
             leg: {gid, start: start[gid], kind, side, line, name: nm, lab, p: +q.toFixed(4), price: c.o, book: c.k},
             slip: {id: `${opts.sport}|${gid}|tag|${nm}|${kind}|${side}|${line}`, sport: opts.sport, g: gid, glab: glab[gid], lab, p: q, side: 'over'}});
@@ -862,7 +871,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
         && Math.abs((x.l ?? .5) - ln) < 1e-9 && x.ya > 0 && x.yb != null && x.ya - x.yb <= .10);
       return r ? {m: (r.ya + r.yb) / 2, w: .5, src: 'Kalshi'} : null;
     },
-    norm, reg, regPath, regLad, FREEZE,
+    norm, reg, regPath, regLad, FREEZE, legOk,
     // one learning-builder candidate: an over (main line, or yes for TD / goal) priced at the owner's books with the
     // site's anchored chance (sgLeg); f = the page's reasons (keys), fit = whether it fits a script / path (page rule)
     cand(gid, start, name, kind, line, p, f, fit){
@@ -1147,22 +1156,23 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const day = C.date ? new Date(C.date + 'T12:00:00').toLocaleDateString([], {weekday: 'long', month: 'short', day: 'numeric'}) : '';
       const tm = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
       const money = v => (v >= 0 ? '+$' : '−$') + Math.abs(v).toFixed(2);
-      const pick = P => { const st = P.res === 'W' ? `<span class="st W">Won ${money(stake * ((P.paid || P.d) - 1))}</span>` : P.res === 'L' ? '<span class="st L">Lost</span>'
+      const pick = P => { const sk = P.stake || stake, st = P.res === 'W' ? `<span class="st W">Won ${money(sk * ((P.paid || P.d) - 1))}</span>` : P.res === 'L' ? '<span class="st L">Lost</span>'
           : P.res === 'V' ? '<span class="st">Void</span>' : new Date(P.first) <= Date.now() ? '<span class="st">Live</span>'
           : P.lock && new Date(P.lock) > Date.now() && byPick ? `<span class="st"${P.lw ? ' title="Re-picked until the confirmed starting lineups and injury calls for its first game are in our numbers (~30 min before tip)"' : ''}>${P.lw ? 'locks after lineups' : 'locks ' + tm(P.lock)}</span>` : `<span class="st">first game ${tm(P.first)}</span>`;
-        return `<div class="dcp ${P.res || ''}"><div class="dch"><span class="slot${P.slot === 'longshot' ? ' ls' : ''}">${P.slot === 'longshot' ? 'Longshot' : 'Core'}</span>${P.legs.length} legs${st}</div>
+        return `<div class="dcp ${P.res || ''}"><div class="dch"><span class="slot${P.slot === 'longshot' ? ' ls' : ''}">${P.slot === 'longshot' ? 'Longshot' : P.slot === 'straight' ? 'Straight' : 'Core'}</span>${P.legs.length} leg${P.legs.length === 1 ? '' : 's'}${st}</div>
           <ul>${P.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i><b>${esc(L.lab)}</b><span>${esc(FULL[L.book] || L.book || '')} ${L.price != null ? amS(L.price) : ''}</span></li>`).join('')}</ul>
-          <div class="dcs"><span>pays <b>${P.d.toFixed(1)}x</b></span><span>$${stake} → <b>$${(stake * P.d).toFixed(2)}</b></span><span>hits <b>${pc(P.p)}</b></span><span class="${P.p * P.d - 1 >= .05 ? 'good' : 'muted'}">edge ${P.p * P.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((P.p * P.d - 1) * 100))}%</span></div></div>`; };
+          <div class="dcs"><span>pays <b>${P.d.toFixed(1)}x</b></span><span>$${sk} → <b>$${(sk * P.d).toFixed(2)}</b></span><span>hits <b>${pc(P.p)}</b></span><span class="${P.p * P.d - 1 >= .05 ? 'good' : 'muted'}">edge ${P.p * P.d - 1 >= 0 ? '+' : '−'}${Math.abs(Math.round((P.p * P.d - 1) * 100))}%</span></div></div>`; };
       // NFL core picks lock by slate (60 min before their first kickoff, after inactives + our rerun); others lock with the card
       const locks = C.picks.map(P => P.lock).filter(Boolean), byPick = locks.some(t => new Date(t).getTime() !== new Date(C.final_at).getTime());
       const next = locks.map(t => new Date(t)).filter(t => t > Date.now()).sort((a, b) => a - b)[0];
       const nextLw = next && C.picks.some(P => P.lw && P.lock && new Date(P.lock).getTime() === next.getTime());
       const fin = byPick ? next || null : C.final_at ? new Date(C.final_at) : null, isFinal = byPick ? !next : fin && fin <= Date.now();
       const finTag = byPick || fin ? `<span class="dfin${isFinal ? ' on' : ''}" title="${isFinal ? 'These picks are set: they won’t change, and they’re graded at these prices. Place them any time before their first game.' : byPick ? 'Each pick locks at its own time (shown on the pick); until then it can still change.' : 'Picks can still change until then; after that they’re set for the day.'}">${isFinal ? 'Final · place any time' : nextLw ? 'Locks after lineups · by ' + tm(fin) : (byPick ? 'Next lock ' : 'Final at ') + tm(fin)}</span>` : '';
-      return `<section class="panel dcard"><div class="phead"><h2>Today’s card</h2>${finTag}<span class="small muted">${esc(day)} · ${C.picks.length} parlay${C.picks.length === 1 ? '' : 's'} · $${stake} each</span></div>
-        <div class="dcrec">${R.n ? `<span>Card record <b>${R.w}-${R.l}</b></span><span><b class="${R.net >= 0 ? 'good' : ''}">${money(R.net)}</b> at $${stake} a parlay</span>` : '<span>First graded picks still to come.</span>'}<span>Prices at your books when picked</span></div>
+      const nS = C.picks.filter(P => P.slot === 'straight').length, nP = C.picks.length - nS;
+      return `<section class="panel dcard"><div class="phead"><h2>Today’s card</h2>${finTag}<span class="small muted">${esc(day)} · ${nS ? `${nS} straight${nS === 1 ? '' : 's'} ($10) · ${nP} parlay${nP === 1 ? '' : 's'} ($${stake})` : `${nP} parlay${nP === 1 ? '' : 's'} · $${stake} each`}</span></div>
+        <div class="dcrec">${R.n ? `<span>Card record <b>${R.w}-${R.l}</b></span><span><b class="${R.net >= 0 ? 'good' : ''}">${money(R.net)}</b> at ${nS ? '$10 a straight, ' : ''}$${stake} a parlay</span>` : '<span>First graded picks still to come.</span>'}<span>Prices at your books when picked</span></div>
         <div class="dcg">${C.picks.map(pick).join('')}</div>
-        <details class="how"><summary>How these are picked</summary><p class="note">Four a day from every parlay on this tab: three core parlays (2-4 legs, paying 3x to 15x) and one all-day longshot (15x to 100x). Every leg is an over, priced at your books, and comes from a different game; the parlay’s chance uses each leg’s market-anchored chance and needs a 5-40% edge (bigger claimed edges have been the model being wrong); a leg is in at most two picks. Our record so far: 5+ leg parlays went 0 for 101, while 2-4 leg ones matched our chances.${sport === 'nhl' ? ' NHL chances shown are cut 15%: our NHL parlays have hit less often than we said.' : ''} ${sport === 'nfl' ? 'The all-day longshot goes final 2 hours before the day’s first game; core picks lock by slate, an hour before their first kickoff (after inactives and our rerun).' : 'Picks go final 1 hour before the day’s first game.'} After that they never change, so you can place them any time; they’re graded on the Profit page at the prices shown.</p></details></section>`;
+        <details class="how"><summary>How these are picked</summary><p class="note">${sport === 'nfl' ? 'Up to six $10 straights from the NFL edge rule (main-line catches and receiving yards where our number, weighted 25% with the sharp fair, beats your book’s price by 5-40%; +33% on 59 in the Oct 15 to Nov 8 replay, picked after looking, so experimental) and two core parlays (2-4 legs, paying 3x to 15x): straights until parlay legs at least break even.' : 'Four a day from every parlay on this tab: three core parlays (2-4 legs, paying 3x to 15x) and one all-day longshot (15x to 100x).'} Every leg is an over priced at your books at 25-55% as an implied chance (about +300 to -122), never an NBA points, NFL passing / rushing or touchdown over (the legs that lost most in our record), and from a different game; the parlay’s chance uses each leg’s market-anchored chance and needs a 5-40% edge (bigger claimed edges have been the model being wrong); a leg is in at most two parlays a day. Across every card, legs have won about 0.92 of what their prices imply, so each extra leg costs: no parlay type is proven.${sport === 'nhl' ? ' NHL chances shown are cut 15%: our NHL parlays have hit less often than we said.' : ''} ${sport === 'nfl' ? 'Picks lock by slate, an hour before their first kickoff (after inactives and our rerun).' : sport === 'nhl' ? 'Picks go final 5 hours before the day’s first game.' : 'Each pick locks right after the confirmed lineups for its first game.'} After that they never change, so you can place them any time; they’re graded on the Profit page at the prices shown.</p></details></section>`;
     },
     // The market's chance of a game script, from the prediction markets' full ladders: game totals (Kalshi first, then
     // Polymarket: over X at every few points) and winning margins (Polymarket: each team -X). Mid prices, quotes wider than
