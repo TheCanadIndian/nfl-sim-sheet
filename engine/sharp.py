@@ -149,8 +149,13 @@ def cons_of(parts, exclude=None):
 # -> per-stat shift up. Both better in both halves (NFL main -13.5 / -12.1e-4 log-loss, alt -28.7 / -28.9; NBA alt -12.2 / -12.4).
 # NBA main lines and the NHL: no shift (worse or mixed out of sample). Pinnacle's own number (pn, the 'Pinnacle only' view) is
 # left raw. Each shifted value records it (os) so a later run undoes it before recomputing (write_props carries old kinds over).
-OVER_SHIFT = {"nfl": {"main": -.094, "alt": -.143},
-              "nba": {"alt": {"pts": .014, "reb": .173, "ast": .080, "fg3m": .164}}}
+# SWITCHED OFF the same day (parlay / edge audit, research/new_edges.py): better forecasts, worse bet selection. NFL overs
+# flagged at 5-40% (WPIN on ours + fair, best of your books, Oct 15 - Nov 8) fell from 370 (+12.6%, both halves +) to 139
+# (+9.7%); the 231 it dropped returned ~+14%. NBA alt overs flagged went from 596 (-25%) to 3,381 (-12%): six times the
+# losing flags. Values kept for the record; an empty table = off (old shifted values are undone at the next run).
+OVER_SHIFT_TESTED = {"nfl": {"main": -.094, "alt": -.143},
+                     "nba": {"alt": {"pts": .014, "reb": .173, "ast": .080, "fg3m": .164}}}
+OVER_SHIFT = {}
 
 
 def _over_shift(sport, kind, part):
