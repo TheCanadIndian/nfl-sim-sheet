@@ -137,10 +137,21 @@ def _lg(p):
     return math.log(p / (1 - p))
 
 
-def cons_of(parts, exclude=None):
-    """Log-odds mean of the sources' over chances, without `exclude` (the book being bet) when others remain."""
-    xs = [v for k, v in parts.items() if k != exclude] or list(parts.values())
-    return 1 / (1 + math.exp(-sum(_lg(v) for v in xs) / len(xs)))
+# Novig-centred NBA consensus (owner 2026-11-11 'do all 3' after research/book_study.py: Novig was the sharpest NBA prop book,
+# -13.3e-4 log-loss vs the other books' median, and right when books disagreed). research/fair_reference_test.py, 10,538 NBA
+# main-line overs at your books, Oct 20 - Nov 10, leave-one-out: Novig x2 -1.4e-4, x3 -2.0, x5 -2.7 (h1 -3.3 / h2 -2.2, z -3.8),
+# x10 -3.2, Novig alone -3.7 -- better in both halves at every weight; x5 keeps Pinnacle / ProphetX in. NFL: Novig x3 +1.3 and
+# the all-books median +13.3 (worse), so the NFL stays equal-weight; the all-books median was worse in the NBA too (+3.8).
+CONS_W = {"nba": {"Novig": 5.0}}                   # weights in the consensus's log-mean (mkt.js / screener.js CONS_W twins)
+
+
+def cons_of(parts, exclude=None, sport=None):
+    """Log-odds mean of the sources' over chances (weighted by CONS_W[sport]), without `exclude` (the book being bet) when
+    others remain."""
+    xs = [(k, v) for k, v in parts.items() if k != exclude] or list(parts.items())
+    W = CONS_W.get(sport, {})
+    ws = [W.get(k, 1.0) for k, _ in xs]
+    return 1 / (1 + math.exp(-sum(w * _lg(v) for w, (_, v) in zip(ws, xs)) / sum(ws)))
 
 
 # Over bias of the no-vig fair (quant audit 2026-11-11, research/over_shift.py, props snapshots Oct 15 - Nov 8, fit on one half of
@@ -206,7 +217,7 @@ def apply_consensus(sport, now):
                         parts[bk] = a_ / (a_ + b_)
                 if "Pinnacle" not in parts and "Novig" not in parts:
                     continue
-                c = cons_of(parts)
+                c = cons_of(parts, sport=sport)
                 if pin and "Pinnacle" in parts:
                     pin.update(pn=round(parts["Pinnacle"], 4), o=round(c, 4), parts={k: round(v, 4) for k, v in parts.items()})
                     dl = _lg(c) - _lg(parts["Pinnacle"])              # alt lines carried from Pinnacle move with the consensus
@@ -306,7 +317,7 @@ def apply_consensus(sport, now):
                 parts = ((e or {}).get("pin") or {}).get("parts")
                 if not parts:
                     continue
-                po = cons_of(parts, exclude=v.get("k"))
+                po = cons_of(parts, exclude=v.get("k"), sport=sport)
                 rejudge(FL, gid, nm, v, WPIN.get(sport, {}).get(kind, .5), po if side == "over" else 1 - po)
     if FL is not None:
         try:
@@ -360,7 +371,7 @@ def lc_tags(sport, PR):
                     continue
                 w = WPIN.get(sport, {}).get(kind, .5)
                 def fair(skip):
-                    lo, wt = _lg(cons_of(parts, exclude=skip)), 1.0
+                    lo, wt = _lg(cons_of(parts, exclude=skip, sport=sport)), 1.0
                     for src, (mid, dep, _) in P.items():
                         if src != skip.lower():
                             wk = 2 * dep / (dep + 200); lo += wk * _lg(mid); wt += wk

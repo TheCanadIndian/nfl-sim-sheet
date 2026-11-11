@@ -665,6 +665,11 @@ def tag_label(e):
         return "Ladder: Novig rung 10%+ under the other books’ fair (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
+    if e.get("src") == "pp1t3":
+        return "Goal: PP1 top-3-usage forwards, every price at your books (experimental)"
+    if e.get("src") == "arch3":
+        return ("Threes: spot-up shooters, your book 3%+ over the other books’ fair (experimental)" if e.get("grp") == "value"
+                else "Threes: spot-up shooters, every main-line over at your books (experimental)")
     if e.get("src") == "g2":
         return "2+ goals: every price at your books (baseline)" if e.get("grp") == "all" else "2+ goals: edge 5%+ at your books (experimental)"
     if e.get("src") == "tl":
@@ -835,6 +840,57 @@ def tags():
                     e = log.setdefault(f"due|{sport}|{gid}|{nm}", dict(sport=sport, src="due", gid=gid, name=nm, bet="goal", book=bk, o=o,
                                                                      first=now.isoformat(), p=fair, m=fair, start=st, dry=(x.get("dry") or {}).get(nm)))
                     e.setdefault("start", st)
+        # NHL PP1 top-3-usage forwards (owner 2026-11-11 'do all 3', research/book_study.py: every over on them at your books
+        # +5.5% on 1,917, goals +6.7% on 1,049, both halves +5.2 / +8.5, won / fair 1.15): every anytime-goal over at the owner's
+        # books for a forward on PP1 in his team's top 3 by usage (hockey/project.py -> dry_nhl.json 'pp1t3'), first price,
+        # best of Hard Rock / Novig / Kalshi; fair = sharp, else four books. Tracked, off the bets feed.
+        if sport == "nhl":
+            for gid, x in DRY.items():
+                st = starts.get(str(gid)) or x.get("start")
+                if st and PL.when(st) <= now:
+                    continue
+                for nm in x.get("pp1t3") or []:
+                    e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(nm) or {}).get("goal") or {}
+                    bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                    fair = (e_.get("pin") or {}).get("o") or (e_.get("f4") or {}).get("o")
+                    if not bo or fair is None:
+                        continue
+                    _, bk, o = max(bo)
+                    e = log.setdefault(f"pp1t3|{sport}|{gid}|{nm}", dict(sport=sport, src="pp1t3", gid=gid, name=nm, bet="goal", book=bk, o=o,
+                                                                       first=now.isoformat(), p=fair, m=fair, start=st))
+                    e.setdefault("start", st)
+        # NBA spot-up shooters' threes (owner 2026-11-11 'do all 3', research/book_study.py: spot-up threes where your book beat
+        # the other books' de-vigged median by 3%+ +41% on 42, every spot-up threes over +3.8% on 552): every main-line threes over
+        # at the owner's best book for a 'Spot-up shooter' (markets/arch_nba.json), first price; grp 'all' = every one, grp
+        # 'value' = that price 3%+ over the median two-way no-vig of the other books (2+). Tracked, off the bets feed.
+        if sport == "nba":
+            try:
+                ARCH = json.load(open(os.path.join(site, "markets", "arch_nba.json")))
+            except (OSError, ValueError):
+                ARCH = {}
+            for gid, G in (PR.get("props") or {}).items():
+                st = starts.get(str(gid))
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, ks in G.items():
+                    e_ = ks.get("fg3m") or {}
+                    if ARCH.get(nm) != "Spot-up shooter" or e_.get("l") is None:
+                        continue
+                    bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                    if not bo:
+                        continue
+                    d_, bk, o = max(bo)
+                    nv = sorted((1 / dec(e_["o"][b][0])) / ((1 / dec(e_["o"][b][0])) + (1 / dec(e_["u"][b][0])))
+                                for b in set(e_.get("o") or {}) & set(e_.get("u") or {}) if b != bk and b != "Kalshi"
+                                and isinstance(e_["o"][b], list) and isinstance(e_["u"][b], list) and e_["o"][b][0] is not None and e_["u"][b][0] is not None)
+                    med = (nv[len(nv) // 2] if len(nv) % 2 else (nv[len(nv) // 2 - 1] + nv[len(nv) // 2]) / 2) if len(nv) >= 2 else None
+                    fair = med if med is not None else (e_.get("pin") or {}).get("o")
+                    if fair is None:
+                        continue
+                    for grp in ["all"] + (["value"] if med is not None and med * d_ - 1 >= .03 else []):
+                        e = log.setdefault(f"arch3|{grp}|{gid}|{nm}", dict(sport=sport, src="arch3", grp=grp, gid=gid, name=nm, bet=f"over {e_['l']} threes",
+                                                                          book=bk, o=o, first=now.isoformat(), p=fair, m=fair, start=st))
+                        e.setdefault("start", st)
         # NHL opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py): every anytime-goal
         # over at the owner's books for a PP1 player outside his team's top 3 whose opponent is missing one (hockey/project.py
         # -> markets/dout_nhl.json 'vs'; research/nhl_dout_narrow.py),
@@ -1274,7 +1330,7 @@ def _stats(pnl, clv=None, q=None, mk=None, y=None, days=None):
 
 
 BH_FDR = .10                                          # Benjamini-Hochberg false-discovery rate for 'proven'
-CLOSE_MAIN_SRC = {"value", "lc", "f4", "fx", "dry", "due", "dout", "tl"}   # tags that are main-line bets (old closes valid)
+CLOSE_MAIN_SRC = {"value", "lc", "f4", "fx", "dry", "due", "dout", "tl", "pp1t3", "arch3"}   # tags that are main-line bets (old closes valid)
 TRACKED = ["NHL anytime goals (top 3)", "NFL player props", "NBA player props", "MLB home runs (VALUE)"]
 TRACK_SINCE = "Oct 18"
 
@@ -1536,7 +1592,7 @@ def feed_data():
     tseen = set()                                            # the same prop at the same book under several tags: counted once
     for e in sorted((json.load(open(tp)) if os.path.exists(tp) else {}).values(), key=lambda e: str(e.get("first"))):
         d0 = _et_day(e.get("start") or e["first"])
-        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb") or (e.get("src") == "tl" and e.get("grp") == "fed"):
+        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb", "pp1t3", "arch3") or (e.get("src") == "tl" and e.get("grp") == "fed"):
             continue
         dd = dec(e["o"])
         tk = (e["sport"], str(e.get("gid")), e.get("name"), e.get("bet"), e.get("book"))

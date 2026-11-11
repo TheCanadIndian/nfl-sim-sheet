@@ -58,9 +58,12 @@ function scStar(r, b){
   const med = a => { a = a.slice().sort((x, y) => x - y); const n = a.length; return n ? (n % 2 ? a[(n - 1) / 2] : (a[n / 2 - 1] + a[n / 2]) / 2) : null; };
   const twoWay = (o, u) => med(Object.keys(o || {}).filter(k => !NOBET.has(k) && u && u[k] && o[k][0] != null && u[k][0] != null)
     .map(k => { const a = 1 / dec(o[k][0]), b = 1 / dec(u[k][0]); return a / (a + b); }));
-  const sharpO = (pin, book) => { const P = pin.parts; if (!P) return pin.o;
-    let xs = Object.entries(P).filter(([k]) => k !== book).map(([, v]) => v); if (!xs.length) xs = Object.values(P);
-    return 1 / (1 + Math.exp(-xs.reduce((s, v) => s + lgt(v), 0) / xs.length)); };
+  // Novig-centred NBA consensus (sharp.py CONS_W twin): Novig weighted 5 in the NBA log-mean
+  const CONS_W = {nba: {Novig: 5}};
+  const sharpO = (pin, book, sp) => { const P = pin.parts; if (!P) return pin.o;
+    let xs = Object.entries(P).filter(([k]) => k !== book); if (!xs.length) xs = Object.entries(P);
+    const W = CONS_W[sp] || {}, ws = xs.map(([k]) => W[k] || 1);
+    return 1 / (1 + Math.exp(-xs.reduce((s, [, v], i) => s + ws[i] * lgt(v), 0) / ws.reduce((s, w) => s + w, 0))); };
 
   // ---------------------------------------------------------------- state (remembered per device)
   // alt lines on (owner 2026-10-25: "I feel like we are missing prices"): every rung shows; their fair is carried from
@@ -189,7 +192,7 @@ function scStar(r, b){
             const prices = books.map(([b, v]) => {
               let fair = null, w = .5, src = '';
               if (k === 'fg'){ const o = Object.entries(x.fgn || {}).filter(([bb]) => bb !== b).map(([, q]) => q); fair = o.length >= 2 ? med(o) : null; w = (WPIN[sport] || {}).fg ?? .2; src = 'every other book’s first-goal price, hold removed across the game’s field'; }
-              else if (x.main && x.pin){ fair = sharpO(x.pin, b); w = (WPIN[sport] || {})[k] ?? .5; src = 'sharp consensus'; }
+              else if (x.main && x.pin){ fair = sharpO(x.pin, b, sport); w = (WPIN[sport] || {})[k] ?? .5; src = 'sharp consensus'; }
               else if (!x.main && x.apin != null){ fair = x.apin; src = 'sharp consensus, carried to this line'; }
               else if (!x.main && x.carry != null){ fair = x.carry; w = 0; src = '≈ main line’s fair carried by our distribution'; }   // our model is already in the carry: don't count it twice
               else { const tw = twoWay(x.o, x.u); if (tw != null && (x.main || Object.keys(x.u || {}).length >= 2)){ fair = tw; src = 'books’ no-vig median'; }

@@ -514,7 +514,11 @@ def main():
         json.dump(dict(generated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
                        games={str(x["id"]): {"start": x.get("start_utc"), "dry": {PL.jsnorm(q["name"]): q["dry"] for s_ in (x["away"], x["home"])
                                                                                    for q in s_["players"] if q.get("dry") is not None},
-                                             "due": [PL.jsnorm(q["name"]) for s_ in (x["away"], x["home"]) for q in s_["players"] if q.get("due")]}
+                                             "due": [PL.jsnorm(q["name"]) for s_ in (x["away"], x["home"]) for q in s_["players"] if q.get("due")],
+                                             # PP1 forwards in their team's top 3 by usage (owner 2026-11-11, research/book_study.py: every over on
+                                             # them at your books +5.5% on 1,917, goals +6.7% on 1,049 in both halves) -> profit.tags src 'pp1t3'
+                                             "pp1t3": [PL.jsnorm(q["name"]) for s_ in (x["away"], x["home"]) for q in s_["players"]
+                                                       if q.get("pp") == "PP1" and (q.get("ur") or 9) <= 3 and q.get("pos") != "D"]}
                               for x in payload["games"]}), open(dp, "w"), separators=(",", ":"))
     except Exception as e:                                  # noqa: BLE001
         print(f"dry_nhl.json: skipped ({type(e).__name__}: {e})")

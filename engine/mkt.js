@@ -82,9 +82,12 @@
     if (!P.length) return null; const z = P.reduce((s, [, p]) => s + Math.log(p / (1 - p)), 0) / P.length; return 1 / (1 + Math.exp(-z)); };
   // Sharp consensus (research/consensus_test.py): the log-odds mean of Pinnacle's, Novig's and ProphetX's no-vig at the same line beat Pinnacle alone on NBA props 2025-26 (-0.0023 log-loss, z -2.5, all 4 stats) and NFL 2026 (-0.0021, z -2.3), flat on NFL 2025; tight Kalshi added nothing beyond Novig, so Kalshi stays out. Leave-one-out: a bet at a book is judged against the consensus without that book.
   const lgt = p => Math.log(Math.min(Math.max(p, 1e-4), 1 - 1e-4) / (1 - Math.min(Math.max(p, 1e-4), 1 - 1e-4)));
+  // Novig-centred NBA consensus (sharp.py CONS_W, research/fair_reference_test.py): Novig weighted 5 in the NBA log-mean
+  const CONS_W = {nba: {Novig: 5}};
   const sharpO = (e, book) => { const P = e.pin && e.pin.parts; if (!P) return e.pin.o;
-    let xs = Object.entries(P).filter(([k]) => k !== book).map(([, v]) => v); if (!xs.length) xs = Object.values(P);
-    return 1 / (1 + Math.exp(-xs.reduce((s, v) => s + lgt(v), 0) / xs.length)); };
+    let xs = Object.entries(P).filter(([k]) => k !== book); if (!xs.length) xs = Object.entries(P);
+    const W = CONS_W[sport] || {}, ws = xs.map(([k]) => W[k] || 1);
+    return 1 / (1 + Math.exp(-xs.reduce((s, [, v], i) => s + ws[i] * lgt(v), 0) / ws.reduce((s, w) => s + w, 0))); };
   const sharpLab = e => e && e.pin && e.pin.parts && Object.keys(e.pin.parts).length > 1 ? 'Sharp consensus (' + Object.keys(e.pin.parts).join(' + ') + ')' : 'Pinnacle';
   const NOBET = new Set(['Pinnacle']);             // sharp reference only: never a 'best price' (not bettable from the US)
   const SKIP = new Set(['kalshi']);               // The Odds API's Kalshi quote has no fee (Unabated's 'Kalshi' is fee-adjusted)               // quoted without Kalshi's fee here; Kalshi (fee included) is in the prediction-market box
