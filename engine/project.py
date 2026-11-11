@@ -413,6 +413,31 @@ def rb_boost(pos, s):
         s["rush_yds"] = np.round(s["rush_yds"] * RB_BOOST)
 
 
+# Edge audit fix G (owner 2026-11-11; research/edge_audit_rbrole.py): carry projections lagged a role cut (JK Dobbins, Woody Marks
+# projected ~12 carries after 6-7, got 4-5). An RB's carries and rushing yards (yards per carry unchanged) x (his mean carries in
+# his last 2 games / projected carries)^ROLE_W; w fit on the 2025 frozen projections, on 2026 weeks 1-9 (unseen) carries deviance
+# 2.790 -> 2.744 and rushing-yards MSE 865.7 -> 852.6, better in both halves; role cuts 8.66 -> 8.06 carries vs 8.12 actual.
+# The same for targets made 2026 worse (not used).
+ROLE_W = 0.1
+
+
+def recent_carries(con, season, week):
+    """{player_id: mean carries over his last 2 regular-season games before this week} (2+ games)."""
+    pw = pd.read_sql("SELECT player_id, season, week, carries FROM player_week WHERE season_type = 'REG' AND (season < ? OR (season = ? AND week < ?))",
+                     con, params=(int(season), int(season), int(week)))
+    pw = pw.sort_values(["player_id", "season", "week"]).groupby("player_id").tail(2)
+    n = pw.groupby("player_id").carries.count()
+    return pw.groupby("player_id").carries.mean()[n >= 2].fillna(0).to_dict()
+
+
+def role_recent(pos, s, recent, rng):
+    if pos != "RB" or recent is None or s["car"].mean() < 3:
+        return
+    f = (max(recent, .25) / max(float(s["car"].mean()), .25)) ** ROLE_W
+    s["car"] = np.floor(s["car"] * f + rng.random(s["car"].shape))
+    s["rush_yds"] = np.round(s["rush_yds"] * f)
+
+
 # Season-to-date bias fix (research/bias_correction_test.py, 2026 wk 2-5 walk-forward on 7,060 Kalshi rungs: our receiving
 # yards / receptions / passing yards ran 4-5 pts low, rushing fine). Each run scales those draws by actual / projected
 # so far this season (raw projections: earlier weeks' applied ratios are divided back out), shrunk toward 1 with
@@ -681,6 +706,10 @@ def main():
         print(f"  bias fix skipped ({type(e).__name__}: {e})"); BIAS = {}
     print(f"  season-to-date bias fix (actual / projected): {BIAS}")
     brng = np.random.default_rng(int(week) * 7919)
+    try:
+        RECENT = recent_carries(con, season, week)
+    except Exception as e:                                       # noqa: BLE001 -- never block a projection run
+        print(f"  recent carries skipped ({type(e).__name__}: {e})"); RECENT = {}
     for g in todo.itertuples():
         hi = PL.team_input(fr, g.game_id, g.home_team)
         ai = PL.team_input(fr, g.game_id, g.away_team)
@@ -721,6 +750,7 @@ def main():
                 if max(s["tgt"].mean(), s["car"].mean(), s.get("att", np.zeros(1)).mean()) < 0.5:
                     continue
                 rb_boost(p.pos, s)
+                role_recent(p.pos, s, RECENT.get(p.player_id), brng)
                 box[(t.team, p.name)] = s
                 keyrows.append((g.game_id, t.team, p.player_id, p.name))
                 s_all = dict(s, tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])
