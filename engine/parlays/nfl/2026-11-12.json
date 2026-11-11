@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-12",
 "lock": "2026-11-13T01:15:00+00:00",
-"frozen_at": "2026-11-11T13:24:47.029Z",
+"frozen_at": "2026-11-11T13:41:21.237Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 109.5,
 "name": "malik nabers",
 "lab": "Malik Nabers 110+ rec yds",
-"p": 0.2056,
+"p": 0.2059,
 "price": 456,
 "book": "Kalshi",
 "sc": "NYG pulls away",
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.05139,
+"p": 0.05149,
 "d": 21.128,
 "first": "2026-11-13T01:15:00+00:00",
 "pick": "longshot"
@@ -68,7 +68,7 @@
 "line": 109.5,
 "name": "malik nabers",
 "lab": "Malik Nabers 110+ rec yds",
-"p": 0.2056,
+"p": 0.2059,
 "price": 456,
 "book": "Kalshi",
 "sc": "NYG pulls away",
@@ -79,28 +79,27 @@
 ]
 },
 {
-"gid": "2026_10_KC_ATL",
-"start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
+"gid": "2026_10_NE_DET",
+"start": "2026-11-15T09:30:00",
+"kind": "pass_yds",
 "side": "o",
-"line": 49.5,
-"name": "bijan robinson",
-"lab": "Bijan Robinson 50+ rec yds",
-"p": 0.2132,
+"line": 324.5,
+"name": "drake maye",
+"lab": "Drake Maye 325+ pass yds",
+"p": 0.2123,
 "price": 331,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "script"
 ]
 }
 ],
-"p": 0.04383,
+"p": 0.04373,
 "d": 23.964,
-"first": "2026-11-13T01:15:00+00:00",
-"pick": "longshot"
+"first": "2026-11-13T01:15:00+00:00"
 },
 {
 "card": "Primetime ladders (experimental)",
@@ -215,40 +214,7 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_10_WAS_NYG",
-"start": "2026-11-12T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "isaiah likely",
-"lab": "Isaiah Likely TD",
-"p": 0.365,
-"price": 208,
-"book": "Novig"
-},
-{
-"gid": "2026_10_NE_DET",
-"start": "2026-11-15T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jameson williams",
-"lab": "Jameson Williams TD",
-"p": 0.3673,
-"price": 186,
-"book": "Novig"
-}
-],
-"p": 0.13406,
-"d": 8.809,
-"first": "2026-11-13T01:15:00+00:00"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "2026_10_WAS_NYG",
@@ -265,18 +231,18 @@
 {
 "gid": "2026_10_SF_DAL",
 "start": "2026-11-15T16:25:00",
-"kind": "td",
+"kind": "rush_yds",
 "side": "o",
-"line": 0.5,
-"name": "brock purdy",
-"lab": "Brock Purdy TD",
-"p": 0.2968,
-"price": 292,
+"line": 65.5,
+"name": "javonte williams",
+"lab": "Javonte Williams over 65.5 rush yds",
+"p": 0.5294,
+"price": 106,
 "book": "Novig"
 }
 ],
-"p": 0.10833,
-"d": 12.074,
+"p": 0.1932,
+"d": 6.345,
 "first": "2026-11-13T01:15:00+00:00",
 "pick": "core"
 },
@@ -299,52 +265,18 @@
 {
 "gid": "2026_10_NE_DET",
 "start": "2026-11-15T09:30:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jameson williams",
-"lab": "Jameson Williams anytime TD",
-"p": 0.377,
-"price": 186,
+"kind": "rush_yds",
+"side": "u",
+"line": 97.5,
+"name": "jahmyr gibbs",
+"lab": "Jahmyr Gibbs under 97.5 rush yds",
+"p": 0.5416,
+"price": -106,
 "book": "Novig"
 }
 ],
-"p": 0.15193,
-"d": 8.809,
-"first": "2026-11-13T01:15:00+00:00",
-"pick": "core"
-},
-{
-"card": "Value-tag parlays (higher odds)",
-"tier": "+300 to +1000",
-"legs": [
-{
-"gid": "2026_10_WAS_NYG",
-"start": "2026-11-12T20:15:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "isaiah likely",
-"lab": "Isaiah Likely anytime TD",
-"p": 0.403,
-"price": 208,
-"book": "Novig"
-},
-{
-"gid": "2026_10_SEA_LV",
-"start": "2026-11-15T16:05:00",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "brock bowers",
-"lab": "Brock Bowers anytime TD",
-"p": 0.362,
-"price": 213,
-"book": "Novig"
-}
-],
-"p": 0.14589,
-"d": 9.64,
+"p": 0.21825,
+"d": 5.986,
 "first": "2026-11-13T01:15:00+00:00"
 },
 {
@@ -372,12 +304,12 @@
 "name": "brock purdy",
 "lab": "Brock Purdy anytime TD",
 "p": 0.34,
-"price": 292,
+"price": 300,
 "book": "Novig"
 }
 ],
 "p": 0.13702,
-"d": 12.074,
+"d": 12.32,
 "first": "2026-11-13T01:15:00+00:00"
 },
 {
