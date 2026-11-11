@@ -21,7 +21,7 @@ const state = {script:'all', view:'games', game:D.games[0]?.id, group:'receiving
 try { Object.assign(state, JSON.parse(localStorage.getItem('simsheet-ui') || '{}')); } catch (e) {}
 if (!D.games.some(g => g.id === state.game)) state.game = D.games[0]?.id;
 if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
-if (['games','board','dvp','fair','props','agree','parlays'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
+if (['games','board','dvp','fair','props','agree','parlays','ladders'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
 if (state.view === 'wfair') state.view = 'games';      // the Experimental tab is gone (graded in the background on the Profit page)
 if (state.view === 'props' && !D.props.length) state.view = 'games';
 if (state.view === 'rz') { state.view = 'games'; state.group = 'td'; }
@@ -34,6 +34,7 @@ document.getElementById('sub').textContent = `${D.season} season · ${D.games.le
 document.getElementById('foot').innerHTML = `Every number comes from simulated games anchored to the Vegas spread and total. Medians are the 50/50 point: half the simulations land above, half below. Bars show where 8 in 10 simulations landed (10th to 90th percentile), with the darker band holding the middle half. Fair odds are the model's no-vig price. Rebuild this page each time <code>project.py</code> runs.`;
 if (!D.props.length) document.getElementById('tab-props').hidden = true;
 if (!D.sgp) { document.getElementById('tab-parlays').hidden = true; if (state.view === 'parlays') state.view = 'games'; }
+if (!D.dvp && document.getElementById('tab-ladders')) { document.getElementById('tab-ladders').hidden = true; if (state.view === 'ladders') state.view = 'games'; }
 
 function scaleFor(rows, stat){
   let lo = 0, hi = 0;
@@ -298,7 +299,7 @@ function lruChip(c, u0){
   const u = lo.find(x => x.l === LADSEL[key]) || u0, tracked = c.rungs.some(x => x.k === u.k && x.l === u.l), b = u.best, kc = u.cost;
   const n = l => Math.round(l + .5), tx = o => `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`;
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
-  return `<span class="lru" title="${n(u.l)}+ ${KL[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}">${num}${aStar(c.p, u)} ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${tracked ? (u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : '') : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${n(u.l)}+ ${KL[u.k]}`}) : ''}</span>`;
+  return `<span class="lru" title="${n(u.l)}+ ${KL[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}">${num}${aStar(c.p, u)} ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${tracked ? (u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : '') : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${n(u.l)}+ ${KL[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
@@ -385,6 +386,19 @@ function ladderCard(){
     ${LADS && !on.length && on0.length ? `<p class="note" style="margin:0 0 6px">No ladder candidate has a ★ right now. Tap ★ only again to see them all.</p>` : ''}
     ${on0.length ? `<div class="ladsw" role="group" aria-label="Ladder candidates view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-nladv="${k}" aria-pressed="${NLADV === k}">${l}</button>`).join('')}</div><div class="ladsw" role="group" aria-label="Star filter"><button type="button" data-nlads="1" aria-pressed="${LADS}" title="Only players / rungs whose role, stat and odds range made money in NFL straights by role on the Profit page (last 30 days, 20+ bets). Picked after the fact: a lead, not a rule.">★ only <i>${nStar}</i></button></div>${window.MKT && MKT.consBar ? MKT.consBar(on0, LADM) : ''}` : ''}
     <div class="ladbody">${ladRail(on, D.games)}${NLADV === 'game' ? ladByGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more with ladders</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}${wait}</div></section>`;
+}
+// Ladders tab (owner 2026-11-11: 'move the ladder ... candidates ... out side of the parlays tab and give them their own tab')
+function renderLadders(){ return ladderCard() || '<section class="panel pempty"><div class="phead"><h2>Ladder candidates <span class="exp3">experimental</span></h2></div><p class="note">No soft-matchup players with Kalshi ladders yet · they fill in as the week’s ladders post.</p></section>'; }
+// + on every ladder rung (owner 2026-11-11: 'make all bets in there able to be added to the parlay builder even if i switch to a
+// different leg'): the leg is the rung shown (the dropdown re-renders the chip with its own +); another rung of the same
+// player-stat replaces it in the slip. Prices: every book at that number (Kalshi with its fee) for 'Each book pays'
+const amK = c => Math.round(c >= .5 ? -100 * c / (1 - c) : 100 * (1 - c) / c);
+function rungSlip(g, p, u){
+  if (!window.SLIP || !u) return '';
+  const px = {};
+  for (const o of u.opts || []) px[o.b] = o.b === 'Kalshi' ? amK(u.cost) : Number(String(o.price).replace('+', ''));
+  const b = (u.best && u.best.b) || 'Kalshi', L = slipLeg(p, u.k, u.l, 'over', u.p);
+  return ' ' + SLIP.btn({...L, lab: `${p.n} ${Math.round(u.l + .5)}+ ${SLIP_LAB[u.k] || u.k}`, book: b, o: px[b], px});
 }
 // Ladder candidates by game (owner 2026-10-25: "why are my ladder candidates not separated by game"): games in kickoff
 // order, each game's players best edge first, five shown and the rest folded; remembered on this device (nfl-ladv).
@@ -679,7 +693,8 @@ function learnCandsNFL(){
 }
 function renderParlays(){
   if (window.MKT && MKT.FREEZE && MKT.cand) try { learnCandsNFL(); } catch (e) {}
-  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + pathLongshots() + ladderCard() + primetimeLadders() + ladderLongshots();
+  if (window.MKT && MKT.FREEZE) try { ladderCard(); } catch (e) {}      // the freeze loads #parlays: ladder rungs still register for the screener
+  const ladder = (window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + pathLongshots() + primetimeLadders() + ladderLongshots();
   const C = (D.sgp && D.sgp.cross) || [];
   const tiers = tierParlays() + (window.MKT && MKT.tagParlays ? MKT.tagParlays({sport: 'nfl', title: 'Value-tag parlays (higher odds)',
     games: D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, start: g.sort}))}) : '');
@@ -1529,7 +1544,7 @@ function render(){
   const main = document.getElementById('main');
   main.innerHTML = state.view === 'board' ? renderBoard() : state.view === 'props' ? renderProps()
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, away: g.away, home: g.home}))) : '<div class="empty">Loading prices…</div>')
-    : state.view === 'parlays' ? renderParlays() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
+    : state.view === 'parlays' ? renderParlays() : state.view === 'ladders' ? renderLadders() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
   save();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }

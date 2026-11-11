@@ -779,6 +779,7 @@ details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:poin
       <button role="tab" id="tab-games" data-view="games">Games</button>
       <button role="tab" id="tab-board" data-view="board">Player board</button>
       <button role="tab" id="tab-dvp" data-view="dvp">Defense vs position</button>
+      <button role="tab" id="tab-ladders" data-view="ladders">Ladders</button>
       <button role="tab" id="tab-parlays" data-view="parlays">Parlays</button>
       <button role="tab" id="tab-fair" data-view="fair">Fair odds</button>
       <button role="tab" id="tab-agree" data-view="agree">Model agreement</button>

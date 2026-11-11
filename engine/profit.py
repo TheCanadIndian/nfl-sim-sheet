@@ -183,6 +183,50 @@ def nba_ladder_rows(date, mk, R, GM):
                 if y is not None:
                     out.append(dict(date=date, sport="nba", cat="NBA threes: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="fg3m",
                                     title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
+    # study pick 'K 15%+' (owner 2026-11-11: 'yes add it'; research/nba_criteria_kalshi.py: one rung per player-stat at 15-40%,
+    # +11.6% on 1,864 Jan - Nov 2026, up in all four periods): every Kalshi pts / reb / ast / 3PM rung, spread 5c or less, mid
+    # 3-97c, our chance (the market file's 'ours', the live model) 15-40% over the ask + fee; the player-stat's biggest edge
+    if date >= "2026-11-11":
+        for key, L in by.items():
+            best = None
+            for x in L.values():
+                b_, a_ = x["yes_bid"], x["yes_ask"]; m_ = (a_ + b_) / 2; po = (x.get("ours") or {}).get("vegas")
+                if po is None or a_ - b_ > .05 or not .03 <= m_ <= .97 or a_ >= .97:
+                    continue
+                cy = a_ + FEE["kalshi"] * a_ * (1 - a_)
+                if .15 <= po / cy - 1 <= .40 and (best is None or po / cy > best[0]):
+                    best = (po / cy, x, cy, po, m_)
+            if best:
+                y = GM.outcome("nba", best[1], R)
+                if y is not None:
+                    out.append(dict(date=date, sport="nba", cat="NBA study pick: Kalshi rung, our chance 15-40% over the cost, one per player (experimental)", src="kalshi",
+                                    kind=best[1]["kind"], title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4),
+                                    won=int(y), pnl=round(y / best[2] - 1, 4)))
+    return out
+
+
+def _nba_m6():
+    """{(gid, norm name, stat)} with the NBA page's 'matchup' reason: blended defense vs position x archetype 6%+ soft, with
+    the screener's volume floors (site.ctx_nba m6). From the last two NBA projection files."""
+    import glob as _g
+    out = set()
+    for f in sorted(_g.glob(os.path.join(HERE, "nba", "projections", "????-??-??.json")))[-2:]:
+        try:
+            P = json.load(open(f, encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        dv = {(r["team"], r["pg"]): r for r in P.get("dvp") or []}
+        for q in P.get("players", []):
+            vg = (q.get("s") or {}).get("vegas") or {}
+            for k, fl in (("pts", 8), ("reb", 3), ("ast", 2), ("fg3m", 1)):
+                if not vg.get(k) or vg[k][3] < fl:
+                    continue
+                dp = (dv.get((q.get("o"), q.get("pg"))) or {}).get(k)
+                if dp is None:
+                    continue
+                da = (q.get("va") or {}).get(k)
+                if ((dp * da) ** .5 if da else dp) >= 1.06:
+                    out.add((str(q["g"]), _norm(q["n"]), k))
     return out
 
 
@@ -655,6 +699,9 @@ def tag_label(e):
         return f"{'Pinnacle' if e.get('msrc') == 'pin' else 'Consensus'} move: {MOVE_SIG.get(e.get('sig'), e.get('sig'))} (experimental)"
     if e.get("src") == "knee":
         return "Ladder knee (experimental)"
+    if e.get("src") == "study":
+        return {"cs": "Study pick: consensus line up + odds drop, soft matchup on that stat (experimental)",
+                "cr": "Study pick: consensus line up + odds drop, Pinnacle higher-rung outlier (experimental)"}.get(e.get("grp"), "Study pick (experimental)")
     if e.get("src") == "open":
         return "Early opener value (experimental)"
     if e.get("src") == "dry":
@@ -753,6 +800,24 @@ def tags():
                                gid=x["g"], name=x["n"], bet=x["b"], book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair") or x.get("cons"),
                                m=x.get("fair") or x.get("cons"), start=st, from_l=x.get("from_l"), to_l=x.get("to_l")))
             e.setdefault("start", st)
+        # study picks (owner 2026-11-11: 'yes add it'; research/nba_criteria.py, Hard Rock + Novig NBA overs Oct 20 - Nov 10):
+        # a consensus line-up + odds-drop move with the page's matchup reason on that stat (+20% on 197) or with a Pinnacle
+        # higher-rung outlier on the same prop (+13% on 208); the move's own bet and price, first sighting, graded like tags
+        if sport == "nba" and FL.get("moves"):
+            M6 = _nba_m6()
+            sigs = {}
+            for x in FL["moves"]:
+                sigs.setdefault((str(x["g"]), x["n"], x.get("k")), set()).add((x["src"], x["sig"]))
+            for x in FL["moves"]:
+                st = starts.get(str(x["g"])) or x.get("start")
+                if x["src"] != "cons" or x["sig"] != "both" or (st and PL.when(st) <= now) or x.get("o") is None:
+                    continue
+                kp = (str(x["g"]), x["n"], x.get("k"))
+                for grp, ok in (("cs", kp in M6), ("cr", ("pin", "rung") in sigs.get(kp, set()))):
+                    if ok:
+                        e = log.setdefault(f"study|{grp}|{sport}|{x['g']}|{x['n']}|{x['b']}", dict(sport=sport, src="study", grp=grp, gid=x["g"], name=x["n"],
+                                           bet=x["b"], book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair") or x.get("cons"), m=x.get("fair") or x.get("cons"), start=st))
+                        e.setdefault("start", st)
         # ladder knees (sharp.ladder_knees; owner 2026-10-24): each first sighting at its book's price, graded like tags
         for x in FL.get("knees") or []:
             st = starts.get(str(x["g"])) or x.get("start")

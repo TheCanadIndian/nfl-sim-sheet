@@ -122,6 +122,7 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
       <button role="tab" data-view="games">Games</button>
       <button role="tab" data-view="board">Player board</button>
       <button role="tab" data-view="dvp">Defense vs position</button>
+      <button role="tab" data-view="ladders">Ladders</button>
       <button role="tab" data-view="parlays">Parlays</button>
     </div>
   </header>
