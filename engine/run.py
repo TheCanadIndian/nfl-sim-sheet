@@ -90,6 +90,7 @@ def nfl(news=False):
     sh(PY, "backfill_missing.py", "--blind")
     sh(PY, "results.py")
     sh(PY, "boxgrade.py", "nfl")             # projected box scores graded (nfl/boxes.html)
+    sh(PY, "roster_audit.py")                # excluded-but-played / projected-but-sat check (edge audit fix E)
     sh(PY, "shadow.py", "nfl")               # shadow tests: failed changes graded beside the live numbers (shadow.html)
     sh(PY, "markets.py", "nfl")
     sh(PY, "grade_markets.py", "nfl")

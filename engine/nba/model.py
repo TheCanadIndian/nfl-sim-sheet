@@ -36,6 +36,10 @@ MIN_HL, MIN_LONG_HL, MIN_RAMP = 4.0, 20.0, 6     # minutes memory (games); games
 # 2024-25 opening only; on the 2025-26 and 2026-27 openings (unseen) minutes MSE 48.2 -> 45.8 / 47.1 -> 44.8, rung log-loss
 # pts -12 / -14e-4, reb -39 / -40, ast -7 / 0, nothing worse.
 USE_PRESEASON, PRE_A, PRE_A_NEW, PRE_K = True, 0.2, 0.4, 5
+# Edge audit fix F (owner 2026-11-11): a player on a new team with under 2 preseason games (Collin Sexton) played 0.926 / 0.857 /
+# 0.860 of his projected minutes in his first 5 games (2024-25 / 2025-26 / 2026-27); his e_min x PRE_NT_NOPRE (fit 2024-25),
+# fading to 1 by game PRE_K. Unseen 2025-26 / 2026-27: their minutes MSE 77.3 -> 72.6 / 56.6 -> 49.3, every opening row better.
+PRE_NT_NOPRE = 0.926
 RATE_HL = 25.0                                    # per-minute production memory (games)
 CARRY = 0.6                                       # last season's weight entering a new season
 K_SCALE = 0.05    # multiplies K_MIN; tuned on 2024-25 (1.0 under-projected stars ~11%, over bench ~12%)
@@ -112,8 +116,12 @@ def preseason_blend(p, pre, n_season):
     e = p.e_min.astype(float).clip(lower=1).to_numpy()
     pm = x.pre_min.astype(float).fillna(1).clip(lower=1).to_numpy()
     ok = (x.n_pre.fillna(0) >= 2).to_numpy()
-    a = np.where(new_team.to_numpy() == 1, PRE_A_NEW, PRE_A) * np.clip(1 - x.n_season.to_numpy() / PRE_K, 0, 1)
-    return pd.Series(np.where(ok & (a > 0), np.exp((1 - a) * np.log(e) + a * np.log(pm)), p.e_min.to_numpy()), index=p.index).clip(0, 44)
+    fade = np.clip(1 - x.n_season.to_numpy() / PRE_K, 0, 1)
+    a = np.where(new_team.to_numpy() == 1, PRE_A_NEW, PRE_A) * fade
+    out = np.where(ok & (a > 0), np.exp((1 - a) * np.log(e) + a * np.log(pm)), p.e_min.to_numpy())
+    nt0 = (new_team.to_numpy() == 1) & ~ok & (fade > 0)                       # new team, no preseason to read (fix F)
+    out = np.where(nt0, out * (1 - (1 - PRE_NT_NOPRE) * fade), out)
+    return pd.Series(out, index=p.index).clip(0, 44)
 
 
 def decayed(df, key, cols, hl, carry):

@@ -202,7 +202,7 @@ def espn_out(todo):
                 for x in dnp:
                     name = _espn_name(x)
                     if name:
-                        out.setdefault((team, _norm(name)), "Out")
+                        out.setdefault((team, _norm(name)), "Inactive")
     return out
 
 
@@ -297,8 +297,24 @@ def future_actives(con, todo, season, week, overrides):
         late = names.assign(k=list(zip(names.team, names.full_name.map(_norm))))
         late = late[late.k.isin(game_day.keys())]
         late = late[~late.player_id.isin(inj[inj.report_status.isin(["Out", "Doubtful"])].player_id)]
+        # Edge audit fix E (owner 2026-11-11): ESPN's pregame game roster carries the previous game's inactives until the new
+        # list posts. Weeks 6-9 2026: 30 of 96 game-day 'Outs' played (Caleb Williams, Lamar Jackson, Breece Hall, Rashee
+        # Rice, Quinshon Judkins...), 29 of them had sat their team's previous game; flagged players who played that previous
+        # game were real scratches 12 of 13 times. So a game-day 'out' counts only for a player who played his team's last
+        # game; the rest are logged and left to the injury report and ESPN's live-roster statuses (below).
+        prevg = {}
+        before = snaps[(snaps.season < season) | ((snaps.season == season) & (snaps.week < week))]
+        for t_, x_ in before.groupby("team"):
+            last_g = x_.sort_values(["season", "week"]).game_id.iloc[-1]
+            prevg[t_] = set(x_[x_.game_id == last_g].player_id)
+        stale = late[[pid not in prevg.get(t_, set()) for t_, pid in zip(late.team, late.player_id)]]
+        if len(stale):
+            print("  ESPN game day lists as not playing, but they sat their team's previous game too (likely last week's list), "
+                  "not excluded on that alone: " + ", ".join(f"{n} ({t_})" for t_, n in zip(stale.team, stale.full_name)))
+        late = late.drop(stale.index)
         inj = pd.concat([inj, pd.DataFrame(dict(team=late.team, player_id=late.player_id, full_name=late.full_name,
-                                                report_status=[game_day[k] + " (ESPN game day)" for k in late.k]))])
+                                                report_status=[("Out (ESPN inactives)" if game_day[k] == "Inactive" else game_day[k] + " (ESPN game day)")
+                                                               for k in late.k]))])
     # ESPN's live roster also marks players Out / Doubtful / Injured Reserve / suspended / PUP: they're out even when the
     # weekly roster and injury files lag (2026 wk 6: Jalen Hurts on IR on ESPN, 'ACT' in the weekly roster)
     if live:
@@ -368,6 +384,21 @@ def future_actives(con, todo, season, week, overrides):
             cand.add(qb_id)
             qbs[(g.game_id, team)] = qb_id
             rows += [(g.game_id, team, pid) for pid in cand]
+    try:                                                    # pregame exclusions per game, for roster_audit.py (fix E's weekly check)
+        fn = os.path.join(os.path.dirname(os.path.abspath(__file__)), "projections", "weeks", f"{season}_wk{int(week):02d}_out.json")
+        old_o = json.load(open(fn)) if os.path.exists(fn) else {}
+        ko = dict(zip(todo.game_id, pd.to_datetime(pd.to_datetime(todo.gameday).dt.strftime("%Y-%m-%d") + " " + todo.gametime.fillna("13:00").astype(str))))
+        for g in todo.itertuples():
+            if ko.get(g.game_id) is not None and ko[g.game_id] <= pd.Timestamp.now(tz="America/New_York").tz_localize(None):
+                continue                                    # started: keep its last pregame list
+            ex = out_inj[out_inj.team.isin([g.home_team, g.away_team])]
+            old_o[g.game_id] = dict(t=pd.Timestamp.now(tz="UTC").isoformat(timespec="minutes"),
+                                    out=[[t_, n, str(r_)] for t_, n, r_ in zip(ex.team, ex.full_name, ex.report_status)],
+                                    actives=[pid for gid, _, pid in rows if gid == g.game_id])
+        os.makedirs(os.path.dirname(fn), exist_ok=True)
+        json.dump(old_o, open(fn, "w"), separators=(",", ":"))
+    except Exception as e:                                  # noqa: BLE001 -- bookkeeping only
+        print(f"  pregame exclusions not saved ({type(e).__name__}: {e})")
     return pd.DataFrame(rows, columns=["game_id", "team", "player_id"]), qbs, notes
 
 

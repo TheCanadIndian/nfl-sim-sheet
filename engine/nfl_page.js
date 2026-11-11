@@ -288,6 +288,12 @@ function tierParlays(){
 // the price said, in both halves (z 1.9 / 2.5 per player); with a 2nd signal (underdog, team total 25+) similar. Tracked
 // on the Profit page; not proven.
 const KL = {rec: 'catches', rec_yds: 'rec yds', rush_yds: 'rush yds', pass_yds: 'pass yds'};
+// Edge audit fix D (owner 2026-11-11; research/edge_audit_round2.py): on NFL Kalshi rungs our top-rung chances ran ~1.7x high and
+// Kalshi's ran low (claims 100%+: won 15 vs 10.6 priced vs 26 ours). The ladder chance is market-anchored: logit p = .21 + .70
+// logit(Kalshi mid) + .25 logit(ours) (fit before Oct 19; after it log-loss .3974 vs ours .3988 vs Kalshi .4054, claims match
+// outcomes). `praw` keeps our own number for the tooltip.
+const LAD_A = [.21, .70, .25], lgN = v => Math.log(v / (1 - v)), sgN = z => 1 / (1 + Math.exp(-z)), clN = v => Math.min(Math.max(v, .002), .998);
+const ladAnchor = u => u.p == null || u.mid == null ? u : {...u, praw: u.p, p: sgN(LAD_A[0] + LAD_A[1] * lgN(clN(u.mid)) + LAD_A[2] * lgN(clN(u.p)))};
 const ladPrice = u => { const opts = [{b: 'Kalshi', price: u.price, pay: 1 / u.cost}, ...Object.entries(u.bk || {}).map(([b, v]) => ({b, price: (v.o > 0 ? '+' : '') + v.o, u: v.u, pay: v.o > 0 ? 1 + v.o / 100 : 1 + 100 / -v.o}))];
   const best = opts.reduce((a, c) => c.pay > a.pay ? c : a); return {...u, opts, best, edge: u.p != null ? u.p * best.pay - 1 : null}; };
 // one rung; its number is a dropdown of this rung and the ones below it, to check their prices (owner 2026-11-01). Lower
@@ -299,7 +305,7 @@ function lruChip(c, u0){
   const u = lo.find(x => x.l === LADSEL[key]) || u0, tracked = c.rungs.some(x => x.k === u.k && x.l === u.l), b = u.best, kc = u.cost;
   const n = l => Math.round(l + .5), tx = o => `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`;
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
-  return `<span class="lru" title="${n(u.l)}+ ${KL[u.k]}: our chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}">${num}${aStar(c.p, u)} ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${tracked ? (u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : '') : u.p != null ? ` <i class="lbk">ours ${Math.round(u.p * 100)}%</i>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${n(u.l)}+ ${KL[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
+  return `<span class="lru" title="${n(u.l)}+ ${KL[u.k]}: chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}${u.praw != null ? ` (26% our ${Math.round(u.praw * 100)}% + 74% Kalshi’s mid; our own number runs high on these rungs)` : ''} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}">${num}${aStar(c.p, u)} ${KL[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${tracked ? (u.edge != null && u.edge >= .05 ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : '') : u.p != null ? ` <i class="lbk">chance ${Math.round(u.p * 100)}%</i>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nfl', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.sort || null, lab: `${c.p.n} ${n(u.l)}+ ${KL[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
@@ -362,8 +368,8 @@ function ladderCard(){
       const extra = [T.win_prob != null && T.win_prob <= .40 ? 'underdog' : null, T.vegas_implied >= 25 ? `team total ${T.vegas_implied}` : null].filter(Boolean);
       // like the NBA's ladder edges (owner 2026-11-01): each rung at Kalshi (fee in) and at Hard Rock / Novig for the same
       // number, best price bold, best edge first. No 5% floor here: the record is the soft matchup (edge under 5% +6% on 1,919)
-      const rungs = (window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n) : []).map(ladPrice).sort((a, b) => (b.edge ?? -9) - (a.edge ?? -9));
-      const all = window.MKT && MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n).map(ladPrice) : rungs;
+      const rungs = (window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n) : []).map(ladAnchor).map(ladPrice).sort((a, b) => (b.edge ?? -9) - (a.edge ?? -9));
+      const all = window.MKT && MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n).map(ladAnchor).map(ladPrice) : rungs;
       rungs.forEach(u => regL(g, p, u, 'Ladder candidate'));
       cards.push({g, p, r, k, extra, rungs, all, best: rungs.length ? rungs[0].edge ?? -9 : -9});
     }

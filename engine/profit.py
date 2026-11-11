@@ -84,6 +84,9 @@ def ladder_rows(date, mk, R, GM):
                 continue
             ya = r["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
             po = (r.get("ours") or {}).get("vegas")                      # our chance: the claimed edge is po / cost - 1
+            if po is not None and date >= "2026-11-11":                  # edge audit fix D: market-anchored (nfl_page.js ladAnchor)
+                cl = lambda v: min(max(v, .002), .998)
+                po = 1 / (1 + math.exp(-(.21 + .70 * math.log(cl(mid(r)) / (1 - cl(mid(r)))) + .25 * math.log(cl(po) / (1 - cl(po))))))
             out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"),
                             bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4)))
     # receiving yards, one rung per player (owner 2026-11-03 after research/nfl_ladders.py market: Kalshi KXNFLRECYDS Oct 2025 - wk 9,
