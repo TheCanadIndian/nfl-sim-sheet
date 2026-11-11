@@ -1169,11 +1169,19 @@ def tags():
             L = _tag_leg(sport, e["bet"])
             kind = {"td": "td", "goal": "goal"}.get(L["kind"], L["kind"]) if L else None
             x = (((PR.get("props") or {}).get(str(e["gid"])) or {}).get(e["name"]) or {}).get(kind) if kind else None
-            if x:
-                book = (x.get("o" if L["side"] == "o" else "u") or {}).get(e["book"])
-                if book:
+            # the close at the SAME line (quant audit 2026-11-11: alt-line bets were compared with the main line's close --
+            # off-market 77%, openers 53%, 2+ goals 30%, moves 14% of closes were another line); no price there = no close
+            if x and L.get("line") is not None:
+                ln = float(L["line"])
+                at = x if abs(float(x.get("l") if x.get("l") is not None else .5) - ln) < 1e-9 else \
+                    next((a for la, a in (x.get("a") or {}).items() if abs(float(la) - ln) < 1e-9), None)
+                book = ((at or {}).get("o" if L["side"] == "o" else "u") or {}).get(e["book"])
+                if book and book[0] is not None:
                     e["close"] = book[0]
                     e["close_t"] = now.isoformat()
+                    e["close_l"] = ln
+                elif e.get("close") is not None and e.get("close_l") is None:
+                    e.pop("close", None); e.pop("close_t", None)          # an old main-line close on an alt bet
         # settle started tags from box scores
         for key, e in log.items():
             if e["sport"] != sport or e.get("res") is not None or not e.get("start") or PL.when(e["start"]) > now - dt.timedelta(hours=3):
@@ -1219,14 +1227,30 @@ def _skill(q, mk, y):
     return dict(skill=round(-float(d.mean()) / bm, 4), skill_se=None if se is None else round(se, 4), skill_n=len(ok), skill_same=same)
 
 
-def _stats(pnl, clv=None, q=None, mk=None, y=None):
+def _cl_se(a, days):
+    """SE of the mean return clustered by day (quant audit 2026-11-11: bets on one day win and lose together -- design effect
+    ~3-3.6, so the plain SE was ~1.9x too narrow). Falls back to the plain SE with fewer than 5 days."""
+    n = len(a)
+    if days is None or len(set(days)) < 5:
+        return float(a.std(ddof=1)) / math.sqrt(n) if n > 1 else None
+    m = a.mean()
+    g = pd.Series(a - m).groupby(np.asarray(days)).sum()
+    G = len(g)
+    return math.sqrt(G / (G - 1) * float((g ** 2).sum())) / n
+
+
+def _stats(pnl, clv=None, q=None, mk=None, y=None, days=None):
     n = len(pnl)
     if not n:
         return None
     a = np.asarray(pnl, float)
-    roi, sd = float(a.mean()), float(a.std(ddof=1)) if n > 1 else 0.0
-    moe = 1.96 * sd / math.sqrt(n) if n > 1 else None
+    roi = float(a.mean())
+    se = _cl_se(a, days) if n > 1 else None
+    moe = 1.96 * se if se else None
     out = dict(n=n, won=int((a > 0).sum()), units=round(float(a.sum()), 2), roi=round(roi, 4), moe=None if moe is None else round(moe, 4))
+    if se:
+        out["z"] = round(roi / se, 2)
+        out["p1"] = round(float(1 - 0.5 * (1 + math.erf(roi / se / math.sqrt(2)))), 5)   # one-sided: is it really positive?
     c = None if clv is None else np.asarray([x for x in clv if x is not None and x == x], float)    # x == x drops NaN
     if c is not None and len(c):
         out.update(clv=round(float(c.mean()), 4), clv_beat=round(float((c > 0).mean()), 3), clv_n=int(len(c)),
@@ -1249,6 +1273,8 @@ def _stats(pnl, clv=None, q=None, mk=None, y=None):
     return out
 
 
+BH_FDR = .10                                          # Benjamini-Hochberg false-discovery rate for 'proven'
+CLOSE_MAIN_SRC = {"value", "lc", "f4", "fx", "dry", "due", "dout", "tl"}   # tags that are main-line bets (old closes valid)
 TRACKED = ["NHL anytime goals (top 3)", "NFL player props", "NBA player props", "MLB home runs (VALUE)"]
 TRACK_SINCE = "Oct 18"
 
@@ -1269,19 +1295,23 @@ def page_data():
             else:
                 q_, mk_ = r.get("q"), _kmid(r.get("cost"), r["src"])
             rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=r.get("clv"),
-                             q=q_, mk=mk_, y=r.get("won")))
+                             q=q_, mk=mk_, y=r.get("won"), key=f"k|{r['date']}|{r.get('title')}|{r.get('bet')}"))
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         if e.get("res") not in ("W", "L"):
             continue
         d_ = dec(e["o"])
-        clv = (1 / dec(e["close"]) - 1 / d_) if e.get("close") is not None else None
+        # a close counts only at the bet's own line (close_l, from 2026-11-11); older closes only for tags that are main-line
+        # bets (alt-line tags were compared with the main line's close: quant audit)
+        close_ok = e.get("close") is not None and (e.get("close_l") is not None or e.get("src", "value") in CLOSE_MAIN_SRC)
+        clv = (1 / dec(e["close"]) - 1 / d_) if close_ok else None
         sk = dict(q=e.get("p"), mk=e.get("m"), y=int(e["res"] == "W"))
+        tkey = f"t|{e['sport']}|{e.get('gid')}|{e.get('name')}|{e.get('bet')}|{e.get('book')}"
         rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)}", date=_et_day(e.get("start") or e["first"]),
-                         pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, **sk))
+                         pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, key=tkey, **sk))
         if e.get("src") == "fg":                             # first goal: also one row per proposed odds range (owner 2026-11-06)
             rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)} · {fg_band(e['o'])}", date=_et_day(e.get("start") or e["first"]),
-                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, **sk))
+                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, key=tkey, **sk))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
         wl = [e for e in json.load(open(os.path.join(OUT, "profit_wfair.json"))).values() if e.get("res") in ("W", "L")]
@@ -1295,7 +1325,7 @@ def page_data():
         print(f"book-weighted fair ({sp_}): {st['n']} bets, {st['roi']:+.1%}, verdict {st['verdict']}")
         if st["verdict"] in ("proven", "promising"):
             for e, p_, c_ in zip(y, pnl, clv):
-                rows.append(dict(sport=sp_, cat=WF_CAT, date=_et_day(e.get("start") or e["first"]), pnl=p_, clv=c_))
+                rows.append(dict(sport=sp_, cat=WF_CAT, date=_et_day(e.get("start") or e["first"]), pnl=p_, clv=c_, key=f"w|{sp_}|{e.get('gid')}|{e.get('name')}|{e.get('bet')}|{e.get('book')}"))
     for f in glob.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
         if os.path.basename(os.path.dirname(f)) == "learn":           # the learning builder's own files (builder.py)
             continue
@@ -1309,36 +1339,61 @@ def page_data():
             pay = p.get("paid") or p.get("d")
             if not pay:
                 continue
+            pkey = f"p|{d['sport']}|{d['date']}|{p['card']}|" + "|".join(str(L.get("lab") or L.get("name")) for L in p["legs"])
+            # same-game cards are paid at our own fair (NHL combos) or at the legs multiplied (NFL): no book pays either
+            nb = str(p["card"]).startswith("Same-game")
             rows.append(dict(sport=d["sport"], cat=f"{d['sport'].upper()} parlays: {p['card']}", date=d["date"],
-                             pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None))
+                             pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None, key=pkey, nb=nb))
             if p.get("pick"):                               # the daily card (parlays.pick_card): 4 a day, $5 each
                 rows.append(dict(sport=d["sport"], cat=f"{d['sport'].upper()} Today's card ($5 a parlay)", date=d["date"],
-                                 pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None))
+                                 pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None, key=pkey, nb=nb))
     if not rows:
         return dict(rows=[], overall=None, sports=[])
     df = pd.DataFrame(rows)
     today = dt.datetime.now(ET).date().isoformat()
     last30 = (dt.date.fromisoformat(today) - dt.timedelta(days=30)).isoformat()
     sports = []
+    if "nb" not in df:
+        df["nb"] = False
+    df["nb"] = df.nb.fillna(False).astype(bool)
+    allcats = []
     for sp, x in df.groupby("sport"):
         cats = []
         for c, y in x.groupby("cat"):
-            s = _stats(y.pnl.values, y.clv.values if y.clv.notna().any() else None, *((y.q.values, y.mk.values, y.y.values) if "q" in y else ()))
+            s = _stats(y.pnl.values, y.clv.values if y.clv.notna().any() else None, *((y.q.values, y.mk.values, y.y.values) if "q" in y else ()), days=y.date.values)
             s30 = _stats(y[y.date >= last30].pnl.values)
+            if y.nb.any():
+                s["verdict"] = "not bettable"
             cats.append(dict(cat=c, **s, roi30=s30["roi"] if s30 else None, n30=s30["n"] if s30 else 0))
-        cats.sort(key=lambda c: ({"proven": 0, "promising": 1, "unproven": 2, "too early": 3, "losing": 4}[c["verdict"]], -c["n"]))
-        curve = x.sort_values("date").groupby("date").pnl.sum().cumsum().round(2)
-        sports.append(dict(sport=sp, **_stats(x.pnl.values), cats=cats, curve=[[d, float(v)] for d, v in curve.items()]))
+        allcats += cats
+        u = x.drop_duplicates("key")                                       # totals: each bet once (twin rules repeat it)
+        u = u[~u.nb]
+        curve = u.sort_values("date").groupby("date").pnl.sum().cumsum().round(2)
+        sports.append(dict(sport=sp, **_stats(u.pnl.values, days=u.date.values), cats=cats, curve=[[d, float(v)] for d, v in curve.items()]))
+    # 'proven' must also survive the number of rules being tested (quant audit 2026-11-11: 96 rules, 3 at p < .05 vs ~5 by luck):
+    # Benjamini-Hochberg over every rule with 30+ bets, false-discovery rate 10%
+    T_ = sorted([c for c in allcats if c["n"] >= 30 and c.get("p1") is not None and c["verdict"] != "not bettable"], key=lambda c: c["p1"])
+    K_, qmin = len(T_), 1.0
+    for i in range(K_ - 1, -1, -1):
+        qmin = min(qmin, T_[i]["p1"] * K_ / (i + 1))
+        T_[i]["bh"] = round(qmin, 4)
+        if T_[i]["verdict"] == "proven" and qmin >= BH_FDR:
+            T_[i]["verdict"] = "unproven"
+            T_[i]["bh_fail"] = True
+    for s_ in sports:
+        s_["cats"].sort(key=lambda c: ({"proven": 0, "promising": 1, "unproven": 2, "too early": 3, "losing": 4, "not bettable": 5}[c["verdict"]], -c["n"]))
     order = {"nfl": 0, "nhl": 1, "nba": 2, "mlb": 3}
     sports.sort(key=lambda s: order.get(s["sport"], 9))
-    o = _stats(df.pnl.values)
-    o30 = _stats(df[df.date >= last30].pnl.values)
+    du = df.drop_duplicates("key")
+    du = du[~du.nb]
+    o = _stats(du.pnl.values, days=du.date.values)
+    o30 = _stats(du[du.date >= last30].pnl.values, days=du[du.date >= last30].date.values)
     # rules under test (2026-10-18): each current rule next to its Pinnacle- and consensus-anchored twins, always listed
     track = []
     for base in TRACKED:
         for tag in (("", " · market-anchored") if base.startswith("MLB") else ("", " · Pinnacle-anchored", " · consensus-anchored", " · liquidity consensus")):
             y = df[df.cat == f"{base}{tag} (Kalshi)"]
-            st = _stats(y.pnl.values, y.clv.values if len(y) and y.clv.notna().any() else None) if len(y) else None
+            st = _stats(y.pnl.values, y.clv.values if len(y) and y.clv.notna().any() else None, days=y.date.values) if len(y) else None
             track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),
                               roi=st["roi"] if st else None, moe=st["moe"] if st else None,
                               clv=st.get("clv") if st else None, clv_n=st.get("clv_n") if st else 0))
@@ -1478,12 +1533,16 @@ def feed_data():
                               book="Kalshi" if r.get("src") == "kalshi" else "Polymarket", pay=round(1 / r["cost"], 2) if r.get("cost") else None,
                               q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2)))
     tp = os.path.join(OUT, "profit_tags.json")
-    for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
+    tseen = set()                                            # the same prop at the same book under several tags: counted once
+    for e in sorted((json.load(open(tp)) if os.path.exists(tp) else {}).values(), key=lambda e: str(e.get("first"))):
         d0 = _et_day(e.get("start") or e["first"])
         if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb") or (e.get("src") == "tl" and e.get("grp") == "fed"):
             continue
         dd = dec(e["o"])
-        items.append(dict(date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}", pn=e.get("name"), st=_re.sub(r"^(over|under) [\d.]+ ", "", str(e.get("bet") or "")),
+        tk = (e["sport"], str(e.get("gid")), e.get("name"), e.get("bet"), e.get("book"))
+        dup = tk in tseen
+        tseen.add(tk)
+        items.append(dict(dup=dup, date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}", pn=e.get("name"), st=_re.sub(r"^(over|under) [\d.]+ ", "", str(e.get("bet") or "")),
                           book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
     legs = []
     for f in _g.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
@@ -1510,8 +1569,9 @@ def feed_data():
                               res=q["res"], net=round((STRAIGHT if q.get("tier") == "straight" else PARLAY) * ((pay - 1) if q["res"] == "W" else -1), 2)))
     items.sort(key=lambda x: (x["date"], x["res"] == "W", x["net"]), reverse=True)
     # your bets, last 30 days (the record at the top of the page)
-    staked = sum(STRAIGHT if x["t"] == "bet" or x.get("tier") == "straight" else PARLAY for x in items)
-    you = dict(n=len(items), w=sum(x["res"] == "W" for x in items), net=round(sum(x["net"] for x in items), 2), staked=staked)
+    one = [x for x in items if not x.get("dup")]               # totals and the odds tables: each bet once (quant audit)
+    staked = sum(STRAIGHT if x["t"] == "bet" or x.get("tier") == "straight" else PARLAY for x in one)
+    you = dict(n=len(one), w=sum(x["res"] == "W" for x in one), net=round(sum(x["net"] for x in one), 2), staked=staked)
     # what's working: each bet type over the last 30 days, in dollars at the owner's stakes
     by = {}
     for x in items:
@@ -1537,7 +1597,7 @@ def feed_data():
         return next(i for i, (lo, hi, _) in enumerate(ODDS_BANDS) if lo <= am <= hi)
     ob = {}
     for x in items:
-        if x["date"] < since30 or not x.get("pay"):
+        if x["date"] < since30 or not x.get("pay") or x.get("dup"):
             continue
         st = x["t"] == "bet" or x.get("tier") == "straight"
         for sp in (x["sport"], "all"):
@@ -1557,7 +1617,7 @@ def feed_data():
         RL = {}
     oa, orl = {}, {}
     for x in items:
-        if x["date"] < since30 or not x.get("pay") or x["t"] != "bet" or x["sport"] != "nfl":
+        if x["date"] < since30 or not x.get("pay") or x["t"] != "bet" or x["sport"] != "nfl" or x.get("dup"):
             continue
         nm = _norm(x.get("pn") or "")
         st = ST_LAB.get(x.get("st") or "", "Other")
@@ -1576,7 +1636,7 @@ def feed_data():
     except OSError:
         pass
     for x in items:
-        if x["date"] < since30 or not x.get("pay") or x["sport"] != "nba" or x["t"] != "bet":
+        if x["date"] < since30 or not x.get("pay") or x["sport"] != "nba" or x["t"] != "bet" or x.get("dup"):
             continue
         nm = _norm(x.get("pn") or "")
         ar = AR.get(nm) or ("no player" if not nm else "unknown")
@@ -1597,6 +1657,8 @@ def feed_data():
     # every graded bet of the window (a cap cut older days' losers: they sort after winners), compact keys
     for x in items:
         x.pop("pn", None); x.pop("st", None)
+        if not x.get("dup"):
+            x.pop("dup", None)
     items = [x for x in items if x["date"] >= since]          # the day-by-day list: last 14 days
     return dict(items=items, you=you, types=types, legs=legt, odds=odds, odds_arch=odds_arch, odds_role=odds_role, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
@@ -1623,7 +1685,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .arq .fgrp{padding-left:0}.arq .aqin{padding-left:12px}.arq .ast>summary{font-size:13px}.arq table{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:12.5px}.arq td,.arq th{text-align:right;padding:3px 6px 3px 0;border-top:1px solid var(--faint);white-space:nowrap}.arq td:first-child,.arq th:first-child{text-align:left}.aqs{margin:6px 0 4px}.aqs button{padding:2px 9px;font-size:12px}.aqs small{opacity:.7;font-weight:400}.arq .tb{min-width:0}.aqw{overflow-x:auto;max-width:100%}.arq td{white-space:nowrap}.arq table{font-size:12.5px}.arq th,.arq td{padding-right:6px}.arq .apx{display:block;font-size:11.5px;color:var(--muted);white-space:normal}.arq th.apc{border-left:1px solid var(--faint);padding-left:6px}.arq td.apc{background:color-mix(in srgb,var(--faint) 35%,transparent)}
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .vd.proven{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}.vd.promising{background:color-mix(in srgb,#6CB4FF 22%,transparent);color:#6CB4FF}
-.vd.unproven,.vd.too{background:var(--sunk);color:var(--muted)}.vd.losing{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
+.vd.unproven,.vd.too{background:var(--sunk);color:var(--muted)}.vd.nb{background:transparent;color:var(--muted);border:1px dashed var(--faint)}.vd.losing{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
 .pf td.l{white-space:normal}.pf small{display:block;color:var(--muted);font-size:11.5px}
 .spark{width:100%;height:56px;display:block;margin:4px 0 10px}
 .sph{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.sph h2{margin-right:auto}
@@ -1633,14 +1695,14 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 <header><div><div class="eyebrow">All sports</div><h1>Profit</h1></div></header>
 <div class="ptabs" role="tablist" aria-label="Profit views"><button type="button" role="tab" data-ptab="main" aria-selected="true">Profit</button><button type="button" role="tab" data-ptab="winners" aria-selected="false">What winners share</button></div>
 <main id="main"></main><div id="wtab" hidden>__WINNERS__</div>
-<footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets); Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets. Skill vs mkt = 1 − Brier score of our chance ÷ Brier score of the market’s chance on the same bets (the market’s fair with the vig out for tags, Kalshi’s price paid without the fee for prediction-market picks): above 0 means our chance forecast these bets better than the price did, with its 95% range.</footer>
+<footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets; the range counts bets on the same day as moving together) and the rule still stands after allowing for how many rules are being tested (Benjamini-Hochberg, 10% false-discovery rate); Not bettable = graded at a price no book pays (our own fair, or same-game legs multiplied); totals count each bet once; Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets. Skill vs mkt = 1 − Brier score of our chance ÷ Brier score of the market’s chance on the same bets (the market’s fair with the vig out for tags, Kalshi’s price paid without the fee for prediction-market picks): above 0 means our chance forecast these bets better than the price did, with its 95% range.</footer>
 </div><script>
 const D = __DATA__;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const pc = (v, d = 1) => v == null ? '–' : `<span class="${v >= 0 ? 'rp' : 'rn'}">${v >= 0 ? '+' : ''}${(v * 100).toFixed(d)}%</span>`;
 const un = v => v == null ? '–' : `<span class="${v >= 0 ? 'rp' : 'rn'}">${v >= 0 ? '+' : ''}${v.toFixed(1)}u</span>`;
-const VL = {proven: 'Proven', promising: 'Promising', unproven: 'Unproven', 'too early': 'Too early', losing: 'Losing'};
-const vd = v => `<span class="vd ${v === 'too early' ? 'too' : v}">${VL[v]}</span>`;
+const VL = {proven: 'Proven', promising: 'Promising', unproven: 'Unproven', 'too early': 'Too early', losing: 'Losing', 'not bettable': 'Not bettable'};
+const vd = v => `<span class="vd ${v === 'too early' ? 'too' : v === 'not bettable' ? 'nb' : v}"${v === 'not bettable' ? ' title="Graded at our own fair price (NHL same-game combos) or at the legs multiplied (NFL same-game parlays). No book pays either, so its return is not one you could have made."' : ''}>${VL[v]}</span>`;
 const skc = c => c.skill == null ? '<span class="muted">–</span>' : c.skill_same ? '<span class="muted" title="This rule’s chance is the market’s own fair">= market</span>'
   : `${pc(c.skill, 1)}<small>± ${c.skill_se != null ? (1.96 * c.skill_se * 100).toFixed(1) : '–'}% · ${c.skill_n}</small>`;
 function spark(c){
@@ -1687,7 +1749,8 @@ function feed(){
         const w = L.filter(x => x.res === 'W'), nn = L.reduce((s, x) => s + x.net, 0), show = FF.w ? w : L;
         const lab = L[0].cat.toUpperCase().startsWith(L[0].sport.toUpperCase()) ? L[0].cat : `${L[0].sport.toUpperCase()} ${L[0].cat}`;
         return `<details class="fgrp"><summary><span class="gl"><b>${esc(lab)}</b> <span class="c">won ${w.length} of ${L.length}</span></span><span class="net">${usd(nn)}</span></summary>${show.map(row).join('') || '<p class="small muted" style="margin:4px 0">No winners.</p>'}</details>`; }).join('');
-      return `<details class="fday"${i === 0 ? ' open' : ''}><summary><h3>${dayL(d)} · ${XA.filter(x => x.res === 'W').length}-${XA.filter(x => x.res === 'L').length} · net ${usd(n)}</h3></summary>${grp}</details>`; }).join('') || '<p class="note">Nothing graded in this view yet.</p>'}</section>`;
+      const XU = XA.filter(x => !x.dup), nu = XU.reduce((s, x) => s + x.net, 0);   // the day's total counts each bet once
+      return `<details class="fday"${i === 0 ? ' open' : ''}><summary><h3>${dayL(d)} · ${XU.filter(x => x.res === 'W').length}-${XU.filter(x => x.res === 'L').length} · net ${usd(nu)}</h3></summary>${grp}</details>`; }).join('') || '<p class="note">Nothing graded in this view yet.</p>'}</section>`;
 }
 function edgeTable(){
   const E = D.edges || []; if (!E.length) return '';

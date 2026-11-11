@@ -143,6 +143,25 @@ def cons_of(parts, exclude=None):
     return 1 / (1 + math.exp(-sum(_lg(v) for v in xs) / len(xs)))
 
 
+# Over bias of the no-vig fair (quant audit 2026-11-11, research/over_shift.py, props snapshots Oct 15 - Nov 8, fit on one half of
+# the dates and scored on the other, both ways): splitting the hold evenly gives NFL overs too much (main lines hit 2.6 pts under
+# the fair, alt 3.8; rush yds worst) -> logit shift; NBA alt-line fairs (books' two-way median / carried) run LOW (hit 1.7 pts over)
+# -> per-stat shift up. Both better in both halves (NFL main -13.5 / -12.1e-4 log-loss, alt -28.7 / -28.9; NBA alt -12.2 / -12.4).
+# NBA main lines and the NHL: no shift (worse or mixed out of sample). Pinnacle's own number (pn, the 'Pinnacle only' view) is
+# left raw. Each shifted value records it (os) so a later run undoes it before recomputing (write_props carries old kinds over).
+OVER_SHIFT = {"nfl": {"main": -.094, "alt": -.143},
+              "nba": {"alt": {"pts": .014, "reb": .173, "ast": .080, "fg3m": .164}}}
+
+
+def _over_shift(sport, kind, part):
+    v = (OVER_SHIFT.get(sport) or {}).get(part)
+    return v.get(kind, 0.0) if isinstance(v, dict) else (v or 0.0)
+
+
+def _shift_p(p, s):
+    return round(1 / (1 + math.exp(-(_lg(p) + s))), 4)
+
+
 def apply_consensus(sport, now):
     """Turn each published prop's sharp reference (e.pin) into the consensus of Pinnacle, Novig and ProphetX at its line,
     keeping the parts (the page drops the book being bet) and Pinnacle's own number (pn); then re-judge Value tags on it."""
@@ -151,6 +170,21 @@ def apply_consensus(sport, now):
         PR = json.load(open(fp))
     except (OSError, ValueError):
         return
+    for g in PR.get("props", {}).values():                    # undo an earlier run's over shift (entries carried over)
+        for kinds in g.values():
+            for e in kinds.values():
+                pin = e.get("pin")
+                if pin and pin.get("os") is not None:
+                    s = pin.pop("os")
+                    if pin.get("o") is not None:
+                        pin["o"] = _shift_p(pin["o"], -s)
+                    if pin.get("parts"):
+                        pin["parts"] = {k: _shift_p(v, -s) for k, v in pin["parts"].items()}
+                for x in (e.get("a") or {}).values():
+                    if x.get("os") is not None:
+                        s = x.pop("os")
+                        if x.get("pin") is not None:
+                            x["pin"] = _shift_p(x["pin"], -s)
     n = 0
     for gid, g in PR.get("props", {}).items():
         for nm, kinds in g.items():
@@ -216,6 +250,18 @@ def apply_consensus(sport, now):
                             x.pop("pin", None)
                         else:
                             x["pin"] = round(fair, 4)
+                sm, sa = _over_shift(sport, kind, "main"), _over_shift(sport, kind, "alt")   # over bias (OVER_SHIFT)
+                pin = e.get("pin")
+                if sm and pin and pin.get("o") is not None:
+                    pin["o"] = _shift_p(pin["o"], sm)
+                    if pin.get("parts"):
+                        pin["parts"] = {k: _shift_p(v, sm) for k, v in pin["parts"].items()}
+                    pin["os"] = sm
+                if sa:
+                    for x in (e.get("a") or {}).values():
+                        if x.get("pin") is not None:
+                            x["pin"] = _shift_p(x["pin"], sa)
+                            x["os"] = sa
                 # a fair over chance can't rise with the line: pool adjacent out-of-order lines (isotonic, falling)
                 lad = sorted([(float(e["l"]), e["pin"], "o")] if e.get("pin") and e.get("l") is not None and e["pin"].get("l") == e.get("l") else [], key=lambda t: t[0])
                 lad += [(float(l), x, "pin") for l, x in (e.get("a") or {}).items() if x.get("pin") is not None]
