@@ -366,11 +366,12 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   const P_NOTE = 'early leads from 3 weeks: the "since" record shows whether they keep hitting';
   // the sportsbooks' over prices at one exact number, for comparing a Kalshi rung (owner 2026-10-23: Hard Rock alt props
   // and Novig ladders): the props file's main line or that number's alt line; {book: {o, u}} (u = bet link or null)
-  const booksAt = (gid, name, kind, line) => {
+  // all = every book but Pinnacle (the NBA threes board, owner 2026-11-11: 'take into account all books')
+  const booksAt = (gid, name, kind, line, all) => {
     const e = PR && PR.props && ((PR.props[String(gid)] || {})[norm(name)] || {})[kind]; if (!e || line == null) return {};
     const x = Math.abs((e.l ?? -99) - line) < 1e-9 ? e.o : ((e.a || {})[String(line)] || (e.a || {})[(+line).toFixed(1)] || {}).o;
     const out = {};
-    for (const [b, v] of Object.entries(x || {})) if (['Hard Rock', 'Novig'].includes(b) && v && v[0] != null)
+    for (const [b, v] of Object.entries(x || {})) if ((all ? b !== 'Pinnacle' && b !== 'Kalshi' : ['Hard Rock', 'Novig'].includes(b)) && v && v[0] != null)
       out[b] = {o: v[0], u: v[1] ? (String(v[1]).startsWith('http') ? v[1] : `https://www.gambly.com/deeplink/odds/${v[1]}?utm_campaign=${encodeURIComponent(PR.partner || '')}`) : null};
     return out;
   };
@@ -1216,7 +1217,7 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       return null;
     },
     // Kalshi yardage / catch ladders: the rungs 2+ above the one priced nearest 50/50 (Ladder candidates, NFL Parlays tab)
-    booksAt(gid, name, kind, line){ return booksAt(gid, name, kind, line); },
+    booksAt(gid, name, kind, line, all){ return booksAt(gid, name, kind, line, all); },
     // multi-book fair at one rung (owner 2026-11-03; research/ladder_multibook.py: the best forecast we have for NBA rungs,
     // log-loss .3922 vs carried consensus .3932, the book's own price .4045): every other source at that number with its
     // hold taken out -- two-way no-vig, else the book's over moved by the hold it shows at the main line; Kalshi's mid

@@ -481,6 +481,7 @@ SCREEN_CSS = """
 .sc-px2{background:none;border:0;color:var(--muted);font:600 15px var(--body);padding:3px 10px 5px 6px;cursor:pointer;line-height:1}.sc-px2:hover{color:var(--bad)}
 .sc-add{border-style:dashed;color:var(--muted)}.sc-name{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.sc-name input{min-width:0;width:200px;max-width:60vw;padding:5px 10px;border-radius:8px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);font:600 13px var(--body)}
 .sc-count{font-size:13px;color:var(--muted);margin:4px 0 8px}.sc-count b{color:var(--ink)}
+.sc-tag.promo{background:color-mix(in srgb,#F2C14E 22%,transparent);color:#E9B530;border-color:color-mix(in srgb,#F2C14E 60%,transparent);font-weight:700}.sc-chip.promo{border-color:color-mix(in srgb,#F2C14E 70%,transparent);color:#E9B530;font-weight:700}.sc-chip.promo.on{background:#E9B530;color:#1a1405;border-color:#E9B530}.sc-promo{font-size:12px;color:var(--muted);margin:2px 0 6px;max-width:80ch}.sc-promo b{color:#E9B530}
 .sc-tag.cons.up{background:rgba(45,212,191,.14)}.sc-tag.cons.both{background:#2DD4BF;color:#06231f;border-color:#2DD4BF}.sc-tag.cons.odds{color:#E0A458}.sc-tag.due{color:var(--good)}
 .sc-tag.lad{color:var(--accent);border-color:var(--accent)}.sc-cmp{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:4px;font-size:12px}.sc-cmp span{border:1px solid var(--faint);border-radius:5px;padding:1px 6px;color:var(--muted);white-space:nowrap}.sc-cmp span.my{color:var(--ink)}.sc-cmp span.me{border-color:var(--accent);color:var(--ink);font-weight:700}.sc-cmp i{font-style:normal;font-weight:600}.sc-cmp i.g{color:var(--good)}.sc-cmp i.b{color:var(--bad)}
 .sc-act{display:flex;align-items:center;gap:6px;justify-self:end}.sc-act .slipadd{margin:0;min-width:36px;min-height:36px;font-size:16px;line-height:1}
@@ -530,6 +531,7 @@ def ctx_nba(D):
         elif tr is not None and tr <= -3:
             c.append(["▼ minutes", "b"])
         vg = (q.get("s") or {}).get("vegas") or {}
+        m6 = []                                    # stats with the page's 'matchup' reason (blended 6%+ soft): the screener's study picks
         for k, fl in _NBA_MIN.items():
             if not vg.get(k) or vg[k][3] < fl:
                 continue
@@ -538,10 +540,12 @@ def ctx_nba(D):
                 continue
             da = (q.get("va") or {}).get(k)
             v = (dp * da) ** .5 if da else dp
+            if v >= 1.06:
+                m6.append(k)
             if abs(v - 1) >= .08:
                 grp = _ARCH_PL.get(q.get("ar"), _NBA_PL.get(q.get("pg"), "")) if da else _NBA_PL.get(q.get("pg"), "")
                 st_[k] = [[f"{q.get('o')} {_pct(v)} {_NBA_SL[k]} vs {grp}", "g" if v > 1 else "b"]]
-        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"))
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}))
     return out
 
 

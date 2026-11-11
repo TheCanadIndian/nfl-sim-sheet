@@ -1519,11 +1519,12 @@ def oa_nba(now):
         A = (alt.get(gid) or {}).get("props", {})
         for nm, kinds in c["props"].items():
             for kind, lines in kinds.items():
+                two0 = {l for l, x in lines.items() if x.get("o") and x.get("u")}    # main line: chosen from the main markets only
                 lines = {l: {sd: dict(v) for sd, v in x.items()} for l, x in lines.items()}
                 for l, x in ((A.get(nm) or {}).get(kind) or {}).items():
                     for sd, bk in x.items():
                         lines.setdefault(l, {}).setdefault(sd, {}).update(bk)
-                two = {l: x for l, x in lines.items() if x.get("o") and x.get("u")}
+                two = {l: x for l, x in lines.items() if x.get("o") and x.get("u") and (l in two0 or not two0)}
                 if not two:
                     continue
                 main = max(two, key=lambda l: len(set(two[l]["o"]) & set(two[l]["u"])))
@@ -1555,7 +1556,9 @@ NBA_ALT_CACHE = os.path.join(M.OUT, "oa_props_nba_alt.json")
 
 def oa_nba_alt(now):
     """Hard Rock's NBA alternate lines (owner 2026-10-23: compare Kalshi ladder rungs with Hard Rock alt props and Novig
-    ladders; Novig's ladder already comes in the main markets). 4 credits a game (4 alternate markets, one book): the
+    ladders; Novig's ladder already comes in the main markets). Threes ladders from every book (owner 2026-11-11: 'for NBA
+    threes ladders take into account all books'): up to 10 bookmakers cost one region, so asking all of NBA_BOOKS costs the
+    same 4 credits; points / rebounds / assists keep Hard Rock alone (props file size). 4 credits a game (4 alternate markets): the
     morning pull, then hourly in the last 2 h before tip (sharp.wanted) -- alt prices move less than main lines.
     Cache: {gid: {fetched, start, props: {player: {kind: {line: {o|u: {book: [odds, link]}}}}}}}, merged by oa_nba."""
     k = B.key()
@@ -1579,7 +1582,8 @@ def oa_nba_alt(now):
             if not B.budget_ok(bst, now):
                 print("odds api nba alt lines: credit budget used for today"); break
             q = requests.get(f"https://api.the-odds-api.com/v4/sports/basketball_nba/events/{e['id']}/odds", timeout=30,
-                             params=dict(apiKey=k, bookmakers="hardrockbet", markets=",".join(NBA_ALT_MKT), oddsFormat="american", includeLinks="true"))
+                             params=dict(apiKey=k, bookmakers=",".join(b for b in NBA_BOOKS if b != "pinnacle"), markets=",".join(NBA_ALT_MKT),
+                                         oddsFormat="american", includeLinks="true"))
             used = int(q.headers.get("x-requests-last") or 0)
             bst["spent_today"] = bst.get("spent_today", 0) + used
             if q.headers.get("x-requests-remaining"):
@@ -1590,6 +1594,8 @@ def oa_nba_alt(now):
             for b in q.json().get("bookmakers", []):
                 for m in b.get("markets", []):
                     kind = NBA_ALT_MKT.get(m["key"])
+                    if kind != "fg3m" and b["key"] != "hardrockbet":          # every book on threes ladders, Hard Rock alone on the rest
+                        continue
                     for o in m.get("outcomes", []):
                         side = {"over": "o", "under": "u"}.get((o.get("name") or "").lower())
                         if not kind or not side or o.get("point") is None or not o.get("description"):

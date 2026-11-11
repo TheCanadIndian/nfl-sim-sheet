@@ -1746,11 +1746,17 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .spark{width:100%;height:56px;display:block;margin:4px 0 10px}
 .sph{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.sph h2{margin-right:auto}
 @media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5){display:none}}
+.bnav{position:sticky;top:var(--tbh,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:0 0 12px;background:var(--bg);scrollbar-width:none;align-items:center}.bnav::-webkit-scrollbar{display:none}.bnav .small{flex:none;margin-right:2px}.bnav a{flex:none;border:1px solid var(--faint);border-radius:999px;padding:5px 12px;font:600 13px var(--body);color:var(--ink);text-decoration:none;white-space:nowrap}.bnav a:hover,.bnav a:focus-visible{border-color:var(--ink)}.bnav a.ext{color:var(--muted)}
+.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
+.crit .crcall{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:9px 12px;font-size:13.5px;margin:6px 0 10px}.crit .crcall small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
+.crit .bh{display:inline-block;font-size:10.5px;font-weight:700;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:0 6px;margin-left:6px;white-space:nowrap}
+.crit td.l{white-space:normal;min-width:150px}.crit .tz{font-weight:400;font-size:12px;color:var(--muted);margin-left:6px}
+@media (max-width:560px){.crit th:nth-child(3),.crit td:nth-child(3){display:none}.crit td.l{min-width:130px}}.crit .crb>summary{font-size:14px}.crit .crb{padding-left:0}.crit .best{display:block;font-size:11.5px;color:var(--good);white-space:normal}
 .ptabs{display:flex;gap:6px;margin:10px 0 14px;flex-wrap:wrap}.ptabs button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:6px 14px;font:600 14px var(--body);cursor:pointer}.ptabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 </style></head><body><div class="wrap">
 <header><div><div class="eyebrow">All sports</div><h1>Profit</h1></div></header>
-<div class="ptabs" role="tablist" aria-label="Profit views"><button type="button" role="tab" data-ptab="main" aria-selected="true">Profit</button><button type="button" role="tab" data-ptab="winners" aria-selected="false">What winners share</button></div>
-<main id="main"></main><div id="wtab" hidden>__WINNERS__</div>
+<div class="ptabs" role="tablist" aria-label="Profit views"><button type="button" role="tab" data-ptab="main" aria-selected="true">Profit</button><button type="button" role="tab" data-ptab="breakdowns" aria-selected="false">Breakdowns</button><button type="button" role="tab" data-ptab="winners" aria-selected="false">What winners share</button></div>
+<main id="main"></main><div id="btab" hidden></div><div id="wtab" hidden>__WINNERS__</div>
 <footer>Everything the site recommends, graded at the price it showed, 1 unit per bet. Prediction-market picks follow the site's rules on the last pregame quote (Kalshi includes its fee); Value tags use the tagged book's price when the tag first appeared, and Beat close compares it with that book's last price before the game; for prediction-market picks Beat close is Pinnacle's fair (no-vig) closing chance minus the price paid, fee included, when Pinnacle priced the same bet (positive = better than the sharpest closing line, the quickest sign of a real edge); parlays are every card on the Plays / Parlays tabs, frozen before their first game. Verdicts: Proven = the 95% range of the return is above zero (30+ bets; the range counts bets on the same day as moving together) and the rule still stands after allowing for how many rules are being tested (Benjamini-Hochberg, 10% false-discovery rate); Not bettable = graded at a price no book pays (our own fair, or same-game legs multiplied); totals count each bet once; Losing = below zero; Promising = beats the closing line by a clear margin; Too early = fewer than 30 bets. Skill vs mkt = 1 − Brier score of our chance ÷ Brier score of the market’s chance on the same bets (the market’s fair with the vig out for tags, Kalshi’s price paid without the fee for prediction-market picks): above 0 means our chance forecast these bets better than the price did, with its 95% range.</footer>
 </div><script>
 const D = __DATA__;
@@ -1869,6 +1875,71 @@ function legTable(){
 document.addEventListener('click', e => { const b = e.target.closest('button[data-fw],button[data-fs]'); if (!b) return;
   if (b.dataset.fw) FF.w = !FF.w; else FF.s = b.dataset.fs;
   try { localStorage.setItem('simfeed-v1', JSON.stringify(FF)); } catch (x) {} render(); });
+// ---- Breakdowns tab (owner 2026-11-11: 'add this to the profit page, move all data like this to a new tab and make things
+// easily findable'): every slice-by-slice table in one tab, a sticky jump bar, each section saying what it answers.
+const CR = D.crit || null;
+let CS = 'books'; try { CS = localStorage.getItem('profit-crit') || 'books'; } catch (e) {}
+function critSec(){
+  if (!CR || !(CR.books || CR.kalshi)) return '';
+  const k = CR[CS] ? CS : CR.books ? 'books' : 'kalshi', J = CR[k], T = J.total, K = k === 'kalshi', U = K ? 'Rungs' : 'Bets', u = U.toLowerCase();
+  const p1 = v => v == null || v !== v ? '–' : (v >= 0 ? '+' : '−') + Math.abs(v * 100).toFixed(1) + '%';
+  const cl = v => v == null || v !== v ? 'muted' : v >= 0 ? 'rp' : 'rn';
+  const both = r => r.h1 != null && r.h2 != null && r.h1 > 0 && r.h2 > 0;
+  const hh = r => `<span class="${cl(r.h1)}">${p1(r.h1)}</span> <span class="muted">/</span> <span class="${cl(r.h2)}">${p1(r.h2)}</span>`;
+  const tds = r => `<td>${r.n.toLocaleString()}</td><td>${r.won.toLocaleString()} <small class="muted">/ ${Math.round(r.priced).toLocaleString()}</small></td><td class="${r.wp >= 1 ? 'rp' : 'rn'}">${r.wp.toFixed(2)}</td><td class="${cl(r.roi)}">${p1(r.roi)}</td><td>${hh(r)}</td>`;
+  const th = (a, x) => `<thead><tr><th>${a}</th><th>${U}</th><th>Won / priced</th><th>Index</th><th>Return</th><th>h1 / h2</th>${x || ''}</tr></thead>`;
+  const tbl = (a, rows, lab, x, xr) => `<div class="aqw"><table>${th(a, x)}<tbody>${rows.map(r => `<tr><td class="l">${lab(r)}${both(r) ? '<span class="bh">both halves +</span>' : ''}</td>${tds(r)}${xr ? xr(r) : ''}</tr>`).join('')}</tbody></table></div>`;
+  const mixl = r => `${esc(r.a)} <span class="muted">+</span> ${esc(r.b)}`;
+  const blk = (id, title, note, body, tz) => { const key = 'crit:' + k + ':' + id;
+    return `<details class="fgrp crb" data-ak="${esc(key)}"${AOPEN.has(key) ? ' open' : ''}><summary><span class="gl"><b>${title}</b>${tz ? `<span class="tz">${tz}</span>` : ''}</span></summary>${note ? `<p class="note" style="margin:4px 0 6px">${note}</p>` : ''}${body}</details>`; };
+  const tzr = r => r ? `${esc(r.crit || (r.a + ' + ' + r.b))} <span class="${cl(r.roi)}">${p1(r.roi)}</span> on ${r.n.toLocaleString()}` : '';
+  const sw = `<div class="fsw">${['books', 'kalshi'].filter(x => CR[x]).map(x => `<button data-cs="${x}" aria-pressed="${k === x}">${x === 'books' ? 'Hard Rock + Novig' : 'Kalshi'}</button>`).join('')}</div>`;
+  const lede = K ? `Every Kalshi NBA points, rebounds, assists and threes rung ${esc(J.dates[0])} to ${esc(J.dates[1])} with a quote 5¢ wide or less, bought YES at the last ask before tip plus the 7% fee: ${T.n.toLocaleString()} rungs, won ${T.won.toLocaleString()} vs ${Math.round(T.priced).toLocaleString()} priced, ${p1(T.roi)}. h1 = the 2025-26 regular season, h2 = the playoffs and 2026-27.`
+    : `Every over at Hard Rock and Novig ${esc(J.dates[0])} to ${esc(J.dates[1])}, main and alt lines, at its last price before tip: ${T.n.toLocaleString()} bets, won ${T.won.toLocaleString()} vs ${Math.round(T.priced).toLocaleString()} priced, ${p1(T.roi)}. Halves split after ${esc(J.split || '')}.`;
+  const best = (J.pairs || [])[0], one = (J.one || []).find(r => r.crit === 'our edge 15-40%');
+  const call = K ? `<b>Only one thing beats Kalshi’s price: our chance 15%+ over the cost.</b>${one ? ` One rung per player at 15–40%: ${p1(one.roi)} on ${one.n.toLocaleString()}, up in all four periods.` : ''} Matchups, starters, minutes, rest, game totals and recent hit rates are already in the price; alone, each loses. Tagged <b>★ K 15%+</b> on the screener.<small>“Our edge” here is the research model’s walk-forward chance (fit only on earlier games), not the number the pages show; the live 5%+ ladder-edge row has lost since launch.</small>`
+    : `<b>No single criterion beats the price at Hard Rock / Novig.</b>${best ? ` The best mix: ${mixl(best)}, ${p1(best.roi)} on ${best.n} (${p1(best.h1)} / ${p1(best.h2)}).` : ''} The consensus mixes are tagged <b>★ CONS ▲▼ + soft</b> / <b>★ CONS ▲▼ + PIN rung</b> on the screener.<small>${(J.npairs || 557).toLocaleString()} mixes were tested, so a few look good by luck: leads, not rules.</small>`;
+  let h = `<p class="small muted" style="margin:0 0 6px">${lede}</p><div class="crcall">${call}</div>`;
+  const S = [...(J.singles || [])].sort((a, b) => b.wp - a.wp);
+  h += blk('single', 'Each criterion alone', `Ranked by won vs priced.${K ? ' A rung is one Kalshi market; a player’s ladder has several, so these count a ladder several times.' : ''}`, tbl('Criterion', S, r => esc(r.crit)), `best: ${tzr(S[0])}`);
+  if (K && (J.one || []).length){
+    const PER = ['2025-26 to Jan 31', '2025-26 Feb-Apr', 'Playoffs', '2026-27 live'], PL = ['To Jan 31', 'Feb–Apr', 'Playoffs', '2026-27'];
+    h += blk('one', 'Our edge, one rung per player', 'Each player-stat counted once, at his biggest edge. The two extra cuts (game total 222+, 24+ projected minutes) came from the Nov 4 drill-down on part of these dates.',
+      tbl('Rule', J.one, r => esc(r.crit), PL.map(x => `<th>${x}</th>`).join(''), r => PER.map(x => { const v = (r.per || {})[x]; return `<td>${v ? `<span class="${cl(v[1])}">${p1(v[1])}</span> <small class="muted">${v[0]}</small>` : '–'}</td>`; }).join('')), one ? tzr(one) : '');
+  }
+  h += blk('pairs', 'Mixes that beat the price in both halves', `Every pair with 150+ ${u}: ${(J.npairs || 557).toLocaleString()} tested.${K ? ' Nearly all the winners include our edge or gap.' : ''}`, tbl('Mix', J.pairs || [], mixl), `best: ${tzr((J.pairs || [])[0])}`);
+  if (K && (J.nomodel || []).length) h += blk('nomodel', 'Mixes without our number', 'Positive in both halves without our edge or gap: all within a few points of break-even.', tbl('Mix', J.nomodel, mixl), `best: ${tzr(J.nomodel[0])}`);
+  h += blk('worst', 'Mixes to avoid', 'Negative in both halves.', tbl('Mix', J.worst || [], mixl), `worst: ${tzr((J.worst || [])[0])}`);
+  const band = r => `<tr><td class="l">${esc(r.name)}${r.best ? `<span class="best">best inside: ${esc(r.best.crit)} · ${r.best.n} · ${p1(r.best.roi)} (${p1(r.best.h1)} / ${p1(r.best.h2)})</span>` : ''}</td>${tds(r)}</tr>`;
+  const rec = r => `<span class="c">${r.n.toLocaleString()} ${u} · won ${r.won.toLocaleString()} vs ${Math.round(r.priced).toLocaleString()} priced · h1 / h2 ${hh(r)}</span>`;
+  const net = r => `<span class="net ${cl(r.roi)}">${p1(r.roi)}</span>`;
+  const mk = (a, m) => { const key = 'crit:' + k + ':m:' + a + '|' + m.name;
+    return `<details class="fgrp ast" data-ak="${esc(key)}"${AOPEN.has(key) ? ' open' : ''}><summary><span class="gl"><b>${esc(m.name.replace(' · Kalshi rungs', ''))}</b> ${rec(m)}</span>${net(m)}</summary>${(m.kids || []).length ? `<div class="aqw"><table>${th('Odds')}<tbody>${m.kids.map(band).join('')}</tbody></table></div>` : `<p class="note">No odds range with 25+ ${u}.</p>`}</details>`; };
+  const ar = a => { const key = 'crit:' + k + ':a:' + a.name;
+    return `<details class="fgrp" data-ak="${esc(key)}"${AOPEN.has(key) ? ' open' : ''}><summary><span class="gl"><b>${esc(a.name)}</b> ${rec(a)}</span>${net(a)}</summary><div class="aqin">${(a.kids || []).map(m => mk(a.name, m)).join('')}</div></details>`; };
+  h += blk('tree', 'By archetype, then market, then odds', `Open a player type, then a market. Each odds range names the best single criterion inside it that was up in both halves (25+ ${u}). Small samples picked after the fact: a green cell is something to watch, not a rule.`,
+    `<div class="aqin" style="padding-left:0">${[...(J.tree || [])].filter(a => a.name !== 'unknown').sort((a, b) => b.wp - a.wp).map(ar).join('')}</div>`, `${(J.tree || []).filter(a => a.name !== 'unknown').length} player types`);
+  return `<section class="panel lt arq crit"><div class="phead"><h2>NBA over criteria</h2><span class="small muted">which criteria and mixes win · archetype → market → odds · a study, run ${esc(String(J.generated || '').slice(0, 10))}</span></div>${sw}${h}</section>`;
+}
+document.addEventListener('click', e => { const b = e.target.closest('button[data-cs]'); if (!b) return;
+  CS = b.dataset.cs; try { localStorage.setItem('profit-crit', CS); } catch (x) {} render(); });
+const BSEC = [
+  ['b-odds', 'Results by odds', 'Which odds ranges have made money?', () => oddsTable()],
+  ['b-arch', 'NBA by archetype', 'Which NBA player types, stats and odds win?', () => archOdds()],
+  ['b-role', 'NFL by role', 'Which NFL roles, stats and odds win?', () => archOdds(FE.odds_role, true)],
+  ['b-crit', 'NBA over criteria', 'Which criteria or mixes beat the price, at the books and at Kalshi?', () => critSec()],
+  ['b-edge', 'By claimed edge', 'Do bigger claimed edges hit more often?', () => edgeTable()],
+  ['b-legs', 'Parlay legs', 'Which kinds of parlay legs hit more than expected?', () => legTable()],
+];
+function breakdowns(){
+  const S = BSEC.map(([id, lab, q, f]) => [id, lab, q, f()]).filter(x => x[3]);
+  if (!S.length) return '<section class="panel"><p class="note">Nothing graded yet.</p></section>';
+  const nav = `<nav class="bnav" aria-label="Jump to a breakdown"><span class="small muted">Jump to</span>${S.map(([id, lab, q]) => `<a href="#${id}" data-bj="${id}" title="${esc(q)}">${lab}</a>`).join('')}<a class="ext" href="#winners" data-ptab-go="winners" title="Traits that winning bets share, scored against their price">What winners share ↗</a></nav>`;
+  return nav + S.map(([id, lab, q, html]) => `<div class="bsec" id="${id}"><span class="bq">${esc(q)}</span>${html}</div>`).join('');
+}
+function bnote(){
+  return `<section class="panel"><p class="note" style="margin:0">Results sliced by odds, NBA archetype, NFL role, NBA criteria (books and Kalshi), claimed edge and parlay legs are on the <a href="#breakdowns" data-ptab-go="breakdowns">Breakdowns</a> tab.</p></section>`;
+}
 function render(){
   const O = D.overall;
   if (!O){ document.getElementById('main').innerHTML = '<section class="panel"><p class="note">Nothing graded yet.</p></section>'; return; }
@@ -1888,17 +1959,28 @@ function render(){
     <div class="trk">${Object.entries(by).map(([b, L]) => `<div class="tb"><h3>${esc(b)}</h3><table><tbody>${L.map(t => `<tr><td>${esc(t.rule)}<small style="display:block;color:var(--muted)">${t.n} bets</small></td><td class="r">${tcell(t)}</td><td class="r">${ccell(t)}</td></tr>`).join('')}</tbody></table></div>`).join('')}</div></section>` : '';
   const all = `<details class="panel"><summary style="cursor:pointer"><h2 style="display:inline">Every tracked rule</h2> <span class="small muted">all bets incl. unders and the test versions</span></summary>
     <section class="panel"><div class="phead"><h2>Overall</h2></div>${tiles}</section>${track}${D.sports.map(sp).join('')}</details>`;
-  document.getElementById('main').innerHTML = you() + working() + oddsTable() + archOdds() + archOdds(FE.odds_role, true) + feed() + legTable() + edgeTable() + all;
+  document.getElementById('main').innerHTML = you() + working() + bnote() + feed() + all;
+  document.getElementById('btab').innerHTML = breakdowns();
 }
 render();
-// tabs (owner 2026-11-09: 'make this a tab under profits'): Profit | What winners share (#winners opens it)
-function ptab(t){ const w = t === 'winners' && document.getElementById('wtab').innerHTML.trim();
-  document.getElementById('main').hidden = !!w; document.getElementById('wtab').hidden = !w;
-  document.querySelectorAll('[data-ptab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.ptab === (w ? 'winners' : 'main')))); }
-document.addEventListener('click', e => { const b = e.target.closest('[data-ptab]'); if (!b) return;
-  ptab(b.dataset.ptab); history.replaceState(null, '', b.dataset.ptab === 'winners' ? '#winners' : location.pathname + location.search); window.scrollTo(0, 0); });
-window.addEventListener('hashchange', () => ptab(location.hash === '#winners' ? 'winners' : 'main'));
-ptab(location.hash === '#winners' ? 'winners' : 'main');
+// tabs (owner 2026-11-09: 'make this a tab under profits'; 2026-11-11: Breakdowns): Profit | Breakdowns | What winners share.
+// #breakdowns and #winners open a tab; #b-odds, #b-arch, #b-role, #b-crit, #b-edge, #b-legs open Breakdowns at that section
+const TABS = {main: 'main', breakdowns: 'btab', winners: 'wtab'};
+function ptab(t){ if (!TABS[t] || (t === 'winners' && !document.getElementById('wtab').innerHTML.trim())) t = 'main';
+  for (const [k, id] of Object.entries(TABS)) document.getElementById(id).hidden = k !== t;
+  document.querySelectorAll('[data-ptab]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.ptab === t))); }
+const tabHash = t => t === 'main' ? location.pathname + location.search : '#' + t;
+function jump(id){ ptab('breakdowns'); const el = document.getElementById(id); if (!el) return;
+  const f = el.querySelector('section'); if (f && f.firstElementChild && f.firstElementChild.tagName === 'DETAILS') f.firstElementChild.open = true;
+  el.scrollIntoView({block: 'start'}); }
+document.addEventListener('click', e => {
+  const j = e.target.closest('[data-bj]'); if (j){ e.preventDefault(); history.replaceState(null, '', '#' + j.dataset.bj); jump(j.dataset.bj); return; }
+  const b = e.target.closest('[data-ptab],[data-ptab-go]'); if (!b) return; e.preventDefault();
+  const t = b.dataset.ptab || b.dataset.ptabGo; ptab(t); history.replaceState(null, '', tabHash(t)); window.scrollTo(0, 0); });
+function fromHash(){ const h = location.hash;
+  if (h.startsWith('#b-')) jump(h.slice(1)); else ptab(h === '#winners' ? 'winners' : h === '#breakdowns' ? 'breakdowns' : 'main'); }
+window.addEventListener('hashchange', fromHash);
+fromHash();
 </script></body></html>"""
 
 
@@ -1909,6 +1991,10 @@ def page():
     S = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(S)
     d = page_data()
+    try:                                     # NBA over-criteria studies (research/nba_criteria*.py publish it; Breakdowns tab)
+        d["crit"] = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "criteria_nba.json"), encoding="utf-8"))
+    except (OSError, ValueError):
+        d["crit"] = None
     s = (PAGE.replace("__FONTS__", report.FONTS).replace("__CSS__", report.BASE_CSS).replace("__DATA__", json.dumps(d, separators=(",", ":"))))
     try:
         import traits
