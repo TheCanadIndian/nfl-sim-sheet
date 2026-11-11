@@ -80,6 +80,8 @@ jobs:
       - run: |
           git config user.name "sim-sheet-bot"
           git config user.email "sim-sheet-bot@users.noreply.github.com"
+          # heartbeat: when prices last ran (watch.js shows a stale-data banner once it is 45+ min old)
+          python -c "import json, datetime; json.dump(dict(t=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'), src='cloud'), open('markets/heartbeat.json', 'w'))"
           git add -A markets engine/markets engine/parlays
           for f in nhl/parlays.html nfl/parlays.html profit.html parlays.html openers.html winners.html; do [ -f "$f" ] && git add "$f"; done
           if git diff --cached --quiet; then echo "no changes"; exit 0; fi

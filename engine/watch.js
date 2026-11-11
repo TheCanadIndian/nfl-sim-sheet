@@ -294,3 +294,34 @@
   document.head.appendChild(st);
   let t = null; new MutationObserver(() => { clearTimeout(t); t = setTimeout(add, 50); }).observe(document.body, {childList: true, subtree: true}); add();
 })();
+
+/* Stale-data banner (owner 2026-11-11, after a GitHub Actions outage stopped every run: 'how do we mitigate this situation').
+   markets.yml (and the PC failover, private/failover.py) stamp markets/heartbeat.json on every price run, about every 15 min
+   all day. When the newest stamp is over 45 minutes old, every page says how old the prices are, so stale numbers are never
+   taken for live ones. No stamp file -> nothing shown. */
+(function(){
+  const base = (document.currentScript && document.currentScript.src || '').replace(/watch\.js.*$/, '');
+  if (/[?&]freeze=1(&|$)/.test(location.search)) return;
+  const STALE = 45, KEY = 'simstale-hide';
+  const ago = m => m < 120 ? `${Math.round(m)} min` : m < 48 * 60 ? `${Math.round(m / 60)} h` : `${Math.round(m / 1440)} days`;
+  function check(){
+    fetch(base + 'markets/heartbeat.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null).then(h => {
+      const old = document.getElementById('simstale');
+      if (!h || !h.t){ if (old) old.remove(); return; }
+      const t = new Date(h.t), age = (Date.now() - t) / 60000;
+      if (!(age > STALE)){ if (old) old.remove(); return; }
+      let hidden = false; try { hidden = sessionStorage.getItem(KEY) === h.t; } catch (e) {}
+      if (hidden) return;
+      const when = t.toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+      const html = `<span>Prices last updated <b>${ago(age)} ago</b> (${when}). Automatic updates are delayed, so check the price at the book before betting.</span>`
+        + `<button type="button" aria-label="Hide" style="background:none;border:0;color:inherit;font:inherit;font-size:18px;line-height:1;cursor:pointer;padding:0 4px">×</button>`;
+      const d = old || document.createElement('div');
+      d.id = 'simstale'; d.setAttribute('role', 'status'); d.innerHTML = html;
+      d.style.cssText = 'display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 16px;background:#3a2a0a;color:#F2D29B;border-bottom:1px solid #E0A458;font:14px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;position:relative;z-index:50';
+      d.querySelector('button').onclick = () => { try { sessionStorage.setItem(KEY, h.t); } catch (e) {} d.remove(); };
+      if (!old) document.body.insertBefore(d, document.body.firstChild);
+    }).catch(() => {});
+  }
+  check();
+  setInterval(check, 5 * 60e3);
+})();
