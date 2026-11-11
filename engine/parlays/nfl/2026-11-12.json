@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-12",
 "lock": "2026-11-13T01:15:00+00:00",
-"frozen_at": "2026-11-11T21:12:07.886Z",
+"frozen_at": "2026-11-11T21:17:56.469Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -75,6 +75,74 @@
 "p": 0.08235,
 "d": 9.842,
 "first": "2026-11-13T01:15:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4151,
+"price": 160,
+"book": "Novig"
+},
+{
+"gid": "2026_10_WAS_NYG",
+"start": "2026-11-12T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 7.5,
+"name": "van jefferson",
+"lab": "Van Jefferson over 7.5 rec yds",
+"p": 0.5414,
+"price": -102,
+"book": "Novig"
+}
+],
+"p": 0.22474,
+"d": 5.149,
+"first": "2026-11-13T01:15:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4151,
+"price": 160,
+"book": "Novig"
+},
+{
+"gid": "2026_10_WAS_NYG",
+"start": "2026-11-12T20:15:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "van jefferson",
+"lab": "Van Jefferson over 1.5 receptions",
+"p": 0.3993,
+"price": 163,
+"book": "Novig"
+}
+],
+"p": 0.16572,
+"d": 6.838,
+"first": "2026-11-13T01:15:00+00:00",
+"pick": "core"
 },
 {
 "card": "Same-game parlays",
@@ -2675,69 +2743,28 @@
 "first": "2026-11-13T01:15:00+00:00"
 },
 {
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_10_WAS_NYG",
-"start": "2026-11-13T01:15:00+00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 14.5,
-"name": "van jefferson",
-"lab": "Van Jefferson over 14.5 rec yds",
-"p": 0.4379,
-"price": 217,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.388,
-"fair": 0.4038,
-"main": false
-},
-{
-"gid": "2026_10_HOU_CLE",
-"start": "2026-11-15T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "quinshon judkins",
-"lab": "Quinshon Judkins over 1.5 receptions",
-"p": 0.4128,
-"price": 160,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0732,
-"fair": 0.376,
-"main": true
-}
-],
-"p": 0.18077,
-"d": 8.242,
-"first": "2026-11-13T01:15:00+00:00"
-},
-{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
 {
 "gid": "2026_10_WAS_NYG",
 "start": "2026-11-13T01:15:00+00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
+"line": 7.5,
 "name": "van jefferson",
-"lab": "Van Jefferson over 1.5 receptions",
-"p": 0.4036,
-"price": 163,
+"lab": "Van Jefferson over 7.5 rec yds",
+"p": 0.5409,
+"price": -102,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0615,
-"fair": 0.3571,
+"edge": 0.0711,
+"fair": 0.4945,
 "main": true
 }
 ],
-"p": 0.4036,
-"d": 2.63,
+"p": 0.5409,
+"d": 1.98,
 "first": "2026-11-13T01:15:00+00:00",
 "pick": "straight"
 },
