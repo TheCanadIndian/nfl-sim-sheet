@@ -139,8 +139,9 @@ def freeze():
                 mp = LB.build_moveknee(sport, snap.get("cands"), now)            # NBA: sharp move up -> one rung above the main line
                 sw = LB.build_sweet(sport, snap.get("cands"), now)               # owner 2026-10-27: edge 5-40% legs priced 15-45%
                 ne = LB.build_nfl_edge(sport, snap.get("cands"), now)            # owner 2026-11-11: NFL edge rule as straights
-                snap["parlays"] = snap.get("parlays", []) + lp + cp + mp + sw + ne
-                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays, {len(sw)} sweet-spot parlays, {len(ne)} NFL edge straights")
+                sp_ = LB.build_study(sport, snap.get("cands"), now)              # owner 2026-11-12: narrowed study picks, 5 a day
+                snap["parlays"] = snap.get("parlays", []) + lp + cp + mp + sw + ne + sp_
+                print(f"parlays {sport}: {len(snap.get('cands') or [])} learning candidates, {len(lp)} learning parlays, {len(cp)} confluence parlays, {len(mp)} sharp move parlays, {len(sw)} sweet-spot parlays, {len(ne)} NFL edge straights, {len(sp_)} study-pick parlays")
             except Exception as e:                                   # noqa: BLE001
                 print(f"parlays {sport}: learning builder skipped ({type(e).__name__}: {e})")
             by = {}
@@ -181,7 +182,7 @@ def freeze():
                     nxt = []
                     for q in keep:
                         if LP(q):
-                            if room <= 0 or now >= pick_lock(sport, "core", q, fin) or (bc != NFL_EDGE_CARD and any(str(L.get("gid")) in lgids for L in q["legs"])):
+                            if room <= 0 or now >= pick_lock(sport, "core", q, fin) or (bc not in (NFL_EDGE_CARD, STUDY_CARD) and any(str(L.get("gid")) in lgids for L in q["legs"])):
                                 continue
                             room -= 1
                         nxt.append(q)
@@ -230,8 +231,9 @@ def goal_core(p):
 
 
 NFL_EDGE_CARD = "NFL edge straights (experimental)"
-BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays", "Sweet-spot edge parlays", NFL_EDGE_CARD)   # builder.py's cards: tracked on their own
-BUILDER_CAP = {NFL_EDGE_CARD: 8}                     # per sport-day; 3 for the other builder cards
+STUDY_CARD = "Study-pick parlays (experimental)"     # builder.build_study (owner 2026-11-12): the narrowed Nov 11 study picks, 2-leg, one book
+BUILDER_CARDS = ("Learning parlays", "Confluence parlays", "Sharp move parlays", "Sweet-spot edge parlays", NFL_EDGE_CARD, STUDY_CARD)   # builder.py's cards: tracked on their own
+BUILDER_CAP = {NFL_EDGE_CARD: 8, STUDY_CARD: 5}      # per sport-day; 3 for the other builder cards
 NFL_STRAIGHTS = 6                                    # NFL Today's card: up to 6 straights from NFL_EDGE_CARD ...
 CARD_N_SPORT = {"nfl": 2}                            # ... and 2 core parlays, no longshot (favor straights until legs break even)
 
@@ -266,7 +268,7 @@ def leg_ok(L, sport=None):
 
 # cards the leg rule leaves alone: same-game (not bettable anyway) and Triple-green longshots (owner 2026-11-11 'exempt triple
 # green': the one card whose legs beat their price, 1.29 on 41 legs, though many are priced under 25%)
-LEG_RULE_EXEMPT = ("Same-game", "Triple-green longshots")
+LEG_RULE_EXEMPT = ("Same-game", "Triple-green longshots", "Study-pick parlays")   # study picks keep their own tested rules (2026-11-12)
 
 
 def parlay_ok(p, sport):
@@ -687,14 +689,14 @@ def hub_data():
                                                          paid=q.get("paid"), pick=q.get("pick"),
                                                          bk=book_mults(q["legs"], sport, mk_cache) if q.get("res") is None and q.get("first") and when(q["first"]) > dt.datetime.now(dt.timezone.utc) else None,
                                                          legs=[dict(lab=L.get("lab"), book=L.get("book"), price=L.get("price"), res=L.get("res"),
-                                                                    sport=L.get("sport", sport), f=L.get("f")) for L in q["legs"]]))
+                                                                    sport=L.get("sport", sport), f=L.get("f"), **({"v": L["v"]} if str(q.get("card", "")).startswith("Study-pick") and L.get("v") else {})) for L in q["legs"]]))
         sports.append(dict(sport=sport, date=d["date"], final_at=d.get("final_at"), cards=[dict(card=c, parlays=v) for c, v in cards.items()]))
     L = None
     try:                                                            # the learning builder's status (builder.py)
         st = json.load(open(os.path.join(OUT, "learn", "state.json")))
         segs = st.get("segments", [])
         show = [x for x in segs if x["status"] in ("Proven", "Dropped")] + sorted([x for x in segs if x["status"] == "Watching"], key=lambda x: -x["n"])[:6]
-        L = dict(builder=st.get("builder"), conf=st.get("confluence"), mk=st.get("moveknee"), sw=st.get("sweet"), rows=st.get("rows"), live=st.get("live_rows"), segs=show[:16], changes=st.get("changes", [])[-6:], updated=st.get("updated"))
+        L = dict(builder=st.get("builder"), conf=st.get("confluence"), mk=st.get("moveknee"), sw=st.get("sweet"), stp=st.get("study"), rows=st.get("rows"), live=st.get("live_rows"), segs=show[:16], changes=st.get("changes", [])[-6:], updated=st.get("updated"))
     except (OSError, ValueError):
         pass
     SLM = None
@@ -833,6 +835,16 @@ function render(){
       (MKP.length ? `<div class="hg">${MKP.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">None today: the sharp market hasn’t moved enough NBA props up yet (moves show up through the day, mostly in the last hours before tip).</p>')
       + `<details class="how"><summary>How it works</summary><p class="note">Starts from a prop Pinnacle or our sharp consensus moved up (the line went up, the over got shorter, or both) and takes the first rung above the main line at your best price (Hard Rock, Novig or Kalshi with its fee). Pinnacle moves rank first. In Oct 23-25 NBA markets that rung went 37% vs 32% priced (+13%, 134 bets; small sample), while the main line was +6% and two rungs up −17%; requiring a matchup or tag made every rung worse, so they’re shown as context only. One leg per game, 2 and 3 legs. Experimental and tracked; never on Today’s card.</p></details>`);
   }
+  // Study-pick parlays (builder.build_study, owner 2026-11-12): the narrowed Nov 11 study picks, 2 legs at one book, up to 5 a day
+  const STP = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Study-pick parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  {
+    const B = (D.learn && D.learn.stp) || {n: 0};
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    const why = q => `<p class="note" style="margin:6px 0 0">${q.legs.map(L => `<b>${esc(L.lab.split(' over ')[0])}</b>: ${esc((L.v || []).join(' · '))}`).join('<br>')}</p>`;
+    TB.study = sec('Study-pick parlays <span class="lst exp">Experimental</span>', `up to 5 a day · $${D.stake} each · record ${rec}`,
+      (STP.length ? `<div class="hg">${STP.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">None yet today. Legs show up as the sharp consensus moves NBA props and Kalshi posts its ladders, mostly in the afternoon; each parlay locks after its first game’s confirmed lineups.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Only the study picks that held up after the Nov 12 review, each under its own tested rule. <b>Consensus picks</b> (Hard Rock / Novig): the sharp consensus moved an NBA prop’s line up and its over shorter, plus either a soft matchup (6%+) on that stat (+20% on 197 in the study) or a Pinnacle higher-rung outlier on it (+13% on 208). <b>Kalshi rungs</b>: our chance 15-40% over Kalshi’s ask with the fee, his best rung, in a game totaled 230+, not a points rung, for a player projected 24-32 minutes. Inside the Kalshi study those cuts, chosen on earlier months only, returned +24% to +33% against +9% for every such rung, mostly in one stretch, so not proven. Two legs from different games at the same book (one ticket you can place), consensus picks first, a leg in at most 2 parlays, up to 5 a day. NHL PP1 top-3 was dropped: its study had look-ahead. The chance shown is the market’s, not ours; the Kalshi legs are mostly long prices, so expect long dry spells. Every leg is also graded as a straight on the Profit page (the study-pick rows), which is where the rule will prove itself or not.</p></details>`);
+  }
   TB.learn = lrnHtml;
   TB.slate = slateTab();
   // everything else the pages build: tracked on the Profit page, not picks (owner 2026-10-25: the section felt like noise)
@@ -840,11 +852,11 @@ function render(){
   if (multi && multi.cards.length){ const qs = multi.cards.flatMap(c => c.parlays);
     more.push(`<details class="hc"><summary>Multisport all-day longshots<span>${qs.length}</span></summary><div class="hg">${qs.map(q => card(q, 'multi', '')).join('')}</div></details>`); }
   for (const s of S.filter(s => s.sport !== 'multi'))
-    for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge) parlays/.test(c.card)))
+    for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge|Study-pick) parlays/.test(c.card)))
       more.push(`<details class="hc"><summary>${SP[s.sport]} · ${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`);
   if (more.length) TB.more = sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
-  const TABS = [['card', 'Today’s cards'], ['slate', 'Plus-money slate'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
-  const cnt = {card: picks.length, slate: ((D.sports.find(s => s.sport === 'slate') || {cards: []}).cards.reduce((n, c) => n + c.parlays.length, 0))};
+  const TABS = [['card', 'Today’s cards'], ['study', 'Study picks'], ['slate', 'Plus-money slate'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
+  const cnt = {card: picks.length, study: STP.length, slate: ((D.sports.find(s => s.sport === 'slate') || {cards: []}).cards.reduce((n, c) => n + c.parlays.length, 0))};
   if (!TB[T]) T = TABS.find(([k]) => TB[k]) ? TABS.find(([k]) => TB[k])[0] : 'card';
   const bar = `<div class="htabs" role="tablist">${TABS.filter(([k]) => TB[k] || k === 'card').map(([k, lab]) => `<button role="tab" data-t="${k}" aria-selected="${T === k}">${lab}${cnt[k] ? `<span>${cnt[k]}</span>` : ''}</button>`).join('')}</div>`;
   html = bar + (T === 'slate' ? '' : sw) + (TB[T] || '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>');

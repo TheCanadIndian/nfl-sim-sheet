@@ -82,13 +82,13 @@ function scStar(r, b){
   // slices that held up in both halves of the Nov 11 studies (research/nba_criteria.py, nba_criteria_kalshi.py, book_study.py).
   // Each row tag says which one; none is proven. k15 = his best rung only (the study counted one rung per player-stat).
   const PROMO = {
-    k15: {t: 'K 15%+', tip: 'Our chance is 15–40% over Kalshi’s ask with the fee (his best rung). Kalshi NBA points / rebounds / assists / threes Jan 16 – Nov 2 2026, one rung per player: +11.6% on 1,864, up in all four periods (z +2.0). That used the research model’s walk-forward chance; the live 5%+ ladder-edge row has lost. Not proven.'},
+    k15: {t: 'K 15%+', tip: 'Our chance is 15–40% over Kalshi’s ask with the fee (his best rung). Kalshi NBA points / rebounds / assists / threes Jan 16 – Nov 2 2026, one rung per player: +11.6% on 1,864, up in all four periods (z +2.0). That used the research model’s walk-forward chance; the live model flags about 3x as many (7 a game vs 2), so prefer the narrowed K 15%+ · 230+ tag. Not proven.'},
+    k15n: {t: 'K 15%+ · 230+', tip: 'The K 15%+ rung in a game totaled 230+, not a points rung, for a player projected 24–32 minutes. Inside the Kalshi study, these cuts chosen on earlier periods only (scored on later ones) returned +24% to +33% vs +9% for every K 15%+ pick, mostly in one test period (2026-27). The live K 15%+ flags ~3x the study’s rate, so this is the version to watch. Not proven; tracked on the Profit page.'},
     cs: {t: 'CONS ▲▼ + soft', tip: 'The sharp consensus moved the line up AND the over shorter, with a soft matchup (6%+) on this stat. Hard Rock + Novig NBA overs Oct 20 – Nov 10: +20% on 197, both halves (z +1.4). Best of 557 mixes tested; not proven.'},
     cr: {t: 'CONS ▲▼ + PIN rung', tip: 'The sharp consensus moved the line up AND the over shorter, and Pinnacle flagged a higher-rung outlier on this stat. Hard Rock + Novig NBA overs Oct 20 – Nov 10: +13% on 208, both halves (z +0.8). Not proven.'},
-    pp: {t: 'PP1 top-3', tip: 'PP1 forward, top 3 by usage in his team. Every anytime-goal over at Hard Rock / Novig / Kalshi Oct 12 – Nov 10: +6.7% on 1,049, both halves (+5 / +9), every price band up; tracked on the Profit page. Not proven.'},
   };
   const QP = [
-    {n: 'Study picks', top: 1, f: {promo: true, edge: -100, alts: true}, t: 'Every line tagged ★ by the Nov 11 studies: NBA Kalshi rungs with our chance 15–40% over the cost, NBA consensus line-up + odds-drop moves with a soft matchup or a Pinnacle higher-rung outlier, NHL PP1 top-3 forwards to score. Each held up in both halves; none is proven. Hover a ★ tag for its record.'},
+    {n: 'Study picks', top: 1, f: {promo: true, edge: -100, alts: true}, t: 'Every line tagged ★ by the Nov 11 studies: NBA Kalshi rungs with our chance 15–40% over the cost (and the narrowed 230+ version), NBA consensus line-up + odds-drop moves with a soft matchup or a Pinnacle higher-rung outlier. Each held up in both halves; none is proven. (NHL PP1 top-3 was dropped Nov 12: its study had look-ahead.) Hover a ★ tag for its record.'},
     // ★ = most promising (research/screener_walkforward.py, owner 2026-11-04: 'remove chip labels but highlight most promising'): picking
     // settings on earlier days only and betting the next day kept landing on NHL goal edges; top 3-10 settings +4 to +7%, not proven
     {n: 'NHL goals 3%+, plus money', top: 1, f: {sport: 'nhl', stat: 'goal', edge: 3, price: 'plus', alts: false}, t: 'Most promising. Anytime goal, edge 3%+, +150 to +400 at your books. +15% on 307 Oct 12 - Nov 2, but picked after the fact; picking settings on earlier days only and betting the next day made about break-even to +7% (top 3-10 settings) and kept choosing NHL goal edges. Not proven.'},
@@ -135,7 +135,7 @@ function scStar(r, b){
     const za = zs.reduce((s, z) => s + z, 0) / zs.length;
     return sig(sport === 'nba' ? -.0984 + .5245 * za + .6252 * zc : (za + zc) / 2);
   }
-  function build(sport, P, F, LV, PA, LA, DU, PP){
+  function build(sport, P, F, LV, PA, LA, DU){
     const out = [], G = GAMES[sport] || {}, now = Date.now();
     // Kalshi's prop ladders are only in live_<sport>.json (asks / bids), not the props file: every rung with a 4c-or-less
     // spread joins its prop's ladder at the ask plus Kalshi's 7% fee (research/kalshi_liquidity_rule.py: 4c+ spreads lost 38%)
@@ -223,9 +223,9 @@ function scStar(r, b){
                       open: opn[`${gid}|${nm}|${k}|${x.l}`] || null, gone: !!x.gone, path: pth[`${gid}|${nm}|${k}|${x.l}`] || null, lad: lad[`${gid}|${nm}|${k}|${x.l}`] || null});
             const R_ = out[out.length - 1], pm = [], cb = R_.cons && consK(R_) === 'both';
             R_.pinr = pinR.has(`${gid}|${nm}|${k}`);
+            R_.mn = cx ? cx.mn ?? null : null; R_.tt = cx ? cx.tt ?? null : null;   // projected minutes, game total (site.py ctx_nba)
             if (sport === 'nba' && cb && cx && (cx.m6 || []).includes(k)) pm.push('cs');
             if (sport === 'nba' && cb && pinR.has(`${gid}|${nm}|${k}`)) pm.push('cr');
-            if (sport === 'nhl' && k === 'goal' && PP && PP.has(`${gid}|${nm}`)) pm.push('pp');
             const kp = prices.find(y => y.b === 'Kalshi');
             if (sport === 'nba' && ['pts', 'reb', 'ast', 'fg3m'].includes(k) && kp && x.p != null){ const ek = x.p * dec(kp.o) - 1; if (ek >= .15 && ek <= .4) R_.k15 = ek; }
             R_.promo = pm;
@@ -236,7 +236,9 @@ function scStar(r, b){
     // K 15%+: one rung per player-stat, his biggest edge (the study's count)
     const kb = {};
     for (const r of out) if (r.k15 != null){ const key = `${r.gid}|${r.nm}|${r.k}`; if (!kb[key] || r.k15 > kb[key].k15) kb[key] = r; }
-    for (const r of Object.values(kb)) r.promo.push('k15');
+    for (const r of Object.values(kb)){ r.promo.push('k15');
+      // narrowed (owner 2026-11-12): game total 230+, no points rung, projected 24-32 min (profit.py 'NBA study pick (narrowed)')
+      if (r.k !== 'pts' && r.tt != null && r.tt >= 230 && r.mn != null && r.mn >= 24 && r.mn < 32) r.promo.push('k15n'); }
     // Off-market prices (sharp.off_market -> flags "off"; owner 2026-10-28: 'move the off-market prices to the screener'):
     // one row per flagged price at its own book and fair (incl. Polymarket and Kalshi rungs the props file lacks); only under the Off market chip
     for (const x of F.off || []){
@@ -260,9 +262,9 @@ function scStar(r, b){
           const X = await fetch(`${root}markets/ddtd_nba.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
           for (const [g, ps] of Object.entries(X.props || {})) for (const [nm, ks] of Object.entries(ps)) Object.assign(((P.props = P.props || {})[g] = P.props[g] || {})[nm] = P.props[g][nm] || {}, ks);
         }
-        const DU = new Set(), PP = new Set();                                  // 'due' goal luck + PP1 top-3 forwards (hockey/project.py -> dry_nhl.json)
+        const DU = new Set();                                                  // 'due' goal luck (hockey/project.py -> dry_nhl.json)
         if (sp === 'nhl'){ const X = await fetch(`${root}markets/dry_nhl.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.ok ? r.json() : {}).catch(() => ({}));
-          for (const [g, v] of Object.entries(X.games || {})){ for (const n of v.due || []) DU.add(`${g}|${n}`); for (const n of v.pp1t3 || []) PP.add(`${g}|${n}`); }
+          for (const [g, v] of Object.entries(X.games || {})){ for (const n of v.due || []) DU.add(`${g}|${n}`); }
           // first goal scorer (sharp.fg_nhl -> fg_nhl.json, owner 2026-11-06): kind 'fg', Yes only. Fair: each book's prices divided by
           // its own total over the game's field (books listing 80%+ of the field), x .985 (no goal through OT ~1.5%), then the median
           // of the other books. Our chance = the projection's p_first (untested: weight .2 like the anytime goal).
@@ -278,7 +280,7 @@ function scStar(r, b){
               P.props[g][nm].fg = {o, p: x.p ?? null, fgn};
             }
           } }
-        return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}, PA || {}, LA || {}, DU, PP) : [];
+        return P && (P.props || (LV && LV.rows)) ? build(sp, {...P, props: P.props || {}}, F || {}, LV || {}, PA || {}, LA || {}, DU) : [];
       } catch (e) { return []; }
     }));
     ROWS = res.flat();
@@ -314,7 +316,7 @@ function scStar(r, b){
       // Ladder knees filter: the knee's own book (that book's ladder has the kink), and no edge floor (shape, not edge)
       const kb = S.knee && r.knee ? ps.find(x => x.b === r.knee.bk) : S.open && r.open ? r.prices.find(x => x.b === r.open.bk)
         : S.path && r.path ? (r.prices.find(x => x.b === r.path.book) || ps[0])
-        : S.promo && r.promo && (S.promok === 'k15' || (S.promok === 'all' && r.promo.length === 1 && r.promo[0] === 'k15')) ? r.prices.find(x => x.b === 'Kalshi')
+        : S.promo && r.promo && (S.promok === 'k15' || S.promok === 'k15n' || (S.promok === 'all' && r.promo.length && r.promo.every(t => t === 'k15' || t === 'k15n'))) ? r.prices.find(x => x.b === 'Kalshi')
         : S.promo && r.promo && (S.promok === 'cs' || S.promok === 'cr' || (S.promok === 'all' && r.promo.some(t => t === 'cs' || t === 'cr'))) ? (ps.find(x => x.b === 'Hard Rock' || x.b === 'Novig') || ps[0]) : null;
       if ((S.knee || S.open || S.path) && !kb) continue;
       const best = kb || ps[0], [lo, hi] = PRICE[S.price] || PRICE.all;

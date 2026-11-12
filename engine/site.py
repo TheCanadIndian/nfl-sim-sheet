@@ -516,6 +516,7 @@ def _pct(v):
 
 def ctx_nba(D):
     dvp = {(r["team"], r["pg"]): r for r in D.get("dvp") or []}
+    tot = {str(g.get("id")): g.get("total") for g in D.get("games") or []}   # the books' game total (screener's narrowed K 15%+)
     out = {}
     for q in D.get("players", []):
         c, st_ = [], {}
@@ -546,7 +547,9 @@ def ctx_nba(D):
             if abs(v - 1) >= .08:
                 grp = _ARCH_PL.get(q.get("ar"), _NBA_PL.get(q.get("pg"), "")) if da else _NBA_PL.get(q.get("pg"), "")
                 st_[k] = [[f"{q.get('o')} {_pct(v)} {_NBA_SL[k]} vs {grp}", "g" if v > 1 else "b"]]
-        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}))
+        mn = (vg.get("min") or [None] * 4)[3]                                   # projected minutes (median), for the narrowed K 15%+
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}),
+                                          **({"mn": round(mn, 1)} if mn is not None else {}), **({"tt": tot[str(q["g"])]} if tot.get(str(q["g"])) else {}))
     return out
 
 

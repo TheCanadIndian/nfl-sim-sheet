@@ -141,6 +141,8 @@ def nba_ladder_rows(date, mk, R, GM):
             by.setdefault((str(r["game"]), str(r.get("pid")), r["kind"]), {})[float(r["line"])] = r
     play = {(str(p["g"]), str(p["id"])) for p in P.get("players", [])
             if (((p.get("s") or {}).get("vegas") or {}).get("min") or [0] * 4)[3] >= 20}
+    NMIN = {(str(p["g"]), str(p["id"])): (((p.get("s") or {}).get("vegas") or {}).get("min") or [None] * 4)[3] for p in P.get("players", [])}
+    NTOT = {str(g.get("id")): g.get("total") for g in P.get("games", [])}          # the narrowed study pick's game total
     out = []
     for key, L in by.items():
         rs = [L[x] for x in sorted(L) if L[x]["yes_ask"] - L[x]["yes_bid"] <= .10]       # wide quotes left out, as on the page
@@ -209,9 +211,17 @@ def nba_ladder_rows(date, mk, R, GM):
             if best:
                 y = GM.outcome("nba", best[1], R)
                 if y is not None:
-                    out.append(dict(date=date, sport="nba", cat="NBA study pick: Kalshi rung, our chance 15-40% over the cost, one per player (experimental)", src="kalshi",
-                                    kind=best[1]["kind"], title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4),
-                                    won=int(y), pnl=round(y / best[2] - 1, 4)))
+                    row = dict(date=date, sport="nba", cat="NBA study pick: Kalshi rung, our chance 15-40% over the cost, one per player (experimental)", src="kalshi",
+                               kind=best[1]["kind"], title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4),
+                               won=int(y), pnl=round(y / best[2] - 1, 4))
+                    out.append(row)
+                    # narrowed (owner 2026-11-12 'okay'): the live model flags ~7 K 15%+ picks a game vs ~2 in the study (Nov 11: 72 won 18
+                    # vs 18.3 priced). Inside the study's 1,864 picks, cuts chosen on earlier periods only and scored on the next returned
+                    # +24..+33% vs +9% for all (mostly the 2026-27 period): game total 230+ (the books' total in that night's projection),
+                    # no points rung, projected 24-32 minutes (median). Forward from Nov 12; the plain row keeps grading beside it.
+                    mn = NMIN.get(key[:2]); tt = NTOT.get(key[0])
+                    if date >= "2026-11-12" and best[1]["kind"] != "pts" and tt is not None and tt >= 230 and mn is not None and 24 <= mn < 32:
+                        out.append(dict(row, cat="NBA study pick (narrowed): Kalshi rung 15-40% over the cost, game total 230+, no points, 24-32 min (experimental)"))
     return out
 
 
@@ -723,7 +733,7 @@ def tag_label(e):
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
     if e.get("src") == "pp1t3":
-        return "Goal: PP1 top-3-usage forwards, every price at your books (experimental)"
+        return "Goal: PP1 top-3-usage forwards, every price at your books (experimental; its study had look-ahead, expected to lose)"
     if e.get("src") == "arch3":
         return ("Threes: spot-up shooters, your book 3%+ over the other books’ fair (experimental)" if e.get("grp") == "value"
                 else "Threes: spot-up shooters, every main-line over at your books (experimental)")

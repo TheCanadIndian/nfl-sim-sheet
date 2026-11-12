@@ -203,7 +203,7 @@ def learn():
     st = dict(updated=dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), rows=len(rows),
               live_rows=sum(1 for r in rows if r.get("f") is not None), segments=segs, changes=changes[-60:], builder=builder_record(),
               confluence=builder_record(CONF_CARD), moveknee=builder_record(MK_CARD),
-              sweet=builder_record(SW_CARD))
+              sweet=builder_record(SW_CARD), study=builder_record(PL.STUDY_CARD))
     os.makedirs(OUT, exist_ok=True)
     json.dump(st, open(STATE, "w"), indent=0)
     print(f"builder: {len(rows)} graded value props ({st['live_rows']} with reasons), {sum(s['status'] == 'Proven' for s in segs)} proven, "
@@ -576,6 +576,120 @@ def build_nfl_edge(sport, cands, now):
     out = []
     for L in sorted(best.values(), key=lambda L: L["start"])[:PL.BUILDER_CAP.get(PL.NFL_EDGE_CARD, 8)]:
         out.append(dict(card=PL.NFL_EDGE_CARD, tier="straight", legs=[L], p=L["p"], d=round(PL.dec(L["price"]), 3)))
+    return out
+
+
+# ---------------------------------------------------------------- 8. study-pick parlays
+# Owner 2026-11-12 ('do you see a viable route to filter down to the winners?' -> 'I was asking from the study picks' -> 5 a day,
+# parlays only, locks per game -> 'okay'). The Nov 11 study picks that are left after the Nov 12 review, each under its own tested
+# rule (so the card is exempt from the leg rule, like Triple-green; the reuse cap still applies):
+#   cs  consensus line up + odds drop with the page's 6%+ matchup on that stat (Hard Rock + Novig NBA overs, +20% on 197)
+#   cr  the same move with a Pinnacle higher-rung outlier on that prop (+13% on 208)
+#   k15n  Kalshi rung, our chance 15-40% over the ask + fee (best rung per player-stat), game total 230+, no points rung,
+#         projected 24-32 min (inside the Kalshi study, cuts chosen on earlier periods only returned +24..+33% vs +9%, mostly 2026-27)
+# NHL PP1 top-3 was dropped (its study had look-ahead: game-day role -6..-9%). Pairs: 2 legs from different games at ONE book (one
+# ticket), cs first, then cr, then k15n by edge; a leg in at most 2; up to 5 a day (BUILDER_CAP), each locking like the other
+# builder cards (NBA: after its first game's confirmed lineups). Chance shown = the market's (sharp fair / Kalshi mid), not ours.
+ST_TOT, ST_MIN, ST_EDGE = 230, (24, 32), (.15, .40)
+
+
+def study_legs(sport, now):
+    if sport != "nba":
+        return []
+    import re
+    import profit as PF
+    import sharp as SH
+    try:
+        FL = json.load(open(os.path.join(PL.SITE, "markets", "flags_nba.json")))
+    except (OSError, ValueError):
+        FL = {}
+    try:
+        LV = json.load(open(os.path.join(PL.SITE, "markets", "live_nba.json"))).get("rows", [])
+    except (OSError, ValueError):
+        LV = []
+    legs, seen = [], set()
+    iso = lambda s: str(s).replace(" ", "T")
+    # consensus study picks (the same test as profit.tags src 'study')
+    moves = FL.get("moves") or []
+    if moves:
+        M6 = PF._nba_m6()
+        sigs = {}
+        for x in moves:
+            sigs.setdefault((str(x["g"]), x["n"], x.get("k")), set()).add((x["src"], x["sig"]))
+        for x in moves:
+            if x.get("src") != "cons" or x.get("sig") != "both" or x.get("o") is None or not x.get("start") or PL.when(iso(x["start"])) <= now:
+                continue
+            kp = (str(x["g"]), x["n"], x.get("k"))
+            grp = "cs" if kp in M6 else "cr" if ("pin", "rung") in sigs.get(kp, set()) else None
+            m = re.search(r"over ([\d.]+)", x.get("b") or "")
+            if not grp or not m or x.get("bk") not in ("Hard Rock", "Novig"):
+                continue
+            line = float(m.group(1))
+            if (kp, line) in seen:
+                continue
+            seen.add((kp, line))
+            fair = x.get("fair") or x.get("cons")
+            why = ["consensus line up + odds drop"] + (["soft matchup (6%+) on this stat"] if kp in M6 else []) + \
+                  (["Pinnacle higher-rung outlier"] if ("pin", "rung") in sigs.get(kp, set()) else [])
+            legs.append(dict(gid=kp[0], start=iso(x["start"]), kind=kp[2], side="o", line=line, name=x["n"],
+                             lab=f"{x['n'].title()} over {line:g} {STAT.get(kp[2], kp[2])}", p=round(fair, 4) if fair else None, fair=round(fair, 4) if fair else None,
+                             price=x["o"], book=x["bk"], sport="nba", grp=grp, v=why))
+    # narrowed K 15%+ (the same test as profit.nba_ladder_rows 'NBA study pick (narrowed)')
+    P = {}
+    for f in sorted(glob.glob(os.path.join(HERE, "nba", "projections", "????-??-??.json")))[-2:]:
+        try:
+            P_ = json.load(open(f, encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        tot = {str(g.get("id")): g.get("total") for g in P_.get("games", [])}
+        for q in P_.get("players", []):
+            mn = (((q.get("s") or {}).get("vegas") or {}).get("min") or [None] * 4)[3]
+            P[(str(q["g"]), str(q["id"]))] = (mn, tot.get(str(q["g"])))
+    best = {}
+    for r in LV:
+        if r.get("s") != "kalshi" or r.get("k") not in ("reb", "ast", "fg3m") or r.get("l") is None or not r.get("n") or r.get("ya") is None or r.get("yb") is None:
+            continue
+        ya, yb, po = r["ya"], r["yb"], (r.get("p") or {}).get("vegas")
+        if po is None or ya - yb > .05 or not .03 <= (ya + yb) / 2 <= .97 or ya >= .97 or not r.get("start") or PL.when(r["start"]) <= now:
+            continue
+        cy = ya + .07 * ya * (1 - ya)
+        e = po / cy - 1
+        key = (str(r["g"]), SH.jsnorm(r["n"]), r["k"])
+        if ST_EDGE[0] <= e <= ST_EDGE[1] and (key not in best or e > best[key][0]):
+            best[key] = (e, r, cy, po)
+    for key, (e, r, cy, po) in best.items():
+        mn, tt = P.get((key[0], str(r.get("pid"))), (None, None))
+        if tt is None or tt < ST_TOT or mn is None or not ST_MIN[0] <= mn < ST_MIN[1]:
+            continue
+        mid = (r["ya"] + r["yb"]) / 2
+        am = round(-100 * cy / (1 - cy)) if cy >= .5 else round(100 * (1 - cy) / cy)
+        legs.append(dict(gid=key[0], start=r["start"], kind=key[2], side="o", line=float(r["l"]), name=key[1],
+                         lab=f"{r['n']} over {float(r['l']):g} {STAT.get(key[2], key[2])}", p=round(mid, 4), fair=round(mid, 4), ours=round(po, 4),
+                         price=am, book="Kalshi", sport="nba", edge=round(e, 4), grp="k15n",
+                         v=[f"Kalshi {(r.get('ti') or '').split(': ', 1)[-1]}: our chance {po:.0%} vs {cy:.0%} with the fee (+{e:.0%})", f"game total {tt:g}", f"projected {mn:.0f} min"]))
+    return legs
+
+
+def build_study(sport, cands, now):
+    legs = study_legs(sport, now)
+    order = {"cs": 0, "cr": 1, "k15n": 2}
+    legs.sort(key=lambda L: (order[L["grp"]], -(L.get("edge") or 0), L["start"]))
+    use, made, out = [0] * len(legs), set(), []
+    cap = PL.BUILDER_CAP.get(PL.STUDY_CARD, 5)
+    grew = True
+    while grew and len(out) < cap:                                    # each pass: every leg (best first) takes its best free partner
+        grew = False
+        for i, A in enumerate(legs):
+            if len(out) >= cap or use[i] >= PL.LEG_REUSE:
+                continue
+            for j, B in enumerate(legs):
+                if j == i or use[j] >= PL.LEG_REUSE or (min(i, j), max(i, j)) in made or A["book"] != B["book"] or A["gid"] == B["gid"]:
+                    continue
+                ls = [A, B]
+                out.append(dict(card=PL.STUDY_CARD, tier="2 legs", legs=ls, p=round(math.prod(L["p"] for L in ls), 5) if all(L.get("p") for L in ls) else None,
+                                d=round(math.prod(PL.dec(L["price"]) for L in ls), 3)))
+                made.add((min(i, j), max(i, j))); use[i] += 1; use[j] += 1; grew = True
+                break
     return out
 
 
