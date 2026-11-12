@@ -12,6 +12,7 @@ This repo is **public** and GitHub Pages serves its root, so anything committed 
 | Keys | `D:\football\private\*.txt` | none; the cloud uses GitHub secrets |
 | Private tools | `private/` (trackers, Windows scheduled task) | not available |
 | Publishing | `python sync_engine.py push`, then run workflows | commit + push `engine/`, then run workflows |
+| Branches (2026-11-11) | `main` = code + workflows + docs + the research tape (markets/*.json except hist_*, engine/parlays/**, paper/), with history; `live` = pages + engine state, ONE commit replaced on every publish | the same; never commit pages / state to `main` |
 
 The cloud (GitHub Actions) does all scheduled work. From another device you can still change code and rebuild the site.
 
@@ -29,6 +30,12 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 - `python sync_engine.py pull` gets the cloud's state: frozen projections, grades, learned settings, `markets/*.json`.
 - `python sync_engine.py push` sends code + state and commits ("Engine: sync code from PC"). If git is behind: `cd site && git pull --rebase && git push`.
 - Python venv: `D:\football\football\Scripts\python.exe`. Shell is Windows (PowerShell + Git Bash).
+
+## Two branches: main + live (2026-11-11, owner: 'do a b and c' -- the repo had reached 3.6 GB, ~165 MB a day)
+- **Why:** every run committed pages, engine state, saved draws / projections and odds history to `main`; ~90% of the growth was files nobody reads history of.
+- **`engine/publish.py`** (all workflows, the PC sync, the failover): `start` lays the `live` branch over a `main` checkout (base manifest .git/live_base.json); `commit "msg" [--only=engine/]` commits `main` paths (`is_main`: .github, docs, engine code = sync_engine CODE globs, markets/*.json except hist_*, engine/parlays/**, paper/) with pull --rebase as before, and lays the run's changed `live` files onto the NEWEST `live` tree as one parentless commit pushed with --force-with-lease (retried), so concurrent runs keep each other's files. `classify` checks the split. LIVE_BRANCH env: `live` on main, `live-test` on other refs (workflow env); deploys fire only from main.
+- **Workflows:** run-sport action + markets.yml overlay `live` before any step and publish with `publish.py commit`; deploy.yml overlays `live` before uploading. Generated pages and engine state are no longer in `main` -- the PC's `sync_engine.py pull` / `push` overlays `live` (push publishes engine/ state only; `push-all` = the failover's full publish). Local page tests read the overlaid files in site/.
+- **History trim (c):** `main` was rewritten to keep only `main` paths (git-filter-repo, private/trim_history.py; commits touching only pages / state pruned): 8,110 -> ~8,000 commits, 3.6 GB -> ~0.43 GB; research scripts still read props / live / flags / books / card / day-file history. Release tags re-pointed; `data-seed` re-created on the new tip (its old commit had no kept paths). GitHub's reported size drops when its own gc prunes the old objects (support can force it). **Full old history:** private/archive/sim-sheet-history-2026-11-11.bundle (PC) + release `history-2026-11-11` (two parts + sha256; `cat` the parts, `git clone` the bundle); the PC's pre-trim clone is in stash / reflog of site/ (failover-2026-11-11 branch, old objects until gc). Cutover tools: private/cutover.py, trim_push.py.
 
 ## Pipeline
 - **Schedules:** a Cloudflare Worker (`sim-sheet-cron`, Eastern time) starts the workflows; all also run by hand (`workflow_dispatch`).
