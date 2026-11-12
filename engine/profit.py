@@ -1228,6 +1228,7 @@ def tags():
                         if isinstance(v, list) and v and v[0] is not None:
                             gaps.setdefault(b, []).append(lg_(1 / dec(v[0])) - lg_(fa))
             hold = {b: float(np.median(v)) for b, v in gaps.items() if len(v) >= 5}
+            G2NOW = {}                                  # every player's current 2+ goals status -> markets/g2now_nhl.json (NHL page chips)
             for gid, G_ in G2.items():
                 st = G_.get("start")
                 if not st or PL.when(st) <= now:
@@ -1265,11 +1266,16 @@ def tags():
                         continue
                     two = lambda q: 1 - (1 - q) * (1 - math.log(1 - q))
                     ch, fair = two(.2 * p1 + .8 * fa), two(fa); edge = ch * d_ - 1
+                    G2NOW.setdefault(str(gid), {})[nm] = dict(b=bk, o=o2[bk], c=round(ch, 4), e=round(edge, 4), ok=int(.05 <= edge <= .40))
                     oth = [q for b, q in src.items() if b != bk]
                     if .05 <= edge <= .40:
                         log.setdefault(f"g2|edge|{gid}|{nm}", dict(sport=sport, src="g2", grp="edge", gid=gid, name=nm, bet="2+ goals", book=bk, o=o2[bk],
                                                                   first=now.isoformat(), p=round(ch, 4), m=round(fair, 4), ours=p2, a1=round(.2 * p1 + .8 * fa, 4),
                                                                   mb=round(float(np.median(oth)), 4) if len(oth) >= 2 else None, start=st))
+            try:
+                json.dump(dict(t=now.isoformat(timespec="seconds"), games=G2NOW), open(os.path.join(site, "markets", "g2now_nhl.json"), "w"), separators=(",", ":"))
+            except OSError:
+                pass
         # NBA double / triple-doubles (owner 2026-10-27: 'yes' to grading them; sharp.oa_nba_ddtd -> markets/ddtd_nba.json):
         # every Yes at the owner's best book, its last pregame price (baseline, kept off the bets feed), and each first
         # sighting with an edge 5-40% (chance = 5% ours + 95% the books' fair, the screener's NBA weight)
@@ -1892,7 +1898,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .sph{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.sph h2{margin-right:auto}
 @media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5){display:none}}
 .bnav{position:sticky;top:var(--tbh,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:0 0 12px;background:var(--bg);scrollbar-width:none;align-items:center}.bnav::-webkit-scrollbar{display:none}.bnav .small{flex:none;margin-right:2px}.bnav a{flex:none;border:1px solid var(--faint);border-radius:999px;padding:5px 12px;font:600 13px var(--body);color:var(--ink);text-decoration:none;white-space:nowrap}.bnav a:hover,.bnav a:focus-visible{border-color:var(--ink)}.bnav a.ext{color:var(--muted)}
-.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
+.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.fgm table{width:100%;border-collapse:separate;border-spacing:3px;font-size:13px}.fgm th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:2px 4px;vertical-align:bottom}.fgm th small{display:block;font-weight:400;font-size:11px}.fgm td.l,.fgm th.l{text-align:left;padding:4px 6px 4px 0}.fgm td.fgc{text-align:center;border-radius:6px;padding:5px 4px;background:var(--sunk);min-width:64px}.fgm td.fgc b{display:block;font-weight:800;font-size:14px}.fgm td.fgc small{display:block;font-size:11px;color:var(--muted)}.fgm td.up{background:color-mix(in srgb,var(--good) 24%,transparent)}.fgm td.up b{color:var(--good)}.fgm td.dn b{color:var(--bad)}.fgm td.few{opacity:.5}.fgm td.na{background:transparent;color:var(--muted)}.fgm tr.all td{border-bottom:1px solid var(--faint)}.fgm tr.all td.l{font-weight:700}.fgm .upnow{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13.5px;margin:4px 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fgm .upnow .h{font-weight:700;margin-right:4px}.fgm .upnow .h small{font-weight:400;color:var(--muted)}.fgm .upc{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}.fgm .upc b{color:var(--good)}.fgm .upc small{color:var(--muted)}.fgm .upnow .more{color:var(--muted);font-size:12.5px}@media (max-width:560px){.fgm .upc{white-space:normal}}.fgm h3{margin:14px 0 4px}@media (max-width:560px){.fgm td.fgc{min-width:0;padding:4px 2px}.fgm td.fgc b{font-size:13px}.fgm td.l{font-size:12px}}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
 .crit .crcall{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:9px 12px;font-size:13.5px;margin:6px 0 10px}.crit .crcall small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
 .crit .bh{display:inline-block;font-size:10.5px;font-weight:700;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:0 6px;margin-left:6px;white-space:nowrap}
 .crit td.l{white-space:normal;min-width:150px}.crit .tz{font-weight:400;font-size:12px;color:var(--muted);margin-left:6px}
@@ -2068,6 +2074,39 @@ function critSec(){
 }
 document.addEventListener('click', e => { const b = e.target.closest('button[data-cs]'); if (!b) return;
   CS = b.dataset.cs; try { localStorage.setItem('profit-crit', CS); } catch (x) {} render(); });
+// NHL first goal + 2+ goals at a glance (owner 2026-11-12: 'easier to identify between all the separate fgs bets and highlight the
+// ones that are up right now. Same with highlighting 2+ goal scorers'): one column per version, one row per odds range, green = up
+const FGV = [['base', 'Every FanDuel price', 'baseline', 'every FanDuel first-goal price, its last pregame price', /every FanDuel price/],
+  ['fdtop', 'FD + Bovada longer', 'than every other book', 'FanDuel and Bovada at the same odds, longer than every other book (at +5000 and up a third book must match)', /FanDuel [+] Bovada same odds/],
+  ['narrow', 'FD + Bovada + our edge', 'our chance 15%+ over the fair', 'the FD + Bovada sighting where our first-goal chance is 15%+ over the other books’ fair (narrowed)', /narrowed/]];
+const fgPct = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
+function fgCell(r){
+  if (!r) return '<td class="fgc na">–</td>';
+  const few = r.n < 20;
+  return `<td class="fgc ${few ? 'few' : r.roi > 0 ? 'up' : 'dn'}" title="${esc(r.cat)} · won ${r.won} of ${r.n} · ${r.units >= 0 ? '+' : '−'}${Math.abs(r.units).toFixed(1)} units at 1 a bet${few ? ' · under 20 bets: too few to read' : ''}"><b>${fgPct(r.roi)}</b><small>${r.won} of ${r.n}</small></td>`;
+}
+function fgSec(){
+  const C = ((D.sports.find(s => s.sport === 'nhl') || {}).cats || []);
+  const FG = C.filter(r => /^NHL First goal:/.test(r.cat)), G2 = C.filter(r => /^NHL 2[+] goals:/.test(r.cat));
+  if (!FG.length && !G2.length) return '';
+  const M = {}, key = b => b === 'All prices' ? -1 : /^under/.test(b) ? 0 : +((b.match(/[0-9]+/) || [0])[0]);
+  for (const r of FG){
+    const [base, band] = r.cat.split(' · '), v = FGV.find(x => x[4].test(base));
+    if (v) (M[band || 'All prices'] = M[band || 'All prices'] || {})[v[0]] = r;
+  }
+  const rows = Object.keys(M).sort((a, b) => key(a) - key(b));
+  const up = [], chip = (lab, r) => `<span class="upc"><b>${fgPct(r.roi)}</b> ${lab} <small>won ${r.won} of ${r.n}</small></span>`;
+  let nb = 0;
+  for (const b of rows) for (const v of FGV){ const r = M[b][v[0]]; if (!(r && r.n >= 20 && r.roi > 0)) continue; if (b === 'All prices') up.push(chip(`first goal · ${esc(v[1])}`, r)); else nb++; }
+  for (const r of G2) if (r.n >= 20 && r.roi > 0) up.push(chip(`2+ goals · ${/edge/.test(r.cat) ? 'edge 5%+' : 'every price'}`, r));
+  const fgt = FG.length ? `<h3>First goal scorer</h3><div class="tw"><table><thead><tr><th class="l">Odds range</th>${FGV.map(v => `<th title="${esc(v[3])}">${esc(v[1])}<small>${esc(v[2])}</small></th>`).join('')}</tr></thead><tbody>${rows.map(b =>
+    `<tr class="${b === 'All prices' ? 'all' : ''}"><td class="l">${esc(b)}</td>${FGV.map(v => fgCell(M[b][v[0]])).join('')}</tr>`).join('')}</tbody></table></div>` : '';
+  const g2t = G2.length ? `<h3>2+ goals</h3><div class="tw"><table><thead><tr><th class="l">Bet</th><th>Return</th></tr></thead><tbody>${G2.map(r =>
+    `<tr><td class="l">${/edge/.test(r.cat) ? 'Edge 5%+ at your books <small class="muted">(our anchored chance, Poisson)</small>' : 'Every price at your books <small class="muted">(baseline)</small>'}</td>${fgCell(r)}</tr>`).join('')}</tbody></table></div>` : '';
+  return `<section class="panel lt fgm"><div class="phead"><h2>NHL first goal &amp; 2+ goals</h2><span class="small muted">every tracked version · since tracking began (Nov 6) · 1 unit a bet</span></div>
+    <div class="upnow"><span class="h">Up right now <small>(20+ bets)</small></span>${up.length ? up.join('') : '<span class="muted">no version overall</span>'}${nb ? `<span class="more">+ ${nb} odds range${nb === 1 ? '' : 's'} (green below)</span>` : ''}</div>
+    <p class="note" style="margin:0 0 6px">Green = up, red = down, faded = under 20 bets (too few to read). Each cell is the return and won of bets. Long prices swing hard: one +5000 winner moves a column, so read these over weeks.</p>${fgt}${g2t}</section>`;
+}
 const BSEC = [
   ['b-odds', 'Results by odds', 'Which odds ranges have made money?', () => oddsTable()],
   ['b-arch', 'NBA by archetype', 'Which NBA player types, stats and odds win?', () => archOdds()],
@@ -2075,6 +2114,7 @@ const BSEC = [
   ['b-crit', 'NBA over criteria', 'Which criteria or mixes beat the price, at the books and at Kalshi?', () => critSec()],
   ['b-edge', 'By claimed edge', 'Do bigger claimed edges hit more often?', () => edgeTable()],
   ['b-legs', 'Parlay legs', 'Which kinds of parlay legs hit more than expected?', () => legTable()],
+  ['b-fg', 'NHL first goal & 2+', 'Which NHL first-goal and 2+ goal bets are up right now?', () => fgSec()],
 ];
 function breakdowns(){
   const S = BSEC.map(([id, lab, q, f]) => [id, lab, q, f()]).filter(x => x[3]);
@@ -2083,7 +2123,7 @@ function breakdowns(){
   return nav + S.map(([id, lab, q, html]) => `<div class="bsec" id="${id}"><span class="bq">${esc(q)}</span>${html}</div>`).join('');
 }
 function bnote(){
-  return `<section class="panel"><p class="note" style="margin:0">Results sliced by odds, NBA archetype, NFL role, NBA criteria (books and Kalshi), claimed edge and parlay legs are on the <a href="#breakdowns" data-ptab-go="breakdowns">Breakdowns</a> tab.</p></section>`;
+  return `<section class="panel"><p class="note" style="margin:0">Results sliced by odds, NBA archetype, NFL role, NBA criteria (books and Kalshi), claimed edge, parlay legs and every NHL first-goal / 2+ goal version side by side (which are up now) are on the <a href="#breakdowns" data-ptab-go="breakdowns">Breakdowns</a> tab.</p></section>`;
 }
 function render(){
   const O = D.overall;
@@ -2129,6 +2169,29 @@ fromHash();
 </script></body></html>"""
 
 
+FG_VER = (("base", "every FanDuel price"), ("narrow", "narrowed"), ("fdtop", "FanDuel + Bovada same odds"))
+
+
+def fg_records(d):
+    """markets/fgrec_nhl.json for the NHL All players chips (hockey/page.js fgTag / g2Tag): every first-goal version x odds range
+    (index into FG_BANDS, -1 = all prices) and the two 2+ goals rows -- bets, won, return, since tracking began."""
+    C = next((s_.get("cats") or [] for s_ in d.get("sports") or [] if s_.get("sport") == "nhl"), [])
+    out = {"fg": {}, "g2": {}, "t": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
+    labs = [b[2] for b in FG_BANDS]
+    for r in C:
+        cat = r.get("cat") or ""
+        rec = {"n": r.get("n"), "won": r.get("won"), "roi": r.get("roi")}
+        if cat.startswith("NHL First goal:"):
+            base, _, band = cat.partition(" · ")
+            v = next((k for k, w in FG_VER if w in base), None)
+            if v:
+                out["fg"].setdefault(v, {})[str(labs.index(band)) if band in labs else "-1"] = rec
+        elif cat.startswith("NHL 2+ goals:"):
+            out["g2"]["edge" if "edge" in cat else "all"] = rec
+    site = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")
+    json.dump(out, open(os.path.join(site, "markets", "fgrec_nhl.json"), "w"), separators=(",", ":"))
+
+
 def page():
     import importlib.util
     import report
@@ -2136,6 +2199,10 @@ def page():
     S = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(S)
     d = page_data()
+    try:                                     # NHL All players chips (owner 2026-11-12: 'make them easier to identify in the all players tab')
+        fg_records(d)
+    except Exception as e:                   # noqa: BLE001
+        print(f"fg records: skipped ({type(e).__name__}: {e})")
     try:                                     # NBA over-criteria studies (research/nba_criteria*.py publish it; Breakdowns tab)
         d["crit"] = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "criteria_nba.json"), encoding="utf-8"))
     except (OSError, ValueError):
