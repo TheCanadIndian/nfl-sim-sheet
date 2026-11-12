@@ -1,0 +1,12 @@
+## Starting priors (2026-11-11, from the site's own studies in CLAUDE.md; to be revised by results)
+- **The vig compounds.** A parlay pays the hold on every leg: ~6-7% a leg at Hard Rock, ~1.5-2.5% at Novig, Kalshi's fee ~7% x p(1-p). Default to Novig, then Kalshi; Hard Rock only when its price is clearly the best.
+- **Price band:** legs priced 25-55% hit about their price (0.98-0.99 of priced); legs under 25% hit 0.81. No longshot legs.
+- **Claimed edges lie when they're big:** edge 5-10% held (1.01 of priced); 20-40% hit 0.78. Selected fairs run ~12% high (winner's curse). Treat +3..+12% as the believable range.
+- **By sport (parlay legs Oct 8 - Nov 10):** NHL 0.97 of priced, NBA 0.83, NFL 0.82.
+- **Known losers:** NBA points overs (0.69), NFL passing yds (0.42), rushing yds (0.67), anytime TDs (0.70); NBA alt-line longshots; Pass-first / Primary creator archetype fades.
+- **Leads, not proven:** NHL PP1 top-3-usage forwards to score at Hard Rock / Novig / Kalshi (+5.5% on 1,917; goals +6.7%); NFL main-line catches / receiving yards under the NFL edge rule (+13..+23%); NBA Kalshi rungs where our chance is 15-40% over the cost, one per player (+11.6% on 1,864); NFL catches legs 1.26 of priced (small).
+- **Novig is the sharpest book** for NBA / NFL props: when it disagrees with the others it's usually right, so a Novig price far better than the others' fair is rarely a gift. Hard Rock's cheap NHL overs: the other books were right.
+- **No-vig fairs overstate overs** (NFL hit 2.8 pts under fair, NBA 0.7, NHL 1.0): an over's edge is a little smaller than shown; unders a little bigger.
+- **The market overweights the last few games** (NHL just scored 0.79-0.82 of priced, droughts 1.08-1.23; NBA last-5 trend), but the edges are small.
+- **Legs in a parlay are ~independent across games;** a parlay's result is its legs' results. Pick good legs, not good-looking parlays.
+- **Variance:** a 2-leg at +260 hits ~28%; a 3-leg at +600 ~14%. Losing streaks of 7+ days happen a third of the time at these odds. Stay small.

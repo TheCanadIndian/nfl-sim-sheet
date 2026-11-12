@@ -80,6 +80,14 @@ jobs:
           python allprops.py || true
           python traits.py || true
           python profit.py page || true
+      # Claude's paper account (paper/, engine/paper.py; 2026-11-12): merge what the daily routine pushed to claude/paper,
+      # grade from box scores, rebuild /paper.html
+      - name: Paper account
+        working-directory: engine
+        run: |
+          python paper.py pull-branch || true
+          python paper.py grade || true
+          python paper.py page || true
       - run: |
           git config user.name "sim-sheet-bot"
           git config user.email "sim-sheet-bot@users.noreply.github.com"

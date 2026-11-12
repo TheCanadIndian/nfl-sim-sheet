@@ -130,8 +130,9 @@ def bar(depth, active):
     prof_cur = ' aria-current="page"' if active == "profit" else ""
     parl_cur = ' aria-current="page"' if active == "parlays" else ""
     scr_cur = ' aria-current="page"' if active == "screener" else ""
+    pap_cur = ' aria-current="page"' if active == "paper" else ""
     r1 = (f'<div class="row r1"><a class="brand" href="{pre}index.html">Sim Sheet</a>{"".join(tabs)}'
-          f'<span class="grow"></span><a class="help" href="{pre}screener.html"{scr_cur}>Screener</a><a class="help" href="{pre}parlays.html"{parl_cur}>Parlays</a><a class="help" href="{pre}profit.html"{prof_cur}>Profit</a>'
+          f'<span class="grow"></span><a class="help" href="{pre}screener.html"{scr_cur}>Screener</a><a class="help" href="{pre}parlays.html"{parl_cur}>Parlays</a><a class="help" href="{pre}profit.html"{prof_cur}>Profit</a><a class="help" href="{pre}paper.html"{pap_cur} title="Claude’s paper parlay account: every bet and why">Paper</a>'
           f'<a class="help guide" href="{pre}guide.html"{help_cur}>How to read</a></div>')
     r2 = ""
     if sport in SPORT and SPORT[sport]["status"] == "live":

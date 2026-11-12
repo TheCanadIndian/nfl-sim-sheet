@@ -2,7 +2,8 @@
 """Two-branch publishing (owner 2026-11-11: the repo had grown to 3.6 GB, ~165 MB a day, because every run committed pages,
 engine state and odds history to main every ~15 min).
 
-  main  keeps code, workflows, docs and the research tape WITH history: markets/*.json except hist_*, and engine/parlays/**
+  main  keeps code, workflows, docs and the research tape WITH history: markets/*.json except hist_*, engine/parlays/** and
+        paper/** (Claude's paper account, 2026-11-12)
         (research/ reads the git history of props / live / flags / books / card / day files).
   live  holds everything else a run produces (pages, engine state, saved draws and projections, odds history ...) as ONE
         commit that every publish replaces, so it never accumulates history.
@@ -45,7 +46,7 @@ BASE = os.path.join(ROOT, ".git", "live_base.json")
 
 def is_main(p):
     """True for paths kept on main (with history); everything else is a live path."""
-    if p.startswith(".github/") or p in META or p.startswith("engine/parlays/"):
+    if p.startswith(".github/") or p in META or p.startswith("engine/parlays/") or p.startswith("paper/"):   # paper/: the paper account
         return True
     if p.startswith("markets/") and p.count("/") == 1 and p.endswith(".json") and not p.startswith("markets/hist_"):
         return True
