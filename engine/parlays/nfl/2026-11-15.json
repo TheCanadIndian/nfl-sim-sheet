@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-15",
 "lock": "2026-11-15T14:30:00+00:00",
-"frozen_at": "2026-11-12T20:46:07.174Z",
+"frozen_at": "2026-11-12T21:03:11.123Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -114,6 +114,18 @@
 "tier": "3-leg",
 "legs": [
 {
+"gid": "2026_10_MIA_IND",
+"start": "2026-11-15T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 7.5,
+"name": "tyler warren",
+"lab": "Tyler Warren 8+ catches",
+"p": 0.28,
+"price": 218,
+"book": "Kalshi"
+},
+{
 "gid": "2026_10_MIN_GB",
 "start": "2026-11-15T13:00:00",
 "kind": "rec_yds",
@@ -136,23 +148,45 @@
 "p": 0.275,
 "price": 218,
 "book": "Kalshi"
-},
-{
-"gid": "2026_10_MIA_IND",
-"start": "2026-11-15T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 7.5,
-"name": "tyler warren",
-"lab": "Tyler Warren 8+ catches",
-"p": 0.27,
-"price": 229,
-"book": "Kalshi"
 }
 ],
-"p": 0.02079,
-"d": 33.17,
+"p": 0.02156,
+"d": 32.086,
 "first": "2026-11-15T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T13:00:00",
+"kind": "total",
+"side": "over",
+"line": 41.5,
+"name": null,
+"lab": "HOU-CLE over 41.5",
+"p": 0.51,
+"price": 125,
+"book": "Novig"
+},
+{
+"gid": "2026_10_KC_ATL",
+"start": "2026-11-15T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 26.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 26.5 rec yds",
+"p": 0.5472,
+"price": -102,
+"book": "Novig"
+}
+],
+"p": 0.27907,
+"d": 4.456,
+"first": "2026-11-15T18:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -187,6 +221,39 @@
 "d": 7.436,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_10_NE_DET",
+"start": "2026-11-15T09:30:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "hunter henry",
+"lab": "Hunter Henry over 3.5 receptions",
+"p": 0.4675,
+"price": 130,
+"book": "Novig"
+},
+{
+"gid": "2026_10_LA_ARI",
+"start": "2026-11-15T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "blake corum",
+"lab": "Blake Corum over 1.5 receptions",
+"p": 0.4425,
+"price": 138,
+"book": "Novig"
+}
+],
+"p": 0.20687,
+"d": 5.474,
+"first": "2026-11-15T14:30:00+00:00"
 },
 {
 "card": "Same-game parlays",
@@ -24392,44 +24459,18 @@
 "line": 3.5,
 "name": "hunter henry",
 "lab": "Hunter Henry over 3.5 receptions",
-"p": 0.4615,
+"p": 0.4632,
 "price": 130,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0615,
-"fair": 0.4197,
+"edge": 0.0654,
+"fair": 0.422,
 "main": true
 }
 ],
-"p": 0.4615,
+"p": 0.4632,
 "d": 2.3,
 "first": "2026-11-15T14:30:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_10_MIA_IND",
-"start": "2026-11-15T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 3.5 receptions",
-"p": 0.4906,
-"price": 120,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0793,
-"fair": 0.4808,
-"main": true
-}
-],
-"p": 0.4906,
-"d": 2.2,
-"first": "2026-11-15T18:00:00+00:00",
 "pick": "straight"
 },
 {
@@ -24470,18 +24511,44 @@
 "line": 26.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 26.5 rec yds",
-"p": 0.5359,
-"price": -104,
+"p": 0.5374,
+"price": -102,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0511,
-"fair": 0.4945,
+"edge": 0.0644,
+"fair": 0.4966,
 "main": true
 }
 ],
-"p": 0.5359,
-"d": 1.962,
+"p": 0.5374,
+"d": 1.98,
 "first": "2026-11-15T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_10_LA_ARI",
+"start": "2026-11-15T21:05:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "trey mcbride",
+"lab": "Trey McBride over 59.5 rec yds",
+"p": 0.5621,
+"price": 100,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1242,
+"fair": 0.4928,
+"main": true
+}
+],
+"p": 0.5621,
+"d": 2.0,
+"first": "2026-11-15T21:05:00+00:00",
 "pick": "straight"
 },
 {
@@ -24496,17 +24563,17 @@
 "line": 19.5,
 "name": "kyren williams",
 "lab": "Kyren Williams over 19.5 rec yds",
-"p": 0.5563,
-"price": -106,
+"p": 0.5658,
+"price": -111,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0811,
-"fair": 0.4917,
+"edge": 0.0755,
+"fair": 0.5044,
 "main": true
 }
 ],
-"p": 0.5563,
-"d": 1.943,
+"p": 0.5658,
+"d": 1.901,
 "first": "2026-11-15T21:05:00+00:00",
 "pick": "straight"
 }
