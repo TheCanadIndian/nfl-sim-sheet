@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-15",
 "lock": "2026-11-15T14:30:00+00:00",
-"frozen_at": "2026-11-12T23:45:40.370Z",
+"frozen_at": "2026-11-12T23:59:21.580Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -34,12 +34,12 @@
 "line": 99.5,
 "name": "amonra st brown",
 "lab": "Amon-Ra St. Brown 100+ rec yds",
-"p": 0.305,
+"p": 0.31,
 "price": 189,
 "book": "Kalshi"
 }
 ],
-"p": 0.10065,
+"p": 0.1023,
 "d": 7.91,
 "first": "2026-11-15T14:30:00+00:00"
 },
@@ -88,7 +88,7 @@
 "line": 99.5,
 "name": "amonra st brown",
 "lab": "Amon-Ra St. Brown 100+ rec yds",
-"p": 0.305,
+"p": 0.31,
 "price": 189,
 "book": "Kalshi"
 },
@@ -105,7 +105,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.08693,
+"p": 0.08835,
 "d": 8.907,
 "first": "2026-11-15T14:30:00+00:00"
 },
@@ -156,8 +156,20 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
+{
+"gid": "2026_10_LA_ARI",
+"start": "2026-11-15T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 7.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 7.5 receptions",
+"p": 0.5479,
+"price": 102,
+"book": "Kalshi"
+},
 {
 "gid": "2026_10_HOU_CLE",
 "start": "2026-11-15T13:00:00",
@@ -166,67 +178,31 @@
 "line": 1.5,
 "name": "quinshon judkins",
 "lab": "Quinshon Judkins over 1.5 receptions",
-"p": 0.414,
+"p": 0.4142,
 "price": 160,
 "book": "Hard Rock"
-},
-{
-"gid": "2026_10_NE_DET",
-"start": "2026-11-15T09:30:00",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "hunter henry",
-"lab": "Hunter Henry over 3.5 receptions",
-"p": 0.4636,
-"price": 130,
-"book": "Novig"
-},
-{
-"gid": "2026_10_KC_ATL",
-"start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 26.5,
-"name": "xavier worthy",
-"lab": "Xavier Worthy over 26.5 rec yds",
-"p": 0.5383,
-"price": -104,
-"book": "Novig"
 }
 ],
-"p": 0.10331,
-"d": 11.73,
-"first": "2026-11-15T14:30:00+00:00",
+"p": 0.22695,
+"d": 5.252,
+"first": "2026-11-15T18:00:00+00:00",
 "pick": "core"
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_10_NE_DET",
-"start": "2026-11-15T09:30:00",
+"gid": "2026_10_LA_ARI",
+"start": "2026-11-15T16:05:00",
 "kind": "rec",
 "side": "o",
-"line": 3.5,
-"name": "hunter henry",
-"lab": "Hunter Henry over 3.5 receptions",
-"p": 0.4636,
-"price": 130,
-"book": "Novig"
-},
-{
-"gid": "2026_10_KC_ATL",
-"start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 26.5,
-"name": "xavier worthy",
-"lab": "Xavier Worthy over 26.5 rec yds",
-"p": 0.5383,
-"price": -104,
-"book": "Novig"
+"line": 7.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 7.5 receptions",
+"p": 0.5479,
+"price": 102,
+"book": "Kalshi"
 },
 {
 "gid": "2026_10_MIA_IND",
@@ -241,9 +217,9 @@
 "book": "Novig"
 }
 ],
-"p": 0.09171,
-"d": 12.903,
-"first": "2026-11-15T14:30:00+00:00",
+"p": 0.20134,
+"d": 5.777,
+"first": "2026-11-15T18:00:00+00:00",
 "pick": "core"
 },
 {
@@ -27065,58 +27041,6 @@
 "tier": "straight",
 "legs": [
 {
-"gid": "2026_10_NE_DET",
-"start": "2026-11-15T14:30:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "hunter henry",
-"lab": "Hunter Henry over 3.5 receptions",
-"p": 0.4615,
-"price": 130,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0615,
-"fair": 0.4197,
-"main": true
-}
-],
-"p": 0.4615,
-"d": 2.3,
-"first": "2026-11-15T14:30:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_10_MIA_IND",
-"start": "2026-11-15T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 3.5 receptions",
-"p": 0.4906,
-"price": 120,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0793,
-"fair": 0.4808,
-"main": true
-}
-],
-"p": 0.4906,
-"d": 2.2,
-"first": "2026-11-15T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
 "gid": "2026_10_HOU_CLE",
 "start": "2026-11-15T18:00:00+00:00",
 "kind": "rec",
@@ -27124,70 +27048,18 @@
 "line": 1.5,
 "name": "quinshon judkins",
 "lab": "Quinshon Judkins over 1.5 receptions",
-"p": 0.414,
+"p": 0.4143,
 "price": 160,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.0765,
-"fair": 0.3762,
+"edge": 0.0771,
+"fair": 0.3794,
 "main": true
 }
 ],
-"p": 0.414,
+"p": 0.4143,
 "d": 2.6,
 "first": "2026-11-15T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_10_KC_ATL",
-"start": "2026-11-15T18:00:00+00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 26.5,
-"name": "xavier worthy",
-"lab": "Xavier Worthy over 26.5 rec yds",
-"p": 0.5359,
-"price": -104,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0511,
-"fair": 0.4945,
-"main": true
-}
-],
-"p": 0.5359,
-"d": 1.962,
-"first": "2026-11-15T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_10_LA_ARI",
-"start": "2026-11-15T21:05:00+00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 19.5,
-"name": "kyren williams",
-"lab": "Kyren Williams over 19.5 rec yds",
-"p": 0.5575,
-"price": -106,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0834,
-"fair": 0.4933,
-"main": true
-}
-],
-"p": 0.5575,
-"d": 1.943,
-"first": "2026-11-15T21:05:00+00:00",
 "pick": "straight"
 },
 {
@@ -27202,17 +27074,43 @@
 "line": 59.5,
 "name": "trey mcbride",
 "lab": "Trey McBride over 59.5 rec yds",
-"p": 0.5482,
-"price": -104,
+"p": 0.5722,
+"price": -113,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0754,
-"fair": 0.4743,
+"edge": 0.0785,
+"fair": 0.5029,
 "main": true
 }
 ],
-"p": 0.5482,
-"d": 1.962,
+"p": 0.5722,
+"d": 1.885,
+"first": "2026-11-15T21:05:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_10_LA_ARI",
+"start": "2026-11-15T21:05:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "kyren williams",
+"lab": "Kyren Williams over 19.5 rec yds",
+"p": 0.5654,
+"price": -113,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0657,
+"fair": 0.5105,
+"main": true
+}
+],
+"p": 0.5654,
+"d": 1.885,
 "first": "2026-11-15T21:05:00+00:00",
 "pick": "straight"
 }
