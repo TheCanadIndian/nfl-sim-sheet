@@ -769,6 +769,15 @@ def tags():
     site = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")
     fp = os.path.join(OUT, "profit_tags.json")
     log = json.load(open(fp)) if os.path.exists(fp) else {}
+    # entries lost to the pre-split commit race (2026-11-12, owner 'ok'): before the 2026-11-11 branch split a queued markets run
+    # checked out the files as they stood when it was triggered and its commit (pull --rebase -X theirs) replaced the newer log,
+    # dropping what the run ahead of it had logged (423 permanently, Oct 12 - Nov 11, rebuilt from the PC's old snapshots with
+    # their first-seen prices). Merged back here, never over an existing entry; graded below like any other tag.
+    try:
+        for k_, e_ in json.load(open(os.path.join(HERE, "profit_restore.json"), encoding="utf-8")).items():
+            log.setdefault(k_, e_)
+    except (OSError, ValueError):
+        pass
     now = dt.datetime.now(dt.timezone.utc)
     starts = _starts()
     for sport in ("nfl", "nhl", "nba"):

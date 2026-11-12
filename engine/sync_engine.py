@@ -25,7 +25,8 @@ ENGINE = os.path.join(REPO, "engine")
 GIT = shutil.which("git") or r"C:\Program Files\Git\cmd\git.exe"
 
 CODE = ["*.py", "*.js", "*.ps1", "README.md", "requirements.txt", "*.example.csv", "boxscore/*.py",
-        "hockey/*.py", "hockey/*.js", "hockey/README.md", "hockey/usage_params.json", "hockey/sog_params.json", "hockey/shiftsim_params.json", "scheduled/*", "nba/*.py", "nba/*.js", "nba/README.md", "nba/archetypes.json", "nba/corr_params.json", "nba/threes_params.json", "nba/steps_params.json", "mlb/*.py", "mlb/params.json", "outperf_params.json"]
+        "hockey/*.py", "hockey/*.js", "hockey/README.md", "hockey/usage_params.json", "hockey/sog_params.json", "hockey/shiftsim_params.json", "scheduled/*", "nba/*.py", "nba/*.js", "nba/README.md", "nba/archetypes.json", "nba/corr_params.json", "nba/threes_params.json", "nba/steps_params.json", "mlb/*.py", "mlb/params.json", "outperf_params.json",
+        "profit_restore.json"]                                   # profit tags lost to the pre-split commit race (2026-11-12), merged by profit.tags
 STATE = ["model_params.json", "learning_log.json", "overrides/*.csv", "hockey/overrides.csv",
          "hockey/.last_run.json", "projections/*", "projections/weeks/*", "projections/blind/*",
          "projections/blind/weeks/*", "hockey/projections/*", "nba/projections/*", "nba/.last_run.json", "nba/lineups_log.json", "markets/*.json",
