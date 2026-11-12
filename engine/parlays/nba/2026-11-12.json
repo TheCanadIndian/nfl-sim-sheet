@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-12",
 "lock": "2026-11-13T00:00:00+00:00",
-"frozen_at": "2026-11-12T21:53:18.992Z",
+"frozen_at": "2026-11-12T22:04:46.240Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -14,113 +14,6 @@
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
-{
-"gid": "401909976",
-"start": "2026-11-13T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "jaylen brown",
-"lab": "Jaylen Brown 5+ ast",
-"p": 0.3927,
-"price": 185,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909979",
-"start": "2026-11-13T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "moussa diabate",
-"lab": "Moussa Diabate 10+ reb",
-"p": 0.4463,
-"price": 141,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.17528,
-"d": 6.869,
-"first": "2026-11-13T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909976",
-"start": "2026-11-13T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "vj edgecombe",
-"lab": "VJ Edgecombe 5+ ast",
-"p": 0.2763,
-"price": 300,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909979",
-"start": "2026-11-13T02:00Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "moussa diabate",
-"lab": "Moussa Diabate 10+ reb",
-"p": 0.4463,
-"price": 141,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.12332,
-"d": 9.64,
-"first": "2026-11-13T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909976",
-"start": "2026-11-13T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "jaylen brown",
-"lab": "Jaylen Brown 5+ ast",
-"p": 0.3927,
-"price": 185,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
 {
 "gid": "401909977",
 "start": "2026-11-13T00:00Z",
@@ -141,14 +34,14 @@
 {
 "gid": "401909979",
 "start": "2026-11-13T02:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
 "line": 2.5,
-"name": "dillon brooks",
-"lab": "Dillon Brooks 3+ threes",
-"p": 0.2668,
-"price": 257,
-"book": "Novig",
+"name": "moussa diabate",
+"lab": "Moussa Diabate 3+ ast",
+"p": 0.3523,
+"price": 190,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -156,14 +49,13 @@
 ]
 }
 ],
-"p": 0.03001,
-"d": 35.102,
+"p": 0.10089,
+"d": 10.005,
 "first": "2026-11-13T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
-"card": "Confluence parlays (experimental)",
+"card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
 {
@@ -171,56 +63,44 @@
 "start": "2026-11-13T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
+"line": 4.5,
 "name": "vj edgecombe",
-"lab": "VJ Edgecombe over 3.5 assists",
-"p": 0.4358,
-"price": 145,
+"lab": "VJ Edgecombe over 4.5 assists",
+"p": 0.2763,
+"fair": 0.2758,
+"price": 260,
 "book": "Hard Rock",
-"f": [
-"usage",
-"rotation"
-],
-"v": [
-"usage",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc",
-"pinnacle up"
-],
 "sport": "nba",
-"edge": 0.0693
+"edge": -0.0053,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (3.5)"
+]
 },
 {
-"gid": "401909977",
-"start": "2026-11-13T00:00Z",
+"gid": "401909978",
+"start": "2026-11-13T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson over 2.5 rebounds",
-"p": 0.4879,
-"price": 105,
+"line": 6.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 6.5 rebounds",
+"p": 0.3439,
+"fair": 0.347,
+"price": 220,
 "book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"our model above fair",
-"consensus up"
-],
 "sport": "nba",
-"edge": 0.0018
+"edge": 0.1006,
+"v": [
+"consensus line up + odds drop",
+"one rung above the main line (5.5)",
+"LC"
+]
 }
 ],
-"p": 0.21263,
-"d": 5.022,
+"p": 0.0957,
+"d": 11.52,
 "first": "2026-11-13T00:00:00+00:00",
 "res": null
 },
@@ -238,15 +118,14 @@
 "lab": "VJ Edgecombe over 4.5 assists",
 "p": 0.2763,
 "fair": 0.2758,
-"price": 300,
+"price": 260,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1053,
+"edge": -0.0053,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (3.5)",
-"LC"
+"one rung above the main line (3.5)"
 ]
 },
 {
@@ -270,27 +149,128 @@
 ]
 },
 {
-"gid": "401909979",
-"start": "2026-11-13T02:00Z",
+"gid": "401909977",
+"start": "2026-11-13T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "grayson allen",
-"lab": "Grayson Allen over 5.5 assists",
-"p": 0.3025,
-"fair": 0.3108,
-"price": 260,
+"line": 6.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins over 6.5 assists",
+"p": 0.3124,
+"fair": 0.315,
+"price": 220,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0889,
+"edge": -0.0003,
 "v": [
-"consensus line up",
-"one rung above the main line (4.5)"
+"consensus line up + odds drop",
+"one rung above the main line (5.5)",
+"soft matchup"
 ]
 }
 ],
-"p": 0.02974,
-"d": 46.08,
+"p": 0.03015,
+"d": 36.864,
+"first": "2026-11-13T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909979",
+"start": "2026-11-13T02:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "moussa diabate",
+"lab": "Moussa Diabate over 9.5 rebounds",
+"p": 0.4555,
+"price": 138,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0841,
+"fair": 0.4542,
+"main": false
+},
+{
+"gid": "401909978",
+"start": "2026-11-13T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 5.5 rebounds",
+"p": 0.4742,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.067,
+"fair": 0.4812,
+"main": true
+}
+],
+"p": 0.216,
+"d": 5.355,
+"first": "2026-11-13T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909979",
+"start": "2026-11-13T02:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "moussa diabate",
+"lab": "Moussa Diabate over 9.5 rebounds",
+"p": 0.4555,
+"price": 138,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0841,
+"fair": 0.4542,
+"main": false
+},
+{
+"gid": "401909978",
+"start": "2026-11-13T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 5.5 rebounds",
+"p": 0.4742,
+"price": 125,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.067,
+"fair": 0.4812,
+"main": true
+},
+{
+"gid": "401909977",
+"start": "2026-11-13T00:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "john collins",
+"lab": "John Collins over 1.5 threes",
+"p": 0.3349,
+"price": 217,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0618,
+"fair": 0.3387,
+"main": false
+}
+],
+"p": 0.07234,
+"d": 16.975,
 "first": "2026-11-13T00:00:00+00:00",
 "res": null
 }
