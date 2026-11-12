@@ -21,6 +21,10 @@ jobs:
     environment: github-pages
     steps:
       - uses: actions/checkout@v4
+      - name: Overlay the live branch (pages + engine state live there; engine/publish.py)
+        env:
+          LIVE_BRANCH: live
+        run: python3 engine/publish.py start
       - run: |
           mkdir -p /tmp/pages
           rsync -a --exclude engine --exclude .github --exclude .git ./ /tmp/pages/

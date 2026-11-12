@@ -13,6 +13,7 @@ your changes. Large rebuildable data (databases, raw API caches) never goes in t
 """
 
 import fnmatch
+import json
 import os
 import shutil
 import subprocess
@@ -62,8 +63,21 @@ def git(*a):
     return subprocess.run([GIT, "-C", REPO, *a]).returncode
 
 
-def main(cmd):
+def overlay():
+    """Lay the live branch (pages + engine state since 2026-11-11, publish.py) over the repo's working tree."""
+    subprocess.run([sys.executable, os.path.join(HERE, "publish.py"), "start"], cwd=REPO)
+
+
+def live_time():
+    try:
+        return json.load(open(os.path.join(REPO, ".git", "live_base.json"))).get("t")
+    except (OSError, ValueError):
+        return None
+
+
+def main(cmd, msg=None):
     git("pull", "--rebase", "--quiet")
+    overlay()
     if cmd == "pull":
         n = copy(ENGINE, HERE, files(ENGINE, STATE))
         print(f"pulled {n} state files from the cloud")
@@ -78,7 +92,11 @@ def main(cmd):
         e = os.path.join(ENGINE, r)
         if not os.path.exists(e):
             newer_here.append(r); continue
-        t = subprocess.run([GIT, "-C", REPO, "log", "-1", "--format=%ct", "--", os.path.join("engine", r)], capture_output=True, text=True).stdout.strip()
+        rp = "engine/" + r.replace(os.sep, "/")
+        if rp.startswith("engine/parlays/"):          # still on main, with history
+            t = subprocess.run([GIT, "-C", REPO, "log", "-1", "--format=%ct", "--", rp], capture_output=True, text=True).stdout.strip()
+        else:                                        # on the one-commit live branch: its time is the newest publish of any file
+            t = str(live_time() or "")
         # 5 min margin: a commit reaches GitHub after its timestamp, so a pull right then copies older data with a later mtime
         (newer_cloud if t and int(t) + 300 > os.path.getmtime(os.path.join(HERE, r)) else newer_here).append(r)
     if newer_cloud:
@@ -101,14 +119,11 @@ def main(cmd):
         print(f"kept {len(newer_repo)} code files edited in the repo (copied them to the PC): {', '.join(newer_repo)}")
     n = copy(HERE, ENGINE, code) + copy(HERE, ENGINE, newer_here)
     print(f"copied {n} files into engine/")
-    git("add", "-A", "engine", ".github")
-    if git("diff", "--cached", "--quiet") != 0:
-        git("commit", "--quiet", "-m", "Engine: sync code from PC")
-        git("push", "--quiet")
-        print("pushed")
-    else:
-        print("nothing to push")
+    # code + research tape -> main (history); engine state -> the live branch (publish.py). 'push' publishes only engine/
+    # live paths (never stray local test pages); 'push-all' (the PC failover) publishes every page / data file it rebuilt.
+    only = [] if cmd == "push-all" else ["--only=engine/"]
+    subprocess.run([sys.executable, os.path.join(HERE, "publish.py"), "commit", msg or "Engine: sync code from PC", *only], cwd=REPO)
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "push")
+    main(sys.argv[1] if len(sys.argv) > 1 else "push", sys.argv[2] if len(sys.argv) > 2 else None)

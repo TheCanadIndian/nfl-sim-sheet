@@ -21,6 +21,7 @@ jobs:
     timeout-minutes: 20
     env:
       SIM_SITE: ${{ github.workspace }}
+      LIVE_BRANCH: ${{ github.ref_name == 'main' && 'live' || 'live-test' }}   # publish.py: pages + state branch (tests: live-test)
       PYTHONIOENCODING: utf-8
       TZ: America/New_York
       GH_TOKEN: ${{ github.token }}
@@ -32,6 +33,8 @@ jobs:
           cache: pip
           cache-dependency-path: engine/requirements.txt
       - run: pip install -q -r engine/requirements.txt
+      - name: Overlay the live branch (pages + engine state; engine/publish.py)
+        run: python engine/publish.py start
       - id: q
         working-directory: engine
         run: |
@@ -82,12 +85,9 @@ jobs:
           git config user.email "sim-sheet-bot@users.noreply.github.com"
           # heartbeat: when prices last ran (watch.js shows a stale-data banner once it is 45+ min old)
           python -c "import json, datetime; json.dump(dict(t=datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'), src='cloud'), open('markets/heartbeat.json', 'w'))"
-          git add -A markets engine/markets engine/parlays
-          for f in nhl/parlays.html nfl/parlays.html profit.html parlays.html openers.html winners.html; do [ -f "$f" ] && git add "$f"; done
-          if git diff --cached --quiet; then echo "no changes"; exit 0; fi
-          git commit -q -m "Auto: market prices $(date -u +'%Y-%m-%d %H:%M') UTC"
-          for i in 1 2 3 4 5; do git pull -q --rebase -X theirs && git push -q && break; sleep $((i * 5)); done
-          gh workflow run deploy.yml
+          # main keeps code + the research tape (with history); pages / state go to the one-commit live branch (publish.py)
+          python engine/publish.py commit "Auto: market prices $(date -u +'%Y-%m-%d %H:%M') UTC"
+          if [ "${{ github.ref_name }}" = "main" ]; then gh workflow run deploy.yml; else echo "test branch: no deploy"; fi
       # NBA on the NHL's schedule (owner 2026-10-23): nba/should_run.py (seconds, no data) starts nba.yml when a game
       # tips within 75 min, lines are 4+ h old on a game day, or last night needs grading; the fixed Worker times stay
       - name: NBA check (start an NBA run when due)

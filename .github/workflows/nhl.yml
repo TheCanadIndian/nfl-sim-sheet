@@ -24,6 +24,7 @@ jobs:
     timeout-minutes: 120
     env:
       SIM_SITE: ${{ github.workspace }}
+      LIVE_BRANCH: ${{ github.ref_name == 'main' && 'live' || 'live-test' }}   # publish.py: pages + state branch (tests: live-test)
       PYTHONIOENCODING: utf-8
       TZ: America/New_York
       GH_TOKEN: ${{ github.token }}
