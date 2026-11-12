@@ -68,7 +68,7 @@ function scStar(r, b){
   // ---------------------------------------------------------------- state (remembered per device)
   // alt lines on (owner 2026-10-25: "I feel like we are missing prices"): every rung shows; their fair is carried from
   // the main line (shown with ≈ where only our distribution carries it). Devices that had saved 'off' are switched on once.
-  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', consk: 'all', due: false, offm: false, softm: false, soon: false, alts: true, promo: false, promok: 'all', pink: 'all', sort: 'edge'};
+  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', consk: 'all', due: false, offm: false, softm: false, soon: false, alts: true, promo: false, promok: 'all', pink: 'all', gap8: false, sort: 'edge'};
   let S = {...DEF};
   try { Object.assign(S, JSON.parse(localStorage.getItem('simscreen-v2') || '{}')); } catch (e) {}
   if (!S.v3){ S.alts = true; S.v3 = 1; }
@@ -88,6 +88,7 @@ function scStar(r, b){
     cr: {t: 'CONS ▲▼ + PIN rung', tip: 'The sharp consensus moved the line up AND the over shorter, and Pinnacle flagged a higher-rung outlier on this stat. Hard Rock + Novig NBA overs Oct 20 – Nov 10: +13% on 208, both halves (z +0.8). Not proven.'},
   };
   const QP = [
+    {n: 'NFL gap 8+', top: 1, f: {sport: 'nfl', gap8: true, edge: -100, alts: false}, t: 'NFL main-line overs on catches, receiving yards and anytime TDs at your books where our chance is 8+ pts above the other books’ no-vig fair (Pinnacle and Kalshi left out). 2026 search +18% on 319, unseen +40% on 164 (one per player-stat, best price); the same overs without the gap about even. Rushing / passing yards and alt lines lost with the same gap. Tracked on the Profit page; not proven.'},
     {n: 'Study picks', top: 1, f: {promo: true, edge: -100, alts: true}, t: 'Every line tagged ★ by the Nov 11 studies: NBA Kalshi rungs with our chance 15–40% over the cost (and the narrowed 230+ version), NBA consensus line-up + odds-drop moves with a soft matchup or a Pinnacle higher-rung outlier. Each held up in both halves; none is proven. (NHL PP1 top-3 was dropped Nov 12: its study had look-ahead.) Hover a ★ tag for its record.'},
     // ★ = most promising (research/screener_walkforward.py, owner 2026-11-04: 'remove chip labels but highlight most promising'): picking
     // settings on earlier days only and betting the next day kept landing on NHL goal edges; top 3-10 settings +4 to +7%, not proven
@@ -109,7 +110,7 @@ function scStar(r, b){
   const pick = o => Object.fromEntries(FKEYS.map(k => [k, o[k] ?? DEF[k]]));
   const same = f => FKEYS.every(k => (f[k] ?? DEF[k]) === S[k]);
   function suggest(){                                                         // a default name from what's switched on
-    const on = {promo: 'Study picks', tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', due: 'Due', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', soon: 'Next 6h'};
+    const on = {gap8: 'NFL gap 8+', promo: 'Study picks', tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', due: 'Due', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', soon: 'Next 6h'};
     const sub = {promo: S.promok !== 'all' && PROMO[S.promok] ? PROMO[S.promok].t : '', consmv: S.consk !== 'all' ? S.consk : '', pinmv: S.pink !== 'all' ? S.pink : ''};
     const bits = [S.sport === 'all' ? '' : SP[S.sport], ...Object.keys(on).filter(k => S[k]).map(k => sub[k] ? `${on[k]} (${sub[k]})` : on[k]), S.edge > -99 ? S.edge + '%+' : '', S.stat !== 'all' ? (STAT[S.stat] || S.stat) : '', S.price !== 'all' ? PRICE[S.price][2] : ''].filter(Boolean);
     return bits.join(' · ').slice(0, 40) || 'My filters'; }
@@ -229,6 +230,20 @@ function scStar(r, b){
             const kp = prices.find(y => y.b === 'Kalshi');
             if (sport === 'nba' && ['pts', 'reb', 'ast', 'fg3m'].includes(k) && kp && x.p != null){ const ek = x.p * dec(kp.o) - 1; if (ek >= .15 && ek <= .4) R_.k15 = ek; }
             R_.promo = pm;
+            // NFL gap 8+ (profit.py src 'gap8'): our chance 8+ pts over the OTHER books' two-way no-vig median (2+, no Pinnacle / Kalshi);
+            // anytime TD one-way: the books' fair from the median Yes of 3+ others. Best price at your books with that gap.
+            if (sport === 'nfl' && x.main && x.p != null && (k === 'rec' || k === 'rec_yds' || k === 'td')){
+              let g8 = null;
+              for (const y of prices){
+                if (y.b !== 'Hard Rock' && y.b !== 'Novig' && y.b !== 'Kalshi') continue;
+                const oth = Object.keys(x.o || {}).filter(bb => bb !== y.b && !NOBET.has(bb) && bb !== 'Kalshi' && x.o[bb] && x.o[bb][0] != null);
+                const nv = oth.filter(bb => x.u && x.u[bb] && x.u[bb][0] != null).map(bb => { const a = 1 / dec(x.o[bb][0]), c = 1 / dec(x.u[bb][0]); return a / (a + c); });
+                let f = nv.length >= 2 ? med(nv) : null;
+                if (f == null && k === 'td' && oth.length >= 3){ const m = Math.min(Math.max(med(oth.map(bb => 1 / dec(x.o[bb][0]))), .002), .998); f = sig(-.0647 + 1.1037 * Math.log(m / (1 - m))); }
+                if (f != null && x.p - f >= .08 && (!g8 || dec(y.o) > dec(g8.o))) g8 = {b: y.b, o: y.o, gap: x.p - f, fair: f};
+              }
+              R_.gap8 = g8;
+            }
           }
         }
       }
@@ -310,6 +325,7 @@ function scStar(r, b){
       if (S.due && !r.due) continue;
       if (S.softm && !r.soft) continue;
       if (S.promo && !(r.promo && r.promo.length && (S.promok === 'all' || r.promo.includes(S.promok)))) continue;
+      if (S.gap8 && !r.gap8) continue;
       if (q && !(norm(r.name).includes(q) || norm(r.team).includes(q) || norm(r.game).includes(q))) continue;
       const ps = r.prices.filter(x => S.books === 'all' || mine.has(x.b)).sort((a, b) => dec(b.o) - dec(a.o));
       if (!ps.length) continue;
@@ -317,11 +333,12 @@ function scStar(r, b){
       const kb = S.knee && r.knee ? ps.find(x => x.b === r.knee.bk) : S.open && r.open ? r.prices.find(x => x.b === r.open.bk)
         : S.path && r.path ? (r.prices.find(x => x.b === r.path.book) || ps[0])
         : S.promo && r.promo && (S.promok === 'k15' || S.promok === 'k15n' || (S.promok === 'all' && r.promo.length && r.promo.every(t => t === 'k15' || t === 'k15n'))) ? r.prices.find(x => x.b === 'Kalshi')
-        : S.promo && r.promo && (S.promok === 'cs' || S.promok === 'cr' || (S.promok === 'all' && r.promo.some(t => t === 'cs' || t === 'cr'))) ? (ps.find(x => x.b === 'Hard Rock' || x.b === 'Novig') || ps[0]) : null;
+        : S.promo && r.promo && (S.promok === 'cs' || S.promok === 'cr' || (S.promok === 'all' && r.promo.some(t => t === 'cs' || t === 'cr'))) ? (ps.find(x => x.b === 'Hard Rock' || x.b === 'Novig') || ps[0])
+        : S.gap8 && r.gap8 ? (r.prices.find(x => x.b === r.gap8.b) || ps[0]) : null;
       if ((S.knee || S.open || S.path) && !kb) continue;
       const best = kb || ps[0], [lo, hi] = PRICE[S.price] || PRICE.all;
       if (best.o < lo || best.o >= hi) continue;
-      if (!S.knee && !S.open && !S.path && !S.lad && !S.offm && !S.due && !S.promo && !(S.consmv && S.consk !== 'all') && !(S.pinmv && S.pink !== 'all') && S.edge > -99 && !(best.edge != null && !best.est && best.edge * 100 >= S.edge)) continue;
+      if (!S.knee && !S.open && !S.path && !S.lad && !S.offm && !S.due && !S.promo && !S.gap8 && !(S.consmv && S.consk !== 'all') && !(S.pinmv && S.pink !== 'all') && S.edge > -99 && !(best.edge != null && !best.est && best.edge * 100 >= S.edge)) continue;
       if (!r.gone && !r.offOnly && !S.lad && best.edge != null && best.edge > .6) continue;                     // 60%+ claimed edges are stale or broken quotes
       out.push({...r, best, n: ps.length});
     }
@@ -335,7 +352,7 @@ function scStar(r, b){
     const when = Object.entries(FETCHED).filter(([, t]) => t).map(([s, t]) => `${SP[s]} ${new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'})}`).join(' · ');
     const tm = t => t ? new Date(t).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '';
     const row = r => { const b = r.best, ev = b.edge;
-      const tags = [...(r.promo || []).map(t => `<span class="sc-tag promo" title="${esc(PROMO[t].tip)}">★ ${esc(PROMO[t].t)}</span>`), r.value ? (b.fair != null && b.fair - 1 / dec(b.o) >= .15 ? '<span class="sc-tag off" title="The Value tag on this line sits 15+ pts under the sharp fair: usually a stale or broken quote. Check the price is real before betting (edge audit, Nov 11).">Off · check price</span>' : '<span class="sc-tag v" title="Value tag on the sport page">Value</span>') : '', r.lc ? '<span class="sc-tag lc" title="LC tag: beats the liquidity-weighted consensus">LC</span>' : '',
+      const tags = [...(r.promo || []).map(t => `<span class="sc-tag promo" title="${esc(PROMO[t].tip)}">★ ${esc(PROMO[t].t)}</span>`), r.gap8 ? `<span class="sc-tag promo" title="Our chance ${Math.round(r.p * 100)}% vs the other books’ no-vig fair ${Math.round(r.gap8.fair * 100)}% at ${esc(r.gap8.b)}. NFL gap 8+: 2026 search +18% on 319, unseen +40% on 164; tracked on the Profit page, not proven.">GAP · ours ${Math.round(r.p * 100)}% vs ${Math.round(r.gap8.fair * 100)}%</span>` : '', r.value ? (b.fair != null && b.fair - 1 / dec(b.o) >= .15 ? '<span class="sc-tag off" title="The Value tag on this line sits 15+ pts under the sharp fair: usually a stale or broken quote. Check the price is real before betting (edge audit, Nov 11).">Off · check price</span>' : '<span class="sc-tag v" title="Value tag on the sport page">Value</span>') : '', r.lc ? '<span class="sc-tag lc" title="LC tag: beats the liquidity-weighted consensus">LC</span>' : '',
                     r.off || r.offOnly ? '<span class="sc-tag off" title="Off-market price: 8+ pts from the fair (often stale; check before betting)">Off</span>' : '',
                     r.pin ? `<span class="sc-tag pin" title="Pinnacle moved this prop${r.pin.line ? ': line up ' + r.pin.line : ''}${r.pin.price ? (r.pin.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">PIN${r.pin.line ? ' ▲' : ''}${r.pin.price ? ' ▼odds' : ''}</span>` : '',
                     r.pinr ? '<span class="sc-tag pin" title="Pinnacle moved this stat and flagged a higher rung at your books priced 10-60% over its carried fair (tracked, experimental)">PIN rung</span>' : '',
@@ -373,7 +390,7 @@ function scStar(r, b){
         <div class="sc-grp">${chip('books', 'mine', 'My books', S.books === 'mine')}${chip('books', 'all', 'All books', S.books === 'all')}</div>
         <div class="sc-grp"><span class="sc-l">Edge</span>${[[-100, 'Any'], [0, '0%+'], [3, '3%+'], [5, '5%+'], [10, '10%+']].map(([v, l]) => chip('edge', v, l, +S.edge === v)).join('')}</div>
         <div class="sc-grp">${Object.entries(PRICE).map(([k, v]) => chip('price', k, v[2], S.price === k)).join('')}</div>
-        <div class="sc-grp">${chip('promo', 'x', `★ Study picks · ${ROWS.filter(r => r.promo && r.promo.length && (S.sport === 'all' || r.sport === S.sport)).length}`, S.promo).replace('class="sc-chip', 'class="sc-chip promo')}${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('due', 'x', 'NHL due', S.due)}${chip('offm', 'x', 'Off market', S.offm)}${chip('knee', 'x', 'Ladder knees', S.knee)}${chip('lad', 'x', 'Ladders', S.lad)}${chip('path', 'x', 'Path legs', S.path)}${chip('open', 'x', 'Early openers', S.open)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
+        <div class="sc-grp">${chip('promo', 'x', `★ Study picks · ${ROWS.filter(r => r.promo && r.promo.length && (S.sport === 'all' || r.sport === S.sport)).length}`, S.promo).replace('class="sc-chip', 'class="sc-chip promo')}${chip('gap8', 'x', `NFL gap 8+ · ${ROWS.filter(r => r.gap8).length}`, S.gap8)}${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('due', 'x', 'NHL due', S.due)}${chip('offm', 'x', 'Off market', S.offm)}${chip('knee', 'x', 'Ladder knees', S.knee)}${chip('lad', 'x', 'Ladders', S.lad)}${chip('path', 'x', 'Path legs', S.path)}${chip('open', 'x', 'Early openers', S.open)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
         ${S.lad ? (() => { const n = {}; ROWS.forEach(r => { if (r.lad && (S.sport === 'all' || r.sport === S.sport)) r.lad.cats.forEach(c => { n[c] = (n[c] || 0) + 1; }); });
           return `<div class="sc-grp"><span class="sc-l">Ladder</span>${chip('ladc', 'all', 'All', S.ladc === 'all')}${Object.keys(n).sort().map(c => chip('ladc', c, `${esc(c)}s · ${n[c]}`, S.ladc === c)).join('')}</div>`; })() : ''}
         ${S.promo ? (() => { const n = {}; ROWS.forEach(r => { if (r.promo && (S.sport === 'all' || r.sport === S.sport)) r.promo.forEach(t => { n[t] = (n[t] || 0) + 1; }); });
@@ -394,7 +411,7 @@ function scStar(r, b){
   document.addEventListener('click', e => {
     const c = e.target.closest('.sc-chip[data-k]');
     if (c){ const k = c.dataset.k, v = c.dataset.v;
-      if (k === 'promo' || k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'due' || k === 'knee' || k === 'offm' || k === 'open' || k === 'path' || k === 'lad' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
+      if (k === 'promo' || k === 'gap8' || k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'due' || k === 'knee' || k === 'offm' || k === 'open' || k === 'path' || k === 'lad' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }

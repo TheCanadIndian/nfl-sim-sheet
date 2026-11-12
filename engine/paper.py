@@ -53,6 +53,7 @@ MAX_BETS_DAY, MAX_UNITS_DAY = 4, 4.0              # at most 4 parlays and 4 unit
 LONG_DEC, LONG_STAKE = 6.0, .5                    # parlays paying more than 6x take half a unit
 LEGS = (2, 4)                                     # parlays only: 2-4 legs, one per game
 LEG_Q = (.15, .80)                                # each leg's implied chance at the price (Kalshi with its fee)
+OVERS_PROPS_ONLY = True                           # owner 2026-11-12 ('Only overs only player props'): every leg a player-prop over; no unders, no game lines
 MAX_DEC = 30.0                                    # no lottery tickets
 LEG_REUSE = 2                                     # one leg in at most 2 of the day's parlays
 MIN_LEAD_MIN = 5                                  # recorded at least 5 min before the leg's game starts
@@ -249,6 +250,8 @@ def slate(sports=("nba", "nhl", "nfl"), at=None):
                 starts.setdefault(g, st)
 
         def emit(gid, nm, key, kind, side, line, prices, fair, ours, main, extra=None):
+            if OVERS_PROPS_ONLY and (not nm or side != "o"):
+                return                                       # player-prop overs only (owner 2026-11-12)
             st = starts.get(str(gid))
             if not st or when(st) <= at + dt.timedelta(minutes=MIN_LEAD_MIN):
                 return
@@ -432,6 +435,9 @@ def record(path, dry=False):
         got, games = [], set()
         for L in legs:
             lid = str(L.get("id") or "")
+            parts = lid.split("|")
+            if OVERS_PROPS_ONLY and (len(parts) != 6 or parts[2] == "-" or parts[5] != "o"):
+                errs.append(f"{tag}: {lid} is not a player-prop over (overs on player props only: no unders, no game lines)"); continue
             c = idx.get((lid, book))
             if not c:
                 errs.append(f"{tag}: no current {book} price for {lid} (not offered there, game started or within {MIN_LEAD_MIN} min, or a typo)"); continue
@@ -775,7 +781,8 @@ def page():
     if len(pts) > 1 and pts[1][0] == START_DATE:
         pts = pts[1:]
         pts.insert(0, ((dt.date.fromisoformat(START_DATE) - dt.timedelta(days=1)).isoformat(), START))
-    rules = (f"<ul><li><b>Parlays only</b>, {LEGS[0]}-{LEGS[1]} legs, one leg per game, every leg at the same book (one ticket at Hard Rock, Novig or Kalshi), "
+    rules = ("<ul><li><b>Overs on player props only</b> (from Nov 12 evening): no unders, no game totals or moneylines.</li>"
+             f"<li><b>Parlays only</b>, {LEGS[0]}-{LEGS[1]} legs, one leg per game, every leg at the same book (one ticket at Hard Rock, Novig or Kalshi), "
              f"priced at what that book showed when the bet was recorded (Kalshi with its 7% fee). Each leg priced {100 * LEG_Q[0]:.0f}-{100 * LEG_Q[1]:.0f}%; "
              f"nothing paying over {MAX_DEC:g}x.</li>"
              f"<li><b>Stake:</b> one unit = {100 * UNIT_PCT:g}% of the bankroll at the day’s first bet, rounded, {money(UNIT_MIN)}-{money(UNIT_MAX)} "

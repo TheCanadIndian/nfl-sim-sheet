@@ -719,6 +719,8 @@ def tag_label(e):
         return f"{'Pinnacle' if e.get('msrc') == 'pin' else 'Consensus'} move: {MOVE_SIG.get(e.get('sig'), e.get('sig'))} (experimental)"
     if e.get("src") == "knee":
         return "Ladder knee (experimental)"
+    if e.get("src") == "gap8":
+        return "Gap 8+: catches / receiving yards / anytime TD overs, main lines, your books (experimental)"
     if e.get("src") == "study":
         return {"cs": "Study pick: consensus line up + odds drop, soft matchup on that stat (experimental)",
                 "cr": "Study pick: consensus line up + odds drop, Pinnacle higher-rung outlier (experimental)"}.get(e.get("grp"), "Study pick (experimental)")
@@ -847,6 +849,55 @@ def tags():
                         e = log.setdefault(f"study|{grp}|{sport}|{x['g']}|{x['n']}|{x['b']}", dict(sport=sport, src="study", grp=grp, gid=x["g"], name=x["n"],
                                            bet=x["b"], book=x["bk"], o=x["o"], first=now.isoformat(), p=x.get("fair") or x.get("cons"), m=x.get("fair") or x.get("cons"), start=st))
                         e.setdefault("start", st)
+        # NFL gap 8+ (owner 2026-11-12 'do 1', research/nfl_props10.py / _gap.py, 2026 only): main-line overs on catches / receiving
+        # yards / anytime TD at Hard Rock / Novig / Kalshi where OUR chance is 8+ pts above the OTHER books' two-way no-vig median (2+;
+        # Pinnacle and Kalshi left out, as in the study; anytime TD one-way: the books' fair from the median Yes of 3+ others). Search
+        # (Sep 9 - Oct 26) +17.7% on 319, unseen (Oct 29 - Nov 9) +39.6% on 164, one per player-stat at the best price, t +2.1 each;
+        # the same overs without the gap ~even. First sighting at the best of your books; Kalshi = live ask + fee. Pass mark: Dec 10.
+        if sport == "nfl":
+            try:
+                LVn = json.load(open(os.path.join(site, "markets", "live_nfl.json"))).get("rows") or []
+            except (OSError, ValueError):
+                LVn = []
+            kq = {}
+            for r in LVn:
+                if r.get("s") == "kalshi" and r.get("k") in ("rec", "rec_yds", "anytime_td") and r.get("n") and r.get("ya"):
+                    kk_ = "td" if r["k"] == "anytime_td" else r["k"]
+                    kq[(str(r["g"]), PL.jsnorm(r["n"]), kk_, None if kk_ == "td" or r.get("l") is None else round(float(r["l"]), 1))] = float(r["ya"])
+            for gid, pl in (PR.get("props") or {}).items():
+                st = starts.get(str(gid))
+                if not st or PL.when(st) <= now:
+                    continue
+                for nm, kinds in pl.items():
+                    for k in ("rec", "rec_yds", "td"):
+                        e_ = kinds.get(k) or {}
+                        ours, O, U = e_.get("p"), e_.get("o") or {}, e_.get("u") or {}
+                        if ours is None or not O or (k != "td" and e_.get("l") is None):
+                            continue
+                        line = None if k == "td" else float(e_["l"])
+                        pr = {b: O[b][0] for b in ("Hard Rock", "Novig") if isinstance(O.get(b), list) and O[b][0] is not None}
+                        ya = kq.get((str(gid), nm, k, None if line is None else round(line, 1)))
+                        if ya and ya < .97:
+                            cy = ya + FEE["kalshi"] * ya * (1 - ya)
+                            pr["Kalshi"] = round(-100 * cy / (1 - cy)) if cy >= .5 else round(100 * (1 - cy) / cy)
+                        best = None
+                        for b, o in pr.items():
+                            oth = [x for x in O if x not in (b, "Pinnacle", "Kalshi") and isinstance(O.get(x), list) and O[x][0] is not None]
+                            nv = [(1 / dec(O[x][0])) / (1 / dec(O[x][0]) + 1 / dec(U[x][0])) for x in oth if isinstance(U.get(x), list) and U[x][0] is not None]
+                            if len(nv) >= 2:
+                                f = float(np.median(nv))
+                            elif k == "td" and len(oth) >= 3:
+                                m_ = min(max(float(np.median([1 / dec(O[x][0]) for x in oth])), .002), .998)
+                                f = 1 / (1 + math.exp(-(-.0647 + 1.1037 * math.log(m_ / (1 - m_)))))
+                            else:
+                                continue
+                            if ours - f >= .08 and (best is None or dec(o) > dec(best[1])):
+                                best = (b, o, f)
+                        if best:
+                            bet = "TD" if k == "td" else f"over {line:g} {'receptions' if k == 'rec' else 'rec yds'}"
+                            e = log.setdefault(f"gap8|{sport}|{gid}|{nm}|{k}", dict(sport=sport, src="gap8", gid=gid, name=nm, bet=bet, book=best[0], o=best[1],
+                                               first=now.isoformat(), p=round(ours, 4), m=round(best[2], 4), start=st))
+                            e.setdefault("start", st)
         # ladder knees (sharp.ladder_knees; owner 2026-10-24): each first sighting at its book's price, graded like tags
         for x in FL.get("knees") or []:
             st = starts.get(str(x["g"])) or x.get("start")

@@ -5,6 +5,8 @@ only use parlays... determine your own bet size and daily limit... everyday I ne
 Page: /paper.html (one collapsible block per day). Code: `engine/paper.py`. No real money; no bets are placed anywhere.
 
 ## Rules (enforced by `paper.py record`)
+- **Overs on player props only** (the owner, 2026-11-12: "Only overs only player props"): no unders, no game totals or moneylines.
+  `paper.py slate` lists only player-prop overs and `record` refuses anything else (`OVERS_PROPS_ONLY`).
 - **Parlays only:** 2-4 legs, one leg per game, every leg at the SAME book (one ticket at Hard Rock, Novig or Kalshi).
 - **Prices:** whatever that book shows in the site's market files when the bet is recorded (Kalshi = its ask + the 7% fee).
   A leg whose game starts within 5 minutes, or that the book doesn't price, can't be recorded.
