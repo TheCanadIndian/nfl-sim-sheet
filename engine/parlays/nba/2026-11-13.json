@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-13",
 "lock": "2026-11-14T00:00:00+00:00",
-"frozen_at": "2026-11-13T18:24:05.305Z",
+"frozen_at": "2026-11-13T18:42:05.791Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -40,7 +40,7 @@
 "line": 5.5,
 "name": "dejounte murray",
 "lab": "Dejounte Murray 6+ ast",
-"p": 0.3779,
+"p": 0.3787,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -50,7 +50,7 @@
 ]
 }
 ],
-"p": 0.12654,
+"p": 0.12682,
 "d": 9.6,
 "first": "2026-11-14T01:00:00+00:00",
 "pick": "core",
@@ -68,7 +68,7 @@
 "line": 2.5,
 "name": "meleek thomas",
 "lab": "Meleek Thomas 3+ threes",
-"p": 0.3787,
+"p": 0.3786,
 "price": 163,
 "book": "Novig",
 "f": [
@@ -86,7 +86,7 @@
 "line": 5.5,
 "name": "dejounte murray",
 "lab": "Dejounte Murray 6+ ast",
-"p": 0.3779,
+"p": 0.3787,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -96,7 +96,7 @@
 ]
 }
 ],
-"p": 0.14311,
+"p": 0.14339,
 "d": 8.416,
 "first": "2026-11-14T01:00:00+00:00",
 "pick": "core",
@@ -114,7 +114,7 @@
 "line": 1.5,
 "name": "karlanthony towns",
 "lab": "Karl-Anthony Towns 2+ threes",
-"p": 0.44,
+"p": 0.4402,
 "price": 170,
 "book": "Hard Rock",
 "f": [
@@ -160,7 +160,7 @@
 ]
 }
 ],
-"p": 0.04386,
+"p": 0.04389,
 "d": 26.649,
 "first": "2026-11-14T00:00:00+00:00",
 "pick": "longshot",
@@ -178,7 +178,7 @@
 "line": 1.5,
 "name": "karlanthony towns",
 "lab": "Karl-Anthony Towns 2+ threes",
-"p": 0.44,
+"p": 0.4402,
 "price": 170,
 "book": "Hard Rock",
 "f": [
@@ -195,7 +195,7 @@
 "line": 2.5,
 "name": "meleek thomas",
 "lab": "Meleek Thomas 3+ threes",
-"p": 0.3787,
+"p": 0.3786,
 "price": 163,
 "book": "Novig",
 "f": [
@@ -224,7 +224,7 @@
 ]
 }
 ],
-"p": 0.04961,
+"p": 0.04963,
 "d": 23.362,
 "first": "2026-11-14T00:00:00+00:00",
 "pick": "longshot",
@@ -259,8 +259,41 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0237
+"edge": 0.0238
 },
+{
+"gid": "401909302",
+"start": "2026-11-14T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "draymond green",
+"lab": "Draymond Green over 0.5 threes",
+"p": 0.5661,
+"price": -115,
+"book": "Hard Rock",
+"f": [
+"rotation"
+],
+"v": [
+"rotation",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0606
+}
+],
+"p": 0.29041,
+"d": 3.739,
+"first": "2026-11-14T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
 {
 "gid": "401909300",
 "start": "2026-11-14T01:00Z",
@@ -283,17 +316,67 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0723
+"edge": 0.0739
+},
+{
+"gid": "401909304",
+"start": "2026-11-14T03:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "derrick jones",
+"lab": "Derrick Jones Jr. over 1.5 threes",
+"p": 0.4324,
+"price": 135,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0063
+},
+{
+"gid": "401909303",
+"start": "2026-11-14T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "scoot henderson",
+"lab": "Scoot Henderson over 2.5 assists",
+"p": 0.3968,
+"price": 150,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"matchup",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0071
 }
 ],
-"p": 0.26153,
-"d": 4.2,
+"p": 0.08747,
+"d": 12.338,
 "first": "2026-11-14T01:00:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "4-leg longshot",
+"tier": "5-leg longshot",
 "legs": [
 {
 "gid": "401909298",
@@ -320,7 +403,30 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0237
+"edge": 0.0238
+},
+{
+"gid": "401909302",
+"start": "2026-11-14T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "draymond green",
+"lab": "Draymond Green over 0.5 threes",
+"p": 0.5661,
+"price": -115,
+"book": "Hard Rock",
+"f": [
+"rotation"
+],
+"v": [
+"rotation",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0606
 },
 {
 "gid": "401909300",
@@ -344,7 +450,7 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0723
+"edge": 0.0739
 },
 {
 "gid": "401909304",
@@ -369,7 +475,7 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.006
+"edge": 0.0063
 },
 {
 "gid": "401909303",
@@ -394,11 +500,11 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0069
+"edge": 0.0071
 }
 ],
-"p": 0.04487,
-"d": 24.675,
+"p": 0.0254,
+"d": 46.132,
 "first": "2026-11-14T01:00:00+00:00",
 "res": null
 },
@@ -464,15 +570,15 @@
 "lab": "Jaylen Wells over 5.5 rebounds",
 "p": 0.105,
 "fair": 0.105,
-"ours": 0.1614,
+"ours": 0.1541,
 "price": 756,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3812,
+"edge": 0.3188,
 "grp": "k15n",
 "v": [
-"Kalshi 6+ rebounds: our chance 16% vs 12% with the fee (+38%)",
-"game total 237.5",
+"Kalshi 6+ rebounds: our chance 15% vs 12% with the fee (+32%)",
+"game total 235.5",
 "projected 27 min"
 ]
 },
@@ -486,14 +592,14 @@
 "lab": "Meleek Thomas over 3.5 threes",
 "p": 0.18,
 "fair": 0.18,
-"ours": 0.2552,
+"ours": 0.2532,
 "price": 398,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.2711,
+"edge": 0.2611,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ threes: our chance 26% vs 20% with the fee (+27%)",
+"Kalshi 4+ threes: our chance 25% vs 20% with the fee (+26%)",
 "game total 235.5",
 "projected 26 min"
 ]
@@ -518,14 +624,14 @@
 "lab": "Meleek Thomas over 3.5 threes",
 "p": 0.18,
 "fair": 0.18,
-"ours": 0.2552,
+"ours": 0.2532,
 "price": 398,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.2711,
+"edge": 0.2611,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ threes: our chance 26% vs 20% with the fee (+27%)",
+"Kalshi 4+ threes: our chance 25% vs 20% with the fee (+26%)",
 "game total 235.5",
 "projected 26 min"
 ]
@@ -540,15 +646,15 @@
 "lab": "Ty Jerome over 7.5 rebounds",
 "p": 0.05,
 "fair": 0.05,
-"ours": 0.0736,
+"ours": 0.0755,
 "price": 1464,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.1509,
+"edge": 0.1806,
 "grp": "k15n",
 "v": [
-"Kalshi 8+ rebounds: our chance 7% vs 6% with the fee (+15%)",
-"game total 237.5",
+"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+18%)",
+"game total 235.5",
 "projected 31 min"
 ]
 }
@@ -563,25 +669,79 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401909298",
+"gid": "401909300",
 "start": "2026-11-14T01:00:00+00:00",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas over 3.5 assists",
-"p": 0.085,
-"fair": 0.085,
-"ours": 0.1231,
-"price": 841,
+"line": 7.5,
+"name": "ty jerome",
+"lab": "Ty Jerome over 7.5 rebounds",
+"p": 0.05,
+"fair": 0.05,
+"ours": 0.0755,
+"price": 1464,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.158,
+"edge": 0.1806,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 12% vs 11% with the fee (+16%)",
+"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+18%)",
 "game total 235.5",
-"projected 26 min"
+"projected 31 min"
+]
+},
+{
+"gid": "401909299",
+"start": "2026-11-14T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 7.5 rebounds",
+"p": 0.28,
+"fair": 0.28,
+"ours": 0.3578,
+"price": 229,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.1754,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ rebounds: our chance 36% vs 30% with the fee (+18%)",
+"game total 245.5",
+"projected 30 min"
+]
+}
+],
+"p": 0.014,
+"d": 51.456,
+"first": "2026-11-14T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909299",
+"start": "2026-11-14T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 7.5 rebounds",
+"p": 0.28,
+"fair": 0.28,
+"ours": 0.3578,
+"price": 229,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.1754,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ rebounds: our chance 36% vs 30% with the fee (+18%)",
+"game total 245.5",
+"projected 30 min"
 ]
 },
 {
@@ -594,75 +754,21 @@
 "lab": "Jaylen Wells over 5.5 rebounds",
 "p": 0.105,
 "fair": 0.105,
-"ours": 0.1614,
+"ours": 0.1541,
 "price": 756,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3812,
+"edge": 0.3188,
 "grp": "k15n",
 "v": [
-"Kalshi 6+ rebounds: our chance 16% vs 12% with the fee (+38%)",
-"game total 237.5",
+"Kalshi 6+ rebounds: our chance 15% vs 12% with the fee (+32%)",
+"game total 235.5",
 "projected 27 min"
 ]
 }
 ],
-"p": 0.00893,
-"d": 80.55,
-"first": "2026-11-14T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909300",
-"start": "2026-11-14T01:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "ty jerome",
-"lab": "Ty Jerome over 7.5 rebounds",
-"p": 0.05,
-"fair": 0.05,
-"ours": 0.0736,
-"price": 1464,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1509,
-"grp": "k15n",
-"v": [
-"Kalshi 8+ rebounds: our chance 7% vs 6% with the fee (+15%)",
-"game total 237.5",
-"projected 31 min"
-]
-},
-{
-"gid": "401909298",
-"start": "2026-11-14T01:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas over 3.5 assists",
-"p": 0.085,
-"fair": 0.085,
-"ours": 0.1231,
-"price": 841,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.158,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ assists: our chance 12% vs 11% with the fee (+16%)",
-"game total 235.5",
-"projected 26 min"
-]
-}
-],
-"p": 0.00425,
-"d": 147.172,
+"p": 0.0294,
+"d": 28.162,
 "first": "2026-11-14T01:00:00+00:00",
 "res": null
 }
