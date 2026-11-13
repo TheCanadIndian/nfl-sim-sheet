@@ -88,6 +88,14 @@ def main(cmd, msg=None):
         print(f"copied {n} code files from the repo to the PC")
         return
     # state: never push a PC copy over a newer cloud copy (the cloud runs keep updating these)
+    # last commit time of every engine/parlays/ path in ONE git log pass (2026-11-12: was one `git log -1` per file, ~30 s on 190 files)
+    plog = subprocess.run([GIT, "-C", REPO, "log", "--format=@%ct", "--name-only", "--", "engine/parlays/"], capture_output=True, text=True).stdout
+    ptime, cur = {}, None
+    for ln in plog.splitlines():
+        if ln.startswith("@"):
+            cur = ln[1:]
+        elif ln.strip() and cur and ln not in ptime:
+            ptime[ln] = cur                          # newest first: the first sighting is the last commit
     newer_here, newer_cloud = [], []
     for r in files(HERE, STATE):
         e = os.path.join(ENGINE, r)
@@ -95,7 +103,7 @@ def main(cmd, msg=None):
             newer_here.append(r); continue
         rp = "engine/" + r.replace(os.sep, "/")
         if rp.startswith("engine/parlays/"):          # still on main, with history
-            t = subprocess.run([GIT, "-C", REPO, "log", "-1", "--format=%ct", "--", rp], capture_output=True, text=True).stdout.strip()
+            t = ptime.get(rp, "")
         else:                                        # on the one-commit live branch: its time is the newest publish of any file
             t = str(live_time() or "")
         # 5 min margin: a commit reaches GitHub after its timestamp, so a pull right then copies older data with a later mtime
