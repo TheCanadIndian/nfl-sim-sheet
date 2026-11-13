@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-13",
 "lock": "2026-11-14T00:00:00+00:00",
-"frozen_at": "2026-11-13T19:54:12.859Z",
+"frozen_at": "2026-11-13T20:13:37.177Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -235,6 +235,53 @@
 "res": null
 },
 {
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909296",
+"start": "2026-11-14T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "karlanthony towns",
+"lab": "Karl-Anthony Towns over 1.5 threes",
+"p": 0.4609,
+"price": 170,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup"
+],
+"sport": "nba",
+"edge": 0.2445
+},
+{
+"gid": "401909300",
+"start": "2026-11-14T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "saddiq bey",
+"lab": "Saddiq Bey over 4.5 rebounds",
+"p": 0.5197,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.1693
+}
+],
+"p": 0.23953,
+"d": 6.075,
+"first": "2026-11-14T00:00:00+00:00",
+"res": null
+},
+{
 "card": "Confluence parlays (experimental)",
 "tier": "3 legs",
 "legs": [
@@ -322,48 +369,6 @@
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909296",
-"start": "2026-11-14T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "karlanthony towns",
-"lab": "Karl-Anthony Towns over 1.5 threes",
-"p": 0.4399,
-"price": 170,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1878,
-"fair": 0.4407,
-"main": true
-},
-{
-"gid": "401909300",
-"start": "2026-11-14T01:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "saddiq bey",
-"lab": "Saddiq Bey over 4.5 rebounds",
-"p": 0.5205,
-"price": 125,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.171,
-"fair": 0.5189,
-"main": true
-}
-],
-"p": 0.22897,
-"d": 6.075,
-"first": "2026-11-14T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
 "tier": "3 legs",
 "legs": [
 {
@@ -374,12 +379,12 @@
 "line": 1.5,
 "name": "karlanthony towns",
 "lab": "Karl-Anthony Towns over 1.5 threes",
-"p": 0.4399,
+"p": 0.4594,
 "price": 170,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1878,
-"fair": 0.4407,
+"edge": 0.2405,
+"fair": 0.4624,
 "main": true
 },
 {
@@ -415,7 +420,7 @@
 "main": true
 }
 ],
-"p": 0.06324,
+"p": 0.06604,
 "d": 24.3,
 "first": "2026-11-14T00:00:00+00:00",
 "res": null
@@ -489,60 +494,6 @@
 ]
 },
 {
-"gid": "401909298",
-"start": "2026-11-14T01:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas over 3.5 threes",
-"p": 0.175,
-"fair": 0.175,
-"ours": 0.2511,
-"price": 398,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2507,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ threes: our chance 25% vs 20% with the fee (+25%)",
-"game total 235.5",
-"projected 26 min"
-]
-}
-],
-"p": 0.01837,
-"d": 42.629,
-"first": "2026-11-14T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909298",
-"start": "2026-11-14T01:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas over 3.5 threes",
-"p": 0.175,
-"fair": 0.175,
-"ours": 0.2511,
-"price": 398,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2507,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ threes: our chance 25% vs 20% with the fee (+25%)",
-"game total 235.5",
-"projected 26 min"
-]
-},
-{
 "gid": "401909299",
 "start": "2026-11-14T01:00:00+00:00",
 "kind": "reb",
@@ -550,8 +501,8 @@
 "line": 5.5,
 "name": "norman powell",
 "lab": "Norman Powell over 5.5 rebounds",
-"p": 0.085,
-"fair": 0.085,
+"p": 0.095,
+"fair": 0.095,
 "ours": 0.1273,
 "price": 841,
 "book": "Kalshi",
@@ -565,8 +516,8 @@
 ]
 }
 ],
-"p": 0.01487,
-"d": 46.862,
+"p": 0.00997,
+"d": 80.55,
 "first": "2026-11-14T01:00:00+00:00",
 "res": null
 },
@@ -582,8 +533,8 @@
 "line": 5.5,
 "name": "norman powell",
 "lab": "Norman Powell over 5.5 rebounds",
-"p": 0.085,
-"fair": 0.085,
+"p": 0.095,
+"fair": 0.095,
 "ours": 0.1273,
 "price": 841,
 "book": "Kalshi",
@@ -594,6 +545,60 @@
 "Kalshi 6+ rebounds: our chance 13% vs 11% with the fee (+20%)",
 "game total 245.5",
 "projected 29 min"
+]
+},
+{
+"gid": "401909298",
+"start": "2026-11-14T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "meleek thomas",
+"lab": "Meleek Thomas over 3.5 threes",
+"p": 0.185,
+"fair": 0.185,
+"ours": 0.2511,
+"price": 373,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.1889,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ threes: our chance 25% vs 21% with the fee (+19%)",
+"game total 235.5",
+"projected 26 min"
+]
+}
+],
+"p": 0.01758,
+"d": 44.509,
+"first": "2026-11-14T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909298",
+"start": "2026-11-14T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "meleek thomas",
+"lab": "Meleek Thomas over 3.5 threes",
+"p": 0.185,
+"fair": 0.185,
+"ours": 0.2511,
+"price": 373,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.1889,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ threes: our chance 25% vs 21% with the fee (+19%)",
+"game total 235.5",
+"projected 26 min"
 ]
 },
 {
@@ -619,8 +624,8 @@
 ]
 }
 ],
-"p": 0.00893,
-"d": 80.55,
+"p": 0.01942,
+"d": 40.489,
 "first": "2026-11-14T01:00:00+00:00",
 "res": null
 },
@@ -658,8 +663,8 @@
 "line": 3.5,
 "name": "meleek thomas",
 "lab": "Meleek Thomas over 3.5 assists",
-"p": 0.09,
-"fair": 0.09,
+"p": 0.085,
+"fair": 0.085,
 "ours": 0.1232,
 "price": 841,
 "book": "Kalshi",
@@ -673,7 +678,7 @@
 ]
 }
 ],
-"p": 0.0045,
+"p": 0.00425,
 "d": 147.172,
 "first": "2026-11-14T01:00:00+00:00",
 "res": null
