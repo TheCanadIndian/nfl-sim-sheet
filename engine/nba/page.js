@@ -130,6 +130,36 @@ function usageLine(p){
   if (x.ast >= 1.5 && x.ach) L.push(`<span class="usl" title="AST% = his assists over his teammates' made baskets while he's on the floor: ${f1(x.ast)} of ${f1(x.ach)} a game${esc(yr)}. Same as Basketball-Reference's AST%.">Ast <b>${f1(x.ast)}</b> <i>AST% ${p1(x.ar)}</i></span>`);
   return L.length ? `<div class="usw">${L.join('')}</div>` : '';
 }
+// defense rating (nba/defrate.py, owner 2026-11-14: 'lets build a rating system for the defense' -> 'show all'): how far tonight's
+// defense moves his over away from the market price, in points at a 50/50 line, from the defense findings that held up against the
+// market (DvP, opponent rest / back-to-back / travel, the opponent's usual rim protector or 3-and-D starter out). Grades T tough
+// (<= -3), t slightly tough, n neutral, s slightly soft, S soft (+3+). Unseen tests: tough ran 3-5 pts under the price; no grade
+// beats the price after the vig -- a reason to skip an over, not to bet one.
+const DRG = {T: ['tough', 'drg-tough'], t: ['slightly tough', 'drg-stough'], n: ['neutral', 'drg-neutral'], s: ['slightly soft', 'drg-ssoft'], S: ['soft', 'drg-soft']};   // distinct names: the page renders in quirks mode, where class names ignore case
+function drWhy(p, st){
+  const g = D.games.find(x => x.id === p.g), dd = g && g.dd ? g.dd[p.o] : null, m = mx(p, st), R = [];
+  if (m) R.push(`DvP ${sgn(m.v)} ${KLAB[st]} vs ${m.da && m.da !== m.dp ? (ARCH_PL[p.ar] || PG_PL[p.pg]) : PG_PL[p.pg]}${m.v <= .92 ? ' (tough)' : ''}`);
+  if (dd){
+    if (dd.r != null && dd.r >= 3) R.push(`${p.o} rested ${Math.round(dd.r)} days`);
+    if (dd.r != null && dd.r < 1.6) R.push(`${p.o} on the 2nd night of a back-to-back`);
+    if (dd.mi != null && dd.mi >= 1000) R.push(`${p.o} flew ${dd.mi.toLocaleString()} mi`);
+    if (dd.rim && dd.rim.length) R.push(`${p.o} rim protector out (${dd.rim.join(', ')}; the market over-adjusts)`);
+    if (dd.d3 && dd.d3.length) R.push(`${p.o} 3-and-D starter out (${dd.d3.join(', ')}; the market over-adjusts)`);
+  }
+  return R;
+}
+function drChip(p, st, lab){
+  const x = p.dr && p.dr[st]; if (!x) return '';
+  const [v, gr] = x, G = DRG[gr] || DRG.n, pv = `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`;
+  const tip = `Defense rating, ${KLAB[st]} overs: ${G[0]}, ${pv} pts vs the market price (at a 50/50 line). Why: ${drWhy(p, st).join(' · ') || 'nothing unusual'}. Built from the defense findings that held up against the market and tested on data it never saw: tough matchups ran 3-5 pts under the price; no grade beat the price after the vig, so read it as a reason to skip an over, not to bet one. Experimental.`;
+  return lab === 'card' ? `<span class="drc ${G[1]}" title="${esc(tip)}">D · <i>${SL[st]}</i> ${G[0]} <b>${pv}</b></span>`
+    : `<span class="drc ${G[1]}" title="${esc(tip)}"><i>${SL[st]}</i> <b>${pv}</b></span>`;
+}
+function drLine(p){
+  if (!p.dr) return '';
+  const L = ['pts', 'reb', 'ast', 'fg3m'].filter(st => p.dr[st] && vol(p, st));
+  return L.length ? `<div class="drw"><span class="drh" title="Defense rating for his overs tonight: points vs the market price. Red = tough (overs ran 3-5 pts under the price on unseen data), outlined = slight, grey = neutral, green = soft. Hover a chip for why.">D rating</span>${L.map(st => drChip(p, st)).join('')}</div>` : '';
+}
 function mxLine(p){
   const L = ['pts', 'reb', 'ast', 'fg3m'].filter(st => vol(p, st)).map(st => ({st, m: mx(p, st)})).filter(x => x.m && Math.abs(x.m.v - 1) >= .08)
     .sort((a, b) => Math.abs(b.m.v - 1) - Math.abs(a.m.v - 1)).slice(0, 2);
@@ -156,7 +186,7 @@ function softStrip(g){
 }
 function teamTable(g, team){
   const ps = D.players.filter(p => p.g === g.id && p.t === team).sort((a,b) => (b.s[mode(g.id)]?.min?.[MED] ?? 0) - (a.s[mode(g.id)]?.min?.[MED] ?? 0));
-  const rows = ps.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-open="${esc(p.k)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${chips(p, g.id)}${mxLine(p)}${usageLine(p)}</td><td class="l"><span class="pos">${esc(p.pos)}${p.start ? '' : ''}</span></td>${COLS.map(c => cell(p, c, g.id)).join('')}</tr>`
+  const rows = ps.map(p => `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-open="${esc(p.k)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${chips(p, g.id)}${mxLine(p)}${drLine(p)}${usageLine(p)}</td><td class="l"><span class="pos">${esc(p.pos)}${p.start ? '' : ''}</span></td>${COLS.map(c => cell(p, c, g.id)).join('')}</tr>`
     + (state.open === p.k ? `<tr class="xrow"><td colspan="${COLS.length + 2}">${slider(p, g.id)}</td></tr>` : '')).join('');
   const outs = (g.out && g.out[team]) || [];
   const outLine = outs.length ? `<p class="muted small" style="margin:6px 0 0"><b style="color:var(--r2)">Out:</b> ${outs.map(o => `${esc(o.n)}${o.note ? ` <span title="${esc(o.note)}">(${esc(o.st)})</span>` : ''}`).join(', ')}. Their minutes are shared among the players below.</p>` : '';
@@ -466,7 +496,7 @@ function ladderCard(){
   cards.sort((a, b) => b.best - a.best);
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
-  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${ladFit(c)}</div><div class="ladtg">${chips(c.p, c.g)}</div>
+  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${ladFit(c)}${[...new Set(c.rungs.map(u => u.k))].map(st => drChip(c.p, st, 'card')).join('')}</div><div class="ladtg">${chips(c.p, c.g)}</div>
     <div class="ladr">${ladShown(c).map(u => lruChip(c, u)).join('')}</div>${starElse(c)}</div>`;
   if (LADM && !cards.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
   const nStar = cards.filter(c => starRungs(c).length).length;
@@ -518,7 +548,7 @@ function threesBoard(){
   const chip = (r, u) => { const pk = r.pick === u, e = Math.max(u.ek, u.eb);
     return `<span class="lru${pk ? ' thpk' : ''}" title="${n(u.l)}+ threes: threes-rule chance ${Math.round(u.q * 100)}% (ours ${Math.round(u.p * 100)}%, Kalshi mid ${Math.round(u.mid * 100)}%) · Kalshi ${Math.round(u.cost * 100)}% with the fee → edge ${u.ek >= 0 ? '+' : '−'}${Math.abs(Math.round(u.ek * 100))}%${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.ob.map(o => ` · ${o.b} ${o.o > 0 ? '+' : ''}${o.o}`).join('')}${u.mf ? ` · every other book’s fair ${Math.round(u.mf.f * 100)}% from ${Object.keys(u.mf.parts).join(', ')}${u.ef != null ? ` → ${u.best.b} ${u.ef >= 0 ? '+' : '−'}${Math.abs(Math.round(u.ef * 100))}% vs it` : ''}` : ' · no other book prices this number'}${pk ? ' · the pick the Profit page grades' : ''}${u.agree ? ' · ✓ the other books agree' : ''}"><b>${n(u.l)}+</b>${pk ? ' <b class="thtag">pick</b>' : ''}${u.agree ? ' <b class="thok">✓ books</b>' : ''} ${u.opts.map(o => o === u.best ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${u.ob.length ? ` <i class="lbk thob">${esc(BKS[u.ob[0].b] || u.ob[0].b)} ${u.ob[0].o > 0 ? '+' : ''}${u.ob[0].o}${u.ob.length > 1 ? ` <small>+${u.ob.length - 1}</small>` : ''}</i>` : ''} <i class="lbk">${Math.round(u.q * 100)}%</i>${u.mf ? ` <i class="lbk thmf">books ${Math.round(u.mf.f * 100)}%</i>` : ''}${e >= .05 && e <= .6 ? ` <b class="ledge">+${Math.round(e * 100)}%${u.ek < .05 ? ` ${u.best.b === 'Hard Rock' ? 'HR' : 'NV'}` : ''}</b>` : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(r.g.id), name: r.p.n, kind: 'fg3m', line: u.l, book: u.best.b, o: u.best.b === 'Kalshi' ? Math.round(u.cost >= .5 ? -100 * u.cost / (1 - u.cost) : 100 * (1 - u.cost) / u.cost) : Number(String(u.best.price).replace('+', '')), glab: `${r.g.away} @ ${r.g.home}`, start: r.g.start_utc || null, lab: `${r.p.n} ${n(u.l)}+ threes`}) : ''}${rungSlip(r.g, r.p, u, u.q)}</span>`; };
   const med = p => p.s.vegas && p.s.vegas.fg3m ? p.s.vegas.fg3m[MED] : null;
-  const row = r => `<div class="lad"><div class="ladh"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.t)} vs ${esc(r.p.o)} · ${esc(r.g.start || '')}${med(r.p) != null ? ` · our median ${f0(med(r.p))} 3PM` : ''}</span>${r.p.ar ? ` <span class="ladc">${esc(r.p.ar)}</span>` : ''}</div>
+  const row = r => `<div class="lad"><div class="ladh"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.t)} vs ${esc(r.p.o)} · ${esc(r.g.start || '')}${med(r.p) != null ? ` · our median ${f0(med(r.p))} 3PM` : ''}</span>${drChip(r.p, 'fg3m', 'card')}${r.p.ar ? ` <span class="ladc">${esc(r.p.ar)}</span>` : ''}</div>
     <div class="ladr">${(THA ? r.R : r.R.filter(u => u === r.pick || u === r.bk || u.agree || Math.max(u.ek, u.eb) >= .05 || Math.abs(u.mid - .5) < .2).slice(0, 4)).map(u => chip(r, u)).join('')}</div></div>`;
   const P = rows.filter(r => r.pick), B = rows.filter(r => !r.pick && r.bk), rest = rows.filter(r => !r.pick && !r.bk);
   return `<section class="panel"><div class="phead"><h2>Threes board <span class="exp3">experimental</span></h2><span class="small muted">${P.length} pick${P.length === 1 ? '' : 's'} · ${B.length} more at Hard Rock / Novig · ${rows.filter(r => r.agree).length} where every book agrees · ${rows.length} players</span></div>

@@ -1598,6 +1598,43 @@ def threes_data():
                 bands=[b[2] for b in ODDS_BANDS], since=str(df.date.min()), own=THREE_OWN)
 
 
+# ---------------------------------------------------------------- NBA defense rating, tracked (owner 2026-11-14: 'lets build a rating system for the defense'
+# -> 'show all'): every over at your books (allprops.py, last pregame price) counted by tonight's grade (nba/defrate.py), main and alt lines apart
+DR_ORDER = ["T", "t", "n", "s", "S"]
+
+
+def _safe(f):
+    try:
+        return f()
+    except Exception as e:                                   # noqa: BLE001  (display sections never take the page down)
+        print(f"{f.__name__}: skipped ({type(e).__name__}: {e})"); return None
+
+
+def drate_data(days=30):
+    try:
+        A = json.load(open(os.path.join(os.environ.get("SIM_SITE") or os.path.join(HERE, "site"), "markets", "allprops_nba.json")))
+    except (OSError, ValueError):
+        return None
+    D_ = A.get("drate") or {}
+    if not D_:
+        return dict(rows={}, stat={}, since=None, days=0)
+    lo = (dt.datetime.now(ET).date() - dt.timedelta(days=days)).isoformat()
+    rows, stat, ds = {}, {}, []
+    for day, cells in D_.items():
+        if day < lo:
+            continue
+        ds.append(day)
+        for key, c in cells.items():
+            g, st, ma, _b = key.split("|")
+            c = (list(c) + [0.0] * 5)[:5]
+            for tgt in (rows.setdefault(g, {}).setdefault(ma, [0, 0, 0.0, 0.0, 0.0]),) + ((stat.setdefault(g, {}).setdefault(st, [0, 0, 0.0, 0.0, 0.0]),) if ma == "main" else ()):
+                for i in range(5):
+                    tgt[i] += c[i]
+    rnd = lambda v: [int(v[0]), int(v[1]), round(v[2], 1), round(v[3], 1), round(v[4], 2)]
+    return dict(rows={g: {m: rnd(v) for m, v in x.items()} for g, x in rows.items()}, stat={g: {k: rnd(v) for k, v in x.items()} for g, x in stat.items()},
+                since=min(ds) if ds else None, days=len(ds))
+
+
 def page_data():
     rows = []                                          # (sport, category, date, pnl, clv)
     for f in glob.glob(os.path.join(OUT, "profit_*.json")):
@@ -1721,7 +1758,7 @@ def page_data():
         thr = threes_data()
     except Exception as e:                                   # noqa: BLE001  (a display section: never take the page down)
         print(f"threes section: skipped ({type(e).__name__}: {e})"); thr = None
-    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data(), edges=edge_bands(), thr=thr)
+    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data(), edges=edge_bands(), thr=thr, drt=_safe(drate_data))
 
 
 # ---------------------------------------------------------------- what actually worked (owner 2026-10-21)
@@ -2016,7 +2053,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .pf small.holdm{display:none}
 @media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5),.pf th:nth-child(8),.pf td:nth-child(8){display:none}.pf small.holdm{display:block;margin-top:3px;line-height:1.5}.holdm .hl{display:block}}
 .bnav{position:sticky;top:var(--tbh,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:0 0 12px;background:var(--bg);scrollbar-width:none;align-items:center}.bnav::-webkit-scrollbar{display:none}.bnav .small{flex:none;margin-right:2px}.bnav a{flex:none;border:1px solid var(--faint);border-radius:999px;padding:5px 12px;font:600 13px var(--body);color:var(--ink);text-decoration:none;white-space:nowrap}.bnav a:hover,.bnav a:focus-visible{border-color:var(--ink)}.bnav a.ext{color:var(--muted)}
-.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.thr .thr1 td.l small{display:block;font-weight:400;color:var(--muted);font-size:11px}.thr .thr1 tr.own td.l{box-shadow:inset 3px 0 0 #F2C14E;padding-left:9px}.thr .thr1 td{text-align:right}.thr .thr1 td.l,.thr .thr1 td.hold{text-align:left}.thr .thr1 td small{display:block}.t3r{display:inline-block;font-size:10.5px;font-weight:600;color:#F2C14E;border:1px solid #F2C14E;border-radius:999px;padding:0 6px;margin-left:4px;vertical-align:1px}.thr .thr1 td.wp{white-space:nowrap}.thrmore{margin:6px 0 4px;background:none;border:1px solid var(--line,#2a2f36);color:var(--muted);border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer}.thr h3 small{font-weight:400;font-size:12px}@media (max-width:560px){.thr .wp{display:none}}.fgm table{width:100%;border-collapse:separate;border-spacing:3px;font-size:13px}.fgm th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:2px 4px;vertical-align:bottom}.fgm th small{display:block;font-weight:400;font-size:11px}.fgm td.l,.fgm th.l{text-align:left;padding:4px 6px 4px 0}.fgm td.fgc{text-align:center;border-radius:6px;padding:5px 4px;background:var(--sunk);min-width:64px}.fgm td.fgc b{display:block;font-weight:800;font-size:14px}.fgm td.fgc small{display:block;font-size:11px;color:var(--muted)}.fgm td.up{background:color-mix(in srgb,var(--good) 24%,transparent)}.fgm td.up b{color:var(--good)}.fgm td.dn b{color:var(--bad)}.fgm td.few{opacity:.5}.fgm td.na{background:transparent;color:var(--muted)}.fgm tr.all td{border-bottom:1px solid var(--faint)}.fgm tr.all td.l{font-weight:700}.fgm .upnow{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13.5px;margin:4px 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fgm .upnow .h{font-weight:700;margin-right:4px}.fgm .upnow .h small{font-weight:400;color:var(--muted)}.fgm .upc{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}.fgm .upc b{color:var(--good)}.fgm .upc small{color:var(--muted)}.fgm .upnow .more{color:var(--muted);font-size:12.5px}@media (max-width:560px){.fgm .upc{white-space:normal}}.fgm h3{margin:14px 0 4px}@media (max-width:560px){.fgm td.fgc{min-width:0;padding:4px 2px}.fgm td.fgc b{font-size:13px}.fgm td.l{font-size:12px}}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
+.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.drs .dr1 td{text-align:right}.drs .dr1 td.l{text-align:left}.drs .dr1 td.l small{display:block;color:var(--muted);font-size:11px}.drs .dr1 td.wp{white-space:nowrap}.drt{display:inline-block;font-size:11.5px;font-weight:700;border-radius:999px;padding:0 8px;border:1px solid}.drt-tough{color:#fff;background:var(--bad);border-color:var(--bad)}.drt-stough{color:var(--bad)}.drt-neutral{color:var(--muted);border-color:var(--faint)}.drt-ssoft{color:var(--good)}.drt-soft{color:#0b2e17;background:var(--good);border-color:var(--good)}@media (max-width:560px){.drs .wp{display:none}}.thr .thr1 td.l small{display:block;font-weight:400;color:var(--muted);font-size:11px}.thr .thr1 tr.own td.l{box-shadow:inset 3px 0 0 #F2C14E;padding-left:9px}.thr .thr1 td{text-align:right}.thr .thr1 td.l,.thr .thr1 td.hold{text-align:left}.thr .thr1 td small{display:block}.t3r{display:inline-block;font-size:10.5px;font-weight:600;color:#F2C14E;border:1px solid #F2C14E;border-radius:999px;padding:0 6px;margin-left:4px;vertical-align:1px}.thr .thr1 td.wp{white-space:nowrap}.thrmore{margin:6px 0 4px;background:none;border:1px solid var(--line,#2a2f36);color:var(--muted);border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer}.thr h3 small{font-weight:400;font-size:12px}@media (max-width:560px){.thr .wp{display:none}}.fgm table{width:100%;border-collapse:separate;border-spacing:3px;font-size:13px}.fgm th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:2px 4px;vertical-align:bottom}.fgm th small{display:block;font-weight:400;font-size:11px}.fgm td.l,.fgm th.l{text-align:left;padding:4px 6px 4px 0}.fgm td.fgc{text-align:center;border-radius:6px;padding:5px 4px;background:var(--sunk);min-width:64px}.fgm td.fgc b{display:block;font-weight:800;font-size:14px}.fgm td.fgc small{display:block;font-size:11px;color:var(--muted)}.fgm td.up{background:color-mix(in srgb,var(--good) 24%,transparent)}.fgm td.up b{color:var(--good)}.fgm td.dn b{color:var(--bad)}.fgm td.few{opacity:.5}.fgm td.na{background:transparent;color:var(--muted)}.fgm tr.all td{border-bottom:1px solid var(--faint)}.fgm tr.all td.l{font-weight:700}.fgm .upnow{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13.5px;margin:4px 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fgm .upnow .h{font-weight:700;margin-right:4px}.fgm .upnow .h small{font-weight:400;color:var(--muted)}.fgm .upc{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}.fgm .upc b{color:var(--good)}.fgm .upc small{color:var(--muted)}.fgm .upnow .more{color:var(--muted);font-size:12.5px}@media (max-width:560px){.fgm .upc{white-space:normal}}.fgm h3{margin:14px 0 4px}@media (max-width:560px){.fgm td.fgc{min-width:0;padding:4px 2px}.fgm td.fgc b{font-size:13px}.fgm td.l{font-size:12px}}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
 .crit .crcall{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:9px 12px;font-size:13.5px;margin:6px 0 10px}.crit .crcall small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
 .crit .bh{display:inline-block;font-size:10.5px;font-weight:700;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:0 6px;margin-left:6px;white-space:nowrap}
 .crit td.l{white-space:normal;min-width:150px}.crit .tz{font-weight:400;font-size:12px;color:var(--muted);margin-left:6px}
@@ -2268,6 +2305,21 @@ function thrSec(){
     <div class="upnow"><span class="h">Up right now <small>(20+ bets)</small></span>${up.length ? up.join('') : '<span class="muted">nothing yet</span>'}</div>
     <p class="note" style="margin:0 0 6px">Green = up, red = down, faded = under 20 bets. One prop can count under several rules; ‘Every threes bet’ counts it once. Kalshi prices include the fee.</p>${t1}${t2}${lg}</section>`;
 }
+// NBA defense rating, tracked (owner 2026-11-14: 'show all'): profit.drate_data -> D.drt (allprops.py counts by nba/defrate.py grade)
+const DRL = {T: ['Tough', 'drt-tough', '−3 or less'], t: ['Slightly tough', 'drt-stough', '−3 to −1'], n: ['Neutral', 'drt-neutral', '−1 to +1'], s: ['Slightly soft', 'drt-ssoft', '+1 to +3'], S: ['Soft', 'drt-soft', '+3 or more']};
+const DR_TEST = {T: ['−3.2', '−4.9'], t: ['−2.0', '−3.6'], n: ['−2.7', '−2.0'], s: ['+1.7', '−2.3'], S: ['–', '–']};
+function drSec(){
+  const T = D.drt; if (!T) return '';
+  const cell = (c, lab) => c && c[0] ? fgCell({cat: lab, n: c[0], won: c[1], roi: c[4] / c[0] - 1, units: c[4] - c[0]}) : '<td class="fgc na">–</td>';
+  const wp = c => c && c[0] ? `${c[1]} <span class="muted">vs ${c[2].toFixed(1)}</span>` : '<span class="muted">–</span>';
+  const hf = c => c && c[0] ? hpc((c[1] - c[3]) / c[0]).replace('%', ' pts') : '<span class="muted">–</span>';
+  const rows = ['T', 't', 'n', 's', 'S'].map(g => { const r = (T.rows || {})[g] || {}, L = DRL[g];
+    return `<tr><td class="l"><span class="drt ${L[1]}">${L[0]}</span><small>rated ${L[2]} pts</small></td>${cell(r.main, L[0] + ' · main lines')}<td class="wp">${wp(r.main)}</td><td>${hf(r.main)}</td>${cell(r.alt, L[0] + ' · alt lines')}<td class="muted small">${DR_TEST[g][0]} / ${DR_TEST[g][1]}</td></tr>`; }).join('');
+  const empty = !T.days;
+  return `<section class="panel lt fgm drs"><div class="phead"><h2>NBA defense rating</h2><span class="small muted">every over at your books by tonight’s defense grade · ${empty ? 'tracking from Nov 14' : `last ${T.days} day${T.days === 1 ? '' : 's'} (since ${esc(T.since)})`} · 1 unit a bet</span></div>
+    <p class="note" style="margin:0 0 6px">Each NBA over gets a grade from tonight’s defense: DvP, the defense’s rest, back-to-back and travel, and its usual rim protector or 3-and-D starter being out (the market over-adjusts for those). The grade is how far that moves the over away from the market price. Built on Kalshi Jan–Apr 2026 and tested on data it never saw: tough matchups ran 3–5 pts under the price; no grade beat the price after the vig. Chips on the NBA page, ladder cards and screener. ${empty ? '<b>First results after tonight’s games.</b>' : ''}</p>
+    <div class="tw"><table class="dr1"><thead><tr><th class="l">Grade</th><th>Main lines</th><th class="wp">Won vs priced</th><th title="Over hit rate minus the sharp fair at the last price (points)">Hit vs fair</th><th>Alt lines</th><th title="The study’s unseen tests: hit minus the price on Kalshi (playoffs + 2026-27) / books’ main lines (Oct 24 - Nov 13), in points">Study test</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
 const BSEC = [
   ['b-odds', 'Results by odds', 'Which odds ranges have made money?', () => oddsTable()],
   ['b-arch', 'NBA by archetype', 'Which NBA player types, stats and odds win?', () => archOdds()],
@@ -2277,6 +2329,7 @@ const BSEC = [
   ['b-legs', 'Parlay legs', 'Which kinds of parlay legs hit more than expected?', () => legTable()],
   ['b-fg', 'NHL first goal & 2+', 'Which NHL first-goal and 2+ goal bets are up right now?', () => fgSec()],
   ['b-3pt', 'NBA threes', 'Which NBA threes bets are making money?', () => thrSec()],
+  ['b-dr', 'NBA defense rating', 'Do overs against tough defenses lose more than the price?', () => drSec()],
 ];
 function breakdowns(){
   const S = BSEC.map(([id, lab, q, f]) => [id, lab, q, f()]).filter(x => x[3]);

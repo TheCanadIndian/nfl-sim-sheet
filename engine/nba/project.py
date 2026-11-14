@@ -361,6 +361,11 @@ def main():
         FBM.write(payload, F.DB)
     except Exception as e:                                         # noqa: BLE001 -- display / tracking only
         print("first basket model skipped:", type(e).__name__, e)
+    try:                                                           # defense rating for overs (defrate.py, owner 2026-11-14: 'show all')
+        import defrate as DR
+        DR.write(payload, F.DB)
+    except Exception as e:                                         # noqa: BLE001 -- display / tracking only
+        print("defense rating skipped:", type(e).__name__, e)
     try:                                                           # archetype map for the Profit page (owner 2026-11-06)
         write_arch_map(fr)
     except Exception as e:                                         # noqa: BLE001 -- display only

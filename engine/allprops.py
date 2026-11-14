@@ -94,6 +94,16 @@ def _add(A, day, grp, kind, d, y, fair):
     c[0] += 1; c[1] += y; c[2] = round(c[2] + 1 / d, 4); c[3] = round(c[3] + (fair if fair is not None else 1 / d / 1.045), 4)
 
 
+def _add_dr(A, day, gr, kind, main, d, y, fair):
+    """NBA defense rating (nba/defrate.py, owner 2026-11-14 'show all'): every over at your books by tonight's grade
+    -> A['drate'][day]['grade|stat|main or alt|band'] = [n, won, priced, fair, paid] (paid = payouts of the winners, so the
+    return is paid / n - 1); the Profit page's 'NBA defense rating' (Breakdowns) reads it."""
+    from profit import ST_LAB
+    key = f"{gr}|{ST_LAB.get(kind, kind)}|{'main' if main else 'alt'}|{_band(d)}"
+    c = A.setdefault("drate", {}).setdefault(day, {}).setdefault(key, [0, 0, 0.0, 0.0, 0.0])
+    c[0] += 1; c[1] += y; c[2] = round(c[2] + 1 / d, 4); c[3] = round(c[3] + (fair if fair is not None else 1 / d / 1.045), 4); c[4] = round(c[4] + d * y, 4)
+
+
 def _et_day(st):
     from zoneinfo import ZoneInfo
     return dt.datetime.fromisoformat(st).astimezone(ZoneInfo("America/New_York")).date().isoformat()
@@ -110,6 +120,8 @@ def grade():
             continue
         A = _load(_p(f"allprops_{sport}.json"), {})
         G = _groups(sport)
+        DRT = _load(_p("drate_nba.json"), {}).get("games", {}) if sport == "nba" else {}
+        BL = _load(_p("boxlines_nba.json"), {}) if sport == "nba" else {}
         done = 0
         for gid in list(P):
             st = dt.datetime.fromisoformat(P[gid]["s"])
@@ -129,9 +141,15 @@ def grade():
                 if res not in ("W", "L"):
                     continue
                 _add(A, day, G.get(jsnorm(nm)) or "unknown", k, _dec(o), int(res == "W"), fair)
+                x = ((DRT.get(str(gid)) or {}).get("p") or {}).get(jsnorm(nm), {}).get(k)
+                if x:
+                    ml = ((BL.get(str(gid)) or {}).get("p") or {}).get(jsnorm(nm), {}).get(k)
+                    _add_dr(A, day, x[1], k, ml is not None and abs(float(ml) - float(l)) < .01, _dec(o), int(res == "W"), fair)
             del P[gid]; done += 1
         cut = (now.date() - dt.timedelta(days=KEEP_DAYS)).isoformat()
         A["days"] = {d: v for d, v in (A.get("days") or {}).items() if d >= cut}
+        if A.get("drate"):
+            A["drate"] = {d: v for d, v in A["drate"].items() if d >= cut}
         json.dump(A, open(_p(f"allprops_{sport}.json"), "w"), separators=(",", ":"), sort_keys=True)
         json.dump(P, open(fp, "w"), separators=(",", ":"))
         print(f"allprops {sport}: graded {done} games, {len(P)} pending, {len(A['days'])} days kept")
