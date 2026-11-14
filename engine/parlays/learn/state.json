@@ -1,7 +1,7 @@
 {
-"updated": "2026-11-14T02:58:36+00:00",
-"rows": 1022,
-"live_rows": 716,
+"updated": "2026-11-14T03:00:24+00:00",
+"rows": 1024,
+"live_rows": 718,
 "segments": [
 {
 "seg": "NHL",
@@ -265,6 +265,15 @@
 "status": "Proven"
 },
 {
+"seg": "NBA",
+"n": 33,
+"ret": -0.3234,
+"h1": -0.173,
+"h2": -0.4832,
+"z": -1.36,
+"status": "Dropped"
+},
+{
 "seg": "NHL \u00b7 3 reasons",
 "n": 31,
 "ret": -0.2974,
@@ -283,12 +292,12 @@
 "status": "Watching"
 },
 {
-"seg": "NBA",
-"n": 31,
-"ret": -0.2797,
+"seg": "NBA \u00b7 Hard Rock",
+"n": 30,
+"ret": -0.3924,
 "h1": -0.173,
-"h2": -0.4093,
-"z": -1.11,
+"h2": -0.6793,
+"z": -1.59,
 "status": "Dropped"
 },
 {
@@ -298,15 +307,6 @@
 "h1": -0.2323,
 "h2": -0.1131,
 "z": -0.53,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 Hard Rock",
-"n": 28,
-"ret": -0.349,
-"h1": -0.5108,
-"h2": -0.2087,
-"z": -1.32,
 "status": "Learning"
 },
 {
@@ -338,11 +338,11 @@
 },
 {
 "seg": "NBA \u00b7 rotation",
-"n": 23,
-"ret": -0.397,
+"n": 24,
+"ret": -0.4221,
 "h1": -0.1355,
-"h2": -0.6367,
-"z": -1.45,
+"h2": -0.6646,
+"z": -1.61,
 "status": "Learning"
 },
 {
@@ -383,11 +383,11 @@
 },
 {
 "seg": "NBA \u00b7 fits a path",
-"n": 21,
-"ret": -0.3396,
+"n": 22,
+"ret": -0.3696,
 "h1": -0.2685,
-"h2": -0.455,
-"z": -1.2,
+"h2": -0.5156,
+"z": -1.36,
 "status": "Learning"
 },
 {
@@ -526,6 +526,15 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 no path",
+"n": 10,
+"ret": -0.154,
+"h1": 0.6919,
+"h2": -1.0,
+"z": -0.35,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 3 reasons",
 "n": 10,
 "ret": -0.735,
@@ -544,7 +553,7 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 no path",
+"seg": "NBA \u00b7 1 reason",
 "n": 9,
 "ret": -0.06,
 "h1": 0.5167,
@@ -553,12 +562,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 1 reason",
+"seg": "NBA \u00b7 2 reasons",
 "n": 9,
-"ret": -0.06,
-"h1": 0.5167,
-"h2": -0.3484,
-"z": -0.12,
+"ret": 0.2466,
+"h1": 0.0023,
+"h2": 0.442,
+"z": 0.61,
 "status": "Learning"
 },
 {
@@ -598,12 +607,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 2 reasons",
+"seg": "NBA \u00b7 matchup",
 "n": 8,
-"ret": 0.4024,
-"h1": 0.0023,
-"h2": 0.8025,
-"z": 0.95,
+"ret": -0.7125,
+"h1": -1.0,
+"h2": -0.54,
+"z": -2.48,
 "status": "Learning"
 },
 {
@@ -625,21 +634,21 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 threes",
+"n": 7,
+"ret": -0.3014,
+"h1": 0.63,
+"h2": -1.0,
+"z": -0.66,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 rebounds \u00b7 edge 5-10%",
 "n": 7,
 "ret": -0.0357,
 "h1": 0.1125,
 "h2": -0.2333,
 "z": -0.08,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 matchup",
-"n": 7,
-"ret": -0.6714,
-"h1": -1.0,
-"h2": -0.425,
-"z": -2.04,
 "status": "Learning"
 },
 {
@@ -688,21 +697,21 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 threes",
-"n": 5,
-"ret": -0.022,
-"h1": 1.445,
-"h2": -1.0,
-"z": -0.04,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 assists \u00b7 edge 5-10%",
 "n": 5,
 "ret": -0.058,
 "h1": 0.325,
 "h2": -0.3133,
 "z": -0.1,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 threes \u00b7 edge 5-10%",
+"n": 5,
+"ret": -0.43,
+"h1": 0.425,
+"h2": -1.0,
+"z": -0.75,
 "status": "Learning"
 },
 {
@@ -733,12 +742,30 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 threes \u00b7 plus money",
+"n": 4,
+"ret": -0.2875,
+"h1": 0.425,
+"h2": -1.0,
+"z": -0.4,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 Novig",
 "n": 3,
 "ret": 0.3667,
 "h1": 1.04,
 "h2": 0.03,
 "z": 0.54,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 threes \u00b7 coin flip",
+"n": 3,
+"ret": -0.32,
+"h1": 1.04,
+"h2": -1.0,
+"z": -0.47,
 "status": "Learning"
 },
 {
@@ -769,34 +796,7 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 threes \u00b7 edge 5-10%",
-"n": 3,
-"ret": -0.05,
-"h1": 1.85,
-"h2": -1.0,
-"z": -0.05,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 threes \u00b7 plus money",
-"n": 3,
-"ret": -0.05,
-"h1": 1.85,
-"h2": -1.0,
-"z": -0.05,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 threes \u00b7 edge 10-20%",
-"n": 2,
-"ret": 0.02,
-"h1": 1.04,
-"h2": -1.0,
-"z": 0.02,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 threes \u00b7 coin flip",
 "n": 2,
 "ret": 0.02,
 "h1": 1.04,
@@ -877,6 +877,15 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 0 reasons",
+"n": 1,
+"ret": -1.0,
+"h1": -1.0,
+"h2": null,
+"z": 0.0,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 points \u00b7 edge 10-20%",
 "n": 1,
 "ret": 0.9091,
@@ -905,14 +914,6 @@
 }
 ],
 "changes": [
-{
-"date": "2026-10-22",
-"seg": "NHL \u00b7 Novig",
-"was": "Watching",
-"now": "Dropped",
-"n": 288,
-"ret": -0.1881
-},
 {
 "date": "2026-10-22",
 "seg": "NHL \u00b7 goals \u00b7 plus money",
@@ -1384,6 +1385,14 @@
 "now": "Dropped",
 "n": 280,
 "ret": -0.1191
+},
+{
+"date": "2026-11-13",
+"seg": "NBA \u00b7 Hard Rock",
+"was": "Learning",
+"now": "Dropped",
+"n": 30,
+"ret": -0.3924
 }
 ],
 "builder": {
