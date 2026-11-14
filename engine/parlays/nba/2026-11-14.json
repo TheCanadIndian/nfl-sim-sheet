@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-14",
 "lock": "2026-11-15T00:00:00+00:00",
-"frozen_at": "2026-11-14T22:46:07.213Z",
+"frozen_at": "2026-11-14T22:51:27.265Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,24 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401909981",
+"start": "2026-11-15T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "james harden",
+"lab": "James Harden 6+ reb",
+"p": 0.3818,
+"price": 210,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
 "gid": "401909983",
 "start": "2026-11-15T01:00Z",
 "kind": "ast",
@@ -22,7 +40,7 @@
 "line": 6.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 7+ ast",
-"p": 0.3113,
+"p": 0.3135,
 "price": 275,
 "book": "Hard Rock",
 "f": [
@@ -32,29 +50,11 @@
 "game",
 "price"
 ]
-},
-{
-"gid": "401909984",
-"start": "2026-11-15T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "jonathan kuminga",
-"lab": "Jonathan Kuminga 4+ ast",
-"p": 0.27,
-"price": 300,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
 }
 ],
-"p": 0.08405,
-"d": 15,
-"first": "2026-11-15T01:00:00+00:00",
+"p": 0.11969,
+"d": 11.625,
+"first": "2026-11-15T00:30:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -70,7 +70,7 @@
 "line": 6.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 7+ ast",
-"p": 0.3113,
+"p": 0.3135,
 "price": 275,
 "book": "Hard Rock",
 "f": [
@@ -86,75 +86,10 @@
 "start": "2026-11-15T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 8.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 9+ ast",
-"p": 0.3138,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.09767,
-"d": 12.375,
-"first": "2026-11-15T01:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909980",
-"start": "2026-11-15T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 5+ ast",
-"p": 0.2901,
-"price": 250,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909982",
-"start": "2026-11-15T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 3+ ast",
-"p": 0.4158,
-"price": 135,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909984",
-"start": "2026-11-15T01:00Z",
-"kind": "ast",
-"side": "o",
 "line": 3.5,
 "name": "jonathan kuminga",
 "lab": "Jonathan Kuminga 4+ ast",
-"p": 0.27,
+"p": 0.2805,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -165,9 +100,74 @@
 ]
 }
 ],
-"p": 0.03257,
-"d": 32.9,
-"first": "2026-11-15T00:00:00+00:00",
+"p": 0.08795,
+"d": 15,
+"first": "2026-11-15T01:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909981",
+"start": "2026-11-15T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "james harden",
+"lab": "James Harden 6+ reb",
+"p": 0.3818,
+"price": 210,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909982",
+"start": "2026-11-15T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham 7+ reb",
+"p": 0.3233,
+"price": 225,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909984",
+"start": "2026-11-15T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 4+ ast",
+"p": 0.2805,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.03463,
+"d": 40.3,
+"first": "2026-11-15T00:30:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -183,7 +183,7 @@
 "line": 4.5,
 "name": "zion williamson",
 "lab": "Zion Williamson 5+ ast",
-"p": 0.2901,
+"p": 0.2912,
 "price": 250,
 "book": "Hard Rock",
 "f": [
@@ -196,19 +196,19 @@
 {
 "gid": "401909982",
 "start": "2026-11-15T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 3+ ast",
-"p": 0.4158,
-"price": 135,
-"book": "Novig",
+"line": 6.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham 7+ reb",
+"p": 0.3233,
+"price": 225,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -216,11 +216,11 @@
 "start": "2026-11-15T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 8.5,
+"line": 7.5,
 "name": "lamelo ball",
-"lab": "LaMelo Ball 9+ ast",
-"p": 0.3138,
-"price": 230,
+"lab": "LaMelo Ball 8+ ast",
+"p": 0.4445,
+"price": 135,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -230,109 +230,10 @@
 ]
 }
 ],
-"p": 0.03784,
-"d": 27.142,
+"p": 0.04185,
+"d": 26.731,
 "first": "2026-11-15T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909984",
-"start": "2026-11-15T01:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "jonathan kuminga",
-"lab": "Jonathan Kuminga over 2.5 assists",
-"p": 0.514,
-"price": 125,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1565,
-"fair": 0.5123,
-"main": true
-},
-{
-"gid": "401909983",
-"start": "2026-11-15T01:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "cameron boozer",
-"lab": "Cameron Boozer over 5.5 assists",
-"p": 0.4591,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1249,
-"fair": 0.458,
-"main": true
-}
-],
-"p": 0.23598,
-"d": 5.513,
-"first": "2026-11-15T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401909984",
-"start": "2026-11-15T01:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "jonathan kuminga",
-"lab": "Jonathan Kuminga over 2.5 assists",
-"p": 0.514,
-"price": 125,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1565,
-"fair": 0.5123,
-"main": true
-},
-{
-"gid": "401909983",
-"start": "2026-11-15T01:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "cameron boozer",
-"lab": "Cameron Boozer over 5.5 assists",
-"p": 0.4591,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1249,
-"fair": 0.458,
-"main": true
-},
-{
-"gid": "401909982",
-"start": "2026-11-15T01:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "pelle larsson",
-"lab": "Pelle Larsson over 1.5 threes",
-"p": 0.3884,
-"price": 180,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0875,
-"fair": 0.4027,
-"main": true
-}
-],
-"p": 0.09165,
-"d": 15.435,
-"first": "2026-11-15T01:00:00+00:00",
+"pick": "longshot",
 "res": null
 }
 ],
