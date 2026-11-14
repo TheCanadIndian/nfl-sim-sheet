@@ -1527,6 +1527,77 @@ def _holds(y):
     return out
 
 
+# ---------------------------------------------------------------- NBA threes at a glance (owner 2026-11-14: 'can i get a section for threes profit as well',
+# after the NHL first goal & 2+ grid): every threes over / YES the site tracks, by rule (the threes-only rules first), each bet once overall, by odds
+# range, and the threes legs inside frozen parlays. Profit page Breakdowns tab, #b-3pt.
+THREE_OWN = ["NBA threes: one rung per player, 5%+ edge (experimental) (Kalshi)",
+             "NBA Threes: spot-up shooters, every main-line over at your books (experimental)",
+             "NBA Threes: spot-up shooters, your book 3%+ over the other books’ fair (experimental)"]
+
+
+def _oband(d):
+    am = round((d - 1) * 100 if d >= 2 else -100 / (d - 1))
+    return next((i for i, (lo, hi, _) in enumerate(ODDS_BANDS) if lo <= am <= hi), len(ODDS_BANDS) - 1)
+
+
+def threes_data():
+    rows = []
+    try:
+        ks = json.load(open(os.path.join(OUT, "profit_nba.json"))).get("rows", [])
+    except (OSError, ValueError):
+        ks = []
+    for r in ks:
+        if r.get("kind") != "fg3m" or r.get("bet") != "YES" or not r.get("cost"):
+            continue
+        rows.append(dict(cat=f"{r['cat']} (Kalshi)", date=r["date"], pnl=r["pnl"], won=int(r.get("won") or 0), d=1 / r["cost"], t0=r.get("t0"),
+                         key=f"k|{r['date']}|{r.get('title')}"))
+    try:
+        tg = json.load(open(os.path.join(OUT, "profit_tags.json")))
+    except (OSError, ValueError):
+        tg = {}
+    for e in tg.values():
+        if e.get("sport") != "nba" or e.get("res") not in ("W", "L"):
+            continue
+        lg = _tag_leg("nba", e.get("bet") or "")
+        if not lg or lg["kind"] != "fg3m" or lg["side"] != "o":
+            continue
+        d_, w = dec(e["o"]), e["res"] == "W"
+        rows.append(dict(cat=f"NBA {tag_label(e)}", date=_et_day(e.get("start") or e["first"]), pnl=(d_ - 1) if w else -1.0, won=int(w), d=d_, t0=e.get("start"),
+                         key=f"t|{e.get('gid')}|{e.get('name')}|{e.get('bet')}|{e.get('book')}"))
+    if not rows:
+        return None
+    df = pd.DataFrame(rows)
+    last30 = (dt.datetime.now(ET).date() - dt.timedelta(days=30)).isoformat()
+
+    def st(y):
+        o = dict(n=int(len(y)), won=int(y.won.sum()), priced=round(float((1 / y.d).sum()), 1), units=round(float(y.pnl.sum()), 1), roi=round(float(y.pnl.mean()), 4))
+        y30 = y[y.date >= last30]
+        o.update(n30=int(len(y30)), roi30=round(float(y30.pnl.mean()), 4) if len(y30) else None, **_holds(y))
+        o["bands"] = {str(i): [int(len(z)), int(z.won.sum()), round(float(z.pnl.mean()), 4)] for i, z in y.groupby(y.d.map(_oband))}
+        return o
+    rules = [dict(cat=c, own=c in THREE_OWN, **st(y)) for c, y in df.groupby("cat")]
+    rules.sort(key=lambda r: (not r["own"], THREE_OWN.index(r["cat"]) if r["own"] else 0, -r["n"]))
+    legs, seen = [0, 0, 0.0], set()                                   # threes legs in frozen cross-game parlays: n, won, priced
+    for f in glob.glob(os.path.join(HERE, "parlays", "nba", "????-??-??.json")):
+        try:
+            d = json.load(open(f))
+        except (OSError, ValueError):
+            continue
+        for p in d.get("parlays", []):
+            if str(p.get("card", "")).startswith("Same-game"):
+                continue
+            for L in p.get("legs", []):
+                o = L.get("price")
+                if L.get("kind") not in ("fg3m", "3pm") or L.get("side") == "u" or L.get("res") not in ("W", "L") or not isinstance(o, (int, float)) or abs(o) < 100:
+                    continue
+                k = (L.get("gid"), L.get("name"), L.get("line"), L.get("book"))
+                if k in seen:
+                    continue
+                seen.add(k); legs[0] += 1; legs[1] += L["res"] == "W"; legs[2] += 1 / dec(o)
+    return dict(rules=rules, all=st(df.drop_duplicates("key")), legs=dict(n=legs[0], won=int(legs[1]), priced=round(legs[2], 1)),
+                bands=[b[2] for b in ODDS_BANDS], since=str(df.date.min()), own=THREE_OWN)
+
+
 def page_data():
     rows = []                                          # (sport, category, date, pnl, clv)
     for f in glob.glob(os.path.join(OUT, "profit_*.json")):
@@ -1646,7 +1717,11 @@ def page_data():
             track.append(dict(base=base, rule=tag.strip(" ·") or "current rule", n=int(len(y)),
                               roi=st["roi"] if st else None, moe=st["moe"] if st else None,
                               clv=st.get("clv") if st else None, clv_n=st.get("clv_n") if st else 0))
-    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data(), edges=edge_bands())
+    try:
+        thr = threes_data()
+    except Exception as e:                                   # noqa: BLE001  (a display section: never take the page down)
+        print(f"threes section: skipped ({type(e).__name__}: {e})"); thr = None
+    return dict(overall=dict(**o, roi30=o30["roi"] if o30 else None, n30=o30["n"] if o30 else 0), sports=sports, track=track, since=TRACK_SINCE, feed=feed_data(), edges=edge_bands(), thr=thr)
 
 
 # ---------------------------------------------------------------- what actually worked (owner 2026-10-21)
@@ -1941,7 +2016,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .pf small.holdm{display:none}
 @media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5),.pf th:nth-child(8),.pf td:nth-child(8){display:none}.pf small.holdm{display:block;margin-top:3px;line-height:1.5}.holdm .hl{display:block}}
 .bnav{position:sticky;top:var(--tbh,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:0 0 12px;background:var(--bg);scrollbar-width:none;align-items:center}.bnav::-webkit-scrollbar{display:none}.bnav .small{flex:none;margin-right:2px}.bnav a{flex:none;border:1px solid var(--faint);border-radius:999px;padding:5px 12px;font:600 13px var(--body);color:var(--ink);text-decoration:none;white-space:nowrap}.bnav a:hover,.bnav a:focus-visible{border-color:var(--ink)}.bnav a.ext{color:var(--muted)}
-.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.fgm table{width:100%;border-collapse:separate;border-spacing:3px;font-size:13px}.fgm th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:2px 4px;vertical-align:bottom}.fgm th small{display:block;font-weight:400;font-size:11px}.fgm td.l,.fgm th.l{text-align:left;padding:4px 6px 4px 0}.fgm td.fgc{text-align:center;border-radius:6px;padding:5px 4px;background:var(--sunk);min-width:64px}.fgm td.fgc b{display:block;font-weight:800;font-size:14px}.fgm td.fgc small{display:block;font-size:11px;color:var(--muted)}.fgm td.up{background:color-mix(in srgb,var(--good) 24%,transparent)}.fgm td.up b{color:var(--good)}.fgm td.dn b{color:var(--bad)}.fgm td.few{opacity:.5}.fgm td.na{background:transparent;color:var(--muted)}.fgm tr.all td{border-bottom:1px solid var(--faint)}.fgm tr.all td.l{font-weight:700}.fgm .upnow{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13.5px;margin:4px 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fgm .upnow .h{font-weight:700;margin-right:4px}.fgm .upnow .h small{font-weight:400;color:var(--muted)}.fgm .upc{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}.fgm .upc b{color:var(--good)}.fgm .upc small{color:var(--muted)}.fgm .upnow .more{color:var(--muted);font-size:12.5px}@media (max-width:560px){.fgm .upc{white-space:normal}}.fgm h3{margin:14px 0 4px}@media (max-width:560px){.fgm td.fgc{min-width:0;padding:4px 2px}.fgm td.fgc b{font-size:13px}.fgm td.l{font-size:12px}}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
+.bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.thr .thr1 td.l small{display:block;font-weight:400;color:var(--muted);font-size:11px}.thr .thr1 tr.own td.l{box-shadow:inset 3px 0 0 #F2C14E;padding-left:9px}.thr .thr1 td{text-align:right}.thr .thr1 td.l,.thr .thr1 td.hold{text-align:left}.thr .thr1 td small{display:block}.t3r{display:inline-block;font-size:10.5px;font-weight:600;color:#F2C14E;border:1px solid #F2C14E;border-radius:999px;padding:0 6px;margin-left:4px;vertical-align:1px}.thr .thr1 td.wp{white-space:nowrap}.thrmore{margin:6px 0 4px;background:none;border:1px solid var(--line,#2a2f36);color:var(--muted);border-radius:999px;padding:5px 12px;font:inherit;font-size:12.5px;cursor:pointer}.thr h3 small{font-weight:400;font-size:12px}@media (max-width:560px){.thr .wp{display:none}}.fgm table{width:100%;border-collapse:separate;border-spacing:3px;font-size:13px}.fgm th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:2px 4px;vertical-align:bottom}.fgm th small{display:block;font-weight:400;font-size:11px}.fgm td.l,.fgm th.l{text-align:left;padding:4px 6px 4px 0}.fgm td.fgc{text-align:center;border-radius:6px;padding:5px 4px;background:var(--sunk);min-width:64px}.fgm td.fgc b{display:block;font-weight:800;font-size:14px}.fgm td.fgc small{display:block;font-size:11px;color:var(--muted)}.fgm td.up{background:color-mix(in srgb,var(--good) 24%,transparent)}.fgm td.up b{color:var(--good)}.fgm td.dn b{color:var(--bad)}.fgm td.few{opacity:.5}.fgm td.na{background:transparent;color:var(--muted)}.fgm tr.all td{border-bottom:1px solid var(--faint)}.fgm tr.all td.l{font-weight:700}.fgm .upnow{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13.5px;margin:4px 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fgm .upnow .h{font-weight:700;margin-right:4px}.fgm .upnow .h small{font-weight:400;color:var(--muted)}.fgm .upc{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}.fgm .upc b{color:var(--good)}.fgm .upc small{color:var(--muted)}.fgm .upnow .more{color:var(--muted);font-size:12.5px}@media (max-width:560px){.fgm .upc{white-space:normal}}.fgm h3{margin:14px 0 4px}@media (max-width:560px){.fgm td.fgc{min-width:0;padding:4px 2px}.fgm td.fgc b{font-size:13px}.fgm td.l{font-size:12px}}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
 .crit .crcall{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:9px 12px;font-size:13.5px;margin:6px 0 10px}.crit .crcall small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
 .crit .bh{display:inline-block;font-size:10.5px;font-weight:700;color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:0 6px;margin-left:6px;white-space:nowrap}
 .crit td.l{white-space:normal;min-width:150px}.crit .tz{font-weight:400;font-size:12px;color:var(--muted);margin-left:6px}
@@ -2134,6 +2209,7 @@ function critSec(){
     `<div class="aqin" style="padding-left:0">${[...(J.tree || [])].filter(a => a.name !== 'unknown').sort((a, b) => b.wp - a.wp).map(ar).join('')}</div>`, `${(J.tree || []).filter(a => a.name !== 'unknown').length} player types`);
   return `<section class="panel lt arq crit"><div class="phead"><h2>NBA over criteria</h2><span class="small muted">which criteria and mixes win · archetype → market → odds · a study, run ${esc(String(J.generated || '').slice(0, 10))}</span></div>${sw}${h}</section>`;
 }
+document.addEventListener('click', e => { const m = e.target.closest('button[data-thrmore]'); if (!m) return; const tb = m.previousElementSibling.querySelector('tbody.more'); if (!tb) return; tb.hidden = !tb.hidden; m.textContent = tb.hidden ? m.textContent.replace(/^Hide/, 'Show') : m.textContent.replace(/^Show/, 'Hide'); });
 document.addEventListener('click', e => { const b = e.target.closest('button[data-cs]'); if (!b) return;
   CS = b.dataset.cs; try { localStorage.setItem('profit-crit', CS); } catch (x) {} render(); });
 // NHL first goal + 2+ goals at a glance (owner 2026-11-12: 'easier to identify between all the separate fgs bets and highlight the
@@ -2141,7 +2217,7 @@ document.addEventListener('click', e => { const b = e.target.closest('button[dat
 const FGV = [['base', 'Every FanDuel price', 'baseline', 'every FanDuel first-goal price, its last pregame price', /every FanDuel price/],
   ['fdtop', 'FD + Bovada longer', 'than every other book', 'FanDuel and Bovada at the same odds, longer than every other book (at +5000 and up a third book must match)', /FanDuel [+] Bovada same odds/],
   ['narrow', 'FD + Bovada + our edge', 'our chance 15%+ over the fair', 'the FD + Bovada sighting where our first-goal chance is 15%+ over the other books’ fair (narrowed)', /narrowed/]];
-const fgPct = v => (v >= 0 ? '+' : '−') + Math.abs(Math.round(v * 100)) + '%';
+const fgPct = v => { const r = Math.round(v * 100); return (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r) + '%'; };
 function fgCell(r){
   if (!r) return '<td class="fgc na">–</td>';
   const few = r.n < 20;
@@ -2169,6 +2245,29 @@ function fgSec(){
     <div class="upnow"><span class="h">Up right now <small>(20+ bets)</small></span>${up.length ? up.join('') : '<span class="muted">no version overall</span>'}${nb ? `<span class="more">+ ${nb} odds range${nb === 1 ? '' : 's'} (green below)</span>` : ''}</div>
     <p class="note" style="margin:0 0 6px">Green = up, red = down, faded = under 20 bets (too few to read). Each cell is the return and won of bets. Long prices swing hard: one +5000 winner moves a column, so read these over weeks.</p>${fgt}${g2t}</section>`;
 }
+// NBA threes at a glance (owner 2026-11-14: 'can i get a section for threes profit as well'): profit.threes_data -> D.thr
+const THR_SHORT = [['Kalshi threes rule', 'one rung per player, 5%+ edge'], ['Spot-up, every over', 'main lines at your books'], ['Spot-up, 3%+ over books', 'your book vs the other books’ fair']];
+const thrName = r => { const t = r.cat.replace(/ [(]experimental[)]/, '').replace(/^NBA /, ''); return t.charAt(0).toUpperCase() + t.slice(1); };
+function thrSec(){
+  const T = D.thr; if (!T || !T.rules || !T.rules.length) return '';
+  const short = r => THR_SHORT[T.own.indexOf(r.cat)] || [thrName(r), ''];
+  const nm = r => r.own ? `<b>${esc(short(r)[0])}</b> <span class="t3r">threes rule</span><small>${esc(short(r)[1])}</small>` : esc(thrName(r));
+  const up = T.rules.filter(r => r.n >= 20 && r.roi > 0).map(r => `<span class="upc"><b>${fgPct(r.roi)}</b> ${esc(r.own ? short(r)[0] : thrName(r))} <small>won ${r.won} of ${r.n}</small></span>`);
+  const row = (lab, r, cls) => `<tr class="${cls || ''}"><td class="l">${lab}</td>${fgCell(r)}<td class="wp">${r.won} <span class="muted">vs ${r.priced.toFixed(1)}</span></td><td>${r.n30 ? hpc(r.roi30) + `<small>${r.n30} bets</small>` : '<span class="muted">–</span>'}</td><td class="hold">${hold(r.hv, r.tod)}</td></tr>`;
+  const SHOW = 12, rest = T.rules.slice(SHOW);
+  const t1 = `<h3>By rule <small class="muted">threes bets only · each rule’s own record</small></h3><div class="tw"><table class="thr1"><thead><tr><th class="l">Rule</th><th>Return</th><th class="wp" title="Bets won vs the wins the prices implied (sum of 1 / payout)">Won vs priced</th><th>Last 30 d</th><th title="${HOLD_TIP}" style="text-align:left">Holds up?</th></tr></thead><tbody>
+    ${row('<b>Every threes bet</b><small>each bet once, every rule</small>', Object.assign({cat: 'Every threes bet'}, T.all), 'all')}${T.rules.slice(0, SHOW).map(r => row(nm(r), r, r.own ? 'own' : '')).join('')}</tbody>${rest.length ? `<tbody class="more" hidden>${rest.map(r => row(nm(r), r, '')).join('')}</tbody>` : ''}</table></div>${rest.length ? `<button class="thrmore" type="button" data-thrmore>Show ${rest.length} more rules (fewer threes bets)</button>` : ''}`;
+  const cols = [['Every threes bet', 'each bet once', T.all], ...T.own.map((c, i) => [THR_SHORT[i][0], THR_SHORT[i][1], T.rules.find(r => r.cat === c)])].filter(c => c[2]);
+  const bi = T.bands.map((b, i) => i).filter(i => cols.some(c => c[2].bands[String(i)]));
+  const bc = (c, i) => { const x = c[2].bands[String(i)]; return x ? fgCell({cat: `${c[0]} · ${T.bands[i]}`, n: x[0], won: x[1], roi: x[2], units: x[2] * x[0]}) : '<td class="fgc na">–</td>'; };
+  const t2 = `<h3>By odds range</h3><div class="tw"><table><thead><tr><th class="l">Odds</th>${cols.map(c => `<th>${esc(c[0])}<small>${esc(c[1])}</small></th>`).join('')}</tr></thead><tbody>
+    <tr class="all"><td class="l">All prices</td>${cols.map(c => fgCell(Object.assign({}, c[2], {cat: c[0]}))).join('')}</tr>${bi.map(i => `<tr><td class="l">${esc(T.bands[i])}</td>${cols.map(c => bc(c, i)).join('')}</tr>`).join('')}</tbody></table></div>`;
+  const L = T.legs || {};
+  const lg = L.n ? `<p class="note" style="margin:8px 0 0">Threes legs inside parlays (frozen cross-game cards, each leg once): won ${L.won} of ${L.n} vs ${L.priced} priced${L.priced ? ` (${(L.won / L.priced).toFixed(2)} of priced)` : ''}.</p>` : '';
+  return `<section class="panel lt fgm thr"><div class="phead"><h2>NBA threes</h2><span class="small muted">every threes over the site tracks · since ${esc(T.since)} · 1 unit a bet</span></div>
+    <div class="upnow"><span class="h">Up right now <small>(20+ bets)</small></span>${up.length ? up.join('') : '<span class="muted">nothing yet</span>'}</div>
+    <p class="note" style="margin:0 0 6px">Green = up, red = down, faded = under 20 bets. One prop can count under several rules; ‘Every threes bet’ counts it once. Kalshi prices include the fee.</p>${t1}${t2}${lg}</section>`;
+}
 const BSEC = [
   ['b-odds', 'Results by odds', 'Which odds ranges have made money?', () => oddsTable()],
   ['b-arch', 'NBA by archetype', 'Which NBA player types, stats and odds win?', () => archOdds()],
@@ -2177,6 +2276,7 @@ const BSEC = [
   ['b-edge', 'By claimed edge', 'Do bigger claimed edges hit more often?', () => edgeTable()],
   ['b-legs', 'Parlay legs', 'Which kinds of parlay legs hit more than expected?', () => legTable()],
   ['b-fg', 'NHL first goal & 2+', 'Which NHL first-goal and 2+ goal bets are up right now?', () => fgSec()],
+  ['b-3pt', 'NBA threes', 'Which NBA threes bets are making money?', () => thrSec()],
 ];
 function breakdowns(){
   const S = BSEC.map(([id, lab, q, f]) => [id, lab, q, f()]).filter(x => x[3]);
@@ -2185,7 +2285,7 @@ function breakdowns(){
   return nav + S.map(([id, lab, q, html]) => `<div class="bsec" id="${id}"><span class="bq">${esc(q)}</span>${html}</div>`).join('');
 }
 function bnote(){
-  return `<section class="panel"><p class="note" style="margin:0">Results sliced by odds, NBA archetype, NFL role, NBA criteria (books and Kalshi), claimed edge, parlay legs and every NHL first-goal / 2+ goal version side by side (which are up now) are on the <a href="#breakdowns" data-ptab-go="breakdowns">Breakdowns</a> tab.</p></section>`;
+  return `<section class="panel"><p class="note" style="margin:0">Results sliced by odds, NBA archetype, NFL role, NBA criteria (books and Kalshi), claimed edge, parlay legs, every NHL first-goal / 2+ goal version side by side (which are up now) and every NBA threes rule are on the <a href="#breakdowns" data-ptab-go="breakdowns">Breakdowns</a> tab.</p></section>`;
 }
 function render(){
   const O = D.overall;
