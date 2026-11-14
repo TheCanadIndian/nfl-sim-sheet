@@ -1,0 +1,336 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MLB home runs 2026-09-30</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0A0F12; --surface:#111A1F; --sunk:#18242B; --ink:#EAF1F4; --muted:#95A6B0;
+  --faint:#22313A; --accent:#36D399; --band:rgba(54,211,153,.26); --whisker:#6D808B;
+  --away:#6CB4FF; --tip-bg:#EAF1F4; --tip-ink:#0A0F12; --good:#34D27A; --bad:#F04848; --sel:#6CB4FF;
+  --g1:#9ED9B6; --g2:#4FD08A; --g3:#1EE06E; --r1:#E9A3A3; --r2:#F26464; --r3:#FF2E2E;
+  --c-qb:#B4BCC2; --c-rb:#36D399; --c-wr:#6CB4FF; --c-te:#F2C14E;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
+.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
+h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:6px 0 0;letter-spacing:.005em;text-transform:uppercase;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+/* games view */
+.games{display:grid;grid-template-columns:228px minmax(0,1fr);gap:20px;align-items:start}
+.rail{display:grid;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 64px)}
+.game-btn{display:grid;gap:4px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:9px 12px;cursor:pointer}
+.game-btn:hover{background:var(--sunk)}
+.game-btn[aria-current="true"]{background:var(--surface);border-color:var(--faint)}
+.game-btn .m{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.game-btn .teams{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.02em}
+.game-btn .line{font-size:12.5px;color:var(--muted)}
+.mini{display:flex;height:4px;gap:2px}
+.mini i{display:block;border-radius:1px}
+.detail{display:grid;gap:18px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--faint);border-radius:9px;padding:20px;display:grid;gap:18px;min-width:0}
+.score{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:12px}
+.side{display:grid;gap:2px}
+.side.home{text-align:right}
+.code{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.03em;line-height:1}
+.pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
+.at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
+.winbar{display:grid;gap:6px}
+.plink .caret{display:inline-block;width:12px;color:var(--muted);font-size:11px}
+.plink.open{color:var(--sel)}
+tr.opened td{background:color-mix(in srgb,var(--sel) 8%,transparent)}
+tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 14px 16px;white-space:normal}
+.slider{display:grid;gap:12px;max-width:860px}
+.sl-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.sl-row{display:flex;align-items:center;gap:10px}
+.sl-row label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sl-row input[type=range]{flex:1;accent-color:var(--sel);height:28px;min-width:120px}
+.sl-step{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px}
+.sl-val{font-family:var(--display);font-size:26px;min-width:64px;text-align:right}
+.sl-out{display:grid;grid-template-columns:auto minmax(80px,1fr) auto;gap:14px;align-items:center}
+.sl-side{display:grid;gap:0}
+.sl-side span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.sl-side b{font-family:var(--display);font-size:34px;line-height:1}
+.sl-side em{font-style:normal;color:var(--muted);font-size:14px}
+.sl-side.under{text-align:right} .sl-side b{color:var(--ink)}
+.sl-meter{height:12px;border-radius:6px;background:color-mix(in srgb,var(--bad) 55%,transparent);overflow:hidden}
+.sl-meter i{display:block;height:100%;background:var(--good)}
+.lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
+/* degree shades: text */
+.g1{color:var(--g1)!important} .g2{color:var(--g2)!important} .g3{color:var(--g3)!important}
+.r1{color:var(--r1)!important} .r2{color:var(--r2)!important} .r3{color:var(--r3)!important}
+.g3,.r3{font-weight:700}
+/* degree shades: fills and row tints */
+.sl-meter{display:flex;gap:2px;background:var(--sunk)!important}
+.sl-meter i{display:block;height:100%}
+.sl-meter .f-g1{background:var(--g1)} .sl-meter .f-g2{background:var(--g2)} .sl-meter .f-g3{background:var(--g3)}
+.sl-meter .f-r1{background:var(--r1)} .sl-meter .f-r2{background:var(--r2)} .sl-meter .f-r3{background:var(--r3)} .sl-meter .f-n{background:var(--whisker)}
+tr.bg-g1 td{background:color-mix(in srgb,var(--g1) 6%,transparent)} tr.bg-g2 td{background:color-mix(in srgb,var(--g2) 10%,transparent)} tr.bg-g3 td{background:color-mix(in srgb,var(--g3) 15%,transparent)}
+tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)} tr.bg-r2 td{background:color-mix(in srgb,var(--r2) 10%,transparent)} tr.bg-r3 td{background:color-mix(in srgb,var(--r3) 15%,transparent)}
+.gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
+.gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
+.gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.ag{font-size:12px;font-weight:600;white-space:nowrap}
+.ag.up,.ag.up2{color:var(--good)} .ag.dn,.ag.dn2{color:var(--bad)} .ag.ok{color:var(--muted);font-weight:500}
+tr.agover td{background:color-mix(in srgb,var(--good) 11%,transparent)}
+tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.pos-d{color:var(--good)} .neg-d{color:var(--bad)}
+.agbar{position:relative;height:10px;min-width:120px;background:var(--sunk);border-radius:2px}
+.agbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.agbar b{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--ink)}
+.ftd{display:grid;gap:2px;border-top:1px solid var(--faint);padding-top:12px}
+.ftd-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.ftd-r{display:grid;grid-template-columns:minmax(0,1fr) 90px 46px 52px 36px;gap:10px;align-items:center;font-size:14px;padding:3px 0}
+.ftd-r .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ftd-r .pbar{min-width:0;height:8px}
+.ftd-r b{text-align:right;font-weight:600} .ftd-r > span:nth-child(4),.ftd-r > span:nth-child(5){text-align:right}
+.ftd-r.top .n{font-weight:600}
+.star{color:var(--accent);margin-right:5px}
+.winbar .bar{display:flex;height:10px;gap:2px}
+.winbar .bar i{display:block;border-radius:2px}
+.winbar .lbl{display:flex;justify-content:space-between;font-size:13px}
+.box{width:100%;border-collapse:collapse}
+.box td{padding:6px 4px;border-bottom:1px solid var(--faint)}
+.box tr:last-child td{border-bottom:0}
+.box td:first-child{text-align:left;font-weight:500}
+.box td:nth-child(2){text-align:center;color:var(--muted);font-size:13px}
+.box td:last-child{text-align:right;font-weight:500}
+.boxhead{display:grid;grid-template-columns:1fr auto 1fr;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.04em}
+.boxhead span:last-child{text-align:right}
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+.phead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.key{display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--muted);align-items:center}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key .kw{width:22px;height:2px;background:var(--whisker)}
+.key .kb{width:22px;height:10px;background:var(--band);border-radius:2px}
+.key .km{width:2px;height:14px;background:var(--ink)}
+
+/* tables */
+.tw{overflow-x:auto}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+.t th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--faint);white-space:nowrap;vertical-align:bottom}
+.t td{padding:7px 8px;border-bottom:1px solid var(--faint);text-align:right;white-space:nowrap}
+.t th.l,.t td.l{text-align:left}
+.t td.name{font-weight:500;width:1%;padding-right:10px}   /* shrink to the longest name so the position tag sits beside it */
+.t td.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.t .grp td{border-bottom:0;padding-top:16px;text-align:left;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.04em}
+.t td.big{font-weight:600}
+.t th.sc{width:32%;min-width:130px}
+.pos{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px}
+.strip{position:relative;height:20px;min-width:130px;cursor:default}
+.strip .g{position:absolute;top:0;bottom:0;width:1px;background:var(--faint)}
+.strip .w{position:absolute;top:9px;height:2px;background:var(--whisker)}
+.strip .b{position:absolute;top:4px;height:12px;background:var(--band);border-radius:2px}
+.strip .m{position:absolute;top:2px;width:2px;height:16px;background:var(--ink);transform:translateX(-1px)}
+.axis{position:relative;height:14px;min-width:130px;font-size:11px;letter-spacing:0;text-transform:none}
+.axis span{position:absolute;bottom:0}
+.pbar{position:relative;height:10px;min-width:100px;background:var(--sunk);border-radius:2px}
+.pbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.dv{position:relative;height:12px;min-width:150px;background:var(--sunk);border-radius:2px}
+.dv i{position:absolute;top:0;bottom:0;border-radius:2px}
+.dv .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.controls label{font-size:13px;color:var(--muted)}
+select,input[type=search]{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px}
+input[type=search]{min-width:200px}
+.empty{padding:28px 8px;color:var(--muted)}
+.plink{border:0;background:none;padding:0;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
+.plink:hover{text-decoration-color:var(--accent)}
+.fo-res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fo-side{display:grid;gap:2px;background:var(--sunk);border-radius:8px;padding:14px 16px}
+.fo-p{font-family:var(--display);font-weight:700;font-size:52px;line-height:1}
+.fo-o{font-family:var(--display);font-weight:600;font-size:24px;color:var(--muted)}
+.t tr.cur td{background:var(--sunk)}
+#fo-player{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;width:min(340px,100%)}
+#fo-line{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;width:90px}
+.mm{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:500;border:1px solid currentColor;border-radius:4px;padding:0 5px;margin:2px 4px 0 0;white-space:nowrap;cursor:help}
+.mm.up{color:var(--good)} .mm.down{color:var(--bad)} .mm.strong{font-weight:700}
+.chips{display:flex;flex-wrap:wrap}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.mcell{background:var(--sunk);border-radius:7px;padding:8px 10px;display:grid;gap:1px}
+.mcell .v{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.1}
+.mcell .v.up{color:var(--good)} .mcell .v.down{color:var(--bad)}
+.dmiss{margin:0;font-size:13px;color:var(--ink)} .dmiss b{color:var(--r2);font-weight:600}
+.mlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.mlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.mlist .who{font-weight:600;min-width:170px}
+.note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
+.dvbar{position:relative;height:10px;min-width:150px;background:var(--sunk);border-radius:2px}
+.dvbar i{position:absolute;top:0;bottom:0;border-radius:2px}
+.dvbar .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.flagbtn{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px}
+.flagbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.wx-flag{color:var(--bad);font-weight:600}
+.sitenav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13.5px}
+.sitenav a{color:var(--muted);text-decoration:none;font-weight:500}
+.sitenav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.sitenav a[aria-current="page"]{color:var(--ink)}
+.mix{display:flex;height:12px;gap:2px;min-width:150px}
+.mix i{display:block;border-radius:2px}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.mm.tagn{color:var(--muted);cursor:help}
+.t td .rzchips{min-width:240px;max-width:360px;white-space:normal;justify-content:flex-start}
+.t td,.t th{padding-inline:6px}
+.rzline{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;margin-left:12px;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;color:var(--muted)}
+.rzline .mm{margin:0}
+footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
+#tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
+#tip b{font-weight:600}
+@media (max-width:980px){.two{grid-template-columns:1fr}}
+@media (max-width:1100px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px}}
+@media (max-width:860px){
+  .games{grid-template-columns:1fr}
+  .rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .game-btn{min-width:180px}
+  .pts{font-size:48px}
+  h1{font-size:34px}
+}
+@media (prefers-reduced-motion:no-preference){.game-btn,.tabs button,.seg button{transition:background .15s,color .15s}}
+
+.hrbar{position:relative;height:8px;border-radius:4px;background:var(--sunk);min-width:70px}
+.hrbar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--accent)}
+.why{display:flex;flex-wrap:wrap;gap:4px}
+.why span{font-size:11px;font-weight:600;padding:0 6px;border-radius:9px;line-height:17px;border:1px solid var(--faint);color:var(--muted);white-space:nowrap}
+.why .g1,.why .g2,.why .g3{border-color:color-mix(in srgb,var(--g2) 55%,transparent)} .why .r1,.why .r2,.why .r3{border-color:color-mix(in srgb,var(--r2) 55%,transparent)}
+.gcard{display:grid;gap:12px}
+.gmeta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--muted);font-size:13.5px}
+.gmeta b{color:var(--ink);font-weight:600}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px}
+.lu{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.pick td{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.star{color:var(--accent)}
+
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--faint);margin-inline:-20px;padding-inline:20px;margin-bottom:6px}
+.topbar .row{max-width:1560px;margin:0 auto;display:flex;align-items:center;gap:4px 6px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.topbar .row::-webkit-scrollbar{display:none}
+.topbar .r1{padding-block:9px 7px}
+.topbar .r2{padding-block:0 8px}
+.topbar .brand{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;margin-right:14px}
+.topbar .sp{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.05em;color:var(--muted);text-decoration:none;padding:4px 11px;border-radius:7px}
+.topbar .sp:hover{color:var(--ink);background:var(--sunk)}
+.topbar .sp[aria-current="true"]{color:var(--bg);background:var(--ink)}
+.topbar .soon{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-left:5px;opacity:.75}
+.topbar .sp[aria-current="true"] .soon{opacity:.85}
+.topbar .grow{flex:1}
+.topbar .help{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:5px 9px;border-radius:6px}
+.topbar .help:hover,.topbar .help[aria-current="page"]{color:var(--ink);background:var(--sunk)}
+.topbar a.lnk{color:var(--muted);text-decoration:none;font-weight:500;font-size:14px;padding:5px 10px;border-radius:6px}
+.topbar a.lnk:hover{color:var(--ink);background:var(--sunk)}
+.topbar a.lnk[aria-current="page"]{color:var(--ink);background:var(--sunk);box-shadow:inset 0 -2px 0 var(--accent)}
+.newbie{max-width:1560px;margin:0 auto 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sunk);border-radius:8px;padding:9px 14px;font-size:14px}
+.newbie a{color:var(--accent);font-weight:600;text-decoration:none}
+.newbie button{margin-left:auto;border:0;background:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 6px}
+#sitenav{display:none}
+/* phones: keep every page inside the screen; wide tables scroll inside their own box */
+.wrap,main,.panel,.gcard,.sides>div,.detail,.card{min-width:0}
+.wrap,.panel,.detail,.gcard{grid-template-columns:minmax(0,1fr)}
+@media (max-width:760px){
+  header{align-items:flex-start}
+  header .tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  header .tabs button{white-space:nowrap;flex:0 0 auto}
+  .games{grid-template-columns:minmax(0,1fr)!important}
+  .rail{position:static!important;display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .rail .game-btn{flex:0 0 auto;min-width:168px;border-color:var(--faint)}
+  .two,.fo-res{grid-template-columns:minmax(0,1fr)!important}
+  .score .pts{font-size:48px}
+  .panel{padding:14px}
+  .picks-key{font-size:12px;gap:8px}
+  .mlc{min-width:92px;padding:6px 9px}
+  .mlc b{font-size:17px}
+  h1{font-size:32px}
+}
+
+.mtoggle{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:13.5px;color:var(--muted)}
+.mtoggle .seg{display:inline-flex;gap:0;background:var(--sunk);border-radius:8px;padding:3px}
+.mtoggle .seg a{padding:5px 13px;border-radius:6px;text-decoration:none;color:var(--muted);font-weight:600;font-size:13.5px}
+.mtoggle .seg a[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mtoggle .why{max-width:70ch}
+</style>
+<nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="../index.html">Sim Sheet</a><a class="sp" href="../nfl/index.html">NFL</a><a class="sp" href="../nhl/index.html">NHL</a><a class="sp" href="../nba/index.html">NBA</a><a class="sp" href="../mlb/index.html" aria-current="true">MLB</a><span class="grow"></span><a class="help" href="../guide.html">How to read</a></div><div class="row r2"><a class="lnk" href="../mlb/index.html" title="Every hitter&#x27;s chance of a home run today" aria-current="page">Today</a><a class="lnk" href="../mlb/results.html" title="Every night graded: who homered vs our chances">Results</a><a class="lnk" href="../mlb/markets.html" title="Live Kalshi home-run prices with money on each side">Markets</a><a class="lnk" href="../updates.html#mlb" title="What the model learned and changed">Model updates</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="../guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
+<div class="wrap">
+  <header class="hero" style="display:grid;gap:6px"><div class="eyebrow" id="sub"></div><h1>Home run sheet</h1>
+    <p class="sub" style="color:var(--muted);max-width:70ch;margin:0">Each hitter's chance of at least one home run today: his power, the pitchers he'll face (starter, then bullpen), handedness, pitch mix and where they locate, recent form, park and weather, and how many trips to the plate his lineup spot gets. Chips show what pushes his number up (green) or down (red) vs an average hitter.</p></header>
+  <nav class="tabs" role="tablist"><button data-view="board" aria-selected="true">Top of the slate</button><button data-view="games">By game</button><button data-view="how">How it works</button></nav>
+  <main id="main"></main>
+</div>
+<script type="application/json" id="data">{"date":"2026-09-30","generated":"2026-10-06T00:11","features":["l_bhr","l_bpc","l_bfb","l_phr","l_ppc","same","l_park","temp","wind_out","post","l_b_brl","l_b_hh","l_b_pull","l_p_brl","l_p_hh","l_p_pull","velo"],"coef":{"const":2.5659,"l_bhr":0.3614,"l_bpc":-0.522,"l_bfb":0.6488,"l_phr":0.1148,"l_ppc":0.1855,"same":-0.1533,"l_park":0.6431,"temp":0.0944,"wind_out":0.0754,"post":-0.0195,"l_b_brl":0.7663,"l_b_hh":0.511,"l_b_pull":0.2053,"l_p_brl":0.0066,"l_p_hh":0.4304,"l_p_pull":0.5733,"velo":-0.0319},"games":[{"id":849841,"start_utc":"2026-09-30T18:00:00Z","date":"2026-09-30","away":"PHI","home":"ATL","series":"NL Wild Card Series","venue":"Truist Park","sp_away":"Cristopher S\u00e1nchez","sp_home":"Tyler Mahle"},{"id":849846,"start_utc":"2026-09-30T21:00:00Z","date":"2026-09-30","away":"CWS","home":"HOU","series":"AL Wild Card Series","venue":"Daikin Park","sp_away":"Sean Burke","sp_home":"Hunter Brown"},{"id":849848,"start_utc":"2026-10-01T00:00:00Z","date":"2026-09-30","away":"BOS","home":"NYY","series":"AL Wild Card Series","venue":"Yankee Stadium","sp_away":"Sonny Gray","sp_home":"Max Fried"},{"id":849842,"start_utc":"2026-10-01T02:00:00Z","date":"2026-09-30","away":"CHC","home":"SD","series":"NL Wild Card Series","venue":"Petco Park","sp_away":"Kevin Gausman","sp_home":"Nick Pivetta"}],"players":[{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":2,"batter":670541,"name":"Yordan Alvarez","bats":"L","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.2935,"p_hr2":0.0387,"p_pa_sp":0.0789,"p_pa_bp":0.0714,"exp_pa":4.42,"exp_pa_sp":2.55,"fair":241,"why":{"power":1.621,"pitcher":0.08,"matchup":0.066,"park":0.018,"opportunity":0.029},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":2,"batter":656941,"name":"Kyle Schwarber","bats":"L","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.2781,"p_hr2":0.035,"p_pa_sp":0.068,"p_pa_bp":0.069,"exp_pa":4.61,"exp_pa_sp":2.77,"fair":260,"why":{"power":1.239,"pitcher":0.004,"matchup":0.066,"park":0.092,"opportunity":0.073},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":1,"batter":691718,"name":"Pete Crow-Armstrong","bats":"L","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.2137,"p_hr2":0.0198,"p_pa_sp":0.0605,"p_pa_bp":0.0388,"exp_pa":4.72,"exp_pa_sp":2.36,"fair":368,"why":{"power":0.902,"pitcher":0.17,"matchup":0.066,"park":-0.026,"opportunity":0.098},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":1,"batter":700250,"name":"Ben Rice","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1997,"p_hr2":0.0172,"p_pa_sp":0.0514,"p_pa_bp":0.0417,"exp_pa":4.53,"exp_pa_sp":2.95,"fair":401,"why":{"power":1.012,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":0.054},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":4,"batter":808959,"name":"Munetaka Murakami","bats":"L","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.1937,"p_hr2":0.0162,"p_pa_sp":0.0383,"p_pa_bp":0.0582,"exp_pa":4.41,"exp_pa_sp":2.32,"fair":416,"why":{"power":0.956,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":0.025},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":4,"batter":621566,"name":"Matt Olson","bats":"L","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.1879,"p_hr2":0.015,"p_pa_sp":0.0438,"p_pa_bp":0.056,"exp_pa":4.23,"exp_pa_sp":2.73,"fair":432,"why":{"power":1.168,"pitcher":-0.242,"matchup":-0.085,"park":0.092,"opportunity":-0.017},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":5,"batter":701538,"name":"Jackson Merrill","bats":"L","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.1656,"p_hr2":0.0114,"p_pa_sp":0.0439,"p_pa_bp":0.042,"exp_pa":4.12,"exp_pa_sp":2.33,"fair":504,"why":{"power":0.506,"pitcher":0.052,"matchup":0.066,"park":-0.026,"opportunity":-0.042},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":3,"batter":592518,"name":"Manny Machado","bats":"R","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.1637,"p_hr2":0.0113,"p_pa_sp":0.0399,"p_pa_bp":0.0416,"exp_pa":4.32,"exp_pa_sp":2.58,"fair":511,"why":{"power":0.528,"pitcher":0.052,"matchup":-0.085,"park":0.013,"opportunity":0.005},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":3,"batter":547180,"name":"Bryce Harper","bats":"L","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.1619,"p_hr2":0.0112,"p_pa_sp":0.0382,"p_pa_bp":0.0388,"exp_pa":4.51,"exp_pa_sp":2.65,"fair":518,"why":{"power":0.22,"pitcher":0.004,"matchup":0.066,"park":0.092,"opportunity":0.048},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":1,"batter":665487,"name":"Fernando Tatis Jr.","bats":"R","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.1599,"p_hr2":0.0109,"p_pa_sp":0.0371,"p_pa_bp":0.0388,"exp_pa":4.53,"exp_pa_sp":2.77,"fair":525,"why":{"power":0.419,"pitcher":0.052,"matchup":-0.085,"park":0.013,"opportunity":0.054},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":4,"batter":673548,"name":"Seiya Suzuki","bats":"R","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.1579,"p_hr2":0.0104,"p_pa_sp":0.0452,"p_pa_bp":0.0325,"exp_pa":4.41,"exp_pa_sp":1.99,"fair":533,"why":{"power":0.568,"pitcher":0.17,"matchup":-0.085,"park":0.013,"opportunity":0.025},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":4,"batter":682987,"name":"Spencer Jones","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1562,"p_hr2":0.0101,"p_pa_sp":0.0425,"p_pa_bp":0.0344,"exp_pa":4.23,"exp_pa_sp":2.59,"fair":540,"why":{"power":0.65,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":-0.017},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":3,"batter":683737,"name":"Michael Busch","bats":"L","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.1524,"p_hr2":0.0097,"p_pa_sp":0.0446,"p_pa_bp":0.0284,"exp_pa":4.51,"exp_pa_sp":2.13,"fair":556,"why":{"power":0.377,"pitcher":0.17,"matchup":0.066,"park":-0.026,"opportunity":0.048},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":3,"batter":678246,"name":"Miguel Vargas","bats":"R","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.1482,"p_hr2":0.0093,"p_pa_sp":0.0267,"p_pa_bp":0.0448,"exp_pa":4.51,"exp_pa_sp":2.44,"fair":575,"why":{"power":0.623,"pitcher":-0.327,"matchup":-0.085,"park":-0.015,"opportunity":0.048},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":3,"batter":671277,"name":"Luis Garc\u00eda Jr.","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1469,"p_hr2":0.009,"p_pa_sp":0.0389,"p_pa_bp":0.0315,"exp_pa":4.32,"exp_pa_sp":2.69,"fair":581,"why":{"power":0.504,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":0.005},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":9,"batter":695657,"name":"Colson Montgomery","bats":"L","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.1467,"p_hr2":0.0088,"p_pa_sp":0.0316,"p_pa_bp":0.0482,"exp_pa":3.84,"exp_pa_sp":1.77,"fair":582,"why":{"power":0.603,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":-0.107},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":3,"batter":575929,"name":"Willson Contreras","bats":"R","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.1433,"p_hr2":0.0087,"p_pa_sp":0.0304,"p_pa_bp":0.0373,"exp_pa":4.51,"exp_pa_sp":2.3,"fair":598,"why":{"power":0.534,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":0.048},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":4,"batter":677800,"name":"Wilyer Abreu","bats":"L","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.1427,"p_hr2":0.0086,"p_pa_sp":0.0275,"p_pa_bp":0.0411,"exp_pa":4.41,"exp_pa_sp":2.19,"fair":601,"why":{"power":0.686,"pitcher":-0.294,"matchup":-0.085,"park":-0.068,"opportunity":0.025},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":2,"batter":686948,"name":"Drake Baldwin","bats":"L","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.1419,"p_hr2":0.0085,"p_pa_sp":0.0311,"p_pa_bp":0.04,"exp_pa":4.42,"exp_pa_sp":2.93,"fair":604,"why":{"power":0.52,"pitcher":-0.242,"matchup":-0.085,"park":0.092,"opportunity":0.029},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":5,"batter":664023,"name":"Ian Happ","bats":"S","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.1377,"p_hr2":0.0078,"p_pa_sp":0.0412,"p_pa_bp":0.0282,"exp_pa":4.3,"exp_pa_sp":1.88,"fair":626,"why":{"power":0.27,"pitcher":0.17,"matchup":0.066,"park":-0.026,"opportunity":-0.001},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":1,"batter":660670,"name":"Ronald Acu\u00f1a Jr.","bats":"R","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.1371,"p_hr2":0.0079,"p_pa_sp":0.0315,"p_pa_bp":0.0332,"exp_pa":4.53,"exp_pa_sp":3.02,"fair":630,"why":{"power":0.414,"pitcher":-0.242,"matchup":0.066,"park":0.02,"opportunity":0.054},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":6,"batter":572233,"name":"Christian Walker","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.1362,"p_hr2":0.0076,"p_pa_sp":0.0358,"p_pa_bp":0.0361,"exp_pa":4.01,"exp_pa_sp":2.05,"fair":634,"why":{"power":0.368,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":-0.068},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":6,"batter":663586,"name":"Austin Riley","bats":"R","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.1353,"p_hr2":0.0075,"p_pa_sp":0.035,"p_pa_bp":0.0369,"exp_pa":4.01,"exp_pa_sp":2.47,"fair":639,"why":{"power":0.576,"pitcher":-0.242,"matchup":0.066,"park":0.02,"opportunity":-0.068},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":1,"batter":665161,"name":"Jeremy Pe\u00f1a","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.131,"p_hr2":0.0072,"p_pa_sp":0.0304,"p_pa_bp":0.0307,"exp_pa":4.53,"exp_pa_sp":2.66,"fair":663,"why":{"power":0.157,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":0.054},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":6,"batter":669016,"name":"Brandon Marsh","bats":"L","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.1302,"p_hr2":0.007,"p_pa_sp":0.0326,"p_pa_bp":0.0331,"exp_pa":4.19,"exp_pa_sp":2.28,"fair":668,"why":{"power":0.033,"pitcher":0.004,"matchup":0.066,"park":0.092,"opportunity":-0.027},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":7,"batter":663757,"name":"Trent Grisham","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1245,"p_hr2":0.0062,"p_pa_sp":0.0366,"p_pa_bp":0.0296,"exp_pa":3.9,"exp_pa_sp":2.23,"fair":703,"why":{"power":0.409,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":-0.094},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":7,"batter":806956,"name":"Ethan Salas","bats":"L","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.1234,"p_hr2":0.0061,"p_pa_sp":0.034,"p_pa_bp":0.0325,"exp_pa":3.9,"exp_pa_sp":2.09,"fair":710,"why":{"power":0.154,"pitcher":0.052,"matchup":0.066,"park":-0.026,"opportunity":-0.094},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":5,"batter":643217,"name":"Andrew Benintendi","bats":"L","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.1229,"p_hr2":0.0063,"p_pa_sp":0.0241,"p_pa_bp":0.0369,"exp_pa":4.3,"exp_pa_sp":2.26,"fair":714,"why":{"power":0.211,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":-0.001},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":6,"batter":665862,"name":"Jazz Chisholm Jr.","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1206,"p_hr2":0.0058,"p_pa_sp":0.0343,"p_pa_bp":0.0277,"exp_pa":4.01,"exp_pa_sp":2.35,"fair":729,"why":{"power":0.32,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":-0.068},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":2,"batter":608324,"name":"Alex Bregman","bats":"R","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.1193,"p_hr2":0.0059,"p_pa_sp":0.0319,"p_pa_bp":0.0228,"exp_pa":4.61,"exp_pa_sp":2.22,"fair":738,"why":{"power":0.089,"pitcher":0.17,"matchup":-0.085,"park":0.013,"opportunity":0.073},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":2,"batter":641355,"name":"Cody Bellinger","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1189,"p_hr2":0.0058,"p_pa_sp":0.0304,"p_pa_bp":0.0245,"exp_pa":4.42,"exp_pa_sp":2.83,"fair":741,"why":{"power":0.162,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":0.029},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":7,"batter":671739,"name":"Michael Harris II","bats":"L","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.1178,"p_hr2":0.0056,"p_pa_sp":0.0286,"p_pa_bp":0.0368,"exp_pa":3.9,"exp_pa_sp":2.41,"fair":749,"why":{"power":0.394,"pitcher":-0.242,"matchup":-0.085,"park":0.092,"opportunity":-0.094},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":1,"batter":663330,"name":"Jahmai Jones","bats":"R","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.1178,"p_hr2":0.0059,"p_pa_sp":0.0238,"p_pa_bp":0.0292,"exp_pa":4.72,"exp_pa_sp":2.57,"fair":749,"why":{"power":0.191,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":0.098},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":4,"batter":664034,"name":"Ty France","bats":"R","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.1159,"p_hr2":0.0055,"p_pa_sp":0.0282,"p_pa_bp":0.0295,"exp_pa":4.23,"exp_pa_sp":2.43,"fair":763,"why":{"power":0.068,"pitcher":0.052,"matchup":-0.085,"park":0.013,"opportunity":-0.017},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":5,"batter":673237,"name":"Yainer Diaz","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.1131,"p_hr2":0.0052,"p_pa_sp":0.0286,"p_pa_bp":0.0289,"exp_pa":4.12,"exp_pa_sp":2.13,"fair":784,"why":{"power":0.087,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":-0.042},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":3,"batter":670623,"name":"Isaac Paredes","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.1112,"p_hr2":0.0051,"p_pa_sp":0.0268,"p_pa_bp":0.027,"exp_pa":4.32,"exp_pa_sp":2.4,"fair":799,"why":{"power":0.016,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":0.005},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":8,"batter":669224,"name":"Austin Wells","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.1107,"p_hr2":0.0048,"p_pa_sp":0.0336,"p_pa_bp":0.0271,"exp_pa":3.77,"exp_pa_sp":2.05,"fair":803,"why":{"power":0.291,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":-0.123},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":7,"batter":828599,"name":"Lucas Spence","bats":"L","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.1093,"p_hr2":0.0048,"p_pa_sp":0.0308,"p_pa_bp":0.0278,"exp_pa":3.9,"exp_pa_sp":1.97,"fair":815,"why":{"power":-0.027,"pitcher":0.08,"matchup":0.066,"park":0.018,"opportunity":-0.094},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":9,"batter":621020,"name":"Dansby Swanson","bats":"R","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.1038,"p_hr2":0.0042,"p_pa_sp":0.034,"p_pa_bp":0.0244,"exp_pa":3.84,"exp_pa_sp":1.51,"fair":863,"why":{"power":0.165,"pitcher":0.17,"matchup":-0.085,"park":0.013,"opportunity":-0.107},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":2,"batter":691019,"name":"Kyle Teel","bats":"L","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.1037,"p_hr2":0.0045,"p_pa_sp":0.019,"p_pa_bp":0.0292,"exp_pa":4.61,"exp_pa_sp":2.58,"fair":864,"why":{"power":-0.049,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":0.073},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":5,"batter":681082,"name":"Bryson Stott","bats":"L","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.1024,"p_hr2":0.0043,"p_pa_sp":0.0247,"p_pa_bp":0.0251,"exp_pa":4.3,"exp_pa_sp":2.4,"fair":877,"why":{"power":-0.224,"pitcher":0.004,"matchup":0.066,"park":0.092,"opportunity":-0.001},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":8,"batter":669720,"name":"Austin Hays","bats":"R","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.1016,"p_hr2":0.0041,"p_pa_sp":0.0274,"p_pa_bp":0.0287,"exp_pa":3.77,"exp_pa_sp":1.97,"fair":885,"why":{"power":0.039,"pitcher":0.052,"matchup":-0.085,"park":0.013,"opportunity":-0.123},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":9,"batter":641857,"name":"Ryan McMahon","bats":"L","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.101,"p_hr2":0.004,"p_pa_sp":0.0316,"p_pa_bp":0.0255,"exp_pa":3.65,"exp_pa_sp":1.98,"fair":890,"why":{"power":0.211,"pitcher":-0.028,"matchup":0.066,"park":-0.068,"opportunity":-0.152},"park":0.987,"temp":68,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":7,"batter":624641,"name":"Edmundo Sosa","bats":"R","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.0978,"p_hr2":0.0039,"p_pa_sp":0.0235,"p_pa_bp":0.0266,"exp_pa":4.08,"exp_pa_sp":2.18,"fair":923,"why":{"power":-0.078,"pitcher":0.004,"matchup":-0.085,"park":0.02,"opportunity":-0.051},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":8,"batter":701358,"name":"Cam Smith","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.0974,"p_hr2":0.0038,"p_pa_sp":0.0267,"p_pa_bp":0.027,"exp_pa":3.77,"exp_pa_sp":1.84,"fair":926,"why":{"power":0.013,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":-0.123},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":2,"batter":668939,"name":"Adley Rutschman","bats":"S","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.0966,"p_hr2":0.0039,"p_pa_sp":0.019,"p_pa_bp":0.0251,"exp_pa":4.61,"exp_pa_sp":2.49,"fair":935,"why":{"power":-0.051,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":0.073},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":1,"batter":607208,"name":"Trea Turner","bats":"R","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.0923,"p_hr2":0.0036,"p_pa_sp":0.0193,"p_pa_bp":0.0218,"exp_pa":4.72,"exp_pa_sp":2.83,"fair":984,"why":{"power":-0.246,"pitcher":0.004,"matchup":-0.085,"park":0.02,"opportunity":0.098},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":4,"batter":664761,"name":"Alec Bohm","bats":"R","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.0916,"p_hr2":0.0035,"p_pa_sp":0.0204,"p_pa_bp":0.0231,"exp_pa":4.41,"exp_pa_sp":2.54,"fair":991,"why":{"power":-0.2,"pitcher":0.004,"matchup":-0.085,"park":0.02,"opportunity":0.025},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":8,"batter":669221,"name":"Sean Murphy","bats":"R","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.0912,"p_hr2":0.0033,"p_pa_sp":0.0245,"p_pa_bp":0.0259,"exp_pa":3.77,"exp_pa_sp":2.29,"fair":997,"why":{"power":0.095,"pitcher":-0.242,"matchup":0.066,"park":0.02,"opportunity":-0.123},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":3,"batter":645277,"name":"Ozzie Albies","bats":"S","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.0906,"p_hr2":0.0034,"p_pa_sp":0.0202,"p_pa_bp":0.0246,"exp_pa":4.32,"exp_pa_sp":2.81,"fair":1004,"why":{"power":-0.103,"pitcher":-0.242,"matchup":0.066,"park":0.02,"opportunity":0.005},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":6,"batter":671976,"name":"Tristan Peters","bats":"L","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.0903,"p_hr2":0.0033,"p_pa_sp":0.0176,"p_pa_bp":0.027,"exp_pa":4.19,"exp_pa_sp":2.04,"fair":1007,"why":{"power":-0.123,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":-0.027},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":4,"batter":514888,"name":"Jose Altuve","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.089,"p_hr2":0.0032,"p_pa_sp":0.0217,"p_pa_bp":0.0219,"exp_pa":4.23,"exp_pa_sp":2.31,"fair":1024,"why":{"power":-0.181,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":-0.017},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":6,"batter":593428,"name":"Xander Bogaerts","bats":"R","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.0888,"p_hr2":0.0031,"p_pa_sp":0.0225,"p_pa_bp":0.0235,"exp_pa":4.01,"exp_pa_sp":2.18,"fair":1027,"why":{"power":-0.153,"pitcher":0.052,"matchup":-0.085,"park":0.013,"opportunity":-0.068},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":9,"batter":592663,"name":"J.T. Realmuto","bats":"R","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.0876,"p_hr2":0.0031,"p_pa_sp":0.0222,"p_pa_bp":0.0251,"exp_pa":3.84,"exp_pa_sp":1.99,"fair":1042,"why":{"power":-0.129,"pitcher":0.004,"matchup":-0.085,"park":0.02,"opportunity":-0.107},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":8,"batter":596115,"name":"Trevor Story","bats":"R","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.0876,"p_hr2":0.0031,"p_pa_sp":0.0203,"p_pa_bp":0.025,"exp_pa":3.96,"exp_pa_sp":1.77,"fair":1042,"why":{"power":0.016,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":-0.079},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849848,"team":"NYY","opp":"BOS","home":1,"slot":5,"batter":806146,"name":"George Lombard Jr.","bats":"R","sp_id":543243,"sp_name":"Sonny Gray","sp_hand":"R","tbf":22.5420560748,"bp_r":0.6101694915,"lineup":"posted","p_hr":0.0816,"p_hr2":0.0027,"p_pa_sp":0.0213,"p_pa_bp":0.0193,"exp_pa":4.12,"exp_pa_sp":2.44,"fair":1126,"why":{"power":-0.099,"pitcher":-0.028,"matchup":-0.085,"park":-0.026,"opportunity":-0.042},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":8,"batter":608348,"name":"Carson Kelly","bats":"R","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.0783,"p_hr2":0.0024,"p_pa_sp":0.0247,"p_pa_bp":0.0176,"exp_pa":3.96,"exp_pa_sp":1.56,"fair":1177,"why":{"power":-0.163,"pitcher":0.17,"matchup":-0.085,"park":0.013,"opportunity":-0.079},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":7,"batter":807713,"name":"Matt Shaw","bats":"R","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.0778,"p_hr2":0.0024,"p_pa_sp":0.0237,"p_pa_bp":0.0169,"exp_pa":4.08,"exp_pa_sp":1.66,"fair":1186,"why":{"power":-0.198,"pitcher":0.17,"matchup":-0.085,"park":0.013,"opportunity":-0.051},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":5,"batter":678882,"name":"Ceddanne Rafaela","bats":"R","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.0773,"p_hr2":0.0024,"p_pa_sp":0.0166,"p_pa_bp":0.0205,"exp_pa":4.3,"exp_pa_sp":2.11,"fair":1193,"why":{"power":-0.173,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":-0.001},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":2,"batter":687957,"name":"Dustin Harris","bats":"L","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.0763,"p_hr2":0.0024,"p_pa_sp":0.0181,"p_pa_bp":0.0173,"exp_pa":4.42,"exp_pa_sp":2.66,"fair":1210,"why":{"power":-0.395,"pitcher":0.052,"matchup":0.066,"park":-0.026,"opportunity":0.029},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":9,"batter":681987,"name":"Nate Eaton","bats":"R","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.0738,"p_hr2":0.0022,"p_pa_sp":0.0176,"p_pa_bp":0.0217,"exp_pa":3.84,"exp_pa_sp":1.75,"fair":1255,"why":{"power":-0.124,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":-0.107},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":8,"batter":695731,"name":"Braden Montgomery","bats":"S","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.0681,"p_hr2":0.0018,"p_pa_sp":0.0134,"p_pa_bp":0.0215,"exp_pa":3.96,"exp_pa_sp":1.87,"fair":1369,"why":{"power":-0.331,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":-0.079},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849842,"team":"SD","opp":"CHC","home":1,"slot":9,"batter":630105,"name":"Jake Cronenworth","bats":"L","sp_id":592332,"sp_name":"Kevin Gausman","sp_hand":"R","tbf":21.3991989319,"bp_r":0.7084468665,"lineup":"posted","p_hr":0.064,"p_hr2":0.0016,"p_pa_sp":0.0184,"p_pa_bp":0.0176,"exp_pa":3.65,"exp_pa_sp":1.89,"fair":1463,"why":{"power":-0.386,"pitcher":0.052,"matchup":0.066,"park":-0.026,"opportunity":-0.152},"park":1.011,"temp":71,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":9,"batter":673490,"name":"Ha-Seong Kim","bats":"R","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.0634,"p_hr2":0.0016,"p_pa_sp":0.0174,"p_pa_bp":0.0184,"exp_pa":3.65,"exp_pa_sp":2.18,"fair":1477,"why":{"power":-0.228,"pitcher":-0.242,"matchup":0.066,"park":0.02,"opportunity":-0.152},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":7,"batter":686765,"name":"Nick Sogard","bats":"S","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.0601,"p_hr2":0.0014,"p_pa_sp":0.0129,"p_pa_bp":0.017,"exp_pa":4.08,"exp_pa_sp":1.91,"fair":1563,"why":{"power":-0.361,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":-0.051},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":1,"batter":803011,"name":"Sam Antonacci","bats":"L","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.0595,"p_hr2":0.0015,"p_pa_sp":0.0105,"p_pa_bp":0.0162,"exp_pa":4.72,"exp_pa_sp":2.69,"fair":1580,"why":{"power":-0.48,"pitcher":-0.327,"matchup":0.066,"park":0.018,"opportunity":0.098},"park":1.099,"temp":70,"wind_out":0.0},{"game_pk":849841,"team":"PHI","opp":"ATL","home":0,"slot":8,"batter":702222,"name":"Justin Crawford","bats":"L","sp_id":641816,"sp_name":"Tyler Mahle","sp_hand":"R","tbf":22.2563417891,"bp_r":0.642746315,"lineup":"posted","p_hr":0.0487,"p_hr2":0.0009,"p_pa_sp":0.0125,"p_pa_bp":0.0127,"exp_pa":3.96,"exp_pa_sp":2.09,"fair":1952,"why":{"power":-0.613,"pitcher":0.004,"matchup":0.066,"park":0.092,"opportunity":-0.079},"park":1.012,"temp":83,"wind_out":0.0},{"game_pk":849841,"team":"ATL","opp":"PHI","home":1,"slot":5,"batter":643289,"name":"Mauricio Dub\u00f3n","bats":"R","sp_id":650911,"sp_name":"Cristopher S\u00e1nchez","sp_hand":"L","tbf":23.9706275033,"bp_r":0.6697468863,"lineup":"posted","p_hr":0.048,"p_hr2":0.0009,"p_pa_sp":0.0116,"p_pa_bp":0.0123,"exp_pa":4.12,"exp_pa_sp":2.58,"fair":1984,"why":{"power":-0.488,"pitcher":-0.242,"matchup":0.066,"park":0.02,"opportunity":-0.042},"park":0.91,"temp":83,"wind_out":0.0},{"game_pk":849848,"team":"BOS","opp":"NYY","home":0,"slot":6,"batter":702332,"name":"Caleb Durbin","bats":"R","sp_id":608331,"sp_name":"Max Fried","sp_hand":"L","tbf":19.6134846462,"bp_r":0.6640973631,"lineup":"posted","p_hr":0.0431,"p_hr2":0.0007,"p_pa_sp":0.0093,"p_pa_bp":0.0115,"exp_pa":4.19,"exp_pa_sp":2.02,"fair":2220,"why":{"power":-0.538,"pitcher":-0.294,"matchup":0.066,"park":-0.026,"opportunity":-0.027},"park":1.055,"temp":68,"wind_out":0.0},{"game_pk":849846,"team":"CWS","opp":"HOU","home":0,"slot":7,"batter":805367,"name":"Chase Meidroth","bats":"R","sp_id":686613,"sp_name":"Hunter Brown","sp_hand":"R","tbf":20.5420560748,"bp_r":0.6827826087,"lineup":"posted","p_hr":0.0425,"p_hr2":0.0007,"p_pa_sp":0.0078,"p_pa_bp":0.0132,"exp_pa":4.08,"exp_pa_sp":1.97,"fair":2251,"why":{"power":-0.536,"pitcher":-0.327,"matchup":-0.085,"park":-0.015,"opportunity":-0.051},"park":1.044,"temp":70,"wind_out":0.0},{"game_pk":849842,"team":"CHC","opp":"SD","home":0,"slot":6,"batter":663538,"name":"Nico Hoerner","bats":"R","sp_id":601713,"sp_name":"Nick Pivetta","sp_hand":"R","tbf":17.5837526959,"bp_r":0.5928184282,"lineup":"posted","p_hr":0.0366,"p_hr2":0.0005,"p_pa_sp":0.0106,"p_pa_bp":0.0076,"exp_pa":4.19,"exp_pa_sp":1.78,"fair":2635,"why":{"power":-0.645,"pitcher":0.17,"matchup":-0.085,"park":0.013,"opportunity":-0.027},"park":1.075,"temp":71,"wind_out":0.0},{"game_pk":849846,"team":"HOU","opp":"CWS","home":1,"slot":9,"batter":669397,"name":"Nick Allen","bats":"R","sp_id":680732,"sp_name":"Sean Burke","sp_hand":"R","tbf":20.1134846462,"bp_r":0.6220566319,"lineup":"posted","p_hr":0.0357,"p_hr2":0.0005,"p_pa_sp":0.0099,"p_pa_bp":0.01,"exp_pa":3.65,"exp_pa_sp":1.81,"fair":2700,"why":{"power":-0.632,"pitcher":0.08,"matchup":-0.085,"park":-0.015,"opportunity":-0.152},"park":1.044,"temp":70,"wind_out":0.0}]}</script>
+<script>
+const D = JSON.parse(document.getElementById('data').textContent);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct = p => (p * 100).toFixed(1) + '%';
+const odds = o => (o > 0 ? '+' : '') + o;
+const LAB = {power: 'power', pitcher: 'pitcher', matchup: 'matchup', form: 'form', park: 'park/wx', opportunity: 'PAs'};
+const sh = v => v >= .2 ? 'g3' : v >= .1 ? 'g2' : v >= .04 ? 'g1' : v <= -.2 ? 'r3' : v <= -.1 ? 'r2' : v <= -.04 ? 'r1' : '';
+const why = w => `<div class="why">${Object.entries(w).filter(([k, v]) => Math.abs(v) >= .04).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 4)
+  .map(([k, v]) => `<span class="${sh(v)}" title="${esc(LAB[k])}: ${v > 0 ? '+' : ''}${Math.round(v * 100)}% to his HR chance vs an average hitter">${v > 0 ? '▲' : '▼'} ${LAB[k]} ${v > 0 ? '+' : ''}${Math.round(v * 100)}%</span>`).join('')}</div>`;
+const G = Object.fromEntries(D.games.map(g => [g.id, g]));
+const TOP = new Set(D.players.slice().sort((a, b) => b.p_hr - a.p_hr).slice(0, 5).map(p => p.batter + '|' + p.game_pk));
+const maxp = Math.max(.25, ...D.players.map(p => p.p_hr));
+const bar = p => `<div class="hrbar" role="img" aria-label="${pct(p)}"><i style="width:${p / maxp * 100}%"></i></div>`;
+const row = (p, i, showGame) => `<tr class="${TOP.has(p.batter + '|' + p.game_pk) ? 'pick' : ''}">${i != null ? `<td class="muted">${i + 1}</td>` : `<td class="muted">${p.slot}</td>`}
+  <td class="l name">${TOP.has(p.batter + '|' + p.game_pk) ? '<span class="star">★</span> ' : ''}${esc(p.name)} <small class="muted">${esc(p.team)} · bats ${esc(p.bats)}${showGame ? ` · vs ${esc(p.sp_name || 'TBD')}` : ''}</small>${why(p.why)}</td>
+  <td class="l">${bar(p.p_hr)}</td><td class="big">${pct(p.p_hr)}</td><td>${odds(p.fair)}</td>
+  <td class="muted" title="expected plate appearances (vs starter)">${p.exp_pa.toFixed(1)} <small>(${p.exp_pa_sp.toFixed(1)})</small></td>
+  <td class="muted" title="HR chance per PA vs the starter / bullpen">${pct(p.p_pa_sp)} / ${pct(p.p_pa_bp)}</td>
+  ${window.MKT && MKT.has() ? `<td class="l">${MKT.cell(p.game_pk, p.batter, p.name, 'hr')}</td>` : ''}</tr>`;
+const head = first => `<thead><tr><th>${first}</th><th class="l">Batter</th><th class="l" style="min-width:80px">Chance</th><th>1+ HR</th><th>Fair</th><th title="expected PAs (vs the starter)">PA (SP)</th><th title="per-PA HR chance vs starter / bullpen">per PA SP / BP</th>${window.MKT && MKT.has() ? '<th class="l" title="Kalshi 1+ HR price, our edge, and dollars to buy YES / NO within 3¢">Kalshi</th>' : ''}</tr></thead>`;
+function board(){
+  const ps = D.players.slice().sort((a, b) => b.p_hr - a.p_hr).slice(0, 40);
+  return `<section class="panel"><div class="phead"><h2>Most likely to homer</h2><span class="muted small">★ top 5 of the slate</span></div>
+    <div class="tw"><table class="t">${head('#')}<tbody>${ps.map((p, i) => row(p, i, true)).join('')}</tbody></table></div></section>`;
+}
+function games(){
+  return D.games.map(g => {
+    const side = t => D.players.filter(p => p.game_pk === g.id && p.team === t).sort((a, b) => a.slot - b.slot);
+    const one = (t, sp) => { const ps = side(t); if (!ps.length) return '';
+      return `<div><div class="lu">${esc(t)} lineup · ${esc(ps[0].lineup)} · vs ${esc(ps[0].sp_name || 'TBD')} (${esc(ps[0].sp_hand)}HP)</div>
+        <div class="tw"><table class="t">${head('#')}<tbody>${ps.map(p => row(p, null, false)).join('')}</tbody></table></div></div>`; };
+    const any = D.players.find(p => p.game_pk === g.id) || {};
+    const t = new Date(g.start_utc).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+    return `<section class="panel gcard"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}</h2><span class="muted small">${esc(g.series || '')} · ${t}</span></div>
+      <div class="gmeta"><span>${esc(g.venue)} · HR factor <b>${any.park != null ? (any.park >= 1 ? '+' : '') + Math.round((any.park - 1) * 100) + '%' : '–'}</b></span>
+        <span>Temp <b>${any.temp != null ? any.temp + '°F' : 'n/a'}</b></span><span>Wind out <b>${any.wind_out != null ? any.wind_out + ' mph' : 'n/a'}</b></span>
+        <span>SP: <b>${esc(g.sp_away || 'TBD')}</b> / <b>${esc(g.sp_home || 'TBD')}</b></span></div>
+      <div class="two">${one(g.away)}${one(g.home)}</div></section>`;
+  }).join('');
+}
+function how(){
+  return `<section class="panel" style="display:grid;gap:10px;max-width:80ch"><h2>How the number is built</h2>
+    <p>Every plate appearance gets a home-run chance from a model trained on every PA since 2024 (walk-forward: nothing after the game it predicts). Inputs that earned their place in testing:</p>
+    <ul>${D.features.map(f => `<li><code>${esc(f)}</code></li>`).join('')}</ul>
+    <p>Then his lineup spot sets how many times he bats (leadoff ~4.6, ninth ~3.7), and the starter's usual depth decides how many of those come against him before the bullpen. The chance of 1+ HR combines them.</p>
+    <p class="muted small">Generated ${esc(D.generated)}. Lineups marked "projected" use each team's most recent order until the real one is posted.</p></section>`;
+}
+let view = 'board';
+function render(){
+  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.view === view));
+  document.getElementById('main').innerHTML = view === 'games' ? games() : view === 'how' ? how() : board();
+}
+document.getElementById('sub').textContent = `${D.games.length} game${D.games.length === 1 ? '' : 's'} · ${D.date} · built ${D.generated.replace('T', ' ')}`;
+document.addEventListener('click', e => { const b = e.target.closest('button[data-view]'); if (b){ view = b.dataset.view; render(); } });
+render();
+</script><script>
+(function(){ var b = document.getElementById('newbie'); if (!b) return;
+  try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
+  b.hidden = false;
+  b.querySelector('button').addEventListener('click', function(){ b.remove(); try { localStorage.setItem('simsheet-newbie', 'done'); } catch (e) {} });
+})();
+</script>
