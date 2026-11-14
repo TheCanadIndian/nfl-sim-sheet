@@ -1,48 +1,289 @@
 {
 "sport": "nba",
 "date": "2026-11-14",
-"lock": "2026-11-15T00:30:00+00:00",
-"frozen_at": "2026-11-14T10:37:07.237Z",
+"lock": "2026-11-15T00:00:00+00:00",
+"frozen_at": "2026-11-14T12:54:58.188Z",
 "books": [
 "Novig",
 "Kalshi",
 "Hard Rock"
 ],
-"final_at": "2026-11-14T23:30:00+00:00",
+"final_at": "2026-11-14T23:00:00+00:00",
 "parlays": [
 {
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909980",
+"start": "2026-11-15T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.4349,
+"price": 124,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909981",
+"start": "2026-11-15T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell 6+ reb",
+"p": 0.3888,
+"price": 189,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.16911,
+"d": 6.474,
+"first": "2026-11-15T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909980",
+"start": "2026-11-15T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.4349,
+"price": 124,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909981",
+"start": "2026-11-15T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "james harden",
+"lab": "James Harden 6+ reb",
+"p": 0.3943,
+"price": 181,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.17149,
+"d": 6.294,
+"first": "2026-11-15T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909981",
 "start": "2026-11-15T00:30Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "CLE moneyline",
-"p": 0.5744,
-"price": -117,
-"book": "Novig"
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell 6+ reb",
+"p": 0.3888,
+"price": 189,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909982",
+"start": "2026-11-15T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "bam adebayo",
+"lab": "Bam Adebayo 2+ threes",
+"p": 0.3387,
+"price": 181,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 },
 {
 "gid": "401909984",
 "start": "2026-11-15T01:00Z",
-"kind": "total",
-"side": "over",
-"line": 236.5,
-"name": null,
-"lab": "CHI-MIN over 236.5",
-"p": 0.4944,
-"price": 115,
-"book": "Novig"
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu 5+ ast",
+"p": 0.4314,
+"price": 120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.28394,
-"d": 3.988,
+"p": 0.05681,
+"d": 17.866,
 "first": "2026-11-15T00:30:00+00:00",
-"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909981",
+"start": "2026-11-15T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "james harden",
+"lab": "James Harden 6+ reb",
+"p": 0.3943,
+"price": 181,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909982",
+"start": "2026-11-15T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "bam adebayo",
+"lab": "Bam Adebayo 2+ threes",
+"p": 0.3387,
+"price": 181,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909984",
+"start": "2026-11-15T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu 5+ ast",
+"p": 0.4314,
+"price": 120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.0576,
+"d": 17.371,
+"first": "2026-11-15T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909980",
+"start": "2026-11-15T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "herbert jones",
+"lab": "Herbert Jones over 3.5 assists",
+"p": 0.15,
+"fair": 0.15,
+"ours": 0.2419,
+"price": 456,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3448,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ assists: our chance 24% vs 18% with the fee (+34%)",
+"game total 235.5",
+"projected 28 min"
+]
+},
+{
+"gid": "401909984",
+"start": "2026-11-15T01:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga over 5.5 assists",
+"p": 0.055,
+"fair": 0.055,
+"ours": 0.0973,
+"price": 1241,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.305,
+"grp": "k15n",
+"v": [
+"Kalshi 6+ assists: our chance 10% vs 7% with the fee (+31%)",
+"game total 235.5",
+"projected 28 min"
+]
+}
+],
+"p": 0.00825,
+"d": 74.56,
+"first": "2026-11-15T00:00:00+00:00",
 "res": null
 }
 ],
