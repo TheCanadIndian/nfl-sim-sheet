@@ -93,6 +93,15 @@ def eband(e):
             return lab
 
 
+# the hold-up check's time slots (owner 2026-11-14: 'can we also split by time of day' -> 'do both'; same cuts as profit.tod_slot and
+# research/time_of_day.py): the game's Eastern start -- day before 6 PM, eve 6-8:59 PM, late 9 PM+. Display only: the flag rule is unchanged.
+def slot(t):
+    if t is None:
+        return None
+    h = t.hour + t.minute / 60
+    return "day" if h < 18 else "eve" if h < 21 else "late"
+
+
 def tod(t):
     h = t.hour + t.minute / 60
     return "starts before 5 PM ET" if h < 17 else "starts 5-8 PM ET" if h < 20 else "starts 8 PM ET or later"
@@ -174,7 +183,8 @@ def load():
                     continue
                 seen.add(key)
                 q = [1 / dec(float(x["price"])) for x in L]
-                PL.append(dict(sport=sp, card=card, n=len(L), d=float(p["d"]), y=int(p["res"] == "W"), day=j.get("date"), q=q, p=p.get("p"),
+                ts = [_day(x.get("start")) for x in L if _day(x.get("start"))]
+                PL.append(dict(sport=sp, card=card, n=len(L), d=float(p["d"]), y=int(p["res"] == "W"), day=j.get("date"), q=q, p=p.get("p"), t=min(ts) if ts else None,
                                bk={x["book"] for x in L}, ks={x.get("kind") for x in L}, sps={x.get("sport") or sp for x in L},
                                legs=[(x.get("lab") or "", x.get("price"), x.get("res")) for x in L]))
     return list(P.values()), PL
@@ -238,18 +248,22 @@ def score(rows, unit):
     if not rows:
         return {}
     days = sorted(r["day"] for r in rows); mid = days[len(days) // 2]
-    S = collections.defaultdict(lambda: dict(n=0, w=0, e=0.0, net=0.0, n1=0, net1=0.0, n2=0, net2=0.0, dd=collections.defaultdict(float)))
+    S = collections.defaultdict(lambda: dict(n=0, w=0, e=0.0, net=0.0, n1=0, net1=0.0, n2=0, net2=0.0, dd=collections.defaultdict(float),
+                                             sl=collections.defaultdict(lambda: [0, 0.0])))
     for r in rows:
         ret = r["d"] - 1 if r["y"] else -1.0
+        sl = slot(r.get("t"))
         for t in r["tr"] + ["all " + unit]:
             s = S[t]; s["n"] += 1; s["w"] += r["y"]; s["e"] += 1 / r["d"]; s["net"] += ret; s["dd"][r["day"]] += ret
+            if sl: s["sl"][sl][0] += 1; s["sl"][sl][1] += ret
             if r["day"] < mid: s["n1"] += 1; s["net1"] += ret
             else: s["n2"] += 1; s["net2"] += ret
     out = {}
     for t, s in S.items():
         v = sum(x * x for x in s["dd"].values())
         out[t] = dict(n=s["n"], w=s["w"], e=round(s["e"], 2), ret=round(s["net"] / s["n"], 4), h1=round(s["net1"] / s["n1"], 4) if s["n1"] else None,
-                      h2=round(s["net2"] / s["n2"], 4) if s["n2"] else None, n1=s["n1"], n2=s["n2"], z=round(s["net"] / math.sqrt(v), 2) if v > 0 else 0.0)
+                      h2=round(s["net2"] / s["n2"], 4) if s["n2"] else None, n1=s["n1"], n2=s["n2"], z=round(s["net"] / math.sqrt(v), 2) if v > 0 else 0.0,
+                      tod={k: [n, round(net / n, 4)] for k, (n, net) in s["sl"].items() if n})
     return out
 
 
@@ -354,13 +368,18 @@ def body(D=None):
     pct = lambda v: "–" if v is None else f"{v * 100:+.0f}%"
     cls = lambda v: "" if v is None else ' class="up"' if v > 0 else ' class="dn"'
     odds = lambda o: f"+{o:.0f}" if o > 0 else f"{o:.0f}"
+    def todc(td):
+        if not td:
+            return '<span class="muted">–</span>'
+        return " ".join(f'<span class="tods">{k} <span{cls(td[k][1])}>{pct(td[k][1])}</span></span>' if td[k][0] >= 20
+                        else f'<span class="tods muted" title="{td[k][0]} bets: too few to read">{k} {td[k][0]}</span>' for k in ("day", "eve", "late") if k in td)
     def table(rows, unit_lab, empty):
         if not rows:
             return f'<p class="note">{empty}</p>'
         body = "".join(f'<tr><td class="l tr">{e(t)}</td><td>{s["n"]}</td><td>{s["w"]} <i>vs {s["e"]:.1f}</i></td><td{cls(s["ret"])}>{pct(s["ret"])}</td>'
-                       f'<td class="hv"><span{cls(s["h1"])}>{pct(s["h1"])}</span> / <span{cls(s["h2"])}>{pct(s["h2"])}</span></td><td>{s["z"]:+.1f}</td></tr>' for t, s in rows)
+                       f'<td class="hv"><span{cls(s["h1"])}>{pct(s["h1"])}</span> / <span{cls(s["h2"])}>{pct(s["h2"])}</span></td><td class="hv">{todc(s.get("tod"))}</td><td>{s["z"]:+.1f}</td></tr>' for t, s in rows)
         return (f'<div class="tw"><table class="t wt"><thead><tr><th class="l">{unit_lab}</th><th>Bets</th><th>Won vs priced</th><th>Return</th>'
-                f'<th>Halves</th><th>z</th></tr></thead><tbody>{body}</tbody></table></div>')
+                f'<th>Halves</th><th title="Return by the game’s Eastern start: day (before 6 PM), eve (6-8:59 PM), late (9 PM and later). A slot needs 20+ bets to show a return (fewer shows the count).">Time of day</th><th>z</th></tr></thead><tbody>{body}</tbody></table></div>')
     def sect(unit):
         Sx = D[unit]; base = Sx.get("all " + unit)
         good = sorted([(t, s) for t, s in Sx.items() if not t.startswith("all ") and flag_ok(s)], key=lambda r: -r[1]["z"])[:15]

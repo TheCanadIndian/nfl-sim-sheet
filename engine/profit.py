@@ -87,7 +87,7 @@ def ladder_rows(date, mk, R, GM):
             if po is not None and date >= "2026-11-11":                  # edge audit fix D: market-anchored (nfl_page.js ladAnchor)
                 cl = lambda v: min(max(v, .002), .998)
                 po = 1 / (1 + math.exp(-(.21 + .70 * math.log(cl(mid(r)) / (1 - cl(mid(r)))) + .25 * math.log(cl(po) / (1 - cl(po))))))
-            out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"),
+            out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"), t0=r.get("start"),
                             bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4)))
     # receiving yards, one rung per player (owner 2026-11-03 after research/nfl_ladders.py market: Kalshi KXNFLRECYDS Oct 2025 - wk 9,
     # one rung per player +38% on 778 at 5%+ walk-forward, -5 / +13 / +77% by period; catches / rushing / passing lost): every Kalshi
@@ -112,7 +112,7 @@ def ladder_rows(date, mk, R, GM):
                 y = GM.outcome("nfl", best[1], R)
                 if y is not None:
                     out.append(dict(date=date, sport="nfl", cat="NFL receiving yards: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="rec_yds",
-                                    title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
+                                    title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
     return out
 
 
@@ -170,7 +170,7 @@ def nba_ladder_rows(date, mk, R, GM):
                 continue
             for cat in cats:
                 pc = pa if cat.endswith("anchored (experimental)") else p
-                out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"),
+                out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"), t0=r.get("start"),
                                 bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if pc is None else round(pc, 4), won=int(y), pnl=round(y / cy - 1, 4)))
     # threes, one rung per player (owner 2026-11-03 after research/threes_market.py, KSplit's idea tested: his whole-ladder sizing lost
     # to one rung per player; our threes = threes.py blend from today): every Kalshi 3PM rung, spread 5c or less, mid 3-97c; chance =
@@ -194,7 +194,7 @@ def nba_ladder_rows(date, mk, R, GM):
                 y = GM.outcome("nba", best[1], R)
                 if y is not None:
                     out.append(dict(date=date, sport="nba", cat="NBA threes: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="fg3m",
-                                    title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
+                                    title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
     # study pick 'K 15%+' (owner 2026-11-11: 'yes add it'; research/nba_criteria_kalshi.py: one rung per player-stat at 15-40%,
     # +11.6% on 1,864 Jan - Nov 2026, up in all four periods): every Kalshi pts / reb / ast / 3PM rung, spread 5c or less, mid
     # 3-97c, our chance (the market file's 'ours', the live model) 15-40% over the ask + fee; the player-stat's biggest edge
@@ -212,7 +212,7 @@ def nba_ladder_rows(date, mk, R, GM):
                 y = GM.outcome("nba", best[1], R)
                 if y is not None:
                     row = dict(date=date, sport="nba", cat="NBA study pick: Kalshi rung, our chance 15-40% over the cost, one per player (experimental)", src="kalshi",
-                               kind=best[1]["kind"], title=best[1].get("title"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4),
+                               kind=best[1]["kind"], title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4),
                                won=int(y), pnl=round(y / best[2] - 1, 4))
                     out.append(row)
                     # narrowed (owner 2026-11-12 'okay'): the live model flags ~7 K 15%+ picks a game vs ~2 in the study (Nov 11: 72 won 18
@@ -374,7 +374,7 @@ def experimental(date, sport, src, k, r, fy, cy, cn, R, GM):
     if y is None:
         return []
     hit = y if bet == "YES" else 1 - y
-    return [dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
+    return [dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), t0=r.get("start"), bet=bet, cost=round(cost, 4),
                  q=round(fair, 4), won=int(hit), pnl=round(hit / cost - 1, 4), clv=round(fair - cost, 4))]
 
 
@@ -391,7 +391,7 @@ def pin_rule(date, sport, cat, src, k, r, p, fy, cy, cn, ya, na, need, sides, R,
         return []
     hit, cost = (y, cy) if bet == "YES" else (1 - y, cn)
     fair = fy if bet == "YES" else 1 - fy
-    return [dict(date=date, sport=sport, cat=f"{cat} · {tag}", src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
+    return [dict(date=date, sport=sport, cat=f"{cat} · {tag}", src=src, kind=k, title=r.get("title"), t0=r.get("start"), bet=bet, cost=round(cost, 4),
                  q=round(q if bet == "YES" else 1 - q, 4), won=int(hit), pnl=round(hit / cost - 1, 4), clv=round(fair - cost, 4))]
 
 
@@ -448,7 +448,7 @@ def market_rows(sport):
                 if qa / cy - 1 >= .05:
                     ya_ = GM.outcome(sport, r, R)
                     if ya_ is not None:
-                        rows.append(dict(date=date, sport=sport, cat="MLB home runs (VALUE) · market-anchored", src=src, kind=k, title=r.get("title"),
+                        rows.append(dict(date=date, sport=sport, cat="MLB home runs (VALUE) · market-anchored", src=src, kind=k, title=r.get("title"), t0=r.get("start"),
                                          bet="YES", cost=round(cy, 4), q=round(qa, 4), won=int(ya_), pnl=round(ya_ / cy - 1, 4), clv=None))
             elif sport == "nhl" and k == "goal":
                 if (r.get("line") or .5) >= 1 or rank.get((r["game"], r.get("pid")), 99) > 3:
@@ -466,7 +466,7 @@ def market_rows(sport):
                     if q50 / cy - 1 > .05 and (sport != "nfl" or k not in ("rec", "rec_yds", "rush_yds", "pass_yds") or (p >= .5 and abs(p - m) >= .10 and cy >= .15)):
                         yo = GM.outcome(sport, r, R)
                         if yo is not None:
-                            rows.append(dict(date=date, sport=sport, cat=f"{sport.upper()} player props · old 50/50", src=src, kind=k, title=r.get("title"),
+                            rows.append(dict(date=date, sport=sport, cat=f"{sport.upper()} player props · old 50/50", src=src, kind=k, title=r.get("title"), t0=r.get("start"),
                                              bet="YES", cost=round(cy, 4), q=round(q50, 4), won=int(yo), pnl=round(yo / cy - 1, 4), clv=None))
                     cat, q, need, sides = f"{sport.upper()} player props", wk * p + (1 - wk) * m, .05, ("YES", "NO")
                 else:
@@ -504,7 +504,7 @@ def market_rows(sport):
                 continue
             hit = y if bet == "YES" else 1 - y
             fair = None if fy is None else (fy if bet == "YES" else 1 - fy)
-            rows.append(dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), bet=bet, cost=round(cost, 4),
+            rows.append(dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), t0=r.get("start"), bet=bet, cost=round(cost, 4),
                              q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4),
                              clv=None if fair is None else round(fair - cost, 4)))
         if sport == "nfl":
@@ -1486,6 +1486,47 @@ TRACKED = ["NHL anytime goals (top 3)", "NFL player props", "NBA player props", 
 TRACK_SINCE = "Oct 18"
 
 
+# ---------------------------------------------------------------- does a rule hold up (owner 2026-11-14: 'can we also split by time of day' -> 'do both')
+# Every rule's record split two ways: by date (h1 = the earlier half of its bet days, the cut builder.py / traits.py use) and by the
+# game's Eastern start (research/time_of_day.py: day before 6 PM, evening 6-8:59 PM, late 9 PM+). A slot needs 20+ bets to count.
+# First read (2026-11-14): 14 of 101 rules up in both date halves, 1 of them up in every slot; NFL day games +6.9% vs night -10.4%,
+# NBA evening -10.0% vs late -24.1% (each bet once).
+TOD_SLOTS, TOD_MIN = ("day", "eve", "late"), 20
+_T_MAX = dt.datetime.max.replace(tzinfo=dt.timezone.utc)
+
+
+def _tparse(ts):
+    try:
+        t = dt.datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return t if t.tzinfo else t.replace(tzinfo=dt.timezone.utc)
+
+
+def tod_slot(ts):
+    """'day' / 'eve' / 'late' from a start time, by its Eastern clock time; None if unknown."""
+    t = _tparse(ts) if ts else None
+    if t is None:
+        return None
+    t = t.astimezone(ET)
+    h = t.hour + t.minute / 60
+    return "day" if h < 18 else "eve" if h < 21 else "late"
+
+
+def _holds(y):
+    """{hv: [h1, h2, cut], tod: {slot: [n, return]}} for one rule's rows (a DataFrame with date, pnl and t0)."""
+    out = {}
+    days = sorted(set(y.date))
+    if len(days) > 1:
+        cut = days[len(days) // 2 - 1]
+        a, b = y[y.date <= cut].pnl, y[y.date > cut].pnl
+        out["hv"] = [round(float(a.mean()), 4) if len(a) else None, round(float(b.mean()), 4) if len(b) else None, cut]
+    if "t0" in y:
+        sl = y.t0.map(tod_slot)
+        out["tod"] = {s: [int((sl == s).sum()), round(float(y.pnl[sl == s].mean()), 4)] for s in TOD_SLOTS if (sl == s).any()}
+    return out
+
+
 def page_data():
     rows = []                                          # (sport, category, date, pnl, clv)
     for f in glob.glob(os.path.join(OUT, "profit_*.json")):
@@ -1502,7 +1543,7 @@ def page_data():
             else:
                 q_, mk_ = r.get("q"), _kmid(r.get("cost"), r["src"])
             rows.append(dict(sport=r["sport"], cat=f"{r['cat']} ({'Kalshi' if r['src'] == 'kalshi' else 'Polymarket'})", date=r["date"], pnl=r["pnl"], clv=r.get("clv"),
-                             q=q_, mk=mk_, y=r.get("won"), key=f"k|{r['date']}|{r.get('title')}|{r.get('bet')}"))
+                             q=q_, mk=mk_, y=r.get("won"), key=f"k|{r['date']}|{r.get('title')}|{r.get('bet')}", t0=r.get("t0")))
     tp = os.path.join(OUT, "profit_tags.json")
     for e in (json.load(open(tp)) if os.path.exists(tp) else {}).values():
         if e.get("res") not in ("W", "L"):
@@ -1515,10 +1556,10 @@ def page_data():
         sk = dict(q=e.get("p"), mk=e.get("m"), y=int(e["res"] == "W"))
         tkey = f"t|{e['sport']}|{e.get('gid')}|{e.get('name')}|{e.get('bet')}|{e.get('book')}"
         rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)}", date=_et_day(e.get("start") or e["first"]),
-                         pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, key=tkey, **sk))
+                         pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, key=tkey, t0=e.get("start"), **sk))
         if e.get("src") == "fg":                             # first goal: also one row per proposed odds range (owner 2026-11-06)
             rows.append(dict(sport=e["sport"], cat=f"{e['sport'].upper()} {tag_label(e)} · {fg_band(e['o'])}", date=_et_day(e.get("start") or e["first"]),
-                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, key=tkey, **sk))
+                             pnl=(d_ - 1) if e["res"] == "W" else -1.0, clv=clv, key=tkey, t0=e.get("start"), **sk))
     # book-weighted fair: graded in the background, shown only once it reads Proven or Promising
     try:
         wl = [e for e in json.load(open(os.path.join(OUT, "profit_wfair.json"))).values() if e.get("res") in ("W", "L")]
@@ -1532,7 +1573,7 @@ def page_data():
         print(f"book-weighted fair ({sp_}): {st['n']} bets, {st['roi']:+.1%}, verdict {st['verdict']}")
         if st["verdict"] in ("proven", "promising"):
             for e, p_, c_ in zip(y, pnl, clv):
-                rows.append(dict(sport=sp_, cat=WF_CAT, date=_et_day(e.get("start") or e["first"]), pnl=p_, clv=c_, key=f"w|{sp_}|{e.get('gid')}|{e.get('name')}|{e.get('bet')}|{e.get('book')}"))
+                rows.append(dict(sport=sp_, cat=WF_CAT, date=_et_day(e.get("start") or e["first"]), pnl=p_, clv=c_, key=f"w|{sp_}|{e.get('gid')}|{e.get('name')}|{e.get('bet')}|{e.get('book')}", t0=e.get("start")))
     for f in glob.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
         if os.path.basename(os.path.dirname(f)) == "learn":           # the learning builder's own files (builder.py)
             continue
@@ -1549,11 +1590,12 @@ def page_data():
             pkey = f"p|{d['sport']}|{d['date']}|{p['card']}|" + "|".join(str(L.get("lab") or L.get("name")) for L in p["legs"])
             # same-game cards are paid at our own fair (NHL combos) or at the legs multiplied (NFL): no book pays either
             nb = str(p["card"]).startswith("Same-game")
+            t0 = min((str(L["start"]) for L in p["legs"] if L.get("start")), key=lambda v: _tparse(v) or _T_MAX, default=None)   # first leg's start
             rows.append(dict(sport=d["sport"], cat=f"{d['sport'].upper()} parlays: {p['card']}", date=d["date"],
-                             pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None, key=pkey, nb=nb))
+                             pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None, key=pkey, nb=nb, t0=t0))
             if p.get("pick"):                               # the daily card (parlays.pick_card): 4 a day, $5 each
                 rows.append(dict(sport=d["sport"], cat=f"{d['sport'].upper()} Today's card ($5 a parlay)", date=d["date"],
-                                 pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None, key=pkey, nb=nb))
+                                 pnl=(pay - 1) if p["res"] == "W" else -1.0, clv=None, key=pkey, nb=nb, t0=t0))
     if not rows:
         return dict(rows=[], overall=None, sports=[])
     df = pd.DataFrame(rows)
@@ -1571,7 +1613,7 @@ def page_data():
             s30 = _stats(y[y.date >= last30].pnl.values)
             if y.nb.any():
                 s["verdict"] = "not bettable"
-            cats.append(dict(cat=c, **s, roi30=s30["roi"] if s30 else None, n30=s30["n"] if s30 else 0))
+            cats.append(dict(cat=c, **s, roi30=s30["roi"] if s30 else None, n30=s30["n"] if s30 else 0, **_holds(y)))
         allcats += cats
         u = x.drop_duplicates("key")                                       # totals: each bet once (twin rules repeat it)
         u = u[~u.nb]
@@ -1893,10 +1935,11 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .vd{display:inline-block;border-radius:999px;padding:1px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
 .vd.proven{background:color-mix(in srgb,var(--good) 20%,transparent);color:var(--good)}.vd.promising{background:color-mix(in srgb,#6CB4FF 22%,transparent);color:#6CB4FF}
 .vd.unproven,.vd.too{background:var(--sunk);color:var(--muted)}.vd.nb{background:transparent;color:var(--muted);border:1px dashed var(--faint)}.vd.losing{background:color-mix(in srgb,var(--bad) 18%,transparent);color:var(--bad)}
-.pf td.l{white-space:normal}.pf small{display:block;color:var(--muted);font-size:11.5px}
+.pf td.l{white-space:normal}td.hold{white-space:nowrap;text-align:left}td.hold small{white-space:normal;min-width:120px}.tods{display:inline-block;margin-right:7px;font-size:11.5px}.hok{color:var(--good);margin-right:4px}.pf small{display:block;color:var(--muted);font-size:11.5px}
 .spark{width:100%;height:56px;display:block;margin:4px 0 10px}
 .sph{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}.sph h2{margin-right:auto}
-@media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5){display:none}}
+.pf small.holdm{display:none}
+@media (max-width:640px){.pf th:nth-child(3),.pf td:nth-child(3),.pf th:nth-child(5),.pf td:nth-child(5),.pf th:nth-child(8),.pf td:nth-child(8){display:none}.pf small.holdm{display:block;margin-top:3px;line-height:1.5}.holdm .hl{display:block}}
 .bnav{position:sticky;top:var(--tbh,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:8px 0;margin:0 0 12px;background:var(--bg);scrollbar-width:none;align-items:center}.bnav::-webkit-scrollbar{display:none}.bnav .small{flex:none;margin-right:2px}.bnav a{flex:none;border:1px solid var(--faint);border-radius:999px;padding:5px 12px;font:600 13px var(--body);color:var(--ink);text-decoration:none;white-space:nowrap}.bnav a:hover,.bnav a:focus-visible{border-color:var(--ink)}.bnav a.ext{color:var(--muted)}
 .bsec{scroll-margin-top:calc(var(--tbh,0px) + 60px)}.fgm table{width:100%;border-collapse:separate;border-spacing:3px;font-size:13px}.fgm th{font-size:12px;color:var(--muted);font-weight:600;text-align:center;padding:2px 4px;vertical-align:bottom}.fgm th small{display:block;font-weight:400;font-size:11px}.fgm td.l,.fgm th.l{text-align:left;padding:4px 6px 4px 0}.fgm td.fgc{text-align:center;border-radius:6px;padding:5px 4px;background:var(--sunk);min-width:64px}.fgm td.fgc b{display:block;font-weight:800;font-size:14px}.fgm td.fgc small{display:block;font-size:11px;color:var(--muted)}.fgm td.up{background:color-mix(in srgb,var(--good) 24%,transparent)}.fgm td.up b{color:var(--good)}.fgm td.dn b{color:var(--bad)}.fgm td.few{opacity:.5}.fgm td.na{background:transparent;color:var(--muted)}.fgm tr.all td{border-bottom:1px solid var(--faint)}.fgm tr.all td.l{font-weight:700}.fgm .upnow{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:8px 12px;font-size:13.5px;margin:4px 0 10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.fgm .upnow .h{font-weight:700;margin-right:4px}.fgm .upnow .h small{font-weight:400;color:var(--muted)}.fgm .upc{border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:999px;padding:3px 10px;white-space:nowrap}.fgm .upc b{color:var(--good)}.fgm .upc small{color:var(--muted)}.fgm .upnow .more{color:var(--muted);font-size:12.5px}@media (max-width:560px){.fgm .upc{white-space:normal}}.fgm h3{margin:14px 0 4px}@media (max-width:560px){.fgm td.fgc{min-width:0;padding:4px 2px}.fgm td.fgc b{font-size:13px}.fgm td.l{font-size:12px}}.bq{display:block;font-size:12.5px;color:var(--muted);margin:2px 0 8px}
 .crit .crcall{border-left:3px solid var(--good);background:var(--sunk);border-radius:6px;padding:9px 12px;font-size:13.5px;margin:6px 0 10px}.crit .crcall small{display:block;color:var(--muted);margin-top:4px;font-size:12px}
@@ -2030,6 +2073,25 @@ document.addEventListener('click', e => { const b = e.target.closest('button[dat
 // easily findable'): every slice-by-slice table in one tab, a sticky jump bar, each section saying what it answers.
 const CR = D.crit || null;
 let CS = 'books'; try { CS = localStorage.getItem('profit-crit') || 'books'; } catch (e) {}
+// does it hold up (owner 2026-11-14: 'can we also split by time of day' -> 'do both'): by date halves and by the game's Eastern start
+const HOLD_TIP = 'Top: return in the earlier / later half of its bet days. Below: return by the game’s Eastern start time -- day (before 6 PM), eve (6-8:59 PM), late (9 PM and later); a slot needs 20+ bets (fewer shows just the count). ✓ = up in both halves AND in every time slot with 20+ bets (at least two). Parlays use the first game’s start.';
+const HOLD_TIP2 = 'Return by the game’s Eastern start time: day (before 6 PM), eve (6-8:59 PM), late (9 PM and later). A slot needs 20+ to show a return (fewer shows the count).';
+const hpc = v => { if (v == null || v !== v) return '–'; const r = Math.round(v * 100); return `<span class="${v >= 0 ? 'rp' : 'rn'}">${r > 0 ? '+' : r < 0 ? '−' : ''}${Math.abs(r)}%</span>`; };
+const TODL = [['day', 'day'], ['eve', 'eve'], ['late', 'late']];
+function todCells(td){
+  td = td || {};
+  const xs = TODL.filter(([k]) => td[k] && td[k][0]);
+  if (!xs.length) return '<span class="muted">–</span>';
+  return xs.map(([k, l]) => td[k][0] >= 20 ? `<span class="tods">${l} ${hpc(td[k][1])}</span>` : `<span class="tods muted" title="${td[k][0]} bets: too few to read">${l} ${td[k][0]}</span>`).join('');
+}
+function hold(hv, td, inline){
+  td = td || {};
+  const big = TODL.filter(([k]) => td[k] && td[k][0] >= 20);
+  const ok = hv && hv[0] > 0 && hv[1] > 0 && big.length >= 2 && big.every(([k]) => td[k][1] > 0);
+  const top = hv ? `<span title="Split after ${esc(String(hv[2] || ''))}">${hpc(hv[0])} / ${hpc(hv[1])}</span>` : '<span class="muted">–</span>';
+  if (inline) return hv || Object.keys(td).length ? `${ok ? '<b class="hok">✓ holds up</b> ' : ''}${hv ? `<span class="hl">halves ${top}</span>` : ''}${Object.keys(td).length ? `<span class="hl">${todCells(td)}</span>` : ''}` : '';
+  return `${ok ? '<b class="hok" title="Up in both halves and in every time slot with 20+ bets">✓</b>' : ''}${top}<small>${todCells(td)}</small>`;
+}
 function critSec(){
   if (!CR || !(CR.books || CR.kalshi)) return '';
   const k = CR[CS] ? CS : CR.books ? 'books' : 'kalshi', J = CR[k], T = J.total, K = k === 'kalshi', U = K ? 'Rungs' : 'Bets', u = U.toLowerCase();
@@ -2037,8 +2099,8 @@ function critSec(){
   const cl = v => v == null || v !== v ? 'muted' : v >= 0 ? 'rp' : 'rn';
   const both = r => r.h1 != null && r.h2 != null && r.h1 > 0 && r.h2 > 0;
   const hh = r => `<span class="${cl(r.h1)}">${p1(r.h1)}</span> <span class="muted">/</span> <span class="${cl(r.h2)}">${p1(r.h2)}</span>`;
-  const tds = r => `<td>${r.n.toLocaleString()}</td><td>${r.won.toLocaleString()} <small class="muted">/ ${Math.round(r.priced).toLocaleString()}</small></td><td class="${r.wp >= 1 ? 'rp' : 'rn'}">${r.wp.toFixed(2)}</td><td class="${cl(r.roi)}">${p1(r.roi)}</td><td>${hh(r)}</td>`;
-  const th = (a, x) => `<thead><tr><th>${a}</th><th>${U}</th><th>Won / priced</th><th>Index</th><th>Return</th><th>h1 / h2</th>${x || ''}</tr></thead>`;
+  const tds = r => `<td>${r.n.toLocaleString()}</td><td>${r.won.toLocaleString()} <small class="muted">/ ${Math.round(r.priced).toLocaleString()}</small></td><td class="${r.wp >= 1 ? 'rp' : 'rn'}">${r.wp.toFixed(2)}</td><td class="${cl(r.roi)}">${p1(r.roi)}</td><td>${hh(r)}</td><td class="hold">${todCells(r.tod)}</td>`;
+  const th = (a, x) => `<thead><tr><th>${a}</th><th>${U}</th><th>Won / priced</th><th>Index</th><th>Return</th><th>h1 / h2</th><th title="${HOLD_TIP2}" style="text-align:left">Time of day</th>${x || ''}</tr></thead>`;
   const tbl = (a, rows, lab, x, xr) => `<div class="aqw"><table>${th(a, x)}<tbody>${rows.map(r => `<tr><td class="l">${lab(r)}${both(r) ? '<span class="bh">both halves +</span>' : ''}</td>${tds(r)}${xr ? xr(r) : ''}</tr>`).join('')}</tbody></table></div>`;
   const mixl = r => `${esc(r.a)} <span class="muted">+</span> ${esc(r.b)}`;
   const blk = (id, title, note, body, tz) => { const key = 'crit:' + k + ':' + id;
@@ -2130,11 +2192,11 @@ function render(){
   if (!O){ document.getElementById('main').innerHTML = '<section class="panel"><p class="note">Nothing graded yet.</p></section>'; return; }
   const tiles = `<div class="rec"><div><b>${un(O.units)}</b><span>${O.n} bets · all sports</span></div><div><b>${pc(O.roi)}</b><span>return per bet ± ${O.moe != null ? (O.moe * 100).toFixed(1) : '–'}%</span></div><div><b>${pc(O.roi30)}</b><span>last 30 days (${O.n30} bets)</span></div><div><b>${D.sports.reduce((n, s) => n + s.cats.filter(c => c.verdict === 'proven').length, 0)}</b><span>proven profitable bet types</span></div></div>`;
   const sp = s => `<section class="panel"><div class="sph"><h2>${s.sport.toUpperCase()}</h2><span>${un(s.units)} · ${pc(s.roi)} per bet · ${s.n} bets</span></div>${spark(s.curve)}
-    <div class="tw"><table class="t pf"><thead><tr><th class="l">Bet type</th><th>Verdict</th><th>Record</th><th>Return</th><th>Beat close</th><th title="Skill vs market: 1 − Brier(our chance) ÷ Brier(the market’s chance) on these bets. Above 0 = our chance called them better than the price; 0 = the rule uses the market’s own chance; below 0 = the market knew more. Like R-squared for yes / no bets, scored against the price. 30+ bets.">Skill vs mkt</th><th>Last 30 d</th></tr></thead><tbody>
-    ${s.cats.map(c => `<tr><td class="l"><b>${esc(c.cat)}</b><small>${c.n} bets · ${un(c.units)}</small></td><td>${vd(c.verdict)}</td><td>${c.won}-${c.n - c.won}</td>
+    <div class="tw"><table class="t pf"><thead><tr><th class="l">Bet type</th><th>Verdict</th><th>Record</th><th>Return</th><th>Beat close</th><th title="Skill vs market: 1 − Brier(our chance) ÷ Brier(the market’s chance) on these bets. Above 0 = our chance called them better than the price; 0 = the rule uses the market’s own chance; below 0 = the market knew more. Like R-squared for yes / no bets, scored against the price. 30+ bets.">Skill vs mkt</th><th>Last 30 d</th><th title="${HOLD_TIP}" style="text-align:left">Holds up?</th></tr></thead><tbody>
+    ${s.cats.map(c => `<tr><td class="l"><b>${esc(c.cat)}</b><small>${c.n} bets · ${un(c.units)}</small><small class="holdm">${hold(c.hv, c.tod, true)}</small></td><td>${vd(c.verdict)}</td><td>${c.won}-${c.n - c.won}</td>
       <td>${pc(c.roi)}<small>± ${c.moe != null ? (c.moe * 100).toFixed(0) : '–'}%</small></td><td>${c.clv != null ? `${pc(c.clv, 1)}<small>${Math.round(c.clv_beat * 100)}% of ${c.clv_n}</small>` : '<span class="muted">–</span>'}</td>
       <td>${skc(c)}</td>
-      <td>${c.n30 ? pc(c.roi30, 0) + `<small>${c.n30} bets</small>` : '<span class="muted">–</span>'}</td></tr>`).join('')}</tbody></table></div></section>`;
+      <td>${c.n30 ? pc(c.roi30, 0) + `<small>${c.n30} bets</small>` : '<span class="muted">–</span>'}</td><td class="hold">${hold(c.hv, c.tod)}</td></tr>`).join('')}</tbody></table></div></section>`;
   const T = D.track || [], by = {}; T.forEach(t => (by[t.base] = by[t.base] || []).push(t));
   const tcell = t => !t.n ? '<span class="wait">waiting for results</span>'
     : t.n < 30 ? `<span class="wait" title="Fewer than 30 bets: too early to read">${pc(t.roi)} · too early</span>` : `${pc(t.roi)}<small> ± ${t.moe != null ? (t.moe * 100).toFixed(0) : '–'}%</small>`;
