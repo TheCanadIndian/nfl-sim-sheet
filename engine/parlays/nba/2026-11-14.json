@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-14",
 "lock": "2026-11-15T00:00:00+00:00",
-"frozen_at": "2026-11-14T14:25:34.097Z",
+"frozen_at": "2026-11-14T14:43:38.072Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,14 +17,14 @@
 {
 "gid": "401909982",
 "start": "2026-11-15T01:00Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 4+ ast",
-"p": 0.2539,
-"price": 300,
-"book": "Hard Rock",
+"line": 1.5,
+"name": "bam adebayo",
+"lab": "Bam Adebayo 2+ threes",
+"p": 0.3389,
+"price": 208,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -51,14 +51,60 @@
 ]
 }
 ],
-"p": 0.10727,
-"d": 9.4,
+"p": 0.14317,
+"d": 7.238,
 "first": "2026-11-15T01:00:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "401909980",
+"start": "2026-11-15T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.4312,
+"price": 130,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909982",
+"start": "2026-11-15T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "bam adebayo",
+"lab": "Bam Adebayo 2+ threes",
+"p": 0.3389,
+"price": 208,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.14611,
+"d": 7.084,
+"first": "2026-11-15T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909980",
@@ -95,51 +141,6 @@
 "rotation",
 "game"
 ]
-}
-],
-"p": 0.10948,
-"d": 9.2,
-"first": "2026-11-15T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909981",
-"start": "2026-11-15T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "james harden",
-"lab": "James Harden 7+ ast",
-"p": 0.4496,
-"price": 122,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909982",
-"start": "2026-11-15T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "bam adebayo",
-"lab": "Bam Adebayo 2+ threes",
-"p": 0.3389,
-"price": 198,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 },
 {
 "gid": "401909984",
@@ -160,9 +161,9 @@
 ]
 }
 ],
-"p": 0.06437,
-"d": 15.547,
-"first": "2026-11-15T00:30:00+00:00",
+"p": 0.04625,
+"d": 21.62,
+"first": "2026-11-15T00:00:00+00:00",
 "res": null
 },
 {
@@ -322,6 +323,60 @@
 "p": 0.15721,
 "d": 7.95,
 "first": "2026-11-15T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909984",
+"start": "2026-11-15T01:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga over 5.5 assists",
+"p": 0.06,
+"fair": 0.06,
+"ours": 0.0952,
+"price": 1241,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.2769,
+"grp": "k15n",
+"v": [
+"Kalshi 6+ assists: our chance 10% vs 7% with the fee (+28%)",
+"game total 234.5",
+"projected 28 min"
+]
+},
+{
+"gid": "401909981",
+"start": "2026-11-15T00:30:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "peyton watson",
+"lab": "Peyton Watson over 3.5 assists",
+"p": 0.18,
+"fair": 0.18,
+"ours": 0.2634,
+"price": 373,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.2472,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ assists: our chance 26% vs 21% with the fee (+25%)",
+"game total 231.5",
+"projected 30 min"
+]
+}
+],
+"p": 0.0108,
+"d": 63.429,
+"first": "2026-11-15T00:30:00+00:00",
 "res": null
 }
 ],
