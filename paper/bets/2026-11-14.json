@@ -1,0 +1,67 @@
+{
+ "date": "2026-11-14",
+ "bets": [
+  {
+   "id": "2026-11-14-1",
+   "t": "2026-11-14T16:40:02+00:00",
+   "book": "Novig",
+   "stake": 5.0,
+   "dec": 4.88,
+   "odds": 388,
+   "q": 0.2049,
+   "p": 0.2353,
+   "edge": 0.1485,
+   "why": "Only two games start before 6 PM ET (SEA@CAR 1 PM, WPG@CHI 3:30 PM), so this is a small 2-leg SOG parlay at Novig, the lowest-hold book. Both legs are shots-on-goal overs priced 44-47% with fair at or above the price. NHL is the sport where our model competes with the market. Small stake, no claimed edge over 15%.",
+   "legs": [
+    {
+     "id": "nhl|2026020321|vince dunn|sog15|1.5|o",
+     "sport": "nhl",
+     "gid": "2026020321",
+     "game": "SEA @ CAR",
+     "start": "2026-11-14T18:00:00+00:00",
+     "name": "vince dunn",
+     "kind": "sog",
+     "side": "o",
+     "line": 1.5,
+     "lab": "Vince Dunn over 1.5 shots on goal",
+     "book": "Novig",
+     "price": 115,
+     "dec": 2.15,
+     "q": 0.4651,
+     "fair": 0.4851,
+     "ours": 0.566,
+     "p": 0.5255,
+     "edge": 0.1299,
+     "main": true,
+     "sig": [],
+     "why": "Novig +115 (47%) vs sharp fair 49%; our SOG model 57%, which is the model talking, so I trust the fair-vs-price gap of about 2 pts more. Defenseman with steady shot volume. No news checked beyond the slate."
+    },
+    {
+     "id": "nhl|2026020312|cole perfetti|sog25|2.5|o",
+     "sport": "nhl",
+     "gid": "2026020312",
+     "game": "WPG @ CHI",
+     "start": "2026-11-14T20:30:00+00:00",
+     "name": "cole perfetti",
+     "kind": "sog",
+     "side": "o",
+     "line": 2.5,
+     "lab": "Cole Perfetti over 2.5 shots on goal",
+     "book": "Novig",
+     "price": 127,
+     "dec": 2.27,
+     "q": 0.4405,
+     "fair": 0.4416,
+     "ours": 0.454,
+     "p": 0.4478,
+     "edge": 0.0165,
+     "main": true,
+     "sig": [],
+     "why": "Novig +127 (44%) vs fair 44%, ours 45%. No edge over the price, but a near-even leg. The NHL SOG model beat the market slightly (attempts model). Paired with Dunn from a different game."
+    }
+   ]
+  }
+ ],
+ "bankroll_open": 235.0,
+ "unit": 5.0
+}
