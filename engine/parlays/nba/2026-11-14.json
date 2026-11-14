@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-14",
 "lock": "2026-11-15T00:00:00+00:00",
-"frozen_at": "2026-11-14T20:27:53.792Z",
+"frozen_at": "2026-11-14T20:33:39.847Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -172,70 +172,6 @@
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909980",
-"start": "2026-11-15T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 5+ ast",
-"p": 0.2879,
-"price": 250,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909982",
-"start": "2026-11-15T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "duncan robinson",
-"lab": "Duncan Robinson 3+ ast",
-"p": 0.4411,
-"price": 130,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909984",
-"start": "2026-11-15T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 8+ ast",
-"p": 0.4285,
-"price": 138,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.0544,
-"d": 19.159,
-"first": "2026-11-15T00:00:00+00:00",
-"res": null
-},
-{
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -299,6 +235,55 @@
 "res": null
 },
 {
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909980",
+"start": "2026-11-15T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "zion williamson",
+"lab": "Zion Williamson over 4.5 assists",
+"p": 0.2879,
+"fair": 0.2841,
+"price": 250,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0075,
+"v": [
+"Pinnacle odds drop",
+"one rung above the main line (3.5)",
+"soft matchup"
+]
+},
+{
+"gid": "401909981",
+"start": "2026-11-15T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "meleek thomas",
+"lab": "Meleek Thomas over 2.5 threes",
+"p": 0.4824,
+"fair": 0.4877,
+"price": 155,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.2302,
+"v": [
+"consensus odds drop",
+"one rung above the main line (1.5)"
+]
+}
+],
+"p": 0.13856,
+"d": 8.925,
+"first": "2026-11-15T00:00:00+00:00",
+"res": null
+},
+{
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -310,12 +295,12 @@
 "line": 2.5,
 "name": "jaylon tyson",
 "lab": "Jaylon Tyson over 2.5 assists",
-"p": 0.508,
+"p": 0.5436,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.27,
-"fair": 0.523,
+"edge": 0.3591,
+"fair": 0.5626,
 "main": false
 },
 {
@@ -335,7 +320,7 @@
 "main": false
 }
 ],
-"p": 0.14488,
+"p": 0.15503,
 "d": 10.0,
 "first": "2026-11-15T00:30:00+00:00",
 "res": null
@@ -352,12 +337,12 @@
 "line": 2.5,
 "name": "jaylon tyson",
 "lab": "Jaylon Tyson over 2.5 assists",
-"p": 0.508,
+"p": 0.5436,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.27,
-"fair": 0.523,
+"edge": 0.3591,
+"fair": 0.5626,
 "main": false
 },
 {
@@ -393,7 +378,7 @@
 "main": true
 }
 ],
-"p": 0.0719,
+"p": 0.07694,
 "d": 22.5,
 "first": "2026-11-15T00:30:00+00:00",
 "res": null
