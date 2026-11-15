@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-15",
 "lock": "2026-11-15T14:30:00+00:00",
-"frozen_at": "2026-11-15T08:32:27.362Z",
+"frozen_at": "2026-11-15T08:49:10.013Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,40 @@
 ],
 "final_at": "2026-11-15T12:30:00+00:00",
 "parlays": [
+{
+"card": "Primetime ladders (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_10_PIT_CIN",
+"start": "2026-11-15T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "chase brown",
+"lab": "Chase Brown 40+ rec yds",
+"p": 0.23,
+"price": 296,
+"book": "Kalshi"
+},
+{
+"gid": "2026_10_PIT_CIN",
+"start": "2026-11-15T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "pat freiermuth",
+"lab": "Pat Freiermuth 40+ rec yds",
+"p": 0.305,
+"price": 198,
+"book": "Kalshi"
+}
+],
+"p": 0.07233,
+"d": 11.801,
+"first": "2026-11-16T01:20:00+00:00",
+"res": null
+},
 {
 "card": "Primetime ladders (experimental)",
 "tier": "3-leg",
@@ -51,7 +85,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01581,
+"p": 0.01547,
 "d": 45.794,
 "first": "2026-11-16T01:20:00+00:00",
 "res": null
@@ -121,40 +155,6 @@
 ],
 "p": 0.102,
 "d": 8.409,
-"first": "2026-11-15T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_10_PIT_CIN",
-"start": "2026-11-15T20:20:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "pat freiermuth",
-"lab": "Pat Freiermuth 40+ rec yds",
-"p": 0.305,
-"price": 198,
-"book": "Kalshi"
-},
-{
-"gid": "2026_10_BUF_NYJ",
-"start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "dalton kincaid",
-"lab": "Dalton Kincaid 60+ rec yds",
-"p": 0.3,
-"price": 208,
-"book": "Kalshi"
-}
-],
-"p": 0.0915,
-"d": 9.179,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
 },
@@ -255,6 +255,18 @@
 "tier": "+250 to +600",
 "legs": [
 {
+"gid": "2026_10_MIA_IND",
+"start": "2026-11-15T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 21.5,
+"name": "jonathan taylor",
+"lab": "Jonathan Taylor over 21.5 rec yds",
+"p": 0.5425,
+"price": -102,
+"book": "Novig"
+},
+{
 "gid": "2026_10_LA_ARI",
 "start": "2026-11-15T16:05:00",
 "kind": "rec",
@@ -265,22 +277,10 @@
 "p": 0.5625,
 "price": -111,
 "book": "Novig"
-},
-{
-"gid": "2026_10_CAR_NO",
-"start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 12.5,
-"name": "xavier legette",
-"lab": "Xavier Legette over 12.5 rec yds",
-"p": 0.5273,
-"price": 100,
-"book": "Novig"
 }
 ],
-"p": 0.2966,
-"d": 3.802,
+"p": 0.30517,
+"d": 3.765,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
 },
@@ -291,13 +291,13 @@
 {
 "gid": "2026_10_MIA_IND",
 "start": "2026-11-15T13:00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 3.5,
+"line": 21.5,
 "name": "jonathan taylor",
-"lab": "Jonathan Taylor over 3.5 receptions",
-"p": 0.4867,
-"price": 127,
+"lab": "Jonathan Taylor over 21.5 rec yds",
+"p": 0.5425,
+"price": -102,
 "book": "Novig"
 },
 {
@@ -321,12 +321,12 @@
 "name": "xavier legette",
 "lab": "Xavier Legette over 12.5 rec yds",
 "p": 0.5273,
-"price": 100,
+"price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.14929,
-"d": 8.488,
+"p": 0.16642,
+"d": 7.479,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "core",
 "res": null
@@ -362,18 +362,18 @@
 {
 "gid": "2026_10_CAR_NO",
 "start": "2026-11-15T13:00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
+"line": 12.5,
 "name": "xavier legette",
-"lab": "Xavier Legette over 1.5 receptions",
-"p": 0.4648,
-"price": 133,
+"lab": "Xavier Legette over 12.5 rec yds",
+"p": 0.5273,
+"price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.1316,
-"d": 9.888,
+"p": 0.14929,
+"d": 8.573,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "core",
 "res": null
@@ -27285,6 +27285,31 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "2026_10_MIA_IND",
+"start": "2026-11-15T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "tyler warren",
+"lab": "Tyler Warren over 49.5 rec yds",
+"p": 0.4659,
+"price": -102,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup"
+],
+"v": [
+"usage",
+"matchup",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0633
+},
+{
 "gid": "2026_10_SF_DAL",
 "start": "2026-11-15T16:25:00",
 "kind": "rec_yds",
@@ -27293,7 +27318,7 @@
 "name": "keenan allen",
 "lab": "Keenan Allen over 24.5 rec yds",
 "p": 0.4937,
-"price": -102,
+"price": -106,
 "book": "Kalshi",
 "f": [
 "matchup",
@@ -27307,35 +27332,11 @@
 "lc"
 ],
 "sport": "nfl",
-"edge": 0.0799
-},
-{
-"gid": "2026_10_MIA_IND",
-"start": "2026-11-15T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tyler warren",
-"lab": "Tyler Warren over 5.5 receptions",
-"p": 0.5402,
-"price": -122,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.0694
+"edge": 0.0597
 }
 ],
-"p": 0.2667,
-"d": 3.604,
+"p": 0.23001,
+"d": 3.849,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
 },
@@ -27351,12 +27352,12 @@
 "line": 4.5,
 "name": "wandale robinson",
 "lab": "Wan'Dale Robinson over 4.5 receptions",
-"p": 0.5312,
+"p": 0.5328,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1953,
-"fair": 0.5425,
+"edge": 0.1988,
+"fair": 0.5446,
 "main": true
 },
 {
@@ -27383,16 +27384,16 @@
 "line": 2.5,
 "name": "josh downs",
 "lab": "Josh Downs over 2.5 receptions",
-"p": 0.4673,
+"p": 0.4679,
 "price": 141,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1263,
-"fair": 0.4075,
+"edge": 0.1275,
+"fair": 0.4082,
 "main": true
 }
 ],
-"p": 0.09808,
+"p": 0.0985,
 "d": 15.725,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
@@ -27409,16 +27410,16 @@
 "line": 4.5,
 "name": "wandale robinson",
 "lab": "Wan'Dale Robinson over 4.5 receptions",
-"p": 0.5312,
+"p": 0.5328,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1953,
-"fair": 0.5425,
+"edge": 0.1988,
+"fair": 0.5446,
 "main": true
 }
 ],
-"p": 0.5312,
+"p": 0.5328,
 "d": 2.25,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight",
@@ -27490,16 +27491,16 @@
 "line": 2.5,
 "name": "josh downs",
 "lab": "Josh Downs over 2.5 receptions",
-"p": 0.4673,
+"p": 0.4679,
 "price": 141,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1263,
-"fair": 0.4075,
+"edge": 0.1275,
+"fair": 0.4082,
 "main": true
 }
 ],
-"p": 0.4673,
+"p": 0.4679,
 "d": 2.41,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight",
@@ -27571,16 +27572,16 @@
 "line": 1.5,
 "name": "xavier legette",
 "lab": "Xavier Legette over 1.5 receptions",
-"p": 0.4627,
+"p": 0.4618,
 "price": 133,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0782,
-"fair": 0.4243,
+"edge": 0.0759,
+"fair": 0.423,
 "main": true
 }
 ],
-"p": 0.4627,
+"p": 0.4618,
 "d": 2.33,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
