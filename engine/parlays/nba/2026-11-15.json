@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-15",
 "lock": "2026-11-15T18:00:00+00:00",
-"frozen_at": "2026-11-15T22:42:08.281Z",
+"frozen_at": "2026-11-15T22:47:22.977Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -480,20 +480,20 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909990",
+"gid": "401909989",
 "start": "2026-11-15T23:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "jakob poeltl",
-"lab": "Jakob Poeltl 8+ reb",
-"p": 0.3768,
-"price": 198,
-"book": "Kalshi",
+"line": 1.5,
+"name": "naji marshall",
+"lab": "Naji Marshall 2+ threes",
+"p": 0.2825,
+"price": 264,
+"book": "Novig",
 "f": [
-"rotation",
-"game",
-"price"
+"usage",
+"matchup",
+"rotation"
 ]
 },
 {
@@ -504,7 +504,7 @@
 "line": 1.5,
 "name": "jalen johnson",
 "lab": "Jalen Johnson 2+ threes",
-"p": 0.4246,
+"p": 0.4248,
 "price": 135,
 "book": "Novig",
 "f": [
@@ -515,56 +515,9 @@
 ]
 }
 ],
-"p": 0.16,
-"d": 7.003,
+"p": 0.12,
+"d": 8.554,
 "first": "2026-11-15T23:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909990",
-"start": "2026-11-15T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "jakob poeltl",
-"lab": "Jakob Poeltl 8+ reb",
-"p": 0.3768,
-"price": 198,
-"book": "Kalshi",
-"f": [
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909992",
-"start": "2026-11-16T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "nickeil alexanderwalker",
-"lab": "Nickeil Alexander-Walker 4+ ast",
-"p": 0.3826,
-"price": 160,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.14417,
-"d": 7.748,
-"first": "2026-11-15T23:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -591,15 +544,57 @@
 "line": 9.5,
 "name": "alperen sengun",
 "lab": "Alperen Sengun over 9.5 rebounds",
-"p": 0.4449,
+"p": 0.4476,
 "price": 138,
 "book": "Novig"
 }
 ],
-"p": 0.21859,
+"p": 0.21994,
 "d": 5.474,
 "first": "2026-11-15T23:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909989",
+"start": "2026-11-15T23:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "kyrie irving",
+"lab": "Kyrie Irving over 5.5 rebounds",
+"p": 0.3593,
+"price": 270,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.3294,
+"fair": 0.3593,
+"main": false
+},
+{
+"gid": "401909991",
+"start": "2026-11-16T00:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 2.5,
+"name": "tre johnson",
+"lab": "Tre Johnson over 2.5 rebounds",
+"p": 0.4761,
+"price": 145,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1664,
+"fair": 0.4761,
+"main": false
+}
+],
+"p": 0.17106,
+"d": 9.065,
+"first": "2026-11-15T23:00:00+00:00",
 "res": null
 }
 ],
