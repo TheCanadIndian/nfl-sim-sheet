@@ -1,8 +1,8 @@
 {
 "sport": "multi",
 "date": "2026-11-15",
-"lock": "2026-11-15T21:00:00+00:00",
-"frozen_at": "2026-11-15T13:55:17.004344+00:00",
+"lock": "2026-11-16T01:00:00+00:00",
+"frozen_at": "2026-11-15T15:34:05.098911+00:00",
 "books": [
 "Hard Rock",
 "Kalshi",
@@ -15,19 +15,6 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "2026020329",
-"start": "2026-11-16T02:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "mark stone",
-"lab": "Mark Stone to score",
-"p": 0.3768,
-"price": 174,
-"book": "Novig",
-"sport": "nhl"
-},
-{
 "gid": "401909993",
 "start": "2026-11-16T02:00Z",
 "kind": "ast",
@@ -35,13 +22,33 @@
 "line": 6.5,
 "name": "shai gilgeousalexander",
 "lab": "Shai Gilgeous-Alexander 7+ ast",
-"p": 0.3483,
+"p": 0.3586,
 "price": 195,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
-"rotation"
+"rotation",
+"price"
+],
+"sport": "nba"
+},
+{
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "cj mccollum",
+"lab": "CJ McCollum 4+ reb",
+"p": 0.3933,
+"price": 146,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
 ],
 "sport": "nba"
 },
@@ -54,14 +61,14 @@
 "name": "macklin celebrini",
 "lab": "Macklin Celebrini to score",
 "p": 0.3943,
-"price": 160,
+"price": 163,
 "book": "Novig",
 "sport": "nhl"
 }
 ],
-"p": 0.05175,
-"d": 21.016,
-"first": "2026-11-16T02:00:00+00:00",
+"p": 0.05561,
+"d": 19.086,
+"first": "2026-11-16T01:00:00+00:00",
 "res": null
 },
 {
@@ -69,19 +76,6 @@
 "tier": "3 legs \u00b7 NBA + NHL",
 "legs": [
 {
-"gid": "2026020329",
-"start": "2026-11-16T02:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "mark stone",
-"lab": "Mark Stone to score",
-"p": 0.3768,
-"price": 174,
-"book": "Novig",
-"sport": "nhl"
-},
-{
 "gid": "401909993",
 "start": "2026-11-16T02:00Z",
 "kind": "ast",
@@ -89,115 +83,53 @@
 "line": 6.5,
 "name": "shai gilgeousalexander",
 "lab": "Shai Gilgeous-Alexander 7+ ast",
-"p": 0.3483,
+"p": 0.3586,
 "price": 195,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
-"rotation"
+"rotation",
+"price"
 ],
 "sport": "nba"
 },
 {
-"gid": "401909991",
-"start": "2026-11-16T00:00Z",
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 10.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 11+ reb",
-"p": 0.3776,
-"price": 170,
-"book": "Hard Rock",
+"line": 3.5,
+"name": "cj mccollum",
+"lab": "CJ McCollum 4+ reb",
+"p": 0.3933,
+"price": 146,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
-"rotation"
+"rotation",
+"game"
 ],
 "sport": "nba"
-}
-],
-"p": 0.04956,
-"d": 21.824,
-"first": "2026-11-16T00:00:00+00:00",
-"res": null
 },
 {
-"card": "Multisport longshots",
-"tier": "4 legs \u00b7 NBA + NHL",
-"legs": [
-{
-"gid": "2026020330",
+"gid": "2026020329",
 "start": "2026-11-16T02:00:00Z",
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "macklin celebrini",
-"lab": "Macklin Celebrini to score",
-"p": 0.3943,
-"price": 160,
+"name": "mark stone",
+"lab": "Mark Stone to score",
+"p": 0.3839,
+"price": 163,
 "book": "Novig",
 "sport": "nhl"
-},
-{
-"gid": "401909991",
-"start": "2026-11-16T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 10.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 11+ reb",
-"p": 0.3776,
-"price": 170,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"sport": "nba"
-},
-{
-"gid": "401909987",
-"start": "2026-11-15T21:30Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "naz reid",
-"lab": "Naz Reid 3+ ast",
-"p": 0.3899,
-"price": 160,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"sport": "nba"
-},
-{
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ ast",
-"p": 0.3422,
-"price": 189,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"sport": "nba"
 }
 ],
-"p": 0.01987,
-"d": 52.748,
-"first": "2026-11-15T21:00:00+00:00",
+"p": 0.05414,
+"d": 19.086,
+"first": "2026-11-16T01:00:00+00:00",
 "res": null
 }
 ],
