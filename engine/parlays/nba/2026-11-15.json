@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-15",
 "lock": "2026-11-15T21:00:00+00:00",
-"frozen_at": "2026-11-15T12:32:51.506Z",
+"frozen_at": "2026-11-15T12:44:56.593Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,13 +17,13 @@
 {
 "gid": "401909991",
 "start": "2026-11-16T00:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 5.5,
-"name": "kevin durant",
-"lab": "Kevin Durant 6+ ast",
-"p": 0.3068,
-"price": 280,
+"line": 11.5,
+"name": "alperen sengun",
+"lab": "Alperen Sengun 12+ reb",
+"p": 0.3039,
+"price": 266,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -35,13 +35,13 @@
 {
 "gid": "401909992",
 "start": "2026-11-16T01:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 3.5,
+"line": 2.5,
 "name": "cj mccollum",
-"lab": "CJ McCollum 4+ reb",
-"p": 0.4056,
-"price": 124,
+"lab": "CJ McCollum 3+ threes",
+"p": 0.3981,
+"price": 129,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -51,8 +51,8 @@
 ]
 }
 ],
-"p": 0.12442,
-"d": 8.512,
+"p": 0.12097,
+"d": 8.381,
 "first": "2026-11-16T00:00:00+00:00",
 "res": null
 },
@@ -63,12 +63,75 @@
 {
 "gid": "401909991",
 "start": "2026-11-16T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "kevin durant",
+"lab": "Kevin Durant 6+ ast",
+"p": 0.3118,
+"price": 252,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "cj mccollum",
+"lab": "CJ McCollum 3+ threes",
+"p": 0.3981,
+"price": 129,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.12411,
+"d": 8.061,
+"first": "2026-11-16T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "darryn peterson",
+"lab": "Darryn Peterson 6+ reb",
+"p": 0.341,
+"price": 218,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909991",
+"start": "2026-11-16T00:00Z",
 "kind": "reb",
 "side": "o",
 "line": 11.5,
 "name": "alperen sengun",
 "lab": "Alperen Sengun 12+ reb",
-"p": 0.3014,
+"p": 0.3039,
 "price": 266,
 "book": "Kalshi",
 "f": [
@@ -81,13 +144,13 @@
 {
 "gid": "401909992",
 "start": "2026-11-16T01:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "cj mccollum",
-"lab": "CJ McCollum 4+ reb",
-"p": 0.4056,
-"price": 124,
+"name": "nickeil alexanderwalker",
+"lab": "Nickeil Alexander-Walker 4+ ast",
+"p": 0.3681,
+"price": 140,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -97,9 +160,10 @@
 ]
 }
 ],
-"p": 0.12223,
-"d": 8.198,
-"first": "2026-11-16T00:00:00+00:00",
+"p": 0.03815,
+"d": 27.933,
+"first": "2026-11-15T22:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -107,20 +171,20 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
 "kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ reb",
-"p": 0.4206,
-"price": 134,
+"line": 5.5,
+"name": "darryn peterson",
+"lab": "Darryn Peterson 6+ reb",
+"p": 0.341,
+"price": 218,
 "book": "Kalshi",
 "f": [
 "usage",
 "rotation",
-"game"
+"price"
 ]
 },
 {
@@ -131,8 +195,8 @@
 "line": 5.5,
 "name": "kevin durant",
 "lab": "Kevin Durant 6+ ast",
-"p": 0.3068,
-"price": 280,
+"p": 0.3118,
+"price": 252,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -142,89 +206,27 @@
 ]
 },
 {
-"gid": "401909993",
-"start": "2026-11-16T02:00Z",
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
 "kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell 4+ ast",
-"p": 0.4065,
-"price": 130,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-}
-],
-"p": 0.05245,
-"d": 20.452,
-"first": "2026-11-15T21:00:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
-"kind": "reb",
-"side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ reb",
-"p": 0.4206,
-"price": 134,
+"name": "nickeil alexanderwalker",
+"lab": "Nickeil Alexander-Walker 4+ ast",
+"p": 0.3681,
+"price": 140,
 "book": "Kalshi",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401909991",
-"start": "2026-11-16T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 11.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 12+ reb",
-"p": 0.3014,
-"price": 266,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909993",
-"start": "2026-11-16T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell 4+ ast",
-"p": 0.4065,
-"price": 130,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
 }
 ],
-"p": 0.05153,
-"d": 19.698,
-"first": "2026-11-15T21:00:00+00:00",
+"p": 0.03914,
+"d": 26.865,
+"first": "2026-11-15T22:00:00+00:00",
 "res": null
 },
 {
@@ -316,14 +318,14 @@
 {
 "gid": "401909986",
 "start": "2026-11-15T21:00Z",
-"kind": "spread",
-"side": "home",
+"kind": "ast",
+"side": "o",
 "line": 2.5,
-"name": null,
-"lab": "PHX +2.5",
-"p": 0.4946,
-"price": 113,
-"book": "Novig"
+"name": "jalen green",
+"lab": "Jalen Green over 2.5 assists",
+"p": 0.5013,
+"price": 110,
+"book": "Hard Rock"
 },
 {
 "gid": "401909988",
@@ -350,8 +352,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.17149,
-"d": 7.713,
+"p": 0.17382,
+"d": 7.604,
 "first": "2026-11-15T21:00:00+00:00",
 "pick": "core",
 "res": null
