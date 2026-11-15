@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-15",
 "lock": "2026-11-15T14:30:00+00:00",
-"frozen_at": "2026-11-15T07:32:55.747Z",
+"frozen_at": "2026-11-15T07:48:39.397Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -175,18 +175,6 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_10_HOU_CLE",
-"start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 69.5,
-"name": "denzel boston",
-"lab": "Denzel Boston 70+ rec yds",
-"p": 0.265,
-"price": 252,
-"book": "Kalshi"
-},
-{
 "gid": "2026_10_NE_DET",
 "start": "2026-11-15T09:30:00",
 "kind": "rec_yds",
@@ -197,9 +185,21 @@
 "p": 0.26,
 "price": 252,
 "book": "Kalshi"
+},
+{
+"gid": "2026_10_HOU_CLE",
+"start": "2026-11-15T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "denzel boston",
+"lab": "Denzel Boston 70+ rec yds",
+"p": 0.26,
+"price": 252,
+"book": "Kalshi"
 }
 ],
-"p": 0.01998,
+"p": 0.0196,
 "d": 39.454,
 "first": "2026-11-15T14:30:00+00:00",
 "res": null
@@ -221,14 +221,14 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_10_HOU_CLE",
-"start": "2026-11-15T13:00:00",
+"gid": "2026_10_NE_DET",
+"start": "2026-11-15T09:30:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 69.5,
-"name": "denzel boston",
-"lab": "Denzel Boston 70+ rec yds",
-"p": 0.265,
+"line": 109.5,
+"name": "amonra st brown",
+"lab": "Amon-Ra St. Brown 110+ rec yds",
+"p": 0.26,
 "price": 252,
 "book": "Kalshi"
 },
@@ -245,9 +245,9 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.01691,
+"p": 0.01659,
 "d": 44.297,
-"first": "2026-11-15T18:00:00+00:00",
+"first": "2026-11-15T14:30:00+00:00",
 "res": null
 },
 {
@@ -257,13 +257,13 @@
 {
 "gid": "2026_10_MIA_IND",
 "start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 21.5,
+"line": 3.5,
 "name": "jonathan taylor",
-"lab": "Jonathan Taylor over 21.5 rec yds",
-"p": 0.5425,
-"price": -102,
+"lab": "Jonathan Taylor over 3.5 receptions",
+"p": 0.4867,
+"price": 127,
 "book": "Novig"
 },
 {
@@ -291,8 +291,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.14669,
-"d": 8.627,
+"p": 0.1316,
+"d": 9.888,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "core",
 "res": null
@@ -304,13 +304,13 @@
 {
 "gid": "2026_10_MIA_IND",
 "start": "2026-11-15T13:00:00",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 21.5,
+"line": 3.5,
 "name": "jonathan taylor",
-"lab": "Jonathan Taylor over 21.5 rec yds",
-"p": 0.5425,
-"price": -102,
+"lab": "Jonathan Taylor over 3.5 receptions",
+"p": 0.4867,
+"price": 127,
 "book": "Novig"
 },
 {
@@ -338,8 +338,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.13229,
-"d": 9.626,
+"p": 0.11867,
+"d": 11.034,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "core",
 "res": null
@@ -27247,67 +27247,8 @@
 "res": null
 },
 {
-"card": "Confluence parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_10_SF_DAL",
-"start": "2026-11-15T16:25:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "keenan allen",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.4937,
-"price": -106,
-"book": "Kalshi",
-"f": [
-"matchup",
-"rotation"
-],
-"v": [
-"matchup",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.0597
-},
-{
-"gid": "2026_10_MIA_IND",
-"start": "2026-11-15T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 5.5,
-"name": "tyler warren",
-"lab": "Tyler Warren over 5.5 receptions",
-"p": 0.5381,
-"price": -120,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.0745
-}
-],
-"p": 0.26566,
-"d": 3.563,
-"first": "2026-11-15T18:00:00+00:00",
-"res": null
-},
-{
 "card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
+"tier": "2 legs",
 "legs": [
 {
 "gid": "2026_10_JAX_TEN",
@@ -27317,12 +27258,12 @@
 "line": 4.5,
 "name": "wandale robinson",
 "lab": "Wan'Dale Robinson over 4.5 receptions",
-"p": 0.5311,
+"p": 0.5314,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1949,
-"fair": 0.5423,
+"edge": 0.1956,
+"fair": 0.5427,
 "main": true
 },
 {
@@ -27333,33 +27274,17 @@
 "line": 1.5,
 "name": "john metchie",
 "lab": "John Metchie over 1.5 receptions",
-"p": 0.3946,
+"p": 0.3951,
 "price": 190,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1444,
-"fair": 0.3421,
-"main": true
-},
-{
-"gid": "2026_10_MIA_IND",
-"start": "2026-11-15T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 3.5 receptions",
-"p": 0.4834,
-"price": 127,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0973,
-"fair": 0.4466,
+"edge": 0.1457,
+"fair": 0.3427,
 "main": true
 }
 ],
-"p": 0.10131,
-"d": 14.812,
+"p": 0.20996,
+"d": 6.525,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
 },
@@ -27375,16 +27300,16 @@
 "line": 4.5,
 "name": "wandale robinson",
 "lab": "Wan'Dale Robinson over 4.5 receptions",
-"p": 0.5311,
+"p": 0.5314,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1949,
-"fair": 0.5423,
+"edge": 0.1956,
+"fair": 0.5427,
 "main": true
 }
 ],
-"p": 0.5311,
+"p": 0.5314,
 "d": 2.25,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight",
@@ -27402,16 +27327,16 @@
 "line": 1.5,
 "name": "john metchie",
 "lab": "John Metchie over 1.5 receptions",
-"p": 0.3946,
+"p": 0.3951,
 "price": 190,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1444,
-"fair": 0.3421,
+"edge": 0.1457,
+"fair": 0.3427,
 "main": true
 }
 ],
-"p": 0.3946,
+"p": 0.3951,
 "d": 2.9,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight",
@@ -27429,16 +27354,16 @@
 "line": 1.5,
 "name": "calvin ridley",
 "lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.4376,
+"p": 0.4369,
 "price": 160,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1378,
-"fair": 0.4155,
+"edge": 0.1358,
+"fair": 0.4145,
 "main": true
 }
 ],
-"p": 0.4376,
+"p": 0.4369,
 "d": 2.6,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight",
@@ -27556,24 +27481,24 @@
 "tier": "straight",
 "legs": [
 {
-"gid": "2026_10_MIA_IND",
+"gid": "2026_10_BUF_NYJ",
 "start": "2026-11-15T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 5.5,
-"name": "tyler warren",
-"lab": "Tyler Warren over 5.5 receptions",
-"p": 0.5861,
-"price": -120,
+"line": 1.5,
+"name": "dawson knox",
+"lab": "Dawson Knox over 1.5 receptions",
+"p": 0.4826,
+"price": 122,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0745,
-"fair": 0.5381,
+"edge": 0.0713,
+"fair": 0.4561,
 "main": true
 }
 ],
-"p": 0.5861,
-"d": 1.833,
+"p": 0.4826,
+"d": 2.22,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
 }
