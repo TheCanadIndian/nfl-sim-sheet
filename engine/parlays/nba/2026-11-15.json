@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-15",
 "lock": "2026-11-15T18:00:00+00:00",
-"frozen_at": "2026-11-15T23:37:24.098Z",
+"frozen_at": "2026-11-15T23:42:08.359Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -476,6 +476,43 @@
 "locked": true
 },
 {
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909990",
+"start": "2026-11-15T23:00Z",
+"kind": "spread",
+"side": "home",
+"line": 3.5,
+"name": null,
+"lab": "TOR +3.5",
+"p": 0.4914,
+"price": 130,
+"book": "Novig"
+},
+{
+"gid": "401909991",
+"start": "2026-11-16T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "alperen sengun",
+"lab": "Alperen Sengun over 9.5 rebounds",
+"p": 0.4476,
+"price": 138,
+"book": "Novig"
+}
+],
+"p": 0.21994,
+"d": 5.474,
+"first": "2026-11-15T23:00:00+00:00",
+"pick": "core",
+"res": null,
+"locked": true,
+"final": true
+},
+{
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
@@ -487,7 +524,7 @@
 "line": 1.5,
 "name": "naji marshall",
 "lab": "Naji Marshall 2+ threes",
-"p": 0.2857,
+"p": 0.2856,
 "price": 264,
 "book": "Novig",
 "f": [
@@ -504,7 +541,7 @@
 "line": 1.5,
 "name": "jalen johnson",
 "lab": "Jalen Johnson 2+ threes",
-"p": 0.4243,
+"p": 0.4246,
 "price": 135,
 "book": "Novig",
 "f": [
@@ -515,7 +552,7 @@
 ]
 }
 ],
-"p": 0.12121,
+"p": 0.12129,
 "d": 8.554,
 "first": "2026-11-15T23:00:00+00:00",
 "res": null,
@@ -533,7 +570,7 @@
 "line": 1.5,
 "name": "naji marshall",
 "lab": "Naji Marshall 2+ threes",
-"p": 0.2857,
+"p": 0.2856,
 "price": 264,
 "book": "Novig",
 "f": [
@@ -550,7 +587,7 @@
 "line": 3.5,
 "name": "nickeil alexanderwalker",
 "lab": "Nickeil Alexander-Walker 4+ ast",
-"p": 0.3867,
+"p": 0.3861,
 "price": 156,
 "book": "Novig",
 "f": [
@@ -561,7 +598,7 @@
 ]
 }
 ],
-"p": 0.11048,
+"p": 0.11029,
 "d": 9.318,
 "first": "2026-11-15T23:00:00+00:00",
 "res": null,
@@ -622,7 +659,7 @@
 "line": 9.5,
 "name": "alperen sengun",
 "lab": "Alperen Sengun 10+ reb",
-"p": 0.4423,
+"p": 0.4425,
 "price": 144,
 "book": "Novig",
 "f": [
@@ -640,7 +677,7 @@
 "line": 1.5,
 "name": "jalen johnson",
 "lab": "Jalen Johnson 2+ threes",
-"p": 0.4204,
+"p": 0.4218,
 "price": 138,
 "book": "Novig",
 "f": [
@@ -651,7 +688,7 @@
 ]
 }
 ],
-"p": 0.18596,
+"p": 0.18666,
 "d": 5.807,
 "first": "2026-11-16T00:00:00+00:00",
 "pick": "core",
@@ -659,21 +696,20 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909991",
 "start": "2026-11-16T00:00Z",
 "kind": "reb",
 "side": "o",
-"line": 9.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 10+ reb",
-"p": 0.4423,
-"price": 144,
-"book": "Novig",
+"line": 7.5,
+"name": "steven adams",
+"lab": "Steven Adams 8+ reb",
+"p": 0.2627,
+"price": 300,
+"book": "Hard Rock",
 "f": [
-"usage",
 "matchup",
 "rotation",
 "price"
@@ -682,13 +718,13 @@
 {
 "gid": "401909992",
 "start": "2026-11-16T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "nickeil alexanderwalker",
-"lab": "Nickeil Alexander-Walker 4+ ast",
-"p": 0.3867,
-"price": 156,
+"line": 7.5,
+"name": "dyson daniels",
+"lab": "Dyson Daniels 8+ reb",
+"p": 0.4419,
+"price": 127,
 "book": "Novig",
 "f": [
 "usage",
@@ -696,12 +732,28 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401909993",
+"start": "2026-11-16T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander 7+ ast",
+"p": 0.3279,
+"price": 195,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
 }
 ],
-"p": 0.17105,
-"d": 6.246,
+"p": 0.03807,
+"d": 26.786,
 "first": "2026-11-16T00:00:00+00:00",
-"pick": "core",
 "res": null
 }
 ],
