@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-15",
 "lock": "2026-11-15T14:30:00+00:00",
-"frozen_at": "2026-11-15T00:17:21.319Z",
+"frozen_at": "2026-11-15T00:21:20.020Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,52 @@
 ],
 "final_at": "2026-11-15T12:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_10_MIN_GB",
+"start": "2026-11-15T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 109.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson 110+ rec yds",
+"p": 0.2906,
+"price": 240,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"script"
+]
+},
+{
+"gid": "2026_10_SF_DAL",
+"start": "2026-11-15T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 119.5,
+"name": "ceedee lamb",
+"lab": "CeeDee Lamb 120+ rec yds",
+"p": 0.2875,
+"price": 252,
+"book": "Kalshi",
+"sc": "Shootout",
+"f": [
+"usage",
+"rotation",
+"script"
+]
+}
+],
+"p": 0.08356,
+"d": 11.968,
+"first": "2026-11-15T18:00:00+00:00"
+},
 {
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
@@ -20,10 +66,10 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 39.5,
-"name": "jaylen warren",
-"lab": "Jaylen Warren 40+ rec yds",
-"p": 0.27,
-"price": 240,
+"name": "chase brown",
+"lab": "Chase Brown 40+ rec yds",
+"p": 0.24,
+"price": 280,
 "book": "Kalshi"
 },
 {
@@ -39,8 +85,8 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.081,
-"d": 10.142,
+"p": 0.074,
+"d": 11.337,
 "first": "2026-11-16T01:20:00+00:00"
 },
 {
@@ -216,6 +262,27 @@
 "book": "Novig"
 },
 {
+"gid": "2026_10_MIN_GB",
+"start": "2026-11-15T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "aaron jones",
+"lab": "Aaron Jones over 9.5 rec yds",
+"p": 0.5508,
+"price": -108,
+"book": "Novig"
+}
+],
+"p": 0.26997,
+"d": 4.333,
+"first": "2026-11-15T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026_10_KC_ATL",
 "start": "2026-11-15T13:00:00",
 "kind": "rec",
@@ -223,64 +290,8 @@
 "line": 2.5,
 "name": "josh downs",
 "lab": "Josh Downs over 2.5 receptions",
-"p": 0.4483,
+"p": 0.4492,
 "price": 144,
-"book": "Novig"
-}
-],
-"p": 0.21976,
-"d": 5.49,
-"first": "2026-11-15T18:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_10_BUF_NYJ",
-"start": "2026-11-15T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "dawson knox",
-"lab": "Dawson Knox over 1.5 receptions",
-"p": 0.4902,
-"price": 125,
-"book": "Novig"
-},
-{
-"gid": "2026_10_LA_ARI",
-"start": "2026-11-15T16:05:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "blake corum",
-"lab": "Blake Corum over 1.5 receptions",
-"p": 0.436,
-"price": 150,
-"book": "Novig"
-}
-],
-"p": 0.21369,
-"d": 5.625,
-"first": "2026-11-15T18:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_10_LA_ARI",
-"start": "2026-11-15T16:05:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "blake corum",
-"lab": "Blake Corum over 1.5 receptions",
-"p": 0.436,
-"price": 150,
 "book": "Novig"
 },
 {
@@ -296,9 +307,10 @@
 "book": "Novig"
 }
 ],
-"p": 0.15995,
-"d": 7.35,
-"first": "2026-11-15T18:00:00+00:00"
+"p": 0.16482,
+"d": 7.174,
+"first": "2026-11-15T18:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Parlays by payout (your books)",
@@ -331,7 +343,41 @@
 ],
 "p": 0.15347,
 "d": 7.644,
-"first": "2026-11-15T18:00:00+00:00"
+"first": "2026-11-15T18:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_10_LA_ARI",
+"start": "2026-11-15T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "blake corum",
+"lab": "Blake Corum over 1.5 receptions",
+"p": 0.436,
+"price": 147,
+"book": "Novig"
+},
+{
+"gid": "2026_10_NE_DET",
+"start": "2026-11-15T09:30:00",
+"kind": "rec",
+"side": "u",
+"line": 7.5,
+"name": "amonra st brown",
+"lab": "Amonra St Brown under 7.5 receptions",
+"p": 0.5636,
+"price": -113,
+"book": "Novig"
+}
+],
+"p": 0.24574,
+"d": 4.656,
+"first": "2026-11-15T14:30:00+00:00"
 },
 {
 "card": "Same-game parlays",
@@ -27054,12 +27100,12 @@
 "line": 1.5,
 "name": "john metchie",
 "lab": "John Metchie over 1.5 receptions",
-"p": 0.4005,
+"p": 0.4009,
 "price": 199,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1976,
-"fair": 0.3382,
+"edge": 0.1985,
+"fair": 0.3386,
 "main": true
 },
 {
@@ -27079,7 +27125,7 @@
 "main": true
 }
 ],
-"p": 0.20994,
+"p": 0.21015,
 "d": 6.728,
 "first": "2026-11-15T18:00:00+00:00"
 },
@@ -27095,16 +27141,16 @@
 "line": 1.5,
 "name": "john metchie",
 "lab": "John Metchie over 1.5 receptions",
-"p": 0.4005,
+"p": 0.4009,
 "price": 199,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1976,
-"fair": 0.3382,
+"edge": 0.1985,
+"fair": 0.3386,
 "main": true
 }
 ],
-"p": 0.4005,
+"p": 0.4009,
 "d": 2.99,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight"
@@ -27147,16 +27193,16 @@
 "line": 1.5,
 "name": "calvin ridley",
 "lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.4288,
+"p": 0.4266,
 "price": 160,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1149,
-"fair": 0.4126,
+"edge": 0.1092,
+"fair": 0.4097,
 "main": true
 }
 ],
-"p": 0.4288,
+"p": 0.4266,
 "d": 2.6,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight"
@@ -27173,16 +27219,16 @@
 "line": 2.5,
 "name": "josh downs",
 "lab": "Josh Downs over 2.5 receptions",
-"p": 0.4465,
+"p": 0.4471,
 "price": 144,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0894,
-"fair": 0.407,
+"edge": 0.0909,
+"fair": 0.4078,
 "main": true
 }
 ],
-"p": 0.4465,
+"p": 0.4471,
 "d": 2.44,
 "first": "2026-11-15T18:00:00+00:00",
 "pick": "straight"
@@ -27244,6 +27290,31 @@
 "tier": "straight",
 "legs": [
 {
+"gid": "2026_10_MIN_GB",
+"start": "2026-11-15T18:00:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "aaron jones",
+"lab": "Aaron Jones over 9.5 rec yds",
+"p": 0.5508,
+"price": -108,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0608,
+"fair": 0.5144,
+"main": true
+}
+],
+"p": 0.5508,
+"d": 1.926,
+"first": "2026-11-15T18:00:00+00:00"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
 "gid": "2026_10_HOU_CLE",
 "start": "2026-11-15T18:00:00+00:00",
 "kind": "rec",
@@ -27263,31 +27334,6 @@
 "p": 0.5759,
 "d": 1.833,
 "first": "2026-11-15T18:00:00+00:00"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_10_LA_ARI",
-"start": "2026-11-15T21:05:00+00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "trey mcbride",
-"lab": "Trey McBride over 59.5 rec yds",
-"p": 0.5666,
-"price": 104,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.1559,
-"fair": 0.4955,
-"main": true
-}
-],
-"p": 0.5666,
-"d": 2.04,
-"first": "2026-11-15T21:05:00+00:00"
 }
 ],
 "graded": false
