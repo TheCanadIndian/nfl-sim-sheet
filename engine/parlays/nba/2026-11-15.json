@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-15",
 "lock": "2026-11-15T18:00:00+00:00",
-"frozen_at": "2026-11-15T23:48:47.005Z",
+"frozen_at": "2026-11-15T23:53:07.123Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -660,59 +660,12 @@
 "start": "2026-11-16T00:00Z",
 "kind": "reb",
 "side": "o",
-"line": 9.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 10+ reb",
-"p": 0.4425,
-"price": 144,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909992",
-"start": "2026-11-16T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "jalen johnson",
-"lab": "Jalen Johnson 2+ threes",
-"p": 0.4218,
-"price": 138,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.18666,
-"d": 5.807,
-"first": "2026-11-16T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909991",
-"start": "2026-11-16T00:00Z",
-"kind": "reb",
-"side": "o",
 "line": 7.5,
 "name": "steven adams",
 "lab": "Steven Adams 8+ reb",
-"p": 0.2627,
+"p": 0.2868,
 "price": 300,
-"book": "Hard Rock",
+"book": "Novig",
 "f": [
 "matchup",
 "rotation",
@@ -727,8 +680,8 @@
 "line": 7.5,
 "name": "dyson daniels",
 "lab": "Dyson Daniels 8+ reb",
-"p": 0.4419,
-"price": 127,
+"p": 0.4418,
+"price": 135,
 "book": "Novig",
 "f": [
 "usage",
@@ -736,28 +689,116 @@
 "rotation",
 "game"
 ]
+}
+],
+"p": 0.12673,
+"d": 9.4,
+"first": "2026-11-16T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909991",
+"start": "2026-11-16T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "steven adams",
+"lab": "Steven Adams 8+ reb",
+"p": 0.2868,
+"price": 300,
+"book": "Novig",
+"f": [
+"matchup",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jalen johnson",
+"lab": "Jalen Johnson 2+ threes",
+"p": 0.4258,
+"price": 135,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.12214,
+"d": 9.4,
+"first": "2026-11-16T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brayden burries",
+"lab": "Brayden Burries over 5.5 rebounds",
+"p": 0.5276,
+"price": 105,
+"book": "Hard Rock",
+"f": [
+"game"
+],
+"v": [
+"game",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0618
 },
 {
 "gid": "401909993",
 "start": "2026-11-16T02:00Z",
 "kind": "ast",
 "side": "o",
-"line": 6.5,
+"line": 5.5,
 "name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 7+ ast",
-"p": 0.3279,
-"price": 195,
-"book": "Hard Rock",
+"lab": "Shai Gilgeous-Alexander over 5.5 assists",
+"p": 0.463,
+"price": 115,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation"
-]
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0001
 }
 ],
-"p": 0.03807,
-"d": 26.786,
-"first": "2026-11-16T00:00:00+00:00",
+"p": 0.24428,
+"d": 4.407,
+"first": "2026-11-16T01:00:00+00:00",
 "res": null
 }
 ],
