@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-15",
 "lock": "2026-11-15T18:00:00+00:00",
-"frozen_at": "2026-11-15T15:06:03.406Z",
+"frozen_at": "2026-11-15T15:20:50.426Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -61,20 +61,20 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
-"kind": "ast",
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ ast",
-"p": 0.3418,
-"price": 198,
-"book": "Kalshi",
+"line": 2.5,
+"name": "keyonte george",
+"lab": "Keyonte George 3+ threes",
+"p": 0.3824,
+"price": 178,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
-"game"
+"price"
 ]
 },
 {
@@ -96,77 +96,185 @@
 ]
 }
 ],
-"p": 0.1226,
-"d": 8.791,
-"first": "2026-11-15T21:00:00+00:00",
+"p": 0.13715,
+"d": 8.201,
+"first": "2026-11-15T22:00:00+00:00",
 "pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ ast",
-"p": 0.3418,
-"price": 198,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909987",
-"start": "2026-11-15T21:30Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "naz reid",
-"lab": "Naz Reid 3+ ast",
-"p": 0.3901,
-"price": 160,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909991",
-"start": "2026-11-16T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 10.5,
-"name": "alperen sengun",
-"lab": "Alperen Sengun 11+ reb",
-"p": 0.369,
-"price": 170,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-}
-],
-"p": 0.0492,
-"d": 20.92,
-"first": "2026-11-15T21:00:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "ace bailey",
+"lab": "Ace Bailey over 1.5 threes",
+"p": 0.4978,
+"price": 102,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0159
+},
+{
+"gid": "401909992",
+"start": "2026-11-16T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "nickeil alexanderwalker",
+"lab": "Nickeil Alexander-Walker over 3.5 rebounds",
+"p": 0.4674,
+"price": 120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.0221
+}
+],
+"p": 0.23267,
+"d": 4.444,
+"first": "2026-11-15T22:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909993",
+"start": "2026-11-16T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "shai gilgeousalexander",
+"lab": "Shai Gilgeous-Alexander over 5.5 assists",
+"p": 0.4951,
+"price": 105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.015
+},
+{
+"gid": "401909986",
+"start": "2026-11-15T21:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jalen green",
+"lab": "Jalen Green over 1.5 threes",
+"p": 0.4108,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0118
+},
+{
+"gid": "401909991",
+"start": "2026-11-16T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "alperen sengun",
+"lab": "Alperen Sengun over 9.5 rebounds",
+"p": 0.4714,
+"price": 110,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0038
+}
+],
+"p": 0.09588,
+"d": 10.547,
+"first": "2026-11-15T21:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
+"legs": [
+{
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "ace bailey",
+"lab": "Ace Bailey over 1.5 threes",
+"p": 0.4978,
+"price": 102,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0159
+},
 {
 "gid": "401909992",
 "start": "2026-11-16T01:00Z",
@@ -217,11 +325,36 @@
 ],
 "sport": "nba",
 "edge": 0.015
+},
+{
+"gid": "401909986",
+"start": "2026-11-15T21:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jalen green",
+"lab": "Jalen Green over 1.5 threes",
+"p": 0.4108,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0118
 }
 ],
-"p": 0.23141,
-"d": 4.51,
-"first": "2026-11-16T01:00:00+00:00",
+"p": 0.04732,
+"d": 22.32,
+"first": "2026-11-15T21:00:00+00:00",
 "res": null
 },
 {
@@ -236,40 +369,40 @@
 "line": 2.5,
 "name": "mikal bridges",
 "lab": "Mikal Bridges over 2.5 assists",
-"p": 0.3446,
-"fair": 0.3429,
+"p": 0.3634,
+"fair": 0.3627,
 "price": 225,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1199,
+"edge": 0.1812,
 "v": [
 "consensus odds drop",
 "one rung above the main line (1.5)"
 ]
 },
 {
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
-"kind": "fg3m",
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "devin booker",
-"lab": "Devin Booker over 2.5 threes",
-"p": 0.373,
-"fair": 0.3779,
-"price": 181,
-"book": "Kalshi",
+"line": 5.5,
+"name": "dylan harper",
+"lab": "Dylan Harper over 5.5 assists",
+"p": 0.3084,
+"fair": 0.3107,
+"price": 230,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0481,
+"edge": 0.0179,
 "v": [
 "consensus odds drop",
-"one rung above the main line (1.5)"
+"one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.12958,
-"d": 9.133,
-"first": "2026-11-15T21:00:00+00:00",
+"p": 0.11269,
+"d": 10.725,
+"first": "2026-11-15T22:00:00+00:00",
 "res": null
 },
 {
@@ -284,79 +417,31 @@
 "line": 2.5,
 "name": "mikal bridges",
 "lab": "Mikal Bridges over 2.5 assists",
-"p": 0.3446,
-"fair": 0.3429,
+"p": 0.3634,
+"fair": 0.3627,
 "price": 225,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1199,
+"edge": 0.1812,
 "v": [
 "consensus odds drop",
 "one rung above the main line (1.5)"
 ]
 },
 {
-"gid": "401909986",
-"start": "2026-11-15T21:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "devin booker",
-"lab": "Devin Booker over 2.5 threes",
-"p": 0.373,
-"fair": 0.3779,
-"price": 181,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.0481,
-"v": [
-"consensus odds drop",
-"one rung above the main line (1.5)"
-]
-},
-{
-"gid": "401909985",
-"start": "2026-11-15T18:00Z",
-"kind": "reb",
+"gid": "401909988",
+"start": "2026-11-15T22:00Z",
+"kind": "ast",
 "side": "o",
 "line": 5.5,
-"name": "dean wade",
-"lab": "Dean Wade over 5.5 rebounds",
-"p": 0.4116,
-"fair": 0.4138,
-"price": 144,
-"book": "Novig",
+"name": "dylan harper",
+"lab": "Dylan Harper over 5.5 assists",
+"p": 0.3084,
+"fair": 0.3107,
+"price": 230,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0044,
-"v": [
-"consensus odds drop",
-"one rung above the main line (4.5)"
-]
-}
-],
-"p": 0.05362,
-"d": 22.283,
-"first": "2026-11-15T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909985",
-"start": "2026-11-15T18:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "dean wade",
-"lab": "Dean Wade over 5.5 rebounds",
-"p": 0.4116,
-"fair": 0.4138,
-"price": 144,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0044,
+"edge": 0.0179,
 "v": [
 "consensus odds drop",
 "one rung above the main line (4.5)"
@@ -370,19 +455,67 @@
 "line": 5.5,
 "name": "rui hachimura",
 "lab": "Rui Hachimura over 5.5 rebounds",
-"p": 0.3851,
-"fair": 0.391,
+"p": 0.4017,
+"fair": 0.4085,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0374,
+"edge": 0.0042,
 "v": [
 "consensus odds drop",
 "one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.1618,
+"p": 0.04603,
+"d": 26.812,
+"first": "2026-11-15T21:30:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909987",
+"start": "2026-11-15T21:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "rui hachimura",
+"lab": "Rui Hachimura over 5.5 rebounds",
+"p": 0.4017,
+"fair": 0.4085,
+"price": 150,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0042,
+"v": [
+"consensus odds drop",
+"one rung above the main line (4.5)"
+]
+},
+{
+"gid": "401909985",
+"start": "2026-11-15T18:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "dean wade",
+"lab": "Dean Wade over 5.5 rebounds",
+"p": 0.4086,
+"fair": 0.4106,
+"price": 144,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0031,
+"v": [
+"consensus odds drop",
+"one rung above the main line (4.5)"
+]
+}
+],
+"p": 0.16773,
 "d": 6.1,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
@@ -426,6 +559,64 @@
 ],
 "p": 0.18998,
 "d": 6.302,
+"first": "2026-11-15T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909985",
+"start": "2026-11-15T18:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 1.5,
+"name": "dean wade",
+"lab": "Dean Wade over 1.5 assists",
+"p": 0.4777,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0987,
+"fair": 0.4881,
+"main": true
+},
+{
+"gid": "401909991",
+"start": "2026-11-16T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "reed sheppard",
+"lab": "Reed Sheppard over 4.5 assists",
+"p": 0.3977,
+"price": 174,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0897,
+"fair": 0.4095,
+"main": false
+},
+{
+"gid": "401909988",
+"start": "2026-11-15T22:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "keyonte george",
+"lab": "Keyonte George over 2.5 threes",
+"p": 0.3832,
+"price": 178,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0654,
+"fair": 0.3816,
+"main": false
+}
+],
+"p": 0.0728,
+"d": 17.52,
 "first": "2026-11-15T18:00:00+00:00",
 "res": null
 }
