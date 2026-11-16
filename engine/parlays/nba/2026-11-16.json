@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-16",
 "lock": "2026-11-17T00:00:00+00:00",
-"frozen_at": "2026-11-16T22:23:06.323Z",
+"frozen_at": "2026-11-16T22:30:08.514Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 10.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 11+ reb",
-"p": 0.3522,
+"p": 0.3547,
 "price": 190,
 "book": "Hard Rock",
 "f": [
@@ -40,7 +40,7 @@
 "line": 3.5,
 "name": "zion williamson",
 "lab": "Zion Williamson 4+ ast",
-"p": 0.4094,
+"p": 0.4089,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -51,15 +51,34 @@
 ]
 }
 ],
-"p": 0.1442,
+"p": 0.14503,
 "d": 7.25,
 "first": "2026-11-17T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
+{
+"gid": "401909996",
+"start": "2026-11-17T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "cameron boozer",
+"lab": "Cameron Boozer 11+ reb",
+"p": 0.3547,
+"price": 190,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
 {
 "gid": "401909998",
 "start": "2026-11-17T00:30Z",
@@ -68,7 +87,7 @@
 "line": 5.5,
 "name": "kevin durant",
 "lab": "Kevin Durant 6+ reb",
-"p": 0.4359,
+"p": 0.4362,
 "price": 130,
 "book": "Novig",
 "f": [
@@ -77,29 +96,11 @@
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401910000",
-"start": "2026-11-17T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 4+ ast",
-"p": 0.4094,
-"price": 150,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.17847,
-"d": 5.75,
-"first": "2026-11-17T00:30:00+00:00",
+"p": 0.15472,
+"d": 6.67,
+"first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
 {
@@ -125,24 +126,6 @@
 ]
 },
 {
-"gid": "401909996",
-"start": "2026-11-17T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 10.5,
-"name": "cameron boozer",
-"lab": "Cameron Boozer 11+ reb",
-"p": 0.3522,
-"price": 190,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
 "gid": "401909998",
 "start": "2026-11-17T00:30Z",
 "kind": "reb",
@@ -150,7 +133,7 @@
 "line": 5.5,
 "name": "kevin durant",
 "lab": "Kevin Durant 6+ reb",
-"p": 0.4359,
+"p": 0.4362,
 "price": 130,
 "book": "Novig",
 "f": [
@@ -159,11 +142,64 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401910000",
+"start": "2026-11-17T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.4089,
+"price": 150,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.06337,
-"d": 16.075,
+"p": 0.07364,
+"d": 13.857,
 "first": "2026-11-17T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401909996",
+"start": "2026-11-17T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "cameron boozer",
+"lab": "Cameron Boozer over 5.5 assists",
+"p": 0.4417,
+"price": 138,
+"book": "Novig"
+},
+{
+"gid": "401909997",
+"start": "2026-11-17T00:30Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "BKN moneyline",
+"p": 0.3528,
+"price": 199,
+"book": "Novig"
+}
+],
+"p": 0.15582,
+"d": 7.116,
+"first": "2026-11-17T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -197,7 +233,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0057
+"edge": 0.007
 },
 {
 "gid": "401909998",
@@ -226,7 +262,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0013
+"edge": 0.0015
 }
 ],
 "p": 0.19985,
@@ -265,7 +301,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0057
+"edge": 0.007
 },
 {
 "gid": "401909998",
@@ -294,7 +330,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0013
+"edge": 0.0015
 },
 {
 "gid": "401909997",
@@ -320,7 +356,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0518
+"edge": 0.0522
 },
 {
 "gid": "401910000",
@@ -346,7 +382,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0119
+"edge": 0.0123
 }
 ],
 "p": 0.05284,
@@ -366,12 +402,12 @@
 "line": 7.5,
 "name": "tari eason",
 "lab": "Tari Eason over 7.5 rebounds",
-"p": 0.3907,
+"p": 0.3909,
 "fair": 0.3943,
 "price": 200,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1721,
+"edge": 0.1728,
 "v": [
 "Pinnacle line up",
 "consensus line up + odds drop",
@@ -387,12 +423,12 @@
 "line": 6.5,
 "name": "vj edgecombe",
 "lab": "VJ Edgecombe over 6.5 rebounds",
-"p": 0.4204,
+"p": 0.4205,
 "fair": 0.4237,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0509,
+"edge": 0.0512,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -417,12 +453,12 @@
 "line": 7.5,
 "name": "tari eason",
 "lab": "Tari Eason over 7.5 rebounds",
-"p": 0.3907,
+"p": 0.3909,
 "fair": 0.3943,
 "price": 200,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1721,
+"edge": 0.1728,
 "v": [
 "Pinnacle line up",
 "consensus line up + odds drop",
@@ -438,12 +474,12 @@
 "line": 6.5,
 "name": "vj edgecombe",
 "lab": "VJ Edgecombe over 6.5 rebounds",
-"p": 0.4204,
+"p": 0.4205,
 "fair": 0.4237,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0509,
+"edge": 0.0512,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -508,12 +544,12 @@
 "line": 7.5,
 "name": "jeremiah fears",
 "lab": "Jeremiah Fears over 7.5 assists",
-"p": 0.3061,
+"p": 0.3062,
 "fair": 0.3118,
 "price": 220,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0205,
+"edge": -0.0203,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -538,11 +574,11 @@
 "line": 3.5,
 "name": "egor demin",
 "lab": "Egor Demin over 3.5 assists",
-"p": 0.3324,
+"p": 0.3321,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2464,
+"edge": 0.2454,
 "fair": 0.3432,
 "main": false
 },
@@ -554,16 +590,16 @@
 "line": 6.5,
 "name": "tari eason",
 "lab": "Tari Eason over 6.5 rebounds",
-"p": 0.5299,
+"p": 0.5293,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1922,
+"edge": 0.1909,
 "fair": 0.5393,
 "main": true
 }
 ],
-"p": 0.17614,
+"p": 0.17578,
 "d": 8.438,
 "first": "2026-11-17T00:30:00+00:00",
 "res": null
@@ -580,11 +616,11 @@
 "line": 3.5,
 "name": "egor demin",
 "lab": "Egor Demin over 3.5 assists",
-"p": 0.3324,
+"p": 0.3321,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2464,
+"edge": 0.2454,
 "fair": 0.3432,
 "main": false
 },
@@ -596,11 +632,11 @@
 "line": 6.5,
 "name": "tari eason",
 "lab": "Tari Eason over 6.5 rebounds",
-"p": 0.5299,
+"p": 0.5293,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1922,
+"edge": 0.1909,
 "fair": 0.5393,
 "main": true
 },
@@ -612,16 +648,16 @@
 "line": 3.5,
 "name": "norman powell",
 "lab": "Norman Powell over 3.5 rebounds",
-"p": 0.396,
+"p": 0.3965,
 "price": 167,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0572,
+"edge": 0.0588,
 "fair": 0.4059,
 "main": false
 }
 ],
-"p": 0.06975,
+"p": 0.0697,
 "d": 22.528,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
@@ -662,14 +698,14 @@
 "lab": "Andrew Wiggins over 5.5 rebounds",
 "p": 0.105,
 "fair": 0.105,
-"ours": 0.1544,
+"ours": 0.1562,
 "price": 756,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3213,
+"edge": 0.3367,
 "grp": "k15n",
 "v": [
-"Kalshi 6+ rebounds: our chance 15% vs 12% with the fee (+32%)",
+"Kalshi 6+ rebounds: our chance 16% vs 12% with the fee (+34%)",
 "game total 231.5",
 "projected 25 min"
 ]
@@ -694,14 +730,14 @@
 "lab": "Andrew Wiggins over 5.5 rebounds",
 "p": 0.105,
 "fair": 0.105,
-"ours": 0.1544,
+"ours": 0.1562,
 "price": 756,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3213,
+"edge": 0.3367,
 "grp": "k15n",
 "v": [
-"Kalshi 6+ rebounds: our chance 15% vs 12% with the fee (+32%)",
+"Kalshi 6+ rebounds: our chance 16% vs 12% with the fee (+34%)",
 "game total 231.5",
 "projected 25 min"
 ]
@@ -714,8 +750,8 @@
 "line": 1.5,
 "name": "zach edey",
 "lab": "Zach Edey over 1.5 assists",
-"p": 0.245,
-"fair": 0.245,
+"p": 0.24,
+"fair": 0.24,
 "ours": 0.3357,
 "price": 280,
 "book": "Kalshi",
@@ -729,7 +765,7 @@
 ]
 }
 ],
-"p": 0.02572,
+"p": 0.0252,
 "d": 32.528,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
