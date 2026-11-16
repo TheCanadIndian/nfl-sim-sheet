@@ -56,6 +56,7 @@ function nmOk(p){
   return NMOK.has(p.k);
 }
 function chips(p, g){
+  if (g && typeof g === 'object') g = g.id;                // the ladder cards pass the game itself (crashed the Ladders tab, 2026-11-16)
   let h = '';
   if (p.st && p.st !== 'Active') h += `<span class="tag q" title="${esc(p.st + (p.note ? ': ' + p.note : ''))}">${p.st === 'Day-To-Day' ? 'DTD' : p.st === 'Questionable' ? 'Q' : esc(p.st)}</span>`;
   if (p.lu && !(p.lu.startsWith('in') && nmOk(p))){ const [mv, src] = p.lu.split('|'), off = src === 'official';     // a move into the five because someone's out: the next-man-up chip says it
@@ -63,7 +64,7 @@ function chips(p, g){
       : `<span class="lean r2" title="${off ? 'Not in tonight’s official starting five' : 'Projected to come off the bench tonight'}; started last game. Coming off the bench cuts his minutes about 13% (2025-26 test), ${off ? 'fully applied' : 'applied at 70% until the official lineup posts'}.">▼ bench</span>`; }
   if (nmOk(p)){                                            // next man up (owner 2026-11-16): a role change because a regular teammate is out
     const gm_ = D.games.find(x => String(x.id) === String(g)), outs = (gm_ && gm_.out ? gm_.out[p.t] || [] : []).filter(o => (o.m || 0) >= 20).sort((a, b) => (b.m || 0) - (a.m || 0));
-    const who = lastNm(outs[0].n) + (outs.length > 1 ? ` +${outs.length - 1}` : ''), mv = p.lu && p.lu.startsWith('in');
+    const who = outs.length ? lastNm(outs[0].n) + (outs.length > 1 ? ` +${outs.length - 1}` : '') : 'teammate', mv = p.lu && p.lu.startsWith('in');
     h += `<span class="lean g2" title="Next man up: ${esc(outs.map(o => `${o.n} (${Math.round(o.m)} min a game)`).join(', '))} out tonight. ${mv ? (p.lu.endsWith('official') ? 'In tonight’s official starting five; ' : 'Projected to start tonight (applied at 70% until the official lineup posts); ') : ''}he projects ${f1(p.nm[1] + p.nm[0])} minutes vs ${f1(p.nm[1])} in his usual role (+${f1(p.nm[0])}). His points / rebounds / assists rise with the minutes (per-minute rates held steady when teammates sat, 2023-27 test). Already in his projection.">▲ ${mv ? 'starts ' : ''}+${f1(p.nm[0])} min · ${esc(who)} out</span>`; }
   if (p.trend >= 3) h += `<span class="lean g2" title="Minutes trending up: last few games ${f1(p.trend)} above his longer average">▲ min</span>`;
   else if (p.trend <= -3) h += `<span class="lean r2" title="Minutes trending down: last few games ${f1(-p.trend)} below his longer average">▼ min</span>`;
@@ -775,7 +776,9 @@ function rungSlip(g, p, u, prob){
 }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
-  document.getElementById('main').innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : state.view === 'ladders' ? laddersView() : gameView();
+  const main = document.getElementById('main');
+  try { main.innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : state.view === 'ladders' ? laddersView() : gameView(); }
+  catch (e) { console.error(e); main.innerHTML = `<div class="empty">This view hit an error (${esc(String(e && e.message || e))}). The other tabs still work; it is fixed on the next page build.</div>`; }
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }
 }
