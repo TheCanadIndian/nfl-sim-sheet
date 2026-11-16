@@ -92,8 +92,10 @@ BAR_CSS = """
 .wrap,.panel,.detail,.gcard{grid-template-columns:minmax(0,1fr)}
 @media (max-width:760px){
   header{align-items:flex-start}
-  header .tabs{max-width:100%;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
-  header .tabs button{white-space:nowrap;flex:0 0 auto}
+  /* every tab visible on phones (owner 2026-11-16: 'I can't open the ladders tabs' -- a sideways-scrolling bar with its
+     scrollbar hidden left Ladders / Parlays / Fair odds off screen with no cue): the tabs wrap onto two rows */
+  header .tabs{max-width:100%;overflow-x:visible;flex-wrap:wrap;gap:4px}
+  header .tabs button{white-space:nowrap;flex:1 1 auto;padding:7px 10px;font-size:14px}
   .games{grid-template-columns:minmax(0,1fr)!important}
   .rail{display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
   .rail .game-btn{flex:0 0 auto;min-width:168px;border-color:var(--faint)}
