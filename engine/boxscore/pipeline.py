@@ -19,6 +19,83 @@ RB_YPR_MULT = 1.0
 QB_YPC_MULT = 1.0     # designed QB runs
 QB_SCR_MULT = 1.0     # scramble yards
 QB_COLS = ["q_cmp_pct", "q_ypa", "q_int_rate", "q_sack_rate", "q_scr_rate", "q_scr_ypc", "q_att_prior"]
+# Next man up (study 2026-11-16, owner: 'who would have new opportunities'; research/nfl_absence.py, nfl_nextman.py): the sim
+# renormalizes shares in proportion among tonight's actives, but a vacated share goes mostly to the absent player's position and,
+# inside it, to the players with room to grow (WR out: WRs with a prior share under 3% got 1.74x their proportional targets, 15%+
+# 0.95x; no one out: the split is right at every share level). s'_j = s_j + f_P V_P (s_j + c_P) / sum_P (s_i + c_P); TD shares
+# follow each player's share change (the sim's TD weights were never renormalized, so an absent player's TD share went to 'other':
+# same-position teammates scored 1.42x their projected TDs in 2025 and 2026). None = off (the proportional split).
+NEXT_MAN = None            # {"tgt": {"WR": (f, c), "TE": (f, c), "RB": (f, c)}, "car": {"RB": (f, c)}}
+NM_TD = True               # with NEXT_MAN on: TD shares follow the share change
+NM_POS = ("WR", "TE", "RB")
+
+
+def _nm_hist(fr):
+    """per team: its game_ids in order and each game's rows (realized shares), cached on the Frames"""
+    if getattr(fr, "_nm", None) is not None:
+        return fr._nm
+    pp = fr.pp
+    x = pp.assign(a_tgt=pp.tgt_u / pp.team_att_u.clip(lower=1), a_car=pp.designed_car / pp.team_designed_runs.clip(lower=1),
+                  sn=pp.offense_pct.fillna(0.0))
+    H = {}
+    for team, y in x.groupby("team"):
+        order = y.drop_duplicates("game_id").sort_values(["gameday", "game_id"]).game_id.tolist()
+        H[team] = (order, {g: z for g, z in y.groupby("game_id")})
+    fr._nm = H
+    return H
+
+
+def vacated(fr, game_id, team, active_ids):
+    """Regulars of the team's last 3 games not active tonight: active in 2+ of them with 50%+ snaps, or 15%+ of targets / 30%+ of
+    designed carries over his last 4 games for the team. Returns [(pos, tgt share, car share, prior tgt, prior rec td, prior rush td)]."""
+    order, G = _nm_hist(fr).get(team, ([], {}))
+    if game_id not in order:
+        return []
+    j = order.index(game_id)
+    last3 = order[max(j - 3, 0):j]
+    seen = {}
+    for g in order[max(j - 12, 0):j]:
+        for r in G[g].itertuples():
+            seen.setdefault(r.player_id, []).append((g, r))
+    out = []
+    for pid, h in seen.items():
+        if pid in active_ids or h[-1][1].pos not in NM_POS:
+            continue
+        rec = [r for g, r in h if g in last3]
+        if len(rec) < 2:
+            continue
+        last4 = [r for _, r in h[-4:]]
+        sn = float(np.mean([r.sn for r in rec])); ts = float(np.mean([r.a_tgt for r in last4])); cs = float(np.mean([r.a_car for r in last4]))
+        if sn >= .5 or ts >= .15 or cs >= .30:
+            lr = h[-1][1]
+            out.append((lr.pos, ts, cs, float(lr.p_tgt_share), float(lr.p_rec_td_share), float(lr.p_rush_td_share), float(lr.p_car_share)))
+    return out
+
+
+def next_man(players, qb_id, vac):
+    """apply NEXT_MAN to the Player list in place (targets, carries, and with NM_TD the TD shares)"""
+    if not NEXT_MAN or not vac:
+        return
+    for kind, sh, vi, pri, td in (("tgt", "tgt_share", 1, 3, "rec_td_share"), ("car", "car_share", 2, 6, "rush_td_share")):
+        prm = NEXT_MAN.get(kind) or {}
+        s = np.array([getattr(p, sh) for p in players], float)
+        if s.sum() <= 0:
+            continue
+        s2 = s.copy()
+        for P_, (f, c) in prm.items():
+            V = sum(v[vi] for v in vac if v[0] == P_)
+            m = np.array([p.pos == P_ for p in players]) & (s > 0)
+            if V <= 0 or not m.any():
+                continue
+            w = np.where(m, s + c, 0.0)
+            s2 = s2 + f * V * w / w.sum()
+        # normalized share before (everyone incl. the absent at their priors) and after
+        n0 = s / (s.sum() + sum(v[pri] for v in vac))
+        n1 = s2 / s2.sum()
+        for p, v, a, b in zip(players, s2, n0, n1):
+            setattr(p, sh, float(v))
+            if NM_TD and a > 0:
+                setattr(p, td, float(getattr(p, td) * b / a))
 
 
 class Frames:
@@ -224,6 +301,8 @@ def team_input(fr: Frames, game_id, team, overrides=None):
     for p in players:
         if p.pos == "QB" and p.player_id != qb_id:
             p.car_share = p.tgt_share = p.rec_td_share = p.rush_td_share = 0.0
+    if NEXT_MAN:
+        next_man(players, qb_id, vacated(fr, game_id, team, set(pl.player_id)))
     qb = next(p for p in players if p.player_id == qb_id)
     for c in QB_COLS:
         if pd.isna(row.get(c)):
