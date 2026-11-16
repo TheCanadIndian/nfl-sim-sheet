@@ -281,7 +281,7 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
         key = f"{gid}|{team}|{name}"
         mp = match["players"].get(key, {})
         plist.append(dict(k=key, g=gid, t=team, o=opp, n=name, id=pid, pos=pos, d=dists.get(key, {}),
-                          lab=mp.get("label"), tags=mp.get("tags", []), tdm=btd.get(key),
+                          lab=mp.get("label"), tags=mp.get("tags", []), tdm=btd.get(key), nm=(match.get("nm") or {}).get(key),
                           s={r["stat"]: [round(float(r[q]), 3 if r["stat"] in ("anytime_td", "first_td") else 2) for q in Q]
                              for r in d.to_dict("records")}))
 

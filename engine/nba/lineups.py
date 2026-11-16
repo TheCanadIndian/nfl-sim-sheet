@@ -15,7 +15,9 @@ Tonight's five per team (sources in order):
              projection is right; a team whose projected five includes a day-to-day / questionable player ('unsure')
              gets no change until its official lineup posts
 Each player's last game (started or not) vs tonight's five: moved in x MOVE_IN, moved out x MOVE_OUT on his
-expected minutes (model.team_minutes then rescales the team to 240).
+expected minutes (model.team_minutes then rescales the team to 240). 'Last game' = HIS OWN last game played (nba/project.py,
+2026-11-16): it was his team's last game, so a starter back from injury got the promotion bump and played 0.78-0.88 of his
+projected minutes (research/nba_lineup_live.py).
 """
 import datetime as dt
 import json

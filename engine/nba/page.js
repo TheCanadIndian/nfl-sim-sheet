@@ -39,12 +39,32 @@ function whyNBA(p, gid){
   return R.size ? `<span class="why" title="Path reasons behind this flagged price (the Path longshot rules)">why: <b>${esc([...R].join(' · '))}</b></span>`
     : `<span class="why none" title="None of the path reasons (usage, matchup, rotation, game) applies: the price has no clear reason behind it">no clear reason</span>`;
 }
+// next man up chips: players whose ROLE changes because a regular (20+ min) is out -- moving into the starting five, or not a starter
+// and gaining 4+ minutes and 20%+ over his usual role -- the top 3 a team (the model spreads the rest of the minutes in proportion,
+// so established starters' bumps are just that scaling and stay unchipped)
+const lastNm = n => { const w = String(n || '').replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/i, '').trim().split(/\s+/); return w[w.length - 1] || n; };
+let NMOK = null;
+function nmOk(p){
+  if (!NMOK){ NMOK = new Set(); const by = {};
+    for (const q of D.players){ if (!q.nm || !Array.isArray(q.nm)) continue;
+      const gm_ = D.games.find(x => String(x.id) === String(q.g));
+      if (!(gm_ && gm_.out && (gm_.out[q.t] || []).some(o => (o.m || 0) >= 20))) continue;
+      const [gn, us] = q.nm, mv = q.lu && q.lu.startsWith('in');
+      if (!(mv || (q.ls !== 1 && gn >= 4 && gn / Math.max(us, 1) >= .2))) continue;
+      (by[q.g + '|' + q.t] = by[q.g + '|' + q.t] || []).push(q); }
+    for (const L of Object.values(by)) L.sort((a, b) => b.nm[0] - a.nm[0]).slice(0, 3).forEach(q => NMOK.add(q.k)); }
+  return NMOK.has(p.k);
+}
 function chips(p, g){
   let h = '';
   if (p.st && p.st !== 'Active') h += `<span class="tag q" title="${esc(p.st + (p.note ? ': ' + p.note : ''))}">${p.st === 'Day-To-Day' ? 'DTD' : p.st === 'Questionable' ? 'Q' : esc(p.st)}</span>`;
-  if (p.lu){ const [mv, src] = p.lu.split('|'), off = src === 'official';
+  if (p.lu && !(p.lu.startsWith('in') && nmOk(p))){ const [mv, src] = p.lu.split('|'), off = src === 'official';     // a move into the five because someone's out: the next-man-up chip says it
     h += mv === 'in' ? `<span class="lean g2" title="${off ? 'In tonight’s official starting five' : 'Projected to start tonight (our lineup from ESPN’s depth chart, minus anyone out)'}; came off the bench last game. Starting raises his minutes about 20% (2025-26 test), ${off ? 'fully applied' : 'applied at 70% until the official lineup posts'}.">▲ starts</span>`
       : `<span class="lean r2" title="${off ? 'Not in tonight’s official starting five' : 'Projected to come off the bench tonight'}; started last game. Coming off the bench cuts his minutes about 13% (2025-26 test), ${off ? 'fully applied' : 'applied at 70% until the official lineup posts'}.">▼ bench</span>`; }
+  if (nmOk(p)){                                            // next man up (owner 2026-11-16): a role change because a regular teammate is out
+    const gm_ = D.games.find(x => String(x.id) === String(g)), outs = (gm_ && gm_.out ? gm_.out[p.t] || [] : []).filter(o => (o.m || 0) >= 20).sort((a, b) => (b.m || 0) - (a.m || 0));
+    const who = lastNm(outs[0].n) + (outs.length > 1 ? ` +${outs.length - 1}` : ''), mv = p.lu && p.lu.startsWith('in');
+    h += `<span class="lean g2" title="Next man up: ${esc(outs.map(o => `${o.n} (${Math.round(o.m)} min a game)`).join(', '))} out tonight. ${mv ? (p.lu.endsWith('official') ? 'In tonight’s official starting five; ' : 'Projected to start tonight (applied at 70% until the official lineup posts); ') : ''}he projects ${f1(p.nm[1] + p.nm[0])} minutes vs ${f1(p.nm[1])} in his usual role (+${f1(p.nm[0])}). His points / rebounds / assists rise with the minutes (per-minute rates held steady when teammates sat, 2023-27 test). Already in his projection.">▲ ${mv ? 'starts ' : ''}+${f1(p.nm[0])} min · ${esc(who)} out</span>`; }
   if (p.trend >= 3) h += `<span class="lean g2" title="Minutes trending up: last few games ${f1(p.trend)} above his longer average">▲ min</span>`;
   else if (p.trend <= -3) h += `<span class="lean r2" title="Minutes trending down: last few games ${f1(-p.trend)} below his longer average">▼ min</span>`;
   if (p.tl){                                               // teammate links (teamlink.py, owner 2026-11-06): a 24+ min teammate out tonight

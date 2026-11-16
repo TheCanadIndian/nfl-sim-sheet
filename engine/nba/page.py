@@ -35,6 +35,7 @@ def player_payload(tab, meta, dists):
                             for k_, c in (("gp", "x_gp"), ("season", "x_season"), ("fg3a", "x_fg3a"), ("fg3a10", "x_fg3a10"), ("rch", "x_rch"), ("rr", "x_rr"),
                                           ("ach", "x_ach"), ("ar", "x_ar"), ("reb", "x_reb"), ("ast", "x_ast"), ("on", "x_on"))},
                         pp=None if mm is None or pd.isna(mm.p_play) else round(float(mm.p_play), 3),
+                        nm=None if mm is None or "nm_gain" not in mm.index or pd.isna(mm.nm_gain) or mm.nm_gain < 2 else [round(float(mm.nm_gain), 1), round(float(mm.e_min_usual), 1)],
                         bx=None if mm is None or "bx" not in mm.index or not isinstance(mm.bx, dict) else mm.bx,
                         sh=None if mm is None or "sh_f3" not in mm.index or pd.isna(mm.sh_f3) else [round(float(mm.sh_f3), 3), round(float(mm.sh_ft), 3)],
                         d={mode: dists[mode].get(k, {}) for mode in ("vegas", "blind")}))

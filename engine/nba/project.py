@@ -227,7 +227,8 @@ def main():
     # tonight's starting five (lineups.py: ESPN's official starters once posted, else our projection from ESPN's depth
     # charts minus anyone out): moving into the lineup vs his last game x1.20 minutes, out x0.87 (projected: 70% of that)
     rows["lineup"] = None
-    rows["last_start"] = None                                  # started his team's last game (ladder tags, owner 2026-11-04)
+    rows["last_start"] = None                                  # started his own last game played (ladder tags, owner 2026-11-04)
+    rows["e_min_usual"] = rows.e_min.copy()                    # before tonight's lineup and the team's minutes (next man up chip)
     try:
         import lineups as LU
         out_ids = {int(p) for p in ro[ro.status.isin(STATUS_OUT)].player_id}
@@ -235,15 +236,18 @@ def main():
         unsure_ = {LU._norm(n_) for n_, st_ in zip(ro.name, ro.status) if st_ in ("Questionable", "Day-To-Day", "Doubtful")}
         LN = LU.tonight([(int(g.game_id), g.home, g.away) for g in fut.itertuples()], out_ids,
                         day=pd.Timestamp(fut.start_utc.min()).tz_convert("America/New_York").date(), names=names_, unsure_names=unsure_)
-        # 'started last game' = started his team's most recent regular-season / playoff game (sat out = didn't start)
+        # 'started last game' = started HIS OWN most recent regular-season / playoff game played (2026-11-16, owner 'yes';
+        # research/nba_lineup_live.py). It was his TEAM's last game, so a starter back from injury (he sat it out) got the x1.197
+        # promotion bump: those starters played 0.78-0.88 of their projected minutes; vs his own last game, unseen 2025-26 / 2026-27
+        # minutes, points, rebounds and threes better in all 4 halves (assists 3 of 4), starters back after 1-2 games 0.878 -> 0.999.
         import sqlite3
         con_ = sqlite3.connect(M.DB)
-        tg_ = pd.read_sql("SELECT game_id, date, home, away FROM games WHERE state = 'FINAL' AND game_type IN (2, 3)", con_)
-        tg_ = pd.concat([tg_.rename(columns={"home": "team"})[["game_id", "date", "team"]], tg_.rename(columns={"away": "team"})[["game_id", "date", "team"]]])
-        lastg = tg_.sort_values("date").groupby("team").game_id.last()
-        st_ = pd.read_sql(f"SELECT game_id, team, player_id FROM players WHERE starter = 1 AND game_id IN ({','.join(map(str, lastg.tolist())) or 0})", con_)
-        starters_ = {(t, int(p_)) for t, p_ in zip(st_.team, st_.player_id)}
-        last_start = {int(p_): int((t, int(p_)) in starters_) for t, p_ in zip(rows.team, rows.player_id) if t in lastg.index}
+        ids_ = ",".join(str(int(p_)) for p_ in set(rows.player_id)) or "0"
+        own_ = pd.read_sql(f"""SELECT p.player_id, p.starter FROM players p JOIN games g ON g.game_id = p.game_id
+                               WHERE g.state = 'FINAL' AND g.game_type IN (2, 3) AND p.dnp = 0 AND p.min > 0 AND p.player_id IN ({ids_})
+                               ORDER BY g.date, g.game_id""", con_)
+        own_start = own_.groupby("player_id").starter.last()
+        last_start = {int(p_): int(own_start[int(p_)]) for p_ in rows.player_id if int(p_) in own_start.index}
         rows["last_start"] = [last_start.get(int(p_)) for p_ in rows.player_id]
         mult, tags = LU.multipliers(rows, last_start, LN)
         rows["e_min"] = rows.e_min * mult
@@ -282,11 +286,14 @@ def main():
                 print("dd / td history skipped:", type(e).__name__, e)
             save_draws(out, sv, hist=hist)
     tab = pd.concat(tabs, ignore_index=True)
-    meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play", "lineup", "last_start"]
+    meta = rows[["game_id", "team", "player_id", "status", "note", "starter", "min_trend", "games_prior", "pg", "p_play", "lineup", "last_start", "e_min_usual"]
                 + [c for c in ["arch"] + [f"dva_{s}" for s in M.DVA_STATS] if c in rows]].copy()
     if fr.arch is not None and "arch" in meta:                         # archetype name for the page
         meta["arch_name"] = meta.arch.map(lambda a: fr.arch["names"][int(a)] if pd.notna(a) else None)
     meta["e_min"] = M.team_minutes(rows, live=True)
+    # next man up (owner 2026-11-16): minutes tonight vs his usual role (before tonight's lineup move and the team's minutes); the
+    # page shows it when a regular teammate (20+ usual min) is out
+    meta["nm_gain"] = meta.e_min - meta.e_min_usual
     meta["bx"] = [BX.get((g_, t_, p_)) for g_, t_, p_ in zip(meta.game_id, meta.team, meta.player_id)]
     try:                                                           # 3P% / FT% for the box score's made-attempted columns
         meta = meta.merge(shooting(int(fut.season.iloc[0]), set(meta.player_id.astype(int))), on="player_id", how="left")

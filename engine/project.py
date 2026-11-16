@@ -509,7 +509,12 @@ def rb_targets(res, players, rng):
 #    mean / the average)); his simulated draws are re-mapped to that ladder by randomized quantile mapping (ranks kept, so his
 #    links to the other stats in the same simulation hold), catches capped at targets. Held-out log-loss on the ladder lines:
 #    targets -39 / -23e-4 (lines a book would post -67 / -37), catches -8 / -18 (-31 / -14). Receiving yards were mixed: untouched.
-SIZE_RECAL = {"tgt": (0.1306, 1.0929, -0.3104, 3.2794), "rec": (0.0762, 1.0838, -0.2993, 2.2446)}   # a, b, c, average mean
+SIZE_RECAL_ASIS = {"tgt": (0.1306, 1.0929, -0.3104, 3.2794), "rec": (0.0762, 1.0838, -0.2993, 2.2446)}   # a, b, c, average mean
+# With next man up on (boxscore/pipeline.NEXT_MAN, 2026-11-16) most of the size term is double counting: in 2025 the low end's excess
+# came from same-position-absence games, and refit on the walk-forward backtest c is -.115 / -.148 with the proportional split vs
+# -.030 / -.060 with next man up. Live c shrinks by that difference (targets -.310 -> -.225, catches -.299 -> -.212); shadow.py
+# grades this, the old constants and no SIZE_RECAL side by side from the raw ladders (<stem>_recal.json) before one is chosen.
+SIZE_RECAL = {"tgt": (0.1306, 1.0929, -0.2252, 3.2794), "rec": (0.0762, 1.0838, -0.2117, 2.2446)}
 # 2) Touchdowns ran low in both seasons by position (2025 QB 1.24 / RB 1.03 / WR 1.10 / TE 1.25; 2026 1.12 / 1.04 / 1.14 / 1.33):
 #    his chance of no TD becomes P(0)^scale (the scale fit on 2025): 2026 anytime-TD log-loss -30 / -15e-4 by half. Draws with
 #    no TD get one (rushing or receiving in his own mix). Applied after the first-TD shares; team points are left as simulated.
@@ -706,6 +711,7 @@ def main():
         print(f"  bias fix skipped ({type(e).__name__}: {e})"); BIAS = {}
     print(f"  season-to-date bias fix (actual / projected): {BIAS}")
     brng = np.random.default_rng(int(week) * 7919)
+    RAWLAD, NMG = {}, {}
     try:
         RECENT = recent_carries(con, season, week)
     except Exception as e:                                       # noqa: BLE001 -- never block a projection run
@@ -720,6 +726,13 @@ def main():
         margin = h["points"] - a["points"]
         first = first_td(h, a, hi.team, ai.team, abs(hash(g.game_id)) % 2**32)
         for res_, t_ in ((h, hi), (a, ai)):                     # projection audit fixes (SIZE_RECAL, TD_SCALE)
+            if not args.played:                                 # raw targets / catches ladders for the SIZE_RECAL shadow test
+                pl_ = res_["players"]
+                for j_, p_ in enumerate(t_.players):
+                    if p_.pos in ("WR", "TE", "RB") and pl_["tgt"][:, j_].mean() >= .2:
+                        RAWLAD[f"{g.game_id}|{t_.team}|{p_.player_id}"] = {
+                            st_: [round(float((pl_[st_][:, j_] >= k_).mean()), 4) for k_ in range(1, 16)] + [round(float(pl_[st_][:, j_].mean()), 3)]
+                            for st_ in ("tgt", "rec")}
             size_recal(res_, brng)
             td_scale(res_, t_.players, brng)
         if not args.played:                                     # same-game parlays by game script (sgp.py), both models
@@ -752,6 +765,12 @@ def main():
                 rb_boost(p.pos, s)
                 role_recent(p.pos, s, RECENT.get(p.player_id), brng)
                 box[(t.team, p.name)] = s
+                ng = (getattr(fr, "nm_gain", None) or {}).get((g.game_id, t.team, p.player_id))
+                if ng and p.pos in ("WR", "TE", "RB"):           # next man up chip: volume he gains because a regular is out
+                    gt = float(s["tgt"].mean()) * (1 - 1 / ng["tgt"]) if ng.get("tgt") else 0.0
+                    gc = float(s["car"].mean()) * (1 - 1 / ng["car"]) if ng.get("car") else 0.0
+                    if gt >= 1.0 or gc >= 2.0:
+                        NMG[f"{g.game_id}|{t.team}|{p.name}"] = dict(t=round(gt, 1), c=round(gc, 1), w=ng["out"])
                 keyrows.append((g.game_id, t.team, p.player_id, p.name))
                 s_all = dict(s, tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])
                 boxtd[f"{g.game_id}|{t.team}|{p.name}"] = [round(float(pl["rush_td"][:, j].mean()), 3), round(float(pl["rec_td"][:, j].mean()), 3)]
@@ -780,6 +799,13 @@ def main():
     players.to_csv(f"{stem}_players.csv", index=False)
     json.dump(boxtd, open(f"{stem}_box.json", "w"), separators=(",", ":"))     # mean rushing / receiving TDs (projected box score)
     json.dump(BIAS, open(f"{stem}_bias.json", "w"))                 # ratios applied this run (later weeks divide them back out)
+    if RAWLAD:                                                   # pre-SIZE_RECAL ladders (shadow.py); games not in this run kept
+        try:
+            old_ = json.load(open(f"{stem}_recal.json"))
+        except (OSError, ValueError):
+            old_ = {}
+        run_g = set(todo.game_id)
+        json.dump({**{k: v for k, v in old_.items() if k.split("|")[0] not in run_g}, **RAWLAD}, open(f"{stem}_recal.json", "w"), separators=(",", ":"))
     teams.to_csv(f"{stem}_teams.csv", index=False)
     with open(f"{stem}_dist.json", "w") as f:
         json.dump(dists, f, separators=(",", ":"))
@@ -803,6 +829,7 @@ def main():
             payload["spot"] = spotlight(con, fr, todo, season, week, keyrows, players, payload)
         except Exception as e:
             print(f"  game summaries skipped ({type(e).__name__}: {e})")
+    payload["nm"] = NMG                                          # next man up gains (report.py -> each player's 'nm')
     with open(f"{stem}_matchups.json", "w") as f:
         json.dump(payload, f, separators=(",", ":"))
     print_box(teams, players)

@@ -1170,7 +1170,7 @@ function tdBoard(g){
   const body = rows.map(({p, u, T, O, R, L}) => {
     const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN];
     const gl = u ? `${u.games} game${u.games === 1 ? '' : 's'}` : 'no games yet';
-    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span><div class="tdtags">${mktTags(p)}${roleChip(p)}</div>${mxNFL(p) || chips(p)}</div></div></td>`
+    return `<tr class="${state.open === p.k ? 'opened' : ''}"><td class="l tdname"><div class="tdp">${teamChip(p.t)}<div class="tdpn"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)} · ${gl}</span><div class="tdtags">${mktTags(p)}${roleChip(p)}${nmChip(p)}</div>${mxNFL(p) || chips(p)}</div></div></td>`
       + heat(u ? u.rz_car : null, M.rz_car) + heat(u ? u.gl_car : null, M.gl_car) + heat(u ? u.rz_tgt : null, M.rz_tgt) + heat(u ? u.ez_tgt : null, M.ez_tgt)
       + `<td>${ring(u && u.rz_opp_share, 'Share of his team’s red-zone carries + targets in the games he played')}</td>`
       + `<td class="gs">${sbar(T && T.proe)}</td><td>${pbar2(T && T.pass_rate)}</td>`
@@ -1193,7 +1193,7 @@ function tdBoard(g){
     const sgn = v => v == null ? '–' : `<span class="${v >= 0 ? 'good' : 'bad'}">${v >= 0 ? '+' : '−'}${(Math.abs(v) * 100).toFixed(1)}%</span>`;
     const cards = rows.map(({p, u, T, O, R, L}) => {
       const bo = !!(window.MKT && MKT.hasProps && MKT.hasProps(p.g)), a = p.s.anytime_td[MEAN], d = L ? L.adj - a : 0, on = state.open === p.k;
-      const tags = `${mktTags(p)}${roleChip(p)}`, mx = mxNFL(p) || chips(p);
+      const tags = `${mktTags(p)}${roleChip(p)}${nmChip(p)}`, mx = mxNFL(p) || chips(p);
       return `<article class="tdk${on ? ' opened' : ''}"><div class="tdkh">${teamChip(p.t)}<div class="tdpn"><button class="plink${on ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="tds" title="Slide a line for ${esc(p.n)}">${esc(p.n)}</button><span class="tdsub">${esc(p.lab || p.pos)} · vs ${esc(p.o)}${u ? ` · ${u.games}g` : ''}</span></div>`
         + `<div class="tdkc"><b>${pct(a)}</b><span class="tdsub">fair ${american(a)}</span></div></div>`
         + `<div class="tdkm">${L ? `<span class="tdkl"><span class="tdsub">Luck-adj.</span> <b>${pct(L.adj)}</b>${Math.abs(d) >= .005 ? ` <span class="tdsub ${d >= .02 ? 'good' : d <= -.02 ? 'bad' : ''}">${d > 0 ? '▲' : '▼'} ${Math.round(Math.abs(d) * 100)}</span>` : ''}${L.tag ? ` <span class="lk2 ${L.tag}">${L.tag === 'due' ? 'due' : 'ran hot'}</span>` : ''}</span>` : '<span></span>'}<span class="tdko">${bo ? MKT.prop(p.g, p.n, 'td') : '<span class="muted">–</span>'}</span></div>`
@@ -1470,8 +1470,17 @@ function mxNFL(p){
   return `<div class="mxw">${groups.map(G => `<span class="mxl ${G[0].v > 1 ? 'up' : 'dn'}" title="${esc(G.map(x => x.tip).join(' '))}">${G.map(x => `${x.lab} ${sg(x.v)}`).join(' · ')} <i>vs ${MXG[key]}</i></span>`).join('')}</div>`;
 }
 const roleChip = p => { const r = roleOf2(p); return r ? `<span class="tag arch" title="${esc(r[1])} (display only)">${esc(r[0])}</span>` : ''; };
+// next man up (boxscore/pipeline.NEXT_MAN, owner 2026-11-16): the volume he gains tonight because a regular teammate is out. An
+// absent player's share goes mostly to his own position and to the players there with room to grow (WR out: WRs with under 3% of
+// targets got 1.74x their old proportional projection); fit 2023-24, better on 2025-26 in every half. Already in his numbers.
+const lastName = n => { const w = String(n || '').replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/i, '').trim().split(/\s+/); return w[w.length - 1] || n; };
+const nmChip = p => { const m = p.nm; if (!m) return '';
+  const parts = [m.t >= 1 ? `+${m.t.toFixed(1)} tgt` : '', m.c >= 2 ? `+${m.c.toFixed(1)} car` : ''].filter(Boolean);
+  if (!parts.length) return '';
+  const w = m.w || [], who = w.length ? `${lastName(w[0])}${w.length > 1 ? ' +' + (w.length - 1) : ''} out` : 'teammate out';
+  return `<span class="lean g2" title="Next man up: ${esc(w.join(', ') || 'a regular')} out tonight. He gets ${parts.join(' and ')} more than with everyone in: an absent player’s share goes mostly to his position and to the players there with room to grow (tested on 2025-26). Already in his projection.">▲ ${parts.join(' · ')} · ${esc(who)}</span>`; };
 const mktTags = p => `${window.MKT && MKT.flag ? MKT.flag(p.g, p.n) + (MKT.lcFlag ? MKT.lcFlag(p.g, p.n) : '') + (MKT.offFlag ? MKT.offFlag(p.g, p.n) : '') + (MKT.moveFlag ? MKT.moveFlag(p.g, p.n) : '') + whyNFL(p) : ''}${window.MKT && state.gm[p.g] === 'blind' ? MKT.patChips(p.g, p.id, p.n) : ''}`;
-const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${mktTags(p)}${extra}${roleChip(p)}${mxNFL(p) || chips(p)}</td>`;
+const nameCell = (p, stat, extra='') => `<td class="l name"><button class="plink${state.open === p.k ? ' open' : ''}" data-price="${esc(p.k)}" data-pstat="${stat}" title="Slide a line for ${esc(p.n)}"><span class="caret">${state.open === p.k ? '▾' : '▸'}</span>${esc(p.n)}</button>${agChip(p, stat)}${mktTags(p)}${extra}${roleChip(p)}${nmChip(p)}${mxNFL(p) || chips(p)}</td>`;
 // Market-blind lean, inline (same rule as the Model agreement tab)
 const AGK = Object.fromEntries((D.agree || []).map(r => [r.k + '|' + r.stat, r]));
 function agChip(p, stat){

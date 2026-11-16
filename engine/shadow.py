@@ -78,6 +78,55 @@ def nfl(season):
     return out
 
 
+def nfl_recal(season):
+    """SIZE_RECAL with next man up on (owner 2026-11-16): the raw targets / catches ladders each run saves before SIZE_RECAL
+    (projections/weeks/<season>_wkNN_recal.json: P(X >= 1..15) + mean) re-mapped three ways -- live (c shrunk), the old constants,
+    none -- and graded against the box score by log-loss over rungs 1-12 (all, and 'bet-like' rungs priced 10-90%)."""
+    import project as PJ
+    V = {"live": PJ.SIZE_RECAL, "asis": PJ.SIZE_RECAL_ASIS, "off": None}
+    con = sqlite3.connect(os.path.join(HERE, "nfl.db"))
+    pw = pd.read_sql("SELECT player_id, week, targets, receptions FROM player_week WHERE season = ? AND season_type = 'REG'", con, params=(season,))
+    act = {(r.player_id, int(r.week)): (float(r.targets or 0), float(r.receptions or 0)) for r in pw.itertuples()}
+    rows = []
+    for f in sorted(glob.glob(os.path.join(HERE, "projections", "weeks", f"{season}_wk??_recal.json"))):
+        wk = int(os.path.basename(f)[7:9])
+        for key, d in json.load(open(f)).items():
+            a = act.get((key.split("|")[2], wk))
+            if a is None:
+                continue
+            rows.append((wk, d["tgt"], d["rec"], a[0], a[1]))
+    if not rows:
+        return None
+    K = np.arange(1, 13)
+    wk = np.array([r[0] for r in rows])
+    out = []
+    for si, st in ((1, "tgt"), (2, "rec")):
+        P = np.clip(np.array([r[si][:12] for r in rows], float), 1e-4, 1 - 1e-4); m = np.array([r[si][15] for r in rows], float)
+        y = np.array([r[3 if st == "tgt" else 4] for r in rows])
+        Y = (y[:, None] >= K[None, :]).astype(float)
+        L = {}
+        for nm, prm in V.items():
+            if prm is None:
+                Q = P
+            else:
+                a_, b_, c_, avg = prm[st]
+                Q = 1 / (1 + np.exp(-(a_ + b_ * np.log(P / (1 - P)) + c_ * np.log(np.maximum(m, .05) / avg)[:, None])))
+                Q = np.minimum.accumulate(Q, axis=1)
+            Q = np.clip(Q, 1e-4, 1 - 1e-4)
+            L[nm] = -(Y * np.log(Q) + (1 - Y) * np.log(1 - Q))
+        bet = (P > .1) & (P < .9)
+        ws = sorted(set(wk)); cut = ws[len(ws) // 2 - 1] if len(ws) >= 2 else None
+        h1 = wk <= cut if cut is not None else None
+        res = dict(stat=st, n=int(len(rows)), weeks=[int(min(ws)), int(max(ws))])
+        for nm in V:
+            res[nm] = round(float(L[nm].mean()) * 1e4, 1)
+            res[nm + "_bet"] = round(float(L[nm][bet].mean()) * 1e4, 1)
+            res[nm + "_h"] = [] if h1 is None else [round(float(L[nm][h1].mean() - L["live"][h1].mean()) * 1e4, 1),
+                                                    round(float(L[nm][~h1].mean() - L["live"][~h1].mean()) * 1e4, 1)]
+        out.append(res)
+    return out
+
+
 def nhl():
     sys.path.insert(0, os.path.join(HERE, "hockey"))
     import results as HR
@@ -119,8 +168,8 @@ def build(sports):
     except (OSError, ValueError):
         data = {}
     data["generated"] = dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " ")
-    for nm, fn in (("nfl", lambda: nfl(season)), ("nhl", nhl)):
-        if nm not in sports:
+    for nm, fn in (("nfl", lambda: nfl(season)), ("nfl_recal", lambda: nfl_recal(season)), ("nhl", nhl)):
+        if nm.split("_")[0] not in sports:
             continue
         try:
             r = fn()
@@ -169,6 +218,13 @@ if (D.nfl && D.nfl.length) h += `<section class="panel"><div class="phead"><h2>N
   <div class="tw"><table class="t"><thead><tr><th class="l">Stat</th><th>QB games</th><th>Weeks</th><th>Scale now</th><th>Range score live → shadow</th><th>Avg miss live → shadow</th><th>Above median live → shadow</th><th>Halves (shadow − live)</th><th class="l">Verdict</th></tr></thead><tbody>
   ${D.nfl.map(r => `<tr><td class="l">${r.stat === 'att' ? 'Attempts' : 'Completions'}</td><td>${r.n}</td><td>${r.weeks[0]}-${r.weeks[1]}</td><td>×${r.ratio.toFixed(3)}</td><td>${r.live_pin} → ${r.shadow_pin}</td><td>${r.live_mae} → ${r.shadow_mae}</td><td>${Math.round(r.live_over * 100)}% → ${Math.round(r.shadow_over * 100)}%</td><td>${(r.halves || []).map(sg).join(' / ')}</td><td class="l">${verdict(r.halves)}</td></tr>`).join('')}</tbody></table></div>
   <p class="note" style="margin:0">Range score = quantile loss over the 10th-90th percentiles (lower is better). Backtest: better in 2026 weeks 2-5, worse in 2025, so not adopted.</p></section>`;
+if (D.nfl_recal && D.nfl_recal.length){ const VL = {live: 'Live: next man up + SIZE_RECAL, size term shrunk', asis: 'SIZE_RECAL as before (old constants)', off: 'No SIZE_RECAL'};
+  const vd2 = h => !h || h.length < 2 ? '<span class="vd">too early</span>' : h[0] < 0 && h[1] < 0 ? '<span class="vd good">ahead of live in both halves</span>' : h[0] > 0 && h[1] > 0 ? '<span class="vd bad">behind live in both halves</span>' : '<span class="vd">split</span>';
+  const f1 = v => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(1);
+  h += `<section class="panel"><div class="phead"><h2>NFL · targets and catches with next man up</h2><span class="small muted">which SIZE_RECAL to keep · weeks ${D.nfl_recal[0].weeks[0]}-${D.nfl_recal[0].weeks[1]} · ${D.nfl_recal[0].n} player-games</span></div>
+  <div class="tw"><table class="t"><thead><tr><th class="l">Stat</th><th class="l">Version</th><th>Log-loss ×10⁴</th><th>Lines priced 10-90%</th><th>Halves (vs live)</th><th class="l">Verdict</th></tr></thead><tbody>
+  ${D.nfl_recal.map(r => ['live', 'asis', 'off'].map((v, i) => `<tr><td class="l">${i ? '' : r.stat === 'tgt' ? 'Targets' : 'Catches'}</td><td class="l">${VL[v]}</td><td>${r[v].toFixed(1)}</td><td>${r[v + '_bet'].toFixed(1)}</td><td>${v === 'live' ? '–' : (r[v + '_h'] || []).map(f1).join(' / ')}</td><td class="l">${v === 'live' ? '' : vd2(r[v + '_h'])}</td></tr>`).join('')).join('')}</tbody></table></div>
+  <p class="note" style="margin:0">Next man up (Nov 16) gives an absent player’s targets to his position’s next men, which is most of what SIZE_RECAL’s size term was correcting. The live version shrinks that term by the part next man up absorbed in the backtest; this table grades it against the old constants and none on every line from 1+ to 12+ (lower is better).</p></section>`; }
 if (D.nhl && D.nhl.length){ const L = {live: 'Live model', recal: 'Recalibrated (fit 2025-26)', high: 'High-end shrink (above 20%)', season: 'Season-to-date scale'};
   h += `<section class="panel"><div class="phead"><h2>NHL · anytime-goal chances</h2><span class="small muted">${D.nhl[0].nights} nights · ${D.nhl[0].n} skater-games</span></div>
   <div class="tw"><table class="t"><thead><tr><th class="l">Version</th><th>Goals expected</th><th>Scored</th><th>Log-loss</th><th>vs live</th><th>Halves (vs live)</th><th class="l">Verdict</th></tr></thead><tbody>
