@@ -97,6 +97,7 @@ def nfl(news=False):
     sh(PY, "profit.py", "rows", "nfl")          # Profit page: picks under the site's rules
     sh(PY, "profit.py", "roles")                # NFL player roles for the Profit page's 'NFL straights by role'
     sh(PY, "patterns.py")                    # prop patterns: tracked record
+    sh(PY, "nfl_news.py", "--mark")          # what this run saw (injury statuses, prices): markets.yml's news trigger compares to it
 
 
 def nhl(auto=False):

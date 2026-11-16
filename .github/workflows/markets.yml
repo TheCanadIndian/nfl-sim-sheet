@@ -103,6 +103,17 @@ jobs:
         run: |
           set +e; python nba/should_run.py; rc=$?; set -e
           if [ $rc -eq 0 ]; then gh workflow run nba.yml || true; fi
+      # NFL news trigger (owner 2026-11-16, Emmett Johnson / Kenneth Walker wk 10: the books moved Friday 2:40 PM, no NFL run
+      # Friday 6 PM - Sunday 1 AM): nfl_news.py starts nfl.yml when a projected regular's ESPN status changes, a player's
+      # anytime TD / main line jumps since the last NFL run, or Thu-Sat with a game within 48 h and the last run 6+ h old
+      - name: NFL news check (start an NFL run on injury news / big role moves)
+        working-directory: engine
+        run: |
+          set +e; python nfl_news.py; rc=$?; set -e
+          if [ $rc -eq 0 ]; then
+            busy=$(gh run list -w nfl.yml -L 5 --json status --jq '[.[] | select(.status=="queued" or .status=="in_progress" or .status=="waiting")] | length' || echo 0)
+            if [ "$busy" = "0" ]; then gh workflow run nfl.yml -f mode=nfl || true; else echo "an NFL run is already queued or running"; fi
+          fi
       # parlays.py / builder.py steps catch their own errors so the rest runs; any they noted turn the run red here
       - name: Fail the run if a parlay step crashed
         if: always()
