@@ -30,6 +30,7 @@ Run `python sync_engine.py code` to copy code edited in the repo down to `D:\foo
 - `python sync_engine.py pull` gets the cloud's state: frozen projections, grades, learned settings, `markets/*.json`.
 - `python sync_engine.py push` sends code + state and commits ("Engine: sync code from PC"). If git is behind: `cd site && git pull --rebase && git push`.
 - Python venv: `D:\football\football\Scripts\python.exe`. Shell is Windows (PowerShell + Git Bash).
+- Edge team (2026-11-16, PC only, not in this repo): `/team` cycle = a zero-token digest (research/team/digest.py: rechecks due, Profit rules that pass or hold up, shadow tests ahead, traits holding up, unread results) -> one `researcher` (sonnet) study -> `skeptic` (fable) only if it passes -> a proposal for the owner. The agents skip CLAUDE.md and read research/team/PLAYBOOK.md; every hypothesis goes in research/team/ledger.csv.
 
 ## Two branches: main + live (2026-11-11, owner: 'do a b and c' -- the repo had reached 3.6 GB, ~165 MB a day)
 - **Why:** every run committed pages, engine state, saved draws / projections and odds history to `main`; ~90% of the growth was files nobody reads history of.
