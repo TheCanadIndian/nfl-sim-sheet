@@ -2141,6 +2141,64 @@ def fb_nba(now):
     json.dump(dict(fetched=now.isoformat(), games=old), open(FB_FILE, "w"), separators=(",", ":"))
 
 
+# ---------------------------------------------------------------- NFL first touchdown (capture only)
+# Owner 2026-11-16 ('Do all' on the high-odds ideas; idea 3: books seem to price the first TD as a share of the anytime TD, while
+# who scores first depends on who gets the ball early -- scripted plays, which team receives, goal-line roles). One call per game
+# (player_1st_td, FG_BOOKS = 9-10 books incl. Hard Rock = 1 credit), the first-basket schedule (hourly in the last 3 h + the
+# 8 AM ET pull; ~50 credits on a Sunday). markets/ftd_nfl.json {fetched, games: {gid: {start, fetched, players: {name: {o: {book:
+# odds}}}}}}; git history keeps every pull for research (Kalshi KXNFLFIRSTTD history is the other price source). Nothing reads it.
+FTD_FILE = os.path.join(M.SITE, "markets", "ftd_nfl.json")
+
+
+def ftd_nfl(now):
+    k = B.key()
+    O = M.ours_nfl() or {}
+    if not k or not O:
+        return
+    games = {(g["away"], g["home"]): g for g in O.get("games", [])
+             if now < pd.Timestamp(g["start"]).tz_convert("UTC") <= now + pd.Timedelta(hours=24)}
+    try:
+        old = json.load(open(FTD_FILE)).get("games") or {}
+    except (OSError, ValueError):
+        old = {}
+    bst = B.load_state()
+    todo = wanted(games, old, now, 3.0, 60, bst, fast_min=60)
+    if todo:
+        r = requests.get("https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events", params=dict(apiKey=k), timeout=30)   # free
+        for e in (r.json() if r.status_code == 200 else []):
+            g = todo.get((B.NAMES["nfl"].get(e["away_team"]), B.NAMES["nfl"].get(e["home_team"])))
+            if not g:
+                continue
+            if not B.budget_ok(bst, now):
+                print("odds api nfl first td: credit budget used for today"); break
+            q = requests.get(f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/events/{e['id']}/odds", timeout=30,
+                             params=dict(apiKey=k, bookmakers=",".join(FG_BOOKS), markets="player_1st_td", oddsFormat="american"))
+            used = int(q.headers.get("x-requests-last") or 0)
+            bst["spent_today"] = bst.get("spent_today", 0) + used
+            if q.headers.get("x-requests-remaining"):
+                bst["remaining"] = int(float(q.headers["x-requests-remaining"]))
+            if q.status_code != 200:
+                continue
+            P = {}
+            for b in q.json().get("bookmakers", []):
+                for m in b.get("markets", []):
+                    for o in m.get("outcomes", []):
+                        nm = o.get("description") or o.get("name")
+                        if not nm or (o.get("name") or "").lower() == "no" or "no touchdown" in nm.lower():
+                            continue
+                        P.setdefault(jsnorm(nm), {"o": {}})["o"][FG_SHORT.get(b["key"], b["key"])] = int(o["price"])
+            gid = str(g["id"])
+            if P:
+                old[gid] = dict(start=str(g["start"]), fetched=now.isoformat(), players=P)
+                print(f"odds api nfl first td: {g['away']} @ {g['home']}: {len(P)} players, "
+                      f"{len({b for x in P.values() for b in x['o']})} books ({used} credits, {bst.get('remaining')} left)")
+            else:
+                print(f"odds api nfl first td: {g['away']} @ {g['home']}: not posted yet")
+        json.dump(bst, open(B.STATE, "w"), indent=1, default=str)
+    old = {g_: v for g_, v in old.items() if pd.Timestamp(v["start"]).tz_convert("UTC") > now - pd.Timedelta(hours=6)}
+    json.dump(dict(fetched=now.isoformat(), games=old), open(FTD_FILE, "w"), separators=(",", ":"))
+
+
 def fg_nhl(now):
     k = B.key()
     O = M.ours_nhl() or {}
@@ -2323,6 +2381,10 @@ def main(argv):
             if sport == "nfl":
                 pin_pull(now)
                 pin_merge(now)
+                try:
+                    ftd_nfl(now)
+                except Exception as e:                       # noqa: BLE001 -- capture only
+                    print(f"odds api nfl first td: skipped ({type(e).__name__}: {e})")
             if sport == "nhl":
                 pin_pull_nhl(now)
                 pin_merge_nhl(now)
