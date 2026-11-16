@@ -12,3 +12,4 @@
 - **Variance:** a 2-leg at +260 hits ~28%; a 3-leg at +600 ~14%. Losing streaks of 7+ days happen a third of the time at these odds. Stay small.
 - **2026-11-16 record:** 10 parlays, 1 won, legs 3 of 12 vs 5.3 priced, -80%. Still variance-sized, but nothing has beaten its price yet. Keep stakes at the small unit and don't chase. A day with no bet is fine.
 - **2026-11-16 Monday slates** start after 6 PM ET, so the 11:30 run has nothing to bet on Mondays.
+- **2026-11-16 evening:** skipped the Monday slate. Edges under 25% price are alt longshots or stale; the main-line +4..+6% ones are fair price + model nudge, inside the over bias. No edge, no bet.
