@@ -58,13 +58,19 @@ def update(stem, season, week, game_ids, source="live", sims=None, db="nfl.db", 
     btd = {k: v for k, v in _load(f"{ws}_box.json", {}).items() if k.split("|")[0] not in game_ids}     # projected box score TDs
     btd.update({k: v for k, v in _load(f"{stem}_box.json", {}).items() if k.split("|")[0] in game_ids})
     json.dump(btd, open(f"{ws}_box.json", "w"), separators=(",", ":"))
+    if os.path.exists(f"{stem}_recal.json"):                      # pre-SIZE_RECAL ladders, per game (shadow.py nfl_recal, 2026-11-16)
+        rl = {k: v for k, v in _load(f"{ws}_recal.json", {}).items() if k.split("|")[0] not in game_ids}
+        rl.update({k: v for k, v in _load(f"{stem}_recal.json", {}).items() if k.split("|")[0] in game_ids})
+        json.dump(rl, open(f"{ws}_recal.json", "w"), separators=(",", ":"))
 
     m_old = _load(f"{ws}_matchups.json", {"players": {}, "dvp": {}})
     m_new = _load(f"{stem}_matchups.json", {"players": {}, "dvp": {}})
     players = {k: v for k, v in m_old["players"].items() if k.split("|")[0] not in game_ids}
     players.update({k: v for k, v in m_new["players"].items() if k.split("|")[0] in game_ids})
+    nm = {k: v for k, v in (m_old.get("nm") or {}).items() if k.split("|")[0] not in game_ids}    # next man up chips (2026-11-16)
+    nm.update({k: v for k, v in (m_new.get("nm") or {}).items() if k.split("|")[0] in game_ids})
     json.dump({"players": players, "dvp": m_new.get("dvp") or m_old.get("dvp", {}),
-               "rz": m_new.get("rz") or m_old.get("rz")},
+               "rz": m_new.get("rz") or m_old.get("rz"), "nm": nm},
               open(f"{ws}_matchups.json", "w"), separators=(",", ":"))
 
     if os.path.exists(f"{stem}_bias.json"):                       # the season-to-date bias fix this week used (project.py)
