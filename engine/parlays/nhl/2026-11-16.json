@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-16",
 "lock": "2026-11-17T00:30:00+00:00",
-"frozen_at": "2026-11-16T13:10:16.914Z",
+"frozen_at": "2026-11-16T13:24:15.721Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -294,7 +294,7 @@
 "line": 1.5,
 "name": "zachary bolduc",
 "lab": "Zachary Bolduc under 1.5 shots",
-"p": 0.544,
+"p": 0.541,
 "price": 102,
 "book": "Novig"
 },
@@ -311,8 +311,42 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.32426,
+"p": 0.3225,
 "d": 3.777,
+"first": "2026-11-17T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020331",
+"start": "2026-11-17T00:30:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "alexandre texier",
+"lab": "Alexandre Texier under 1.5 shots",
+"p": 0.5763,
+"price": -115,
+"book": "Hard Rock"
+},
+{
+"gid": "2026020332",
+"start": "2026-11-17T02:30:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "kailer yamamoto",
+"lab": "Kailer Yamamoto under 1.5 shots",
+"p": 0.4781,
+"price": 125,
+"book": "Hard Rock"
+}
+],
+"p": 0.27555,
+"d": 4.207,
 "first": "2026-11-17T00:30:00+00:00",
 "res": null
 },
@@ -328,7 +362,7 @@
 "line": 1.5,
 "name": "noah dobson",
 "lab": "Noah Dobson under 1.5 shots",
-"p": 0.4664,
+"p": 0.4611,
 "price": 135,
 "book": "Novig"
 },
@@ -345,42 +379,77 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.27803,
+"p": 0.27489,
 "d": 4.393,
 "first": "2026-11-17T00:30:00+00:00",
 "res": null
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "2026020331",
 "start": "2026-11-17T00:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "oliver bjorkstrand",
-"lab": "Oliver Bjorkstrand over 1.5 shots",
-"p": 0.4474,
-"price": 141,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NYR moneyline",
+"p": 0.5123,
+"price": 102,
 "book": "Novig"
 },
 {
 "gid": "2026020332",
 "start": "2026-11-17T02:30:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "VAN moneyline",
-"p": 0.2803,
-"price": 292,
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "brock boeser",
+"lab": "Brock Boeser over 1.5 shots",
+"p": 0.5449,
+"price": -111,
 "book": "Novig"
 }
 ],
-"p": 0.12541,
-"d": 9.447,
+"p": 0.27916,
+"d": 3.84,
+"first": "2026-11-17T00:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020331",
+"start": "2026-11-17T00:30:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "NYR moneyline",
+"p": 0.5123,
+"price": 102,
+"book": "Novig"
+},
+{
+"gid": "2026020332",
+"start": "2026-11-17T02:30:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "jake debrusk",
+"lab": "Jake Debrusk over 2.5 shots",
+"p": 0.4056,
+"price": 153,
+"book": "Novig"
+}
+],
+"p": 0.2078,
+"d": 5.111,
 "first": "2026-11-17T00:30:00+00:00",
 "pick": "core",
 "res": null
@@ -397,7 +466,7 @@
 "line": 1.5,
 "name": "jt miller",
 "lab": "Jt Miller over 1.5 shots",
-"p": 0.5717,
+"p": 0.5685,
 "price": -120,
 "book": "Novig"
 },
@@ -414,8 +483,43 @@
 "book": "Novig"
 }
 ],
-"p": 0.16026,
+"p": 0.15936,
 "d": 7.187,
+"first": "2026-11-17T00:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026020331",
+"start": "2026-11-17T00:30:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "oliver bjorkstrand",
+"lab": "Oliver Bjorkstrand over 1.5 shots",
+"p": 0.4413,
+"price": 141,
+"book": "Novig"
+},
+{
+"gid": "2026020332",
+"start": "2026-11-17T02:30:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "VAN moneyline",
+"p": 0.2803,
+"price": 292,
+"book": "Novig"
+}
+],
+"p": 0.12369,
+"d": 9.447,
 "first": "2026-11-17T00:30:00+00:00",
 "pick": "core",
 "res": null
