@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-16",
 "lock": "2026-11-17T00:00:00+00:00",
-"frozen_at": "2026-11-16T21:32:26.102Z",
+"frozen_at": "2026-11-16T21:37:02.263Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -176,15 +176,15 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "401910000",
-"start": "2026-11-17T01:00Z",
-"kind": "ast",
+"gid": "401909997",
+"start": "2026-11-17T00:30Z",
+"kind": "reb",
 "side": "o",
-"line": 6.5,
-"name": "jeremiah fears",
-"lab": "Jeremiah Fears over 6.5 assists",
-"p": 0.4558,
-"price": 125,
+"line": 5.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe over 5.5 rebounds",
+"p": 0.5694,
+"price": -120,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -199,7 +199,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0087
+"edge": 0.0365
 },
 {
 "gid": "401909996",
@@ -235,8 +235,8 @@
 "line": 3.5,
 "name": "ayo dosunmu",
 "lab": "Ayo Dosunmu over 3.5 assists",
-"p": 0.4106,
-"price": 141,
+"p": 0.4064,
+"price": 144,
 "book": "Novig",
 "f": [
 "usage",
@@ -250,11 +250,11 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0005
+"edge": 0.0032
 }
 ],
-"p": 0.08499,
-"d": 11.93,
+"p": 0.10508,
+"d": 9.841,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
@@ -355,55 +355,35 @@
 ]
 },
 {
-"gid": "401909995",
-"start": "2026-11-17T00:00Z",
-"kind": "fg3m",
+"gid": "401910000",
+"start": "2026-11-17T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "donovan mitchell",
-"lab": "Donovan Mitchell over 3.5 threes",
-"p": 0.3441,
-"fair": 0.3444,
-"price": 185,
+"line": 7.5,
+"name": "jeremiah fears",
+"lab": "Jeremiah Fears over 7.5 assists",
+"p": 0.3066,
+"fair": 0.3123,
+"price": 220,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0194,
+"edge": -0.019,
 "v": [
 "Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (2.5)"
+"consensus line up",
+"one rung above the main line (6.5)"
 ]
 }
 ],
-"p": 0.05819,
-"d": 21.375,
-"first": "2026-11-17T00:00:00+00:00",
+"p": 0.05277,
+"d": 24.0,
+"first": "2026-11-17T00:30:00+00:00",
 "res": null
 },
 {
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401909995",
-"start": "2026-11-17T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "donovan mitchell",
-"lab": "Donovan Mitchell over 3.5 threes",
-"p": 0.3441,
-"fair": 0.3444,
-"price": 185,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": -0.0194,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (2.5)"
-]
-},
 {
 "gid": "401910000",
 "start": "2026-11-17T01:00Z",
@@ -412,21 +392,41 @@
 "line": 7.5,
 "name": "jeremiah fears",
 "lab": "Jeremiah Fears over 7.5 assists",
-"p": 0.2826,
-"fair": 0.2871,
-"price": 245,
-"book": "Novig",
+"p": 0.3066,
+"fair": 0.3123,
+"price": 220,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0249,
+"edge": -0.019,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
 "one rung above the main line (6.5)"
 ]
+},
+{
+"gid": "401909995",
+"start": "2026-11-17T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell over 3.5 threes",
+"p": 0.3441,
+"fair": 0.3444,
+"price": 185,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0194,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
 }
 ],
-"p": 0.09888,
-"d": 9.833,
+"p": 0.10756,
+"d": 9.12,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
@@ -564,8 +564,8 @@
 "line": 5.5,
 "name": "andrew wiggins",
 "lab": "Andrew Wiggins over 5.5 rebounds",
-"p": 0.105,
-"fair": 0.105,
+"p": 0.1,
+"fair": 0.1,
 "ours": 0.1544,
 "price": 756,
 "book": "Kalshi",
@@ -579,7 +579,7 @@
 ]
 }
 ],
-"p": 0.01208,
+"p": 0.0115,
 "d": 67.196,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
@@ -618,8 +618,8 @@
 "line": 5.5,
 "name": "andrew wiggins",
 "lab": "Andrew Wiggins over 5.5 rebounds",
-"p": 0.105,
-"fair": 0.105,
+"p": 0.1,
+"fair": 0.1,
 "ours": 0.1544,
 "price": 756,
 "book": "Kalshi",
@@ -633,7 +633,7 @@
 ]
 }
 ],
-"p": 0.00788,
+"p": 0.0075,
 "d": 100.494,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
@@ -650,8 +650,8 @@
 "line": 3.5,
 "name": "jaylen wells",
 "lab": "Jaylen Wells over 3.5 assists",
-"p": 0.09,
-"fair": 0.09,
+"p": 0.095,
+"fair": 0.095,
 "ours": 0.1428,
 "price": 841,
 "book": "Kalshi",
@@ -687,7 +687,7 @@
 ]
 }
 ],
-"p": 0.00855,
+"p": 0.00903,
 "d": 88.548,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
