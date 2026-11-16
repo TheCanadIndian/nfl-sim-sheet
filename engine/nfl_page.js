@@ -996,6 +996,59 @@ function gameBets(g){
                            betChip(leg(`total|under|${tl}`, {stat: 'total', line: tl, side: 'under'}, `Under ${tl} (${glab})`), 'Under', H.p_under, BK(g.id, 'total', 'under', tl, H.p_under))]),
   ].join('')}${window.MKT && MKT.bkNote ? MKT.bkNote(g.id) : ''}</div>`;
 }
+// ---------------- injury watch (owner 2026-11-16: Emmett Johnson / Kenneth Walker, KC @ ATL wk 10) ----------------
+// Questionable regulars: project.py simulated the game again with him sitting (D.sit); his teammates' prices at your books
+// with our chance if he plays (this projection) and if he sits. Ruled-out regulars (already out of the projection): the
+// teammates who gained (next man up, p.nm). Edge = chance x payout - 1 at the best of Hard Rock / Novig / Kalshi.
+const IW_BOOKS = ['Hard Rock', 'Novig', 'Kalshi'], IW_STAT = {td: 'TD', rush_yds: 'rush yds', rec_yds: 'rec yds', rec: 'catches'};
+const iwDec = o => o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+function iwBest(o){ let b = null; for (const k of IW_BOOKS){ const v = (o || {})[k]; if (v && v[0] != null && (!b || iwDec(v[0]) > iwDec(b.o))) b = {bk: k, o: v[0]}; } return b; }
+// the bets one teammate can be judged on: TD, and the main line (+ any cheaper number one of your books still posts) of the
+// stats he gains; plays / sits = chance at that line in each case
+function iwBets(g, name, stats, dPlay, dSit, tdPlay, tdSit){
+  const out = [];
+  for (const st of stats){
+    const e = window.MKT && MKT.propEntry ? MKT.propEntry(g.id, name, st) : null; if (!e) continue;
+    if (st === 'td'){ const b = iwBest(e.o); if (b) out.push({st, l: .5, b, pp: tdPlay, ps: tdSit}); continue; }
+    const lines = [[e.l, e.o], ...Object.entries(e.a || {}).map(([l, a]) => [+l, (a || {}).o]).filter(([l]) => l < e.l)];
+    const rows = lines.map(([l, o]) => ({st, l, b: iwBest(o), pp: dPlay && dPlay[st] ? probs(dPlay[st], l).over : null, ps: dSit && dSit[st] ? probs(dSit[st], l).over : null}))
+      .filter(r => r.b && r.l != null);
+    const main = rows.find(r => r.l === e.l), cheap = rows.filter(r => r.l !== e.l && r.ps != null && r.ps * iwDec(r.b.o) - 1 >= .1).sort((a, b) => (b.ps * iwDec(b.b.o)) - (a.ps * iwDec(a.b.o))).slice(0, 2);
+    if (main) out.push(main); out.push(...cheap);
+  }
+  return out;
+}
+function iwRow(name, r, sitLab){
+  const ev = r.ps != null ? r.ps * iwDec(r.b.o) - 1 : null, ln = r.st === 'td' ? 'anytime TD' : `${Math.ceil(r.l)}+ ${IW_STAT[r.st]}`;
+  return `<div class="iwr"><span class="iwb">${esc(ln)}</span><span class="iwp">${esc(r.b.bk)} ${amS(r.b.o)}</span>`
+    + `${r.pp != null ? `<span class="iwc" title="Our chance with him playing (this projection)">plays ${pct(r.pp)}</span>` : ''}`
+    + `${r.ps != null ? `<span class="iwc s" title="Our chance ${esc(sitLab)}">${esc(sitLab)} ${pct(r.ps)}</span>` : ''}`
+    + `${ev != null ? `<span class="iwe${ev >= .1 ? ' up' : ev < 0 ? ' dn' : ''}" title="Expected return at that price if our ${esc(sitLab)} chance is right">${ev >= 0 ? '+' : '−'}${Math.round(Math.abs(ev) * 100)}% ${sitLab === 'sits' ? 'if he sits' : ''}</span>` : ''}`
+    + `${r.pp != null && r.ps != null && r.ps - r.pp >= .03 ? `<span class="iwi" title="Break-even: by our ‘plays’ and ‘sits’ numbers this price pays off if he sits at least this often (the book’s margin in). 0% = our number beats the price even if he plays.">worth it if he sits ≥ ${pct(Math.min(1, Math.max(0, (1 / iwDec(r.b.o) - r.pp) / (r.ps - r.pp))))}</span>` : ''}</div>`;
+}
+function injuryWatch(g){
+  const S = (D.sit || {})[g.id] || [], outs = {};
+  for (const p of D.players) if (p.g === g.id && p.nm && (p.nm.w || []).length) for (const w of p.nm.w) (outs[`${p.t}|${w}`] = outs[`${p.t}|${w}`] || []).push(p);
+  if (!S.length && !Object.keys(outs).length) return '';
+  const q = S.map(x => {
+    const ben = x.ben.slice(0, 3).map(b => {
+      const pk = byKey[`${g.id}|${x.team}|${b.n}`], stats = ['td', ...(b.sit.car - (b.base.car || 0) >= 1.5 ? ['rush_yds'] : []), ...(b.sit.tgt - (b.base.tgt || 0) >= .8 ? ['rec', 'rec_yds'] : [])];
+      const bets = iwBets(g, b.n, stats, pk && pk.d, b.d, b.base.td, b.sit.td);
+      const vol = [b.sit.car - (b.base.car || 0) >= 1.5 ? `car ${f0(b.base.car || 0)} → ${f0(b.sit.car)}` : '', b.sit.tgt - (b.base.tgt || 0) >= .8 ? `tgt ${f1(b.base.tgt || 0)} → ${f1(b.sit.tgt)}` : '', `TD ${pct(b.base.td || 0)} → ${pct(b.sit.td)}`].filter(Boolean).join(' · ');
+      return `<div class="iwp1"><div class="iwn"><b>${esc(b.n)}</b> <span class="small muted">${esc(b.pos)} · ${esc(vol)}</span></div>${bets.map(r => iwRow(b.n, r, 'sits')).join('') || '<div class="small muted">no prices at your books yet</div>'}</div>`; }).join('');
+    return `<div class="iwg"><div class="iwh"><b>${esc(x.n)}</b> <span class="small muted">${esc(x.team)} ${esc(x.pos)}</span> <span class="iwst">${esc(x.st)}</span> <span class="small muted">· if he sits:</span></div>${ben}</div>`; }).join('');
+  const o = Object.entries(outs).map(([k, ps]) => {
+    const [team, who] = k.split('|');
+    const ben = ps.sort((a, b) => ((b.nm.c || 0) / 2 + (b.nm.t || 0)) - ((a.nm.c || 0) / 2 + (a.nm.t || 0))).slice(0, 3).map(p => {
+      const stats = ['td', ...((p.nm.c || 0) >= 2 ? ['rush_yds'] : []), ...((p.nm.t || 0) >= 1 ? ['rec', 'rec_yds'] : [])];
+      const td = p.s.anytime_td ? p.s.anytime_td[MEAN] : null;
+      const bets = iwBets(g, p.n, stats, null, p.d, null, td).map(r => ({...r, pp: null}));
+      return `<div class="iwp1"><div class="iwn"><b>${esc(p.n)}</b> <span class="small muted">${esc(p.pos)} · ${[(p.nm.c || 0) >= 2 ? `+${f1(p.nm.c)} car` : '', (p.nm.t || 0) >= 1 ? `+${f1(p.nm.t)} tgt` : ''].filter(Boolean).join(' · ')}</span></div>${bets.map(r => iwRow(p.n, r, 'projected')).join('') || '<div class="small muted">no prices at your books yet</div>'}</div>`; }).join('');
+    return `<div class="iwg"><div class="iwh"><b>${esc(who)}</b> <span class="small muted">${esc(team)}</span> <span class="iwst out">out</span> <span class="small muted">· in the projection already; who gains:</span></div>${ben}</div>`; }).join('');
+  return `<section class="panel iw" aria-label="Injury watch"><div class="phead"><h2>Injury watch <span class="exp3">experimental</span></h2><span class="small muted">backups’ prices at your books vs our chance</span></div>
+    ${q}${o}
+    <details class="how"><summary>How to read this</summary><p class="note"><b>Questionable</b> (ESPN): we simulate the game again with him sitting; next man up hands his share to the teammates with room to grow. <b>plays</b> = our chance with him in (this projection), <b>sits</b> = with him out. The books price a mix of the two until the inactives post about 90 minutes before kickoff, so a backup’s price between them is the bet on him sitting. <b>Out</b>: already out of the projection; the chance shown includes his absence. A cheaper number one of your books still posts (a line that hasn’t caught up) is listed under the main line when its edge is 10%+. Tracked on the Profit page as ‘Injury watch’ (experimental); not a tested rule.</p></details></section>`;
+}
 function gameDetailMain(g){
   const A = TM(g)[g.away], H = TM(g)[g.home];
   const side = (t, T, cls) => `<div class="side ${cls}"><span class="code">${esc(t)}</span><span class="pts">${f1(T.points)}</span><span class="muted small">Vegas ${f1(D.teams[g.id][t].vegas_implied)}</span></div>`;
@@ -1022,6 +1075,7 @@ function gameDetailMain(g){
         <table class="box">${rows.map(([l,f]) => `<tr><td>${f(A)}</td><td>${l}</td><td>${f(H)}</td></tr>`).join('')}</table></div>
     </div>
   </section>
+  ${injuryWatch(g)}
   <section class="panel" aria-label="Player projections">
     <div class="phead">
       <div class="seg" role="group" aria-label="Stat group">${Object.entries(GROUPS).map(([k,G]) => `<button data-group="${k}" aria-pressed="${k===state.group}">${G.label}</button>`).join('')}</div>

@@ -626,6 +626,82 @@ def american(p):
     return round(-100 * p / (1 - p)) if p >= 0.5 else round(100 * (1 - p) / p)
 
 
+# ---------------------------------------------------------------- injury watch: 'if he sits' scenarios (owner 2026-11-16)
+# Emmett Johnson / Kenneth Walker, KC @ ATL wk 10: Walker was questionable from Friday and inactive Sunday; the books priced the
+# chance he'd sit from Friday 2:40 PM (Johnson's anytime TD +488 -> +130, -150 by Saturday noon) while this model kept Walker 100%
+# in until the official inactives (Johnson 8% to clear 39.5 rushing yards; he ran for 101 and scored twice). For every RB / WR / TE
+# regular ESPN lists as Questionable (Doubtful / Out are already excluded), the game is simulated again with him sitting
+# (next man up hands out his share; the same post-fixes as the main run) and his teammates' gains are saved: matchups.json 'sit'
+# (the NFL page's Injury watch) and SITE/markets/sit_nfl.json (profit.tags src 'sit'). The main projection is unchanged.
+SIT_STATUS = ("Questionable",)
+SIT_SIMS = 10000
+SIT_MIN_TGT, SIT_MIN_CAR = 3.0, 6.0                 # the sitter's projected volume to be worth a scenario
+SIT_GAIN = dict(tgt=.8, car=1.5, td=.04)            # a teammate is listed when he gains this much
+
+
+def espn_status():
+    """{(team, normalized name): status} from ESPN's league-wide NFL injury feed (one request); {} on failure."""
+    import requests
+    try:
+        import books as B
+        r = requests.get("https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries", headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+        code, out = B.NAMES["nfl"], {}
+        for t in r.json().get("injuries", []):
+            tc = code.get(t.get("displayName"))
+            for i in t.get("injuries", []):
+                if tc:
+                    out[(tc, _norm((i.get("athlete") or {}).get("displayName")))] = i.get("status") or ""
+        return out
+    except Exception as e:                                         # noqa: BLE001 -- the injury watch is extra
+        print(f"  injury watch: ESPN injury feed skipped ({type(e).__name__}: {e})")
+        return {}
+
+
+def _player_stats(res, j):
+    pl = res["players"]
+    return dict(tgt=pl["tgt"][:, j], rec=pl["rec"][:, j], rec_yds=pl["rec_yds"][:, j], car=pl["car"][:, j],
+                rush_yds=pl["rush_yds"][:, j], tds=pl["rec_td"][:, j] + pl["rush_td"][:, j])
+
+
+def sit_scenario(model, params, fr, g, hi, ai, team, pid, BIAS, RECENT, rng, box):
+    """Teammates' numbers with player `pid` sitting: [{n, pos, base, sit, d}] for those who gain."""
+    keep = dict(getattr(fr, "nm_gain", None) or {})
+    try:
+        ti = PL.team_input(fr, g.game_id, team, overrides=lambda pl: pl[pl.player_id != pid])
+    finally:
+        fr.nm_gain = keep                                          # the main run's next-man-up chips stay as they were
+    hs, as_ = (ti, ai) if team == hi.team else (hi, ti)
+    h, a = simulate_game(model, params, hs, as_, n=SIT_SIMS, seed=(abs(hash(g.game_id + str(pid))) % 2**32))
+    res = h if team == hi.team else a
+    rb_targets(res, ti.players, rng)
+    apply_bias(res, BIAS, rng)
+    size_recal(res, rng)
+    td_scale(res, ti.players, rng)
+    out = []
+    for j, p in enumerate(ti.players):
+        if p.player_id == pid or p.pos not in ("RB", "WR", "TE"):
+            continue
+        s = _player_stats(res, j)
+        if max(s["tgt"].mean(), s["car"].mean()) < .5:
+            continue
+        rb_boost(p.pos, s)
+        role_recent(p.pos, s, RECENT.get(p.player_id), rng)
+        b = box.get((team, p.name))
+        bt = (lambda k: float(b[k].mean()) if b is not None and k in b else 0.0)
+        btd = float(b["anytime_td"].mean()) if b is not None and "anytime_td" in b else 0.0
+        std = float((s["tds"] > 0).mean())
+        gain = dict(tgt=float(s["tgt"].mean()) - bt("tgt"), car=float(s["car"].mean()) - bt("car"), td=std - btd)
+        if not any(gain[k] >= SIT_GAIN[k] for k in SIT_GAIN):
+            continue
+        summ = lambda x: dict(tgt=round(float(x["tgt"].mean()), 1), car=round(float(x["car"].mean()), 1), rec=round(float(x["rec"].mean()), 1),
+                              rec_yds=round(float(np.median(x["rec_yds"])), 1), rush_yds=round(float(np.median(x["rush_yds"])), 1))
+        out.append(dict(n=p.name, pos=p.pos, base=dict(summ(b) if b is not None else {}, td=round(btd, 3)),
+                        sit=dict(summ(s), td=round(std, 3)),
+                        d={st: compress(s[st], st) for st in ("rec", "rec_yds", "rush_yds", "tds")}))
+    out.sort(key=lambda x: -(x["sit"]["td"] - x["base"].get("td", 0)) - (x["sit"]["car"] - x["base"].get("car", 0)) / 20 - (x["sit"]["tgt"] - x["base"].get("tgt", 0)) / 10)
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--season", type=int)
@@ -711,7 +787,8 @@ def main():
         print(f"  bias fix skipped ({type(e).__name__}: {e})"); BIAS = {}
     print(f"  season-to-date bias fix (actual / projected): {BIAS}")
     brng = np.random.default_rng(int(week) * 7919)
-    RAWLAD, NMG = {}, {}
+    RAWLAD, NMG, SIT = {}, {}, {}
+    QST = espn_status() if not args.played and not args.blind else {}
     try:
         RECENT = recent_carries(con, season, week)
     except Exception as e:                                       # noqa: BLE001 -- never block a projection run
@@ -787,6 +864,23 @@ def main():
                 q = first[t.team][j]
                 prow.append(dict(game_id=g.game_id, team=t.team, opp=opp, player=p.name, player_id=p.player_id,
                                  pos=p.pos, stat="first_td", mean=q, p10=q, p25=q, median=q, p75=q, p90=q))
+        if QST:                                                  # injury watch: teammates' numbers if a questionable regular sits
+            for t_ in (hi, ai):
+                for p_ in t_.players:
+                    stt = QST.get((t_.team, _norm(p_.name)), "")
+                    b_ = box.get((t_.team, p_.name))
+                    if stt not in SIT_STATUS or p_.pos not in ("RB", "WR", "TE") or b_ is None:
+                        continue
+                    if b_["tgt"].mean() < SIT_MIN_TGT and b_["car"].mean() < SIT_MIN_CAR:
+                        continue
+                    try:
+                        ben = sit_scenario(model, params, fr, g, hi, ai, t_.team, p_.player_id, BIAS, RECENT, brng, box)
+                    except Exception as e:                       # noqa: BLE001 -- never block a projection run
+                        print(f"  injury watch {p_.name}: skipped ({type(e).__name__}: {e})"); continue
+                    if ben:
+                        SIT.setdefault(g.game_id, []).append(dict(team=t_.team, n=p_.name, pos=p_.pos, st=stt, ben=ben))
+                        print(f"  injury watch: {p_.name} ({t_.team} {p_.pos}, {stt}) -- if he sits: "
+                              + ", ".join(f"{x['n']} {x['base'].get('car', 0):.0f}->{x['sit']['car']:.0f} car / {x['base'].get('tgt', 0):.1f}->{x['sit']['tgt']:.1f} tgt, TD {x['base'].get('td', 0):.0%}->{x['sit']['td']:.0%}" for x in ben[:3]))
 
     os.makedirs(args.out, exist_ok=True)
     stem = os.path.join(args.out, f"{season}_wk{week:02d}")
@@ -830,8 +924,33 @@ def main():
         except Exception as e:
             print(f"  game summaries skipped ({type(e).__name__}: {e})")
     payload["nm"] = NMG                                          # next man up gains (report.py -> each player's 'nm')
+    payload["sit"] = SIT                                         # injury watch: 'if he sits' scenarios (report.py -> D.sit)
     with open(f"{stem}_matchups.json", "w") as f:
         json.dump(payload, f, separators=(",", ":"))
+    if not args.played and not args.blind:                       # profit.tags src 'sit': scenarios + the ruled-out regulars' gainers
+        try:
+            site = os.environ.get("SIM_SITE") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "site")
+            ko = dict(zip(todo.game_id, (pd.to_datetime(pd.to_datetime(todo.gameday).dt.strftime("%Y-%m-%d") + " " + todo.gametime.fillna("13:00").astype(str))
+                                         .dt.tz_localize("America/New_York").dt.tz_convert("UTC").astype(str))))
+            outg = {}
+            for k_, v_ in NMG.items():
+                gid_, team_, nm_ = k_.split("|", 2)
+                for w_ in v_.get("w") or []:
+                    outg.setdefault(gid_, {}).setdefault(f"{team_}|{w_}", []).append(dict(n=nm_, t=v_.get("t"), c=v_.get("c")))
+            fn = os.path.join(site, "markets", "sit_nfl.json")
+            old_s = (json.load(open(fn)).get("games") or {}) if os.path.exists(fn) else {}
+            now_ = pd.Timestamp.now(tz="UTC")
+            keep_ = {g_: v_ for g_, v_ in old_s.items() if g_ not in ko and pd.Timestamp(v_.get("start", now_)) > now_ - pd.Timedelta(hours=6)}
+            for gid_ in todo.game_id:
+                if pd.Timestamp(ko[gid_]) <= now_:                # started: keep its last pregame list
+                    if gid_ in old_s:
+                        keep_[gid_] = old_s[gid_]
+                    continue
+                keep_[gid_] = dict(start=ko[gid_], sit=SIT.get(gid_, []), out=outg.get(gid_, {}))
+            os.makedirs(os.path.dirname(fn), exist_ok=True)
+            json.dump(dict(fetched=now_.isoformat(), games=keep_), open(fn, "w"), separators=(",", ":"))
+        except Exception as e:                                   # noqa: BLE001 -- tracking only
+            print(f"  sit_nfl.json skipped ({type(e).__name__}: {e})")
     print_box(teams, players)
     print(f"\nWrote {stem}_players.csv and {stem}_teams.csv")
 

@@ -734,6 +734,9 @@ def tag_label(e):
         return "Ladder: Novig rung 10%+ under the other books’ fair (experimental)"
     if e.get("src") == "dout":
         return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
+    if e.get("src") == "sit":
+        return ("Injury watch: teammates who gain from a ruled-out regular, TD + main-line overs at your books (experimental)" if e.get("grp") == "out"
+                else "Injury watch: backups of a questionable regular, TD + main-line overs at your books, priced if he sits (experimental)")
     if e.get("src") == "pp1t3":
         return "Goal: PP1 top-3-usage forwards, every price at your books (experimental; its study had look-ahead, expected to lose)"
     if e.get("src") == "arch3":
@@ -1060,6 +1063,55 @@ def tags():
                                                                       first=now.isoformat(), p=fair, m=fair, start=st,
                                                                       dout=", ".join(v for vs in (x.get("out") or {}).values() for v in vs)))
                     e.setdefault("start", st)
+        # NFL injury watch (owner 2026-11-16, Emmett Johnson / Kenneth Walker wk 10): project.py -> markets/sit_nfl.json. grp 'q' =
+        # the top 3 teammates who gain if a questionable regular sits: anytime TD and the main-line over of each stat he gains
+        # (carries -> rush yds, targets -> catches + rec yds), first sighting, best of Hard Rock / Novig / Kalshi, p = our chance
+        # if he sits (the scenario), pp = with him in; grp 'out' = the teammates who gain from a regular already ruled out (next
+        # man up), p = our chance from the props file. Tracked, off the bets feed; not a tested rule.
+        if sport == "nfl":
+            try:
+                SI = json.load(open(os.path.join(site, "markets", "sit_nfl.json"))).get("games", {})
+            except (OSError, ValueError):
+                SI = {}
+            pov = lambda d, l: (None if not d else float(np.asarray(d["p"])[(d["o"] + np.arange(len(d["p"]))) > l].sum()) if "p" in d
+                                else float((np.asarray(d["q"]) > l).mean()))
+            TXT = {"td": "TD", "rush_yds": "rush yds", "rec_yds": "rec yds", "rec": "receptions"}
+
+            def sit_log(grp, gid, st, nm, kind, p, pp, who, gain):
+                e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(_norm(nm)) or {}).get(kind) or {}
+                bo = [(dec(v[0]), b, v[0]) for b, v in (e_.get("o") or {}).items() if b in ("Hard Rock", "Novig", "Kalshi") and isinstance(v, list) and v and v[0] is not None]
+                if not bo or (kind != "td" and e_.get("l") is None):
+                    return
+                l = None if kind == "td" else float(e_["l"])
+                pr = p(l) if callable(p) else p
+                if pr is None:
+                    return
+                _, bk, o = max(bo)
+                pin = e_.get("pin") or {}
+                bet = "TD" if kind == "td" else f"over {l:g} {TXT[kind]}"
+                e = log.setdefault(f"sit|{grp}|{gid}|{_norm(nm)}|{bet}", dict(sport="nfl", src="sit", grp=grp, gid=gid, name=_norm(nm), bet=bet, book=bk, o=o,
+                                                                         first=now.isoformat(), p=round(pr, 4), m=pin.get("o") if pin.get("l", l) == l else None,
+                                                                         pp=(round(pp(l) if callable(pp) else pp, 4) if pp is not None else e_.get("p")), who=who, gain=gain, start=st))
+                e.setdefault("start", st)
+            for gid, x in SI.items():
+                st = starts.get(str(gid)) or x.get("start")
+                if not st or PL.when(st) <= now:
+                    continue
+                for s_ in x.get("sit") or []:
+                    for b in (s_.get("ben") or [])[:3]:
+                        d_, sit_, base_ = b.get("d") or {}, b.get("sit") or {}, b.get("base") or {}
+                        kinds = ["td"] + (["rush_yds"] if sit_.get("car", 0) - base_.get("car", 0) >= 1.5 else []) \
+                            + (["rec", "rec_yds"] if sit_.get("tgt", 0) - base_.get("tgt", 0) >= .8 else [])
+                        for k_ in kinds:
+                            p_ = sit_.get("td") if k_ == "td" else (lambda l, k_=k_: pov(d_.get(k_), l))
+                            sit_log("q", gid, st, b["n"], k_, p_, base_.get("td") if k_ == "td" else None, s_.get("n"),
+                                    dict(car=round(sit_.get("car", 0) - base_.get("car", 0), 1), tgt=round(sit_.get("tgt", 0) - base_.get("tgt", 0), 1)))
+                for who, bens in (x.get("out") or {}).items():
+                    for b in sorted(bens, key=lambda b: -((b.get("c") or 0) / 2 + (b.get("t") or 0)))[:3]:
+                        kinds = ["td"] + (["rush_yds"] if (b.get("c") or 0) >= 2 else []) + (["rec", "rec_yds"] if (b.get("t") or 0) >= 1 else [])
+                        for k_ in kinds:
+                            e_ = (((PR.get("props") or {}).get(str(gid)) or {}).get(_norm(b["n"])) or {}).get(k_) or {}
+                            sit_log("out", gid, st, b["n"], k_, e_.get("p"), None, who.split("|", 1)[-1], dict(car=b.get("c"), tgt=b.get("t")))
         # NHL anytime-goal fair without Pinnacle (owner 2026-10-31, research/nhl_atg_fourbook.py): the four-book fair
         # (sharp.four_book, leaving out the book bet) beside the old exchanges' median / 1.03, on the same props; chance =
         # 50/50 with ours as the page does without Pinnacle; each first sighting with edge 5-40% at the owner's best book
@@ -1897,7 +1949,7 @@ def feed_data():
     tseen = set()                                            # the same prop at the same book under several tags: counted once
     for e in sorted((json.load(open(tp)) if os.path.exists(tp) else {}).values(), key=lambda e: str(e.get("first"))):
         d0 = _et_day(e.get("start") or e["first"])
-        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb", "pp1t3", "arch3") or (e.get("src") == "tl" and e.get("grp") == "fed"):
+        if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb", "pp1t3", "arch3", "sit") or (e.get("src") == "tl" and e.get("grp") == "fed"):
             continue
         dd = dec(e["o"])
         tk = (e["sport"], str(e.get("gid")), e.get("name"), e.get("bet"), e.get("book"))

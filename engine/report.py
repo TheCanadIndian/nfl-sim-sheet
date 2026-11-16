@@ -292,7 +292,7 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
                 generated=dt.datetime.now().strftime("%b %d, %Y %I:%M %p").replace(" 0", " "),
                 games=games, teams=team_rows, players=plist, props=props_list, dvp=match["dvp"],
                 rz=match.get("rz"), defout=match.get("defout", {}), agree=agreement(stem, players, dists), alt=alt_model(stem, match),
-                sgp=sgp, spot=match.get("spot", {}), fmap=field_map(db, games, int(season), int(week), proj=_fm_proj(players)) if db else {},
+                sgp=sgp, spot=match.get("spot", {}), sit=match.get("sit", {}), fmap=field_map(db, games, int(season), int(week), proj=_fm_proj(players)) if db else {},
                 subtitle=subtitle, nav=nav or [])
     # NaN is not valid JSON: one missing value (e.g. a player with no depth label) would
     # stop the page's script entirely. Turn every NaN into null and refuse any that slip by.
@@ -390,6 +390,22 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
 .sl-meter{height:12px;border-radius:6px;background:color-mix(in srgb,var(--bad) 55%,transparent);overflow:hidden}
 .sl-meter i{display:block;height:100%;background:var(--good)}
 .lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
+.iw .iwg{padding:10px 0;border-top:1px solid var(--faint)}
+.iw .iwg:first-of-type{border-top:0;padding-top:4px}
+.iwh{margin-bottom:4px}
+.iwst{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(242,193,78,.16);color:var(--c-te);margin-left:4px}
+.iwst.out{background:rgba(240,72,72,.16);color:var(--r2)}
+.iwp1{margin:6px 0 10px 12px}
+.iwn{margin-bottom:2px}
+.iwr{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;font-size:13px;padding:2px 0}
+.iwb{min-width:118px;font-weight:600}
+.iwc{color:var(--muted)}
+.iwc.s{color:var(--ink)}
+.iwi{color:var(--muted);font-size:12px}
+.iwe{font-weight:700;color:var(--muted)}
+.iwe.up{color:var(--good)}
+.iwe.dn{color:var(--r2)}
+@media (max-width:520px){.iwp1{margin-left:2px}.iwb{min-width:0;flex-basis:100%}.iwr{gap:0 10px;padding:3px 0}}
 /* degree shades: text */
 .g1{color:var(--g1)!important} .g2{color:var(--g2)!important} .g3{color:var(--g3)!important}
 .r1{color:var(--r1)!important} .r2{color:var(--r2)!important} .r3{color:var(--r3)!important}
