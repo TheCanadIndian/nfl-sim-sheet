@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-16",
 "lock": "2026-11-17T00:00:00+00:00",
-"frozen_at": "2026-11-16T21:57:22.980Z",
+"frozen_at": "2026-11-16T22:02:13.632Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -107,71 +107,6 @@
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909996",
-"start": "2026-11-17T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "zach edey",
-"lab": "Zach Edey 10+ reb",
-"p": 0.265,
-"price": 300,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909998",
-"start": "2026-11-17T00:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "kevin durant",
-"lab": "Kevin Durant 6+ reb",
-"p": 0.4359,
-"price": 130,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910000",
-"start": "2026-11-17T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 4+ ast",
-"p": 0.4071,
-"price": 150,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.04702,
-"d": 23,
-"first": "2026-11-17T00:00:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
 "card": "Confluence parlays (experimental)",
 "tier": "3 legs",
 "legs": [
@@ -210,8 +145,8 @@
 "name": "zach edey",
 "lab": "Zach Edey over 7.5 rebounds",
 "p": 0.456,
-"price": 120,
-"book": "Hard Rock",
+"price": 115,
+"book": "Novig",
 "f": [
 "matchup",
 "rotation",
@@ -225,7 +160,7 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0276
+"edge": 0.0043
 },
 {
 "gid": "401909999",
@@ -254,7 +189,126 @@
 }
 ],
 "p": 0.10669,
-"d": 9.841,
+"d": 9.618,
+"first": "2026-11-17T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
+"legs": [
+{
+"gid": "401909998",
+"start": "2026-11-17T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "jabari smith",
+"lab": "Jabari Smith Jr. over 2.5 threes",
+"p": 0.3924,
+"price": 155,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0013
+},
+{
+"gid": "401910000",
+"start": "2026-11-17T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson over 3.5 assists",
+"p": 0.4039,
+"price": 150,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0177
+},
+{
+"gid": "401909997",
+"start": "2026-11-17T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe over 5.5 rebounds",
+"p": 0.5757,
+"price": -120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0475
+},
+{
+"gid": "401909996",
+"start": "2026-11-17T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "zach edey",
+"lab": "Zach Edey over 7.5 rebounds",
+"p": 0.456,
+"price": 115,
+"book": "Novig",
+"f": [
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"matchup",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0043
+}
+],
+"p": 0.04161,
+"d": 25.128,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
@@ -355,55 +409,35 @@
 ]
 },
 {
-"gid": "401910000",
-"start": "2026-11-17T01:00Z",
-"kind": "ast",
+"gid": "401909995",
+"start": "2026-11-17T00:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "jeremiah fears",
-"lab": "Jeremiah Fears over 7.5 assists",
-"p": 0.3066,
-"fair": 0.3123,
-"price": 220,
-"book": "Hard Rock",
+"line": 3.5,
+"name": "donovan mitchell",
+"lab": "Donovan Mitchell over 3.5 threes",
+"p": 0.3654,
+"fair": 0.3669,
+"price": 173,
+"book": "Kalshi",
 "sport": "nba",
-"edge": -0.019,
+"edge": -0.0023,
 "v": [
 "Pinnacle odds drop",
-"consensus line up",
-"one rung above the main line (6.5)"
+"consensus odds drop",
+"one rung above the main line (2.5)"
 ]
 }
 ],
-"p": 0.05328,
-"d": 24.0,
-"first": "2026-11-17T00:30:00+00:00",
+"p": 0.06259,
+"d": 20.475,
+"first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
 {
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401910000",
-"start": "2026-11-17T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "jeremiah fears",
-"lab": "Jeremiah Fears over 7.5 assists",
-"p": 0.3066,
-"fair": 0.3123,
-"price": 220,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": -0.019,
-"v": [
-"Pinnacle odds drop",
-"consensus line up",
-"one rung above the main line (6.5)"
-]
-},
 {
 "gid": "401909995",
 "start": "2026-11-17T00:00Z",
@@ -412,21 +446,41 @@
 "line": 3.5,
 "name": "donovan mitchell",
 "lab": "Donovan Mitchell over 3.5 threes",
-"p": 0.3439,
-"fair": 0.3442,
-"price": 185,
-"book": "Hard Rock",
+"p": 0.3654,
+"fair": 0.3669,
+"price": 173,
+"book": "Kalshi",
 "sport": "nba",
-"edge": -0.0199,
+"edge": -0.0023,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
 "one rung above the main line (2.5)"
 ]
+},
+{
+"gid": "401910000",
+"start": "2026-11-17T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "jeremiah fears",
+"lab": "Jeremiah Fears over 7.5 assists",
+"p": 0.3066,
+"fair": 0.3123,
+"price": 220,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.019,
+"v": [
+"Pinnacle odds drop",
+"consensus line up",
+"one rung above the main line (6.5)"
+]
 }
 ],
-"p": 0.10749,
-"d": 9.12,
+"p": 0.11458,
+"d": 8.736,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
@@ -509,24 +563,24 @@
 "main": true
 },
 {
-"gid": "401909996",
+"gid": "401909995",
 "start": "2026-11-17T00:00:00+00:00",
 "kind": "reb",
 "side": "o",
-"line": 9.5,
-"name": "zach edey",
-"lab": "Zach Edey over 9.5 rebounds",
-"p": 0.2751,
-"price": 300,
-"book": "Hard Rock",
+"line": 3.5,
+"name": "norman powell",
+"lab": "Norman Powell over 3.5 rebounds",
+"p": 0.396,
+"price": 167,
+"book": "Novig",
 "sport": "nba",
-"edge": 0.1004,
-"fair": 0.2549,
+"edge": 0.0572,
+"fair": 0.4059,
 "main": false
 }
 ],
-"p": 0.04877,
-"d": 33.75,
+"p": 0.0702,
+"d": 22.528,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
@@ -591,21 +645,21 @@
 {
 "gid": "401909996",
 "start": "2026-11-17T00:00:00+00:00",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
+"line": 5.5,
 "name": "jaylen wells",
-"lab": "Jaylen Wells over 3.5 assists",
-"p": 0.095,
-"fair": 0.095,
-"ours": 0.1428,
-"price": 841,
+"lab": "Jaylen Wells over 5.5 rebounds",
+"p": 0.105,
+"fair": 0.105,
+"ours": 0.1727,
+"price": 685,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3434,
+"edge": 0.3557,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 14% vs 11% with the fee (+34%)",
+"Kalshi 6+ rebounds: our chance 17% vs 13% with the fee (+36%)",
 "game total 232.5",
 "projected 31 min"
 ]
@@ -633,170 +687,8 @@
 ]
 }
 ],
-"p": 0.00997,
-"d": 80.55,
-"first": "2026-11-17T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909996",
-"start": "2026-11-17T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 4.5,
-"name": "jaylen wells",
-"lab": "Jaylen Wells over 4.5 threes",
-"p": 0.075,
-"fair": 0.075,
-"ours": 0.1051,
-"price": 1074,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2343,
-"grp": "k15n",
-"v": [
-"Kalshi 5+ threes: our chance 11% vs 9% with the fee (+23%)",
-"game total 232.5",
-"projected 31 min"
-]
-},
-{
-"gid": "401909998",
-"start": "2026-11-17T00:30:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "andrew wiggins",
-"lab": "Andrew Wiggins over 3.5 assists",
-"p": 0.095,
-"fair": 0.095,
-"ours": 0.1302,
-"price": 841,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2248,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ assists: our chance 13% vs 11% with the fee (+22%)",
-"game total 231.5",
-"projected 25 min"
-]
-}
-],
-"p": 0.00712,
-"d": 110.473,
-"first": "2026-11-17T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909998",
-"start": "2026-11-17T00:30:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "andrew wiggins",
-"lab": "Andrew Wiggins over 3.5 assists",
-"p": 0.095,
-"fair": 0.095,
-"ours": 0.1302,
-"price": 841,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2248,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ assists: our chance 13% vs 11% with the fee (+22%)",
-"game total 231.5",
-"projected 25 min"
-]
-},
-{
-"gid": "401909996",
-"start": "2026-11-17T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "alex sarr",
-"lab": "Alex Sarr over 3.5 assists",
-"p": 0.115,
-"fair": 0.115,
-"ours": 0.1733,
-"price": 685,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.3604,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ assists: our chance 17% vs 13% with the fee (+36%)",
-"game total 232.5",
-"projected 26 min"
-]
-}
-],
-"p": 0.01093,
-"d": 73.868,
-"first": "2026-11-17T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909996",
-"start": "2026-11-17T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "jerami grant",
-"lab": "Jerami Grant over 5.5 rebounds",
-"p": 0.085,
-"fair": 0.085,
-"ours": 0.1158,
-"price": 945,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2096,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ rebounds: our chance 12% vs 10% with the fee (+21%)",
-"game total 232.5",
-"projected 27 min"
-]
-},
-{
-"gid": "401909995",
-"start": "2026-11-17T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "peyton watson",
-"lab": "Peyton Watson over 5.5 assists",
-"p": 0.035,
-"fair": 0.035,
-"ours": 0.0641,
-"price": 1775,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2021,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ assists: our chance 6% vs 5% with the fee (+20%)",
-"game total 241.5",
-"projected 27 min"
-]
-}
-],
-"p": 0.00298,
-"d": 195.938,
+"p": 0.01102,
+"d": 67.196,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 }
