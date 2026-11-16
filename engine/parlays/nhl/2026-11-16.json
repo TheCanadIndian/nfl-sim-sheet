@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-16",
 "lock": "2026-11-17T00:30:00+00:00",
-"frozen_at": "2026-11-16T22:56:28.716Z",
+"frozen_at": "2026-11-16T23:01:30.630Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -173,13 +173,13 @@
 "line": 2.5,
 "name": "pavel dorofeyev",
 "lab": "Pavel Dorofeyev 3+ shots",
-"p": 0.5077,
-"price": -113,
+"p": 0.5064,
+"price": -108,
 "book": "Novig"
 }
 ],
-"p": 0.23549,
-"d": 4.246,
+"p": 0.23486,
+"d": 4.258,
 "first": "2026-11-17T00:30:00+00:00",
 "res": null
 },
@@ -219,6 +219,40 @@
 },
 {
 "card": "Same-game combos (experimental)",
+"tier": "3+ shots + goal",
+"legs": [
+{
+"gid": "2026020332",
+"start": "2026-11-17T02:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "clayton keller",
+"lab": "Clayton Keller to score",
+"p": 0.406,
+"price": 133,
+"book": "Novig"
+},
+{
+"gid": "2026020332",
+"start": "2026-11-17T02:30:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "clayton keller",
+"lab": "Clayton Keller 3+ shots",
+"p": 0.591,
+"price": -163,
+"book": "Novig"
+}
+],
+"p": 0.31461,
+"d": 3.179,
+"first": "2026-11-17T02:30:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
 "tier": "Goal + win",
 "legs": [
 {
@@ -230,7 +264,7 @@
 "name": "vincent trocheck",
 "lab": "Vincent Trocheck to score",
 "p": 0.3479,
-"price": 190,
+"price": 186,
 "book": "Novig"
 },
 {
@@ -261,44 +295,10 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "clayton keller",
-"lab": "Clayton Keller to score",
-"p": 0.406,
-"price": 133,
-"book": "Novig"
-},
-{
-"gid": "2026020332",
-"start": "2026-11-17T02:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "clayton keller",
-"lab": "Clayton Keller 3+ shots",
-"p": 0.5316,
-"price": -163,
-"book": "Novig"
-}
-],
-"p": 0.28297,
-"d": 3.534,
-"first": "2026-11-17T02:30:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "3+ shots + goal",
-"legs": [
-{
-"gid": "2026020332",
-"start": "2026-11-17T02:30:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
 "name": "vincent trocheck",
 "lab": "Vincent Trocheck to score",
 "p": 0.3479,
-"price": 190,
+"price": 186,
 "book": "Novig"
 },
 {
@@ -362,11 +362,45 @@
 "start": "2026-11-17T00:30:00Z",
 "kind": "sog",
 "side": "u",
-"line": 2.5,
-"name": "cole caufield",
-"lab": "Cole Caufield under 2.5 shots",
-"p": 0.453,
-"price": 138,
+"line": 1.5,
+"name": "zachary bolduc",
+"lab": "Zachary Bolduc under 1.5 shots",
+"p": 0.54,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "2026020332",
+"start": "2026-11-17T02:30:00Z",
+"kind": "spread",
+"side": "away",
+"line": 1.5,
+"name": null,
+"lab": "VAN +1.5",
+"p": 0.4856,
+"price": 115,
+"book": "Hard Rock"
+}
+],
+"p": 0.26221,
+"d": 4.3,
+"first": "2026-11-17T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020331",
+"start": "2026-11-17T00:30:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "adam fox",
+"lab": "Adam Fox under 1.5 shots",
+"p": 0.4765,
+"price": 127,
 "book": "Novig"
 },
 {
@@ -382,8 +416,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.24238,
-"d": 4.855,
+"p": 0.25498,
+"d": 4.631,
 "first": "2026-11-17T00:30:00+00:00",
 "res": null
 },
@@ -397,10 +431,10 @@
 "kind": "sog",
 "side": "u",
 "line": 1.5,
-"name": "zachary bolduc",
-"lab": "Zachary Bolduc under 1.5 shots",
-"p": 0.54,
-"price": 100,
+"name": "adam fox",
+"lab": "Adam Fox under 1.5 shots",
+"p": 0.4765,
+"price": 127,
 "book": "Novig"
 },
 {
@@ -416,76 +450,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.15705,
-"d": 7.7,
-"first": "2026-11-17T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020331",
-"start": "2026-11-17T00:30:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "NYR moneyline",
-"p": 0.5003,
-"price": 100,
-"book": "Novig"
-},
-{
-"gid": "2026020332",
-"start": "2026-11-17T02:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "brock boeser",
-"lab": "Brock Boeser over 1.5 shots",
-"p": 0.5428,
-"price": -110,
-"book": "ProphetX"
-}
-],
-"p": 0.27157,
-"d": 3.818,
-"first": "2026-11-17T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020331",
-"start": "2026-11-17T00:30:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "NYR moneyline",
-"p": 0.5003,
-"price": 100,
-"book": "Novig"
-},
-{
-"gid": "2026020332",
-"start": "2026-11-17T02:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "jake debrusk",
-"lab": "Jake Debrusk over 2.5 shots",
-"p": 0.3953,
-"price": 153,
-"book": "Novig"
-}
-],
-"p": 0.19778,
-"d": 5.06,
+"p": 0.1386,
+"d": 8.739,
 "first": "2026-11-17T00:30:00+00:00",
 "res": null
 }

@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-16",
 "lock": "2026-11-17T00:00:00+00:00",
-"frozen_at": "2026-11-16T22:56:30.910Z",
+"frozen_at": "2026-11-16T23:01:33.112Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -42,8 +42,8 @@
 "name": "zion williamson",
 "lab": "Zion Williamson 4+ ast",
 "p": 0.4117,
-"price": 150,
-"book": "Hard Rock",
+"price": 141,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -53,7 +53,7 @@
 }
 ],
 "p": 0.1807,
-"d": 6.175,
+"d": 5.953,
 "first": "2026-11-17T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -104,6 +104,70 @@
 "d": 5.483,
 "first": "2026-11-17T00:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909996",
+"start": "2026-11-17T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 10+ reb",
+"p": 0.3144,
+"price": 225,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909998",
+"start": "2026-11-17T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "kevin durant",
+"lab": "Kevin Durant 6+ reb",
+"p": 0.4448,
+"price": 122,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910000",
+"start": "2026-11-17T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.4117,
+"price": 141,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.05759,
+"d": 17.388,
+"first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
 {
@@ -174,34 +238,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401910000",
-"start": "2026-11-17T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "zion williamson",
-"lab": "Zion Williamson over 3.5 assists",
-"p": 0.4088,
-"price": 150,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"our model above fair",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0293
-},
-{
 "gid": "401909996",
 "start": "2026-11-17T00:00Z",
 "kind": "reb",
@@ -226,10 +262,35 @@
 ],
 "sport": "nba",
 "edge": 0.0103
+},
+{
+"gid": "401909997",
+"start": "2026-11-17T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jaylen brown",
+"lab": "Jaylen Brown over 1.5 threes",
+"p": 0.4705,
+"price": 113,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0023
 }
 ],
-"p": 0.18756,
-"d": 5.375,
+"p": 0.21587,
+"d": 4.579,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 },
@@ -414,19 +475,73 @@
 "start": "2026-11-17T00:00:00+00:00",
 "kind": "ast",
 "side": "o",
+"line": 3.5,
+"name": "jaylen wells",
+"lab": "Jaylen Wells over 3.5 assists",
+"p": 0.095,
+"fair": 0.095,
+"ours": 0.1389,
+"price": 841,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3067,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ assists: our chance 14% vs 11% with the fee (+31%)",
+"game total 232.5",
+"projected 31 min"
+]
+},
+{
+"gid": "401909995",
+"start": "2026-11-17T00:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "meleek thomas",
+"lab": "Meleek Thomas over 3.5 threes",
+"p": 0.215,
+"fair": 0.215,
+"ours": 0.2712,
+"price": 331,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.1689,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ threes: our chance 27% vs 23% with the fee (+17%)",
+"game total 241.5",
+"projected 25 min"
+]
+}
+],
+"p": 0.02042,
+"d": 40.557,
+"first": "2026-11-17T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909996",
+"start": "2026-11-17T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
 "line": 1.5,
 "name": "zach edey",
 "lab": "Zach Edey over 1.5 assists",
-"p": 0.235,
-"fair": 0.235,
+"p": 0.24,
+"fair": 0.24,
 "ours": 0.3335,
-"price": 296,
+"price": 280,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3194,
+"edge": 0.2675,
 "grp": "k15n",
 "v": [
-"Kalshi 2+ assists: our chance 33% vs 25% with the fee (+32%)",
+"Kalshi 2+ assists: our chance 33% vs 26% with the fee (+27%)",
 "game total 232.5",
 "projected 24 min"
 ]
@@ -454,62 +569,8 @@
 ]
 }
 ],
-"p": 0.05052,
-"d": 17.068,
-"first": "2026-11-17T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909996",
-"start": "2026-11-17T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "alex sarr",
-"lab": "Alex Sarr over 3.5 assists",
-"p": 0.115,
-"fair": 0.115,
-"ours": 0.1671,
-"price": 685,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.3117,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ assists: our chance 17% vs 13% with the fee (+31%)",
-"game total 232.5",
-"projected 26 min"
-]
-},
-{
-"gid": "401909995",
-"start": "2026-11-17T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "meleek thomas",
-"lab": "Meleek Thomas over 3.5 threes",
-"p": 0.215,
-"fair": 0.215,
-"ours": 0.2712,
-"price": 331,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1689,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ threes: our chance 27% vs 23% with the fee (+17%)",
-"game total 241.5",
-"projected 25 min"
-]
-}
-],
-"p": 0.02473,
-"d": 33.834,
+"p": 0.0516,
+"d": 16.378,
 "first": "2026-11-17T00:00:00+00:00",
 "res": null
 }
