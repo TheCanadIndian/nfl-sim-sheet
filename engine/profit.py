@@ -89,6 +89,21 @@ def ladder_rows(date, mk, R, GM):
                 po = 1 / (1 + math.exp(-(.21 + .70 * math.log(cl(mid(r)) / (1 - cl(mid(r)))) + .25 * math.log(cl(po) / (1 - cl(po))))))
             out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"), t0=r.get("start"),
                             bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4)))
+        # one rung per ladder (owner 2026-11-17 'Yes' after research/nfl_ladder_candidates.py, ledger 96): the LOWEST rung 2+ above the
+        # 50/50 rung with spread 6c or less and mid 3-97c; unseen wk 6-10 +18.2% at the ask on 588 ladders (fee-in +12.1%, halves
+        # +18 / +18), hit 3.8 pts over the mid vs non-candidate ladders -2.0. Forward record from 2026-11-17; recheck 2026-12-08.
+        if date >= "2026-11-17":
+            one = next((r for r in rs[i0 + 2:] if r["yes_ask"] - r["yes_bid"] <= .06 and .03 <= mid(r) <= .97), None)
+            y = None if one is None else GM.outcome("nfl", one, R)
+            if y is not None:
+                ya = one["yes_ask"]; cy = ya + FEE["kalshi"] * ya * (1 - ya)
+                po = (one.get("ours") or {}).get("vegas")                # same market-anchored chance as the rows above (ladAnchor)
+                if po is not None:
+                    cl = lambda v: min(max(v, .002), .998)
+                    po = round(1 / (1 + math.exp(-(.21 + .70 * math.log(cl(mid(one)) / (1 - cl(mid(one)))) + .25 * math.log(cl(po) / (1 - cl(po)))))), 4)
+                out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates · one rung per ladder, lowest 2+ above 50/50 (experimental)",
+                                src="kalshi", kind=k, title=one.get("title"), t0=one.get("start"), bet="YES", cost=round(cy, 4), q=round(mid(one), 4),
+                                p=po, won=int(y), pnl=round(y / cy - 1, 4)))
     # receiving yards, one rung per player (owner 2026-11-03 after research/nfl_ladders.py market: Kalshi KXNFLRECYDS Oct 2025 - wk 9,
     # one rung per player +38% on 778 at 5%+ walk-forward, -5 / +13 / +77% by period; catches / rushing / passing lost): every Kalshi
     # receiving-yards rung, spread 5c or less, mid 3-97c; chance = Kalshi's mid recalibrated (logit .0711 + .9303 logit mid) moved .35
