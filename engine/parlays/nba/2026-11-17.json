@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-17",
 "lock": "2026-11-18T00:30:00+00:00",
-"frozen_at": "2026-11-17T19:57:30.343Z",
+"frozen_at": "2026-11-17T20:11:04.972Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,51 @@
 ],
 "final_at": "2026-11-17T23:30:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401910006",
+"start": "2026-11-18T03:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 8+ reb",
+"p": 0.2651,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 9.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 10+ ast",
+"p": 0.3639,
+"price": 190,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.09647,
+"d": 11.6,
+"first": "2026-11-18T03:30:00+00:00",
+"pick": "core",
+"res": null
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -57,18 +102,18 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu 3+ threes",
-"p": 0.2532,
-"price": 300,
+"line": 6.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball 7+ ast",
+"p": 0.4454,
+"price": 130,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -77,15 +122,32 @@
 ]
 },
 {
-"gid": "401910006",
-"start": "2026-11-18T03:30Z",
-"kind": "reb",
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "ace bailey",
-"lab": "Ace Bailey 8+ reb",
-"p": 0.2651,
-"price": 300,
+"line": 1.5,
+"name": "john collins",
+"lab": "John Collins 2+ threes",
+"p": 0.3837,
+"price": 156,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+},
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 9.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 10+ ast",
+"p": 0.3639,
+"price": 190,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -94,8 +156,8 @@
 ]
 }
 ],
-"p": 0.06714,
-"d": 16,
+"p": 0.06219,
+"d": 17.075,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -161,6 +223,114 @@
 "res": null
 },
 {
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
+"legs": [
+{
+"gid": "401910003",
+"start": "2026-11-18T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu over 4.5 rebounds",
+"p": 0.4518,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0207
+},
+{
+"gid": "401910006",
+"start": "2026-11-18T03:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "ace bailey",
+"lab": "Ace Bailey over 5.5 rebounds",
+"p": 0.5233,
+"price": -105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0267
+},
+{
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham over 5.5 rebounds",
+"p": 0.4059,
+"price": 147,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0157
+},
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic over 8.5 assists",
+"p": 0.4701,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0117
+}
+],
+"p": 0.04511,
+"d": 23.328,
+"first": "2026-11-18T01:00:00+00:00",
+"res": null
+},
+{
 "card": "Sharp move parlays (experimental)",
 "tier": "3 legs",
 "legs": [
@@ -203,27 +373,28 @@
 ]
 },
 {
-"gid": "401910006",
-"start": "2026-11-18T03:30Z",
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
 "kind": "reb",
 "side": "o",
-"line": 6.5,
-"name": "ace bailey",
-"lab": "Ace Bailey over 6.5 rebounds",
-"p": 0.3882,
-"fair": 0.3857,
-"price": 170,
+"line": 4.5,
+"name": "sion james",
+"lab": "Sion James over 4.5 rebounds",
+"p": 0.3831,
+"fair": 0.3848,
+"price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.048,
+"edge": 0.0727,
 "v": [
 "consensus odds drop",
-"one rung above the main line (5.5)"
+"one rung above the main line (3.5)",
+"LC"
 ]
 }
 ],
-"p": 0.0613,
-"d": 22.302,
+"p": 0.06115,
+"d": 23.128,
 "first": "2026-11-18T00:30:00+00:00",
 "res": null
 },
@@ -232,6 +403,26 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "sion james",
+"lab": "Sion James over 4.5 rebounds",
+"p": 0.3831,
+"fair": 0.3848,
+"price": 180,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0727,
+"v": [
+"consensus odds drop",
+"one rung above the main line (3.5)",
+"LC"
+]
+},
+{
 "gid": "401910006",
 "start": "2026-11-18T03:30Z",
 "kind": "reb",
@@ -249,30 +440,11 @@
 "consensus odds drop",
 "one rung above the main line (5.5)"
 ]
-},
-{
-"gid": "401910003",
-"start": "2026-11-18T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "deni avdija",
-"lab": "Deni Avdija over 7.5 rebounds",
-"p": 0.3231,
-"fair": 0.3269,
-"price": 218,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.0275,
-"v": [
-"consensus line up",
-"one rung above the main line (6.5)"
-]
 }
 ],
-"p": 0.12609,
-"d": 8.586,
-"first": "2026-11-18T01:00:00+00:00",
+"p": 0.14842,
+"d": 7.56,
+"first": "2026-11-18T03:30:00+00:00",
 "res": null
 },
 {
@@ -298,17 +470,17 @@
 {
 "gid": "401910005",
 "start": "2026-11-18T04:00:00+00:00",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 7.5,
-"name": "sandro mamukelashvili",
-"lab": "Sandro Mamukelashvili over 7.5 rebounds",
-"p": 0.4276,
-"price": 156,
-"book": "Novig",
+"line": 3.5,
+"name": "naz reid",
+"lab": "Naz Reid over 3.5 assists",
+"p": 0.2766,
+"price": 300,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0946,
-"fair": 0.4334,
+"edge": 0.1062,
+"fair": 0.2829,
 "main": false
 },
 {
@@ -328,8 +500,8 @@
 "main": false
 }
 ],
-"p": 0.07664,
-"d": 18.88,
+"p": 0.04958,
+"d": 29.5,
 "first": "2026-11-18T00:30:00+00:00",
 "res": null
 }
