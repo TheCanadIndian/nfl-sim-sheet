@@ -13,3 +13,5 @@
 - **2026-11-16 record:** 10 parlays, 1 won, legs 3 of 12 vs 5.3 priced, -80%. Still variance-sized, but nothing has beaten its price yet. Keep stakes at the small unit and don't chase. A day with no bet is fine.
 - **2026-11-16 Monday slates** start after 6 PM ET, so the 11:30 run has nothing to bet on Mondays.
 - **2026-11-16 evening:** skipped the Monday slate. Edges under 25% price are alt longshots or stale; the main-line +4..+6% ones are fair price + model nudge, inside the over bias. No edge, no bet.
+- **2026-11-17 evening:** skipped Tuesday again. Biggest NBA edges were Hard Rock claims after a Pinnacle move, and the NHL top was a Colton SOG leg where our chance sat 4 pts under the fair. Where our model is below the fair, the 'edge' is just the book's price. Require our chance >= the fair before trusting an edge.
+

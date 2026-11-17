@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-17",
 "lock": "2026-11-18T00:30:00+00:00",
-"frozen_at": "2026-11-17T22:35:02.059Z",
+"frozen_at": "2026-11-17T22:40:57.512Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 2.5,
 "name": "toumani camara",
 "lab": "Toumani Camara 3+ ast",
-"p": 0.2713,
+"p": 0.2689,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -50,7 +50,7 @@
 ]
 }
 ],
-"p": 0.09123,
+"p": 0.09042,
 "d": 12.8,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
@@ -68,7 +68,7 @@
 "line": 2.5,
 "name": "toumani camara",
 "lab": "Toumani Camara 3+ ast",
-"p": 0.2713,
+"p": 0.2689,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -96,7 +96,7 @@
 ]
 }
 ],
-"p": 0.10777,
+"p": 0.10682,
 "d": 10.8,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
@@ -111,17 +111,17 @@
 "start": "2026-11-18T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "damian lillard",
-"lab": "Damian Lillard 5+ reb",
-"p": 0.2772,
-"price": 240,
+"line": 6.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels 7+ reb",
+"p": 0.3689,
+"price": 185,
 "book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -159,8 +159,8 @@
 ]
 }
 ],
-"p": 0.03702,
-"d": 29.376,
+"p": 0.04927,
+"d": 24.624,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -174,34 +174,34 @@
 "start": "2026-11-18T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "damian lillard",
-"lab": "Damian Lillard 5+ reb",
-"p": 0.2772,
-"price": 240,
+"line": 6.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels 7+ reb",
+"p": 0.3689,
+"price": 185,
 "book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
 "gid": "401910004",
 "start": "2026-11-18T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 1.5,
-"name": "john collins",
-"lab": "John Collins 2+ threes",
-"p": 0.3949,
-"price": 153,
-"book": "Novig",
+"line": 5.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins 6+ ast",
+"p": 0.3764,
+"price": 180,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"price"
 ]
 },
 {
@@ -222,8 +222,55 @@
 ]
 }
 ],
-"p": 0.04248,
-"d": 23.569,
+"p": 0.0539,
+"d": 21.865,
+"first": "2026-11-18T01:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910003",
+"start": "2026-11-18T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 4.5 assists",
+"p": 0.4298,
+"price": 170,
+"book": "Hard Rock",
+"f": [
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.1606
+},
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes over 2.5 assists",
+"p": 0.5588,
+"price": -110,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"sport": "nba",
+"edge": 0.0667
+}
+],
+"p": 0.24017,
+"d": 5.155,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
@@ -236,26 +283,28 @@
 "start": "2026-11-18T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "sidy cissoko",
-"lab": "Sidy Cissoko over 3.5 rebounds",
-"p": 0.4778,
-"price": 125,
+"line": 5.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 5.5 rebounds",
+"p": 0.507,
+"price": 110,
 "book": "Hard Rock",
 "f": [
-"matchup",
+"usage",
 "rotation",
 "game"
 ],
 "v": [
-"matchup",
+"usage",
 "rotation",
 "game",
+"our model above fair",
+"consensus up",
 "lc",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0666
+"edge": 0.0656
 },
 {
 "gid": "401910005",
@@ -283,130 +332,120 @@
 "edge": 0.0272
 }
 ],
-"p": 0.18868,
-"d": 5.85,
+"p": 0.20021,
+"d": 5.46,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
 {
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
 "legs": [
-{
-"gid": "401910002",
-"start": "2026-11-18T00:30Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "rj barrett",
-"lab": "RJ Barrett over 6.5 rebounds",
-"p": 0.383,
-"fair": 0.3859,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": -0.0615,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (5.5)"
-]
-},
 {
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "sidy cissoko",
-"lab": "Sidy Cissoko over 4.5 rebounds",
-"p": 0.3142,
-"fair": 0.3174,
-"price": 250,
+"line": 5.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 5.5 rebounds",
+"p": 0.507,
+"price": 110,
 "book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0999,
-"v": [
-"Pinnacle odds drop",
-"one rung above the main line (3.5)",
-"soft matchup",
-"LC"
-]
-}
+"f": [
+"usage",
+"rotation",
+"game"
 ],
-"p": 0.12248,
-"d": 8.575,
-"first": "2026-11-18T00:30:00+00:00",
-"res": null
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0656
 },
 {
-"card": "Sharp move parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401910002",
-"start": "2026-11-18T00:30Z",
-"kind": "reb",
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 6.5,
-"name": "rj barrett",
-"lab": "RJ Barrett over 6.5 rebounds",
-"p": 0.383,
-"fair": 0.3859,
-"price": 145,
+"line": 2.5,
+"name": "naz reid",
+"lab": "Naz Reid over 2.5 threes",
+"p": 0.3949,
+"price": 160,
 "book": "Hard Rock",
-"sport": "nba",
-"edge": -0.0615,
+"f": [
+"usage",
+"rotation"
+],
 "v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (5.5)"
-]
-},
-{
-"gid": "401910003",
-"start": "2026-11-18T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "sidy cissoko",
-"lab": "Sidy Cissoko over 4.5 rebounds",
-"p": 0.3142,
-"fair": 0.3174,
-"price": 250,
-"book": "Hard Rock",
+"usage",
+"rotation",
+"our model above fair",
+"consensus up",
+"pinnacle up"
+],
 "sport": "nba",
-"edge": 0.0999,
-"v": [
-"Pinnacle odds drop",
-"one rung above the main line (3.5)",
-"soft matchup",
-"LC"
-]
+"edge": 0.0272
 },
 {
 "gid": "401910004",
 "start": "2026-11-18T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
+"line": 4.5,
 "name": "daniss jenkins",
-"lab": "Daniss Jenkins over 5.5 assists",
-"p": 0.3745,
-"fair": 0.3745,
-"price": 180,
+"lab": "Daniss Jenkins over 4.5 assists",
+"p": 0.5394,
+"price": -110,
 "book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0486,
+"f": [
+"usage",
+"rotation"
+],
 "v": [
-"Pinnacle odds drop",
-"one rung above the main line (4.5)"
-]
+"usage",
+"rotation",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0287
+},
+{
+"gid": "401910006",
+"start": "2026-11-18T03:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "ace bailey",
+"lab": "Ace Bailey over 5.5 rebounds",
+"p": 0.525,
+"price": -105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0293
 }
 ],
-"p": 0.04587,
-"d": 24.01,
-"first": "2026-11-18T00:30:00+00:00",
+"p": 0.0567,
+"d": 20.351,
+"first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
 {
@@ -418,15 +457,15 @@
 "start": "2026-11-18T01:00:00+00:00",
 "kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday over 4.5 assists",
-"p": 0.4387,
-"price": 170,
+"line": 2.5,
+"name": "scoot henderson",
+"lab": "Scoot Henderson over 2.5 assists",
+"p": 0.4178,
+"price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1844,
-"fair": 0.4421,
+"edge": 0.1698,
+"fair": 0.423,
 "main": true
 },
 {
@@ -446,8 +485,8 @@
 "main": false
 }
 ],
-"p": 0.17342,
-"d": 7.56,
+"p": 0.16516,
+"d": 7.84,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
@@ -460,15 +499,15 @@
 "start": "2026-11-18T01:00:00+00:00",
 "kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday over 4.5 assists",
-"p": 0.4387,
-"price": 170,
+"line": 2.5,
+"name": "scoot henderson",
+"lab": "Scoot Henderson over 2.5 assists",
+"p": 0.4178,
+"price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1844,
-"fair": 0.4421,
+"edge": 0.1698,
+"fair": 0.423,
 "main": true
 },
 {
@@ -504,8 +543,8 @@
 "main": false
 }
 ],
-"p": 0.07627,
-"d": 18.22,
+"p": 0.07264,
+"d": 18.894,
 "first": "2026-11-18T00:30:00+00:00",
 "res": null
 }
