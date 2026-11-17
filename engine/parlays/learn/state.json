@@ -1,5 +1,5 @@
 {
-"updated": "2026-11-17T13:54:40+00:00",
+"updated": "2026-11-17T14:10:51+00:00",
 "rows": 1167,
 "live_rows": 861,
 "segments": [
@@ -553,21 +553,21 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 Hard Rock",
-"n": 11,
-"ret": -0.2623,
-"h1": 0.143,
-"h2": -0.6,
-"z": -0.84,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 threes",
 "n": 11,
 "ret": 0.1939,
 "h1": 0.2225,
 "h2": 0.1775,
 "z": 0.55,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 matchup",
+"n": 11,
+"ret": -0.4264,
+"h1": -1.0,
+"h2": -0.0987,
+"z": -1.64,
 "status": "Learning"
 },
 {
@@ -580,12 +580,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 matchup",
+"seg": "NHL \u00b7 Hard Rock",
 "n": 11,
-"ret": -0.4264,
-"h1": -1.0,
-"h2": -0.0987,
-"z": -1.64,
+"ret": -0.2623,
+"h1": 0.143,
+"h2": -0.6,
+"z": -0.84,
 "status": "Learning"
 },
 {
@@ -625,15 +625,6 @@
 "status": "Learning"
 },
 {
-"seg": "NHL \u00b7 3+ shots \u00b7 edge 10-20%",
-"n": 9,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
-"z": 0.0,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 assists \u00b7 coin flip",
 "n": 9,
 "ret": -0.2933,
@@ -643,12 +634,12 @@
 "status": "Learning"
 },
 {
-"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
+"seg": "NHL \u00b7 3+ shots \u00b7 edge 10-20%",
 "n": 9,
 "ret": -1.0,
 "h1": -1.0,
 "h2": -1.0,
-"z": -9.0,
+"z": 0.0,
 "status": "Learning"
 },
 {
@@ -658,6 +649,15 @@
 "h1": 0.624,
 "h2": 1.6025,
 "z": 2.71,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
+"n": 9,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": -9.0,
 "status": "Learning"
 },
 {
@@ -688,21 +688,21 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 threes \u00b7 coin flip",
-"n": 7,
-"ret": 0.4689,
-"h1": 0.02,
-"h2": 0.6485,
-"z": 1.22,
-"status": "Learning"
-},
-{
 "seg": "NBA \u00b7 threes \u00b7 edge 5-10%",
 "n": 7,
 "ret": 0.0227,
 "h1": -0.05,
 "h2": 0.0773,
 "z": 0.05,
+"status": "Learning"
+},
+{
+"seg": "NBA \u00b7 threes \u00b7 coin flip",
+"n": 7,
+"ret": 0.4689,
+"h1": 0.02,
+"h2": 0.6485,
+"z": 1.22,
 "status": "Learning"
 },
 {
@@ -724,6 +724,15 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 rebounds \u00b7 edge 10-20%",
+"n": 5,
+"ret": -1.0,
+"h1": -1.0,
+"h2": -1.0,
+"z": 0.0,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 points",
 "n": 5,
 "ret": 0.2257,
@@ -742,21 +751,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 rebounds \u00b7 edge 10-20%",
-"n": 5,
-"ret": -1.0,
-"h1": -1.0,
-"h2": -1.0,
-"z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 threes \u00b7 edge 10-20%",
+"seg": "NBA \u00b7 4 reasons",
 "n": 4,
-"ret": 0.4933,
-"h1": 0.02,
-"h2": 0.9667,
-"z": 0.98,
+"ret": -0.475,
+"h1": -1.0,
+"h2": 0.05,
+"z": -0.9,
 "status": "Learning"
 },
 {
@@ -769,6 +769,15 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 threes \u00b7 plus money",
+"n": 4,
+"ret": -0.2875,
+"h1": 0.425,
+"h2": -1.0,
+"z": -0.4,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 assists \u00b7 plus money",
 "n": 4,
 "ret": 0.3375,
@@ -778,21 +787,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 4 reasons",
+"seg": "NBA \u00b7 threes \u00b7 edge 10-20%",
 "n": 4,
-"ret": -0.475,
-"h1": -1.0,
-"h2": 0.05,
-"z": -0.9,
-"status": "Learning"
-},
-{
-"seg": "NBA \u00b7 threes \u00b7 plus money",
-"n": 4,
-"ret": -0.2875,
-"h1": 0.425,
-"h2": -1.0,
-"z": -0.4,
+"ret": 0.4933,
+"h1": 0.02,
+"h2": 0.9667,
+"z": 0.98,
 "status": "Learning"
 },
 {
@@ -832,6 +832,15 @@
 "status": "Learning"
 },
 {
+"seg": "NBA \u00b7 0 reasons",
+"n": 2,
+"ret": -0.0833,
+"h1": -0.0833,
+"h2": null,
+"z": -0.09,
+"status": "Learning"
+},
+{
 "seg": "NHL \u00b7 2+ shots \u00b7 edge 10-20%",
 "n": 2,
 "ret": 0.075,
@@ -850,12 +859,12 @@
 "status": "Learning"
 },
 {
-"seg": "NBA \u00b7 0 reasons",
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 20-40%",
 "n": 2,
-"ret": -0.0833,
-"h1": -0.0833,
-"h2": null,
-"z": -0.09,
+"ret": 2.57,
+"h1": -1.0,
+"h2": 6.14,
+"z": 0.72,
 "status": "Learning"
 },
 {
@@ -865,15 +874,6 @@
 "h1": -1.0,
 "h2": -1.0,
 "z": 0.0,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 edge 20-40%",
-"n": 2,
-"ret": 2.57,
-"h1": -1.0,
-"h2": 6.14,
-"z": 0.72,
 "status": "Learning"
 },
 {
