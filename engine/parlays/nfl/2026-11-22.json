@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-17T22:28:11.948Z",
+"frozen_at": "2026-11-17T22:35:00.368Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,40 +10,6 @@
 ],
 "final_at": "2026-11-22T16:00:00+00:00",
 "parlays": [
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_11_MIA_BUF",
-"start": "2026-11-22T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "dalton kincaid",
-"lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5288,
-"price": 130,
-"book": "Hard Rock"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "brian thomas",
-"lab": "Brian Thomas over 1.5 receptions",
-"p": 0.3902,
-"price": 170,
-"book": "Novig"
-}
-],
-"p": 0.20634,
-"d": 6.21,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "core"
-},
 {
 "card": "Same-game parlays",
 "tier": "Most likely \u00b7 5 legs",
@@ -22231,6 +22197,141 @@
 "p": 0.0385,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dalton kincaid",
+"lab": "Dalton Kincaid over 2.5 receptions",
+"p": 0.5057,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1631,
+"fair": 0.4723,
+"main": true
+},
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "tony pollard",
+"lab": "Tony Pollard over 2.5 receptions",
+"p": 0.4809,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1062,
+"fair": 0.5,
+"main": true
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.388,
+"price": 174,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0631,
+"fair": 0.3432,
+"main": true
+}
+],
+"p": 0.09436,
+"d": 14.495,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dalton kincaid",
+"lab": "Dalton Kincaid over 2.5 receptions",
+"p": 0.5057,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1631,
+"fair": 0.4723,
+"main": true
+}
+],
+"p": 0.5057,
+"d": 2.3,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "tony pollard",
+"lab": "Tony Pollard over 2.5 receptions",
+"p": 0.4809,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1062,
+"fair": 0.5,
+"main": true
+}
+],
+"p": 0.4809,
+"d": 2.3,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.388,
+"price": 174,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0631,
+"fair": 0.3432,
+"main": true
+}
+],
+"p": 0.388,
+"d": 2.74,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
 }
 ],
 "graded": false
