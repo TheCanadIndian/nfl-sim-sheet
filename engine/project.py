@@ -148,7 +148,8 @@ def espn_rosters(teams):
     return out, qb1
 
 
-_ESPN_QB = {}        # team -> starting QB's full name from ESPN's official game roster (filled by espn_out)
+_ESPN_QB = {}        # team -> QB flagged 'starter' on ESPN's game roster (filled by espn_out). Log note only: pregame the
+                     # flag is the team's previous game's starters (2026-11-16 audit, research/qb_starter_check.py)
 
 
 def espn_out(todo):
@@ -188,8 +189,8 @@ def espn_out(todo):
                                       f"/competitors/{c['team']['id']}/roster", headers=H, timeout=20).json()
                 except Exception:
                     continue
-                # the official starting QB (game roster 'starter', position 8 = QB): beats the schedule and depth chart
-                # (2026 wk 6: Caleb Williams back from injury, Tanner McKee for Jalen Hurts)
+                # game roster 'starter' QB (position 8): kept for a log note only -- pregame it still shows last game's
+                # starter (2026 wk 7-10: NYG, BAL x2, PHI, CLE, MIN wrong); future_actives picks the QB from the depth chart
                 sq = [x for x in ro.get("entries", []) if x.get("starter") and not x.get("didNotPlay")
                       and str((x.get("position") or {}).get("$ref", "")).split("/positions/")[-1].split("?")[0] == "8"]
                 if len(sq) == 1:
@@ -284,7 +285,7 @@ def future_actives(con, todo, season, week, overrides):
             print(f"  back from injury / reserve (active on ESPN now): " + ", ".join(f"{n} ({t})" for t, n in zip(back.team, back.full_name)))
             active_roster = pd.concat([active_roster, back.assign(status="ACT")])
             back_ids = set(back.player_id)            # in the lineup even when the last games and the weekly depth chart predate the return
-    depth = pd.read_sql(f"""SELECT team, gsis_id AS player_id, pos_abb, pos_rank FROM depth_charts
+    depth = pd.read_sql(f"""SELECT team, gsis_id AS player_id, player_name, pos_abb, pos_rank FROM depth_charts
                             WHERE season={season}
                               AND dt=(SELECT MAX(dt) FROM depth_charts WHERE season={season})""", con)
     depth_qbs = depth[depth.pos_abb == "QB"]   # full QB ladder, for replacing an injured starter
@@ -327,29 +328,40 @@ def future_actives(con, todo, season, week, overrides):
     out_inj = inj[inj.report_status.astype(str).str.match(r"(Out|Doubtful)")]
 
     rows, qbs, notes = [], {}, []
-    # the schedule file's QB can lag a change (2026 wk 6: it still listed Drew Lock for SEA after Sam Darnold returned
-    # and started weeks 3-5). When the latest depth chart's QB1 and the QB who started the team's last game agree on
-    # someone else, use them.
-    qb1 = depth_qbs.sort_values("pos_rank").drop_duplicates("team").set_index("team").player_id.to_dict()
+    # Starting QB (owner 2026-11-16, after LAC @ BAL wk 10; research/qb_starter_check.py, ledger 95): the depth chart's
+    # QB1 who isn't ruled out, else the QB who started the team's last game, else the schedule file's QB. Depth QB1 first
+    # was right 97.6% of 2025 team-games (last starter 92.2%) and 269 of 272 in 2026 wk 1-9 (the old order: 262).
+    # ESPN's game-roster 'starter' flag is NOT used: pregame it is the team's previous game's starters (wrong for NYG wk 7,
+    # BAL wk 8, PHI wk 9, CLE / MIN / BAL wk 10). A depth-chart QB1 the weekly roster file still has on another team (a
+    # trade: Jacoby Brissett ARI -> BAL) is taken; ESPN's live team roster, when it came back, must have him healthy.
     pq = pd.read_sql(f"""SELECT season, week, posteam AS team, passer_player_id AS player_id, COUNT(*) AS n FROM plays
                          WHERE qb_dropback = 1 AND passer_player_id IS NOT NULL AND season >= {season - 1}
                          GROUP BY 1, 2, 3, 4""", con)
     pq = pq[(pq.season < season) | (pq.week < week)].sort_values(["season", "week", "n"])
     last_starter = pq.groupby("team").tail(1).set_index("team").player_id.to_dict()
+    outs = set(out_inj.player_id)
+    nm_of = lambda pid: (lambda s: s.iloc[0] if len(s) else str(pid))(names.loc[names.player_id == pid, "full_name"])
     for g in todo.itertuples():
         for team, qb_id in ((g.home_team, g.home_qb_id), (g.away_team, g.away_qb_id)):
-            d1, ls = qb1.get(team), last_starter.get(team)
-            if team in _ESPN_QB:                                    # ESPN's official starter, posted ~90 min before kickoff
-                m = roster[(roster.team == team) & (roster.full_name.map(_norm) == _norm(_ESPN_QB[team]))]
-                if len(m) and m.player_id.iloc[0] != qb_id:
-                    notes.append(f"{team}: starting QB -> {m.full_name.iloc[0]} (ESPN official starter; schedule had {qb_id})")
-                    qb_id = m.player_id.iloc[0]
-                    if qb_id not in set(active_roster.player_id):
-                        active_roster = pd.concat([active_roster, m.assign(status="ACT")])
-            if d1 is not None and d1 == ls and d1 != qb_id and d1 not in set(out_inj.player_id):
-                nm = names.loc[names.player_id == d1, "full_name"]
-                notes.append(f"{team}: starting QB -> {nm.iloc[0] if len(nm) else d1} (depth chart QB1 and last game's starter; schedule had {qb_id})")
-                qb_id = d1
+            dq = depth_qbs[(depth_qbs.team == team) & ~depth_qbs.player_id.isin(outs)].sort_values("pos_rank")
+            if team in live:
+                ok = [healthy(team, n) for n in dq.player_name.fillna("")]
+                if len(dq) and not ok[0]:
+                    notes.append(f"{team}: depth chart QB1 {dq.player_name.iloc[0]} skipped (not on ESPN's live roster, or injured there)")
+                dq = dq[ok]
+            ls = last_starter.get(team)
+            if len(dq):
+                pick, why = dq.player_id.iloc[0], "depth chart QB1"
+            elif ls is not None and ls not in outs:
+                pick, why = ls, "last game's starter"
+            else:
+                pick, why = qb_id, "schedule"
+            if not pd.isna(pick) and pick != qb_id:
+                notes.append(f"{team}: starting QB -> {nm_of(pick)} ({why}; schedule had {nm_of(qb_id)})")
+                qb_id = pick
+            if team in _ESPN_QB and _norm(_ESPN_QB[team]) != _norm(nm_of(qb_id)):
+                notes.append(f"{team}: ESPN's game roster still flags {_ESPN_QB[team]} as starter (pregame that flag is "
+                             f"last game's starter; not used)")
             ts = snaps[(snaps.team == team) & ((snaps.season < season) | (snaps.week < week))]
             recent = ts.drop_duplicates("game_id").sort_values(["season", "week"]).game_id.iloc[-RECENT_GAMES:]
             cand = set(ts[ts.game_id.isin(recent)].player_id) | set(depth[depth.team == team].player_id) | (back_ids & set(roster[roster.team == team].player_id))
