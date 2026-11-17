@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-17",
 "lock": "2026-11-18T01:00:00+00:00",
-"frozen_at": "2026-11-17T16:26:32.522Z",
+"frozen_at": "2026-11-17T17:02:29.535Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,32 +17,31 @@
 {
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "toumani camara",
-"lab": "Toumani Camara 3+ threes",
-"p": 0.4125,
-"price": 173,
-"book": "Kalshi",
+"line": 5.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 6+ reb",
+"p": 0.4477,
+"price": 130,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
-"gid": "401910005",
-"start": "2026-11-18T04:00Z",
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ ast",
-"p": 0.3126,
-"price": 240,
-"book": "Kalshi",
+"line": 5.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins 6+ ast",
+"p": 0.3901,
+"price": 180,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
@@ -50,8 +49,8 @@
 ]
 }
 ],
-"p": 0.12896,
-"d": 9.282,
+"p": 0.17467,
+"d": 6.44,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -68,38 +67,96 @@
 "line": 2.5,
 "name": "toumani camara",
 "lab": "Toumani Camara 3+ threes",
-"p": 0.4125,
-"price": 173,
-"book": "Kalshi",
+"p": 0.346,
+"price": 190,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
-"gid": "401910005",
-"start": "2026-11-18T04:00Z",
-"kind": "fg3m",
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "sandro mamukelashvili",
-"lab": "Sandro Mamukelashvili 3+ threes",
-"p": 0.3071,
-"price": 218,
-"book": "Kalshi",
+"line": 5.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins 6+ ast",
+"p": 0.3901,
+"price": 180,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"price"
 ]
 }
 ],
-"p": 0.12667,
-"d": 8.681,
+"p": 0.13498,
+"d": 8.12,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910003",
+"start": "2026-11-18T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "sidy cissoko",
+"lab": "Sidy Cissoko over 3.5 rebounds",
+"p": 0.4728,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"matchup",
+"rotation",
+"game",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0557
+},
+{
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham over 5.5 rebounds",
+"p": 0.4037,
+"price": 147,
+"book": "Novig",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0078
+}
+],
+"p": 0.19087,
+"d": 5.557,
+"first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
 {
@@ -116,10 +173,77 @@
 "lab": "Quentin Grimes over 3.5 assists",
 "p": 0.3126,
 "fair": 0.311,
-"price": 240,
+"price": 229,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.0629,
+"edge": 0.0286,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+},
+{
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama over 3.5 assists",
+"p": 0.3936,
+"fair": 0.3981,
+"price": 155,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0038,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+}
+],
+"p": 0.12381,
+"d": 8.389,
+"first": "2026-11-18T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes over 3.5 assists",
+"p": 0.3126,
+"fair": 0.311,
+"price": 229,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.0286,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+},
+{
+"gid": "401910004",
+"start": "2026-11-18T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama over 3.5 assists",
+"p": 0.3936,
+"fair": 0.3981,
+"price": 155,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0038,
 "v": [
 "consensus odds drop",
 "one rung above the main line (2.5)"
@@ -128,25 +252,25 @@
 {
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "damian lillard",
-"lab": "Damian Lillard over 3.5 threes",
-"p": 0.4046,
-"fair": 0.4082,
-"price": 140,
+"line": 6.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball over 6.5 assists",
+"p": 0.4159,
+"fair": 0.4131,
+"price": 130,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.029,
+"edge": -0.0434,
 "v": [
-"consensus odds drop",
-"one rung above the main line (2.5)"
+"consensus line up",
+"one rung above the main line (5.5)"
 ]
 }
 ],
-"p": 0.12695,
-"d": 8.16,
+"p": 0.05115,
+"d": 19.296,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 }
