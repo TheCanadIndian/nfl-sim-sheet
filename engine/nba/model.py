@@ -304,6 +304,28 @@ MIN_NORM = True        # each team's expected minutes add up to a full game (48 
 TEAM_MIN = 241.0       # 240 + a little overtime
 MIN_CAP = 42.0
 P_PLAY_CAL = (0.48, 1.27)                 # logit calibration of p_play to available players (see _priors)
+# Role minutes (2026-11-17, owner 'Sure' after research/nba_minutes_fix.py variant P + the skeptic's review
+# research/team/reviews/nba_minutes_fix.md, ledger 97; goal: projected box scores accurate to the actual box score). After the
+# team's minutes are scaled: started his own last game and under 32 min x1.055, 32+ min x0.950, didn't start his last game and
+# 15+ min x0.943; under 15 min off the bench and anyone the lineup rule moved into / out of the five unchanged (the skeptic: the
+# fit's x0.917 overcut live, they played 0.975; movers would have undone part of MOVE_IN / MOVE_OUT). Needs rows' `last_start`
+# (nba/project.py; None counts as 0); rows without it (played-only backtest, research callers) are unchanged.
+USE_ROLE_MIN = True     # ship check through this code, live mode, today's lineup rule: research/nba_minutes_ship_check.py
+ROLE_MIN = dict(start=1.055, big=0.950, bench=0.943, deep=1.0, big_at=32.0, deep_at=15.0)
+
+
+def role_minutes(x):
+    """Per-row minutes factor for USE_ROLE_MIN (see ROLE_MIN); x.e_min already team-scaled."""
+    if "last_start" not in x:
+        return np.ones(len(x))
+    R = ROLE_MIN
+    e = x.e_min.astype(float).to_numpy()
+    ls = pd.to_numeric(x["last_start"], errors="coerce").fillna(0).to_numpy()
+    f = np.where(e >= R["big_at"], R["big"], np.where(ls == 1, R["start"], np.where(e >= R["deep_at"], R["bench"], R["deep"])))
+    if "lineup" in x:
+        moved = np.array([isinstance(t, str) and t.split("|")[0] in ("in", "out") for t in x["lineup"]])
+        f = np.where(moved, 1.0, f)
+    return f
 
 
 def team_minutes(x, live=False):
@@ -335,6 +357,8 @@ def project(fr, rows, mode="vegas", n=4000, seed=7, live=False):
     x = rows.copy()
     if MIN_NORM:
         x["e_min"] = team_minutes(x, live)
+    if USE_ROLE_MIN:
+        x["e_min"] = x.e_min * role_minutes(x)
     em = x.e_min.to_numpy()
     mu = {}
     for c in STATS:
