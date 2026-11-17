@@ -1,147 +1,128 @@
 {
 "sport": "nba",
 "date": "2026-11-17",
-"lock": "2026-11-18T01:00:00+00:00",
-"frozen_at": "2026-11-17T12:53:57.752Z",
+"lock": "2026-11-18T00:30:00+00:00",
+"frozen_at": "2026-11-17T13:10:08.244Z",
 "books": [
 "Novig",
 "Kalshi",
 "Hard Rock"
 ],
-"final_at": "2026-11-18T00:00:00+00:00",
+"final_at": "2026-11-17T23:30:00+00:00",
 "parlays": [
 {
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401910003",
-"start": "2026-11-18T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "toumani camara",
-"lab": "Toumani Camara 3+ threes",
-"p": 0.401,
-"price": 203,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401910004",
-"start": "2026-11-18T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "john collins",
-"lab": "John Collins 2+ threes",
-"p": 0.3879,
-"price": 145,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-}
-],
-"p": 0.15554,
-"d": 7.423,
-"first": "2026-11-18T01:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401910003",
-"start": "2026-11-18T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu 4+ ast",
-"p": 0.3636,
-"price": 223,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401910004",
-"start": "2026-11-18T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "john collins",
-"lab": "John Collins 2+ threes",
-"p": 0.3879,
-"price": 145,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-}
-],
-"p": 0.14106,
-"d": 7.914,
-"first": "2026-11-18T01:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
+"card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes over 3.5 assists",
+"p": 0.3145,
+"fair": 0.311,
+"price": 220,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0065,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+},
+{
 "gid": "401910003",
-"start": "2026-11-18T01:00:00+00:00",
+"start": "2026-11-18T01:00Z",
 "kind": "fg3m",
 "side": "o",
 "line": 3.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball over 3.5 threes",
-"p": 0.5381,
-"price": 135,
+"name": "damian lillard",
+"lab": "Damian Lillard over 3.5 threes",
+"p": 0.4022,
+"fair": 0.4082,
+"price": 140,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2645,
-"fair": 0.5461,
-"main": true
-},
-{
-"gid": "401910005",
-"start": "2026-11-18T04:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "sandro mamukelashvili",
-"lab": "Sandro Mamukelashvili over 7.5 rebounds",
-"p": 0.4254,
-"price": 156,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0892,
-"fair": 0.4334,
-"main": false
+"edge": -0.0346,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
 }
 ],
-"p": 0.22891,
-"d": 6.016,
+"p": 0.12695,
+"d": 7.68,
 "first": "2026-11-18T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes over 3.5 assists",
+"p": 0.3145,
+"fair": 0.311,
+"price": 220,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0065,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+},
+{
+"gid": "401910003",
+"start": "2026-11-18T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "damian lillard",
+"lab": "Damian Lillard over 3.5 threes",
+"p": 0.4022,
+"fair": 0.4082,
+"price": 140,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0346,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+},
+{
+"gid": "401910002",
+"start": "2026-11-18T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson over 7.5 assists",
+"p": 0.372,
+"fair": 0.378,
+"price": 153,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0587,
+"v": [
+"consensus odds drop",
+"one rung above the main line (6.5)"
+]
+}
+],
+"p": 0.04799,
+"d": 19.43,
+"first": "2026-11-18T00:30:00+00:00",
 "res": null
 }
 ],
