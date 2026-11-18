@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-18T17:25:44.997Z",
+"frozen_at": "2026-11-18T17:43:13.423Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -54,53 +54,6 @@
 "p": 0.10847,
 "d": 10.725,
 "first": "2026-11-19T00:30:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401910007",
-"start": "2026-11-19T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "cedric coward",
-"lab": "Cedric Coward 3+ threes",
-"p": 0.37,
-"price": 174,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910012",
-"start": "2026-11-19T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "immanuel quickley",
-"lab": "Immanuel Quickley 7+ ast",
-"p": 0.3301,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.12214,
-"d": 9.042,
-"first": "2026-11-19T00:00:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -166,7 +119,6 @@
 "p": 0.04994,
 "d": 21.461,
 "first": "2026-11-19T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -231,6 +183,88 @@
 "d": 17.407,
 "first": "2026-11-19T00:00:00+00:00",
 "pick": "longshot",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401910012",
+"start": "2026-11-19T00:30Z",
+"kind": "spread",
+"side": "home",
+"line": -6.5,
+"name": null,
+"lab": "TOR \u22126.5",
+"p": 0.5023,
+"price": 127,
+"book": "Novig"
+},
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jordan poole",
+"lab": "Jordan Poole over 1.5 threes",
+"p": 0.5727,
+"price": -105,
+"book": "Hard Rock"
+}
+],
+"p": 0.28766,
+"d": 4.432,
+"first": "2026-11-19T00:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401910010",
+"start": "2026-11-19T00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "PHI moneyline",
+"p": 0.5315,
+"price": -102,
+"book": "Novig"
+},
+{
+"gid": "401910012",
+"start": "2026-11-19T00:30Z",
+"kind": "spread",
+"side": "home",
+"line": -6.5,
+"name": null,
+"lab": "TOR \u22126.5",
+"p": 0.5023,
+"price": 127,
+"book": "Novig"
+},
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jordan poole",
+"lab": "Jordan Poole over 1.5 threes",
+"p": 0.5727,
+"price": -105,
+"book": "Hard Rock"
+}
+],
+"p": 0.15289,
+"d": 8.777,
+"first": "2026-11-19T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -661,7 +695,7 @@
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
+"tier": "3 legs",
 "legs": [
 {
 "gid": "401910016",
@@ -694,65 +728,27 @@
 "edge": 0.1495,
 "fair": 0.2849,
 "main": false
-}
-],
-"p": 0.11668,
-"d": 12.4,
-"first": "2026-11-19T01:00:00+00:00",
-"res": null
 },
 {
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910007",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "reb",
+"gid": "401910012",
+"start": "2026-11-19T00:30:00+00:00",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "jaylen wells",
-"lab": "Jaylen Wells over 3.5 rebounds",
-"p": 0.295,
-"fair": 0.295,
-"ours": 0.4024,
-"price": 208,
-"book": "Kalshi",
+"line": 6.5,
+"name": "immanuel quickley",
+"lab": "Immanuel Quickley over 6.5 assists",
+"p": 0.3301,
+"price": 230,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2383,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ rebounds: our chance 40% vs 32% with the fee (+24%)",
-"game total 237.5",
-"projected 31 min"
-]
-},
-{
-"gid": "401910009",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 11.5,
-"name": "bam adebayo",
-"lab": "Bam Adebayo over 11.5 rebounds",
-"p": 0.17,
-"fair": 0.17,
-"ours": 0.2435,
-"price": 398,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2128,
-"grp": "k15n",
-"v": [
-"Kalshi 12+ rebounds: our chance 24% vs 20% with the fee (+21%)",
-"game total 236.5",
-"projected 32 min"
-]
+"edge": 0.0893,
+"fair": 0.3301,
+"main": false
 }
 ],
-"p": 0.05015,
-"d": 15.338,
-"first": "2026-11-19T00:00:00+00:00",
+"p": 0.03852,
+"d": 40.92,
+"first": "2026-11-19T00:30:00+00:00",
 "res": null
 }
 ],
