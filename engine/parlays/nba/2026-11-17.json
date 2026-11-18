@@ -1,8 +1,8 @@
 {
 "sport": "nba",
 "date": "2026-11-17",
-"lock": "2026-11-18T01:00:00+00:00",
-"frozen_at": "2026-11-18T00:03:41.545Z",
+"lock": "2026-11-18T00:30:00+00:00",
+"frozen_at": "2026-11-18T00:11:17.100Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,20 +15,21 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401910004",
+"gid": "401910003",
 "start": "2026-11-18T01:00Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "daniss jenkins",
-"lab": "Daniss Jenkins 3+ threes",
-"p": 0.353,
-"price": 208,
+"line": 3.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 4+ reb",
+"p": 0.4295,
+"price": 127,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"price"
+"game"
 ]
 },
 {
@@ -49,8 +50,8 @@
 ]
 }
 ],
-"p": 0.13594,
-"d": 8.686,
+"p": 0.16541,
+"d": 6.401,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -60,6 +61,24 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "401910003",
+"start": "2026-11-18T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 4+ reb",
+"p": 0.4295,
+"price": 127,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
 "gid": "401910004",
 "start": "2026-11-18T01:00Z",
 "kind": "fg3m",
@@ -67,7 +86,7 @@
 "line": 2.5,
 "name": "daniss jenkins",
 "lab": "Daniss Jenkins 3+ threes",
-"p": 0.353,
+"p": 0.3507,
 "price": 208,
 "book": "Novig",
 "f": [
@@ -75,27 +94,10 @@
 "rotation",
 "price"
 ]
-},
-{
-"gid": "401910005",
-"start": "2026-11-18T04:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes 4+ ast",
-"p": 0.3365,
-"price": 220,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"price"
-]
 }
 ],
-"p": 0.1188,
-"d": 9.856,
+"p": 0.15066,
+"d": 6.992,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -105,21 +107,20 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401910003",
+"gid": "401910004",
 "start": "2026-11-18T01:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 4.5,
-"name": "damian lillard",
-"lab": "Damian Lillard 5+ reb",
-"p": 0.2767,
-"price": 230,
-"book": "Hard Rock",
+"line": 2.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins 3+ threes",
+"p": 0.3507,
+"price": 208,
+"book": "Novig",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"price"
 ]
 },
 {
@@ -130,7 +131,7 @@
 "line": 6.5,
 "name": "ace bailey",
 "lab": "Ace Bailey 7+ reb",
-"p": 0.3905,
+"p": 0.395,
 "price": 170,
 "book": "Hard Rock",
 "f": [
@@ -157,9 +158,72 @@
 ]
 }
 ],
-"p": 0.04161,
-"d": 25.126,
+"p": 0.05335,
+"d": 23.451,
 "first": "2026-11-18T01:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910002",
+"start": "2026-11-18T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes 6+ ast",
+"p": 0.4185,
+"price": 144,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910006",
+"start": "2026-11-18T03:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 7+ reb",
+"p": 0.395,
+"price": 170,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes 4+ ast",
+"p": 0.3365,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.05563,
+"d": 21.082,
+"first": "2026-11-18T00:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -188,7 +252,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.035
+"edge": 0.0351
 },
 {
 "gid": "401910006",
@@ -212,7 +276,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0124
+"edge": 0.0136
 }
 ],
 "p": 0.19696,
@@ -246,7 +310,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.035
+"edge": 0.0351
 },
 {
 "gid": "401910006",
@@ -270,7 +334,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0124
+"edge": 0.0136
 },
 {
 "gid": "401910004",
@@ -294,7 +358,7 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0147
+"edge": 0.0146
 },
 {
 "gid": "401910003",
@@ -319,7 +383,7 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0108
+"edge": 0.0113
 }
 ],
 "p": 0.02927,
@@ -359,12 +423,12 @@
 "line": 7.5,
 "name": "keyonte george",
 "lab": "Keyonte George over 7.5 assists",
-"p": 0.3449,
+"p": 0.345,
 "fair": 0.3443,
 "price": 185,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0169,
+"edge": -0.0168,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -409,12 +473,12 @@
 "line": 7.5,
 "name": "keyonte george",
 "lab": "Keyonte George over 7.5 assists",
-"p": 0.3449,
+"p": 0.345,
 "fair": 0.3443,
 "price": 185,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0169,
+"edge": -0.0168,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -424,26 +488,26 @@
 {
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "jaden mcdaniels",
-"lab": "Jaden McDaniels over 6.5 rebounds",
-"p": 0.3625,
-"fair": 0.3622,
-"price": 160,
+"line": 4.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 4.5 assists",
+"p": 0.4031,
+"fair": 0.402,
+"price": 135,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0574,
+"edge": -0.0528,
 "v": [
-"Pinnacle odds drop",
+"Pinnacle line up",
 "consensus odds drop",
-"one rung above the main line (5.5)"
+"one rung above the main line (3.5)"
 ]
 }
 ],
-"p": 0.04627,
-"d": 19.785,
+"p": 0.05135,
+"d": 17.882,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
@@ -454,21 +518,21 @@
 {
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 6.5,
-"name": "jaden mcdaniels",
-"lab": "Jaden McDaniels over 6.5 rebounds",
-"p": 0.3625,
-"fair": 0.3622,
-"price": 160,
+"line": 4.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 4.5 assists",
+"p": 0.4031,
+"fair": 0.402,
+"price": 135,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0574,
+"edge": -0.0528,
 "v": [
-"Pinnacle odds drop",
+"Pinnacle line up",
 "consensus odds drop",
-"one rung above the main line (5.5)"
+"one rung above the main line (3.5)"
 ]
 },
 {
@@ -491,8 +555,8 @@
 ]
 }
 ],
-"p": 0.12134,
-"d": 8.32,
+"p": 0.13467,
+"d": 7.52,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 }
