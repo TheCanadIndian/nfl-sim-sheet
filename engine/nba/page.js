@@ -273,7 +273,7 @@ function boxTable(g, team){
   // owner 2026-10-24: highlight box numbers above the books' main line (an over lean); strip lists them with the line
   const LN = (r, k) => window.MKT && MKT.propLine ? MKT.propLine(g.id, r.p.n, k) : null;
   const ov = (r, k, v) => { const l = LN(r, k); return l != null && v > l ? `<span class="bxo" title="above the books’ line ${l}">${v}</span>` : v; };
-  const over = rows.flatMap(r => [['pts', r.pts, 'PTS'], ['reb', r.reb, 'REB'], ['ast', r.ast, 'AST'], ['fg3m', r.f3m, '3PM']].map(([k, v, lab]) => { const l = LN(r, k); return l != null && v > l ? `<span class="bxoc">${esc(r.p.n.replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/, '').split(' ').slice(-1)[0])} ${lab} <b>${v}</b> <i>line ${l}</i></span>` : ''; }).filter(Boolean));
+  const over = rows.flatMap(r => [['pts', r.pts, 'PTS'], ['reb', r.reb, 'REB'], ['ast', r.ast, 'AST'], ['fg3m', r.f3m, '3PM']].map(([k, v, lab]) => { const l = LN(r, k); return l != null && v > l ? `<span class="bxoc">${esc(r.p.n.replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/, '').split(' ').slice(-1)[0])} ${lab} <b>${v}</b> <i>line ${l}</i>${ladBoxTags(g, r.p, k)}</span>` : ''; }).filter(Boolean));
   const q = p => p.st && p.st !== 'Active' ? ` <span class="tag q" title="${esc(p.st)}">${p.st === 'Questionable' ? 'Q' : p.st === 'Day-To-Day' ? 'DTD' : esc(p.st)}</span>` : '';
   const tr = (r, i) => `${i === 5 ? '<tr class="bxsep"><td class="l" colspan="11">Bench</td></tr>' : ''}<tr><td class="l"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.pos)}</span>${q(r.p)}</td><td>${r.min}</td><td class="bxp">${ov(r, 'pts', r.pts)}</td><td>${ov(r, 'reb', r.reb)}</td><td>${ov(r, 'ast', r.ast)}</td><td>${r.stl}</td><td>${r.blk}</td><td>${r.tov}</td><td>${r.fgm}-${r.fga}</td><td>${ov(r, 'fg3m', r.f3m)}-${r.f3a}</td><td>${r.ftm}-${r.fta}</td></tr>`;
   return `<div class="tw"><table class="t bx"><thead><tr><th class="l">${esc(team)} · starters</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>FG</th><th>3P</th><th>FT</th></tr></thead><tbody>
@@ -293,7 +293,7 @@ function gameView(){
   const pv = `<span class="gmsw" role="group" aria-label="Players view"><button data-pview="proj" aria-pressed="${PVIEW === 'proj'}">Projections</button><button data-pview="box" aria-pressed="${PVIEW === 'box'}">Box score</button></span>`;
   const tables = PVIEW === 'box'
     ? `<section class="panel"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${pv}<span class="muted small">${mode(g.id) === 'vegas' ? 'With Vegas' : 'Market-blind'} · each player’s simulated average, rounded so team totals hold</span></div>${boxTable(g, g.away)}${boxTable(g, g.home)}
-      <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games (the most accurate single guess, and averages add up to the team score). The 11 players with the most expected minutes (about how many play); the rest of the bench’s expected share goes to them so totals match the projected score. Tested on 2024-26 games: points off by 4.4 a player on average. Starters are the five with the most projected minutes; Q = questionable. Highlighted = above the books’ main line for that prop (an over lean; the chips list the line). Points come from his makes (2 × twos + 3 × threes + free throws); shooting splits use his 3P% and FT% this season and last, pulled toward league average on small samples. <a href="boxes.html">How accurate it has been, graded every night →</a></p></section>`
+      <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games (the most accurate single guess, and averages add up to the team score). The 11 players with the most expected minutes (about how many play); the rest of the bench’s expected share goes to them so totals match the projected score. Tested on 2024-26 games: points off by 4.4 a player on average. Starters are the five with the most projected minutes; Q = questionable. Highlighted = above the books’ main line for that prop (an over lean; the chips list the line). On those chips, <b>Ladder</b> = that stat is on Ladder edges (Ladders tab); then <b>15%+ K</b> = a Kalshi rung where our chance beats the ask + fee by 15%+, and <b>NV +N%</b> = a Novig rung 10%+ under the other books’ fair (the rung number follows; both tracked, not proven). Points come from his makes (2 × twos + 3 × threes + free throws); shooting splits use his 3P% and FT% this season and last, pulled toward league average on small samples. <a href="boxes.html">How accurate it has been, graded every night →</a></p></section>`
     : `<section class="panel"><div class="phead"><h2>Players</h2>${pv}<span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
   return `<div class="games"><nav class="rail" aria-label="Games">${rail}</nav><div class="detail">${head}${fbPanel(g)}${tables}</div></div>`;
 }
@@ -396,6 +396,35 @@ const ladPrice = u => { const opts = [{b: 'Kalshi', price: u.price, pay: 1 / u.c
 // one rung; its number is a dropdown of this rung and the ones below it, to check their prices (owner 2026-11-01, as on the
 // NFL page). Rungs outside the card's flagged set show our chance, no edge: the 5% rule only ever covered the flagged rungs
 const LADSEL = {}, LADC = {};
+// the tracked Novig check (profit.tags src 'mbook'): Novig's price vs the other books' fair (2+ sources, 30% our raw number)
+function nvEdge(g, p, u){
+  const nvo = (u.opts || []).find(o => o.b === 'Novig'), mfn = nvo && window.MKT && MKT.multiFair ? MKT.multiFair(g.id, p.id, p.n, u.k, u.l, 'Novig') : null;
+  const pr = u.praw != null ? u.praw : u.p;                     // the tracked Novig rule was built on our raw number
+  const nvq = mfn && mfn.n >= 2 ? (pr != null ? .3 * pr + .7 * mfn.f : mfn.f) : null, nvd = nvo ? +String(nvo.price).replace('+', '') : null;
+  return nvq != null && nvd ? nvq * (nvd > 0 ? 1 + nvd / 100 : 1 + 100 / -nvd) - 1 : null;
+}
+const nvOk = e => e != null && e >= .10 && e <= .40;
+const k15Ok = u => (u.praw ?? u.p) != null && u.cost && (u.praw ?? u.p) / u.cost - 1 >= .15;
+// Box score (owner 2026-11-18: 'when a player is above their market projection show if they are a ladder candidate and if so if
+// they are k15%+ or novig 10%+'): his Ladder edges rungs for that stat (the card's rule: 20+ min, 2+ above the 50/50 rung, 5%+
+// edge); if any, his ladder's best 15%+ K rung and best Novig-under-the-books rung (any rung, as the card's dropdown shows them)
+function ladInfo(g, p, k){
+  const mins = p.s && p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED];
+  if (!(mins >= 20) || p.st === 'Out' || !window.MKT || !MKT.ladder) return null;
+  const rungs = MKT.ladder(g.id, p.id, p.n, [k]).map(ladAnchor).map(ladPrice).filter(u => u.edge != null && u.edge >= LEDGE);
+  if (!rungs.length) return null;
+  const all = MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n, [k]).map(ladAnchor).map(ladPrice) : rungs;
+  const k15 = all.filter(k15Ok).sort((a, b) => (b.praw ?? b.p) / b.cost - (a.praw ?? a.p) / a.cost)[0] || null;
+  const nv = all.map(u => [u, nvEdge(g, p, u)]).filter(([, e]) => nvOk(e)).sort((a, b) => b[1] - a[1])[0] || null;
+  return {n: rungs.length, top: rungs[0], k15, nv};
+}
+function ladBoxTags(g, p, k){
+  const L = ladInfo(g, p, k); if (!L) return '';
+  const n = l => Math.round(l + .5), K = KLAB[k];
+  return ` <b class="bxl" title="${esc(`On Ladder edges (Ladders tab): ${L.n} ${K} rung${L.n === 1 ? '' : 's'} 2+ above the 50/50 rung beat the best price by 5%+; best ${n(L.top.l)}+ at +${Math.round(L.top.edge * 100)}%. Experimental.`)}">Ladder</b>`
+    + (L.k15 ? ` <b class="bxl k" title="${esc(`${n(L.k15.l)}+ ${K}: our chance ${Math.round((L.k15.praw ?? L.k15.p) * 100)}% vs Kalshi’s ask + fee ${Math.round(L.k15.cost * 100)}%. ${LFIT.k15} Not proven.`)}">15%+ K ${n(L.k15.l)}+</b>` : '')
+    + (L.nv ? ` <b class="bxl nv" title="${esc(`${n(L.nv[0].l)}+ ${K}: Novig ${Math.round(L.nv[1] * 100)}% under the other books’ fair (2+ sources, 30% ours). Tracked lead (Novig rungs +73% on 120 in the study), not proven.`)}">NV +${Math.round(L.nv[1] * 100)}% ${n(L.nv[0].l)}+</b>` : '');
+}
 function lruChip(c, u0){
   const key = `${c.p.id}|${u0.k}|${u0.l}`, lo = c.all.filter(x => x.k === u0.k && x.l <= u0.l).sort((a, b) => b.l - a.l);
   LADC[key] = {c, u0};
@@ -404,10 +433,7 @@ function lruChip(c, u0){
   // multi-book fair (MKT.multiFair, leaving out the best book) + the tracked Novig check: Novig's price 10%+ under the
   // fair from 2+ other sources (30% ours) -- research/ladder_multibook.py, Novig +73% on 120, both halves, a lead (owner 2026-11-03)
   const mf = window.MKT && MKT.multiFair ? MKT.multiFair(c.g.id, c.p.id, c.p.n, u.k, u.l, b.b) : null;
-  const nvo = u.opts.find(o => o.b === 'Novig'), mfn = nvo && window.MKT && MKT.multiFair ? MKT.multiFair(c.g.id, c.p.id, c.p.n, u.k, u.l, 'Novig') : null;
-  const pr = u.praw != null ? u.praw : u.p;                     // the tracked Novig rule was built on our raw number
-  const nvq = mfn && mfn.n >= 2 ? (pr != null ? .3 * pr + .7 * mfn.f : mfn.f) : null, nvd = nvo ? +String(nvo.price).replace('+', '') : null;
-  const nve = nvq != null && nvd ? nvq * (nvd > 0 ? 1 + nvd / 100 : 1 + 100 / -nvd) - 1 : null;
+  const nve = nvEdge(c.g, c.p, u);
   const mfTxt = mf ? ` · fair from ${Object.keys(mf.parts).length} source${Object.keys(mf.parts).length === 1 ? '' : 's'} ${Math.round(mf.f * 100)}% (${Object.entries(mf.parts).map(([k, v]) => `${k} ${Math.round(v * 100)}%`).join(', ')}, without ${b.b})` : '';
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
   return `<span class="lru" title="${n(u.l)}+ ${KLAB[u.k]}: chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}${u.praw != null ? ` (23% our ${Math.round(u.praw * 100)}% + 77% Kalshi’s mid: our own number ran high on these rungs)` : ''} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}">${num}${aStar(c.p, u)} ${KLAB[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">chance ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
