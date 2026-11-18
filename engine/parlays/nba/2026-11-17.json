@@ -2,13 +2,13 @@
 "sport": "nba",
 "date": "2026-11-17",
 "lock": "2026-11-18T01:00:00+00:00",
-"frozen_at": "2026-11-18T00:25:52.262Z",
+"frozen_at": "2026-11-18T00:34:31.868Z",
 "books": [
 "Novig",
 "Kalshi",
 "Hard Rock"
 ],
-"final_at": "2026-11-17T23:30:00+00:00",
+"final_at": "2026-11-18T00:00:00+00:00",
 "parlays": [
 {
 "card": "Path longshots",
@@ -54,6 +54,51 @@
 "d": 6.401,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401910003",
+"start": "2026-11-18T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "damian lillard",
+"lab": "Damian Lillard 4+ reb",
+"p": 0.4282,
+"price": 127,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910005",
+"start": "2026-11-18T04:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "quentin grimes",
+"lab": "Quentin Grimes 4+ ast",
+"p": 0.3363,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.14401,
+"d": 7.264,
+"first": "2026-11-18T01:00:00+00:00",
 "res": null
 },
 {
@@ -190,12 +235,12 @@
 "gid": "401910003",
 "start": "2026-11-18T01:00Z",
 "kind": "ml",
-"side": "home",
+"side": "away",
 "line": null,
 "name": null,
-"lab": "MIN moneyline",
-"p": 0.5727,
-"price": -120,
+"lab": "POR moneyline",
+"p": 0.4273,
+"price": 156,
 "book": "Novig"
 },
 {
@@ -211,8 +256,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.25253,
-"d": 4.473,
+"p": 0.18839,
+"d": 6.246,
 "first": "2026-11-18T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -392,55 +437,6 @@
 ],
 "p": 0.05025,
 "d": 18.795,
-"first": "2026-11-18T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910003",
-"start": "2026-11-18T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday over 4.5 assists",
-"p": 0.3942,
-"fair": 0.3934,
-"price": 147,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0262,
-"v": [
-"Pinnacle line up",
-"consensus odds drop",
-"one rung above the main line (3.5)"
-]
-},
-{
-"gid": "401910005",
-"start": "2026-11-18T04:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "quentin grimes",
-"lab": "Quentin Grimes over 3.5 assists",
-"p": 0.3363,
-"fair": 0.335,
-"price": 220,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0763,
-"v": [
-"consensus odds drop",
-"one rung above the main line (2.5)"
-]
-}
-],
-"p": 0.13179,
-"d": 7.904,
 "first": "2026-11-18T01:00:00+00:00",
 "res": null
 }
