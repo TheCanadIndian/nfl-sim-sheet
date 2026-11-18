@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:30:00+00:00",
-"frozen_at": "2026-11-18T17:43:09.537Z",
+"frozen_at": "2026-11-18T17:54:57.381Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -137,7 +137,7 @@
 "name": null,
 "lab": "DET moneyline",
 "p": 0.5185,
-"price": 100,
+"price": -104,
 "book": "Novig"
 }
 ],
@@ -205,7 +205,7 @@
 "name": null,
 "lab": "BOS moneyline",
 "p": 0.4815,
-"price": -102,
+"price": 102,
 "book": "Novig"
 }
 ],
@@ -307,7 +307,7 @@
 "name": null,
 "lab": "NJD moneyline",
 "p": 0.5687,
-"price": -156,
+"price": -153,
 "book": "Novig"
 }
 ],
@@ -545,12 +545,46 @@
 "name": null,
 "lab": "COL-UTA under 6.5",
 "p": 0.5673,
-"price": -113,
+"price": -115,
 "book": "Novig"
 }
 ],
 "p": 0.28777,
-"d": 4.185,
+"d": 4.15,
+"first": "2026-11-19T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020345",
+"start": "2026-11-19T00:30:00Z",
+"kind": "sog",
+"side": "u",
+"line": 1.5,
+"name": "zachary bolduc",
+"lab": "Zachary Bolduc under 1.5 shots",
+"p": 0.5408,
+"price": -108,
+"book": "Novig"
+},
+{
+"gid": "2026020346",
+"start": "2026-11-19T03:00:00Z",
+"kind": "sog",
+"side": "u",
+"line": 2.5,
+"name": "nazem kadri",
+"lab": "Nazem Kadri under 2.5 shots",
+"p": 0.5165,
+"price": 120,
+"book": "Hard Rock"
+}
+],
+"p": 0.27927,
+"d": 4.237,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
 },
@@ -567,7 +601,7 @@
 "name": null,
 "lab": "DET \u22121.5",
 "p": 0.3124,
-"price": 245,
+"price": 239,
 "book": "Novig"
 },
 {
@@ -584,7 +618,7 @@
 }
 ],
 "p": 0.16136,
-"d": 7.59,
+"d": 7.458,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
 },
@@ -612,7 +646,7 @@
 "line": 1.5,
 "name": "zachary bolduc",
 "lab": "Zachary Bolduc under 1.5 shots",
-"p": 0.5428,
+"p": 0.5408,
 "price": -108,
 "book": "Novig"
 },
@@ -625,12 +659,12 @@
 "name": null,
 "lab": "COL-UTA under 6.5",
 "p": 0.5673,
-"price": -113,
+"price": -115,
 "book": "Novig"
 }
 ],
-"p": 0.15621,
-"d": 8.059,
+"p": 0.15561,
+"d": 7.993,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
 },
@@ -647,24 +681,24 @@
 "name": null,
 "lab": "DET \u22121.5",
 "p": 0.3124,
-"price": 245,
+"price": 239,
 "book": "Novig"
 },
 {
-"gid": "2026020345",
-"start": "2026-11-19T00:30:00Z",
+"gid": "2026020346",
+"start": "2026-11-19T03:00:00Z",
 "kind": "sog",
 "side": "u",
 "line": 1.5,
-"name": "noah dobson",
-"lab": "Noah Dobson under 1.5 shots",
-"p": 0.4997,
-"price": 111,
+"name": "brock nelson",
+"lab": "Brock Nelson under 1.5 shots",
+"p": 0.4843,
+"price": 122,
 "book": "Novig"
 }
 ],
-"p": 0.15613,
-"d": 7.28,
+"p": 0.15131,
+"d": 7.526,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
 },
@@ -680,7 +714,7 @@
 "line": 1.5,
 "name": "pavel zacha",
 "lab": "Pavel Zacha over 1.5 shots",
-"p": 0.5283,
+"p": 0.5276,
 "price": -106,
 "book": "Novig"
 },
@@ -697,8 +731,43 @@
 "book": "Novig"
 }
 ],
-"p": 0.27452,
+"p": 0.27413,
 "d": 3.926,
+"first": "2026-11-19T00:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020344",
+"start": "2026-11-19T00:30:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "viktor arvidsson",
+"lab": "Viktor Arvidsson over 2.5 shots",
+"p": 0.5129,
+"price": -102,
+"book": "Novig"
+},
+{
+"gid": "2026020346",
+"start": "2026-11-19T03:00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "COL moneyline",
+"p": 0.5196,
+"price": 102,
+"book": "Novig"
+}
+],
+"p": 0.26653,
+"d": 4,
 "first": "2026-11-19T00:30:00+00:00",
 "pick": "core",
 "res": null
@@ -716,8 +785,8 @@
 "name": null,
 "lab": "DET moneyline",
 "p": 0.5185,
-"price": 100,
-"book": "Novig"
+"price": -104,
+"book": "ProphetX"
 },
 {
 "gid": "2026020346",
@@ -727,62 +796,14 @@
 "line": 1.5,
 "name": "gabriel landeskog",
 "lab": "Gabriel Landeskog over 1.5 shots",
-"p": 0.4799,
+"p": 0.4762,
 "price": 115,
 "book": "Novig"
 }
 ],
-"p": 0.24885,
-"d": 4.3,
+"p": 0.24692,
+"d": 4.217,
 "first": "2026-11-19T00:30:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020344",
-"start": "2026-11-19T00:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "pavel zacha",
-"lab": "Pavel Zacha over 1.5 shots",
-"p": 0.5283,
-"price": -106,
-"book": "Novig"
-},
-{
-"gid": "2026020345",
-"start": "2026-11-19T00:30:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "MTL moneyline",
-"p": 0.4313,
-"price": 153,
-"book": "Novig"
-},
-{
-"gid": "2026020346",
-"start": "2026-11-19T03:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "COL moneyline",
-"p": 0.5196,
-"price": 102,
-"book": "Novig"
-}
-],
-"p": 0.11839,
-"d": 9.932,
-"first": "2026-11-19T00:30:00+00:00",
-"pick": "core",
 "res": null
 }
 ],
