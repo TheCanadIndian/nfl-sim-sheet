@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-19",
 "lock": "2026-11-20T01:15:00+00:00",
-"frozen_at": "2026-11-18T23:28:41.413Z",
+"frozen_at": "2026-11-18T23:38:50.542Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -75,6 +75,86 @@
 "p": 0.07875,
 "d": 10.908,
 "first": "2026-11-20T01:15:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dalton kincaid",
+"lab": "Dalton Kincaid over 2.5 receptions",
+"p": 0.5003,
+"price": 130,
+"book": "Hard Rock"
+},
+{
+"gid": "2026_11_IND_HOU",
+"start": "2026-11-19T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "ashton dulin",
+"lab": "Ashton Dulin over 14.5 rec yds",
+"p": 0.5477,
+"price": -102,
+"book": "Kalshi"
+}
+],
+"p": 0.27405,
+"d": 4.555,
+"first": "2026-11-20T01:15:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dalton kincaid",
+"lab": "Dalton Kincaid over 2.5 receptions",
+"p": 0.5003,
+"price": 130,
+"book": "Hard Rock"
+},
+{
+"gid": "2026_11_IND_HOU",
+"start": "2026-11-19T20:15:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "ashton dulin",
+"lab": "Ashton Dulin over 14.5 rec yds",
+"p": 0.5477,
+"price": -102,
+"book": "Kalshi"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4009,
+"price": 170,
+"book": "Novig"
+}
+],
+"p": 0.10987,
+"d": 12.298,
+"first": "2026-11-20T01:15:00+00:00",
+"pick": "core"
 },
 {
 "card": "Same-game parlays",
@@ -2849,63 +2929,6 @@
 "first": "2026-11-20T01:15:00+00:00"
 },
 {
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "2026_11_MIA_BUF",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "dalton kincaid",
-"lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5064,
-"price": 130,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.1648,
-"fair": 0.4733,
-"main": true
-},
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "tony pollard",
-"lab": "Tony Pollard over 2.5 receptions",
-"p": 0.4902,
-"price": 130,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.1274,
-"fair": 0.5123,
-"main": true
-},
-{
-"gid": "2026_11_IND_HOU",
-"start": "2026-11-20T01:15:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "ashton dulin",
-"lab": "Ashton Dulin over 1.5 receptions",
-"p": 0.4028,
-"price": 174,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.1035,
-"fair": 0.3526,
-"main": true
-}
-],
-"p": 0.09999,
-"d": 14.495,
-"first": "2026-11-20T01:15:00+00:00"
-},
-{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -2917,17 +2940,17 @@
 "line": 1.5,
 "name": "ashton dulin",
 "lab": "Ashton Dulin over 1.5 receptions",
-"p": 0.4028,
-"price": 174,
+"p": 0.4142,
+"price": 170,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1035,
-"fair": 0.3526,
+"edge": 0.1184,
+"fair": 0.356,
 "main": true
 }
 ],
-"p": 0.4028,
-"d": 2.74,
+"p": 0.4142,
+"d": 2.7,
 "first": "2026-11-20T01:15:00+00:00",
 "pick": "straight"
 }
