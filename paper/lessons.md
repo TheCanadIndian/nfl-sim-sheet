@@ -15,3 +15,4 @@
 - **2026-11-16 evening:** skipped the Monday slate. Edges under 25% price are alt longshots or stale; the main-line +4..+6% ones are fair price + model nudge, inside the over bias. No edge, no bet.
 - **2026-11-17 evening:** skipped Tuesday again. Biggest NBA edges were Hard Rock claims after a Pinnacle move, and the NHL top was a Colton SOG leg where our chance sat 4 pts under the fair. Where our model is below the fair, the 'edge' is just the book's price. Require our chance >= the fair before trusting an edge.
 
+- **2026-11-18:** bet again after two skipped days using a filter: Novig/Kalshi, main line, priced 30-60%, ours >= fair, no points. It leaves only +3..5% edges, so expect near break-even; judge it over many bets.
