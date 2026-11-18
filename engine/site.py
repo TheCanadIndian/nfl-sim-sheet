@@ -551,7 +551,8 @@ def ctx_nba(D):
                 grp = _ARCH_PL.get(q.get("ar"), _NBA_PL.get(q.get("pg"), "")) if da else _NBA_PL.get(q.get("pg"), "")
                 st_[k] = [[f"{q.get('o')} {_pct(v)} {_NBA_SL[k]} vs {grp}", "g" if v > 1 else "b"]]
         mn = (vg.get("min") or [None] * 4)[3]                                   # projected minutes (median), for the narrowed K 15%+
-        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}),
+        st = lu == "in" or (not q.get("lu") and bool(q.get("ls")))             # starter (in tonight's five, else started his last game): NBA longshots
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}), **({"st": 1} if st else {}),
                                           **({"mn": round(mn, 1)} if mn is not None else {}), **({"tt": tot[str(q["g"])]} if tot.get(str(q["g"])) else {}))
     return out
 
