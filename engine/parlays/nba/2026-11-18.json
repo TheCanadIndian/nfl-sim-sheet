@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-18T19:44:14.138Z",
+"frozen_at": "2026-11-18T19:56:33.736Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -235,41 +235,6 @@
 "res": null
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "401910013",
-"start": "2026-11-19T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "jordan poole",
-"lab": "Jordan Poole over 1.5 threes",
-"p": 0.5837,
-"price": -110,
-"book": "Hard Rock"
-},
-{
-"gid": "401910014",
-"start": "2026-11-19T01:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "ATL moneyline",
-"p": 0.324,
-"price": 228,
-"book": "Novig"
-}
-],
-"p": 0.18914,
-"d": 6.262,
-"first": "2026-11-19T01:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
 "card": "Learning parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -395,6 +360,42 @@
 "edge": 0.0659
 },
 {
+"gid": "401910009",
+"start": "2026-11-19T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jaime jaquez",
+"lab": "Jaime Jaquez Jr. over 3.5 assists",
+"p": 0.5076,
+"price": 100,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0076
+}
+],
+"p": 0.2602,
+"d": 4.2,
+"first": "2026-11-19T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
 "gid": "401910010",
 "start": "2026-11-19T00:00Z",
 "kind": "ast",
@@ -420,10 +421,63 @@
 ],
 "sport": "nba",
 "edge": 0.0377
+},
+{
+"gid": "401910007",
+"start": "2026-11-19T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "cedric coward",
+"lab": "Cedric Coward over 3.5 assists",
+"p": 0.5688,
+"price": -120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0363
+},
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "daniss jenkins",
+"lab": "Daniss Jenkins over 4.5 rebounds",
+"p": 0.4057,
+"price": 155,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0362
 }
 ],
-"p": 0.28229,
-"d": 4.009,
+"p": 0.12708,
+"d": 8.925,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
@@ -458,6 +512,32 @@
 ],
 "sport": "nba",
 "edge": 0.0659
+},
+{
+"gid": "401910009",
+"start": "2026-11-19T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jaime jaquez",
+"lab": "Jaime Jaquez Jr. over 3.5 assists",
+"p": 0.5076,
+"price": 100,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"game",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0076
 },
 {
 "gid": "401910010",
@@ -538,34 +618,10 @@
 ],
 "sport": "nba",
 "edge": 0.0362
-},
-{
-"gid": "401910015",
-"start": "2026-11-19T02:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "nikola jokic",
-"lab": "Nikola Jokic over 1.5 threes",
-"p": 0.4585,
-"price": 145,
-"book": "Hard Rock",
-"f": [
-"usage",
-"game"
-],
-"v": [
-"usage",
-"game",
-"consensus up",
-"lc"
-],
-"sport": "nba",
-"edge": 0.1091
 }
 ],
-"p": 0.02987,
-"d": 45.919,
+"p": 0.03307,
+"d": 37.485,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
@@ -890,19 +946,19 @@
 "start": "2026-11-19T00:00:00+00:00",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
+"line": 7.5,
 "name": "tyrese proctor",
-"lab": "Tyrese Proctor over 5.5 assists",
-"p": 0.175,
-"fair": 0.175,
-"ours": 0.2602,
-"price": 398,
+"lab": "Tyrese Proctor over 7.5 assists",
+"p": 0.045,
+"fair": 0.045,
+"ours": 0.0862,
+"price": 1464,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.296,
+"edge": 0.348,
 "grp": "k15n",
 "v": [
-"Kalshi 6+ assists: our chance 26% vs 20% with the fee (+30%)",
+"Kalshi 8+ assists: our chance 9% vs 6% with the fee (+35%)",
 "game total 237.5",
 "projected 28 min"
 ]
@@ -910,28 +966,28 @@
 {
 "gid": "401910009",
 "start": "2026-11-19T00:00:00+00:00",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 5.5,
+"line": 7.5,
 "name": "pelle larsson",
-"lab": "Pelle Larsson over 5.5 assists",
-"p": 0.135,
-"fair": 0.135,
-"ours": 0.1904,
-"price": 529,
+"lab": "Pelle Larsson over 7.5 rebounds",
+"p": 0.045,
+"fair": 0.045,
+"ours": 0.0815,
+"price": 1464,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.198,
+"edge": 0.2745,
 "grp": "k15n",
 "v": [
-"Kalshi 6+ assists: our chance 19% vs 16% with the fee (+20%)",
+"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+27%)",
 "game total 236.5",
 "projected 29 min"
 ]
 }
 ],
-"p": 0.02363,
-"d": 31.324,
+"p": 0.00202,
+"d": 244.61,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
@@ -939,6 +995,28 @@
 "card": "Study-pick parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401910009",
+"start": "2026-11-19T00:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "pelle larsson",
+"lab": "Pelle Larsson over 7.5 rebounds",
+"p": 0.045,
+"fair": 0.045,
+"ours": 0.0815,
+"price": 1464,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.2745,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+27%)",
+"game total 236.5",
+"projected 29 min"
+]
+},
 {
 "gid": "401910007",
 "start": "2026-11-19T00:00:00+00:00",
@@ -947,153 +1025,23 @@
 "line": 3.5,
 "name": "jaylen wells",
 "lab": "Jaylen Wells over 3.5 rebounds",
-"p": 0.305,
-"fair": 0.305,
+"p": 0.31,
+"fair": 0.31,
 "ours": 0.4047,
-"price": 208,
+"price": 198,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.2453,
+"edge": 0.2072,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ rebounds: our chance 40% vs 32% with the fee (+25%)",
+"Kalshi 4+ rebounds: our chance 40% vs 34% with the fee (+21%)",
 "game total 237.5",
 "projected 31 min"
 ]
-},
-{
-"gid": "401910009",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "pelle larsson",
-"lab": "Pelle Larsson over 5.5 assists",
-"p": 0.135,
-"fair": 0.135,
-"ours": 0.1904,
-"price": 529,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.198,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ assists: our chance 19% vs 16% with the fee (+20%)",
-"game total 236.5",
-"projected 29 min"
-]
 }
 ],
-"p": 0.04118,
-"d": 19.373,
-"first": "2026-11-19T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910009",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "pelle larsson",
-"lab": "Pelle Larsson over 5.5 rebounds",
-"p": 0.165,
-"fair": 0.165,
-"ours": 0.2217,
-"price": 425,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1648,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ rebounds: our chance 22% vs 19% with the fee (+16%)",
-"game total 236.5",
-"projected 29 min"
-]
-},
-{
-"gid": "401910007",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "tyrese proctor",
-"lab": "Tyrese Proctor over 5.5 assists",
-"p": 0.175,
-"fair": 0.175,
-"ours": 0.2602,
-"price": 398,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.296,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ assists: our chance 26% vs 20% with the fee (+30%)",
-"game total 237.5",
-"projected 28 min"
-]
-}
-],
-"p": 0.02887,
-"d": 26.145,
-"first": "2026-11-19T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910007",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 4.5,
-"name": "jaylen wells",
-"lab": "Jaylen Wells over 4.5 threes",
-"p": 0.07,
-"fair": 0.07,
-"ours": 0.0984,
-"price": 1074,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1556,
-"grp": "k15n",
-"v": [
-"Kalshi 5+ threes: our chance 10% vs 9% with the fee (+16%)",
-"game total 237.5",
-"projected 31 min"
-]
-},
-{
-"gid": "401910009",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "pelle larsson",
-"lab": "Pelle Larsson over 5.5 rebounds",
-"p": 0.165,
-"fair": 0.165,
-"ours": 0.2217,
-"price": 425,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1648,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ rebounds: our chance 22% vs 19% with the fee (+16%)",
-"game total 236.5",
-"projected 29 min"
-]
-}
-],
-"p": 0.01155,
-"d": 61.635,
+"p": 0.01395,
+"d": 46.607,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 }
