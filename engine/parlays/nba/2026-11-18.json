@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-18T21:41:51.144Z",
+"frozen_at": "2026-11-18T21:51:36.840Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,16 +17,17 @@
 {
 "gid": "401910012",
 "start": "2026-11-19T00:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 5.5,
+"line": 2.5,
 "name": "jakobe walter",
-"lab": "Ja'Kobe Walter 6+ reb",
-"p": 0.3104,
-"price": 260,
+"lab": "Ja'Kobe Walter 3+ ast",
+"p": 0.3553,
+"price": 200,
 "book": "Hard Rock",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -51,8 +52,8 @@
 ]
 }
 ],
-"p": 0.0843,
-"d": 14.4,
+"p": 0.0965,
+"d": 12,
 "first": "2026-11-19T00:30:00+00:00",
 "pick": "core",
 "res": null
@@ -64,16 +65,17 @@
 {
 "gid": "401910012",
 "start": "2026-11-19T00:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 5.5,
+"line": 2.5,
 "name": "jakobe walter",
-"lab": "Ja'Kobe Walter 6+ reb",
-"p": 0.3104,
-"price": 260,
+"lab": "Ja'Kobe Walter 3+ ast",
+"p": 0.3553,
+"price": 200,
 "book": "Hard Rock",
 "f": [
 "usage",
+"matchup",
 "rotation",
 "game",
 "price"
@@ -98,8 +100,8 @@
 ]
 }
 ],
-"p": 0.10479,
-"d": 11.52,
+"p": 0.11995,
+"d": 9.6,
 "first": "2026-11-19T00:30:00+00:00",
 "pick": "core",
 "res": null
@@ -108,24 +110,6 @@
 "card": "Path longshots",
 "tier": "3-leg",
 "legs": [
-{
-"gid": "401910007",
-"start": "2026-11-19T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "cameron boozer",
-"lab": "Cameron Boozer 6+ ast",
-"p": 0.4318,
-"price": 133,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
 {
 "gid": "401910013",
 "start": "2026-11-19T01:00Z",
@@ -145,6 +129,24 @@
 ]
 },
 {
+"gid": "401910016",
+"start": "2026-11-19T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 6+ ast",
+"p": 0.2996,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
 "gid": "401910017",
 "start": "2026-11-19T03:00Z",
 "kind": "reb",
@@ -163,9 +165,9 @@
 ]
 }
 ],
-"p": 0.03959,
-"d": 29.824,
-"first": "2026-11-19T00:00:00+00:00",
+"p": 0.02746,
+"d": 42.112,
+"first": "2026-11-19T01:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
@@ -176,32 +178,14 @@
 {
 "gid": "401910007",
 "start": "2026-11-19T00:00Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "cameron boozer",
-"lab": "Cameron Boozer 6+ ast",
-"p": 0.4318,
-"price": 133,
+"line": 2.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 3+ threes",
+"p": 0.3637,
+"price": 170,
 "book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910012",
-"start": "2026-11-19T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "collin murrayboyles",
-"lab": "Collin Murray-Boyles 4+ ast",
-"p": 0.2714,
-"price": 252,
-"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -226,10 +210,28 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401910016",
+"start": "2026-11-19T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 6+ ast",
+"p": 0.2996,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.04525,
-"d": 22.472,
+"p": 0.04206,
+"d": 24.339,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
@@ -326,7 +328,7 @@
 "line": 4.5,
 "name": "rj barrett",
 "lab": "RJ Barrett over 4.5 assists",
-"p": 0.5238,
+"p": 0.5221,
 "price": 110,
 "book": "Hard Rock",
 "f": [
@@ -344,7 +346,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0885
+"edge": 0.0851
 },
 {
 "gid": "401910017",
@@ -374,7 +376,7 @@
 "edge": 0.0264
 }
 ],
-"p": 0.23875,
+"p": 0.23797,
 "d": 4.725,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
@@ -411,6 +413,34 @@
 "edge": 0.0236
 },
 {
+"gid": "401910007",
+"start": "2026-11-19T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "cedric coward",
+"lab": "Cedric Coward over 3.5 assists",
+"p": 0.5524,
+"price": -120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0083
+},
+{
 "gid": "401910009",
 "start": "2026-11-19T00:00Z",
 "kind": "ast",
@@ -418,7 +448,7 @@
 "line": 3.5,
 "name": "jaime jaquez",
 "lab": "Jaime Jaquez Jr. over 3.5 assists",
-"p": 0.5374,
+"p": 0.5439,
 "price": 100,
 "book": "Hard Rock",
 "f": [
@@ -434,37 +464,11 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0634
-},
-{
-"gid": "401910010",
-"start": "2026-11-19T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "joel embiid",
-"lab": "Joel Embiid over 3.5 assists",
-"p": 0.4421,
-"price": 130,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0225
+"edge": 0.0757
 }
 ],
-"p": 0.0953,
-"d": 11.73,
+"p": 0.12051,
+"d": 9.35,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
@@ -480,7 +484,7 @@
 "line": 4.5,
 "name": "rj barrett",
 "lab": "RJ Barrett over 4.5 assists",
-"p": 0.5238,
+"p": 0.5221,
 "price": 110,
 "book": "Hard Rock",
 "f": [
@@ -498,7 +502,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0885
+"edge": 0.0851
 },
 {
 "gid": "401910017",
@@ -555,34 +559,36 @@
 "edge": 0.0236
 },
 {
-"gid": "401910009",
+"gid": "401910007",
 "start": "2026-11-19T00:00Z",
 "kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "jaime jaquez",
-"lab": "Jaime Jaquez Jr. over 3.5 assists",
-"p": 0.5374,
-"price": 100,
+"name": "cedric coward",
+"lab": "Cedric Coward over 3.5 assists",
+"p": 0.5524,
+"price": -120,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
+"rotation",
 "game"
 ],
 "v": [
 "usage",
 "matchup",
+"rotation",
 "game",
 "consensus up",
-"lc"
+"pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0634
+"edge": 0.0083
 }
 ],
-"p": 0.05146,
-"d": 24.098,
+"p": 0.05273,
+"d": 22.089,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
@@ -598,39 +604,41 @@
 "line": 4.5,
 "name": "cedric coward",
 "lab": "Cedric Coward over 4.5 assists",
-"p": 0.3672,
-"fair": 0.3691,
+"p": 0.3734,
+"fair": 0.3757,
 "price": 175,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0097,
+"edge": 0.027,
 "v": [
 "Pinnacle odds drop",
+"consensus odds drop",
 "one rung above the main line (3.5)",
 "soft matchup"
 ]
 },
 {
-"gid": "401910010",
+"gid": "401910009",
 "start": "2026-11-19T00:00Z",
 "kind": "reb",
 "side": "o",
-"line": 7.5,
-"name": "lebron james",
-"lab": "LeBron James over 7.5 rebounds",
-"p": 0.4214,
-"fair": 0.4278,
+"line": 6.5,
+"name": "brayden burries",
+"lab": "Brayden Burries over 6.5 rebounds",
+"p": 0.4172,
+"fair": 0.4234,
 "price": 135,
-"book": "Novig",
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0097,
+"edge": -0.0196,
 "v": [
-"Pinnacle odds drop",
-"one rung above the main line (6.5)"
+"Pinnacle line up",
+"consensus odds drop",
+"one rung above the main line (5.5)"
 ]
 }
 ],
-"p": 0.1579,
+"p": 0.15907,
 "d": 6.463,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
@@ -647,12 +655,12 @@
 "line": 5.5,
 "name": "immanuel quickley",
 "lab": "Immanuel Quickley over 5.5 assists",
-"p": 0.5876,
+"p": 0.58,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.322,
-"fair": 0.587,
+"edge": 0.305,
+"fair": 0.5786,
 "main": false
 },
 {
@@ -672,7 +680,7 @@
 "main": true
 }
 ],
-"p": 0.31207,
+"p": 0.30804,
 "d": 5.4,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
@@ -689,12 +697,12 @@
 "line": 5.5,
 "name": "immanuel quickley",
 "lab": "Immanuel Quickley over 5.5 assists",
-"p": 0.5876,
+"p": 0.58,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.322,
-"fair": 0.587,
+"edge": 0.305,
+"fair": 0.5786,
 "main": false
 },
 {
@@ -730,7 +738,7 @@
 "main": true
 }
 ],
-"p": 0.12814,
+"p": 0.12648,
 "d": 16.74,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
@@ -789,8 +797,8 @@
 "line": 6.5,
 "name": "immanuel quickley",
 "lab": "Immanuel Quickley over 6.5 assists",
-"p": 0.485,
-"fair": 0.485,
+"p": 0.4829,
+"fair": 0.4829,
 "price": 230,
 "book": "Hard Rock",
 "sport": "nba",
@@ -820,9 +828,63 @@
 ]
 }
 ],
-"p": 0.23983,
+"p": 0.23879,
 "d": 6.3,
 "first": "2026-11-19T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910007",
+"start": "2026-11-19T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "tyrese proctor",
+"lab": "Tyrese Proctor over 5.5 assists",
+"p": 0.165,
+"fair": 0.165,
+"ours": 0.2501,
+"price": 456,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3904,
+"grp": "k15n",
+"v": [
+"Kalshi 6+ assists: our chance 25% vs 18% with the fee (+39%)",
+"game total 238.5",
+"projected 28 min"
+]
+},
+{
+"gid": "401910009",
+"start": "2026-11-19T00:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "pelle larsson",
+"lab": "Pelle Larsson over 7.5 rebounds",
+"p": 0.05,
+"fair": 0.05,
+"ours": 0.0848,
+"price": 1464,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3261,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+33%)",
+"game total 236.5",
+"projected 29 min"
+]
+}
+],
+"p": 0.00825,
+"d": 86.958,
+"first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
 {
@@ -930,60 +992,6 @@
 ],
 "p": 0.0105,
 "d": 73.845,
-"first": "2026-11-19T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910007",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "tyrese proctor",
-"lab": "Tyrese Proctor over 5.5 assists",
-"p": 0.175,
-"fair": 0.175,
-"ours": 0.2501,
-"price": 398,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.2457,
-"grp": "k15n",
-"v": [
-"Kalshi 6+ assists: our chance 25% vs 20% with the fee (+25%)",
-"game total 238.5",
-"projected 28 min"
-]
-},
-{
-"gid": "401910009",
-"start": "2026-11-19T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "pelle larsson",
-"lab": "Pelle Larsson over 7.5 rebounds",
-"p": 0.05,
-"fair": 0.05,
-"ours": 0.0848,
-"price": 1464,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.3261,
-"grp": "k15n",
-"v": [
-"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+33%)",
-"game total 236.5",
-"projected 29 min"
-]
-}
-],
-"p": 0.00875,
-"d": 77.887,
 "first": "2026-11-19T00:00:00+00:00",
 "res": null
 },
