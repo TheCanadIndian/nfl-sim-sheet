@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-19",
 "lock": "2026-11-20T01:00:00+00:00",
-"frozen_at": "2026-11-19T19:01:20.239Z",
+"frozen_at": "2026-11-19T19:18:30.027Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,53 +10,6 @@
 ],
 "final_at": "2026-11-20T00:00:00+00:00",
 "parlays": [
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401910020",
-"start": "2026-11-20T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "jrue holiday",
-"lab": "Jrue Holiday 3+ threes",
-"p": 0.426,
-"price": 150,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401910021",
-"start": "2026-11-20T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 8+ ast",
-"p": 0.2709,
-"price": 280,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.11541,
-"d": 9.5,
-"first": "2026-11-20T01:00:00+00:00",
-"pick": "core",
-"res": null
-},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -106,64 +59,49 @@
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
-"gid": "401910019",
+"gid": "401910020",
 "start": "2026-11-20T01:00Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "cameron boozer",
-"lab": "Cameron Boozer 6+ ast",
-"p": 0.395,
+"line": 2.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday 3+ threes",
+"p": 0.426,
 "price": 150,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
-"rotation"
-]
-},
-{
-"gid": "401910020",
-"start": "2026-11-20T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "deni avdija",
-"lab": "Deni Avdija 7+ ast",
-"p": 0.3731,
-"price": 175,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
 "gid": "401910021",
 "start": "2026-11-20T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 7.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 8+ ast",
-"p": 0.2709,
-"price": 280,
-"book": "Kalshi",
+"line": 3.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson 4+ reb",
+"p": 0.37,
+"price": 167,
+"book": "Novig",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "game"
 ]
 }
 ],
-"p": 0.03993,
-"d": 26.125,
+"p": 0.15764,
+"d": 6.675,
 "first": "2026-11-20T01:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -225,6 +163,68 @@
 ],
 "p": 0.04746,
 "d": 21.519,
+"first": "2026-11-20T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910019",
+"start": "2026-11-20T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "cameron boozer",
+"lab": "Cameron Boozer 6+ ast",
+"p": 0.395,
+"price": 150,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+},
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "deni avdija",
+"lab": "Deni Avdija 7+ ast",
+"p": 0.3731,
+"price": 175,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910021",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson 4+ reb",
+"p": 0.37,
+"price": 167,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"game"
+]
+}
+],
+"p": 0.05454,
+"d": 18.356,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -384,28 +384,27 @@
 ]
 },
 {
-"gid": "401910021",
+"gid": "401910022",
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "jalen brunson",
-"lab": "Jalen Brunson over 3.5 rebounds",
-"p": 0.37,
-"fair": 0.371,
-"price": 167,
-"book": "Novig",
+"line": 5.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox over 5.5 rebounds",
+"p": 0.2715,
+"fair": 0.2745,
+"price": 266,
+"book": "Kalshi",
 "sport": "nba",
-"edge": -0.012,
+"edge": -0.0064,
 "v": [
-"consensus odds drop",
-"one rung above the main line (2.5)",
-"soft matchup"
+"consensus line up",
+"one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.04398,
-"d": 25.532,
+"p": 0.03254,
+"d": 34.999,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
