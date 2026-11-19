@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-19",
 "lock": "2026-11-20T01:00:00+00:00",
-"frozen_at": "2026-11-19T18:48:33.493Z",
+"frozen_at": "2026-11-19T19:01:20.239Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 2.5,
 "name": "jrue holiday",
 "lab": "Jrue Holiday 3+ threes",
-"p": 0.4292,
+"p": 0.426,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -41,7 +41,7 @@
 "line": 7.5,
 "name": "lamelo ball",
 "lab": "LaMelo Ball 8+ ast",
-"p": 0.2702,
+"p": 0.2709,
 "price": 280,
 "book": "Kalshi",
 "f": [
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.116,
+"p": 0.11541,
 "d": 9.5,
 "first": "2026-11-20T01:00:00+00:00",
 "pick": "core",
@@ -69,7 +69,7 @@
 "line": 2.5,
 "name": "jrue holiday",
 "lab": "Jrue Holiday 3+ threes",
-"p": 0.4292,
+"p": 0.426,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -83,23 +83,23 @@
 {
 "gid": "401910021",
 "start": "2026-11-20T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "jonathan kuminga",
-"lab": "Jonathan Kuminga 4+ ast",
-"p": 0.2547,
-"price": 296,
-"book": "Kalshi",
+"line": 7.5,
+"name": "josh hart",
+"lab": "Josh Hart 8+ reb",
+"p": 0.322,
+"price": 213,
+"book": "Novig",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "game"
 ]
 }
 ],
-"p": 0.10934,
-"d": 9.9,
+"p": 0.13717,
+"d": 7.825,
 "first": "2026-11-20T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -116,7 +116,7 @@
 "line": 5.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 6+ ast",
-"p": 0.3968,
+"p": 0.395,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -151,7 +151,7 @@
 "line": 7.5,
 "name": "lamelo ball",
 "lab": "LaMelo Ball 8+ ast",
-"p": 0.2702,
+"p": 0.2709,
 "price": 280,
 "book": "Kalshi",
 "f": [
@@ -161,7 +161,7 @@
 ]
 }
 ],
-"p": 0.04001,
+"p": 0.03993,
 "d": 26.125,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
@@ -178,7 +178,7 @@
 "line": 5.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 6+ ast",
-"p": 0.3968,
+"p": 0.395,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -208,23 +208,84 @@
 {
 "gid": "401910021",
 "start": "2026-11-20T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "jonathan kuminga",
-"lab": "Jonathan Kuminga 4+ ast",
-"p": 0.2547,
-"price": 296,
-"book": "Kalshi",
+"line": 7.5,
+"name": "josh hart",
+"lab": "Josh Hart 8+ reb",
+"p": 0.322,
+"price": 213,
+"book": "Novig",
 "f": [
 "usage",
-"rotation",
+"matchup",
 "game"
 ]
 }
 ],
-"p": 0.03771,
-"d": 27.225,
+"p": 0.04746,
+"d": 21.519,
+"first": "2026-11-20T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 12.5,
+"name": "donovan clingan",
+"lab": "Donovan Clingan over 12.5 rebounds",
+"p": 0.4581,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0388
+},
+{
+"gid": "401910019",
+"start": "2026-11-20T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "yaxel lendeborg",
+"lab": "Yaxel Lendeborg over 4.5 assists",
+"p": 0.467,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.1245
+}
+],
+"p": 0.21393,
+"d": 5.513,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -233,23 +294,93 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401910020",
+"gid": "401910019",
 "start": "2026-11-20T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "myles turner",
-"lab": "Myles Turner over 2.5 threes",
-"p": 0.2948,
-"fair": 0.3015,
+"line": 5.5,
+"name": "yaxel lendeborg",
+"lab": "Yaxel Lendeborg over 5.5 assists",
+"p": 0.2872,
+"fair": 0.2928,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1053,
+"edge": 0.0769,
 "v": [
+"Pinnacle odds drop",
+"consensus line up",
+"one rung above the main line (4.5)"
+]
+},
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brayden burries",
+"lab": "Brayden Burries over 5.5 rebounds",
+"p": 0.4025,
+"fair": 0.4049,
+"price": 155,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0265,
+"v": [
+"Pinnacle odds drop",
 "consensus odds drop",
-"one rung above the main line (1.5)",
-"LC"
+"one rung above the main line (4.5)"
+]
+}
+],
+"p": 0.11855,
+"d": 9.562,
+"first": "2026-11-20T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401910019",
+"start": "2026-11-20T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "yaxel lendeborg",
+"lab": "Yaxel Lendeborg over 5.5 assists",
+"p": 0.2872,
+"fair": 0.2928,
+"price": 275,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0769,
+"v": [
+"Pinnacle odds drop",
+"consensus line up",
+"one rung above the main line (4.5)"
+]
+},
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brayden burries",
+"lab": "Brayden Burries over 5.5 rebounds",
+"p": 0.4025,
+"fair": 0.4049,
+"price": 155,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0265,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (4.5)"
 ]
 },
 {
@@ -257,23 +388,24 @@
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 14.5,
-"name": "karlanthony towns",
-"lab": "Karl-Anthony Towns over 14.5 rebounds",
-"p": 0.3306,
-"fair": 0.3328,
-"price": 165,
-"book": "Hard Rock",
+"line": 3.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson over 3.5 rebounds",
+"p": 0.37,
+"fair": 0.371,
+"price": 167,
+"book": "Novig",
 "sport": "nba",
-"edge": -0.124,
+"edge": -0.012,
 "v": [
-"consensus line up",
-"one rung above the main line (13.5)"
+"consensus odds drop",
+"one rung above the main line (2.5)",
+"soft matchup"
 ]
 }
 ],
-"p": 0.10034,
-"d": 9.938,
+"p": 0.04398,
+"d": 25.532,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -284,38 +416,38 @@
 {
 "gid": "401910019",
 "start": "2026-11-20T01:00:00+00:00",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
 "line": 4.5,
-"name": "gui santos",
-"lab": "Gui Santos over 4.5 rebounds",
-"p": 0.4874,
-"price": 135,
+"name": "yaxel lendeborg",
+"lab": "Yaxel Lendeborg over 4.5 assists",
+"p": 0.451,
+"price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1453,
-"fair": 0.5086,
-"main": false
+"edge": 0.1049,
+"fair": 0.467,
+"main": true
 },
 {
 "gid": "401910020",
 "start": "2026-11-20T01:00:00+00:00",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
 "line": 2.5,
 "name": "myles turner",
-"lab": "Myles Turner over 2.5 assists",
-"p": 0.3524,
-"price": 208,
-"book": "Novig",
+"lab": "Myles Turner over 2.5 threes",
+"p": 0.2933,
+"price": 275,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0854,
-"fair": 0.3666,
+"edge": 0.1,
+"fair": 0.3074,
 "main": false
 }
 ],
-"p": 0.17176,
-"d": 7.238,
+"p": 0.13228,
+"d": 9.188,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 }
