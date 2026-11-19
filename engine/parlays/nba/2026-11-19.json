@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-19",
 "lock": "2026-11-20T01:00:00+00:00",
-"frozen_at": "2026-11-19T22:47:57.368Z",
+"frozen_at": "2026-11-19T23:01:23.812Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,23 +15,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401910019",
-"start": "2026-11-20T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "cedric coward",
-"lab": "Cedric Coward 3+ threes",
-"p": 0.3638,
-"price": 190,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
 "gid": "401910020",
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
@@ -48,10 +31,27 @@
 "game",
 "price"
 ]
+},
+{
+"gid": "401910021",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 6+ reb",
+"p": 0.4217,
+"price": 138,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.15608,
-"d": 8.12,
+"p": 0.18091,
+"d": 6.664,
 "first": "2026-11-20T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -63,58 +63,12 @@
 {
 "gid": "401910019",
 "start": "2026-11-20T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "cedric coward",
-"lab": "Cedric Coward 3+ threes",
-"p": 0.3638,
-"price": 190,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401910020",
-"start": "2026-11-20T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 14.5,
-"name": "donovan clingan",
-"lab": "Donovan Clingan 15+ reb",
-"p": 0.3265,
-"price": 260,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.1188,
-"d": 10.44,
-"first": "2026-11-20T01:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910019",
-"start": "2026-11-20T01:00Z",
 "kind": "ast",
 "side": "o",
 "line": 5.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 6+ ast",
-"p": 0.3982,
+"p": 0.3957,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -140,29 +94,12 @@
 "game",
 "price"
 ]
-},
-{
-"gid": "401910021",
-"start": "2026-11-20T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "jonathan kuminga",
-"lab": "Jonathan Kuminga 6+ reb",
-"p": 0.4327,
-"price": 138,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.07392,
-"d": 16.66,
+"p": 0.16977,
+"d": 7,
 "first": "2026-11-20T01:00:00+00:00",
-"pick": "longshot",
+"pick": "core",
 "res": null
 },
 {
@@ -177,7 +114,7 @@
 "line": 5.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer 6+ ast",
-"p": 0.3982,
+"p": 0.3957,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -191,11 +128,11 @@
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 14.5,
+"line": 13.5,
 "name": "donovan clingan",
-"lab": "Donovan Clingan 15+ reb",
-"p": 0.3265,
-"price": 260,
+"lab": "Donovan Clingan 14+ reb",
+"p": 0.4088,
+"price": 180,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -212,7 +149,7 @@
 "line": 5.5,
 "name": "jonathan kuminga",
 "lab": "Jonathan Kuminga 6+ reb",
-"p": 0.4327,
+"p": 0.4217,
 "price": 138,
 "book": "Novig",
 "f": [
@@ -222,8 +159,71 @@
 ]
 }
 ],
-"p": 0.05626,
-"d": 21.42,
+"p": 0.06822,
+"d": 16.66,
+"first": "2026-11-20T01:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "donovan clingan",
+"lab": "Donovan Clingan 14+ reb",
+"p": 0.4088,
+"price": 180,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401910021",
+"start": "2026-11-20T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball 5+ threes",
+"p": 0.3282,
+"price": 199,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910022",
+"start": "2026-11-20T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 2+ threes",
+"p": 0.3986,
+"price": 147,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+}
+],
+"p": 0.05347,
+"d": 20.679,
 "first": "2026-11-20T01:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -240,7 +240,7 @@
 "line": 5.5,
 "name": "brayden burries",
 "lab": "Brayden Burries over 5.5 rebounds",
-"p": 0.4965,
+"p": 0.4946,
 "price": 155,
 "book": "Hard Rock",
 "f": [
@@ -248,7 +248,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.266
+"edge": 0.2611
 },
 {
 "gid": "401910019",
@@ -258,7 +258,7 @@
 "line": 4.5,
 "name": "yaxel lendeborg",
 "lab": "Yaxel Lendeborg over 4.5 assists",
-"p": 0.4688,
+"p": 0.4783,
 "price": 145,
 "book": "Hard Rock",
 "f": [
@@ -266,10 +266,10 @@
 "rotation"
 ],
 "sport": "nba",
-"edge": 0.1486
+"edge": 0.1719
 }
 ],
-"p": 0.23276,
+"p": 0.23657,
 "d": 6.247,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
@@ -286,7 +286,7 @@
 "line": 12.5,
 "name": "donovan clingan",
 "lab": "Donovan Clingan over 12.5 rebounds",
-"p": 0.5066,
+"p": 0.4907,
 "price": 125,
 "book": "Hard Rock",
 "f": [
@@ -303,7 +303,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.142
+"edge": 0.108
 },
 {
 "gid": "401910019",
@@ -313,7 +313,7 @@
 "line": 9.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer over 9.5 rebounds",
-"p": 0.4583,
+"p": 0.4579,
 "price": 150,
 "book": "Hard Rock",
 "f": [
@@ -328,10 +328,10 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.1381
+"edge": 0.1372
 }
 ],
-"p": 0.23217,
+"p": 0.22469,
 "d": 5.625,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
@@ -348,12 +348,12 @@
 "line": 6.5,
 "name": "brayden burries",
 "lab": "Brayden Burries over 6.5 rebounds",
-"p": 0.3441,
-"fair": 0.3437,
+"p": 0.3343,
+"fair": 0.3334,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2903,
+"edge": 0.2536,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -368,12 +368,12 @@
 "line": 10.5,
 "name": "cameron boozer",
 "lab": "Cameron Boozer over 10.5 rebounds",
-"p": 0.347,
-"fair": 0.3497,
+"p": 0.3466,
+"fair": 0.3493,
 "price": 250,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2145,
+"edge": 0.2132,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -382,8 +382,79 @@
 ]
 }
 ],
-"p": 0.12019,
+"p": 0.11646,
 "d": 13.125,
+"first": "2026-11-20T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "brayden burries",
+"lab": "Brayden Burries over 6.5 rebounds",
+"p": 0.3343,
+"fair": 0.3334,
+"price": 275,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.2536,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (5.5)"
+]
+},
+{
+"gid": "401910019",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "cameron boozer",
+"lab": "Cameron Boozer over 10.5 rebounds",
+"p": 0.3466,
+"fair": 0.3493,
+"price": 250,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.2132,
+"v": [
+"Pinnacle line up",
+"consensus line up",
+"one rung above the main line (9.5)",
+"LC"
+]
+},
+{
+"gid": "401910021",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "jalen brunson",
+"lab": "Jalen Brunson over 3.5 rebounds",
+"p": 0.3721,
+"fair": 0.3734,
+"price": 160,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0326,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)",
+"soft matchup"
+]
+}
+],
+"p": 0.04348,
+"d": 34.125,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -396,32 +467,32 @@
 "start": "2026-11-20T01:00:00+00:00",
 "kind": "reb",
 "side": "o",
-"line": 6.5,
+"line": 5.5,
 "name": "brayden burries",
-"lab": "Brayden Burries over 6.5 rebounds",
-"p": 0.3445,
-"price": 275,
+"lab": "Brayden Burries over 5.5 rebounds",
+"p": 0.4943,
+"price": 155,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2918,
-"fair": 0.3437,
-"main": false
+"edge": 0.2605,
+"fair": 0.4948,
+"main": true
 },
 {
 "gid": "401910019",
 "start": "2026-11-20T01:00:00+00:00",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
+"line": 4.5,
 "name": "yaxel lendeborg",
-"lab": "Yaxel Lendeborg over 5.5 assists",
-"p": 0.3029,
-"price": 275,
+"lab": "Yaxel Lendeborg over 4.5 assists",
+"p": 0.4714,
+"price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1357,
-"fair": 0.3127,
-"main": false
+"edge": 0.155,
+"fair": 0.4852,
+"main": true
 },
 {
 "gid": "401910022",
@@ -431,17 +502,17 @@
 "line": 3.5,
 "name": "keaton wagler",
 "lab": "Keaton Wagler over 3.5 assists",
-"p": 0.2894,
+"p": 0.2882,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0851,
-"fair": 0.2949,
+"edge": 0.0808,
+"fair": 0.2936,
 "main": false
 }
 ],
-"p": 0.0302,
-"d": 52.734,
+"p": 0.06715,
+"d": 23.428,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -457,8 +528,8 @@
 "line": 7.5,
 "name": "yaxel lendeborg",
 "lab": "Yaxel Lendeborg over 7.5 rebounds",
-"p": 0.4655,
-"fair": 0.4655,
+"p": 0.4725,
+"fair": 0.4725,
 "price": 140,
 "book": "Hard Rock",
 "sport": "nba",
@@ -476,8 +547,8 @@
 "line": 12.5,
 "name": "donovan clingan",
 "lab": "Donovan Clingan over 12.5 rebounds",
-"p": 0.5066,
-"fair": 0.5066,
+"p": 0.4907,
+"fair": 0.4907,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
@@ -488,7 +559,7 @@
 ]
 }
 ],
-"p": 0.23582,
+"p": 0.23186,
 "d": 5.4,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
