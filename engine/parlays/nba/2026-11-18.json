@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-19T00:46:30.163Z",
+"frozen_at": "2026-11-19T00:52:22.156Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -884,19 +884,36 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "ausar thompson",
+"lab": "Ausar Thompson 8+ ast",
+"p": 0.3012,
+"price": 280,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
 {
 "gid": "401910016",
 "start": "2026-11-19T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 4.5,
+"line": 5.5,
 "name": "brandin podziemski",
-"lab": "Brandin Podziemski 5+ ast",
-"p": 0.4366,
-"price": 125,
-"book": "Novig",
+"lab": "Brandin Podziemski 6+ ast",
+"p": 0.2769,
+"price": 252,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -907,24 +924,24 @@
 {
 "gid": "401910017",
 "start": "2026-11-19T03:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 12.5,
-"name": "walker kessler",
-"lab": "Walker Kessler 13+ reb",
-"p": 0.3625,
-"price": 220,
-"book": "Hard Rock",
+"line": 2.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 3+ threes",
+"p": 0.3345,
+"price": 186,
+"book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 }
 ],
-"p": 0.15826,
-"d": 7.2,
+"p": 0.0279,
+"d": 38.255,
 "first": "2026-11-19T01:00:00+00:00",
 "res": null
 },
@@ -933,19 +950,19 @@
 "tier": "3-leg",
 "legs": [
 {
-"gid": "401910014",
+"gid": "401910013",
 "start": "2026-11-19T01:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "luguentz dort",
-"lab": "Luguentz Dort 4+ reb",
-"p": 0.4326,
-"price": 159,
+"line": 7.5,
+"name": "ausar thompson",
+"lab": "Ausar Thompson 8+ ast",
+"p": 0.3012,
+"price": 280,
 "book": "Kalshi",
 "f": [
+"usage",
 "rotation",
-"game",
 "price"
 ]
 },
@@ -954,12 +971,12 @@
 "start": "2026-11-19T03:00Z",
 "kind": "fg3m",
 "side": "o",
-"line": 2.5,
-"name": "ace bailey",
-"lab": "Ace Bailey 3+ threes",
-"p": 0.3346,
-"price": 186,
-"book": "Novig",
+"line": 3.5,
+"name": "darryn peterson",
+"lab": "Darryn Peterson 4+ threes",
+"p": 0.2488,
+"price": 280,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -975,7 +992,7 @@
 "line": 3.5,
 "name": "jalen green",
 "lab": "Jalen Green 4+ ast",
-"p": 0.308,
+"p": 0.3077,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -985,8 +1002,88 @@
 ]
 }
 ],
-"p": 0.04458,
-"d": 26.667,
+"p": 0.02306,
+"d": 51.984,
+"first": "2026-11-19T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "total",
+"side": "over",
+"line": 226.5,
+"name": null,
+"lab": "DET-NO over 226.5",
+"p": 0.4974,
+"price": 130,
+"book": "Novig"
+},
+{
+"gid": "401910014",
+"start": "2026-11-19T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "aday mara",
+"lab": "Aday Mara over 6.5 rebounds",
+"p": 0.5456,
+"price": 100,
+"book": "Novig"
+}
+],
+"p": 0.27136,
+"d": 4.6,
+"first": "2026-11-19T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "total",
+"side": "over",
+"line": 226.5,
+"name": null,
+"lab": "DET-NO over 226.5",
+"p": 0.4974,
+"price": 130,
+"book": "Novig"
+},
+{
+"gid": "401910014",
+"start": "2026-11-19T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "aday mara",
+"lab": "Aday Mara over 6.5 rebounds",
+"p": 0.5456,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "401910017",
+"start": "2026-11-19T03:00Z",
+"kind": "spread",
+"side": "home",
+"line": -12.5,
+"name": null,
+"lab": "LAL \u221212.5",
+"p": 0.4946,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.13421,
+"d": 9.798,
 "first": "2026-11-19T01:00:00+00:00",
 "res": null
 },
@@ -1002,7 +1099,7 @@
 "line": 10.5,
 "name": "walker kessler",
 "lab": "Walker Kessler over 10.5 rebounds",
-"p": 0.5632,
+"p": 0.5624,
 "price": -110,
 "book": "Hard Rock",
 "f": [
@@ -1011,7 +1108,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.0752
+"edge": 0.0737
 },
 {
 "gid": "401910018",
@@ -1021,7 +1118,7 @@
 "line": 2.5,
 "name": "jalen green",
 "lab": "Jalen Green over 2.5 assists",
-"p": 0.5232,
+"p": 0.5228,
 "price": 105,
 "book": "Hard Rock",
 "f": [
@@ -1029,10 +1126,10 @@
 "rotation"
 ],
 "sport": "nba",
-"edge": 0.0726
+"edge": 0.0718
 }
 ],
-"p": 0.29467,
+"p": 0.29402,
 "d": 3.914,
 "first": "2026-11-19T03:00:00+00:00",
 "res": null
@@ -1049,12 +1146,12 @@
 "line": 2.5,
 "name": "dillon brooks",
 "lab": "Dillon Brooks over 2.5 threes",
-"p": 0.2456,
+"p": 0.2451,
 "fair": 0.2429,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0176,
+"edge": -0.0195,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (1.5)",
@@ -1062,28 +1159,28 @@
 ]
 },
 {
-"gid": "401910014",
-"start": "2026-11-19T01:00Z",
+"gid": "401910015",
+"start": "2026-11-19T02:30Z",
 "kind": "reb",
 "side": "o",
 "line": 4.5,
-"name": "luguentz dort",
-"lab": "Luguentz Dort over 4.5 rebounds",
-"p": 0.283,
-"fair": 0.2804,
-"price": 250,
+"name": "derrick white",
+"lab": "Derrick White over 4.5 rebounds",
+"p": 0.2708,
+"fair": 0.2726,
+"price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0095,
+"edge": 0.0157,
 "v": [
 "consensus line up + odds drop",
 "one rung above the main line (3.5)"
 ]
 }
 ],
-"p": 0.06811,
-"d": 14.0,
-"first": "2026-11-19T01:00:00+00:00",
+"p": 0.06621,
+"d": 15.0,
+"first": "2026-11-19T02:30:00+00:00",
 "res": null
 }
 ],
