@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-19T14:17:20.423Z",
+"frozen_at": "2026-11-19T14:47:05.566Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -12,8 +12,20 @@
 "parlays": [
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5825,
+"price": -115,
+"book": "Kalshi"
+},
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T13:00:00",
@@ -25,6 +37,28 @@
 "p": 0.4025,
 "price": 170,
 "book": "Novig"
+}
+],
+"p": 0.23449,
+"d": 5.048,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5825,
+"price": -115,
+"book": "Kalshi"
 },
 {
 "gid": "2026_11_TB_DET",
@@ -39,10 +73,43 @@
 "book": "Novig"
 }
 ],
-"p": 0.1099,
-"d": 10.395,
+"p": 0.15903,
+"d": 7.198,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 6.5 receptions",
+"p": 0.5326,
+"price": 122,
+"book": "Novig"
+},
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "amonra st brown",
+"lab": "Amonra St Brown under 6.5 receptions",
+"p": 0.4987,
+"price": 111,
+"book": "Novig"
+}
+],
+"p": 0.26562,
+"d": 4.684,
+"first": "2026-11-22T18:00:00+00:00"
 },
 {
 "card": "Same-game parlays",
@@ -23112,47 +23179,6 @@
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "tony pollard",
-"lab": "Tony Pollard over 2.5 receptions",
-"p": 0.5039,
-"price": 130,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.1589,
-"fair": 0.5169,
-"main": true
-},
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "isaac teslaa",
-"lab": "Isaac Teslaa over 1.5 receptions",
-"p": 0.4469,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.0949,
-"fair": 0.4337,
-"main": true
-}
-],
-"p": 0.22519,
-"d": 5.635,
-"first": "2026-11-22T18:00:00+00:00"
-},
-{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -23201,32 +23227,6 @@
 ],
 "p": 0.5039,
 "d": 2.3,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "isaac teslaa",
-"lab": "Isaac Teslaa over 1.5 receptions",
-"p": 0.4469,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.0949,
-"fair": 0.4337,
-"main": true
-}
-],
-"p": 0.4469,
-"d": 2.45,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
 },
