@@ -71,5 +71,35 @@ def draws(out, rows, n=1000, seed=0):
         b = np.clip(np.searchsorted(P["buckets"], np.abs(marg), side="right") - 1, 0, len(P["starters"]) - 1)
         hs, hb = np.array(P["starters"])[b], np.array(P["bench"])[b]
         o = run(np.where(top[:, None], hs[None, :] / hs.mean(), hb[None, :] / hb.mean()))
+    if TH_LINK and "pts" in o and "fg3m" in o:
+        o["fg3m"] = link_threes(o["pts"], o["fg3m"], np.random.default_rng(seed + 7919))
     o["pra"] = o["pts"] + o["reb"] + o["ast"]
     return o
+
+
+# Points <-> threes (2026-11-19, research/nba_corr_fix.py, owner 'Ship it'): threes are drawn apart from points (threes.py:
+# no minutes factor), so a player's points and threes overs came out ~independent here (+.005) vs +.54 in the box scores.
+# Each player's threes draws are re-paired with his points draws by a Gaussian copula at rho = clip(a + b x his threes
+# share of points, 0, .95): his threes distribution is unchanged (a reorder), only which sims they sit in. Fit Oct 24 - Nov 6,
+# test Nov 7 - 18 (90 games): same player points + threes Brier -164e-4 [-225, -103], both halves; teammates assists +
+# threes +3.5 [+0.5, +6.5]; impossible sims (3 x threes > points) 15.8% -> 7.8%. None turns it off.
+TH_LINK = (0.4, 0.5)
+
+
+def link_threes(pts, fg3m, rng):
+    a, b = TH_LINK
+    out = fg3m.copy()
+    n = pts.shape[1]
+    for i in range(len(pts)):
+        x, y = pts[i], fg3m[i]
+        if x.mean() <= 0:
+            continue
+        rho = float(np.clip(a + b * 3 * y.mean() / max(x.mean(), 1.0), 0, .95))
+        if rho <= 0:
+            continue
+        order = np.lexsort((rng.random(n), x))              # points ranks, ties broken at random
+        r = np.empty(n); r[order] = np.arange(n)
+        z = rho * SS.norm.ppf((r + .5) / n) + np.sqrt(1 - rho * rho) * rng.standard_normal(n)
+        new = np.empty_like(y); new[np.argsort(z)] = np.sort(y)
+        out[i] = new
+    return out
