@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-19",
 "lock": "2026-11-20T00:00:00+00:00",
-"frozen_at": "2026-11-19T12:39:44.714Z",
+"frozen_at": "2026-11-19T12:53:23.628Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -1853,20 +1853,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026020351",
+"gid": "2026020354",
 "start": "2026-11-20T00:00:00Z",
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "dylan strome",
-"lab": "Dylan Strome over 1.5 shots",
-"p": 0.5566,
-"price": -120,
+"name": "kyle palmieri",
+"lab": "Kyle Palmieri over 1.5 shots",
+"p": 0.5583,
+"price": -122,
 "book": "Novig"
 }
 ],
-"p": 0.29399,
-"d": 3.631,
+"p": 0.2949,
+"d": 3.604,
 "first": "2026-11-20T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -1888,20 +1888,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026020351",
+"gid": "2026020354",
 "start": "2026-11-20T00:00:00Z",
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "dylan strome",
-"lab": "Dylan Strome over 1.5 shots",
-"p": 0.5566,
-"price": -120,
+"name": "kyle palmieri",
+"lab": "Kyle Palmieri over 1.5 shots",
+"p": 0.5583,
+"price": -122,
 "book": "Novig"
 }
 ],
-"p": 0.29211,
-"d": 3.596,
+"p": 0.29301,
+"d": 3.569,
 "first": "2026-11-20T00:00:00+00:00",
 "res": null
 },
@@ -1942,7 +1942,7 @@
 },
 {
 "card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
+"tier": "Best shot",
 "legs": [
 {
 "gid": "2026020347",
@@ -1962,62 +1962,15 @@
 "kind": "sog",
 "side": "o",
 "line": 1.5,
-"name": "thomas chabot",
-"lab": "Thomas Chabot over 1.5 shots",
-"p": 0.5368,
-"price": -113,
-"book": "Novig"
-},
-{
-"gid": "2026020349",
-"start": "2026-11-20T00:30:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "john carlson",
-"lab": "John Carlson over 1.5 shots",
-"p": 0.5518,
-"price": -113,
+"name": "porter martone",
+"lab": "Porter Martone over 1.5 shots",
+"p": 0.5217,
+"price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.15645,
-"d": 7.036,
-"first": "2026-11-20T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "Best shot",
-"legs": [
-{
-"gid": "2026020347",
-"start": "2026-11-20T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "darren raddysh",
-"lab": "Darren Raddysh over 2.5 shots",
-"p": 0.4939,
-"price": 125,
-"book": "Novig"
-},
-{
-"gid": "2026020350",
-"start": "2026-11-20T00:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "STL moneyline",
-"p": 0.5249,
-"price": -104,
-"book": "Novig"
-}
-],
-"p": 0.25922,
-"d": 4.413,
+"p": 0.27559,
+"d": 4,
 "first": "2026-11-20T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -2249,6 +2202,48 @@
 ],
 "p": 0.20638,
 "d": 4.631,
+"first": "2026-11-20T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026020347",
+"start": "2026-11-20T00:00:00+00:00",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "darren raddysh",
+"lab": "Darren Raddysh 3+ shots",
+"p": 0.4939,
+"price": 125,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.1113,
+"fair": 0.4338,
+"main": true
+},
+{
+"gid": "2026020350",
+"start": "2026-11-20T00:00:00+00:00",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "erik karlsson",
+"lab": "Erik Karlsson 3+ shots",
+"p": 0.4512,
+"price": 140,
+"book": "Hard Rock",
+"sport": "nhl",
+"edge": 0.0829,
+"fair": 0.4124,
+"main": true
+}
+],
+"p": 0.22285,
+"d": 5.4,
 "first": "2026-11-20T00:00:00+00:00",
 "res": null
 }
