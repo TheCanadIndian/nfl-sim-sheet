@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-19T00:38:37.511Z",
+"frozen_at": "2026-11-19T00:46:30.163Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -884,21 +884,66 @@
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
-"gid": "401910013",
+"gid": "401910016",
 "start": "2026-11-19T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "zion williamson",
-"lab": "Zion Williamson 4+ ast",
-"p": 0.3832,
-"price": 178,
+"line": 4.5,
+"name": "brandin podziemski",
+"lab": "Brandin Podziemski 5+ ast",
+"p": 0.4366,
+"price": 125,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910017",
+"start": "2026-11-19T03:00Z",
+"kind": "reb",
+"side": "o",
+"line": 12.5,
+"name": "walker kessler",
+"lab": "Walker Kessler 13+ reb",
+"p": 0.3625,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.15826,
+"d": 7.2,
+"first": "2026-11-19T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910014",
+"start": "2026-11-19T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "luguentz dort",
+"lab": "Luguentz Dort 4+ reb",
+"p": 0.4326,
+"price": 159,
+"book": "Kalshi",
+"f": [
 "rotation",
 "game",
 "price"
@@ -912,7 +957,7 @@
 "line": 2.5,
 "name": "ace bailey",
 "lab": "Ace Bailey 3+ threes",
-"p": 0.3347,
+"p": 0.3346,
 "price": 186,
 "book": "Novig",
 "f": [
@@ -930,7 +975,7 @@
 "line": 3.5,
 "name": "jalen green",
 "lab": "Jalen Green 4+ ast",
-"p": 0.3077,
+"p": 0.308,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -940,71 +985,8 @@
 ]
 }
 ],
-"p": 0.03947,
-"d": 28.623,
-"first": "2026-11-19T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910013",
-"start": "2026-11-19T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham 3+ threes",
-"p": 0.3959,
-"price": 163,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910017",
-"start": "2026-11-19T03:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "ace bailey",
-"lab": "Ace Bailey 3+ threes",
-"p": 0.3347,
-"price": 186,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910018",
-"start": "2026-11-19T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "jalen green",
-"lab": "Jalen Green 4+ ast",
-"p": 0.3077,
-"price": 260,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.04077,
-"d": 27.078,
+"p": 0.04458,
+"d": 26.667,
 "first": "2026-11-19T01:00:00+00:00",
 "res": null
 },
@@ -1020,7 +1002,7 @@
 "line": 10.5,
 "name": "walker kessler",
 "lab": "Walker Kessler over 10.5 rebounds",
-"p": 0.562,
+"p": 0.5632,
 "price": -110,
 "book": "Hard Rock",
 "f": [
@@ -1029,7 +1011,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.0729
+"edge": 0.0752
 },
 {
 "gid": "401910018",
@@ -1039,7 +1021,7 @@
 "line": 2.5,
 "name": "jalen green",
 "lab": "Jalen Green over 2.5 assists",
-"p": 0.5229,
+"p": 0.5232,
 "price": 105,
 "book": "Hard Rock",
 "f": [
@@ -1047,10 +1029,10 @@
 "rotation"
 ],
 "sport": "nba",
-"edge": 0.072
+"edge": 0.0726
 }
 ],
-"p": 0.29387,
+"p": 0.29467,
 "d": 3.914,
 "first": "2026-11-19T03:00:00+00:00",
 "res": null
@@ -1067,12 +1049,12 @@
 "line": 2.5,
 "name": "dillon brooks",
 "lab": "Dillon Brooks over 2.5 threes",
-"p": 0.2451,
+"p": 0.2456,
 "fair": 0.2429,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0196,
+"edge": -0.0176,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (1.5)",
@@ -1087,19 +1069,19 @@
 "line": 4.5,
 "name": "luguentz dort",
 "lab": "Luguentz Dort over 4.5 rebounds",
-"p": 0.2848,
-"fair": 0.2826,
+"p": 0.283,
+"fair": 0.2804,
 "price": 250,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0033,
+"edge": -0.0095,
 "v": [
 "consensus line up + odds drop",
 "one rung above the main line (3.5)"
 ]
 }
 ],
-"p": 0.06864,
+"p": 0.06811,
 "d": 14.0,
 "first": "2026-11-19T01:00:00+00:00",
 "res": null
