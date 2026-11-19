@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-19T14:47:05.566Z",
+"frozen_at": "2026-11-19T15:17:20.877Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,18 +15,6 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5825,
-"price": -115,
-"book": "Kalshi"
-},
-{
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T13:00:00",
 "kind": "rec",
@@ -37,10 +25,22 @@
 "p": 0.4025,
 "price": 170,
 "book": "Novig"
+},
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5851,
+"price": -120,
+"book": "Kalshi"
 }
 ],
-"p": 0.23449,
-"d": 5.048,
+"p": 0.23552,
+"d": 4.95,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -56,8 +56,8 @@
 "line": 49.5,
 "name": "trey mcbride",
 "lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5825,
-"price": -115,
+"p": 0.5851,
+"price": -120,
 "book": "Kalshi"
 },
 {
@@ -73,8 +73,41 @@
 "book": "Novig"
 }
 ],
-"p": 0.15903,
-"d": 7.198,
+"p": 0.15973,
+"d": 7.058,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4025,
+"price": 170,
+"book": "Novig"
+},
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T13:00:00",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "TB moneyline",
+"p": 0.273,
+"price": 285,
+"book": "Novig"
+}
+],
+"p": 0.1099,
+"d": 10.395,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -82,18 +115,6 @@
 "card": "Value-tag parlays (higher odds)",
 "tier": "+300 to +1000",
 "legs": [
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"kind": "rec",
-"side": "u",
-"line": 6.5,
-"name": "justin jefferson",
-"lab": "Justin Jefferson under 6.5 receptions",
-"p": 0.5326,
-"price": 122,
-"book": "Novig"
-},
 {
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T13:00:00",
@@ -104,6 +125,18 @@
 "lab": "Amonra St Brown under 6.5 receptions",
 "p": 0.4987,
 "price": 111,
+"book": "Novig"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "justin jefferson",
+"lab": "Justin Jefferson under 6.5 receptions",
+"p": 0.5326,
+"price": 122,
 "book": "Novig"
 }
 ],
