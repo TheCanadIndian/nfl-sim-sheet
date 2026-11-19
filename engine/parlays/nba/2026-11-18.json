@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-19T00:35:03.582Z",
+"frozen_at": "2026-11-19T00:38:37.511Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -905,15 +905,15 @@
 ]
 },
 {
-"gid": "401910016",
-"start": "2026-11-19T01:00Z",
-"kind": "ast",
+"gid": "401910017",
+"start": "2026-11-19T03:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 5.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski 6+ ast",
-"p": 0.2769,
-"price": 245,
+"line": 2.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 3+ threes",
+"p": 0.3347,
+"price": 186,
 "book": "Novig",
 "f": [
 "usage",
@@ -930,7 +930,7 @@
 "line": 3.5,
 "name": "jalen green",
 "lab": "Jalen Green 4+ ast",
-"p": 0.3062,
+"p": 0.3077,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -940,8 +940,71 @@
 ]
 }
 ],
-"p": 0.03248,
-"d": 34.528,
+"p": 0.03947,
+"d": 28.623,
+"first": "2026-11-19T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham 3+ threes",
+"p": 0.3959,
+"price": 163,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910017",
+"start": "2026-11-19T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "ace bailey",
+"lab": "Ace Bailey 3+ threes",
+"p": 0.3347,
+"price": 186,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910018",
+"start": "2026-11-19T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jalen green",
+"lab": "Jalen Green 4+ ast",
+"p": 0.3077,
+"price": 260,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.04077,
+"d": 27.078,
 "first": "2026-11-19T01:00:00+00:00",
 "res": null
 },
@@ -997,6 +1060,26 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401910018",
+"start": "2026-11-19T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "dillon brooks",
+"lab": "Dillon Brooks over 2.5 threes",
+"p": 0.2451,
+"fair": 0.2429,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0196,
+"v": [
+"Pinnacle odds drop",
+"one rung above the main line (1.5)",
+"soft matchup"
+]
+},
+{
 "gid": "401910014",
 "start": "2026-11-19T01:00Z",
 "kind": "reb",
@@ -1014,30 +1097,10 @@
 "consensus line up + odds drop",
 "one rung above the main line (3.5)"
 ]
-},
-{
-"gid": "401910018",
-"start": "2026-11-19T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "jalen green",
-"lab": "Jalen Green over 3.5 assists",
-"p": 0.3062,
-"fair": 0.3058,
-"price": 260,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1023,
-"v": [
-"consensus odds drop",
-"one rung above the main line (2.5)",
-"soft matchup"
-]
 }
 ],
-"p": 0.08642,
-"d": 12.6,
+"p": 0.06864,
+"d": 14.0,
 "first": "2026-11-19T01:00:00+00:00",
 "res": null
 }
