@@ -405,6 +405,22 @@ function nvEdge(g, p, u){
 }
 const nvOk = e => e != null && e >= .10 && e <= .40;
 const k15Ok = u => (u.praw ?? u.p) != null && u.cost && (u.praw ?? u.p) / u.cost - 1 >= .15;
+// 15%+ K pick (owner 2026-11-19: show each player's 15%+ K rung wherever it sits on his ladder, sorted first; after the ladder
+// rules since Nov 11: this one 150 won vs 138.1 priced on 587, +15% (+-15, 8 nights) -- the card's own rule -1%, its anchored
+// twin -38% on 104). Exactly the Profit row 'NBA study pick' (profit.nba_ladder_rows): every Kalshi pts / reb / ast / 3PM rung,
+// spread 5c or less, mid 3-97c, ask under 97c, our own chance 15-40% over the ask + fee, the stat's biggest; no minutes cut and
+// any rung height (405 of those 587 picks sat on rungs the card never showed). ke = that edge; anchored / priced like the card.
+function k15Picks(g, p){
+  if (!(window.MKT && MKT.ladderAll) || p.st === 'Out') return [];
+  const best = {};
+  for (const u of MKT.ladderAll(g.id, p.id, p.n, Object.keys(KLAB))){
+    if (u.p == null || u.ya - u.yb > .05 || u.mid < .03 || u.mid > .97 || u.ya >= .97) continue;
+    const e = u.p / u.cost - 1;
+    if (e >= .15 && e <= .40 && (!best[u.k] || e > best[u.k].ke)) best[u.k] = {...u, ke: e};
+  }
+  return Object.values(best).map(ladAnchor).map(ladPrice).sort((a, b) => b.ke - a.ke);
+}
+const k15Of = (c, u) => (c.k15 || []).find(x => x.k === u.k && x.l === u.l);
 // Box score (owner 2026-11-18: 'when a player is above their market projection show if they are a ladder candidate and if so if
 // they are k15%+ or novig 10%+'): his Ladder edges rungs for that stat (the card's rule: 20+ min, 2+ above the 50/50 rung, 5%+
 // edge); if any, his ladder's best 15%+ K rung and best Novig-under-the-books rung (any rung, as the card's dropdown shows them)
@@ -414,7 +430,7 @@ function ladInfo(g, p, k){
   const rungs = MKT.ladder(g.id, p.id, p.n, [k]).map(ladAnchor).map(ladPrice).filter(u => u.edge != null && u.edge >= LEDGE);
   if (!rungs.length) return null;
   const all = MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n, [k]).map(ladAnchor).map(ladPrice) : rungs;
-  const k15 = all.filter(k15Ok).sort((a, b) => (b.praw ?? b.p) / b.cost - (a.praw ?? a.p) / a.cost)[0] || null;
+  const k15 = k15Picks(g, p).find(u => u.k === k) || null;           // the tracked pick (same as the card's)
   const nv = all.map(u => [u, nvEdge(g, p, u)]).filter(([, e]) => nvOk(e)).sort((a, b) => b[1] - a[1])[0] || null;
   return {n: rungs.length, top: rungs[0], k15, nv};
 }
@@ -428,7 +444,7 @@ function ladBoxTags(g, p, k){
 function lruChip(c, u0){
   const key = `${c.p.id}|${u0.k}|${u0.l}`, lo = c.all.filter(x => x.k === u0.k && x.l <= u0.l).sort((a, b) => b.l - a.l);
   LADC[key] = {c, u0};
-  const u = lo.find(x => x.l === LADSEL[key]) || u0, flagged = c.rungs.some(x => x.k === u.k && x.l === u.l), b = u.best, kc = u.cost;
+  const u = lo.find(x => x.l === LADSEL[key]) || u0, kp = k15Of(c, u), flagged = !kp && c.rungs.some(x => x.k === u.k && x.l === u.l), b = u.best, kc = u.cost;
   const n = l => Math.round(l + .5), tx = o => `${o.b === 'Kalshi' ? 'K' : o.b === 'Hard Rock' ? 'HR' : 'NV'} ${o.price}`;
   // multi-book fair (MKT.multiFair, leaving out the best book) + the tracked Novig check: Novig's price 10%+ under the
   // fair from 2+ other sources (30% ours) -- research/ladder_multibook.py, Novig +73% on 120, both halves, a lead (owner 2026-11-03)
@@ -436,7 +452,8 @@ function lruChip(c, u0){
   const nve = nvEdge(c.g, c.p, u);
   const mfTxt = mf ? ` · fair from ${Object.keys(mf.parts).length} source${Object.keys(mf.parts).length === 1 ? '' : 's'} ${Math.round(mf.f * 100)}% (${Object.entries(mf.parts).map(([k, v]) => `${k} ${Math.round(v * 100)}%`).join(', ')}, without ${b.b})` : '';
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
-  return `<span class="lru" title="${n(u.l)}+ ${KLAB[u.k]}: chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}${u.praw != null ? ` (23% our ${Math.round(u.praw * 100)}% + 77% Kalshi’s mid: our own number ran high on these rungs)` : ''} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}">${num}${aStar(c.p, u)} ${KLAB[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">chance ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
+  const kpTxt = kp ? ` · 15%+ K pick: our own chance ${Math.round(kp.praw * 100)}% vs Kalshi’s ask + fee ${Math.round(kp.cost * 100)}% = +${Math.round(kp.ke * 100)}%, the one rung of his ${KLAB[u.k]} ladder the Profit page grades (‘NBA study pick’); the one ladder rule ahead since Nov 11, not proven` : '';
+  return `<span class="lru${kp ? ' thpk' : ''}" title="${n(u.l)}+ ${KLAB[u.k]}: chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}${u.praw != null ? ` (23% our ${Math.round(u.praw * 100)}% + 77% Kalshi’s mid: our own number ran high on these rungs)` : ''} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}${kpTxt}">${num}${kp ? ' <b class="thtag">15%+ K pick</b>' : ''}${aStar(c.p, u)} ${KLAB[u.k]} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${kp ? ` <b class="ledge">+${Math.round(kp.ke * 100)}% K</b>` : flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">chance ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u, kp)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
@@ -509,11 +526,16 @@ function aStar(p, u){
   if (!c || c.n < 20 || c.r <= 0 || c.w <= c.e) return '';
   return ` <b class="lstar" title="${esc(`${p.ar} · ${ST_NM[u.k].toLowerCase()} · ${c.b}: ${c.w} won vs ${c.e.toFixed(1)} priced on ${c.n} straights, +${Math.round(c.r * 100)}% (Profit page, last 30 days). Picked after the fact: a lead, not a rule.`)}">★</b>`;
 }
-const ladRungFit = u => ((u.praw ?? u.p) != null && u.cost && (u.praw ?? u.p) / u.cost - 1 >= .15 ? ` <b class="lfit" title="${esc(LFIT.k15)}">15%+ K</b>` : '') + (u.k === 'fg3m' ? ` <b class="lfit" title="${esc(LFIT.fg3m)}">3PM</b>` : '');
+const ladRungFit = (u, kp) => (!kp && (u.praw ?? u.p) != null && u.cost && (u.praw ?? u.p) / u.cost - 1 >= .15 ? ` <b class="lfit" title="${esc(LFIT.k15)}">15%+ K</b>` : '') + (u.k === 'fg3m' ? ` <b class="lfit" title="${esc(LFIT.fg3m)}">3PM</b>` : '');
 // rungs shown on a player row (top 3 of the flagged set, by the move / star filters)
-const ladShown = c => (LADM ? c.rungs.filter(u => ladMv(c, u) === LADM) : c.rungs).filter(u => !LADS || aStar(c.p, u)).slice(0, 3);
+// 15%+ K picks first (each stat's one), then up to 3 flagged rungs that aren't a pick
+const ladFilt = (c, L) => (LADM ? L.filter(u => ladMv(c, u) === LADM) : L).filter(u => !LADS || aStar(c.p, u));
+const ladRest = c => c.rungs.filter(u => !k15Of(c, u));
+const ladPool = c => [...(c.k15 || []), ...ladRest(c)];
+const ladShown = c => [...ladFilt(c, c.k15 || []), ...ladFilt(c, ladRest(c)).slice(0, 3)];
+const ladCmp = (a, b) => ((b.kb != null) - (a.kb != null)) || ((b.kb ?? b.best) - (a.kb ?? a.best));
 // every rung of his ladder with a ★: the flagged ones first, then the rest of the ladder (lower rungs in the dropdown)
-const starRungs = c => [...c.rungs, ...(c.all || []).filter(u => !c.rungs.some(r => r.k === u.k && r.l === u.l))].filter(u => aStar(c.p, u));
+const starRungs = c => { const P = ladPool(c); return [...P, ...(c.all || []).filter(u => !P.some(r => r.k === u.k && r.l === u.l))].filter(u => aStar(c.p, u)); };
 // owner 2026-11-07: 'if not immediately visible provide the leg that the star would pop up on' -- when none of the shown rungs has a
 // ★ but another rung of his ladder does, show that rung under the row (best first: flagged before the rest)
 function starElse(c){
@@ -528,36 +550,38 @@ function ladderCard(){
     if (g.start_utc && new Date(g.start_utc) <= now) continue;
     for (const p of D.players.filter(x => x.g === g.id)){
       const mins = p.s.vegas && p.s.vegas.min && p.s.vegas.min[MED];
-      if (!(mins >= 20) || p.st === 'Out') continue;
-      const all = (window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n, Object.keys(KLAB)) : []).map(ladAnchor);
-      if (all.length) anyLadder++;
+      if (p.st === 'Out') continue;
+      const k15 = k15Picks(g, p);                               // any minutes, any rung (the tracked rule)
+      const all = (mins >= 20 && window.MKT && MKT.ladder ? MKT.ladder(g.id, p.id, p.n, Object.keys(KLAB)) : []).map(ladAnchor);
+      if (all.length || k15.length) anyLadder++;
       // each rung at Kalshi (fee included) and at Hard Rock / Novig for the same number (owner 2026-10-23); the edge
       // shown and ranked is the best of the three
       const rungs = all.map(ladPrice).filter(u => u.edge != null && u.edge >= LEDGE).sort((a, b) => b.edge - a.edge);
-      if (!rungs.length) continue;
+      if (!rungs.length && !k15.length) continue;
       rungs.forEach(u => regL(g, p, u, 'Ladder edge'));
       const R = DVP[p.o + '|' + p.pg] || {};
-      cards.push({g, p, R, sts: [...new Set(rungs.map(u => u.k))].filter(st => (mx(p, st) || {}).v >= 1.07), rungs, all: window.MKT && MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n, Object.keys(KLAB)).map(ladAnchor).map(ladPrice) : rungs, best: rungs[0].edge});
+      cards.push({g, p, R, sts: [...new Set([...k15, ...rungs].map(u => u.k))].filter(st => (mx(p, st) || {}).v >= 1.07), rungs, k15, all: window.MKT && MKT.ladderAll ? MKT.ladderAll(g.id, p.id, p.n, Object.keys(KLAB)).map(ladAnchor).map(ladPrice) : rungs,
+        best: rungs.length ? rungs[0].edge : null, kb: k15.length ? k15[0].ke : null});
     }
   }
-  cards.sort((a, b) => b.best - a.best);
+  cards.sort(ladCmp);
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
     return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
-  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)} · ${f0(c.p.s.vegas.min[MED])} min</span>${soft(c)}${ladFit(c)}${[...new Set(c.rungs.map(u => u.k))].map(st => drChip(c.p, st, 'card')).join('')}</div><div class="ladtg">${chips(c.p, c.g)}</div>
+  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}${c.p.s && c.p.s.vegas && c.p.s.vegas.min ? ` · ${f0(c.p.s.vegas.min[MED])} min` : ''}</span>${soft(c)}${ladFit(c)}${[...new Set(ladPool(c).map(u => u.k))].map(st => drChip(c.p, st, 'card')).join('')}</div><div class="ladtg">${chips(c.p, c.g)}</div>
     <div class="ladr">${ladShown(c).map(u => lruChip(c, u)).join('')}</div>${starElse(c)}</div>`;
-  if (LADM && !cards.some(c => c.rungs.some(u => ladMv(c, u) === LADM))) LADM = '';
-  const nStar = cards.filter(c => starRungs(c).length).length;
-  const cm = (LADM ? cards.filter(c => c.rungs.some(u => ladMv(c, u) === LADM)) : cards).filter(c => !LADS || starRungs(c).some(u => !LADM || ladMv(c, u) === LADM));
+  if (LADM && !cards.some(c => ladPool(c).some(u => ladMv(c, u) === LADM))) LADM = '';
+  const nStar = cards.filter(c => starRungs(c).length).length, nK = cards.filter(c => c.kb != null).length;
+  const cm = (LADM ? cards.filter(c => ladPool(c).some(u => ladMv(c, u) === LADM)) : cards).filter(c => !LADS || starRungs(c).some(u => !LADM || ladMv(c, u) === LADM));
   if (!cm.some(c => String(c.g.id) === LADG)) LADG = '';
   const vis = LADG ? cm.filter(c => String(c.g.id) === LADG) : cm, lim = LADG ? 999 : 8;
   const empty = !anyLadder ? 'Kalshi’s NBA ladders are too thin to read yet (wide gaps between bid and ask); rungs show here once quotes tighten, usually on game day.'
     : !cards.length ? 'No higher rung beats its price by 5%+ right now. Prices move through the day; this updates with them.'
     : LADS && !cm.length ? 'No ladder edge has a ★ right now. Tap ★ only again to see them all.' : '';
   if (empty && !cards.length) return `<section class="panel pempty"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2></div><p class="note">${!anyLadder ? 'No Kalshi ladders tight enough yet · usually fill in on game day.' : 'No rung beats its price by 5%+ right now · updates through the day.'}</p></section>`;
-  return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}</span></div>
+  return `<section class="panel"><div class="phead"><h2>Ladder edges <span class="exp3">experimental</span></h2><span class="small muted">${cards.length} player${cards.length === 1 ? '' : 's'}${nK ? ` · ${nK} with a 15%+ K pick` : ''}</span></div>
     ${empty ? `<p class="note" style="margin:0 0 6px">${empty}</p>` : ''}
-    <details class="how"><summary>What this is</summary><p class="note">Higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the best price by 5% or more, for players projected for 20+ minutes. Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price and its edge is the one shown (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs outside the flagged set show our chance, with no edge claimed. Hard Rock’s alt lines refresh in the morning and hourly in the last two hours before tip. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page. <b>Tags</b> come from a study of every Kalshi NBA rung since January (research only, nothing is filtered): green = up in every period among rungs where our chance beats Kalshi’s ask + fee by 15%+ (the <b>15%+ K</b> tag: starter, away, 24-32 projected minutes, game total 230+, line 10+, threes); red = down (game total under 220, under 24 minutes). Every rung here is already two or more above the 50/50 rung. Hover a tag for its record.</p></details>
-    ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div><div class="ladsw" role="group" aria-label="Star filter"><button type="button" data-lads="1" aria-pressed="${LADS}" title="Only rungs whose archetype, stat and odds range made money in NBA straights by archetype on the Profit page (last 30 days, 20+ bets). Picked after the fact: a lead, not a rule.">★ only <i>${nStar}</i></button></div>${window.MKT && MKT.consBar ? MKT.consBar(cards, LADM) : ''}` : ''}
+    <details class="how"><summary>What this is</summary><p class="note"><b>15%+ K pick</b> (green-edged rung, first in its row; players with one come first): for each stat, the one Kalshi rung where our own chance beats Kalshi’s ask + fee by 15-40% (spread 5¢ or less), wherever it sits on his ladder and at any minutes; its edge is ours vs Kalshi with the fee. It is exactly what the Profit page grades as ‘NBA study pick’, the one ladder rule ahead since the Nov 11 model fixes (150 won vs 138 priced on 587, +15% through Nov 18, 8 nights; not proven). Below it: higher Kalshi rungs (two or more lines above the one priced near 50/50) where our chance beats the best price by 5% or more, for players projected for 20+ minutes (that rule was about break-even over the same nights). Each rung shows Kalshi (K, fee included), Hard Rock’s alt line (HR) and Novig’s ladder (NV) at the same number; the bold one is the best price and its edge is the one shown (tap it to open the bet when the book gives a link). Tap a rung’s number to switch to a lower rung and check its prices; rungs outside the flagged set show our chance, with no edge claimed. Hard Rock’s alt lines refresh in the morning and hourly in the last two hours before tip. The green chip marks a soft matchup for that stat, as context: in our 2024-26 backtest players facing soft defenses beat our high projections no more often than anyone else, because the model already counts the matchup. Untested on NBA prices; every flagged rung is tracked on the Profit page. <b>Tags</b> come from a study of every Kalshi NBA rung since January (research only, nothing is filtered): green = up in every period among rungs where our chance beats Kalshi’s ask + fee by 15%+ (the <b>15%+ K</b> tag: starter, away, 24-32 projected minutes, game total 230+, line 10+, threes); red = down (game total under 220, under 24 minutes). Every rung here is already two or more above the 50/50 rung. Hover a tag for its record.</p></details>
+    ${cards.length ? `<div class="ladsw" role="group" aria-label="Ladder edges view">${[['game', 'By game'], ['edge', 'Best first']].map(([k, l]) => `<button type="button" data-ladv="${k}" aria-pressed="${LADV === k}">${l}</button>`).join('')}</div><div class="ladsw" role="group" aria-label="Star filter"><button type="button" data-lads="1" aria-pressed="${LADS}" title="Only rungs whose archetype, stat and odds range made money in NBA straights by archetype on the Profit page (last 30 days, 20+ bets). Picked after the fact: a lead, not a rule.">★ only <i>${nStar}</i></button></div>${window.MKT && MKT.consBar ? MKT.consBar(cards.map(c => ({...c, rungs: ladPool(c)})), LADM) : ''}` : ''}
     <div class="ladbody">${ladRail(cm, [...D.games].sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc)))}${LADV === 'game' ? byGame(vis, row) : `<div class="ladg">${vis.slice(0, lim).map(row).join('')}</div>${vis.length > lim ? `<details class="ladw"><summary>${vis.length - lim} more</summary><div class="ladg">${vis.slice(lim).map(row).join('')}</div></details>` : ''}`}</div></section>`;
 }
 // Threes board (owner 2026-11-09: 'a place to see all the recommended threes mispricing across the board for the day'):
@@ -618,8 +642,8 @@ function byGame(cards, row){
   for (const c of cards) (by.get(c.g.id) || by.set(c.g.id, []).get(c.g.id)).push(c);
   const games = D.games.filter(g => by.has(g.id)).sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc));
   const cap = LADG ? 999 : 5;
-  return games.map(g => { const L = by.get(g.id).sort((a, b) => b.best - a.best);
-    return `<div class="ladgm"><div class="ladgh"><b>${esc(g.away)} @ ${esc(g.home)}</b> <span class="small muted">${esc(g.start || '')} · ${L.length} player${L.length === 1 ? '' : 's'} · best +${Math.round(L[0].best * 100)}%</span></div>
+  return games.map(g => { const L = by.get(g.id).sort(ladCmp), nk = L.filter(c => c.kb != null).length, be = Math.max(...L.map(c => c.best ?? -9));
+    return `<div class="ladgm"><div class="ladgh"><b>${esc(g.away)} @ ${esc(g.home)}</b> <span class="small muted">${esc(g.start || '')} · ${L.length} player${L.length === 1 ? '' : 's'}${nk ? ` · ${nk} 15%+ K` : ''}${be > -9 ? ` · best +${Math.round(be * 100)}%` : ''}</span></div>
       <div class="ladg">${L.slice(0, cap).map(row).join('')}</div>${L.length > cap ? `<details class="ladw"><summary>${L.length - cap} more in this game</summary><div class="ladg">${L.slice(cap).map(row).join('')}</div></details>` : ''}</div>`; }).join('');
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-ladv]'); if (!b) return;
