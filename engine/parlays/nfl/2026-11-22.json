@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-19T21:16:13.009Z",
+"frozen_at": "2026-11-19T21:28:08.581Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,6 +15,18 @@
 "tier": "2-leg",
 "legs": [
 {
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "george pickens",
+"lab": "George Pickens 90+ rec yds",
+"p": 0.325,
+"price": 173,
+"book": "Kalshi"
+},
+{
 "gid": "2026_11_NO_CHI",
 "start": "2026-11-22T13:00:00",
 "kind": "rec_yds",
@@ -25,6 +37,27 @@
 "p": 0.295,
 "price": 208,
 "book": "Kalshi"
+}
+],
+"p": 0.09588,
+"d": 8.409,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 89.5,
+"name": "george pickens",
+"lab": "George Pickens 90+ rec yds",
+"p": 0.325,
+"price": 173,
+"book": "Kalshi"
 },
 {
 "gid": "2026_11_ARI_KC",
@@ -34,13 +67,13 @@
 "line": 59.5,
 "name": "travis kelce",
 "lab": "Travis Kelce 60+ rec yds",
-"p": 0.285,
-"price": 218,
+"p": 0.29,
+"price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.08408,
-"d": 9.778,
+"p": 0.09425,
+"d": 8.409,
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
@@ -60,27 +93,6 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "george pickens",
-"lab": "George Pickens 100+ rec yds",
-"p": 0.25,
-"price": 252,
-"book": "Kalshi"
-}
-],
-"p": 0.07375,
-"d": 10.843,
-"first": "2026-11-22T18:00:00+00:00"
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
 "gid": "2026_11_ARI_KC",
 "start": "2026-11-22T13:00:00",
 "kind": "rec_yds",
@@ -88,26 +100,48 @@
 "line": 59.5,
 "name": "travis kelce",
 "lab": "Travis Kelce 60+ rec yds",
-"p": 0.285,
-"price": 218,
-"book": "Kalshi"
-},
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "george pickens",
-"lab": "George Pickens 100+ rec yds",
-"p": 0.25,
-"price": 252,
+"p": 0.29,
+"price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.07125,
-"d": 11.197,
+"p": 0.08555,
+"d": 9.469,
 "first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5825,
+"price": -115,
+"book": "Kalshi"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4311,
+"price": 144,
+"book": "Novig"
+}
+],
+"p": 0.25111,
+"d": 4.562,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Value-tag parlays (higher odds)",
@@ -23756,6 +23790,47 @@
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "tony pollard",
+"lab": "Tony Pollard over 2.5 receptions",
+"p": 0.5048,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.161,
+"fair": 0.5169,
+"main": true
+},
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "isaac teslaa",
+"lab": "Isaac Teslaa over 1.5 receptions",
+"p": 0.4423,
+"price": 145,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.0837,
+"fair": 0.4268,
+"main": true
+}
+],
+"p": 0.22327,
+"d": 5.635,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -23831,6 +23906,58 @@
 "p": 0.4423,
 "d": 2.45,
 "first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4311,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0518,
+"fair": 0.3981,
+"main": true
+}
+],
+"p": 0.4311,
+"d": 2.44,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_PIT_PHI",
+"start": "2026-11-22T21:25:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 42.5,
+"name": "dk metcalf",
+"lab": "DK Metcalf over 42.5 rec yds",
+"p": 0.5064,
+"price": 108,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0533,
+"fair": 0.4885,
+"main": true
+}
+],
+"p": 0.5064,
+"d": 2.08,
+"first": "2026-11-22T21:25:00+00:00",
 "pick": "straight"
 }
 ],
