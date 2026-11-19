@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-19T15:17:20.877Z",
+"frozen_at": "2026-11-19T15:46:28.667Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -116,18 +116,6 @@
 "tier": "+300 to +1000",
 "legs": [
 {
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T13:00:00",
-"kind": "rec",
-"side": "u",
-"line": 6.5,
-"name": "amonra st brown",
-"lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4987,
-"price": 111,
-"book": "Novig"
-},
-{
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "kind": "rec",
@@ -138,9 +126,21 @@
 "p": 0.5326,
 "price": 122,
 "book": "Novig"
+},
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "amonra st brown",
+"lab": "Amonra St Brown under 6.5 receptions",
+"p": 0.5001,
+"price": 111,
+"book": "Novig"
 }
 ],
-"p": 0.26562,
+"p": 0.26634,
 "d": 4.684,
 "first": "2026-11-22T18:00:00+00:00"
 },
@@ -23287,6 +23287,32 @@
 "p": 0.4025,
 "d": 2.7,
 "first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_PIT_PHI",
+"start": "2026-11-22T21:25:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 42.5,
+"name": "dk metcalf",
+"lab": "DK Metcalf over 42.5 rec yds",
+"p": 0.5117,
+"price": 106,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0542,
+"fair": 0.4923,
+"main": true
+}
+],
+"p": 0.5117,
+"d": 2.06,
+"first": "2026-11-22T21:25:00+00:00",
 "pick": "straight"
 }
 ],
