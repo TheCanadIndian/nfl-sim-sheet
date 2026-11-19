@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-19T01:35:09.994Z",
+"frozen_at": "2026-11-19T01:50:39.672Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,18 +15,6 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_11_MIA_BUF",
-"start": "2026-11-22T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "dalton kincaid",
-"lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5003,
-"price": 130,
-"book": "Hard Rock"
-},
-{
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T13:00:00",
 "kind": "rec",
@@ -37,17 +25,7 @@
 "p": 0.4009,
 "price": 170,
 "book": "Novig"
-}
-],
-"p": 0.2006,
-"d": 6.21,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "core"
 },
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
 {
 "gid": "2026_11_MIA_BUF",
 "start": "2026-11-22T13:00:00",
@@ -59,7 +37,17 @@
 "p": 0.5055,
 "price": 108,
 "book": "Novig"
+}
+],
+"p": 0.20266,
+"d": 5.616,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core"
 },
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
 {
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T13:00:00",
@@ -70,6 +58,18 @@
 "lab": "TB moneyline",
 "p": 0.2735,
 "price": 285,
+"book": "Novig"
+},
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T13:00:00",
+"kind": "total",
+"side": "over",
+"line": 45.5,
+"name": null,
+"lab": "MIA-BUF over 45.5",
+"p": 0.5055,
+"price": 108,
 "book": "Novig"
 }
 ],
@@ -82,16 +82,16 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_11_MIA_BUF",
+"gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T13:00:00",
 "kind": "rec",
 "side": "o",
-"line": 2.5,
-"name": "dalton kincaid",
-"lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5003,
-"price": 130,
-"book": "Hard Rock"
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4009,
+"price": 170,
+"book": "Novig"
 },
 {
 "gid": "2026_11_TB_DET",
@@ -106,8 +106,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.13683,
-"d": 8.855,
+"p": 0.10964,
+"d": 10.395,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -123,7 +123,7 @@
 "line": 6.5,
 "name": "justin jefferson",
 "lab": "Justin Jefferson under 6.5 receptions",
-"p": 0.4792,
+"p": 0.5222,
 "price": 125,
 "book": "Novig"
 },
@@ -135,12 +135,12 @@
 "line": 69.5,
 "name": "chris olave",
 "lab": "Chris Olave under 69.5 rec yds",
-"p": 0.5483,
+"p": 0.5492,
 "price": -106,
 "book": "Novig"
 }
 ],
-"p": 0.26277,
+"p": 0.28683,
 "d": 4.373,
 "first": "2026-11-22T18:00:00+00:00"
 },
@@ -23176,6 +23176,73 @@
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dalton kincaid",
+"lab": "Dalton Kincaid over 2.5 receptions",
+"p": 0.5145,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1834,
+"fair": 0.4922,
+"main": true
+},
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "tony pollard",
+"lab": "Tony Pollard over 2.5 receptions",
+"p": 0.5056,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.163,
+"fair": 0.5169,
+"main": true
+}
+],
+"p": 0.26013,
+"d": 5.29,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dalton kincaid",
+"lab": "Dalton Kincaid over 2.5 receptions",
+"p": 0.5145,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1834,
+"fair": 0.4922,
+"main": true
+}
+],
+"p": 0.5145,
+"d": 2.3,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -23197,32 +23264,6 @@
 }
 ],
 "p": 0.5056,
-"d": 2.3,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_11_MIA_BUF",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "dalton kincaid",
-"lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5003,
-"price": 130,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.1508,
-"fair": 0.4733,
-"main": true
-}
-],
-"p": 0.5003,
 "d": 2.3,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
