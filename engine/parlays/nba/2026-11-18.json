@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-18",
 "lock": "2026-11-19T00:00:00+00:00",
-"frozen_at": "2026-11-19T00:03:20.921Z",
+"frozen_at": "2026-11-19T00:08:10.398Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -606,51 +606,23 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401910017",
-"start": "2026-11-19T03:00Z",
-"kind": "reb",
-"side": "o",
-"line": 12.5,
-"name": "walker kessler",
-"lab": "Walker Kessler 13+ reb",
-"p": 0.3568,
-"price": 220,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401910018",
-"start": "2026-11-19T03:00Z",
+"gid": "401910012",
+"start": "2026-11-19T00:30Z",
 "kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "jalen green",
-"lab": "Jalen Green 4+ ast",
-"p": 0.3067,
-"price": 260,
-"book": "Hard Rock",
+"name": "collin murrayboyles",
+"lab": "Collin Murray-Boyles 4+ ast",
+"p": 0.3084,
+"price": 218,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"price"
+"game"
 ]
-}
-],
-"p": 0.10943,
-"d": 11.52,
-"first": "2026-11-19T03:00:00+00:00",
-"res": null
 },
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
 {
 "gid": "401910013",
 "start": "2026-11-19T01:00Z",
@@ -668,29 +640,121 @@
 "game",
 "price"
 ]
+}
+],
+"p": 0.11829,
+"d": 8.84,
+"first": "2026-11-19T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910012",
+"start": "2026-11-19T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "immanuel quickley",
+"lab": "Immanuel Quickley 8+ ast",
+"p": 0.3707,
+"price": 160,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910013",
+"start": "2026-11-19T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "cade cunningham",
+"lab": "Cade Cunningham 3+ threes",
+"p": 0.3663,
+"price": 167,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910018",
+"start": "2026-11-19T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jalen green",
+"lab": "Jalen Green 4+ ast",
+"p": 0.3061,
+"price": 260,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.04157,
+"d": 24.991,
+"first": "2026-11-19T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910015",
+"start": "2026-11-19T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "nikola jokic",
+"lab": "Nikola Jokic over 1.5 threes",
+"p": 0.4425,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"game"
+],
+"sport": "nba",
+"edge": 0.0841
 },
 {
 "gid": "401910017",
 "start": "2026-11-19T03:00Z",
 "kind": "reb",
 "side": "o",
-"line": 12.5,
+"line": 10.5,
 "name": "walker kessler",
-"lab": "Walker Kessler 13+ reb",
-"p": 0.3568,
-"price": 220,
+"lab": "Walker Kessler over 10.5 rebounds",
+"p": 0.5621,
+"price": -110,
 "book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
-"game",
-"price"
-]
+"game"
+],
+"sport": "nba",
+"edge": 0.0731
 }
 ],
-"p": 0.1369,
-"d": 8.896,
-"first": "2026-11-19T01:00:00+00:00",
+"p": 0.24873,
+"d": 4.677,
+"first": "2026-11-19T02:30:00+00:00",
 "res": null
 },
 {
@@ -724,18 +788,18 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0012
+"edge": 0.0025
 },
 {
 "gid": "401910017",
 "start": "2026-11-19T03:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 10.5,
-"name": "walker kessler",
-"lab": "Walker Kessler over 10.5 rebounds",
-"p": 0.5677,
-"price": -110,
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic over 8.5 assists",
+"p": 0.4454,
+"price": 125,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -746,101 +810,17 @@
 "usage",
 "rotation",
 "game",
+"our model above fair",
 "consensus up",
-"knee",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0819
+"edge": 0.0038
 }
 ],
-"p": 0.26597,
-"d": 4.066,
+"p": 0.20867,
+"d": 4.792,
 "first": "2026-11-19T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "3 legs",
-"legs": [
-{
-"gid": "401910015",
-"start": "2026-11-19T02:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "nikola jokic",
-"lab": "Nikola Jokic over 1.5 threes",
-"p": 0.4485,
-"price": 145,
-"book": "Hard Rock",
-"f": [
-"usage",
-"game"
-],
-"v": [
-"usage",
-"game",
-"consensus up",
-"lc"
-],
-"sport": "nba",
-"edge": 0.0843
-},
-{
-"gid": "401910018",
-"start": "2026-11-19T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "jalen green",
-"lab": "Jalen Green over 2.5 assists",
-"p": 0.5236,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0723
-},
-{
-"gid": "401910014",
-"start": "2026-11-19T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander over 5.5 assists",
-"p": 0.4487,
-"price": 122,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0025
-}
-],
-"p": 0.10537,
-"d": 11.15,
-"first": "2026-11-19T01:00:00+00:00",
 "res": null
 },
 {
@@ -874,18 +854,18 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0012
+"edge": 0.0025
 },
 {
 "gid": "401910017",
 "start": "2026-11-19T03:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 10.5,
-"name": "walker kessler",
-"lab": "Walker Kessler over 10.5 rebounds",
-"p": 0.5677,
-"price": -110,
+"line": 8.5,
+"name": "luka doncic",
+"lab": "Luka Doncic over 8.5 assists",
+"p": 0.4454,
+"price": 125,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -896,12 +876,38 @@
 "usage",
 "rotation",
 "game",
+"our model above fair",
 "consensus up",
-"knee",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0819
+"edge": 0.0038
+},
+{
+"gid": "401910018",
+"start": "2026-11-19T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "miles bridges",
+"lab": "Miles Bridges over 2.5 assists",
+"p": 0.4877,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0513
 },
 {
 "gid": "401910015",
@@ -925,36 +931,11 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0843
-},
-{
-"gid": "401910018",
-"start": "2026-11-19T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "jalen green",
-"lab": "Jalen Green over 2.5 assists",
-"p": 0.5236,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0723
+"edge": 0.0841
 }
 ],
-"p": 0.06246,
-"d": 20.423,
+"p": 0.04564,
+"d": 25.244,
 "first": "2026-11-19T00:30:00+00:00",
 "res": null
 },
@@ -970,12 +951,12 @@
 "line": 5.5,
 "name": "daniss jenkins",
 "lab": "Daniss Jenkins over 5.5 rebounds",
-"p": 0.2592,
+"p": 0.2586,
 "fair": 0.2586,
 "price": 270,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0409,
+"edge": -0.0432,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -990,12 +971,12 @@
 "line": 3.5,
 "name": "jalen green",
 "lab": "Jalen Green over 3.5 assists",
-"p": 0.3067,
+"p": 0.3061,
 "fair": 0.3058,
 "price": 260,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.104,
+"edge": 0.1019,
 "v": [
 "consensus odds drop",
 "one rung above the main line (2.5)",
