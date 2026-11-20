@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-20T16:23:58.145Z",
+"frozen_at": "2026-11-20T16:41:46.428Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -55,7 +55,7 @@
 "line": 1.5,
 "name": "brian thomas",
 "lab": "Brian Thomas over 1.5 receptions",
-"p": 0.4195,
+"p": 0.4178,
 "price": 156,
 "book": "Novig"
 },
@@ -72,8 +72,42 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.24447,
+"p": 0.24347,
 "d": 4.693,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4178,
+"price": 156,
+"book": "Novig"
+},
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "devin duvernay",
+"lab": "Devin Duvernay over 1.5 receptions",
+"p": 0.4988,
+"price": 111,
+"book": "Novig"
+}
+],
+"p": 0.20841,
+"d": 5.402,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -24602,12 +24636,12 @@
 "line": 2.5,
 "name": "tony pollard",
 "lab": "Tony Pollard over 2.5 receptions",
-"p": 0.5399,
+"p": 0.5437,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.2418,
-"fair": 0.5631,
+"edge": 0.2506,
+"fair": 0.5682,
 "main": true
 },
 {
@@ -24618,16 +24652,16 @@
 "line": 2.5,
 "name": "dalton kincaid",
 "lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5162,
+"p": 0.5142,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1872,
-"fair": 0.4961,
+"edge": 0.1827,
+"fair": 0.4935,
 "main": true
 }
 ],
-"p": 0.2787,
+"p": 0.27957,
 "d": 5.29,
 "first": "2026-11-22T18:00:00+00:00"
 },
@@ -24643,16 +24677,16 @@
 "line": 2.5,
 "name": "tony pollard",
 "lab": "Tony Pollard over 2.5 receptions",
-"p": 0.5399,
+"p": 0.5437,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.2418,
-"fair": 0.5631,
+"edge": 0.2506,
+"fair": 0.5682,
 "main": true
 }
 ],
-"p": 0.5399,
+"p": 0.5437,
 "d": 2.3,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -24669,16 +24703,16 @@
 "line": 2.5,
 "name": "dalton kincaid",
 "lab": "Dalton Kincaid over 2.5 receptions",
-"p": 0.5162,
+"p": 0.5142,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1872,
-"fair": 0.4961,
+"edge": 0.1827,
+"fair": 0.4935,
 "main": true
 }
 ],
-"p": 0.5162,
+"p": 0.5142,
 "d": 2.3,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -24695,16 +24729,16 @@
 "line": 1.5,
 "name": "brian thomas",
 "lab": "Brian Thomas over 1.5 receptions",
-"p": 0.4199,
+"p": 0.4192,
 "price": 156,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0749,
-"fair": 0.3818,
+"edge": 0.0732,
+"fair": 0.3809,
 "main": true
 }
 ],
-"p": 0.4199,
+"p": 0.4192,
 "d": 2.56,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -24740,6 +24774,32 @@
 "tier": "straight",
 "legs": [
 {
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "devin duvernay",
+"lab": "Devin Duvernay over 1.5 receptions",
+"p": 0.4988,
+"price": 111,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0525,
+"fair": 0.4649,
+"main": true
+}
+],
+"p": 0.4988,
+"d": 2.11,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
@@ -24747,19 +24807,44 @@
 "line": 3.5,
 "name": "jahmyr gibbs",
 "lab": "Jahmyr Gibbs over 3.5 receptions",
-"p": 0.5658,
+"p": 0.5622,
 "price": -115,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.0579,
-"fair": 0.5789,
+"edge": 0.051,
+"fair": 0.574,
 "main": true
 }
 ],
-"p": 0.5658,
+"p": 0.5622,
 "d": 1.87,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T21:25:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4153,
+"price": 153,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0508,
+"fair": 0.3729,
+"main": true
+}
+],
+"p": 0.4153,
+"d": 2.53,
+"first": "2026-11-22T21:25:00+00:00"
 }
 ],
 "graded": false
