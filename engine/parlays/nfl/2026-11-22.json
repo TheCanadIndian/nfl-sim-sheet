@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-20T23:31:58.862Z",
+"frozen_at": "2026-11-20T23:47:14.689Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -159,16 +159,49 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_11_MIA_BUF",
+"gid": "2026_11_ARI_KC",
 "start": "2026-11-22T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 19.5,
-"name": "dawson knox",
-"lab": "Dawson Knox over 19.5 rec yds",
-"p": 0.563,
-"price": 102,
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5709,
+"price": -115,
 "book": "Kalshi"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4367,
+"price": 144,
+"book": "Novig"
+}
+],
+"p": 0.2493,
+"d": 4.562,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_11_PIT_PHI",
+"start": "2026-11-22T16:25:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "PHI moneyline",
+"p": 0.3651,
+"price": 194,
+"book": "Novig"
 },
 {
 "gid": "2026_11_ARI_KC",
@@ -178,13 +211,13 @@
 "line": 49.5,
 "name": "trey mcbride",
 "lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5753,
+"p": 0.5709,
 "price": -115,
 "book": "Kalshi"
 }
 ],
-"p": 0.32388,
-"d": 3.777,
+"p": 0.20843,
+"d": 5.497,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -193,28 +226,16 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_11_MIA_BUF",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 19.5,
-"name": "dawson knox",
-"lab": "Dawson Knox over 19.5 rec yds",
-"p": 0.563,
-"price": 102,
-"book": "Kalshi"
-},
-{
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5753,
-"price": -115,
-"book": "Kalshi"
+"gid": "2026_11_PIT_PHI",
+"start": "2026-11-22T16:25:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "PHI moneyline",
+"p": 0.3651,
+"price": 194,
+"book": "Novig"
 },
 {
 "gid": "2026_11_LV_DEN",
@@ -224,14 +245,14 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4218,
+"p": 0.4219,
 "price": 153,
 "book": "Novig"
 }
 ],
-"p": 0.13662,
-"d": 9.555,
-"first": "2026-11-22T18:00:00+00:00",
+"p": 0.15404,
+"d": 7.438,
+"first": "2026-11-22T21:25:00+00:00",
 "pick": "core"
 },
 {
@@ -24230,7 +24251,7 @@
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
+"tier": "3 legs",
 "legs": [
 {
 "gid": "2026_11_TEN_DAL",
@@ -24240,12 +24261,12 @@
 "line": 2.5,
 "name": "tony pollard",
 "lab": "Tony Pollard over 2.5 receptions",
-"p": 0.5484,
+"p": 0.5426,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.2614,
-"fair": 0.5746,
+"edge": 0.248,
+"fair": 0.5684,
 "main": true
 },
 {
@@ -24256,17 +24277,33 @@
 "line": 1.5,
 "name": "devin duvernay",
 "lab": "Devin Duvernay over 1.5 receptions",
-"p": 0.4419,
-"price": 150,
+"p": 0.4377,
+"price": 156,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1046,
-"fair": 0.3922,
+"edge": 0.1206,
+"fair": 0.3844,
+"main": true
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-23T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "myles price",
+"lab": "Myles Price over 1.5 receptions",
+"p": 0.3926,
+"price": 174,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0757,
+"fair": 0.3593,
 "main": true
 }
 ],
-"p": 0.24234,
-"d": 5.75,
+"p": 0.09324,
+"d": 16.133,
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
@@ -24281,16 +24318,16 @@
 "line": 2.5,
 "name": "tony pollard",
 "lab": "Tony Pollard over 2.5 receptions",
-"p": 0.5484,
+"p": 0.5426,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.2614,
-"fair": 0.5746,
+"edge": 0.248,
+"fair": 0.5684,
 "main": true
 }
 ],
-"p": 0.5484,
+"p": 0.5426,
 "d": 2.3,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -24307,17 +24344,17 @@
 "line": 1.5,
 "name": "devin duvernay",
 "lab": "Devin Duvernay over 1.5 receptions",
-"p": 0.4419,
-"price": 150,
+"p": 0.4377,
+"price": 156,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1046,
-"fair": 0.3922,
+"edge": 0.1206,
+"fair": 0.3844,
 "main": true
 }
 ],
-"p": 0.4419,
-"d": 2.5,
+"p": 0.4377,
+"d": 2.56,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
 },
@@ -24333,16 +24370,16 @@
 "line": 1.5,
 "name": "isaac teslaa",
 "lab": "Isaac Teslaa over 1.5 receptions",
-"p": 0.4354,
+"p": 0.437,
 "price": 145,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.0666,
-"fair": 0.4168,
+"edge": 0.0708,
+"fair": 0.4194,
 "main": true
 }
 ],
-"p": 0.4354,
+"p": 0.437,
 "d": 2.45,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -24352,24 +24389,24 @@
 "tier": "straight",
 "legs": [
 {
-"gid": "2026_11_TB_DET",
+"gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 3.5,
-"name": "jahmyr gibbs",
-"lab": "Jahmyr Gibbs over 3.5 receptions",
-"p": 0.5704,
-"price": -115,
-"book": "Hard Rock",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4366,
+"price": 144,
+"book": "Novig",
 "sport": "nfl",
-"edge": 0.0664,
-"fair": 0.5854,
+"edge": 0.0654,
+"fair": 0.4041,
 "main": true
 }
 ],
-"p": 0.5704,
-"d": 1.87,
+"p": 0.4366,
+"d": 2.44,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
 },
@@ -24385,16 +24422,16 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4218,
+"p": 0.4219,
 "price": 153,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0672,
+"edge": 0.0675,
 "fair": 0.3817,
 "main": true
 }
 ],
-"p": 0.4218,
+"p": 0.4219,
 "d": 2.53,
 "first": "2026-11-22T21:25:00+00:00",
 "pick": "straight"
@@ -24411,17 +24448,17 @@
 "line": 1.5,
 "name": "myles price",
 "lab": "Myles Price over 1.5 receptions",
-"p": 0.3957,
-"price": 167,
+"p": 0.3926,
+"price": 174,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0564,
-"fair": 0.363,
+"edge": 0.0757,
+"fair": 0.3593,
 "main": true
 }
 ],
-"p": 0.3957,
-"d": 2.67,
+"p": 0.3926,
+"d": 2.74,
 "first": "2026-11-23T01:20:00+00:00",
 "pick": "straight"
 }
