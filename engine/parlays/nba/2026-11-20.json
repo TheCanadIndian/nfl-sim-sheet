@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-20",
 "lock": "2026-11-21T00:00:00+00:00",
-"frozen_at": "2026-11-20T20:54:14.003Z",
+"frozen_at": "2026-11-20T21:06:13.916Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,21 +15,21 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909310",
+"gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "saddiq bey",
-"lab": "Saddiq Bey 3+ threes",
-"p": 0.4076,
-"price": 159,
+"line": 3.5,
+"name": "norman powell",
+"lab": "Norman Powell 4+ ast",
+"p": 0.2932,
+"price": 252,
 "book": "Kalshi",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
@@ -51,8 +51,8 @@
 ]
 }
 ],
-"p": 0.13992,
-"d": 8.029,
+"p": 0.10067,
+"d": 10.912,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -64,14 +64,14 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ threes",
-"p": 0.4188,
-"price": 138,
-"book": "Novig",
+"line": 11.5,
+"name": "anthony davis",
+"lab": "Anthony Davis 12+ reb",
+"p": 0.4072,
+"price": 145,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -98,74 +98,10 @@
 ]
 }
 ],
-"p": 0.14378,
-"d": 7.378,
+"p": 0.1398,
+"d": 7.595,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909309",
-"start": "2026-11-21T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ threes",
-"p": 0.4188,
-"price": 138,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909310",
-"start": "2026-11-21T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "saddiq bey",
-"lab": "Saddiq Bey 3+ threes",
-"p": 0.4076,
-"price": 159,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909313",
-"start": "2026-11-21T03:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 5.5,
-"name": "luka doncic",
-"lab": "Luka Doncic 6+ threes",
-"p": 0.314,
-"price": 213,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.0536,
-"d": 19.294,
-"first": "2026-11-21T01:00:00+00:00",
 "res": null
 },
 {
@@ -197,7 +133,7 @@
 "line": 3.5,
 "name": "norman powell",
 "lab": "Norman Powell 4+ ast",
-"p": 0.2828,
+"p": 0.2932,
 "price": 252,
 "book": "Kalshi",
 "f": [
@@ -226,8 +162,72 @@
 ]
 }
 ],
-"p": 0.02846,
+"p": 0.02951,
 "d": 38.562,
+"first": "2026-11-21T00:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909305",
+"start": "2026-11-21T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "sion james",
+"lab": "Sion James 5+ ast",
+"p": 0.3206,
+"price": 250,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "anthony davis",
+"lab": "Anthony Davis 12+ reb",
+"p": 0.4072,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909313",
+"start": "2026-11-21T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 5.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 6+ threes",
+"p": 0.314,
+"price": 213,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.04099,
+"d": 26.84,
 "first": "2026-11-21T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -328,12 +328,12 @@
 "line": 6.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis over 6.5 rebounds",
-"p": 0.4139,
-"fair": 0.4172,
+"p": 0.4126,
+"fair": 0.4157,
 "price": 165,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.097,
+"edge": 0.0933,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -362,7 +362,7 @@
 ]
 }
 ],
-"p": 0.14489,
+"p": 0.14437,
 "d": 7.553,
 "first": "2026-11-21T00:00:00+00:00",
 "res": null
@@ -379,12 +379,12 @@
 "line": 6.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis over 6.5 rebounds",
-"p": 0.4139,
-"fair": 0.4172,
+"p": 0.4126,
+"fair": 0.4157,
 "price": 165,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.097,
+"edge": 0.0933,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -433,7 +433,7 @@
 ]
 }
 ],
-"p": 0.05683,
+"p": 0.05662,
 "d": 18.881,
 "first": "2026-11-21T00:00:00+00:00",
 "res": null
@@ -499,12 +499,12 @@
 "line": 6.5,
 "name": "nic claxton",
 "lab": "Nic Claxton over 6.5 rebounds",
-"p": 0.432,
+"p": 0.4155,
 "price": 175,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1881,
-"fair": 0.4503,
+"edge": 0.1426,
+"fair": 0.4319,
 "main": true
 },
 {
@@ -524,7 +524,7 @@
 "main": true
 }
 ],
-"p": 0.12036,
+"p": 0.11576,
 "d": 11.0,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
@@ -541,12 +541,12 @@
 "line": 6.5,
 "name": "nic claxton",
 "lab": "Nic Claxton over 6.5 rebounds",
-"p": 0.432,
+"p": 0.4155,
 "price": 175,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1881,
-"fair": 0.4503,
+"edge": 0.1426,
+"fair": 0.4319,
 "main": true
 },
 {
@@ -582,7 +582,7 @@
 "main": false
 }
 ],
-"p": 0.05474,
+"p": 0.05265,
 "d": 26.95,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
