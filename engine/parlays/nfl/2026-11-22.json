@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-20T12:53:55.870Z",
+"frozen_at": "2026-11-20T13:11:38.071Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -55,7 +55,7 @@
 "line": 1.5,
 "name": "brian thomas",
 "lab": "Brian Thomas over 1.5 receptions",
-"p": 0.4185,
+"p": 0.4192,
 "price": 156,
 "book": "Novig"
 },
@@ -67,13 +67,59 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4157,
+"p": 0.4182,
 "price": 153,
 "book": "Novig"
 }
 ],
-"p": 0.17399,
+"p": 0.17528,
 "d": 6.477,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4192,
+"price": 156,
+"book": "Novig"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4182,
+"price": 153,
+"book": "Novig"
+},
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5373,
+"price": -104,
+"book": "Novig"
+}
+],
+"p": 0.09418,
+"d": 12.704,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -89,7 +135,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4902,
+"p": 0.492,
 "price": 120,
 "book": "Novig"
 },
@@ -106,7 +152,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.28619,
+"p": 0.28728,
 "d": 4.315,
 "first": "2026-11-22T18:00:00+00:00"
 },
@@ -155,7 +201,7 @@
 "line": 6.5,
 "name": "amonra st brown",
 "lab": "Amonra St Brown under 6.5 receptions",
-"p": 0.4902,
+"p": 0.492,
 "price": 120,
 "book": "Novig"
 },
@@ -172,7 +218,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.23646,
+"p": 0.23736,
 "d": 4.884,
 "first": "2026-11-22T18:00:00+00:00"
 },
@@ -24695,16 +24741,16 @@
 "line": 1.5,
 "name": "brian thomas",
 "lab": "Brian Thomas over 1.5 receptions",
-"p": 0.4192,
+"p": 0.4199,
 "price": 156,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0732,
-"fair": 0.3809,
+"edge": 0.0749,
+"fair": 0.3818,
 "main": true
 }
 ],
-"p": 0.4192,
+"p": 0.4199,
 "d": 2.56,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -24758,6 +24804,32 @@
 ],
 "p": 0.431,
 "d": 2.45,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey McBride over 49.5 rec yds",
+"p": 0.5353,
+"price": -104,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.05,
+"fair": 0.5004,
+"main": true
+}
+],
+"p": 0.5353,
+"d": 1.962,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
 }
