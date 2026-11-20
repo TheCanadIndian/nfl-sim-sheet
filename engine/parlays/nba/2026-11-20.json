@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-20",
 "lock": "2026-11-21T00:00:00+00:00",
-"frozen_at": "2026-11-20T23:47:16.917Z",
+"frozen_at": "2026-11-20T23:55:02.266Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,19 +17,19 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ ast",
-"p": 0.3982,
-"price": 155,
+"line": 8.5,
+"name": "nic claxton",
+"lab": "Nic Claxton 9+ reb",
+"p": 0.2754,
+"price": 300,
 "book": "Hard Rock",
 "f": [
-"usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -40,7 +40,7 @@
 "line": 1.5,
 "name": "ziaire williams",
 "lab": "Ziaire Williams 2+ threes",
-"p": 0.3647,
+"p": 0.364,
 "price": 210,
 "book": "Hard Rock",
 "f": [
@@ -51,8 +51,8 @@
 ]
 }
 ],
-"p": 0.14523,
-"d": 7.905,
+"p": 0.10024,
+"d": 12.4,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -62,21 +62,21 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401909309",
+"gid": "401909310",
 "start": "2026-11-21T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 9.5,
-"name": "josh giddey",
-"lab": "Josh Giddey 10+ ast",
-"p": 0.4461,
-"price": 122,
-"book": "Novig",
+"line": 4.5,
+"name": "jared mccain",
+"lab": "Jared McCain 5+ reb",
+"p": 0.2967,
+"price": 260,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -87,7 +87,7 @@
 "line": 1.5,
 "name": "ziaire williams",
 "lab": "Ziaire Williams 2+ threes",
-"p": 0.3647,
+"p": 0.364,
 "price": 210,
 "book": "Hard Rock",
 "f": [
@@ -98,8 +98,8 @@
 ]
 }
 ],
-"p": 0.16272,
-"d": 6.882,
+"p": 0.10801,
+"d": 11.16,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -111,14 +111,97 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ ast",
-"p": 0.3982,
-"price": 155,
+"line": 8.5,
+"name": "nic claxton",
+"lab": "Nic Claxton 9+ reb",
+"p": 0.2754,
+"price": 300,
 "book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909310",
+"start": "2026-11-21T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "jared mccain",
+"lab": "Jared McCain 5+ reb",
+"p": 0.2967,
+"price": 260,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909313",
+"start": "2026-11-21T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 5.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 6+ threes",
+"p": 0.3167,
+"price": 208,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.02588,
+"d": 44.352,
+"first": "2026-11-21T01:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 4+ threes",
+"p": 0.2608,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909310",
+"start": "2026-11-21T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "ajay mitchell",
+"lab": "Ajay Mitchell 2+ threes",
+"p": 0.3364,
+"price": 190,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -134,7 +217,7 @@
 "line": 7.5,
 "name": "jaxson hayes",
 "lab": "Jaxson Hayes 8+ reb",
-"p": 0.3205,
+"p": 0.3196,
 "price": 250,
 "book": "Hard Rock",
 "f": [
@@ -142,30 +225,11 @@
 "game",
 "price"
 ]
-},
-{
-"gid": "401909313",
-"start": "2026-11-21T03:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 5.5,
-"name": "luka doncic",
-"lab": "Luka Doncic 6+ threes",
-"p": 0.3169,
-"price": 208,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.04043,
-"d": 27.489,
+"p": 0.02804,
+"d": 40.6,
 "first": "2026-11-21T01:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
@@ -180,7 +244,7 @@
 "line": 3.5,
 "name": "sion james",
 "lab": "Sion James 4+ assists",
-"p": 0.4937,
+"p": 0.4953,
 "price": 114,
 "book": "Kalshi"
 },
@@ -192,12 +256,12 @@
 "line": 2.5,
 "name": "quenton jackson",
 "lab": "Quenton Jackson over 2.5 assists",
-"p": 0.5356,
+"p": 0.5279,
 "price": 110,
 "book": "Hard Rock"
 }
 ],
-"p": 0.26441,
+"p": 0.26148,
 "d": 4.494,
 "first": "2026-11-21T00:00:00+00:00",
 "pick": "core",
@@ -207,31 +271,6 @@
 "card": "Confluence parlays (experimental)",
 "tier": "3 legs",
 "legs": [
-{
-"gid": "401909311",
-"start": "2026-11-21T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "jaxson hayes",
-"lab": "Jaxson Hayes over 5.5 rebounds",
-"p": 0.5826,
-"price": -120,
-"book": "Hard Rock",
-"f": [
-"rotation",
-"game"
-],
-"v": [
-"rotation",
-"game",
-"our model above fair",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0707
-},
 {
 "gid": "401909312",
 "start": "2026-11-21T03:00Z",
@@ -253,7 +292,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0801
+"edge": 0.0788
 },
 {
 "gid": "401909310",
@@ -268,16 +307,42 @@
 "book": "Hard Rock",
 "f": [
 "usage",
-"rotation"
+"rotation",
+"game"
 ],
 "v": [
 "usage",
 "rotation",
+"game",
 "our model above fair",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0213
+"edge": 0.0225
+},
+{
+"gid": "401909311",
+"start": "2026-11-21T02:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jaxson hayes",
+"lab": "Jaxson Hayes over 5.5 rebounds",
+"p": 0.5826,
+"price": -120,
+"book": "Hard Rock",
+"f": [
+"rotation",
+"game"
+],
+"v": [
+"rotation",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0674
 }
 ],
 "p": 0.13717,
@@ -297,12 +362,12 @@
 "line": 7.5,
 "name": "nic claxton",
 "lab": "Nic Claxton over 7.5 rebounds",
-"p": 0.391,
+"p": 0.3953,
 "fair": 0.3964,
 "price": 195,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1534,
+"edge": 0.1662,
 "v": [
 "Pinnacle line up + odds drop",
 "one rung above the main line (6.5)",
@@ -317,12 +382,12 @@
 "line": 6.5,
 "name": "jaxson hayes",
 "lab": "Jaxson Hayes over 6.5 rebounds",
-"p": 0.4476,
+"p": 0.4468,
 "fair": 0.4465,
 "price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0966,
+"edge": 0.0946,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -347,12 +412,12 @@
 "line": 7.5,
 "name": "nic claxton",
 "lab": "Nic Claxton over 7.5 rebounds",
-"p": 0.391,
+"p": 0.3953,
 "fair": 0.3964,
 "price": 195,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1534,
+"edge": 0.1662,
 "v": [
 "Pinnacle line up + odds drop",
 "one rung above the main line (6.5)",
@@ -367,12 +432,12 @@
 "line": 6.5,
 "name": "jaxson hayes",
 "lab": "Jaxson Hayes over 6.5 rebounds",
-"p": 0.4476,
+"p": 0.4468,
 "fair": 0.4465,
 "price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0966,
+"edge": 0.0946,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -387,12 +452,12 @@
 "line": 6.5,
 "name": "tari eason",
 "lab": "Tari Eason over 6.5 rebounds",
-"p": 0.3903,
-"fair": 0.3941,
+"p": 0.3969,
+"fair": 0.4013,
 "price": 175,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0734,
+"edge": 0.0915,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -401,7 +466,7 @@
 ]
 }
 ],
-"p": 0.06975,
+"p": 0.07103,
 "d": 19.876,
 "first": "2026-11-21T01:00:00+00:00",
 "res": null
@@ -418,12 +483,12 @@
 "line": 6.5,
 "name": "tari eason",
 "lab": "Tari Eason over 6.5 rebounds",
-"p": 0.3903,
-"fair": 0.3941,
+"p": 0.3969,
+"fair": 0.4013,
 "price": 175,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0734,
+"edge": 0.0915,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -439,12 +504,12 @@
 "line": 5.5,
 "name": "anthony black",
 "lab": "Anthony Black over 5.5 assists",
-"p": 0.4027,
+"p": 0.4021,
 "fair": 0.4088,
 "price": 141,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0295,
+"edge": -0.0309,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -452,7 +517,7 @@
 ]
 }
 ],
-"p": 0.16111,
+"p": 0.16405,
 "d": 6.628,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
@@ -469,11 +534,11 @@
 "line": 1.5,
 "name": "tari eason",
 "lab": "Tari Eason over 1.5 assists",
-"p": 0.453,
+"p": 0.4519,
 "price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1324,
+"edge": 0.1298,
 "fair": 0.4596,
 "main": true
 },
@@ -485,16 +550,16 @@
 "line": 7.5,
 "name": "jaxson hayes",
 "lab": "Jaxson Hayes over 7.5 rebounds",
-"p": 0.3221,
+"p": 0.3203,
 "price": 250,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1274,
+"edge": 0.1209,
 "fair": 0.3189,
 "main": false
 }
 ],
-"p": 0.14591,
+"p": 0.14474,
 "d": 8.75,
 "first": "2026-11-21T02:30:00+00:00",
 "res": null
@@ -545,6 +610,168 @@
 "p": 0.15326,
 "d": 5.946,
 "first": "2026-11-21T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909307",
+"start": "2026-11-21T00:30:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "tyrese proctor",
+"lab": "Tyrese Proctor over 7.5 assists",
+"p": 0.03,
+"fair": 0.03,
+"ours": 0.0572,
+"price": 2243,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.34,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ assists: our chance 6% vs 4% with the fee (+34%)",
+"game total 234.5",
+"projected 26 min"
+]
+},
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 2.5 threes",
+"p": 0.175,
+"fair": 0.175,
+"ours": 0.2528,
+"price": 425,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3282,
+"grp": "k15n",
+"v": [
+"Kalshi 3+ threes: our chance 25% vs 19% with the fee (+33%)",
+"game total 238.5",
+"projected 32 min"
+]
+}
+],
+"p": 0.00525,
+"d": 123.007,
+"first": "2026-11-21T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 2.5 threes",
+"p": 0.175,
+"fair": 0.175,
+"ours": 0.2528,
+"price": 425,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3282,
+"grp": "k15n",
+"v": [
+"Kalshi 3+ threes: our chance 25% vs 19% with the fee (+33%)",
+"game total 238.5",
+"projected 32 min"
+]
+},
+{
+"gid": "401909307",
+"start": "2026-11-21T00:30:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "peyton watson",
+"lab": "Peyton Watson over 7.5 rebounds",
+"p": 0.1,
+"fair": 0.1,
+"ours": 0.1394,
+"price": 756,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.193,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ rebounds: our chance 14% vs 12% with the fee (+19%)",
+"game total 234.5",
+"projected 27 min"
+]
+}
+],
+"p": 0.0175,
+"d": 44.94,
+"first": "2026-11-21T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "nic claxton",
+"lab": "Nic Claxton over 3.5 assists",
+"p": 0.255,
+"fair": 0.255,
+"ours": 0.3467,
+"price": 266,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.2678,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ assists: our chance 35% vs 27% with the fee (+27%)",
+"game total 238.5",
+"projected 25 min"
+]
+},
+{
+"gid": "401909307",
+"start": "2026-11-21T00:30:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "tyrese proctor",
+"lab": "Tyrese Proctor over 7.5 assists",
+"p": 0.03,
+"fair": 0.03,
+"ours": 0.0572,
+"price": 2243,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.34,
+"grp": "k15n",
+"v": [
+"Kalshi 8+ assists: our chance 6% vs 4% with the fee (+34%)",
+"game total 234.5",
+"projected 26 min"
+]
+}
+],
+"p": 0.00765,
+"d": 85.754,
+"first": "2026-11-21T00:30:00+00:00",
 "res": null
 }
 ],
