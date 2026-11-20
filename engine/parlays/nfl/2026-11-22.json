@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-20T19:11:23.757Z",
+"frozen_at": "2026-11-20T19:42:34.017Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -201,54 +201,8 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"tier": "+600 to +1500",
 "legs": [
-{
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5753,
-"price": -115,
-"book": "Kalshi"
-},
-{
-"gid": "2026_11_PIT_PHI",
-"start": "2026-11-22T16:25:00",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "PHI moneyline",
-"p": 0.3601,
-"price": 194,
-"book": "Novig"
-}
-],
-"p": 0.20715,
-"d": 5.497,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5753,
-"price": -115,
-"book": "Kalshi"
-},
 {
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T13:00:00",
@@ -260,10 +214,22 @@
 "p": 0.3043,
 "price": 251,
 "book": "Novig"
+},
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey Mcbride over 49.5 rec yds",
+"p": 0.5218,
+"price": 104,
+"book": "Novig"
 }
 ],
-"p": 0.17503,
-"d": 6.562,
+"p": 0.15876,
+"d": 7.16,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
 },
@@ -284,21 +250,22 @@
 "book": "Novig"
 },
 {
-"gid": "2026_11_PIT_PHI",
+"gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "PHI moneyline",
-"p": 0.3601,
-"price": 194,
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4214,
+"price": 153,
 "book": "Novig"
 }
 ],
-"p": 0.10956,
-"d": 10.319,
-"first": "2026-11-22T18:00:00+00:00"
+"p": 0.12823,
+"d": 8.88,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Same-game parlays",
@@ -24830,6 +24797,32 @@
 "tier": "straight",
 "legs": [
 {
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "trey mcbride",
+"lab": "Trey McBride over 49.5 rec yds",
+"p": 0.5269,
+"price": 104,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0749,
+"fair": 0.4892,
+"main": true
+}
+],
+"p": 0.5269,
+"d": 2.04,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
@@ -24849,6 +24842,32 @@
 "p": 0.5676,
 "d": 1.87,
 "first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T21:25:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4214,
+"price": 153,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0663,
+"fair": 0.3817,
+"main": true
+}
+],
+"p": 0.4214,
+"d": 2.53,
+"first": "2026-11-22T21:25:00+00:00",
 "pick": "straight"
 }
 ],
