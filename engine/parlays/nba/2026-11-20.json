@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-20",
 "lock": "2026-11-21T00:00:00+00:00",
-"frozen_at": "2026-11-20T19:11:25.890Z",
+"frozen_at": "2026-11-20T19:26:55.305Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -64,14 +64,14 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "norman powell",
-"lab": "Norman Powell 4+ ast",
-"p": 0.2976,
-"price": 252,
-"book": "Kalshi",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.4188,
+"price": 138,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -98,8 +98,8 @@
 ]
 }
 ],
-"p": 0.10217,
-"d": 10.912,
+"p": 0.14378,
+"d": 7.378,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -129,12 +129,75 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.4188,
+"price": 138,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909313",
+"start": "2026-11-21T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 5.5,
+"name": "luka doncic",
+"lab": "Luka Doncic 6+ threes",
+"p": 0.314,
+"price": 213,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.0435,
+"d": 23.838,
+"first": "2026-11-21T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909305",
+"start": "2026-11-21T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "sion james",
+"lab": "Sion James 5+ ast",
+"p": 0.3244,
+"price": 250,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+},
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00Z",
 "kind": "ast",
 "side": "o",
 "line": 3.5,
 "name": "norman powell",
 "lab": "Norman Powell 4+ ast",
-"p": 0.2976,
+"p": 0.2828,
 "price": 252,
 "book": "Kalshi",
 "f": [
@@ -163,80 +226,100 @@
 ]
 }
 ],
-"p": 0.03092,
-"d": 35.256,
-"first": "2026-11-21T00:30:00+00:00",
+"p": 0.0288,
+"d": 38.562,
+"first": "2026-11-21T00:00:00+00:00",
 "pick": "longshot",
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
 "legs": [
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis over 5.5 rebounds",
+"p": 0.5435,
+"price": -110,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0311
+},
 {
 "gid": "401909305",
 "start": "2026-11-21T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 4.5,
+"line": 3.5,
 "name": "sion james",
-"lab": "Sion James 5+ ast",
-"p": 0.3244,
-"price": 250,
+"lab": "Sion James over 3.5 assists",
+"p": 0.4927,
+"price": 115,
 "book": "Hard Rock",
 "f": [
 "usage",
-"rotation",
-"price"
-]
-},
-{
-"gid": "401909309",
-"start": "2026-11-21T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "trae young",
-"lab": "Trae Young 3+ threes",
-"p": 0.3698,
-"price": 167,
-"book": "Novig",
-"f": [
+"rotation"
+],
+"v": [
 "usage",
-"matchup",
 "rotation",
-"game"
-]
-},
-{
-"gid": "401909313",
-"start": "2026-11-21T03:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 5.5,
-"name": "luka doncic",
-"lab": "Luka Doncic 6+ threes",
-"p": 0.314,
-"price": 213,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0617
 }
 ],
-"p": 0.03766,
-"d": 29.25,
+"p": 0.26778,
+"d": 4.105,
 "first": "2026-11-21T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909309",
+"start": "2026-11-21T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis over 6.5 rebounds",
+"p": 0.4139,
+"fair": 0.4172,
+"price": 165,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.097,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (5.5)",
+"soft matchup"
+]
+},
 {
 "gid": "401909306",
 "start": "2026-11-21T00:30Z",
@@ -256,30 +339,11 @@
 "consensus odds drop",
 "one rung above the main line (4.5)"
 ]
-},
-{
-"gid": "401909305",
-"start": "2026-11-21T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 8.5,
-"name": "naz reid",
-"lab": "Naz Reid over 8.5 rebounds",
-"p": 0.432,
-"fair": 0.4367,
-"price": 130,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": -0.0065,
-"v": [
-"Pinnacle odds drop",
-"one rung above the main line (7.5)"
-]
 }
 ],
-"p": 0.17127,
-"d": 5.75,
-"first": "2026-11-21T00:00:00+00:00",
+"p": 0.16363,
+"d": 6.625,
+"first": "2026-11-21T00:30:00+00:00",
 "res": null
 },
 {
@@ -287,6 +351,27 @@
 "tier": "3 legs",
 "legs": [
 {
+"gid": "401909309",
+"start": "2026-11-21T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis over 6.5 rebounds",
+"p": 0.4139,
+"fair": 0.4172,
+"price": 165,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.097,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (5.5)",
+"soft matchup"
+]
+},
+{
 "gid": "401909306",
 "start": "2026-11-21T00:30Z",
 "kind": "ast",
@@ -306,6 +391,35 @@
 "one rung above the main line (4.5)"
 ]
 },
+{
+"gid": "401909305",
+"start": "2026-11-21T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 8.5,
+"name": "naz reid",
+"lab": "Naz Reid over 8.5 rebounds",
+"p": 0.432,
+"fair": 0.4367,
+"price": 130,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0065,
+"v": [
+"Pinnacle odds drop",
+"one rung above the main line (7.5)"
+]
+}
+],
+"p": 0.07146,
+"d": 15.237,
+"first": "2026-11-21T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
 {
 "gid": "401909305",
 "start": "2026-11-21T00:00Z",
@@ -345,57 +459,9 @@
 ]
 }
 ],
-"p": 0.06008,
-"d": 16.675,
+"p": 0.15319,
+"d": 6.67,
 "first": "2026-11-21T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909308",
-"start": "2026-11-21T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 9.5,
-"name": "cade cunningham",
-"lab": "Cade Cunningham over 9.5 assists",
-"p": 0.3471,
-"fair": 0.3508,
-"price": 190,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0066,
-"v": [
-"consensus line up",
-"one rung above the main line (8.5)"
-]
-},
-{
-"gid": "401909307",
-"start": "2026-11-21T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "andrew nembhard",
-"lab": "Andrew Nembhard over 7.5 assists",
-"p": 0.4212,
-"fair": 0.4208,
-"price": 138,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0025,
-"v": [
-"consensus odds drop",
-"one rung above the main line (6.5)"
-]
-}
-],
-"p": 0.14762,
-"d": 6.902,
-"first": "2026-11-21T00:30:00+00:00",
 "res": null
 },
 {
@@ -403,40 +469,40 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401909312",
-"start": "2026-11-21T03:00:00+00:00",
+"gid": "401909309",
+"start": "2026-11-21T01:00:00+00:00",
 "kind": "reb",
 "side": "o",
-"line": 7.5,
-"name": "tari eason",
-"lab": "Tari Eason over 7.5 rebounds",
-"p": 0.2695,
+"line": 6.5,
+"name": "nic claxton",
+"lab": "Nic Claxton over 6.5 rebounds",
+"p": 0.432,
+"price": 175,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1881,
+"fair": 0.4503,
+"main": true
+},
+{
+"gid": "401909306",
+"start": "2026-11-21T00:30:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "dayron sharpe",
+"lab": "Day'Ron Sharpe over 0.5 threes",
+"p": 0.2786,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0779,
-"fair": 0.277,
-"main": false
-},
-{
-"gid": "401909308",
-"start": "2026-11-21T00:30:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 1.5,
-"name": "john collins",
-"lab": "John Collins over 1.5 assists",
-"p": 0.3332,
-"price": 220,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0663,
-"fair": 0.3411,
-"main": false
+"edge": 0.1143,
+"fair": 0.289,
+"main": true
 }
 ],
-"p": 0.0898,
-"d": 12.8,
+"p": 0.12036,
+"d": 11.0,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
 }
