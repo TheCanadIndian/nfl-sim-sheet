@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-19",
 "lock": "2026-11-20T01:00:00+00:00",
-"frozen_at": "2026-11-20T00:06:45.319Z",
+"frozen_at": "2026-11-20T00:19:47.574Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,14 +17,14 @@
 {
 "gid": "401910020",
 "start": "2026-11-20T01:00Z",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "deni avdija",
-"lab": "Deni Avdija 8+ ast",
-"p": 0.251,
-"price": 296,
-"book": "Kalshi",
+"line": 2.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday 3+ threes",
+"p": 0.4138,
+"price": 141,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -40,8 +40,8 @@
 "line": 6.5,
 "name": "darius garland",
 "lab": "Darius Garland 7+ ast",
-"p": 0.4188,
-"price": 160,
+"p": 0.4192,
+"price": 156,
 "book": "Novig",
 "f": [
 "usage",
@@ -50,8 +50,8 @@
 ]
 }
 ],
-"p": 0.10515,
-"d": 10.296,
+"p": 0.17345,
+"d": 6.17,
 "first": "2026-11-20T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -63,14 +63,14 @@
 {
 "gid": "401910020",
 "start": "2026-11-20T01:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "damian lillard",
-"lab": "Damian Lillard 4+ threes",
-"p": 0.437,
-"price": 125,
-"book": "Novig",
+"line": 2.5,
+"name": "toumani camara",
+"lab": "Toumani Camara 3+ ast",
+"p": 0.2893,
+"price": 240,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
@@ -86,8 +86,8 @@
 "line": 6.5,
 "name": "darius garland",
 "lab": "Darius Garland 7+ ast",
-"p": 0.4188,
-"price": 160,
+"p": 0.4192,
+"price": 156,
 "book": "Novig",
 "f": [
 "usage",
@@ -96,8 +96,71 @@
 ]
 }
 ],
-"p": 0.18302,
-"d": 5.85,
+"p": 0.12129,
+"d": 8.704,
+"first": "2026-11-20T01:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910019",
+"start": "2026-11-20T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "cameron boozer",
+"lab": "Cameron Boozer 6+ ast",
+"p": 0.4249,
+"price": 147,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+},
+{
+"gid": "401910020",
+"start": "2026-11-20T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday 3+ threes",
+"p": 0.4138,
+"price": 141,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910021",
+"start": "2026-11-20T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 6+ reb",
+"p": 0.4229,
+"price": 138,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.07436,
+"d": 14.167,
 "first": "2026-11-20T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -111,11 +174,11 @@
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "jaime jaquez",
-"lab": "Jaime Jaquez Jr. over 4.5 rebounds",
-"p": 0.509,
-"price": -104,
+"line": 12.5,
+"name": "donovan clingan",
+"lab": "Donovan Clingan over 12.5 rebounds",
+"p": 0.4772,
+"price": 111,
 "book": "Novig",
 "f": [
 "usage",
@@ -127,39 +190,40 @@
 "rotation",
 "game",
 "our model above fair",
-"consensus up"
+"consensus up",
+"pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0049
+"edge": 0.0121
 },
 {
-"gid": "401910019",
+"gid": "401910021",
 "start": "2026-11-20T01:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "cedric coward",
-"lab": "Cedric Coward over 3.5 assists",
-"p": 0.4949,
-"price": 102,
+"line": 5.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga over 5.5 rebounds",
+"p": 0.4207,
+"price": 138,
 "book": "Novig",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"game"
 ],
 "v": [
 "usage",
-"matchup",
 "rotation",
+"game",
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.005
+"edge": 0.0065
 }
 ],
-"p": 0.2519,
-"d": 3.962,
+"p": 0.20076,
+"d": 5.022,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -168,39 +232,39 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401910020",
+"gid": "401910019",
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 13.5,
-"name": "donovan clingan",
-"lab": "Donovan Clingan over 13.5 rebounds",
-"p": 0.4088,
-"fair": 0.4076,
-"price": 135,
+"line": 8.5,
+"name": "cedric coward",
+"lab": "Cedric Coward over 8.5 rebounds",
+"p": 0.3923,
+"fair": 0.3899,
+"price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0393,
+"edge": -0.0389,
 "v": [
-"Pinnacle line up",
-"consensus line up + odds drop",
-"one rung above the main line (12.5)"
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (7.5)"
 ]
 },
 {
-"gid": "401910019",
+"gid": "401910020",
 "start": "2026-11-20T01:00Z",
 "kind": "ast",
 "side": "o",
 "line": 5.5,
-"name": "yaxel lendeborg",
-"lab": "Yaxel Lendeborg over 5.5 assists",
-"p": 0.3093,
-"fair": 0.3143,
-"price": 208,
+"name": "tyler herro",
+"lab": "Tyler Herro over 5.5 assists",
+"p": 0.2528,
+"fair": 0.2561,
+"price": 280,
 "book": "Kalshi",
 "sport": "nba",
-"edge": -0.0474,
+"edge": -0.0392,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -208,8 +272,8 @@
 ]
 }
 ],
-"p": 0.12811,
-"d": 7.238,
+"p": 0.09985,
+"d": 9.31,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 },
@@ -218,39 +282,39 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "401910020",
+"gid": "401910019",
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 13.5,
-"name": "donovan clingan",
-"lab": "Donovan Clingan over 13.5 rebounds",
-"p": 0.4088,
-"fair": 0.4076,
-"price": 135,
+"line": 8.5,
+"name": "cedric coward",
+"lab": "Cedric Coward over 8.5 rebounds",
+"p": 0.3923,
+"fair": 0.3899,
+"price": 145,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0393,
+"edge": -0.0389,
 "v": [
-"Pinnacle line up",
-"consensus line up + odds drop",
-"one rung above the main line (12.5)"
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (7.5)"
 ]
 },
 {
-"gid": "401910019",
+"gid": "401910020",
 "start": "2026-11-20T01:00Z",
 "kind": "ast",
 "side": "o",
 "line": 5.5,
-"name": "yaxel lendeborg",
-"lab": "Yaxel Lendeborg over 5.5 assists",
-"p": 0.3093,
-"fair": 0.3143,
-"price": 208,
+"name": "tyler herro",
+"lab": "Tyler Herro over 5.5 assists",
+"p": 0.2528,
+"fair": 0.2561,
+"price": 280,
 "book": "Kalshi",
 "sport": "nba",
-"edge": -0.0474,
+"edge": -0.0392,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -258,28 +322,27 @@
 ]
 },
 {
-"gid": "401910021",
+"gid": "401910022",
 "start": "2026-11-20T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "jalen brunson",
-"lab": "Jalen Brunson over 3.5 rebounds",
-"p": 0.3773,
-"fair": 0.3789,
-"price": 156,
+"line": 5.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox over 5.5 rebounds",
+"p": 0.2679,
+"fair": 0.2706,
+"price": 257,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0341,
+"edge": -0.0435,
 "v": [
-"consensus odds drop",
-"one rung above the main line (2.5)",
-"soft matchup"
+"consensus line up",
+"one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.04854,
-"d": 18.529,
+"p": 0.02702,
+"d": 33.237,
 "first": "2026-11-20T01:00:00+00:00",
 "res": null
 }
