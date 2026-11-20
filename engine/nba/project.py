@@ -147,6 +147,34 @@ def chance_stats(season, pids):
     return pd.DataFrame(out, columns=["player_id", "x_gp", "x_season", "x_fg3a", "x_fg3a10", "x_rch", "x_rr", "x_ach", "x_ar", "x_reb", "x_ast", "x_on"])
 
 
+AV_STATS = ("pts", "reb", "ast", "fg3m")
+
+
+def stat_avgs(season, pids):
+    """Per player, his average a game for the ladder stats (owner 2026-11-20: 'for the ladder candidates i want to see the avg
+    for the player stat'): this season's games played (regular season + playoffs; last season's when he has fewer than 3)
+    and his last 10 games played. Display only (Ladder edges rung chips)."""
+    import sqlite3
+    con = sqlite3.connect(M.DB)
+    q = f"""SELECT p.player_id, g.season, g.date, {', '.join('p.' + c for c in AV_STATS)} FROM players p JOIN games g USING (game_id)
+             WHERE p.min > 0 AND g.game_type != 1 AND g.season IN ({season}, {season - 1})
+             AND p.player_id IN ({','.join(map(str, pids)) or 0})"""
+    d = pd.read_sql(q, con).sort_values("date")
+    cols = ["player_id", "av_gp", "av_season", "av_cur"] +[f"av_{c}" for c in AV_STATS] + [f"av_{c}10" for c in AV_STATS]
+    out = []
+    for pid, x in d.groupby("player_id"):
+        cur = x[x.season == season]
+        use = cur if len(cur) >= 3 else x[x.season == season - 1]
+        if use.empty:
+            continue
+        r = dict(player_id=int(pid), av_gp=len(use), av_season=int(use.season.iloc[0]), av_cur=int(len(cur) >= 3))
+        for c in AV_STATS:
+            r[f"av_{c}"] = float(use[c].mean())
+            r[f"av_{c}10"] = float(x.tail(10)[c].mean())
+        out.append(r)
+    return pd.DataFrame(out, columns=cols)
+
+
 def save_draws(out, sims, n=1000, hist=None):
     """First n simulations per player and stat, packed as small ints: <OUT>/draws/<game_id>.json. hist: per-row
     [dd20, td60, dd60] (steps.ddtd_hist), stored as "h" for the double / triple-double calibration (sharp._ddtd_ours)."""
@@ -303,6 +331,10 @@ def main():
         meta = meta.merge(chance_stats(int(fut.season.iloc[0]), set(meta.player_id.astype(int))), on="player_id", how="left")
     except Exception as e:                                         # noqa: BLE001 -- display only
         print("rebound / assist chances skipped:", type(e).__name__, e)
+    try:                                                           # his average a game per ladder stat (Ladder edges chips)
+        meta = meta.merge(stat_avgs(int(fut.season.iloc[0]), set(meta.player_id.astype(int))), on="player_id", how="left")
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("stat averages skipped:", type(e).__name__, e)
     # per-game team view
     games = []
     # each out player's usual minutes (his latest expected minutes before this game): a teammate out matters when he plays

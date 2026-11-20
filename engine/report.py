@@ -57,6 +57,34 @@ def _clean(o):
     return o
 
 
+AV_COLS = {"rec": "receptions", "rec_yds": "receiving_yards", "rush_yds": "rushing_yards", "pass_yds": "passing_yards"}
+
+
+def _season_avgs(db, season, week, pids):
+    """Per player, his average a game for the ladder stats (owner 2026-11-20: 'for the ladder candidates i want to see the avg
+    for the player stat'): this season's regular-season games before this week (last season's when he has fewer than 2), and
+    his last 3 games. Games = weeks with a stat line in nflverse's weekly file. Display only (Ladder candidates rung chips)."""
+    if not db or not os.path.exists(db):
+        return {}
+    try:
+        con = sqlite3.connect(db)
+        d = pd.read_sql(f"SELECT player_id, season, week, {', '.join(AV_COLS.values())} FROM player_week WHERE season_type = 'REG' "
+                        f"AND ((season = {season} AND week < {week}) OR season = {season - 1})", con)
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("season averages skipped:", type(e).__name__, e)
+        return {}
+    d = d[d.player_id.isin(set(pids))].sort_values(["season", "week"])
+    out = {}
+    for pid, x in d.groupby("player_id"):
+        cur = x[x.season == season]
+        use = cur if len(cur) >= 2 else x[x.season == season - 1]
+        if use.empty:
+            continue
+        out[pid] = dict(gp=len(use), cur=len(cur) >= 2, season=int(use.season.iloc[0]),
+                        **{k: [round(float(use[c].fillna(0).mean()), 1), round(float(x.tail(3)[c].fillna(0).mean()), 1)] for k, c in AV_COLS.items()})
+    return out
+
+
 def _kickoffs(db, game_ids):
     if not os.path.exists(db):
         return {}
@@ -276,12 +304,13 @@ def build(stem, sims=None, db="nfl.db", subtitle=None, nav=None, out=None):
     sgp = json.load(open(spath)) if os.path.exists(spath) else None
     plist = []
     btd = json.load(open(f"{stem}_box.json")) if os.path.exists(f"{stem}_box.json") else {}     # mean rushing / receiving TDs
+    avs = _season_avgs(db, int(season), int(week), set(players.player_id))                       # his average a game per ladder stat
     for (gid, team, opp, name, pid, pos), d in players.groupby(
             ["game_id", "team", "opp", "player", "player_id", "pos"], sort=False):
         key = f"{gid}|{team}|{name}"
         mp = match["players"].get(key, {})
         plist.append(dict(k=key, g=gid, t=team, o=opp, n=name, id=pid, pos=pos, d=dists.get(key, {}),
-                          lab=mp.get("label"), tags=mp.get("tags", []), tdm=btd.get(key), nm=(match.get("nm") or {}).get(key),
+                          lab=mp.get("label"), tags=mp.get("tags", []), tdm=btd.get(key), nm=(match.get("nm") or {}).get(key), av=avs.get(pid),
                           s={r["stat"]: [round(float(r[q]), 3 if r["stat"] in ("anytime_td", "first_td") else 2) for q in Q]
                              for r in d.to_dict("records")}))
 
@@ -545,7 +574,7 @@ input[type=search]{min-width:200px}
 .ladr .lru,.lstarx .lru{max-width:100%;white-space:normal}.lmv{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.03em;border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}.lmv.pin{color:#C084FC}.lmv.cons{color:#2DD4BF}.lmv.cons.up{background:rgba(45,212,191,.14)}.lmv.cons.both{background:#2DD4BF;color:#06231f;border-color:#2DD4BF}.lmv.cons.odds{color:#E0A458}
 .vtag.cmv{font-size:11px;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:0 7px;white-space:nowrap;color:#2DD4BF;background:none}.vtag.cmv.up{background:rgba(45,212,191,.14)}.vtag.cmv.both{background:#2DD4BF;color:#06231f;border-color:#2DD4BF}.vtag.cmv.odds{color:#E0A458}
 .lsel{font:700 13px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:1px 2px;cursor:pointer}
-.lru .ledge{color:var(--good);font-weight:700;margin-left:4px}.lru.thpk{border-color:var(--good);box-shadow:inset 3px 0 0 var(--good)}.lru .thtag{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bg);background:var(--good);border-radius:3px;padding:0 4px;margin-left:4px}.lru .thok{color:var(--good);font-size:11px}.lru .thob{opacity:.75}.lru .thob small{font-size:10px}.lru .thmf{opacity:.85}.fbt .fbv,b.fbv{color:var(--good)}.fbt td.name .tag{margin-left:4px}.lstarx{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.lru .lstar{color:#F2C14E;font-size:14px;margin-left:2px;cursor:help}.ladtg{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 2px}.lru .lfit{color:var(--good);font-weight:600;font-size:11px;border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}.lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
+.lru .ledge{color:var(--good);font-weight:700;margin-left:4px}.lru .lavg b{color:var(--ink);font-weight:600}.lru.thpk{border-color:var(--good);box-shadow:inset 3px 0 0 var(--good)}.lru .thtag{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bg);background:var(--good);border-radius:3px;padding:0 4px;margin-left:4px}.lru .thok{color:var(--good);font-size:11px}.lru .thob{opacity:.75}.lru .thob small{font-size:10px}.lru .thmf{opacity:.85}.fbt .fbv,b.fbv{color:var(--good)}.fbt td.name .tag{margin-left:4px}.lstarx{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.lru .lstar{color:#F2C14E;font-size:14px;margin-left:2px;cursor:help}.ladtg{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 2px}.lru .lfit{color:var(--good);font-weight:600;font-size:11px;border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}.lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
 .lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
 .ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
 .ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}

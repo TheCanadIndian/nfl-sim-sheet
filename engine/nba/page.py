@@ -34,6 +34,9 @@ def player_payload(tab, meta, dists):
                             k_: (None if pd.isna(mm[c]) else round(float(mm[c]), 3 if c in ("x_rr", "x_ar") else 1))
                             for k_, c in (("gp", "x_gp"), ("season", "x_season"), ("fg3a", "x_fg3a"), ("fg3a10", "x_fg3a10"), ("rch", "x_rch"), ("rr", "x_rr"),
                                           ("ach", "x_ach"), ("ar", "x_ar"), ("reb", "x_reb"), ("ast", "x_ast"), ("on", "x_on"))},
+                        av=None if mm is None or "av_gp" not in mm.index or pd.isna(mm.av_gp) else dict(
+                            gp=int(mm.av_gp), season=int(mm.av_season), cur=bool(mm.av_cur),
+                            **{c: [round(float(mm[f"av_{c}"]), 1), round(float(mm[f"av_{c}10"]), 1)] for c in ("pts", "reb", "ast", "fg3m")}),
                         pp=None if mm is None or pd.isna(mm.p_play) else round(float(mm.p_play), 3),
                         nm=None if mm is None or "nm_gain" not in mm.index or pd.isna(mm.nm_gain) or mm.nm_gain < 2 else [round(float(mm.nm_gain), 1), round(float(mm.e_min_usual), 1)],
                         bx=None if mm is None or "bx" not in mm.index or not isinstance(mm.bx, dict) else mm.bx,
