@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-20",
 "lock": "2026-11-21T00:00:00+00:00",
-"frozen_at": "2026-11-20T22:03:57.247Z",
+"frozen_at": "2026-11-20T22:08:55.333Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 3.5,
 "name": "norman powell",
 "lab": "Norman Powell 4+ ast",
-"p": 0.2902,
+"p": 0.2862,
 "price": 252,
 "book": "Kalshi",
 "f": [
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.10498,
+"p": 0.10353,
 "d": 10.912,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
@@ -64,14 +64,14 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 11.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 12+ reb",
-"p": 0.4072,
-"price": 145,
-"book": "Hard Rock",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.4188,
+"price": 138,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -98,8 +98,8 @@
 ]
 }
 ],
-"p": 0.1473,
-"d": 7.595,
+"p": 0.1515,
+"d": 7.378,
 "first": "2026-11-21T01:00:00+00:00",
 "pick": "core",
 "res": null
@@ -133,7 +133,7 @@
 "line": 3.5,
 "name": "norman powell",
 "lab": "Norman Powell 4+ ast",
-"p": 0.2902,
+"p": 0.2862,
 "price": 252,
 "book": "Kalshi",
 "f": [
@@ -162,7 +162,7 @@
 ]
 }
 ],
-"p": 0.03955,
+"p": 0.039,
 "d": 27.213,
 "first": "2026-11-21T00:00:00+00:00",
 "pick": "longshot",
@@ -192,14 +192,14 @@
 {
 "gid": "401909309",
 "start": "2026-11-21T01:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 11.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 12+ reb",
-"p": 0.4072,
-"price": 145,
-"book": "Hard Rock",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ threes",
+"p": 0.4188,
+"price": 138,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -226,8 +226,8 @@
 ]
 }
 ],
-"p": 0.05549,
-"d": 18.941,
+"p": 0.05707,
+"d": 18.4,
 "first": "2026-11-21T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -241,11 +241,11 @@
 "start": "2026-11-21T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander over 5.5 assists",
-"p": 0.4473,
-"price": 125,
+"line": 2.5,
+"name": "saddiq bey",
+"lab": "Saddiq Bey over 2.5 assists",
+"p": 0.4253,
+"price": 140,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -257,10 +257,10 @@
 "rotation",
 "game",
 "our model above fair",
-"pinnacle up"
+"consensus up"
 ],
 "sport": "nba",
-"edge": 0.0136
+"edge": 0.0289
 },
 {
 "gid": "401909312",
@@ -312,8 +312,8 @@
 "edge": 0.0104
 }
 ],
-"p": 0.10747,
-"d": 9.694,
+"p": 0.10218,
+"d": 10.34,
 "first": "2026-11-21T01:00:00+00:00",
 "res": null
 },
@@ -471,19 +471,19 @@
 "line": 6.5,
 "name": "shai gilgeousalexander",
 "lab": "Shai Gilgeous-Alexander over 6.5 assists",
-"p": 0.309,
-"fair": 0.3062,
+"p": 0.3045,
+"fair": 0.3015,
 "price": 225,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0043,
+"edge": -0.0103,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (5.5)"
 ]
 }
 ],
-"p": 0.10016,
+"p": 0.09862,
 "d": 9.685,
 "first": "2026-11-21T00:00:00+00:00",
 "res": null
@@ -492,6 +492,22 @@
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909306",
+"start": "2026-11-21T00:30:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 0.5,
+"name": "dayron sharpe",
+"lab": "Day'Ron Sharpe over 0.5 threes",
+"p": 0.2786,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1143,
+"fair": 0.289,
+"main": true
+},
 {
 "gid": "401909311",
 "start": "2026-11-21T02:30:00+00:00",
@@ -507,27 +523,11 @@
 "edge": 0.1142,
 "fair": 0.4554,
 "main": false
-},
-{
-"gid": "401909309",
-"start": "2026-11-21T01:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "nic claxton",
-"lab": "Nic Claxton over 6.5 rebounds",
-"p": 0.4045,
-"price": 175,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1124,
-"fair": 0.4197,
-"main": true
 }
 ],
-"p": 0.18397,
-"d": 6.738,
-"first": "2026-11-21T01:00:00+00:00",
+"p": 0.12671,
+"d": 9.8,
+"first": "2026-11-21T00:30:00+00:00",
 "res": null
 },
 {
@@ -542,8 +542,8 @@
 "line": 3.5,
 "name": "alex sarr",
 "lab": "Alex Sarr over 3.5 assists",
-"p": 0.115,
-"fair": 0.115,
+"p": 0.11,
+"fair": 0.11,
 "ours": 0.1697,
 "price": 685,
 "book": "Kalshi",
@@ -579,7 +579,7 @@
 ]
 }
 ],
-"p": 0.00748,
+"p": 0.00715,
 "d": 105.269,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
@@ -618,8 +618,8 @@
 "line": 5.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis over 5.5 assists",
-"p": 0.035,
-"fair": 0.035,
+"p": 0.03,
+"fair": 0.03,
 "ours": 0.0503,
 "price": 2243,
 "book": "Kalshi",
@@ -633,7 +633,7 @@
 ]
 }
 ],
-"p": 0.00228,
+"p": 0.00195,
 "d": 314.196,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
@@ -672,8 +672,8 @@
 "line": 3.5,
 "name": "alex sarr",
 "lab": "Alex Sarr over 3.5 assists",
-"p": 0.115,
-"fair": 0.115,
+"p": 0.11,
+"fair": 0.11,
 "ours": 0.1697,
 "price": 685,
 "book": "Kalshi",
@@ -687,7 +687,7 @@
 ]
 }
 ],
-"p": 0.0069,
+"p": 0.0066,
 "d": 105.269,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
@@ -726,8 +726,8 @@
 "line": 5.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis over 5.5 assists",
-"p": 0.035,
-"fair": 0.035,
+"p": 0.03,
+"fair": 0.03,
 "ours": 0.0503,
 "price": 2243,
 "book": "Kalshi",
@@ -741,7 +741,7 @@
 ]
 }
 ],
-"p": 0.00123,
+"p": 0.00105,
 "d": 548.965,
 "first": "2026-11-21T00:30:00+00:00",
 "res": null
