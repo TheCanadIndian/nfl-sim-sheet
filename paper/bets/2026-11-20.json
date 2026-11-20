@@ -1,0 +1,72 @@
+{
+ "date": "2026-11-20",
+ "bets": [
+  {
+   "id": "2026-11-20-1",
+   "t": "2026-11-20T22:39:55+00:00",
+   "book": "Novig",
+   "stake": 5.0,
+   "dec": 4.529,
+   "odds": 353,
+   "q": 0.2208,
+   "p": 0.2486,
+   "edge": 0.1259,
+   "why": "Only NBA is on tonight. Applies the 11-18 filter (Novig, main line, priced 30-60%, our chance >= fair, no points) and takes the two legs with the largest edge that pass. Both edges are small (+7% and +5%), so this is a near-break-even test of the filter. No research agents were used; nothing was close enough to be worth a vet.",
+   "legs": [
+    {
+     "id": "nba|401909305|dyson daniels|reb|6.5|o",
+     "sport": "nba",
+     "gid": "401909305",
+     "game": "CHA @ ATL",
+     "start": "2026-11-21T00:00:00+00:00",
+     "name": "dyson daniels",
+     "kind": "reb",
+     "side": "o",
+     "line": 6.5,
+     "lab": "Dyson Daniels over 6.5 rebounds",
+     "book": "Novig",
+     "price": 104,
+     "dec": 2.04,
+     "q": 0.4902,
+     "fair": 0.5241,
+     "ours": 0.5756,
+     "p": 0.5267,
+     "edge": 0.0744,
+     "main": true,
+     "sig": [
+      "archetype: Pass-first guard"
+     ],
+     "why": "Novig +104 implies 49%; sharp fair 52.4%, our model 57.6% (above the fair, so the edge is not just the book's price). Main line, a guard with rebound volume. Risk: NBA lineups confirm about 30 min before the 7:00 PM tip."
+    },
+    {
+     "id": "nba|401909311|devin booker|ast|5.5|o",
+     "sport": "nba",
+     "gid": "401909311",
+     "game": "PHX @ UTAH",
+     "start": "2026-11-21T02:30:00+00:00",
+     "name": "devin booker",
+     "kind": "ast",
+     "side": "o",
+     "line": 5.5,
+     "lab": "Devin Booker over 5.5 assists",
+     "book": "Novig",
+     "price": 122,
+     "dec": 2.22,
+     "q": 0.4505,
+     "fair": 0.4718,
+     "ours": 0.476,
+     "p": 0.472,
+     "edge": 0.0479,
+     "main": true,
+     "sig": [
+      "Early opener value: over 7.5 assists at Kalshi 351",
+      "archetype: Primary creator"
+     ],
+     "why": "Novig +122 implies 45%; fair 47.2%, ours 47.6%, so ours is at or above the fair. Consensus line move toward the over. Edge is small, so the leg is roughly fair-priced. Risk: lineup confirmation before the 10:00 PM tip, and Booker's assist leg lost on 11-18."
+    }
+   ]
+  }
+ ],
+ "bankroll_open": 227.23,
+ "unit": 5.0
+}
