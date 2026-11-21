@@ -143,6 +143,8 @@ table.mut td{padding:4px 6px;border-bottom:1px solid var(--faint)}table.mut td.c
 .mutag.dis{color:#F2C14E;border-color:currentColor;background:none}
 .mud{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 2px 0 4px;vertical-align:0;border:1px solid color-mix(in srgb,var(--ink) 25%,transparent)}
 .mud.best{box-shadow:0 0 0 2px color-mix(in srgb,var(--good) 70%,transparent)}
+.mubt td small{display:block}.mubt a{color:inherit;text-decoration:underline dotted;text-underline-offset:3px}
+@media (max-width:640px){table.mubt thead{display:none}table.mubt,table.mubt tbody,table.mubt tr,table.mubt td{display:block;width:auto}table.mubt tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 8px;padding:8px 0;border-bottom:1px solid var(--faint)}table.mubt td{border:0;padding:2px 4px;text-align:left}table.mubt td:nth-child(1),table.mubt td:nth-child(2){grid-column:1/-1}table.mubt td:nth-child(3)::before{content:'Kalshi ';color:var(--muted);font-size:11px}table.mubt td:nth-child(4)::before{content:'HR ';color:var(--muted);font-size:11px}table.mubt td:nth-child(5)::before{content:'Novig ';color:var(--muted);font-size:11px}table.mubt td:nth-child(6)::before{content:'Edge ';color:var(--muted);font-size:11px}table.mubt td:nth-child(8)::before{content:'D chip ';color:var(--muted);font-size:11px}table.mubt td:nth-child(7){grid-column:span 2}}
 @media (max-width:640px){.mugh{display:none}.mugg{grid-template-columns:1fr}.mugl{padding:2px 4px}.mur{grid-template-columns:40px minmax(0,1fr) minmax(0,1fr)}.mur>b{grid-row:span 2}.muc>i{display:inline}.mupdf{margin-left:0}.mus{grid-template-columns:1fr}}
 </style>
 <div class="wrap">

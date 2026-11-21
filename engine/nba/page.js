@@ -877,7 +877,43 @@ function muView(){
     ${MUV === 'stat' ? muByStat(R, r => r.best) : muByGame(R)}</section>
     <section class="panel"><div class="phead"><h2>Where the cell disagrees with the D rating</h2><span class="small muted">${nd} player-stat${nd === 1 ? '' : 's'}</span></div>
     <p class="note" style="margin:0 0 8px">Green or deeper on the sheet while the D rating chip is −1.0 or lower, its slightly tough / tough grades (and the reverse: red with a chip of +1.0 or more; chips between are the rating’s neutral band). The rating adds the defense’s rest, travel and missing defenders to the same matchup and was tested against the market on unseen games: tough ratings ran 3-5 pts under the price, and no grade beat the price after the vig. When they disagree, the chip is the tested one: a reason to check before betting the over.</p>
-    ${MUV === 'stat' ? muByStat(R, r => r.dis, true) : muDisGame(R)}</section>`;
+    ${MUV === 'stat' ? muByStat(R, r => r.dis, true) : muDisGame(R)}</section>${muBetsView()}`;
+}
+// Best bets (owner 2026-11-21: 'At the end of the sheets could you make a best bet list as well'): the matchup sheet is a filter,
+// not an edge (no matchup level beat the price in our tests), so the list starts from the one ladder rule ahead since the Nov 11
+// model fixes -- the 15%+ K pick (k15Picks, Profit row 'NBA study pick': our own chance 15-40% over Kalshi's ask + fee, the stat's
+// biggest rung) -- and keeps the picks whose stat is his team's best matchup (light green or better) with a D rating above -1.0
+// (not slightly tough / tough). Games not started; live prices. Display only: not proven, nothing new tracked.
+function muBets(){
+  const now = Date.now(), out = [];
+  for (const g of D.games){
+    if (g.start_utc && new Date(g.start_utc) <= now) continue;
+    for (const p of D.players.filter(x => x.g === g.id && MU[x.k])){
+      for (const u of k15Picks(g, p)){
+        const c = MU[p.k].s[u.k];
+        if (!c || !c[2] || c[1] < 1 || (c[3] != null && c[3] <= -1)) continue;
+        const ob = b => (u.opts || []).find(o => o.b === b), nve = nvEdge(g, p, u);
+        out.push({g, p, u, c, ke: u.ke, kal: ob('Kalshi'), hr: ob('Hard Rock'), nv: ob('Novig'), nvok: nvOk(nve), nve});
+      }
+    }
+  }
+  out.sort((a, b) => b.ke - a.ke);
+  for (const r of out) r.mates = [...new Set(out.filter(x => x.p.k !== r.p.k && x.p.t === r.p.t && x.g.id === r.g.id).map(x => x.p.n.replace(/\s+(jr\.?|sr\.?|ii|iii|iv)$/i, '').split(' ').slice(-1)[0]))];
+  return out;
+}
+const muRung = r => `${Math.round(r.u.l + .5)}+ ${KLAB[r.u.k]}`;
+function muBetsView(){
+  const B = muBets();
+  const body = !B.length ? `<p class="note">${window.MKT && MKT.ladderAll ? 'No 15%+ K pick lines up with a best matchup right now. Picks move with Kalshi’s prices and lineups; this updates through the day.' : 'Loading Kalshi prices…'}</p>`
+    : `<div class="tw"><table class="mut mubt"><thead><tr><th>Bet</th><th>Game</th><th>Kalshi</th><th>Hard Rock</th><th>Novig</th><th class="n">Edge</th><th>Matchup</th><th class="n">D chip</th></tr></thead><tbody>${B.map(r =>
+      `<tr><td><b>${esc(r.p.n)}</b> ${esc(muRung(r))}${r.mates.length ? ` <span class="mutag dis" title="Same team as ${esc(r.mates.join(', '))}: teammates’ overs pull slightly against each other, so take one, or keep them out of the same parlay">same team</span>` : ''}</td>
+        <td>${esc(r.p.t)} · ${esc(r.g.away)} @ ${esc(r.g.home)}<small class="muted"> ${esc(r.g.start || '')}</small></td>
+        <td>${r.kal ? `<b>${esc(r.kal.price)}</b>` : '–'}</td><td>${r.hr ? (r.hr.u ? `<a href="${esc(r.hr.u)}" target="_blank" rel="noopener">${esc(r.hr.price)} ↗</a>` : esc(r.hr.price)) : '–'}</td>
+        <td>${r.nv ? esc(r.nv.price) : '–'}${r.nvok ? ` <span class="mutag mul2" title="Novig ${Math.round(r.nve * 100)}% under the other books’ fair at this number (2+ sources, 30% ours): the tracked Novig check, a lead">NV +${Math.round(r.nve * 100)}%</span>` : ''}</td>
+        <td class="n"><b>+${Math.round(r.ke * 100)}%</b></td><td class="c ${muCls(r.c[1])}">${MUL[r.c[1]]} <span class="mup">${muPct(r.c[0])}</span></td><td class="n">${r.c[3] != null ? muChip(r.c[3]) : '–'}</td></tr>`).join('')}</tbody></table></div>`;
+  return `<section class="panel"><div class="phead"><h2>Best bets <span class="exp3">experimental</span></h2><span class="small muted">${B.length} pick${B.length === 1 ? '' : 's'} · overs</span></div>
+    <p class="note" style="margin:0 0 8px">A matchup alone isn’t an edge (the market already prices it), so this list starts from the one ladder rule that is ahead since the Nov 11 model fixes, the <b>15%+ K pick</b> (Ladders tab: our chance 15-40% over Kalshi’s ask + fee, one rung per stat; graded on the Profit page as ‘NBA study pick’, not proven), and keeps the picks whose stat is his team’s <b>best matchup</b> on the sheet (light green or better) with a <b>D rating above −1.0</b>. Edge = our chance vs Kalshi with the fee. Longshot rungs: most lose on any one night. Prices and picks move until lineups are confirmed (about 30 minutes before tip), so check again then.</p>
+    ${body}</section>`;
 }
 // PDF export: jsPDF + autoTable, loaded only when the button is tapped (pinned versions); if they can't load, the print dialog opens
 const MU_RGB = {3: [46, 158, 91], 2: [143, 213, 166], 1: [214, 240, 221], 0: [229, 231, 235], '-1': [250, 221, 221], '-2': [240, 163, 163], '-3': [214, 80, 80]};
@@ -936,6 +972,13 @@ async function muPdf(btn){
     y = title('Chart 3 - Best Matchups (Chart 1 players) Grouped by Stat', base + ' Sorted greenest first within each stat.'); y -= 8; byStat(r => r.best);
     y = title('Chart 4 - Cell vs. Chip Disagreements Grouped by Stat', 'Same players as Chart 2, grouped by stat and sorted by how green the cell is. 20+ min; * = under 24 min.'); y -= 8;
     if (D2.length) byStat(r => r.dis, true); else { doc.setFontSize(10); doc.text('No disagreements on this slate.', 40, y + 12); }
+    // Best bets: the 15%+ K picks whose stat is his team's best matchup with a D rating above -1.0 (muBets)
+    const BB = muBets();
+    y = title('Best Bets - 15%+ K Picks on a Best Matchup', `Overs. Starts from the one ladder rule ahead since the Nov 11 model fixes, the 15%+ K pick (our chance 15-40% over Kalshi's ask + fee, one rung per stat; 'NBA study pick' on the Profit page, not proven), and keeps picks whose stat is his team's best matchup on the sheet (light green or better) with a D rating above -1.0. Edge = our chance vs Kalshi with the fee. Prices as of ${new Date().toLocaleString()}; they move until lineups are confirmed. Longshot rungs: most lose on any one night.`);
+    if (BB.length) doc.autoTable({...sty, startY: y, head: [['Bet', 'Team', 'Game', 'Kalshi', 'Hard Rock', 'Novig', 'Edge', 'Matchup', 'D chip']],
+      body: BB.map(r => [muAsc(`${r.p.n} ${muRung(r)}${r.mates.length ? ' (same team as ' + r.mates.join(', ') + ')' : ''}`), r.p.t, muAsc(`${gl(r.g)} ${r.g.start || ''}`), r.kal ? r.kal.price : '-', r.hr ? r.hr.price : '-', r.nv ? r.nv.price + (r.nvok ? ` (NV +${Math.round(r.nve * 100)}%)` : '') : '-',
+        `+${Math.round(r.ke * 100)}%`, {content: `${MUL[r.c[1]]} ${muAsc(muPct(r.c[0]))}`, styles: fill(r.c[1])}, r.c[3] != null ? muAsc(muChip(r.c[3])) : '-'])});
+    else { doc.setFontSize(10); doc.text('No 15%+ K pick lines up with a best matchup right now.', 40, y + 12); }
     const n = doc.internal.getNumberOfPages();
     for (let i = 1; i <= n; i++){ doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(130); doc.text(`Sim Sheet - NBA matchup charts - ${D.date} - page ${i} of ${n} - display only, not a bet rule`, W / 2, H - 22, {align: 'center'}); }
     doc.save(`NBA_matchup_charts_${D.date}.pdf`);
