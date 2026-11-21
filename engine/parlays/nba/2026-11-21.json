@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T15:10:05.997Z",
+"frozen_at": "2026-11-21T15:17:15.395Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,15 +15,15 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401910025",
+"gid": "401910026",
 "start": "2026-11-22T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 8.5,
-"name": "darius garland",
-"lab": "Darius Garland 9+ ast",
-"p": 0.3153,
-"price": 220,
+"line": 4.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 5+ ast",
+"p": 0.4287,
+"price": 140,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -50,14 +50,59 @@
 ]
 }
 ],
-"p": 0.09842,
-"d": 10.24,
+"p": 0.13382,
+"d": 7.68,
 "first": "2026-11-22T01:00:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
 "tier": "2-leg",
+"legs": [
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 4+ ast",
+"p": 0.2634,
+"price": 285,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 14+ reb",
+"p": 0.3122,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.08222,
+"d": 12.32,
+"first": "2026-11-22T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401910023",
@@ -67,8 +112,8 @@
 "line": 1.5,
 "name": "kentavious caldwellpope",
 "lab": "Kentavious Caldwell-Pope 2+ threes",
-"p": 0.426,
-"price": 133,
+"p": 0.4308,
+"price": 130,
 "book": "Novig",
 "f": [
 "matchup",
@@ -84,8 +129,25 @@
 "line": 8.5,
 "name": "darius garland",
 "lab": "Darius Garland 9+ ast",
-"p": 0.3153,
+"p": 0.3133,
 "price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 5+ ast",
+"p": 0.4287,
+"price": 140,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -94,9 +156,132 @@
 ]
 }
 ],
-"p": 0.13432,
-"d": 7.456,
+"p": 0.05785,
+"d": 17.664,
 "first": "2026-11-21T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910023",
+"start": "2026-11-21T18:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "kentavious caldwellpope",
+"lab": "Kentavious Caldwell-Pope 2+ threes",
+"p": 0.4308,
+"price": 130,
+"book": "Novig",
+"f": [
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910025",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 8.5,
+"name": "darius garland",
+"lab": "Darius Garland 9+ ast",
+"p": 0.3133,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 4+ ast",
+"p": 0.2634,
+"price": 285,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.03554,
+"d": 28.336,
+"first": "2026-11-21T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama over 11.5 rebounds",
+"p": 0.4975,
+"price": 100,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0016
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "cam spencer",
+"lab": "Cam Spencer over 5.5 assists",
+"p": 0.4603,
+"price": 115,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.034
+}
+],
+"p": 0.229,
+"d": 4.3,
+"first": "2026-11-22T01:00:00+00:00",
 "res": null
 },
 {
@@ -111,12 +296,12 @@
 "line": 10.5,
 "name": "rudy gobert",
 "lab": "Rudy Gobert over 10.5 rebounds",
-"p": 0.4646,
-"fair": 0.4634,
+"p": 0.4631,
+"fair": 0.4613,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0685,
+"edge": 0.0651,
 "v": [
 "consensus odds drop",
 "one rung above the main line (9.5)"
@@ -130,19 +315,19 @@
 "line": 7.5,
 "name": "darius garland",
 "lab": "Darius Garland over 7.5 assists",
-"p": 0.4378,
+"p": 0.4373,
 "fair": 0.4374,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0148,
+"edge": -0.0162,
 "v": [
 "consensus odds drop",
 "one rung above the main line (6.5)"
 ]
 }
 ],
-"p": 0.20269,
+"p": 0.20177,
 "d": 5.175,
 "first": "2026-11-22T01:00:00+00:00",
 "res": null
@@ -159,12 +344,12 @@
 "line": 10.5,
 "name": "rudy gobert",
 "lab": "Rudy Gobert over 10.5 rebounds",
-"p": 0.4646,
-"fair": 0.4634,
+"p": 0.4631,
+"fair": 0.4613,
 "price": 130,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0685,
+"edge": 0.0651,
 "v": [
 "consensus odds drop",
 "one rung above the main line (9.5)"
@@ -178,12 +363,12 @@
 "line": 7.5,
 "name": "darius garland",
 "lab": "Darius Garland over 7.5 assists",
-"p": 0.4378,
+"p": 0.4373,
 "fair": 0.4374,
 "price": 125,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0148,
+"edge": -0.0162,
 "v": [
 "consensus odds drop",
 "one rung above the main line (6.5)"
@@ -197,19 +382,19 @@
 "line": 6.5,
 "name": "deni avdija",
 "lab": "Deni Avdija over 6.5 assists",
-"p": 0.3428,
-"fair": 0.3442,
+"p": 0.3386,
+"fair": 0.3396,
 "price": 185,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.023,
+"edge": -0.035,
 "v": [
 "consensus odds drop",
 "one rung above the main line (5.5)"
 ]
 }
 ],
-"p": 0.06977,
+"p": 0.06852,
 "d": 14.749,
 "first": "2026-11-22T00:30:00+00:00",
 "res": null
@@ -226,12 +411,12 @@
 "line": 6.5,
 "name": "deni avdija",
 "lab": "Deni Avdija over 6.5 assists",
-"p": 0.3428,
-"fair": 0.3442,
+"p": 0.3386,
+"fair": 0.3396,
 "price": 185,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.023,
+"edge": -0.035,
 "v": [
 "consensus odds drop",
 "one rung above the main line (5.5)"
@@ -245,12 +430,12 @@
 "line": 2.5,
 "name": "vj edgecombe",
 "lab": "VJ Edgecombe over 2.5 threes",
-"p": 0.3559,
-"fair": 0.3588,
-"price": 173,
-"book": "Kalshi",
+"p": 0.3407,
+"fair": 0.3425,
+"price": 178,
+"book": "Novig",
 "sport": "nba",
-"edge": -0.0285,
+"edge": -0.0528,
 "v": [
 "consensus odds drop",
 "one rung above the main line (1.5)",
@@ -258,8 +443,8 @@
 ]
 }
 ],
-"p": 0.1235,
-"d": 7.78,
+"p": 0.11631,
+"d": 7.923,
 "first": "2026-11-21T18:00:00+00:00",
 "res": null
 }
