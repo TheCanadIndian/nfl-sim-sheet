@@ -1,0 +1,699 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parlays</title><link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0A0F12; --surface:#111A1F; --sunk:#18242B; --ink:#EAF1F4; --muted:#95A6B0;
+  --faint:#22313A; --accent:#36D399; --band:rgba(54,211,153,.26); --whisker:#6D808B;
+  --away:#6CB4FF; --tip-bg:#EAF1F4; --tip-ink:#0A0F12; --good:#34D27A; --bad:#F04848; --sel:#6CB4FF;
+  --g1:#9ED9B6; --g2:#4FD08A; --g3:#1EE06E; --r1:#E9A3A3; --r2:#F26464; --r3:#FF2E2E;
+  --c-qb:#B4BCC2; --c-rb:#36D399; --c-wr:#6CB4FF; --c-te:#F2C14E;
+  --display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);padding-inline:20px;padding-block:28px 56px;font-variant-numeric:tabular-nums}
+.wrap{max-width:1560px;margin:0 auto;display:grid;gap:22px;grid-template-columns:minmax(0,1fr)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:500}
+h1{font-family:var(--display);font-weight:700;font-size:44px;line-height:1;margin:6px 0 0;letter-spacing:.005em;text-transform:uppercase;text-wrap:balance}
+h2{font-family:var(--display);font-weight:600;font-size:22px;line-height:1.1;margin:0;text-transform:uppercase;letter-spacing:.02em}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.tabs{display:flex;gap:4px;background:var(--sunk);padding:4px;border-radius:8px;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{border:0;background:none;padding:7px 14px;border-radius:6px;cursor:pointer;font-weight:500;color:var(--muted)}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+
+/* games view */
+.games{display:grid;grid-template-columns:228px minmax(0,1fr);gap:20px;align-items:start}
+.rail{display:grid;gap:2px;align-content:start;position:sticky;top:calc(var(--tbh,64px) + 8px);max-height:calc(100vh - var(--tbh,64px) - 16px);overflow-y:auto;scrollbar-width:thin;padding-bottom:64px}
+.game-btn{display:grid;gap:4px;width:100%;text-align:left;border:1px solid transparent;background:none;border-radius:7px;padding:9px 12px;cursor:pointer}
+.game-btn:hover{background:var(--sunk)}
+.game-btn[aria-current="true"]{background:var(--surface);border-color:var(--faint)}
+.game-btn .m{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.game-btn .teams{font-family:var(--display);font-weight:600;font-size:20px;letter-spacing:.02em}
+.game-btn .line{font-size:12.5px;color:var(--muted)}
+.mini{display:flex;height:4px;gap:2px}
+.mini i{display:block;border-radius:1px}
+.detail{display:grid;gap:18px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--faint);border-radius:9px;padding:20px;display:grid;gap:18px;min-width:0}
+.score{display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:12px}
+.side{display:grid;gap:2px}
+.side.home{text-align:right}
+.code{font-family:var(--display);font-weight:700;font-size:26px;letter-spacing:.03em;line-height:1}
+.pts{font-family:var(--display);font-weight:700;font-size:64px;line-height:.9}
+.at{font-family:var(--display);font-size:22px;color:var(--muted);padding-bottom:10px}
+.winbar{display:grid;gap:6px}
+.plink .caret{display:inline-block;width:12px;color:var(--muted);font-size:11px}
+.plink.open{color:var(--sel)}
+tr.opened td{background:color-mix(in srgb,var(--sel) 8%,transparent)}
+tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 14px 16px;white-space:normal}
+.slider{display:grid;gap:12px;max-width:860px}
+.sl-top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.sl-row{display:flex;align-items:center;gap:10px}
+.sl-row label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sl-row input[type=range]{flex:1;accent-color:var(--sel);height:28px;min-width:120px}
+.sl-step{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:16px}
+.sl-val{font-family:var(--display);font-size:26px;min-width:64px;text-align:right}
+.sl-out{display:grid;grid-template-columns:auto minmax(80px,1fr) auto;gap:14px;align-items:center}
+.sl-side{display:grid;gap:0}
+.sl-side span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+.sl-side b{font-family:var(--display);font-size:34px;line-height:1}
+.sl-side em{font-style:normal;color:var(--muted);font-size:14px}
+.sl-side.under{text-align:right} .sl-side b{color:var(--ink)}
+.sl-meter{height:12px;border-radius:6px;background:color-mix(in srgb,var(--bad) 55%,transparent);overflow:hidden}
+.sl-meter i{display:block;height:100%;background:var(--good)}
+.lean{font-size:11px;font-weight:700;margin-left:6px;white-space:nowrap;cursor:help}
+.iw .iwg{padding:10px 0;border-top:1px solid var(--faint)}
+.iw .iwg:first-of-type{border-top:0;padding-top:4px}
+.iwh{margin-bottom:4px}
+.iwst{font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;background:rgba(242,193,78,.16);color:var(--c-te);margin-left:4px}
+.iwst.out{background:rgba(240,72,72,.16);color:var(--r2)}
+.iwp1{margin:6px 0 10px 12px}
+.iwn{margin-bottom:2px}
+.iwr{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:baseline;font-size:13px;padding:2px 0}
+.iwb{min-width:118px;font-weight:600}
+.iwc{color:var(--muted)}
+.iwc.s{color:var(--ink)}
+.iwi{color:var(--muted);font-size:12px}
+.iwe{font-weight:700;color:var(--muted)}
+.iwe.up{color:var(--good)}
+.iwe.dn{color:var(--r2)}
+@media (max-width:520px){.iwp1{margin-left:2px}.iwb{min-width:0;flex-basis:100%}.iwr{gap:0 10px;padding:3px 0}}
+/* degree shades: text */
+.g1{color:var(--g1)!important} .g2{color:var(--g2)!important} .g3{color:var(--g3)!important}
+.r1{color:var(--r1)!important} .r2{color:var(--r2)!important} .r3{color:var(--r3)!important}
+.g3,.r3{font-weight:700}
+/* degree shades: fills and row tints */
+.sl-meter{display:flex;gap:2px;background:var(--sunk)!important}
+.sl-meter i{display:block;height:100%}
+.sl-meter .f-g1{background:var(--g1)} .sl-meter .f-g2{background:var(--g2)} .sl-meter .f-g3{background:var(--g3)}
+.sl-meter .f-r1{background:var(--r1)} .sl-meter .f-r2{background:var(--r2)} .sl-meter .f-r3{background:var(--r3)} .sl-meter .f-n{background:var(--whisker)}
+tr.bg-g1 td{background:color-mix(in srgb,var(--g1) 6%,transparent)} tr.bg-g2 td{background:color-mix(in srgb,var(--g2) 10%,transparent)} tr.bg-g3 td{background:color-mix(in srgb,var(--g3) 15%,transparent)}
+tr.bg-r1 td{background:color-mix(in srgb,var(--r1) 6%,transparent)} tr.bg-r2 td{background:color-mix(in srgb,var(--r2) 10%,transparent)} tr.bg-r3 td{background:color-mix(in srgb,var(--r3) 15%,transparent)}
+.gmsw{display:inline-flex;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto;margin-left:6px}
+.gmsw button{border:0;background:none;padding:4px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:12.5px;color:var(--muted)}
+.gmsw button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.ag{font-size:12px;font-weight:600;white-space:nowrap}
+.ag.up,.ag.up2{color:var(--good)} .ag.dn,.ag.dn2{color:var(--bad)} .ag.ok{color:var(--muted);font-weight:500}
+tr.agover td{background:color-mix(in srgb,var(--good) 11%,transparent)}
+tr.agunder td{background:color-mix(in srgb,var(--bad) 10%,transparent)}
+.pos-d{color:var(--good)} .neg-d{color:var(--bad)}
+.agbar{position:relative;height:10px;min-width:120px;background:var(--sunk);border-radius:2px}
+.agbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.agbar b{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--ink)}
+.ftd{display:grid;gap:2px;border-top:1px solid var(--faint);padding-top:12px}
+.ftd-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:4px}
+.ftd-r{display:grid;grid-template-columns:minmax(0,1fr) 90px 46px 52px 36px;gap:10px;align-items:center;font-size:14px;padding:3px 0}
+.ftd-r .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ftd-r .pbar{min-width:0;height:8px}
+.ftd-r b{text-align:right;font-weight:600} .ftd-r > span:nth-child(4),.ftd-r > span:nth-child(5){text-align:right}
+.ftd-r.top .n{font-weight:600}
+.star{color:var(--accent);margin-right:5px}
+.winbar .bar{display:flex;height:10px;gap:2px}
+.winbar .bar i{display:block;border-radius:2px}
+.winbar .lbl{display:flex;justify-content:space-between;font-size:13px}
+.box{width:100%;border-collapse:collapse}
+.box td{padding:6px 4px;border-bottom:1px solid var(--faint)}
+.box tr:last-child td{border-bottom:0}
+.box td:first-child{text-align:left;font-weight:500}
+.box td:nth-child(2){text-align:center;color:var(--muted);font-size:13px}
+.box td:last-child{text-align:right;font-weight:500}
+.boxhead{display:grid;grid-template-columns:1fr auto 1fr;font-family:var(--display);font-weight:600;font-size:16px;letter-spacing:.04em}
+.boxhead span:last-child{text-align:right}
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:22px}
+.phead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.seg{display:flex;flex-wrap:wrap;gap:4px}
+.seg button{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.key{display:flex;flex-wrap:wrap;gap:16px;font-size:12.5px;color:var(--muted);align-items:center}
+.key span{display:inline-flex;align-items:center;gap:6px}
+.key .kw{width:22px;height:2px;background:var(--whisker)}
+.key .kb{width:22px;height:10px;background:var(--band);border-radius:2px}
+.key .km{width:2px;height:14px;background:var(--ink)}
+
+/* tables */
+.tw{overflow-x:auto}
+.nbxgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}.nbxteam h3{margin:4px 0 6px;font-family:var(--display);font-size:18px}
+.ladsw{display:flex;gap:6px;margin:4px 0 8px}.ladsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:4px 12px;font:600 13px var(--body);cursor:pointer}.ladsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ladgm{border-top:1px solid var(--faint);padding:10px 0 2px}.ladgh{font-size:14.5px;margin-bottom:2px}.ladgm .lad:first-child{border-top:0}
+table.nbx{margin-bottom:10px}.bxo{background:rgba(52,199,123,.18);color:var(--good);border-radius:4px;padding:0 4px}.bxos{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 12px}.bxoc{border:1px solid var(--faint);border-radius:999px;padding:2px 9px;font-size:12.5px;white-space:nowrap}.bxoc b{color:var(--good)}.bxoc i{font-style:normal;color:var(--muted)}table.nbx td,table.nbx th{text-align:right;white-space:nowrap}table.nbx .l{text-align:left;white-space:normal}table.nbx th.l{color:var(--muted)}table.nbx .bxp{font-weight:700}
+@media(max-width:820px){.nbxgrid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){table.nbx td,table.nbx th{padding-left:5px;padding-right:5px}}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+.t th{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:500;text-align:right;padding:6px 8px;border-bottom:1px solid var(--faint);white-space:nowrap;vertical-align:bottom}
+.t td{padding:7px 8px;border-bottom:1px solid var(--faint);text-align:right;white-space:nowrap}
+.t th.l,.t td.l{text-align:left}
+.t td.name{font-weight:500;width:1%;padding-right:10px}   /* shrink to the longest name so the position tag sits beside it */
+.t td.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.t .grp td{border-bottom:0;padding-top:16px;text-align:left;font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.04em}
+.t td.big{font-weight:600}
+.t th.sc{width:32%;min-width:130px}
+.tag.arch{display:inline-block;font-size:11px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 6px;margin:3px 4px 0 0;cursor:help}
+.mxw{display:flex;flex-wrap:wrap;gap:3px 6px;margin:2px 0 0 18px}.mxl{font-size:11px;font-weight:700;white-space:nowrap;cursor:help}.mxl i{font-style:normal;font-weight:500;color:var(--muted)}.mxl.up{color:var(--good)}.mxl.dn{color:var(--bad)}
+.pos{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px}
+.strip{position:relative;height:20px;min-width:130px;cursor:default}
+.strip .g{position:absolute;top:0;bottom:0;width:1px;background:var(--faint)}
+.strip .w{position:absolute;top:9px;height:2px;background:var(--whisker)}
+.strip .b{position:absolute;top:4px;height:12px;background:var(--band);border-radius:2px}
+.strip .m{position:absolute;top:2px;width:2px;height:16px;background:var(--ink);transform:translateX(-1px)}
+.axis{position:relative;height:14px;min-width:130px;font-size:11px;letter-spacing:0;text-transform:none}
+.axis span{position:absolute;bottom:0}
+.pbar{position:relative;height:10px;min-width:100px;background:var(--sunk);border-radius:2px}
+.pbar i{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:2px}
+.dv{position:relative;height:12px;min-width:150px;background:var(--sunk);border-radius:2px}
+.dv i{position:absolute;top:0;bottom:0;border-radius:2px}
+.dv .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.controls label{font-size:13px;color:var(--muted)}
+select,input[type=search]{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px}
+input[type=search]{min-width:200px}
+.empty{padding:28px 8px;color:var(--muted)}
+.betgrid{display:grid;gap:8px}
+.betrow{display:grid;grid-template-columns:86px 1fr;gap:8px;align-items:center}
+.bets{display:flex;flex-wrap:wrap;gap:6px}
+.bet{display:inline-flex;align-items:baseline;gap:6px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;font-size:13.5px}
+.bet b{font-family:var(--display);font-size:17px;font-weight:700}
+.bet small{color:var(--muted);font-size:12px}
+.bet i{font-style:normal;color:var(--accent);font-weight:700;margin-left:2px}
+.bet.on{border-color:var(--accent);background:rgba(54,211,153,.12)}
+.bet:disabled{cursor:default}
+.bet:disabled i{display:none}
+@media (max-width:520px){.betrow{grid-template-columns:1fr;gap:4px}.bets{display:grid;grid-template-columns:1fr 1fr;gap:6px}.bet{justify-content:space-between;gap:4px;padding:5px 8px;font-size:12.5px;min-width:0}.bet b{font-size:15px}.bet small{display:none}.bet span{white-space:nowrap}}
+.sgp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px}
+.sgp{border:1px solid var(--faint);border-radius:9px;padding:14px;display:grid;gap:10px;align-content:start;background:var(--bg)}
+.sgp h3{font-family:var(--display);font-weight:600;font-size:19px;text-transform:uppercase;letter-spacing:.02em;margin:0;display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 8px;align-items:baseline}
+.sgp h3 small{font-family:var(--body);font-size:12px;text-transform:none;letter-spacing:0;color:var(--muted);font-weight:400}
+.sgp ol{margin:0;padding-left:22px;display:grid;gap:3px;font-size:14px}
+.sgp li .r{float:right;color:var(--muted);font-size:12.5px;margin-left:8px}
+.sgp li.after{list-style:none;margin-left:-22px;border-top:1px dashed var(--faint);padding-top:4px;margin-top:2px;font-size:12px;color:var(--muted)}
+.sgp table{width:100%;border-collapse:collapse;font-size:13.5px}
+.sgp td,.sgp th{padding:4px 6px;text-align:right;border-top:1px solid var(--faint)}
+.sgp th{font-weight:500;color:var(--muted);font-size:12px}
+.sgp td:first-child,.sgp th:first-child{text-align:left}
+.sgp td:first-child{white-space:nowrap}
+.outlook{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;font-size:13.5px;padding:10px 12px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}
+.outlook .good{color:var(--good)}
+.dch .good,.dcs .good{color:var(--good)}.dcp li.pth{margin-top:4px}.dcp li.pth:first-child{margin-top:0}.psc{font-size:12px;color:var(--muted);margin-left:0!important}.psc i{font-style:normal;margin-left:4px}.dch .bad{color:var(--bad)}
+.sgp.exp{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--band)}
+.gbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gbtn{font-size:12.5px;border:1px solid var(--faint);border-radius:999px;padding:3px 10px;color:var(--ink);text-decoration:none}
+.gbtn:hover{border-color:var(--accent);color:var(--accent)}
+.sp-list{display:grid;gap:0}
+.exp3{font-family:var(--body);font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:3px}
+.gsh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;font-size:15px}.gsh .big{font-size:19px;font-weight:700}
+.scsw{margin:4px 0 2px}.scsw button small{opacity:.7;margin-left:5px;font-size:11.5px}
+.scgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px}
+.scteam{display:flex;align-items:baseline;gap:8px;margin:14px 0 6px}.scteam h3{margin:0;font-size:16px}
+.scc{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:8px;align-content:start;min-width:0}
+.sck{margin:2px 0;justify-self:start;width:fit-content}.dcp li.lwhy{gap:4px;flex-wrap:wrap;margin:-2px 0 2px 0}.dcp li.lwhy span{margin-left:0;font-size:11px}.scc .ladh b{font-size:15px}.ladc.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.ladc.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 50%,transparent)}
+.sct{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.sct th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:2px 4px}.sct th:first-child,.sct td:first-child{text-align:left}
+.sct td{text-align:right;padding:4px;border-top:1px solid var(--faint);white-space:nowrap}.sct caption{text-align:left;font-size:12px;color:var(--muted);padding-bottom:2px}
+.sct td a{color:inherit}.sct small{display:block;font-size:10.5px;color:var(--muted)}.sct .mainl{font-size:10px;color:var(--muted);margin-left:4px}
+.offm{display:inline-block;font-size:10px;font-weight:700;color:#F2C14E;border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-top:2px}
+.offbox{display:grid;gap:6px;margin-top:10px}.offl{display:flex;flex-wrap:wrap;gap:6px}
+.offc{border:1px solid var(--faint);border-radius:999px;padding:3px 10px;font-size:12.5px}.offc a{color:inherit;text-decoration:none}.offc i{font-style:normal;color:var(--muted);margin-left:4px}
+.offc.cheap{border-color:color-mix(in srgb,var(--good) 45%,transparent)}.offc.cheap b{color:var(--good)}.offc.rich b{color:var(--bad)}.offc.mine{border-width:2px}
+.sct .e2{color:var(--good);font-weight:700}.sct .e1{color:var(--good)}.sct .neg{color:var(--muted)}.sct .far{opacity:.55}
+.ladbody{min-width:0}.lgr{position:sticky;top:var(--tbh,0px);z-index:9;display:flex;gap:6px;overflow-x:auto;padding:8px 0;background:var(--surface);scrollbar-width:none;-webkit-overflow-scrolling:touch}.lgr::-webkit-scrollbar{display:none}.lgr button{flex:none;border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:7px 12px;font:600 13px var(--body);cursor:pointer;white-space:nowrap}.lgr button i{font-style:normal;font-weight:500;color:var(--muted);margin-left:2px}.lgr button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}.lgr button[aria-pressed="true"] i{color:inherit;opacity:.75}@media(min-width:861px){.lgr{flex-wrap:wrap}}
+.ladr .lru,.lstarx .lru{max-width:100%;white-space:normal}.lmv{font-style:normal;font-size:10.5px;font-weight:800;letter-spacing:.03em;border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}.lmv.pin{color:#C084FC}.lmv.cons{color:#2DD4BF}.lmv.cons.up{background:rgba(45,212,191,.14)}.lmv.cons.both{background:#2DD4BF;color:#06231f;border-color:#2DD4BF}.lmv.cons.odds{color:#E0A458}
+.vtag.cmv{font-size:11px;font-weight:700;border:1px solid currentColor;border-radius:999px;padding:0 7px;white-space:nowrap;color:#2DD4BF;background:none}.vtag.cmv.up{background:rgba(45,212,191,.14)}.vtag.cmv.both{background:#2DD4BF;color:#06231f;border-color:#2DD4BF}.vtag.cmv.odds{color:#E0A458}
+.lsel{font:700 13px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:1px 2px;cursor:pointer}
+.lru .ledge{color:var(--good);font-weight:700;margin-left:4px}.lru .lavg b{color:var(--ink);font-weight:600}.lru.thpk{border-color:var(--good);box-shadow:inset 3px 0 0 var(--good)}.lru .thtag{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--bg);background:var(--good);border-radius:3px;padding:0 4px;margin-left:4px}.lru .thok{color:var(--good);font-size:11px}.lru .thob{opacity:.75}.lru .thob small{font-size:10px}.lru .thmf{opacity:.85}.fbt .fbv,b.fbv{color:var(--good)}.fbt td.name .tag{margin-left:4px}.lstarx{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}.lru .lstar{color:#F2C14E;font-size:14px;margin-left:2px;cursor:help}.ladtg{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 2px}.lru .lfit{color:var(--good);font-weight:600;font-size:11px;border:1px solid color-mix(in srgb,var(--good) 45%,transparent);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}.lbk{font-style:normal;color:var(--muted);margin-left:4px;white-space:nowrap}.lbk.best{color:var(--ink);font-weight:700;text-decoration:none}a.lbk.best{border-bottom:1px dotted var(--muted)}
+.lad{border-top:1px solid var(--faint);padding:10px 0}.ladh{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px}
+.ladc{display:inline-block;border:1px solid var(--faint);border-radius:999px;padding:0 8px;font-size:11.5px;color:var(--muted);white-space:nowrap}.ladc.soft{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}
+.ladr{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.ladg{display:grid;column-gap:32px}@media(min-width:900px){.ladg{grid-template-columns:1fr 1fr}}.ladw{border-top:1px solid var(--faint);padding:10px 0 2px}.ladw summary{cursor:pointer;color:var(--muted);font-size:13px}.lad .ladh>*{min-width:0}.lru{border:1px solid var(--faint);border-radius:8px;padding:3px 9px;font-size:13px;background:var(--sunk);white-space:nowrap}.lru i{font-style:normal;color:var(--muted);margin-left:4px}
+.fm-off{border-top:1px solid var(--faint);padding-top:14px;margin-top:14px}.fm-off:first-of-type{border-top:0;margin-top:4px;padding-top:0}
+.fm-off h3{margin:0 0 10px;font-family:var(--display);font-size:20px;letter-spacing:.02em;text-transform:uppercase}.fm-off h3 small{font-family:var(--body);font-size:13px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:500}
+.fm-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.fm-grid{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:5px;align-items:stretch}
+.fm-grid .rl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);align-self:center;padding-right:4px;max-width:92px;line-height:1.25}
+.fm-grid .cl{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center}
+.fm-c{border-radius:8px;padding:8px 6px;text-align:center;border:1px solid var(--faint);background:var(--sunk);min-height:58px;display:flex;flex-direction:column;justify-content:center}
+.fm-c b{font-family:var(--display);font-size:22px;line-height:1}.fm-c small{display:block;font-size:11.5px;margin-top:3px;color:var(--ink);opacity:.85}
+.fm-c.out{outline:2px dashed #F2C14E;outline-offset:-2px}.fm-c .ob{display:block;font-size:10px;font-weight:700;color:#F2C14E;margin-top:2px;letter-spacing:.02em}
+.fm-miss{font-size:13px;margin:0 0 10px;padding:8px 10px;border:1px dashed #F2C14E;border-radius:8px;color:var(--ink)}.fm-miss small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.fm-c .wh{display:block;margin-top:4px;font-size:11px;line-height:1.3;color:var(--ink);opacity:.92;overflow:hidden;text-overflow:ellipsis}.fm-c .wh em{font-style:normal;color:var(--muted)}
+.fm-run .fm-c .wh{font-size:10px}
+@media (max-width:760px){.fm-c .wh{font-size:10px}.fm-c .wh span:nth-child(n+2){display:none}}
+.fm-c.thin{background-image:repeating-linear-gradient(45deg,transparent 0 6px,rgba(127,127,127,.12) 6px 12px)}
+.fm-los{grid-column:1/-1;border-top:2px solid var(--accent);margin:2px 0;position:relative}.fm-los span{position:absolute;right:0;top:-9px;font-size:10px;color:var(--accent);background:var(--surface);padding:0 4px;letter-spacing:.06em}
+.fm-run{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin-top:4px}.fm-run .cl{grid-row:2}
+.fm-run .fm-c{min-height:52px;padding:6px 2px}.fm-run .fm-c b{font-size:18px}
+.fm-sub{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:2px 0 6px}
+.fm-list{display:grid;gap:6px;margin:0;padding:0;list-style:none;font-size:14px}.fm-list li{line-height:1.4}.fm-list li b{font-weight:700}
+.fm-list .up{color:var(--good);font-weight:800}.fm-list .dn{color:var(--bad);font-weight:800}
+.fm-key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin:2px 0 6px}.fm-key i{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:5px}
+@media (max-width:760px){.fm-wrap{grid-template-columns:minmax(0,1fr)}.fm-run{gap:3px}.fm-run .fm-c b{font-size:15px}.fm-run .fm-c small{font-size:10px}.fm-grid .rl{max-width:64px;font-size:10px}}
+.sp-row{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 0;border-top:1px solid var(--faint)}
+.sp-row:first-child{border-top:0}
+.tierb{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border-radius:4px;padding:3px 7px;white-space:nowrap;margin-top:3px}
+.tierb.t1{background:var(--accent);color:var(--bg)}
+.tierb.t2{background:#F2C14E;color:var(--bg)}
+.tierb.t3{background:var(--sunk);color:var(--muted);border:1px solid var(--faint)}
+.sp-name{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.sp-name b{font-family:var(--display);font-size:21px;font-weight:700;letter-spacing:.01em}
+.sp-name span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.sp-facts{font-size:13.5px;margin-top:3px}
+.sp-why{font-size:13.5px;color:#F2C14E;margin-top:2px}
+.sp-why.neg{color:var(--r2)}
+.gsw{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.gsw::-webkit-scrollbar{display:none}
+.gsw button{white-space:nowrap}
+@media (max-width:520px){.sp-row{grid-template-columns:1fr;gap:4px}.tierb{justify-self:start;margin-top:0}.sp-name b{font-size:19px}}
+.legsrc.both{color:var(--good);border-color:var(--good)}
+.legsrc{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 4px;margin-left:4px;white-space:nowrap}
+@media (max-width:520px){.sgp-grid{grid-template-columns:1fr}}
+.plink{border:0;background:none;padding:0;font:inherit;font-weight:inherit;color:inherit;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-color:var(--faint);text-underline-offset:3px}
+.plink:hover{text-decoration-color:var(--accent)}
+.fo-res{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.fo-side{display:grid;gap:2px;background:var(--sunk);border-radius:8px;padding:14px 16px}
+.fo-p{font-family:var(--display);font-weight:700;font-size:52px;line-height:1}
+.fo-o{font-family:var(--display);font-weight:600;font-size:24px;color:var(--muted)}
+.t tr.cur td{background:var(--sunk)}
+#fo-player{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;width:min(340px,100%)}
+#fo-line{background:var(--surface);border:1px solid var(--faint);border-radius:6px;padding:6px 10px;width:90px}
+.mm{display:inline-flex;align-items:center;gap:3px;font-size:11.5px;font-weight:500;border:1px solid currentColor;border-radius:4px;padding:0 5px;margin:2px 4px 0 0;white-space:nowrap;cursor:help}
+.mm.up{color:var(--good)} .mm.down{color:var(--bad)} .mm.strong{font-weight:700}
+.chips{display:flex;flex-wrap:wrap}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px}
+.mcell{background:var(--sunk);border-radius:7px;padding:8px 10px;display:grid;gap:1px}
+.mcell .v{font-family:var(--display);font-weight:700;font-size:24px;line-height:1.1}
+.mcell .v.up{color:var(--good)} .mcell .v.down{color:var(--bad)}
+.dmiss{margin:0;font-size:13px;color:var(--ink)} .dmiss b{color:var(--r2);font-weight:600}
+.mlist{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.mlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.mlist .who{font-weight:600;min-width:170px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.note{font-size:12.5px;color:var(--muted);margin:0;max-width:75ch}
+.mmeta{display:none}
+tr.bgh td{background:var(--sunk);padding:7px 10px;border-top:2px solid var(--faint);font-size:13px;position:sticky;left:0}.fgt{display:inline-block;font-size:10.5px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:999px;padding:0 6px;margin-left:5px;white-space:nowrap;cursor:help}.fgt.on{color:#F2C14E;border-color:#F2C14E}.fgt.v-fdtop{color:#F2C14E;border-color:#F2C14E}.fgt.v-narrow{color:#1a1a1a;background:#F2C14E;border-color:#F2C14E}.fgt.g2{color:#9EC9FF;border-color:#6CB4FF}.fgt b{font-weight:800;margin-left:2px}.fgt.up{box-shadow:0 0 0 1.5px var(--good)}.fgt.up b{color:var(--good)}.fgt.v-narrow.up b{color:#0b5d2b}.fgt.dn b{color:var(--bad)}.fgt.v-narrow.dn b{color:#8a1c1c}.fgo{display:block;font-size:11.5px;font-weight:400;color:var(--muted);margin-top:3px;line-height:1.45;white-space:normal}.fgo b{color:var(--ink);font-weight:600}.fgo .hr{color:var(--good);font-weight:600}
+.pchips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+details.pfold{margin-bottom:14px}
+details.pfold > summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border:1px solid var(--faint);border-radius:12px;background:var(--surface)}
+details.pfold > summary::-webkit-details-marker{display:none}
+details.pfold > summary h2{margin:0}
+details.pfold > summary .chev{color:var(--muted);transition:transform .15s}
+details.pfold[open] > summary{border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:transparent}
+details.pfold:not([open]) > summary .chev{transform:rotate(-90deg)}
+details.pfold > section.panel{border-top-left-radius:0;border-top-right-radius:0;border-top:0;margin-top:0}
+.kps{display:none}
+.atgp td a{color:var(--accent);text-decoration:none;white-space:nowrap}
+.atgp td a:hover{text-decoration:underline}
+.rr{border:1px solid var(--faint);border-radius:9px;padding:10px 12px;margin:6px 0 12px;background:var(--bg)}
+details.how{font-size:12.5px;color:var(--muted)} details.how summary{cursor:pointer;color:var(--ink);font-size:13px;margin-bottom:4px}
+@media (max-width:640px){
+  /* player tables become two-line rows: name + chips + a small details line on the left, the key number big on the right */
+  .pt,.pt tbody{display:block;width:100%}
+  .pt thead{display:none}
+  .pt tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;align-items:center;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pt tbody tr.grp,.pt tbody tr.xrow{display:block;padding:0;border:0}
+  .pt tbody tr.grp td,.pt tbody tr.xrow td{display:block;padding:10px 2px 4px!important}
+  .pt td{display:none;border:0!important;padding:0!important;text-align:left}
+  .pt td.name{display:block;grid-column:1;min-width:0;width:auto;white-space:normal}
+  .pt td.kp{display:block;grid-column:2;grid-row:1;text-align:right;font-family:var(--display);font-size:22px;font-weight:700;line-height:1}
+  .pt td.kp b{font-weight:700}
+.pt tr.bgh{display:block}.pt tr.bgh td{display:block!important;padding:8px 10px!important;grid-column:1 / -1}
+  .pt td.kp .kps{display:block;font-family:var(--body);font-size:11.5px;font-weight:500;color:var(--muted);margin-top:4px;line-height:1.3}
+  .pt .mmeta{display:block;color:var(--muted);font-size:12px;font-weight:400;margin-top:3px;line-height:1.35}
+  .pt .mmeta b{color:var(--ink);font-weight:600}
+  .tw:has(> .pt){overflow:visible}
+  /* pairs: stacked cards */
+  .pairs,.pairs tbody{display:block;width:100%}
+  .pairs thead{display:none}
+  .pairs tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 2px;border-top:1px solid var(--faint)}
+  .pairs td{border:0!important;padding:0!important;white-space:normal!important}
+  .pairs td:first-child{grid-column:1 / -1}
+  .pairs td.big{grid-column:1;font-size:14px;text-align:left}
+  .pairs td.big::after{content:" chance";color:var(--muted);font-weight:400;font-size:12px}
+  .pairs td.pay{grid-column:1;grid-row:3;text-align:left;color:var(--muted);font-size:12.5px}
+  .pairs td.pay::after{content:" fair payout"}
+  .pairs td.add{grid-column:2;grid-row:2 / span 2;align-self:center}
+  .pairs tr.slate td{grid-column:1 / -1}
+  .tw:has(> .pairs){overflow:visible}
+  .atgp td.pay::after{content:" payout"}
+  .atgp td.edge{grid-column:1;text-align:left;font-size:12.5px}
+  .atgp td.edge::after{content:" edge";font-weight:400;color:var(--muted)}
+  .atgp td.add{grid-row:2 / span 3}
+  /* chips wrap instead of running off the edge; Kalshi pattern chips live in the tap-open panel on phones */
+  .pt td.name .pat-high_total,.pt td.name .pat-cheap_over,.pt td.name .pat-low_rung,.pt td.name .pat-low_total{display:none}
+  .pt td.name .vtag{white-space:normal;line-height:1.35;margin:3px 4px 0 0}
+  /* first-TD list: full names, no bar */
+  .ftd-r{grid-template-columns:minmax(0,1fr) 46px 52px 36px;gap:8px}
+  .ftd-r .pbar{display:none}
+  .ftd-r .n{white-space:normal}
+  .ftd-r .n .small{display:block}
+}
+.dvbar{position:relative;height:10px;min-width:150px;background:var(--sunk);border-radius:2px}
+.dvbar i{position:absolute;top:0;bottom:0;border-radius:2px}
+.dvbar .c{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--muted)}
+.flagbtn{border:1px solid var(--faint);background:none;border-radius:999px;padding:4px 12px;cursor:pointer;font-size:13.5px}
+.flagbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.wx-flag{color:var(--bad);font-weight:600}
+.sitenav{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13.5px}
+.sitenav a{color:var(--muted);text-decoration:none;font-weight:500}
+.sitenav a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.sitenav a[aria-current="page"]{color:var(--ink)}
+.mix{display:flex;height:12px;gap:2px;min-width:150px}
+.mix i{display:block;border-radius:2px}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.mm.tagn{color:var(--muted);cursor:help}
+.t td .rzchips{min-width:240px;max-width:360px;white-space:normal;justify-content:flex-start}
+.t td,.t th{padding-inline:6px}
+.rzline{font-family:var(--body);font-size:12.5px;font-weight:400;letter-spacing:0;margin-left:12px;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;color:var(--muted)}
+.rzline .mm{margin:0}
+/* Touchdowns tab: red-zone usage table (nfl_page.js tdBoard) */
+.tdbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:0 0 10px}
+.tdw{position:relative}
+.tdt{min-width:1040px}
+.tdt td,.tdt th{padding-inline:4px}
+.tdany{display:inline-flex;flex-direction:column;align-items:center;gap:2px}
+.tdt th,.tdt td{text-align:center;vertical-align:middle}
+.tdt th{text-transform:none;letter-spacing:0;font-size:11.5px}
+.tdt .gh th{text-transform:none;letter-spacing:0;font-size:12.5px;color:var(--ink);font-weight:600;border-bottom:1px solid var(--faint);padding-bottom:4px}
+.tdt .gs{border-left:1px solid var(--faint)}
+.tdt th .tds{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;line-height:1.2;white-space:normal;max-width:84px;justify-content:center;text-align:center}
+.tdt th .tds:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.tdt th .tds .ar{font-size:9px;opacity:.45}
+.tdt th .tds.on{color:var(--ink)}.tdt th .tds.on .ar{opacity:1;color:var(--accent)}
+.tdt .tdname{position:sticky;left:0;z-index:2;background:var(--surface);text-align:left;min-width:180px;max-width:230px;width:1%;box-shadow:1px 0 0 var(--faint)}
+.tdt thead .tdname{z-index:3}
+.tdp{display:flex;gap:10px;align-items:center}
+.tdpn{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.tdpn .plink{font-weight:600}
+.tdsub{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.tdtags{display:flex;flex-wrap:wrap;gap:3px 4px}.tdtags:empty{display:none}.tdtags > *{max-width:100%;white-space:normal}.tdpn .mxw{margin:1px 0 0}.tdpn .mxl{white-space:normal}
+.tchip{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;width:34px;height:30px;border-radius:7px;font-size:10.5px;font-weight:700;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.tdt td.hv{padding-inline:4px}
+.hc{display:block;min-width:38px;padding:5px 0;border-radius:6px;font-weight:600;background:rgba(46,158,91,var(--a,.12));color:var(--ink)}
+.hc.z{background:rgba(214,69,69,.16);color:var(--bad)}
+.ring{position:relative;display:inline-grid;place-items:center;width:38px;height:38px}
+.ring svg{position:absolute;inset:0}
+.ring b{position:relative;font-size:10.5px}
+.sb{display:inline-flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:56px}
+.sb > span{font-weight:600;font-size:12.5px}
+.sb i{position:relative;display:block;width:100%;height:4px;background:var(--sunk);border-radius:2px}
+.sb i b{position:absolute;top:0;bottom:0;border-radius:2px}
+.sb i s{position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted);opacity:.5}
+.sb i.lf b{left:0;background:#a8822f}.sb i.lf b.mu{background:var(--muted)}
+.sb .good{color:var(--good)}.sb .bad{color:var(--bad)}
+.tdr{display:inline-flex;flex-direction:column;align-items:center;gap:3px}
+.tdr .pill{display:inline-block;padding:2px 8px;border-radius:6px;font-weight:700;font-size:12.5px;box-shadow:inset 0 0 0 1px var(--faint)}
+.tdr .pill.good{color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}.tdr .pill.bad{color:var(--bad);box-shadow:inset 0 0 0 1px var(--bad)}
+.tdc{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px}
+.tdc .dots{font-size:9px;letter-spacing:1px;color:#a8822f}
+.xv{font-variant-numeric:tabular-nums}
+.tdt .good{color:var(--good)}.tdt .bad{color:var(--bad)}
+.lk2{display:inline-block;padding:0 6px;border-radius:999px;font-size:10.5px;font-weight:600;line-height:17px}
+.lk2.due{background:rgba(46,158,91,.16);color:var(--good)}.lk2.hot{background:rgba(214,69,69,.14);color:var(--bad)}
+.tdreads{display:grid;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid var(--faint);border-radius:10px}
+.tdreads > div{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center}
+.tdreads .eyebrow{flex:0 0 auto;margin-right:4px}
+.tdreads p{margin:6px 0 0;max-width:900px}
+.tdhow summary{cursor:pointer;color:var(--muted)}
+.tdsort{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto}.tdsort select{font:600 14px var(--body);min-height:36px;max-width:150px;padding:0 6px;border-radius:8px;background:var(--surface);color:var(--ink);border:1px solid var(--faint)}
+.tdsdir{all:unset;cursor:pointer;display:inline-grid;place-items:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--faint);color:var(--muted);font-size:11px}
+.tdlg{margin:0 0 10px}
+.tdks0{display:grid;gap:10px}
+.tdk{min-width:0;padding:12px;border:1px solid var(--faint);border-radius:10px;background:var(--surface)}
+.tdk.opened{border-color:var(--accent)}
+.tdkh{display:flex;gap:10px;align-items:center}
+.tdkh .tdpn{flex:1 1 auto}
+.tdkh .plink{font-size:16px;text-align:left}
+.tdkc{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;line-height:1.15}
+.tdkc b{font-family:var(--display);font-size:34px;font-weight:700;font-variant-numeric:tabular-nums}
+.tdkm{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;margin-top:8px;padding-top:8px;border-top:1px solid var(--faint)}
+.tdkl b{font-size:14px;font-variant-numeric:tabular-nums}.tdko{font-size:14px;margin-left:auto}
+.tdkx{margin-top:8px;display:grid;gap:4px;min-width:0}
+.tdkx .mxl{white-space:normal}.tdkx .mxw{margin:0}
+.tdks{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+.tdkt{display:flex;flex-direction:column;align-items:center;gap:1px;padding:5px 2px;border-radius:7px;background:var(--sunk);min-width:0}
+.tdkt > span{font-size:11px;color:var(--muted);white-space:nowrap}
+.tdkt b{font-size:14px;font-weight:600;font-variant-numeric:tabular-nums}
+.tdkt.hot{background:rgba(46,158,91,var(--a,.12))}.tdkt.hot > span{color:var(--ink);opacity:.8}.tdkt.z{background:rgba(214,69,69,.16)}.tdkt.z b{color:var(--bad)}
+.tdkt .good{color:var(--good)}.tdkt .bad{color:var(--bad)}.tdk .good{color:var(--good)}.tdk .bad{color:var(--bad)}
+.tdkd{margin-top:8px}.tdkd summary{cursor:pointer;color:var(--muted);padding:5px 0}.tdkd .tdks{margin-top:4px}
+.tdkp{margin-top:10px;min-width:0;overflow-x:auto}
+.tdread{display:inline-flex;gap:5px;align-items:center;padding:3px 9px;border-radius:999px;background:var(--sunk);font-size:12.5px;white-space:nowrap}
+@media (max-width:640px){.tdt .tdname{min-width:150px}.tdsub{white-space:normal}.tchip{width:30px;height:26px;font-size:9.5px}}
+.pstack{display:grid;gap:14px;min-width:0}.panel.pempty{padding:14px 16px;gap:6px}.panel.pempty .note{margin:0}footer details.fhow summary{cursor:pointer;color:var(--muted);font-weight:600}footer details.fhow p{margin:8px 0 0}@media (max-width:640px){.pstack .panel{padding:14px}.pstack{gap:12px}}footer{font-size:13px;color:var(--muted);max-width:70ch;line-height:1.55}
+#tip{position:fixed;z-index:10;pointer-events:none;background:var(--tip-bg);color:var(--tip-ink);font-size:12.5px;line-height:1.45;padding:7px 10px;border-radius:5px;max-width:260px}
+#tip b{font-weight:600}
+@media (max-width:980px){.two{grid-template-columns:1fr}}
+@media (max-width:1100px) and (min-width:861px){.games{grid-template-columns:1fr}.rail{position:static;display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}.game-btn{min-width:180px;width:auto;flex:0 0 auto}}
+@media (max-width:860px){
+  .games{grid-template-columns:1fr}
+  /* phones: a sticky, swipeable row of compact game chips (several visible at once) */
+  .rail{position:sticky;top:var(--tbh,0px);z-index:19;display:flex;overflow-x:auto;gap:6px;padding:8px 0;margin:-8px 0 0;background:var(--bg);scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  .rail::-webkit-scrollbar{display:none}
+  .game-btn{width:auto;flex:0 0 auto;min-width:0;padding:6px 10px;border:1px solid var(--faint);border-radius:999px;scroll-snap-align:start}
+  .game-btn[aria-current="true"]{border-color:var(--accent);background:var(--sunk)}
+  .game-btn .teams{font-size:15px}
+  .game-btn .m{gap:6px}
+  .game-btn > .line, .game-btn .mini{display:none}
+  .pts{font-size:48px}
+  h1{font-size:34px}
+}
+@media (prefers-reduced-motion:no-preference){.game-btn,.tabs button,.seg button{transition:background .15s,color .15s}}
+
+.hsw{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 14px}.hsw button{border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:5px 14px;font:600 13.5px var(--body);cursor:pointer}
+.hsw button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.htabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;margin:0 0 14px;padding:3px;border:1px solid var(--faint);border-radius:12px;background:var(--sunk)}.htabs::-webkit-scrollbar{display:none}
+.htabs button{flex:none;border:0;background:none;color:var(--muted);border-radius:9px;padding:7px 12px;font:600 13.5px var(--body);cursor:pointer;white-space:nowrap}
+.htabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 0 0 1px var(--faint)}.htabs button span{font-size:11.5px;color:var(--muted);margin-left:5px;font-weight:500}
+.slm{width:100%;border-collapse:collapse;font-size:13px}.slm td{padding:4px 6px;border-top:1px solid var(--faint)}.slm td:last-child{text-align:right;white-space:nowrap}
+.lk{margin-left:auto;font-size:12px;font-weight:700;white-space:nowrap;padding:2px 9px;border-radius:999px;border:1px solid color-mix(in srgb,var(--warn,#F5B547) 55%,transparent);color:var(--warn,#F5B547)}.lk.on{border-color:color-mix(in srgb,var(--good,#36D399) 55%,transparent);color:var(--good,#36D399)}
+.hg{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:10px;margin:8px 0 4px}
+.hp{border:1px solid var(--faint);border-radius:10px;padding:10px 12px;background:var(--sunk);display:grid;gap:6px;align-content:start}
+.hp.pick{border-color:color-mix(in srgb,var(--accent) 55%,transparent)}.hp.W{border-color:color-mix(in srgb,var(--good) 60%,transparent)}.hp.L{opacity:.65}
+.hh{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.hh .st{margin-left:auto;font-weight:700}.hh .st.W{color:var(--good)}.hh .st.L{color:var(--bad)}
+.tg{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:1px 6px;background:var(--faint);color:var(--ink)}
+.tg.card{background:color-mix(in srgb,var(--accent) 20%,transparent);color:var(--accent)}.tg.ls{background:color-mix(in srgb,#F2C14E 20%,transparent);color:#F2C14E}
+.hp ul{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:13.5px}.hp li{display:flex;gap:7px;align-items:baseline}
+.hp li .sp{font-size:10px;font-weight:800;color:var(--muted);width:28px;flex:none}.hp li .bk{margin-left:auto;white-space:nowrap;font-size:12.5px;color:var(--muted)}
+.hp li i{font-style:normal;font-weight:800;width:12px;flex:none}.hp li i.W{color:var(--good)}.hp li i.L{color:var(--bad)}
+.hbx{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:12px}.hbx>span:first-child{color:var(--muted);margin-right:2px}
+.hbx .bq{border:1px solid var(--faint);border-radius:999px;padding:1px 8px;white-space:nowrap;color:var(--muted)}.hbx .bq b{font-family:var(--display);font-size:13px;color:var(--ink);margin-left:3px}
+.hbx .bq.mine{border-color:color-mix(in srgb,var(--ink) 35%,transparent);color:var(--ink)}.hbx .bq.best{border-color:color-mix(in srgb,var(--good) 65%,transparent)}.hbx .bq.best b{color:var(--good)}.hbx .bq.na{opacity:.6}
+.hs{display:flex;flex-wrap:wrap;gap:4px 12px;border-top:1px solid var(--faint);padding-top:6px;font-size:13px}.hs b{font-family:var(--display);font-size:16px}.hs .good{color:var(--good)}
+.hsec h2 small{font-family:var(--body);font-size:12.5px;color:var(--muted);font-weight:500;margin-left:8px;letter-spacing:0;text-transform:none}
+.lst{font-family:var(--body);font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:4px;padding:1px 6px;margin-left:8px;vertical-align:3px;border:1px solid currentColor}
+.lst.exp{color:#F2C14E}.lst.Proven{color:var(--good)}.lst.Dropped{color:var(--bad)}.lst.Watching,.lst.Learning{color:var(--muted)}
+.lt td.good{color:var(--good)}.lt td.bad{color:var(--bad)}.lt td{font-size:13px}
+details.hc{border-top:1px solid var(--faint);padding:8px 0}details.hc summary{cursor:pointer;font-weight:700}details.hc summary span{color:var(--muted);font-weight:500;font-size:12.5px;margin-left:6px}
+
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--faint);margin-inline:-20px;padding-inline:20px;margin-bottom:6px}
+.topbar .row{max-width:1560px;margin:0 auto;display:flex;align-items:center;gap:4px 6px;overflow-x:auto;white-space:nowrap;scrollbar-width:none}
+.topbar .row::-webkit-scrollbar{display:none}
+.topbar .r1{padding-block:9px 7px}
+.topbar .r2{padding-block:0 8px}
+.topbar .brand{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink);text-decoration:none;margin-right:14px}
+.topbar .sp{font-family:var(--display);font-weight:600;font-size:17px;letter-spacing:.05em;color:var(--muted);text-decoration:none;padding:4px 11px;border-radius:7px}
+.topbar .sp:hover{color:var(--ink);background:var(--sunk)}
+.topbar .sp[aria-current="true"]{color:var(--bg);background:var(--ink)}
+.topbar .soon{font-family:var(--body);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-left:5px;opacity:.75}
+.topbar .sp[aria-current="true"] .soon{opacity:.85}
+.topbar .grow{flex:1}
+@media (max-width:520px){.topbar .brand{margin-right:6px;font-size:18px}.topbar .sp{padding:4px 7px;font-size:16px}.topbar .help{padding:5px 6px;font-size:13px}.topbar .help.guide{display:none}}
+.topbar .help{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;padding:5px 9px;border-radius:6px}
+@media (max-width:520px){.topbar .help{padding:5px 5px;font-size:12.5px}.topbar .sp{padding:4px 5px;font-size:15px}}   /* after the base rule so it applies; fits Screener / Parlays / Profit */
+.topbar .help:hover,.topbar .help[aria-current="page"]{color:var(--ink);background:var(--sunk)}
+.topbar a.lnk{color:var(--muted);text-decoration:none;font-weight:500;font-size:14px;padding:5px 10px;border-radius:6px}
+.topbar a.lnk:hover{color:var(--ink);background:var(--sunk)}
+.topbar a.lnk[aria-current="page"]{color:var(--ink);background:var(--sunk);box-shadow:inset 0 -2px 0 var(--accent)}
+.newbie{max-width:1560px;margin:0 auto 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sunk);border-radius:8px;padding:9px 14px;font-size:14px}
+.newbie a{color:var(--accent);font-weight:600;text-decoration:none}
+.newbie button{margin-left:auto;border:0;background:none;color:var(--muted);cursor:pointer;font-size:13px;padding:2px 6px}
+#sitenav{display:none}
+/* phones: keep every page inside the screen; wide tables scroll inside their own box */
+.wrap,main,.panel,.gcard,.sides>div,.detail,.card{min-width:0}
+.wrap,.panel,.detail,.gcard{grid-template-columns:minmax(0,1fr)}
+@media (max-width:760px){
+  header{align-items:flex-start}
+  /* every tab visible on phones (owner 2026-11-16: 'I can't open the ladders tabs' -- a sideways-scrolling bar with its
+     scrollbar hidden left Ladders / Parlays / Fair odds off screen with no cue): the tabs wrap onto two rows */
+  header .tabs{max-width:100%;overflow-x:visible;flex-wrap:wrap;gap:4px}
+  header .tabs button{white-space:nowrap;flex:1 1 auto;padding:7px 10px;font-size:14px}
+  .games{grid-template-columns:minmax(0,1fr)!important}
+  .rail{display:flex!important;overflow-x:auto;gap:6px;padding-bottom:4px}
+  .rail .game-btn{flex:0 0 auto;min-width:168px;border-color:var(--faint)}
+  .two,.fo-res{grid-template-columns:minmax(0,1fr)!important}
+  .score .pts{font-size:48px}
+  .panel{padding:14px}
+  .picks-key{font-size:12px;gap:8px}
+  .mlc{min-width:92px;padding:6px 9px}
+  .mlc b{font-size:17px}
+  h1{font-size:32px}
+}
+
+.mtoggle{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:13.5px;color:var(--muted)}
+.mtoggle .seg{display:inline-flex;gap:0;background:var(--sunk);border-radius:8px;padding:3px}
+.mtoggle .seg a{padding:5px 13px;border-radius:6px;text-decoration:none;color:var(--muted);font-weight:600;font-size:13.5px}
+.mtoggle .seg a[aria-current="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.mtoggle .why{max-width:70ch}
+</style></head><body><nav class="topbar" aria-label="Site"><div class="row r1"><a class="brand" href="index.html">Sim Sheet</a><a class="sp" href="nfl/index.html">NFL</a><a class="sp" href="nhl/index.html">NHL</a><a class="sp" href="nba/index.html">NBA</a><a class="sp" href="mlb/index.html">MLB</a><span class="grow"></span><a class="help" href="screener.html">Screener</a><a class="help" href="parlays.html" aria-current="page">Parlays</a><a class="help" href="profit.html">Profit</a><a class="help" href="paper.html" title="Claude’s paper parlay account: every bet and why">Paper</a><a class="help guide" href="guide.html">How to read</a></div></nav><div class="newbie" id="newbie" hidden><span>New here? Each page shows simulated outcomes: the most likely number, a realistic range, and the chance something happens.</span><a href="guide.html">Read the 2-minute guide →</a><button type="button" aria-label="Dismiss">Got it ✕</button></div>
+<div class="wrap">
+<header><div><div class="eyebrow">All sports · $5 a parlay</div><h1>Parlays</h1></div></header>
+<main id="main"></main>
+<footer>Every parlay the site builds, in one place: each sport’s Today’s card (4 a day: 3 core + 1 longshot, overs only, every leg at your books and from a different game), the multisport all-day longshots, and every card from the sport pages. Frozen at each parlay’s first game and graded on the Profit page. Same-game parlays stay on each game’s page (books don’t pay them as the legs multiplied). Updated about every 15 minutes before games.</footer>
+</div><script>
+const D = {"updated":"2026-11-21T12:43:18+00:00","stake":5,"sports":[{"sport":"nfl","date":"2026-11-22","final_at":"2026-11-22T16:00:00+00:00","cards":[{"card":"Ladder longshots (experimental)","parlays":[{"tier":"2-leg","p":0.08693,"d":9.198,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",null,0],["Kalshi",9.19,2]],"legs":[{"lab":"Jaylen Waddle 60+ rec yds","book":"Kalshi","price":189,"res":null,"sport":"nfl","f":null},{"lab":"Colston Loveland 70+ rec yds","book":"Kalshi","price":218,"res":null,"sport":"nfl","f":null}]},{"tier":"2-leg","p":0.08388,"d":9.198,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",null,0],["Kalshi",9.19,2]],"legs":[{"lab":"Jaylen Waddle 60+ rec yds","book":"Kalshi","price":189,"res":null,"sport":"nfl","f":null},{"lab":"Travis Kelce 60+ rec yds","book":"Kalshi","price":218,"res":null,"sport":"nfl","f":null}]},{"tier":"2-leg","p":0.07838,"d":10.097,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",null,0],["Kalshi",10.11,2]],"legs":[{"lab":"Colston Loveland 70+ rec yds","book":"Kalshi","price":218,"res":null,"sport":"nfl","f":null},{"lab":"Travis Kelce 60+ rec yds","book":"Kalshi","price":218,"res":null,"sport":"nfl","f":null}]},{"tier":"3-leg","p":0.01777,"d":41.061,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",null,0],["Kalshi",41.09,3]],"legs":[{"lab":"Ryan Flournoy 60+ rec yds","book":"Kalshi","price":218,"res":null,"sport":"nfl","f":null},{"lab":"Garrett Wilson 90+ rec yds","book":"Kalshi","price":240,"res":null,"sport":"nfl","f":null},{"lab":"Cade Otton 50+ rec yds","book":"Kalshi","price":280,"res":null,"sport":"nfl","f":null}]}]},{"card":"Parlays by payout (your books)","parlays":[{"tier":"+250 to +600","p":0.29334,"d":3.929,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":"core","bk":[["Hard Rock",null,0],["Novig",3.93,2],["Kalshi",null,1],["FD",3.52,2],["Caesars",3.43,2]],"legs":[{"lab":"Trey Mcbride over 49.5 rec yds","book":"Novig","price":104,"res":null,"sport":"nfl","f":null},{"lab":"Germie Bernard over 25.5 rec yds","book":"Novig","price":-108,"res":null,"sport":"nfl","f":null}]},{"tier":"+250 to +600","p":0.28195,"d":4.011,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",null,1],["Kalshi",null,1],["Caesars",4.3,2],["DK",4.21,2],["FD",4.2,2]],"legs":[{"lab":"Devin Duvernay over 8.5 rec yds","book":"Novig","price":-111,"res":null,"sport":"nfl","f":null},{"lab":"Darius Cooper over 1.5 receptions","book":"Kalshi","price":111,"res":null,"sport":"nfl","f":null}]},{"tier":"+600 to +1500","p":0.15392,"d":7.438,"first":"2026-11-22T21:25:00+00:00","res":null,"lock":"2026-11-22T20:25:00+00:00","lw":null,"paid":null,"pick":"core","bk":[["Hard Rock",null,1],["Novig",7.44,2],["Kalshi",6.67,2],["Poly US",7.09,2],["theScore",7.0,2],["Caesars",6.92,2],["DK",6.91,2]],"legs":[{"lab":"PHI moneyline","book":"Novig","price":194,"res":null,"sport":"nfl","f":null},{"lab":"Marvin Mims over 1.5 receptions","book":"Novig","price":153,"res":null,"sport":"nfl","f":null}]},{"tier":"+600 to +1500","p":0.15147,"d":7.406,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,1],["Novig",null,1],["Kalshi",6.6,2],["Poly US",7.59,2],["Caesars",7.49,2],["DK",7.46,2],["ProphetX",7.44,2]],"legs":[{"lab":"Darius Cooper over 1.5 receptions","book":"Kalshi","price":111,"res":null,"sport":"nfl","f":null},{"lab":"TB moneyline","book":"Novig","price":251,"res":null,"sport":"nfl","f":null}]}]},{"card":"Sweet-spot edge parlays (experimental)","parlays":[{"tier":"3 legs","p":0.09435,"d":15.609,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,2],["Novig",10.73,3],["Kalshi",9.99,3],["ProphetX",10.45,3],["FD",10.22,3],["DK",10.04,3],["Caesars",9.94,3]],"legs":[{"lab":"Tony Pollard over 2.5 receptions","book":"Hard Rock","price":130,"res":null,"sport":"nfl","f":null},{"lab":"Myles Price over 1.5 receptions","book":"Kalshi","price":177,"res":null,"sport":"nfl","f":null},{"lab":"Isaac Teslaa over 1.5 receptions","book":"Hard Rock","price":145,"res":null,"sport":"nfl","f":null}]}]},{"card":"NFL edge straights (experimental)","parlays":[{"tier":"straight","p":0.554,"d":2.3,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":"straight","bk":[["Hard Rock",2.3,1],["Novig",1.67,1],["Kalshi",1.6,1],["DK",1.71,1],["Poly US",1.68,1],["Fanatics",1.67,1],["Caesars",1.67,1]],"legs":[{"lab":"Tony Pollard over 2.5 receptions","book":"Hard Rock","price":130,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.5304,"d":2.04,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":"straight","bk":[["Hard Rock",null,0],["Novig",2.04,1],["Kalshi",1.87,1],["Poly US",1.93,1],["ProphetX",1.92,1],["FD",1.88,1],["Caesars",1.85,1]],"legs":[{"lab":"Trey McBride over 49.5 rec yds","book":"Novig","price":104,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.4367,"d":2.45,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":"straight","bk":[["Hard Rock",2.45,1],["Novig",2.35,1],["Kalshi",2.25,1],["ProphetX",2.35,1],["Poly US",2.35,1],["Caesars",2.33,1],["theScore",2.3,1]],"legs":[{"lab":"Isaac Teslaa over 1.5 receptions","book":"Hard Rock","price":145,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.557,"d":1.901,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":"straight","bk":[["Hard Rock",null,0],["Novig",1.9,1],["Kalshi",null,0],["Caesars",1.89,1],["FD",1.88,1],["MGM",1.87,1],["DK",1.86,1]],"legs":[{"lab":"Devin Duvernay over 8.5 rec yds","book":"Novig","price":-111,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.5632,"d":1.87,"first":"2026-11-22T18:00:00+00:00","res":null,"lock":"2026-11-22T17:00:00+00:00","lw":null,"paid":null,"pick":"straight","bk":[["Hard Rock",1.87,1],["Novig",1.69,1],["Kalshi",1.6,1],["ProphetX",1.7,1],["Caesars",1.68,1],["theScore",1.65,1],["Poly US",1.65,1]],"legs":[{"lab":"Jahmyr Gibbs over 3.5 receptions","book":"Hard Rock","price":-115,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.4216,"d":2.53,"first":"2026-11-22T21:25:00+00:00","res":null,"lock":"2026-11-22T20:25:00+00:00","lw":null,"paid":null,"pick":"straight","bk":[["Hard Rock",null,0],["Novig",2.53,1],["Kalshi",2.48,1],["DK",2.55,1],["theScore",2.5,1],["Fanatics",2.5,1],["Caesars",2.48,1]],"legs":[{"lab":"Marvin Mims over 1.5 receptions","book":"Novig","price":153,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.55,"d":1.926,"first":"2026-11-22T21:25:00+00:00","res":null,"lock":"2026-11-22T20:25:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",1.93,1],["Kalshi",null,0],["FD",1.88,1],["Caesars",1.85,1],["Fanatics",1.83,1]],"legs":[{"lab":"Germie Bernard over 25.5 rec yds","book":"Novig","price":-108,"res":null,"sport":"nfl","f":null}]},{"tier":"straight","p":0.39,"d":2.77,"first":"2026-11-23T01:20:00+00:00","res":null,"lock":"2026-11-23T00:20:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",2.74,1],["Kalshi",2.77,1],["ProphetX",2.69,1],["FD",2.68,1],["Fanatics",2.65,1],["DK",2.6,1]],"legs":[{"lab":"Myles Price over 1.5 receptions","book":"Kalshi","price":177,"res":null,"sport":"nfl","f":null}]}]}]},{"sport":"nhl","date":"2026-11-21","final_at":"2026-11-21T13:00:00+00:00","cards":[{"card":"Likeliest-scorer parlays (experimental)","parlays":[{"tier":"2-leg 6-10x","p":0.16005,"d":6.021,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T23:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",6.02,2],["Kalshi",4.97,2],["theScore",5.85,2],["Poly US",5.68,2],["FD",5.52,2],["Caesars",5.35,2]],"legs":[{"lab":"Sam Reinhart to score","book":"Novig","price":153,"res":null,"sport":"nhl","f":null},{"lab":"Kyle Connor to score","book":"Novig","price":138,"res":null,"sport":"nhl","f":null}]},{"tier":"2-leg 6-10x","p":0.15654,"d":6.141,"first":"2026-11-22T00:00:00+00:00","res":null,"lock":"2026-11-22T00:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",6.14,2],["Kalshi",null,1],["Caesars",5.28,2],["FD",5.25,2],["theScore",5.16,2],["Poly US",5.11,2]],"legs":[{"lab":"Jack Hughes to score","book":"Novig","price":167,"res":null,"sport":"nhl","f":null},{"lab":"Macklin Celebrini to score","book":"Novig","price":130,"res":null,"sport":"nhl","f":null}]}]},{"card":"Anytime-goal parlays","parlays":[{"tier":"Best 2-leg","p":0.15259,"d":7.231,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":"core","bk":[["Hard Rock",null,0],["Novig",7.23,2],["Kalshi",null,1],["DK",6.33,2],["Caesars",6.17,2],["Poly US",6.05,2],["FD",6.02,2]],"legs":[{"lab":"Jack Quinn to score","book":"Novig","price":251,"res":null,"sport":"nhl","f":null},{"lab":"Kirill Kaprizov to score","book":"Novig","price":106,"res":null,"sport":"nhl","f":null}]},{"tier":"Best 3-leg","p":0.04518,"d":24.946,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":"longshot","bk":[["Hard Rock",null,0],["Novig",24.95,3],["Kalshi",null,2],["FD",20.15,3],["Poly US",19.96,3],["DK",18.98,3],["Caesars",18.51,3]],"legs":[{"lab":"Frank Nazar to score","book":"Novig","price":245,"res":null,"sport":"nhl","f":null},{"lab":"Jack Quinn to score","book":"Novig","price":251,"res":null,"sport":"nhl","f":null},{"lab":"Kirill Kaprizov to score","book":"Novig","price":106,"res":null,"sport":"nhl","f":null}]}]},{"card":"Parlays by payout (your books)","parlays":[{"tier":"+250 to +600","p":0.36073,"d":3.579,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T23:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",3.58,2],["Novig",2.84,2],["Kalshi",null,0],["theScore",3.04,2],["DK",2.97,2],["Fanatics",2.91,2],["Caesars",2.86,2]],"legs":[{"lab":"Nils Hoglander under 1.5 shots","book":"Hard Rock","price":-105,"res":null,"sport":"nhl","f":null},{"lab":"Vincent Trocheck under 2.5 shots","book":"Hard Rock","price":-120,"res":null,"sport":"nhl","f":null}]},{"tier":"+600 to +1500","p":0.20422,"d":7.138,"first":"2026-11-22T00:00:00+00:00","res":null,"lock":"2026-11-22T00:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",7.14,3],["Novig",4.46,3],["Kalshi",null,0],["theScore",5.19,3],["Fanatics",4.75,3],["Caesars",4.75,3],["DK",4.59,3]],"legs":[{"lab":"Simon Holmstrom under 1.5 shots","book":"Hard Rock","price":-110,"res":null,"sport":"nhl","f":null},{"lab":"Kyle Connor under 3.5 shots","book":"Hard Rock","price":-115,"res":null,"sport":"nhl","f":null},{"lab":"Logan Cooley under 2.5 shots","book":"Hard Rock","price":100,"res":null,"sport":"nhl","f":null}]},{"tier":"+600 to +1500","p":0.20378,"d":7,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T20:30:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",7.0,3],["Novig",4.5,3],["Kalshi",null,0],["theScore",5.09,3],["DK",4.82,3],["Fanatics",4.6,3],["Caesars",4.57,3]],"legs":[{"lab":"Joel Farabee under 2.5 shots","book":"Hard Rock","price":-120,"res":null,"sport":"nhl","f":null},{"lab":"Simon Holmstrom under 1.5 shots","book":"Hard Rock","price":-110,"res":null,"sport":"nhl","f":null},{"lab":"Logan Cooley under 2.5 shots","book":"Hard Rock","price":100,"res":null,"sport":"nhl","f":null}]}]},{"card":"Shots + moneyline parlays","parlays":[{"tier":"+600 to +1500","p":0.17256,"d":7.193,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":"core","bk":[["Hard Rock",6.53,3],["Novig",null,2],["Kalshi",null,2],["theScore",5.76,3],["DK",5.76,3],["Fanatics",5.76,3],["Caesars",5.58,3]],"legs":[{"lab":"Seth Jones over 1.5 shots","book":"Hard Rock","price":-115,"res":null,"sport":"nhl","f":null},{"lab":"TOR moneyline","book":"Novig","price":-104,"res":null,"sport":"nhl","f":null},{"lab":"SJS moneyline","book":"Novig","price":-104,"res":null,"sport":"nhl","f":null}]},{"tier":"+600 to +1500","p":0.16588,"d":7.263,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":"core","bk":[["Hard Rock",5.99,3],["Novig",null,2],["Kalshi",null,1],["theScore",5.47,3],["DK",5.35,3],["Fanatics",5.31,3],["Caesars",5.13,3]],"legs":[{"lab":"Seth Jones over 1.5 shots","book":"Hard Rock","price":-115,"res":null,"sport":"nhl","f":null},{"lab":"TOR moneyline","book":"Novig","price":-104,"res":null,"sport":"nhl","f":null},{"lab":"Troy Terry over 1.5 shots","book":"Novig","price":-102,"res":null,"sport":"nhl","f":null}]}]},{"card":"Longshot two-mans","parlays":[{"tier":"12x+","p":0.07881,"d":13.052,"first":"2026-11-22T00:00:00+00:00","res":null,"lock":"2026-11-22T00:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",13.05,2],["Kalshi",11.05,2],["DK",13.12,2],["Poly US",12.14,2],["Fanatics",11.7,2],["FD",11.55,2]],"legs":[{"lab":"Shane Pinto to score","book":"Novig","price":239,"res":null,"sport":"nhl","f":null},{"lab":"Matthew Schaefer to score","book":"Novig","price":285,"res":null,"sport":"nhl","f":null}]},{"tier":"12x+","p":0.07802,"d":13.283,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T20:30:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",13.28,2],["Kalshi",10.52,2],["DK",12.3,2],["Poly US",12.14,2],["FD",11.72,2],["theScore",11.25,2]],"legs":[{"lab":"Frank Nazar to score","book":"Novig","price":245,"res":null,"sport":"nhl","f":null},{"lab":"Matthew Schaefer to score","book":"Novig","price":285,"res":null,"sport":"nhl","f":null}]}]},{"card":"Triple-green longshots (experimental)","parlays":[{"tier":"2-leg","p":0.08102,"d":10.68,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T20:30:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",10.68,2],["Kalshi",9.35,2],["FD",9.99,2],["theScore",9.28,2],["Caesars",9.28,2],["Fanatics",9.1,2]],"legs":[{"lab":"Tyler Bertuzzi to score","book":"Novig","price":300,"res":null,"sport":"nhl","f":null},{"lab":"Tim St\u00fctzle to score","book":"Novig","price":167,"res":null,"sport":"nhl","f":null}]},{"tier":"2-leg","p":0.07905,"d":10.466,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T20:30:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",10.47,2],["Kalshi",9.01,2],["FD",10.26,2],["DK",10.2,2],["Caesars",9.68,2],["theScore",9.54,2]],"legs":[{"lab":"Patrick Kane to score","book":"Novig","price":292,"res":null,"sport":"nhl","f":null},{"lab":"Tim St\u00fctzle to score","book":"Novig","price":167,"res":null,"sport":"nhl","f":null}]},{"tier":"2-leg","p":0.06072,"d":14.04,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T20:30:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",14.04,2],["Kalshi",11.3,2],["FD",12.58,2],["theScore",12.25,2],["DK",11.39,2],["Fanatics",11.38,2]],"legs":[{"lab":"Tyler Bertuzzi to score","book":"Novig","price":300,"res":null,"sport":"nhl","f":null},{"lab":"JJ Peterka to score","book":"Novig","price":251,"res":null,"sport":"nhl","f":null}]},{"tier":"2-leg","p":0.05925,"d":13.759,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T20:30:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",13.76,2],["Kalshi",10.89,2],["FD",12.92,2],["DK",12.9,2],["theScore",12.6,2],["Caesars",11.88,2]],"legs":[{"lab":"Patrick Kane to score","book":"Novig","price":292,"res":null,"sport":"nhl","f":null},{"lab":"JJ Peterka to score","book":"Novig","price":251,"res":null,"sport":"nhl","f":null}]}]},{"card":"Confluence parlays (experimental)","parlays":[{"tier":"2 legs","p":0.19428,"d":5.181,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",3.93,2],["Novig",5.18,2],["Kalshi",null,0],["theScore",4.3,2],["Caesars",4.18,2],["Fanatics",4.1,2],["DK",3.91,2]],"legs":[{"lab":"Juraj Slafkovsk\u00fd 3+ shots","book":"Novig","price":141,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]},{"lab":"Steven Stamkos 3+ shots","book":"Novig","price":115,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]}]},{"tier":"3 legs","p":0.08169,"d":11.556,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",8.41,3],["Novig",11.56,3],["Kalshi",null,0],["Fanatics",10.58,3],["DK",9.9,3],["Caesars",9.64,3],["ProphetX",9.21,3]],"legs":[{"lab":"Beckett Sennecke 3+ shots","book":"Novig","price":115,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]},{"lab":"Patrick Kane 3+ shots","book":"Novig","price":150,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]},{"lab":"Adrian Kempe 3+ shots","book":"Novig","price":115,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]}]},{"tier":"4-leg longshot","p":0.03478,"d":27.851,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",17.67,4],["Novig",27.85,4],["Kalshi",null,0],["Fanatics",20.66,4],["Caesars",20.44,4],["theScore",19.8,4],["DK",18.9,4]],"legs":[{"lab":"Juraj Slafkovsk\u00fd 3+ shots","book":"Novig","price":141,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]},{"lab":"Steven Stamkos 3+ shots","book":"Novig","price":115,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]},{"lab":"Beckett Sennecke 3+ shots","book":"Novig","price":115,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]},{"lab":"Patrick Kane 3+ shots","book":"Novig","price":150,"res":null,"sport":"nhl","f":["usage","pp1","goalie"]}]}]},{"card":"Sweet-spot edge parlays (experimental)","parlays":[{"tier":"2 legs","p":0.20388,"d":5.97,"first":"2026-11-22T00:00:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",4.41,2],["Novig",5.97,2],["Kalshi",null,0],["Fanatics",5.51,2],["ProphetX",5.4,2],["DK",5.39,2],["Caesars",5.3,2]],"legs":[{"lab":"Darren Raddysh 3+ shots","book":"Novig","price":127,"res":null,"sport":"nhl","f":null},{"lab":"Mitch Marner 3+ shots","book":"Novig","price":163,"res":null,"sport":"nhl","f":null}]},{"tier":"3 legs","p":0.08763,"d":14.925,"first":"2026-11-21T23:00:00+00:00","res":null,"lock":"2026-11-21T13:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,2],["Novig",14.93,3],["Kalshi",null,0],["Fanatics",13.23,3],["DK",12.94,3],["Caesars",12.57,3],["ProphetX",12.36,3]],"legs":[{"lab":"Darren Raddysh 3+ shots","book":"Novig","price":127,"res":null,"sport":"nhl","f":null},{"lab":"Mitch Marner 3+ shots","book":"Novig","price":163,"res":null,"sport":"nhl","f":null},{"lab":"Erik Karlsson 3+ shots","book":"Novig","price":150,"res":null,"sport":"nhl","f":null}]}]}]},{"sport":"nba","date":"2026-11-21","final_at":"2026-11-21T17:00:00+00:00","cards":[{"card":"Path longshots","parlays":[{"tier":"2-leg","p":0.1156,"d":8.932,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",5.22,2],["Kalshi",8.65,2]],"legs":[{"lab":"VJ Edgecombe 8+ reb","book":"Novig","price":190,"res":null,"sport":"nba","f":["usage","matchup","rotation","game"]},{"lab":"Victor Wembanyama 14+ reb","book":"Kalshi","price":208,"res":null,"sport":"nba","f":["usage","matchup","rotation","price"]}]},{"tier":"2-leg","p":0.10902,"d":9.332,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",5.45,2],["Kalshi",8.9,2]],"legs":[{"lab":"Tyrese Maxey 4+ threes","book":"Novig","price":203,"res":null,"sport":"nba","f":["usage","matchup","rotation","game"]},{"lab":"Victor Wembanyama 14+ reb","book":"Kalshi","price":208,"res":null,"sport":"nba","f":["usage","matchup","rotation","price"]}]},{"tier":"3-leg","p":0.05226,"d":25.236,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T18:00:00+00:00","lw":true,"paid":null,"pick":"longshot","bk":[["Hard Rock",null,0],["Novig",9.32,3],["Kalshi",24.45,3]],"legs":[{"lab":"VJ Edgecombe 8+ reb","book":"Novig","price":190,"res":null,"sport":"nba","f":["usage","matchup","rotation","game"]},{"lab":"Brook Lopez 6+ reb","book":"Kalshi","price":129,"res":null,"sport":"nba","f":["usage","rotation","game"]},{"lab":"LaMelo Ball 8+ ast","book":"Kalshi","price":280,"res":null,"sport":"nba","f":["usage","rotation","price"]}]},{"tier":"3-leg","p":0.04928,"d":26.367,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T18:00:00+00:00","lw":true,"paid":null,"pick":"longshot","bk":[["Hard Rock",null,0],["Novig",9.74,3],["Kalshi",25.15,3]],"legs":[{"lab":"Tyrese Maxey 4+ threes","book":"Novig","price":203,"res":null,"sport":"nba","f":["usage","matchup","rotation","game"]},{"lab":"Brook Lopez 6+ reb","book":"Kalshi","price":129,"res":null,"sport":"nba","f":["usage","rotation","game"]},{"lab":"LaMelo Ball 8+ ast","book":"Kalshi","price":280,"res":null,"sport":"nba","f":["usage","rotation","price"]}]}]},{"card":"Parlays by payout (your books)","parlays":[{"tier":"+250 to +600","p":0.40576,"d":4.105,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T18:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",3.73,2],["Novig",null,1],["Kalshi",3.55,2],["FD",3.26,2]],"legs":[{"lab":"PHI \u221212.5","book":"Novig","price":115,"res":null,"sport":"nba","f":null},{"lab":"Zach Edey over 7.5 rebounds","book":"Hard Rock","price":-110,"res":null,"sport":"nba","f":null}]},{"tier":"+250 to +600","p":0.2778,"d":4.407,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T18:00:00+00:00","lw":true,"paid":null,"pick":"core","bk":[["Hard Rock",null,1],["Novig",null,1],["Kalshi",4.06,2]],"legs":[{"lab":"PHI \u221212.5","book":"Novig","price":115,"res":null,"sport":"nba","f":null},{"lab":"Cam Spencer 6+ assists","book":"Kalshi","price":105,"res":null,"sport":"nba","f":null}]}]},{"card":"Sweet-spot edge parlays (experimental)","parlays":[{"tier":"2 legs","p":0.12479,"d":9.787,"first":"2026-11-22T00:30:00+00:00","res":null,"lock":"2026-11-22T00:30:00+00:00","lw":true,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",9.79,2],["Kalshi",9.79,2]],"legs":[{"lab":"LaMelo Ball over 4.5 threes","book":"Novig","price":203,"res":null,"sport":"nba","f":null},{"lab":"Jalen Brunson over 3.5 threes","book":"Novig","price":223,"res":null,"sport":"nba","f":null}]}]}]},{"sport":"multi","date":"2026-11-21","final_at":"2026-11-21T16:00:00+00:00","cards":[{"card":"Multisport longshots","parlays":[{"tier":"3 legs \u00b7 NBA + NHL","p":0.06002,"d":18.4,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T16:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",10.75,3],["Kalshi",null,2]],"legs":[{"lab":"Victor Wembanyama 14+ reb","book":"Kalshi","price":208,"res":null,"sport":"nba","f":["usage","matchup","rotation","price"]},{"lab":"VJ Edgecombe 8+ reb","book":"Novig","price":190,"res":null,"sport":"nba","f":["usage","matchup","rotation","game"]},{"lab":"Kirill Kaprizov to score","book":"Novig","price":106,"res":null,"sport":"nhl","f":null}]},{"tier":"3 legs \u00b7 NBA + NHL","p":0.03397,"d":31.351,"first":"2026-11-21T18:00:00+00:00","res":null,"lock":"2026-11-21T16:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",18.32,3],["Kalshi",27.09,3]],"legs":[{"lab":"Victor Wembanyama 14+ reb","book":"Kalshi","price":208,"res":null,"sport":"nba","f":["usage","matchup","rotation","price"]},{"lab":"VJ Edgecombe 8+ reb","book":"Novig","price":190,"res":null,"sport":"nba","f":["usage","matchup","rotation","game"]},{"lab":"Jack Quinn to score","book":"Novig","price":251,"res":null,"sport":"nhl","f":null}]},{"tier":"4 legs \u00b7 NBA + NHL","p":0.01879,"d":94.793,"first":"2026-11-21T20:30:00+00:00","res":null,"lock":"2026-11-21T16:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":[["Hard Rock",null,0],["Novig",36.13,4],["Kalshi",null,3]],"legs":[{"lab":"LaMelo Ball 8+ ast","book":"Kalshi","price":280,"res":null,"sport":"nba","f":["usage","rotation","price"]},{"lab":"Kirill Kaprizov to score","book":"Novig","price":106,"res":null,"sport":"nhl","f":null},{"lab":"Jack Quinn to score","book":"Novig","price":251,"res":null,"sport":"nhl","f":null},{"lab":"Frank Nazar to score","book":"Novig","price":245,"res":null,"sport":"nhl","f":null}]}]}]},{"sport":"slate","date":"2026-11-20","final_at":null,"cards":[{"card":"Plus-money slate \u00b7 straight","parlays":[{"tier":"straight","p":0.3555,"d":3.75,"first":"2026-11-21T00:00:00+00:00","res":"L","lock":"2026-11-20T23:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":null,"legs":[{"lab":"Jalen Johnson over 9.5 ast","book":"Hard Rock","price":275,"res":"L","sport":"nba","f":null}]},{"tier":"straight","p":0.2753,"d":4.0,"first":"2026-11-21T01:00:00+00:00","res":"L","lock":"2026-11-21T00:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":null,"legs":[{"lab":"Matas Buzelis over 3.5 fg3m","book":"Hard Rock","price":300,"res":"L","sport":"nba","f":null}]}]},{"card":"Plus-money slate \u00b7 parlay","parlays":[{"tier":"2 legs","p":0.11237,"d":13.125,"first":"2026-11-21T00:00:00+00:00","res":"L","lock":"2026-11-20T23:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":null,"legs":[{"lab":"Jalen Johnson over 9.5 ast","book":"Hard Rock","price":275,"res":"L","sport":"nba","f":null},{"lab":"Jaxson Hayes over 7.5 reb","book":"Hard Rock","price":250,"res":"W","sport":"nba","f":null}]},{"tier":"2 legs","p":0.07641,"d":15.0,"first":"2026-11-21T00:00:00+00:00","res":"L","lock":"2026-11-20T23:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":null,"legs":[{"lab":"Matas Buzelis over 7.5 reb","book":"Hard Rock","price":275,"res":"L","sport":"nba","f":null},{"lab":"Dyson Daniels over 7.5 ast","book":"Hard Rock","price":300,"res":"W","sport":"nba","f":null}]},{"tier":"2 legs","p":0.08763,"d":14.0,"first":"2026-11-21T01:00:00+00:00","res":"L","lock":"2026-11-21T00:00:00+00:00","lw":null,"paid":null,"pick":null,"bk":null,"legs":[{"lab":"Jaxson Hayes over 7.5 reb","book":"Hard Rock","price":250,"res":"W","sport":"nba","f":null},{"lab":"Matas Buzelis over 3.5 fg3m","book":"Hard Rock","price":300,"res":"L","sport":"nba","f":null}]}]}]}],"learn":{"builder":{"n":21,"w":1,"ret":-0.5974,"h1":-0.1546,"h2":-1.0,"z":-1.48,"exp":4.76,"net":-62.73,"status":"Experimental"},"conf":{"n":65,"w":7,"ret":-0.4081,"h1":-0.7072,"h2":-0.1181,"z":-1.85,"exp":8.54,"net":-132.63,"status":"Experimental"},"mk":{"n":58,"w":4,"ret":-0.5575,"h1":-0.5932,"h2":-0.5217,"z":-2.52,"exp":5.6,"net":-161.66,"status":"Experimental"},"sw":{"n":81,"w":4,"ret":-0.4995,"h1":-0.5134,"h2":-0.4859,"z":-1.78,"exp":7.24,"net":-202.3,"status":"Experimental"},"stp":{"n":20,"w":0,"ret":-1.0,"h1":-1.0,"h2":-1.0,"z":0,"exp":1.42,"net":-100.0,"status":"Experimental"},"rows":1269,"live":963,"segs":[{"seg":"NHL","n":1041,"ret":-0.0712,"h1":-0.0956,"h2":-0.0452,"z":-1.04,"status":"Dropped"},{"seg":"NHL \u00b7 goals \u00b7 edge 5-10%","n":689,"ret":-0.1499,"h1":-0.204,"h2":-0.0892,"z":-1.93,"status":"Dropped"},{"seg":"NHL \u00b7 goals \u00b7 plus money","n":377,"ret":-0.123,"h1":-0.1186,"h2":-0.1262,"z":-1.43,"status":"Dropped"},{"seg":"NFL \u00b7 receptions","n":48,"ret":0.4654,"h1":0.5303,"h2":0.4004,"z":3.0,"status":"Proven"},{"seg":"NFL \u00b7 rotation","n":42,"ret":-0.2053,"h1":-0.3711,"h2":-0.023,"z":-1.1,"status":"Dropped"},{"seg":"NFL \u00b7 receptions \u00b7 coin flip","n":39,"ret":0.3284,"h1":0.4099,"h2":0.2426,"z":2.12,"status":"Proven"},{"seg":"NFL \u00b7 receptions \u00b7 edge 5-10%","n":37,"ret":0.3221,"h1":0.3866,"h2":0.261,"z":1.84,"status":"Proven"},{"seg":"NHL \u00b7 3 reasons","n":36,"ret":-0.2431,"h1":-0.1509,"h2":-0.4062,"z":-1.13,"status":"Dropped"},{"seg":"NHL \u00b7 Novig","n":1001,"ret":-0.0556,"h1":-0.0627,"h2":-0.0482,"z":-0.79,"status":"Watching"},{"seg":"NHL \u00b7 goals","n":961,"ret":-0.0692,"h1":-0.1112,"h2":-0.0209,"z":-0.95,"status":"Watching"},{"seg":"NHL \u00b7 no path","n":683,"ret":-0.0233,"h1":0.0396,"h2":-0.0853,"z":-0.3,"status":"Watching"},{"seg":"NHL \u00b7 goals \u00b7 longshot","n":583,"ret":-0.0329,"h1":-0.1217,"h2":0.1238,"z":-0.33,"status":"Watching"},{"seg":"NHL \u00b7 pp1","n":430,"ret":0.0208,"h1":0.1725,"h2":-0.1267,"z":0.23,"status":"Watching"},{"seg":"NHL \u00b7 goalie","n":406,"ret":-0.0367,"h1":-0.1315,"h2":0.0553,"z":-0.38,"status":"Watching"}],"changes":[{"date":"2026-11-17","seg":"NHL \u00b7 3 reasons","was":"Dropped","now":"Watching","n":34,"ret":-0.1985},{"date":"2026-11-17","seg":"NHL \u00b7 goals \u00b7 plus money","was":"Dropped","now":"Watching","n":345,"ret":-0.0886},{"date":"2026-11-17","seg":"NHL \u00b7 3 reasons","was":"Watching","now":"Dropped","n":35,"ret":-0.2214},{"date":"2026-11-19","seg":"NHL \u00b7 goals \u00b7 plus money","was":"Watching","now":"Dropped","n":369,"ret":-0.1172},{"date":"2026-11-19","seg":"NHL \u00b7 2 reasons","was":"Proven","now":"Watching","n":212,"ret":0.1225},{"date":"2026-11-20","seg":"NHL","was":"Watching","now":"Dropped","n":1034,"ret":-0.0697}],"updated":"2026-11-21T12:43:07+00:00"},"slate":{"coef":{"const":-1.0492,"gap":0.1298,"pvf":-0.3722,"dry3":-0.0123,"hot0":-0.0163,"tag":-0.1251,"move":0.111,"alt":0.5998,"nba":0.3729,"nhl":0.6617,"td":0.4075,"goal":0.3059,"far":-0.1405},"se":{"const":0.277,"gap":0.0468,"pvf":0.1866,"dry3":0.1176,"hot0":0.1409,"tag":0.088,"move":0.0422,"alt":0.2562,"nba":0.1381,"nhl":0.478,"td":0.3165,"goal":0.4636,"far":0.053},"live":{"n":8877,"ll_model":0.4322,"ll_market":0.4346,"picks":208,"picks_ret":0.1482,"h1":0.0236,"h2":0.2936},"record":{"straight":{"n":63,"w":10,"net":-200.3,"staked":630.0},"parlay":{"n":74,"w":3,"net":-122.88,"staked":370.0},"days":25,"net":-323.18,"staked":1000.0},"n_seed":2271,"n_live":8877,"updated":"2026-11-21T12:43:07+00:00","check":{"date":"2026-11-21","n":13,"at":"2026-11-21T12:43:09+00:00","best":-0.0895}}};
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const pc = p => p == null ? '–' : p < .1 ? (Math.round(p * 1000) / 10).toFixed(1) + '%' : Math.round(p * 100) + '%';
+const am = o => o == null ? '' : (o > 0 ? '+' : '') + o;
+const tm = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+const day = d => new Date(d + 'T12:00:00').toLocaleDateString([], {weekday: 'short', month: 'short', day: 'numeric'});
+const SP = {nfl: 'NFL', nhl: 'NHL', nba: 'NBA', multi: 'Multi'};
+let F = 'all'; try { F = localStorage.getItem('simhub-v1') || 'all'; } catch (e) {}
+let T = 'card'; try { T = localStorage.getItem('simhub-tab') || 'card'; } catch (e) {}
+// lock time (owner 2026-10-27: 'a clear locked time'): before it the parlay can still be re-picked; after it, it is final
+const dayOf = t => new Date(t).toLocaleDateString('en-CA');
+const lockChip = q => { const t = q.lock || q.first; if (!t) return '';
+  const when_ = (dayOf(t) !== new Date().toLocaleDateString('en-CA') ? new Date(t).toLocaleDateString([], {weekday: 'short'}) + ' ' : '') + tm(t);
+  return new Date(t) <= Date.now() ? `<span class="lk on" title="Final: this parlay won’t change. Place it any time before ${tm(q.first)}.">🔒 Locked · place by ${tm(q.first)}</span>`
+    : q.lw ? `<span class="lk" title="Re-picked until the confirmed starting lineups and injury calls for its first game are in our numbers (~30 min before tip); then it won’t change.">🔓 Locks after lineups · by ${when_}</span>`
+    : `<span class="lk" title="Until then it can still be swapped for a better one; after that it won’t change. First game ${tm(q.first)}.">🔓 Locks ${when_}</span>`; };
+// each book's payout for these legs (owner 2026-10-30): your books always (— = a leg it doesn’t offer), then the best others
+const BKS = {'Hard Rock': 'Hard Rock', Novig: 'Novig', Kalshi: 'Kalshi', DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM'};
+const xf = v => v.toFixed(v < 10 ? 2 : 1) + 'x';
+function bkRow(q){
+  if (!q.bk || !q.bk.length) return '';
+  const n = q.legs.length, best = Math.max(...q.bk.map(r => r[1] || 0));
+  return `<div class="hbx" title="What each book pays for these legs right now, their prices multiplied (a book’s own parlay price can differ). Your books first; — = it doesn’t offer every leg."><span>${n > 1 ? 'Each book pays' : 'At each book'}</span>${q.bk.map(([b, v, k], i) =>
+    `<span class="bq${i < 3 ? ' mine' : ''}${v && v === best ? ' best' : ''}${v ? '' : ' na'}"${v ? '' : ` title="${k} of ${n} leg${n === 1 ? '' : 's'} offered there"`}>${esc(BKS[b] || b)}<b>${v ? xf(v) : '—'}</b></span>`).join('')}</div>`;
+}
+function card(q, sport, lab){
+  const sk = /straight/.test(q.tier || '') ? 10 : D.stake;
+  const st = q.res === 'W' ? `<span class="st W">Won +$${(sk * ((q.paid || q.d) - 1)).toFixed(2)}</span>` : q.res === 'L' ? '<span class="st L">Lost</span>' : q.res === 'V' ? '<span class="st">Void</span>'
+    : new Date(q.first) <= Date.now() ? '<span class="st">Live</span>' : lockChip(q);
+  const ev = q.p && q.d ? q.p * q.d - 1 : null;
+  return `<div class="hp ${q.pick ? 'pick' : ''} ${q.res || ''}"><div class="hh">${q.pick ? `<span class="tg card">Today’s card</span>` : ''}${lab ? `<span class="tg ${/long/i.test(lab) ? 'ls' : ''}">${esc(lab)}</span>` : ''}<span>${esc(q.tier || '')}</span>${st}</div>
+    <ul>${q.legs.map(L => `<li><i class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'}</i>${sport === 'multi' ? `<span class="sp">${SP[L.sport] || ''}</span>` : ''}<b>${esc(L.lab)}</b><span class="bk">${esc(L.book || '')} ${am(L.price)}</span></li>`).join('')}</ul>
+    ${bkRow(q)}
+    <div class="hs">${q.d ? `<span>pays <b>${q.d.toFixed(q.d < 10 ? 1 : 0)}x</b></span><span>$${sk} → <b>$${(sk * q.d).toFixed(q.d < 10 ? 2 : 0)}</b></span>` : ''}<span>hits <b>${pc(q.p)}</b></span>${ev != null ? `<span class="${ev >= .05 ? 'good' : 'muted'}">edge ${ev >= 0 ? '+' : '−'}${Math.abs(Math.round(ev * 100))}%</span>` : ''}</div></div>`;
+}
+function render(){
+  const S = D.sports.filter(s => s.sport !== 'slate' && (F === 'all' || s.sport === F));
+  const sw = `<div class="hsw">${['all', ...D.sports.filter(s => s.sport !== 'slate').map(s => s.sport)].map(k => `<button data-f="${k}" aria-pressed="${F === k}">${k === 'all' ? 'All' : SP[k]}</button>`).join('')}</div>`;
+  const picks = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.flatMap(c => c.parlays.filter(q => q.pick).map(q => ({q, s, c}))));
+  const multi = S.find(s => s.sport === 'multi');
+  const sec = (h, sub, body) => `<section class="panel hsec"><div class="phead"><h2>${h}<small>${sub}</small></h2></div>${body}</section>`;
+  const TB = {};
+  let html = '';
+  const today = new Date().toLocaleDateString('en-CA');
+  const lwOf = s => s.cards.some(c => c.parlays.some(q => q.pick && q.lw && !q.res && new Date(q.first) > Date.now()));
+  const fins = S.filter(s => s.final_at && s.sport !== 'multi').map(s => s.sport === 'nba' ? `NBA ${lwOf(s) ? 'locks after lineups' : 'final'}`
+    : `${SP[s.sport]} ${new Date(s.final_at) <= Date.now() ? 'final' : 'final at ' + tm(s.final_at)}`);
+  const stale = picks.length && picks.every(x => x.s.date < today);
+  if (picks.length) TB.card = sec(stale ? 'Yesterday’s cards' : 'Today’s cards', stale ? `${picks.length} parlays · today’s picks start building around 7 AM ET` : `${picks.length} parlays · $${D.stake} each${fins.length ? ' · ' + fins.join(' · ') : ''}`, `<div class="hg">${picks.map(x => card(x.q, x.s.sport, `${SP[x.s.sport]} · ${x.q.pick === 'longshot' ? 'longshot' : 'core'}${x.s.date !== today ? ' · ' + day(x.s.date) : ''}`)).join('')}</div>`);
+  else TB.card = sec('Today’s cards', `$${D.stake} each`, `<p class="note">Today’s cards aren’t picked yet. Each day’s cards start building around 7 AM ET and fill in as the books post player props (most NBA / NHL props come in late morning). Yesterday’s cards and their results are on the <a href="profit.html">Profit page</a>.</p>`);
+  let lrnHtml = '';
+  const LRN = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Learning parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  if (D.learn || LRN.length){
+    const B = (D.learn && D.learn.builder) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    const segRow = x => `<tr><td class="l">${esc(x.seg)}</td><td>${x.n}</td><td class="${x.ret >= 0 ? 'good' : 'bad'}">${x.ret >= 0 ? '+' : '−'}${Math.abs(Math.round(x.ret * 100))}%</td><td>${x.h1 == null ? '–' : (x.h1 >= 0 ? '+' : '−') + Math.abs(Math.round(x.h1 * 100)) + '%'} / ${x.h2 == null ? '–' : (x.h2 >= 0 ? '+' : '−') + Math.abs(Math.round(x.h2 * 100)) + '%'}</td><td><span class="lst ${x.status}">${x.status}</span></td></tr>`;
+    const learned = D.learn ? `<details class="hc"><summary>What it has learned<span>${D.learn.rows} graded value props${D.learn.live ? ` · ${D.learn.live} with path reasons` : ''}</span></summary>
+      <p class="note">Every over the pages could bet at your books is logged with its reasons and graded, picked or not. A kind of leg is <b>Proven</b> after 30+ bets with a positive return in both halves of the record, <b>Dropped</b> after 30+ negative in both (the builder skips it), and <b>Watching</b> in between. Started from the Oct 12-22 price history (no kind of value prop had consistent returns yet: all 5-40% edges −14% on 305).</p>
+      <div class="tw"><table class="t lt"><thead><tr><th class="l">Kind of leg</th><th>Bets</th><th>Return</th><th>Halves</th><th>Status</th></tr></thead><tbody>${D.learn.segs.map(segRow).join('')}</tbody></table></div>
+      ${D.learn.changes.length ? `<p class="note">Recent changes: ${D.learn.changes.map(c => `${esc(c.date.slice(5))} ${esc(c.seg)} ${esc(c.was)} → <b>${esc(c.now)}</b>`).join(' · ')}</p>` : ''}</details>` : '';
+    lrnHtml += sec(`Learning parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec}`,
+      (LRN.length ? `<details class="hc"><summary>Today’s learning parlays<span>${LRN.length}</span></summary><div class="hg">${LRN.map(x => card(x.q, x.s.sport, SP[x.s.sport])).join('')}</div></details>` : '<p class="note">No legs qualify yet today: every leg must fit a game script or path, carry a 5-40% edge at your books, and not belong to a kind of leg it has dropped.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Builds up to three parlays a sport a day (two 2-leg, one 3-leg), one leg per game, overs only, from legs that fit a game script or our paths (NFL: the script, or two of usage, matchup, rotation; NBA: two of usage, matchup, rotation, game; NHL: top-3 usage plus first power-play unit or a struggling goalie). It ranks them by edge, prefers kinds of legs it has proven and skips the ones it has dropped, and it relearns after every graded game. It stays Experimental until its own record is consistent: 60+ graded parlays, positive in both halves.</p></details>` + learned);
+  }
+  const CNF = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Confluence parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  {
+    const B = (D.learn && D.learn.conf) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    const why = q => { const v = [...new Set(q.legs.flatMap(L => L.v || []))]; return v.length ? `<p class="note" style="margin:6px 0 0">${q.legs.map(L => `<b>${esc(L.lab.split(' ').slice(0, 2).join(' '))}</b>: ${esc((L.v || []).join(', '))}`).join(' · ')}</p>` : ''; };
+    TB.conf = sec(`Confluence parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
+      (CNF.length ? `<div class="hg">${CNF.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">No legs qualify yet today: each needs four or more things agreeing, a price between about −120 and +300 at your books, and a 0-15% edge.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Legs where several things agree: our reasons (usage, rotation, matchup, game script / game), our model above the market’s fair price, and the market’s own signals (Pinnacle or our sharp consensus moving the prop up, a Value or LC tag, a ladder knee). A leg needs four or more; a reason the learning record has dropped counts zero, a proven one counts double. Only legs priced about −120 to +300 with a 0-15% edge (longshot legs hit 10% vs 20% priced, and big claimed edges hit 24% vs 40%). The payout comes from stacking near-fair legs: a 2-leg, a 3-leg and a 4-5 leg longshot paying 20-100x, one leg per game. The chance shown is the market’s fair price, not ours. Tracked beside Today’s card; it stays Experimental until 60+ graded parlays are positive in both halves.</p></details>`);
+  }
+  const SWP = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Sweet-spot edge parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  {
+    const B = (D.learn && D.learn.sw) || {n: 0, status: 'Experimental'}, proven = B.status === 'Proven';
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    TB.sweet = sec(`Sweet-spot edge parlays <span class="lst ${proven ? 'Proven' : 'exp'}">${proven ? 'Proven' : 'Experimental'}</span>`, `record ${rec} · tracked beside Today’s card`,
+      (SWP.length ? `<div class="hg">${SWP.map(x => card(x.q, x.s.sport, SP[x.s.sport])).join('')}</div>` : '<p class="note">No legs qualify yet today: each needs a 5-40% edge at your books on a leg priced about −120 to +570. They show up once the sharp books price the props, mostly a few hours before the games.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Every over at Hard Rock, Novig and Kalshi, main and alternate lines, where our chance (our number blended with the sharp books’ fair price at that line, the site’s usual weights) beats the best price by 5-40%, on legs priced about −120 to +570. One leg per game, its biggest edge; a 2-leg, a 3-leg and a second 2-leg. Why: of every over priced at your books Oct 12-26 (24,944 graded legs, the price 1-3 hours before the start), all legs together lost 29%; this edge returned +16% on 319 legs, positive in both halves, and +23% on the 164 priced in this band. The same edge without our number lost 12%, and chasing line moves lost too. The price band was chosen from that same data, so this stays Experimental until its own graded record holds up.</p></details>`);
+  }
+  const MKP = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Sharp move parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  if (MKP.length || (D.learn && D.learn.mk && D.learn.mk.n)){
+    const B = (D.learn && D.learn.mk) || {n: 0};
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    const why = q => `<p class="note" style="margin:6px 0 0">${q.legs.map(L => `<b>${esc(L.lab.split(' over ')[0])}</b>: ${esc((L.v || []).join(' · '))}`).join('<br>')}</p>`;
+    TB.move = sec('NBA sharp move parlays <span class="lst exp">Experimental</span>', `record ${rec} · tracked beside Today’s card`,
+      (MKP.length ? `<div class="hg">${MKP.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">None today: the sharp market hasn’t moved enough NBA props up yet (moves show up through the day, mostly in the last hours before tip).</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Starts from a prop Pinnacle or our sharp consensus moved up (the line went up, the over got shorter, or both) and takes the first rung above the main line at your best price (Hard Rock, Novig or Kalshi with its fee). Pinnacle moves rank first. In Oct 23-25 NBA markets that rung went 37% vs 32% priced (+13%, 134 bets; small sample), while the main line was +6% and two rungs up −17%; requiring a matchup or tag made every rung worse, so they’re shown as context only. One leg per game, 2 and 3 legs. Experimental and tracked; never on Today’s card.</p></details>`);
+  }
+  // Study-pick parlays (builder.build_study, owner 2026-11-12): the narrowed Nov 11 study picks, 2 legs at one book, up to 5 a day
+  const STP = S.filter(s => s.sport !== 'multi').flatMap(s => s.cards.filter(c => /^Study-pick parlays/.test(c.card)).flatMap(c => c.parlays.map(q => ({q, s}))));
+  {
+    const B = (D.learn && D.learn.stp) || {n: 0};
+    const rec = B.n ? `${B.w}-${B.n - B.w} · ${B.net >= 0 ? '+' : '−'}$${Math.abs(B.net).toFixed(2)} at $${D.stake}` : 'no graded parlays yet';
+    const why = q => `<p class="note" style="margin:6px 0 0">${q.legs.map(L => `<b>${esc(L.lab.split(' over ')[0])}</b>: ${esc((L.v || []).join(' · '))}`).join('<br>')}</p>`;
+    TB.study = sec('Study-pick parlays <span class="lst exp">Experimental</span>', `up to 5 a day · $${D.stake} each · record ${rec}`,
+      (STP.length ? `<div class="hg">${STP.map(x => `<div>${card(x.q, x.s.sport, SP[x.s.sport])}${why(x.q)}</div>`).join('')}</div>` : '<p class="note">None yet today. Legs show up as the sharp consensus moves NBA props and Kalshi posts its ladders, mostly in the afternoon; each parlay locks after its first game’s confirmed lineups.</p>')
+      + `<details class="how"><summary>How it works</summary><p class="note">Only the study picks that held up after the Nov 12 review, each under its own tested rule. <b>Consensus picks</b> (Hard Rock / Novig): the sharp consensus moved an NBA prop’s line up and its over shorter, plus either a soft matchup (6%+) on that stat (+20% on 197 in the study) or a Pinnacle higher-rung outlier on it (+13% on 208). <b>Kalshi rungs</b>: our chance 15-40% over Kalshi’s ask with the fee, his best rung, in a game totaled 230+, not a points rung, for a player projected 24-32 minutes. Inside the Kalshi study those cuts, chosen on earlier months only, returned +24% to +33% against +9% for every such rung, mostly in one stretch, so not proven. Two legs from different games at the same book (one ticket you can place), consensus picks first, a leg in at most 2 parlays, up to 5 a day. NHL PP1 top-3 was dropped: its study had look-ahead. The chance shown is the market’s, not ours; the Kalshi legs are mostly long prices, so expect long dry spells. Every leg is also graded as a straight on the Profit page (the study-pick rows), which is where the rule will prove itself or not.</p></details>`);
+  }
+  TB.learn = lrnHtml;
+  TB.slate = slateTab();
+  // everything else the pages build: tracked on the Profit page, not picks (owner 2026-10-25: the section felt like noise)
+  const more = [];
+  if (multi && multi.cards.length){ const qs = multi.cards.flatMap(c => c.parlays);
+    more.push(`<details class="hc"><summary>Multisport all-day longshots<span>${qs.length}</span></summary><div class="hg">${qs.map(q => card(q, 'multi', '')).join('')}</div></details>`); }
+  for (const s of S.filter(s => s.sport !== 'multi'))
+    for (const c of s.cards.filter(c => !/^(Learning|Confluence|Sharp move|Sweet-spot edge|Study-pick) parlays/.test(c.card)))
+      more.push(`<details class="hc"><summary>${SP[s.sport]} · ${esc(c.card)}<span>${c.parlays.length}</span></summary><div class="hg">${c.parlays.map(q => card(q, s.sport, '')).join('')}</div></details>`);
+  if (more.length) TB.more = sec('More parlays we track', 'not picks · graded on the Profit page', more.join(''));
+  const TABS = [['card', 'Today’s cards'], ['study', 'Study picks'], ['slate', 'Plus-money slate'], ['sweet', 'Sweet-spot'], ['conf', 'Confluence'], ['move', 'Sharp move'], ['learn', 'Learning'], ['more', 'More']];
+  const cnt = {card: picks.length, study: STP.length, slate: ((D.sports.find(s => s.sport === 'slate') || {cards: []}).cards.reduce((n, c) => n + c.parlays.length, 0))};
+  if (!TB[T]) T = TABS.find(([k]) => TB[k]) ? TABS.find(([k]) => TB[k])[0] : 'card';
+  const bar = `<div class="htabs" role="tablist">${TABS.filter(([k]) => TB[k] || k === 'card').map(([k, lab]) => `<button role="tab" data-t="${k}" aria-selected="${T === k}">${lab}${cnt[k] ? `<span>${cnt[k]}</span>` : ''}</button>`).join('')}</div>`;
+  html = bar + (T === 'slate' ? '' : sw) + (TB[T] || '<section class="panel"><p class="note">No parlays yet today: they appear once prices are in.</p></section>');
+  document.getElementById('main').innerHTML = html;
+  const on = document.querySelector('.htabs [aria-selected="true"]'); if (on) on.scrollIntoView({block: 'nearest', inline: 'nearest'});
+}
+// Plus-money slate (slate.py; owner 2026-10-27): straights + 2-leg parlays, every leg +250 or longer, picked by a learning model
+const FL_ = {gap: 'Our number above the market', pvf: 'Price shorter than the fair', dry3: 'NHL: no goal in 3+ games', hot0: 'NHL: scored last game',
+  tag: 'Value or LC tag', move: 'Sharp market moved it up', alt: 'Alternate line', nba: 'NBA leg', nhl: 'NHL leg', td: 'Anytime TD', goal: 'Anytime goal', far: 'Priced +600 or longer', const: 'Baseline vs the market'};
+function slateTab(){
+  const sl = D.sports.find(s => s.sport === 'slate'), M = D.slate || {};
+  const qs = sl ? sl.cards.flatMap(c => c.parlays) : [];
+  const st = qs.filter(q => /straight/.test(q.tier || '')), pa = qs.filter(q => !/straight/.test(q.tier || ''));
+  const R = M.record || {}, money = v => `${v >= 0 ? '+' : '−'}$${Math.abs(v || 0).toFixed(2)}`;
+  const rec = R.days ? `${R.straight.w}-${R.straight.n - R.straight.w} straights · ${R.parlay.w}-${R.parlay.n - R.parlay.w} parlays · ${money(R.net)} on $${R.staked}` : 'no graded bets yet';
+  const sec = (h, sub, body) => `<section class="panel hsec"><div class="phead"><h2>${h}<small>${sub}</small></h2></div>${body}</section>`;
+  const grid = xs => `<div class="hg">${xs.map(q => card(q, 'slate', (q.legs[0].sport || '').toUpperCase() + (q.legs.length > 1 ? ' · ' + [...new Set(q.legs.map(L => (L.sport || '').toUpperCase()))].join(' + ') : ''))).join('')}</div>`;
+  const C = M.coef || {}, SE = M.se || {};
+  const rows = Object.keys(FL_).filter(k => k in C).map(k => ({k, v: C[k], z: SE[k] ? C[k] / SE[k] : 0})).sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+  const lv = M.live || {};
+  const model = `<details class="hc"><summary>What the model weighs<span>${M.n_seed || 0} seed + ${M.n_live || 0} live graded legs</span></summary>
+    <p class="note">Each leg starts at the sharp market’s fair chance at that line; the model adds what has paid on +250-or-longer legs (refit every night). Positive = that leg hits more often than the market says.${lv.n ? ` Live so far: log-loss ${lv.ll_model} (model) vs ${lv.ll_market} (market alone); its 5%+ edges returned ${lv.picks_ret == null ? '–' : (lv.picks_ret * 100).toFixed(0) + '%'} on ${lv.picks}.` : ''}</p>
+    <div class="tw"><table class="slm"><tbody>${rows.map(r => `<tr><td>${FL_[r.k]}</td><td class="${r.v > 0 ? 'good' : r.v < 0 ? 'bad' : ''}">${r.v > 0 ? '+' : ''}${r.v.toFixed(2)}${Math.abs(r.z) >= 2 ? ' ●' : ''}</td></tr>`).join('')}</tbody></table></div>
+    <p class="note">● = clear in the data so far (2+ standard errors).</p></details>`;
+  const how = `<details class="how"><summary>How it works</summary><p class="note">Every over at Hard Rock, Novig and Kalshi priced +250 to +1000 (main and alternate lines, NBA, NHL and NFL) that the sharp books price. A learning model estimates each one’s real chance: the sharp market’s fair price, adjusted for our projection’s gap to it, the price against the fair, NHL goal droughts (players who just scored have been overpriced, players 3+ games without a goal underpriced), Value / LC tags, sharp line moves, alternate lines and price band. It learns from every graded candidate every night (started from 2,271 graded +250 legs, Oct 12-26). The slate takes legs with a 5-60% edge: the 4 best as straights ($10, one per game) and the best 2-leg parlays from different games ($5), 10 bets at most, a leg in at most 2. Each bet locks 60 minutes before its first game. Walk-forward test on Oct 12-26 (fit on one half of the days, slate built on the other, both ways): +$167 and +$154 — only 6 days each way, so it stays Experimental until its own record holds up. A +250 straight wins about 1 time in 4 and a 2-leg parlay about 1 in 15: expect long dry spells; judge it on profit over weeks.</p></details>`;
+  const ck = M.check, none = ck && (!sl || sl.date !== ck.date);
+  const clock = t => new Date(t).toLocaleTimeString([], {hour: 'numeric', minute: '2-digit'});
+  const banner = none ? `<p class="note"><b>No bets today so far.</b> Checked ${ck.n} prices at ${clock(ck.at)}: the best edge is ${ck.best >= 0 ? '+' : '−'}${Math.abs(ck.best * 100).toFixed(1)}% and the slate needs 5%. It rechecks about every 15 minutes.${qs.length ? ' Yesterday’s bets are below.' : ''}</p>` : '';
+  return sec('Plus-money slate <span class="lst exp">Experimental</span>', `record ${rec}`, banner +
+      (qs.length ? `<div class="eyebrow" style="margin-top:4px">Straights · $10</div>${st.length ? grid(st) : '<p class="note">None yet.</p>'}<div class="eyebrow" style="margin-top:12px">Parlays · $5</div>${pa.length ? grid(pa) : '<p class="note">None yet.</p>'}`
+        : '<p class="note">No legs qualify yet today: each needs a 5%+ edge on a +250-or-longer price at your books, and the sharp books post most player props a few hours before the games.</p>')
+      + model + how);
+}
+document.addEventListener('click', e => { const t = e.target.closest('button[data-t]'); if (t){ T = t.dataset.t; try { localStorage.setItem('simhub-tab', T); } catch (x) {} render(); return; } const b = e.target.closest('button[data-f]'); if (!b) return; F = b.dataset.f; try { localStorage.setItem('simhub-v1', F); } catch (x) {} render(); });
+render();
+</script></body></html><script>(function(){function f(){var t=document.querySelector('.topbar');if(t)document.documentElement.style.setProperty('--tbh',Math.round(t.getBoundingClientRect().height)+'px')}f();addEventListener('resize',f);addEventListener('load',f)})();</script>
+<script>
+(function(){ var b = document.getElementById('newbie'); if (!b) return;
+  try { if (localStorage.getItem('simsheet-newbie') === 'done') { b.remove(); return; } } catch (e) {}
+  b.hidden = false;
+  b.querySelector('button').addEventListener('click', function(){ b.remove(); try { localStorage.setItem('simsheet-newbie', 'done'); } catch (e) {} });
+})();
+</script><script src="watch.js"></script>
