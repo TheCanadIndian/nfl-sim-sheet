@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-21T14:26:20.605Z",
+"frozen_at": "2026-11-21T14:44:02.235Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -166,7 +166,7 @@
 "line": 49.5,
 "name": "trey mcbride",
 "lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5319,
+"p": 0.5333,
 "price": 104,
 "book": "Novig"
 },
@@ -183,7 +183,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.29254,
+"p": 0.29334,
 "d": 3.929,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
@@ -200,7 +200,7 @@
 "line": 8.5,
 "name": "devin duvernay",
 "lab": "Devin Duvernay over 8.5 rec yds",
-"p": 0.563,
+"p": 0.5649,
 "price": -111,
 "book": "Novig"
 },
@@ -212,13 +212,13 @@
 "line": 1.5,
 "name": "darius cooper",
 "lab": "Darius Cooper over 1.5 receptions",
-"p": 0.4737,
-"price": 122,
-"book": "Novig"
+"p": 0.5053,
+"price": 111,
+"book": "Kalshi"
 }
 ],
-"p": 0.26666,
-"d": 4.22,
+"p": 0.28542,
+"d": 4.011,
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
@@ -233,7 +233,7 @@
 "line": 49.5,
 "name": "trey mcbride",
 "lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5319,
+"p": 0.5333,
 "price": 104,
 "book": "Novig"
 },
@@ -250,7 +250,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.16183,
+"p": 0.16227,
 "d": 7.16,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core"
@@ -259,18 +259,6 @@
 "card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
-{
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "xavier worthy",
-"lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4774,
-"price": 120,
-"book": "Novig"
-},
 {
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T13:00:00",
@@ -282,10 +270,55 @@
 "p": 0.3043,
 "price": 251,
 "book": "Novig"
+},
+{
+"gid": "2026_11_PIT_PHI",
+"start": "2026-11-22T16:25:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "darius cooper",
+"lab": "Darius Cooper over 1.5 receptions",
+"p": 0.5053,
+"price": 111,
+"book": "Kalshi"
 }
 ],
-"p": 0.14526,
-"d": 7.722,
+"p": 0.15373,
+"d": 7.406,
+"first": "2026-11-22T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 6.5,
+"name": "amonra st brown",
+"lab": "Amonra St Brown under 6.5 receptions",
+"p": 0.5078,
+"price": 138,
+"book": "Novig"
+},
+{
+"gid": "2026_11_NO_CHI",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 66.5,
+"name": "chris olave",
+"lab": "Chris Olave under 66.5 rec yds",
+"p": 0.5457,
+"price": -108,
+"book": "Novig"
+}
+],
+"p": 0.27709,
+"d": 4.584,
 "first": "2026-11-22T18:00:00+00:00"
 },
 {
@@ -23615,16 +23648,16 @@
 "line": 49.5,
 "name": "trey mcbride",
 "lab": "Trey McBride over 49.5 rec yds",
-"p": 0.5297,
+"p": 0.5317,
 "price": 104,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0805,
-"fair": 0.4929,
+"edge": 0.0847,
+"fair": 0.4956,
 "main": true
 }
 ],
-"p": 0.5297,
+"p": 0.5317,
 "d": 2.04,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
@@ -23664,32 +23697,6 @@
 "start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
-"line": 3.5,
-"name": "jahmyr gibbs",
-"lab": "Jahmyr Gibbs over 3.5 receptions",
-"p": 0.5667,
-"price": -115,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.0595,
-"fair": 0.581,
-"main": true
-}
-],
-"p": 0.5667,
-"d": 1.87,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
 "line": 1.5,
 "name": "isaac teslaa",
 "lab": "Isaac Teslaa over 1.5 receptions",
@@ -23704,6 +23711,32 @@
 ],
 "p": 0.431,
 "d": 2.45,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "jahmyr gibbs",
+"lab": "Jahmyr Gibbs over 3.5 receptions",
+"p": 0.5629,
+"price": -115,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.0523,
+"fair": 0.5759,
+"main": true
+}
+],
+"p": 0.5629,
+"d": 1.87,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight"
 },
