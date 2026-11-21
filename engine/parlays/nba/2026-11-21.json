@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T20:46:21.884Z",
+"frozen_at": "2026-11-21T20:54:04.523Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -233,33 +233,8 @@
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "4-leg longshot",
+"tier": "2 legs",
 "legs": [
-{
-"gid": "401910027",
-"start": "2026-11-22T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 1.5,
-"name": "julian champagnie",
-"lab": "Julian Champagnie over 1.5 assists",
-"p": 0.4738,
-"price": 125,
-"book": "Hard Rock",
-"f": [
-"matchup",
-"rotation"
-],
-"v": [
-"matchup",
-"rotation",
-"our model above fair",
-"consensus up",
-"lc"
-],
-"sport": "nba",
-"edge": 0.0696
-},
 {
 "gid": "401910024",
 "start": "2026-11-22T00:30Z",
@@ -308,6 +283,89 @@
 ],
 "sport": "nba",
 "edge": 0.0069
+}
+],
+"p": 0.19123,
+"d": 5.75,
+"first": "2026-11-22T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
+"legs": [
+{
+"gid": "401910024",
+"start": "2026-11-22T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 7.5,
+"name": "josh hart",
+"lab": "Josh Hart over 7.5 rebounds",
+"p": 0.4395,
+"price": 150,
+"book": "Hard Rock",
+"f": [
+"game"
+],
+"v": [
+"game",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0954
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert over 10.5 rebounds",
+"p": 0.4351,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0069
+},
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 1.5,
+"name": "julian champagnie",
+"lab": "Julian Champagnie over 1.5 assists",
+"p": 0.4738,
+"price": 125,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation"
+],
+"v": [
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0696
 },
 {
 "gid": "401910025",
