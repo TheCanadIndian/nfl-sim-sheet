@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T16:11:46.925Z",
+"frozen_at": "2026-11-21T16:19:45.884Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -107,14 +107,14 @@
 {
 "gid": "401910023",
 "start": "2026-11-21T18:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 4.5,
+"line": 3.5,
 "name": "tyrese maxey",
-"lab": "Tyrese Maxey 5+ reb",
-"p": 0.327,
-"price": 195,
-"book": "Hard Rock",
+"lab": "Tyrese Maxey 4+ threes",
+"p": 0.2908,
+"price": 233,
+"book": "Novig",
 "f": [
 "usage",
 "matchup",
@@ -157,15 +157,112 @@
 ]
 }
 ],
-"p": 0.04492,
-"d": 22.656,
+"p": 0.03994,
+"d": 25.574,
 "first": "2026-11-21T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401910024",
+"start": "2026-11-22T00:30Z",
+"kind": "spread",
+"side": "home",
+"line": -5.5,
+"name": null,
+"lab": "NY \u22125.5",
+"p": 0.5,
+"price": 133,
+"book": "Novig"
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 3+ threes",
+"p": 0.3984,
+"price": 166,
+"book": "Kalshi"
+}
+],
+"p": 0.19923,
+"d": 6.198,
+"first": "2026-11-22T00:30:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "401910024",
+"start": "2026-11-22T00:30Z",
+"kind": "spread",
+"side": "home",
+"line": -5.5,
+"name": null,
+"lab": "NY \u22125.5",
+"p": 0.5,
+"price": 133,
+"book": "Novig"
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "cam spencer",
+"lab": "Cam Spencer 3+ threes",
+"p": 0.3303,
+"price": 252,
+"book": "Kalshi"
+}
+],
+"p": 0.16514,
+"d": 8.202,
+"first": "2026-11-22T00:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401910023",
+"start": "2026-11-21T18:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "tyrese maxey",
+"lab": "Tyrese Maxey over 3.5 rebounds",
+"p": 0.4625,
+"price": 117,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0093
+},
 {
 "gid": "401910027",
 "start": "2026-11-22T01:00Z",
@@ -192,36 +289,11 @@
 ],
 "sport": "nba",
 "edge": 0.0016
-},
-{
-"gid": "401910026",
-"start": "2026-11-22T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "cam spencer",
-"lab": "Cam Spencer over 5.5 assists",
-"p": 0.4603,
-"price": 115,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0341
 }
 ],
-"p": 0.229,
-"d": 4.3,
-"first": "2026-11-22T01:00:00+00:00",
+"p": 0.23009,
+"d": 4.34,
+"first": "2026-11-21T18:00:00+00:00",
 "res": null
 },
 {
@@ -365,25 +437,26 @@
 {
 "gid": "401910023",
 "start": "2026-11-21T18:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 4.5,
-"name": "vj edgecombe",
-"lab": "VJ Edgecombe over 4.5 assists",
-"p": 0.4066,
-"fair": 0.4076,
-"price": 135,
-"book": "Hard Rock",
+"line": 3.5,
+"name": "kentavious caldwellpope",
+"lab": "Kentavious Caldwell-Pope over 3.5 rebounds",
+"p": 0.3764,
+"fair": 0.3719,
+"price": 156,
+"book": "Novig",
 "sport": "nba",
-"edge": -0.0445,
+"edge": -0.0364,
 "v": [
 "consensus odds drop",
-"one rung above the main line (3.5)"
+"one rung above the main line (2.5)",
+"soft matchup"
 ]
 }
 ],
-"p": 0.14046,
-"d": 6.698,
+"p": 0.12816,
+"d": 7.296,
 "first": "2026-11-21T18:00:00+00:00",
 "res": null
 }
