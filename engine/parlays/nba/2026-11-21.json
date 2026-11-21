@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T16:32:51.096Z",
+"frozen_at": "2026-11-21T16:41:16.096Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -229,6 +229,91 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401910024",
+"start": "2026-11-22T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "og anunoby",
+"lab": "OG Anunoby over 5.5 rebounds",
+"p": 0.4562,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"game"
+],
+"v": [
+"usage",
+"game",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0453
+},
+{
+"gid": "401910023",
+"start": "2026-11-21T18:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "tyrese maxey",
+"lab": "Tyrese Maxey over 3.5 rebounds",
+"p": 0.4625,
+"price": 117,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0094
+}
+],
+"p": 0.21099,
+"d": 4.991,
+"first": "2026-11-21T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "4-leg longshot",
+"legs": [
+{
+"gid": "401910024",
+"start": "2026-11-22T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "og anunoby",
+"lab": "OG Anunoby over 5.5 rebounds",
+"p": 0.4562,
+"price": 130,
+"book": "Hard Rock",
+"f": [
+"usage",
+"game"
+],
+"v": [
+"usage",
+"game",
+"consensus up",
+"lc"
+],
+"sport": "nba",
+"edge": 0.0453
+},
+{
 "gid": "401910023",
 "start": "2026-11-21T18:00Z",
 "kind": "reb",
@@ -281,10 +366,35 @@
 ],
 "sport": "nba",
 "edge": 0.001
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "cam spencer",
+"lab": "Cam Spencer over 5.5 assists",
+"p": 0.4603,
+"price": 115,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0336
 }
 ],
-"p": 0.23009,
-"d": 4.34,
+"p": 0.04832,
+"d": 21.461,
 "first": "2026-11-21T18:00:00+00:00",
 "res": null
 },

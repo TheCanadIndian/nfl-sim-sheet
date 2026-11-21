@@ -18,3 +18,4 @@
 - **2026-11-18:** bet again after two skipped days using a filter: Novig/Kalshi, main line, priced 30-60%, ours >= fair, no points. It leaves only +3..5% edges, so expect near break-even; judge it over many bets.
 - **2026-11-19:** a 5-pt gap on NFL catches is under the 8-pt bar that held up; with few clean candidates, skipping beats a soft 2-leg. Hold the 8+ pt rule for catches next time.
 - **2026-11-20:** Friday NBA-only slate: the filter gave one 2-leg parlay (+353). Daily record is now 2 wins of 13 bets. Keep the unit small; the test is whether the filter's legs beat their price over many bets.
+- **2026-11-21:** Saturday early slate is thin (NBA 1 PM, NHL 1 / 3:30). Took one half-unit 2-leg at 8.7x. Record 2 of 14; still no proof the filter beats price.
