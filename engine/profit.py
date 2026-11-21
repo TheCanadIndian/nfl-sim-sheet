@@ -788,6 +788,9 @@ def tag_label(e):
                 "mown": "First basket: model 10%+ over Hard Rock / Novig / Kalshi, at that book (experimental)",
                 "open": "First basket: projected jumper or opening-shot taker (30%+), best price (retired 2026-11-21)"}.get(e.get("grp"), "First basket")
     if e.get("src") == "fg":
+        if e.get("book") == "Kalshi":                         # owner 2026-11-21 (research/nhl_fg_kalshi_live.txt)
+            return ("First goal: every Kalshi ask (baseline)" if e.get("grp") == "all"
+                    else "First goal: Kalshi, our chance 30%+ over the ask (experimental)")
         return {"all": "First goal: every FanDuel price (baseline)",
                 "fdtop_m": "First goal: FanDuel + Bovada longer than every other book, and our chance 15%+ over the fair (narrowed; retired 2026-11-21)"}.get(
             e.get("grp"), "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (retired 2026-11-21)")
@@ -1233,6 +1236,36 @@ def tags():
                         if x.get("p") is not None and len(fo) >= 3 and x["p"] >= 1.15 * float(np.median(fo)):
                             log.setdefault(f"fg|fdtop_m|{gid}|{nm}", dict(sport=sport, src="fg", grp="fdtop_m", gid=gid, name=nm, bet="first goal", book=bk, o=o,
                                                                         first=now.isoformat(), m=round(float(np.median(fo)), 4), p=x.get("p"), hr=o_.get("Hard Rock"), start=st))
+            # Kalshi first goal (owner 2026-11-21 'Yes'; research/nhl_fg_kalshi_live.py + .txt, ledger 114): every listed skater's
+            # Kalshi first-goal quote (live_nhl.json k 'first_goal'), priced at the ask + fee (o, American; the raw ask / bid kept
+            # as ya / yb for a no-fee read). Baseline = every ask, its latest pregame price (grp 'all', book Kalshi: off the bets feed
+            # like the FanDuel baseline). 'kedge' = our first-goal chance 30%+ over the ask (no fee: the study's rule; at the last
+            # pregame quote it won 7 of 312 vs 6.3 priced, +55%, halves +160 / +21, 2026-27 only -- a lead). Judged at the LAST
+            # pregame quote like the study: the row follows the latest price while it qualifies and is dropped if it stops qualifying
+            # before the start.
+            try:
+                LVF = json.load(open(os.path.join(site, "markets", "live_nhl.json"))).get("rows") or []
+            except (OSError, ValueError):
+                LVF = []
+            for r in LVF:
+                if r.get("s") != "kalshi" or r.get("k") != "first_goal" or not r.get("n") or r.get("ya") is None or r.get("yb") is None:
+                    continue
+                ya, st = float(r["ya"]), r.get("start")
+                if not 0 < ya < 1 or not st or PL.when(st) <= now:
+                    continue
+                gid, nm = str(r["g"]), _norm(r["n"])
+                q = ya + .07 * ya * (1 - ya)
+                o = round(-100 * q / (1 - q) if q >= .5 else 100 * (1 - q) / q)
+                pm = (r.get("p") or {}).get("model")
+                base = dict(sport=sport, src="fg", gid=gid, name=nm, bet="first goal", book="Kalshi", start=st)
+                e = log.setdefault(f"fg|kall|{gid}|{nm}", dict(base, grp="all", first=now.isoformat()))
+                e.update(o=o, ya=ya, yb=float(r["yb"]), p=pm)
+                kk = f"fg|kedge|{gid}|{nm}"
+                if pm is not None and pm / ya - 1 >= .30:
+                    e = log.setdefault(kk, dict(base, grp="kedge", first=now.isoformat()))
+                    e.update(o=o, ya=ya, yb=float(r["yb"]), p=pm)
+                elif kk in log and log[kk].get("res") is None:
+                    del log[kk]
         # NBA first basket (owner 2026-11-06, research/pbp_factors.py: who scores first is far flatter than scoring share --
         # centers and the 4th / 5th scoring starter score first more than their share; sharp.fb_nba -> markets/fb_nba.json). The best
         # price across every book for each player (its latest pregame price): every player (baseline), centers + the 4th / 5th
@@ -2346,6 +2379,8 @@ document.addEventListener('click', e => { const b = e.target.closest('button[dat
 // NHL first goal + 2+ goals at a glance (owner 2026-11-12: 'easier to identify between all the separate fgs bets and highlight the
 // ones that are up right now. Same with highlighting 2+ goal scorers'): one column per version, one row per odds range, green = up
 const FGV = [['base', 'Every FanDuel price', 'baseline', 'every FanDuel first-goal price, its last pregame price', /every FanDuel price/],
+  ['kall', 'Every Kalshi ask', 'baseline', 'every listed skater at Kalshi’s ask + fee, its last pregame quote (from Nov 21)', /every Kalshi ask/],
+  ['kedge', 'Kalshi + our edge 30%+', 'experimental', 'Kalshi, our first-goal chance 30%+ over the ask, judged at the last pregame quote (from Nov 21; study +55% on 312, 7 wins)', /Kalshi, our chance 30/],
   ['fdtop', 'FD + Bovada longer', 'retired Nov 21', 'FanDuel and Bovada at the same odds, longer than every other book (at +5000 and up a third book must match)', /FanDuel [+] Bovada same odds/],
   ['narrow', 'FD + Bovada + our edge', 'retired Nov 21', 'the FD + Bovada sighting where our first-goal chance is 15%+ over the other books’ fair (narrowed)', /narrowed/]];
 const fgPct = v => { const r = Math.round(v * 100); return (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r) + '%'; };
@@ -2478,7 +2513,8 @@ fromHash();
 </script></body></html>"""
 
 
-FG_VER = (("base", "every FanDuel price"), ("narrow", "narrowed"), ("fdtop", "FanDuel + Bovada same odds"))
+FG_VER = (("base", "every FanDuel price"), ("kall", "every Kalshi ask"), ("kedge", "Kalshi, our chance 30%+"), ("narrow", "narrowed"),
+          ("fdtop", "FanDuel + Bovada same odds"))
 
 
 def fg_records(d):
