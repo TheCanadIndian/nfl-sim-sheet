@@ -158,6 +158,11 @@ def nba_ladder_rows(date, mk, R, GM):
             if (((p.get("s") or {}).get("vegas") or {}).get("min") or [0] * 4)[3] >= 20}
     NMIN = {(str(p["g"]), str(p["id"])): (((p.get("s") or {}).get("vegas") or {}).get("min") or [None] * 4)[3] for p in P.get("players", [])}
     NTOT = {str(g.get("id")): g.get("total") for g in P.get("games", [])}          # the narrowed study pick's game total
+    MUK = {}                                       # matchup charts (nba/matchups.py, payload 'mu' from 2026-11-21): (gid, pid, stat) -> [pct, level, best, chip, dis]
+    for p in P.get("players", []):
+        x = ((P.get("mu") or {}).get("p") or {}).get(p.get("k"))
+        for st, c in ((x or {}).get("s") or {}).items():
+            MUK[(str(p["g"]), str(p["id"]), st)] = c
     out = []
     for key, L in by.items():
         rs = [L[x] for x in sorted(L) if L[x]["yes_ask"] - L[x]["yes_bid"] <= .10]       # wide quotes left out, as on the page
@@ -237,6 +242,12 @@ def nba_ladder_rows(date, mk, R, GM):
                     mn = NMIN.get(key[:2]); tt = NTOT.get(key[0])
                     if date >= "2026-11-12" and best[1]["kind"] != "pts" and tt is not None and tt >= 230 and mn is not None and 24 <= mn < 32:
                         out.append(dict(row, cat="NBA study pick (narrowed): Kalshi rung 15-40% over the cost, game total 230+, no points, 24-32 min (experimental)"))
+                    # + best matchup (owner 2026-11-21: the Matchups tab's Best bets list -> 'Sure' to grading it): the same pick when its stat is
+                    # his team's greenest matchup on the sheet (light green or better) and the D rating is above -1.0 -- does the matchup
+                    # filter help the K pick? The plain row grades beside it.
+                    c_ = MUK.get(key)
+                    if date >= "2026-11-21" and c_ and c_[2] and c_[1] >= 1 and (c_[3] is None or c_[3] > -1):
+                        out.append(dict(row, cat="NBA study pick + best matchup: Kalshi rung 15-40% over the cost, his team’s best matchup in that stat, D rating above −1.0 (experimental)"))
     return out
 
 
@@ -724,6 +735,11 @@ FG_BANDS = [(-10**9, 999, "under +1000"), (1000, 1600, "+1000 to +1600 (shorter-
             (5000, 6000, "+5000 to +6000 (longshot)"), (6001, 9999, "+6001 to +9999 (longshot)"), (10000, 10**9, "+10000 and up (outlier)")]
 
 
+FG_RETIRED = True   # FD + Bovada first-goal versions retired 2026-11-21 (research/fg_out_audit.txt)
+FB_RETIRED = True   # NBA first basket 'low' / 'open' retired 2026-11-21
+DOUT_RETIRED = True   # NHL PP1 vs a team missing a regular D retired 2026-11-21
+
+
 def fg_band(o):
     return next(lab for lo, hi, lab in FG_BANDS if lo <= o <= hi)
 
@@ -744,11 +760,14 @@ def tag_label(e):
     if e.get("src") == "dry":
         return "Goal drought 3+ games (experimental)"
     if e.get("src") == "due":
-        return "Goal luck: due (experimental)"
+        # split 2026-11-21 (research/fg_out_audit.txt, ledger 112): due + a goal drought 3+ -23% on 198 (both halves), due without
+        # one +35% on 74 (the Oct study had it the other way round); every row already stores `dry`, so the split covers the whole record
+        return ("Goal luck: due, on a goal drought 3+ (experimental)" if (e.get("dry") or 0) >= 3
+                else "Goal luck: due, no goal drought (experimental)")
     if e.get("src") == "mbook":
         return "Ladder: Novig rung 10%+ under the other books’ fair (experimental)"
     if e.get("src") == "dout":
-        return "Goal: PP1, not top 3, vs a team missing a regular D (experimental)"
+        return "Goal: PP1, not top 3, vs a team missing a regular D (retired 2026-11-21)"
     if e.get("src") == "sit":
         return ("Injury watch: teammates who gain from a ruled-out regular, TD + main-line overs at your books (experimental)" if e.get("grp") == "out"
                 else "Injury watch: backups of a questionable regular, TD + main-line overs at your books, priced if he sits (experimental)")
@@ -763,15 +782,15 @@ def tag_label(e):
         return ("Teammate link: key teammate out, assists over, under 15% of his assists went to him (experimental)" if e.get("grp") == "afree"
                 else "Teammate link: key teammate out who fed 25%+ of his baskets, points / threes over (expected to lose; experimental)")
     if e.get("src") == "fb":
-        return {"all": "First basket: every player, best price (baseline)", "low": "First basket: centers and the 4th / 5th scoring starter, best price (experimental)",
+        return {"all": "First basket: every player, best price (baseline)", "low": "First basket: centers and the 4th / 5th scoring starter, best price (retired 2026-11-21)",
                 "edge": "First basket: our flat model 10%+ over the best price (retired 2026-11-07)",
                 "medge": "First basket: model 10%+ over the best price (experimental)",
                 "mown": "First basket: model 10%+ over Hard Rock / Novig / Kalshi, at that book (experimental)",
-                "open": "First basket: projected jumper or opening-shot taker (30%+), best price (experimental)"}.get(e.get("grp"), "First basket")
+                "open": "First basket: projected jumper or opening-shot taker (30%+), best price (retired 2026-11-21)"}.get(e.get("grp"), "First basket")
     if e.get("src") == "fg":
         return {"all": "First goal: every FanDuel price (baseline)",
-                "fdtop_m": "First goal: FanDuel + Bovada longer than every other book, and our chance 15%+ over the fair (narrowed; experimental)"}.get(
-            e.get("grp"), "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (experimental)")
+                "fdtop_m": "First goal: FanDuel + Bovada longer than every other book, and our chance 15%+ over the fair (narrowed; retired 2026-11-21)"}.get(
+            e.get("grp"), "First goal: FanDuel + Bovada same odds, longer than every other book (+5000 and up: 3 books) (retired 2026-11-21)")
     if e.get("src") in ("f4", "fx"):
         return f"Goal edge 5%+ without Pinnacle: {'four-book fair (new)' if e['src'] == 'f4' else 'exchanges fair (old)'} (experimental)"
     if e.get("src") == "ddtd":
@@ -1057,8 +1076,10 @@ def tags():
         # NHL opponent missing a regular defenseman (owner 2026-10-30, research/nhl_goal_methods_absd.py): every anytime-goal
         # over at the owner's books for a PP1 player outside his team's top 3 whose opponent is missing one (hockey/project.py
         # -> markets/dout_nhl.json 'vs'; research/nhl_dout_narrow.py),
-        # first price, best of Hard Rock / Novig / Kalshi, sharp-priced props only (as in the study)
-        if sport == "nhl":
+        # first price, best of Hard Rock / Novig / Kalshi, sharp-priced props only (as in the study).
+        # RETIRED 2026-11-21 (owner: 'lets do the projected fixes from the audit'; research/fg_out_audit.txt, ledger 112): live Oct 30 -
+        # Nov 19 won 47 vs 50.2 at the fair, -7.7% on 197 -- the study's lead didn't hold. Record kept; no new rows.
+        if sport == "nhl" and not DOUT_RETIRED:
             try:
                 DO = json.load(open(os.path.join(site, "markets", "dout_nhl.json"))).get("games", {})
             except (OSError, ValueError):
@@ -1186,7 +1207,11 @@ def tags():
                     if "FD" in o_:
                         e = log.setdefault(f"fg|all|{gid}|{nm}", dict(sport=sport, src="fg", grp="all", gid=gid, name=nm, bet="first goal", first=now.isoformat(), start=st))
                         e.update(book="FD", o=o_["FD"], p=x.get("p"))
-                    if "FD" not in o_ or "Bovada" not in o_ or o_["FD"] != o_["Bovada"]:
+                    # FD + Bovada versions RETIRED 2026-11-21 (research/fg_out_audit.txt, ledger 109): 'longer than every other book'
+                    # matched 2,214 of 3,319 FanDuel prices (two in three) and returned -22.8% vs the baseline's -23.8% -- it picks
+                    # nothing out; the narrowed version -9.5% on 430. Our first-goal chance matched results (93 won vs 93.7) and the
+                    # field hold (~29%) is the problem. Records kept; only the baseline keeps logging.
+                    if FG_RETIRED or "FD" not in o_ or "Bovada" not in o_ or o_["FD"] != o_["Bovada"]:
                         continue
                     # owner 2026-11-06 'change it': FD = Bovada and longer than EVERY other book (the median version matched 87 of 113);
                     # 'for 5000 and above we are looking for three books at a higher price that agree': +5000 and up needs a third
@@ -1240,7 +1265,9 @@ def tags():
                     base = dict(sport=sport, src="fb", gid=gid, name=nm, bet="first basket", start=st, mdl=mdl)
                     e = log.setdefault(f"fb|all|{gid}|{nm}", dict(base, grp="all", first=now.isoformat()))
                     e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"), s1=x.get("s1"), mdl=mdl)
-                    if x.get("r") in (4, 5) or x.get("c"):
+                    # 'low' and 'open' RETIRED 2026-11-21 (research/fg_out_audit.txt, ledger 110): centers won 4 of 121 (13.7
+                    # expected), projected jumpers 6 of 145 (17.1); -29% / -38%. Records kept.
+                    if not FB_RETIRED and (x.get("r") in (4, 5) or x.get("c")):
                         e = log.setdefault(f"fb|low|{gid}|{nm}", dict(base, grp="low", first=now.isoformat()))
                         e.update(book=bk, o=o, p=x.get("p"), m=x.get("p"), hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"), s1=x.get("s1"), mdl=mdl)
                     # from 2026-11-07 the model replaces the flat one: 'edge' (flat) stops; its record stays on the Profit page
@@ -1253,7 +1280,7 @@ def tags():
                         if x["p"] * dec(o_[bo]) - 1 >= .10:
                             log.setdefault(f"fb|mown|{gid}|{nm}", dict(base, grp="mown", first=now.isoformat(), book=bo, o=o_[bo], p=x["p"], m=x["p"],
                                                                        r=x.get("r"), c=x.get("c"), j=x.get("j")))
-                    if mx_ and (x.get("j") or (x.get("s1") or 0) >= .3):
+                    if not FB_RETIRED and mx_ and (x.get("j") or (x.get("s1") or 0) >= .3):
                         e = log.setdefault(f"fb|open|{gid}|{nm}", dict(base, grp="open", first=now.isoformat()))
                         e.update(book=bk, o=o, p=x["p"], m=x["p"], hr=o_.get("Hard Rock"), r=x.get("r"), c=x.get("c"), j=x.get("j"), s1=x.get("s1"), mdl=mdl)
         # NHL 2+ goals (owner 2026-11-06: 'start tracking 2+ goals to see if we can find an edge'; sharp.fg_nhl -> g2_nhl.json, Kalshi
@@ -2319,8 +2346,8 @@ document.addEventListener('click', e => { const b = e.target.closest('button[dat
 // NHL first goal + 2+ goals at a glance (owner 2026-11-12: 'easier to identify between all the separate fgs bets and highlight the
 // ones that are up right now. Same with highlighting 2+ goal scorers'): one column per version, one row per odds range, green = up
 const FGV = [['base', 'Every FanDuel price', 'baseline', 'every FanDuel first-goal price, its last pregame price', /every FanDuel price/],
-  ['fdtop', 'FD + Bovada longer', 'than every other book', 'FanDuel and Bovada at the same odds, longer than every other book (at +5000 and up a third book must match)', /FanDuel [+] Bovada same odds/],
-  ['narrow', 'FD + Bovada + our edge', 'our chance 15%+ over the fair', 'the FD + Bovada sighting where our first-goal chance is 15%+ over the other books’ fair (narrowed)', /narrowed/]];
+  ['fdtop', 'FD + Bovada longer', 'retired Nov 21', 'FanDuel and Bovada at the same odds, longer than every other book (at +5000 and up a third book must match)', /FanDuel [+] Bovada same odds/],
+  ['narrow', 'FD + Bovada + our edge', 'retired Nov 21', 'the FD + Bovada sighting where our first-goal chance is 15%+ over the other books’ fair (narrowed)', /narrowed/]];
 const fgPct = v => { const r = Math.round(v * 100); return (r > 0 ? '+' : r < 0 ? '−' : '') + Math.abs(r) + '%'; };
 function fgCell(r){
   if (!r) return '<td class="fgc na">–</td>';
