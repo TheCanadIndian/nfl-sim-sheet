@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T19:33:04.968Z",
+"frozen_at": "2026-11-21T19:43:33.815Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 10.5,
 "name": "joel embiid",
 "lab": "Joel Embiid 11+ reb",
-"p": 0.2828,
+"p": 0.2708,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -32,65 +32,16 @@
 ]
 },
 {
-"gid": "401910026",
-"start": "2026-11-22T01:00Z",
-"kind": "reb",
+"gid": "401910024",
+"start": "2026-11-22T00:30Z",
+"kind": "fg3m",
 "side": "o",
-"line": 11.5,
-"name": "rudy gobert",
-"lab": "Rudy Gobert 12+ reb",
-"p": 0.3519,
-"price": 200,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401910027",
-"start": "2026-11-22T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 12.5,
-"name": "victor wembanyama",
-"lab": "Victor Wembanyama 13+ reb",
-"p": 0.4113,
-"price": 145,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.04093,
-"d": 26.46,
-"first": "2026-11-21T18:00:00+00:00",
-"pick": "longshot",
-"res": null,
-"locked": true,
-"final": true
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910023",
-"start": "2026-11-21T18:00Z",
-"kind": "reb",
-"side": "o",
-"line": 10.5,
-"name": "joel embiid",
-"lab": "Joel Embiid 11+ reb",
-"p": 0.2828,
-"price": 260,
-"book": "Hard Rock",
+"line": 2.5,
+"name": "toumani camara",
+"lab": "Toumani Camara 3+ threes",
+"p": 0.4312,
+"price": 130,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
@@ -105,7 +56,7 @@
 "line": 3.5,
 "name": "cam spencer",
 "lab": "Cam Spencer 4+ reb",
-"p": 0.406,
+"p": 0.4065,
 "price": 156,
 "book": "Novig",
 "f": [
@@ -113,28 +64,10 @@
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401910027",
-"start": "2026-11-22T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "deaaron fox",
-"lab": "De'Aaron Fox 2+ threes",
-"p": 0.3708,
-"price": 160,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.04257,
-"d": 23.962,
+"p": 0.04746,
+"d": 21.197,
 "first": "2026-11-21T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -455,6 +388,54 @@
 "p": 0.03742,
 "d": 32.64,
 "first": "2026-11-22T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert over 11.5 rebounds",
+"p": 0.3496,
+"fair": 0.3477,
+"price": 200,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0488,
+"v": [
+"consensus line up",
+"one rung above the main line (10.5)"
+]
+},
+{
+"gid": "401910028",
+"start": "2026-11-22T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zach lavine",
+"lab": "Zach LaVine over 3.5 assists",
+"p": 0.2843,
+"fair": 0.2843,
+"price": 260,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0234,
+"v": [
+"consensus odds drop",
+"one rung above the main line (2.5)"
+]
+}
+],
+"p": 0.09885,
+"d": 10.8,
+"first": "2026-11-22T01:00:00+00:00",
 "res": null
 },
 {
