@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T12:43:16.110Z",
+"frozen_at": "2026-11-21T12:55:53.000Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,52 @@
 ],
 "final_at": "2026-11-21T17:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401910023",
+"start": "2026-11-21T18:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "tyrese maxey",
+"lab": "Tyrese Maxey 4+ threes",
+"p": 0.2857,
+"price": 208,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 14+ reb",
+"p": 0.3815,
+"price": 208,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.10902,
+"d": 9.486,
+"first": "2026-11-21T18:00:00+00:00",
+"res": null
+},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -58,7 +104,7 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401910023",
@@ -69,8 +115,8 @@
 "name": "tyrese maxey",
 "lab": "Tyrese Maxey 4+ threes",
 "p": 0.2857,
-"price": 203,
-"book": "Novig",
+"price": 208,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -79,27 +125,44 @@
 ]
 },
 {
-"gid": "401910027",
+"gid": "401910025",
 "start": "2026-11-22T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 13.5,
-"name": "victor wembanyama",
-"lab": "Victor Wembanyama 14+ reb",
-"p": 0.3815,
-"price": 208,
+"line": 5.5,
+"name": "brook lopez",
+"lab": "Brook Lopez 6+ reb",
+"p": 0.4146,
+"price": 129,
 "book": "Kalshi",
 "f": [
 "usage",
-"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 7.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball 8+ ast",
+"p": 0.416,
+"price": 252,
+"book": "Kalshi",
+"f": [
+"usage",
 "rotation",
 "price"
 ]
 }
 ],
-"p": 0.10902,
-"d": 9.332,
+"p": 0.04928,
+"d": 24.827,
 "first": "2026-11-21T18:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -150,7 +213,7 @@
 "name": "lamelo ball",
 "lab": "LaMelo Ball 8+ ast",
 "p": 0.416,
-"price": 280,
+"price": 252,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -160,70 +223,7 @@
 }
 ],
 "p": 0.05226,
-"d": 25.236,
-"first": "2026-11-21T18:00:00+00:00",
-"pick": "longshot",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910023",
-"start": "2026-11-21T18:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "tyrese maxey",
-"lab": "Tyrese Maxey 4+ threes",
-"p": 0.2857,
-"price": 203,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910025",
-"start": "2026-11-22T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "brook lopez",
-"lab": "Brook Lopez 6+ reb",
-"p": 0.4146,
-"price": 129,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910026",
-"start": "2026-11-22T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 7.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 8+ ast",
-"p": 0.416,
-"price": 280,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"price"
-]
-}
-],
-"p": 0.04928,
-"d": 26.367,
+"d": 23.376,
 "first": "2026-11-21T18:00:00+00:00",
 "pick": "longshot",
 "res": null
