@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-21",
 "lock": "2026-11-21T18:00:00+00:00",
-"frozen_at": "2026-11-21T18:33:19.311Z",
+"frozen_at": "2026-11-21T18:42:35.435Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 10.5,
 "name": "joel embiid",
 "lab": "Joel Embiid 11+ reb",
-"p": 0.2708,
+"p": 0.2828,
 "price": 260,
 "book": "Hard Rock",
 "f": [
@@ -32,16 +32,65 @@
 ]
 },
 {
-"gid": "401910024",
-"start": "2026-11-22T00:30Z",
-"kind": "fg3m",
+"gid": "401910026",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "toumani camara",
-"lab": "Toumani Camara 3+ threes",
-"p": 0.4312,
-"price": 130,
-"book": "Novig",
+"line": 11.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert 12+ reb",
+"p": 0.3519,
+"price": 200,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 12.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 13+ reb",
+"p": 0.4113,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.04093,
+"d": 26.46,
+"first": "2026-11-21T18:00:00+00:00",
+"pick": "longshot",
+"res": null,
+"locked": true,
+"final": true
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910023",
+"start": "2026-11-21T18:00Z",
+"kind": "reb",
+"side": "o",
+"line": 10.5,
+"name": "joel embiid",
+"lab": "Joel Embiid 11+ reb",
+"p": 0.2828,
+"price": 260,
+"book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
@@ -56,7 +105,7 @@
 "line": 3.5,
 "name": "cam spencer",
 "lab": "Cam Spencer 4+ reb",
-"p": 0.4065,
+"p": 0.406,
 "price": 156,
 "book": "Novig",
 "f": [
@@ -64,10 +113,28 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "deaaron fox",
+"lab": "De'Aaron Fox 2+ threes",
+"p": 0.3708,
+"price": 160,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.04746,
-"d": 21.197,
+"p": 0.04257,
+"d": 23.962,
 "first": "2026-11-21T18:00:00+00:00",
 "res": null,
 "locked": true
@@ -99,12 +166,12 @@
 "start": "2026-11-22T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 12.5,
+"line": 13.5,
 "name": "victor wembanyama",
-"lab": "Victor Wembanyama 13+ reb",
-"p": 0.408,
-"price": 145,
-"book": "Hard Rock",
+"lab": "Victor Wembanyama 14+ reb",
+"p": 0.3117,
+"price": 229,
+"book": "Kalshi",
 "f": [
 "usage",
 "matchup",
@@ -112,15 +179,15 @@
 ]
 }
 ],
-"p": 0.1434,
-"d": 7.35,
+"p": 0.10954,
+"d": 9.87,
 "first": "2026-11-22T01:00:00+00:00",
 "pick": "core",
 "res": null
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401910024",
@@ -144,23 +211,40 @@
 "start": "2026-11-22T01:00Z",
 "kind": "reb",
 "side": "o",
-"line": 11.5,
-"name": "rudy gobert",
-"lab": "Rudy Gobert 12+ reb",
-"p": 0.3515,
-"price": 200,
-"book": "Hard Rock",
+"line": 3.5,
+"name": "cam spencer",
+"lab": "Cam Spencer 4+ reb",
+"p": 0.4061,
+"price": 156,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
-"game",
-"price"
+"game"
+]
+},
+{
+"gid": "401910027",
+"start": "2026-11-22T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 14+ reb",
+"p": 0.3117,
+"price": 229,
+"book": "Kalshi",
+"f": [
+"usage",
+"matchup",
+"rotation"
 ]
 }
 ],
-"p": 0.15153,
-"d": 6.9,
+"p": 0.05457,
+"d": 19.372,
 "first": "2026-11-22T00:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -191,15 +275,15 @@
 "edge": 0.0901
 },
 {
-"gid": "401910026",
+"gid": "401910025",
 "start": "2026-11-22T01:00Z",
 "kind": "ast",
 "side": "o",
-"line": 5.5,
-"name": "cam spencer",
-"lab": "Cam Spencer over 5.5 assists",
-"p": 0.4576,
-"price": 115,
+"line": 7.5,
+"name": "darius garland",
+"lab": "Darius Garland over 7.5 assists",
+"p": 0.4561,
+"price": 125,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -210,15 +294,14 @@
 "usage",
 "rotation",
 "game",
-"our model above fair",
-"lc"
+"consensus up"
 ],
 "sport": "nba",
-"edge": 0.0278
+"edge": 0.0234
 }
 ],
-"p": 0.20006,
-"d": 5.375,
+"p": 0.19941,
+"d": 5.625,
 "first": "2026-11-22T00:30:00+00:00",
 "res": null
 },
