@@ -405,6 +405,11 @@ def main():
         DR.write(payload, F.DB)
     except Exception as e:                                         # noqa: BLE001 -- display / tracking only
         print("defense rating skipped:", type(e).__name__, e)
+    try:                                                           # matchup charts (matchups.py, owner 2026-11-21): Matchups tab, ladders, screener
+        import matchups as MU
+        payload["mu"] = MU.board(payload)
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("matchup charts skipped:", type(e).__name__, e)
     try:                                                           # archetype map for the Profit page (owner 2026-11-06)
         write_arch_map(fr)
     except Exception as e:                                         # noqa: BLE001 -- display only

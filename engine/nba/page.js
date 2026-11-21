@@ -7,7 +7,7 @@ const american = p => { p = Math.min(Math.max(p,1e-4),1-1e-4); const o = p>=.5 ?
 const [MEAN, P10, P25, MED, P75, P90] = [0,1,2,3,4,5];
 const LAB = {min:'Minutes', pts:'Points', reb:'Rebounds', ast:'Assists', fg3m:'Threes', pra:'Pts+Reb+Ast', stl:'Steals', blk:'Blocks', tov:'Turnovers'};
 const COLS = ['min','pts','reb','ast','fg3m','pra'];
-const state = {view: ['#board','#dvp','#parlays','#ladders'].includes(location.hash) ? location.hash.slice(1) : 'games', game: D.games[0]?.id, gm: {}, bstat: 'pts', dstat: 'pts', open: null, ostat: 'pts', oline: null, okey: null};
+const state = {view: ['#board','#dvp','#parlays','#ladders','#mu'].includes(location.hash) ? location.hash.slice(1) : 'games', game: D.games[0]?.id, gm: {}, bstat: 'pts', dstat: 'pts', open: null, ostat: 'pts', oline: null, okey: null};
 document.getElementById('sub').textContent = `${D.games.length} games · ${D.date} · built ${D.generated}`;
 const shadeP = p => p >= .65 ? 'g3' : p >= .56 ? 'g2' : p >= .51 ? 'g1' : p <= .35 ? 'r3' : p <= .44 ? 'r2' : p <= .49 ? 'r1' : '';
 const shadeR = x => x >= 1.12 ? 'g3' : x >= 1.07 ? 'g2' : x >= 1.03 ? 'g1' : x <= 1/1.12 ? 'r3' : x <= 1/1.07 ? 'r2' : x <= 1/1.03 ? 'r1' : '';
@@ -460,7 +460,7 @@ function lruChip(c, u0){
   const mfTxt = mf ? ` · fair from ${Object.keys(mf.parts).length} source${Object.keys(mf.parts).length === 1 ? '' : 's'} ${Math.round(mf.f * 100)}% (${Object.entries(mf.parts).map(([k, v]) => `${k} ${Math.round(v * 100)}%`).join(', ')}, without ${b.b})` : '';
   const num = lo.length > 1 ? `<select class="lsel" data-lrk="${esc(key)}" aria-label="Change rung">${lo.map(x => `<option value="${x.l}"${x.l === u.l ? ' selected' : ''}>${n(x.l)}+</option>`).join('')}</select>` : `<b>${n(u.l)}+</b>`;
   const kpTxt = kp ? ` · 15%+ K pick: our own chance ${Math.round(kp.praw * 100)}% vs Kalshi’s ask + fee ${Math.round(kp.cost * 100)}% = +${Math.round(kp.ke * 100)}%, the one rung of his ${KLAB[u.k]} ladder the Profit page grades (‘NBA study pick’); the one ladder rule ahead since Nov 11, not proven` : '';
-  return `<span class="lru${kp ? ' thpk' : ''}" title="${n(u.l)}+ ${KLAB[u.k]}: chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}${u.praw != null ? ` (23% our ${Math.round(u.praw * 100)}% + 77% Kalshi’s mid: our own number ran high on these rungs)` : ''} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}${kpTxt}">${num}${kp ? ' <b class="thtag">15%+ K pick</b>' : ''}${aStar(c.p, u)} ${KLAB[u.k]}${ladAvg(c.p, u.k)} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${kp ? ` <b class="ledge">+${Math.round(kp.ke * 100)}% K</b>` : flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">chance ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u, kp)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
+  return `<span class="lru${kp ? ' thpk' : ''}" title="${n(u.l)}+ ${KLAB[u.k]}: chance ${u.p != null ? Math.round(u.p * 100) + '%' : '–'}${u.praw != null ? ` (23% our ${Math.round(u.praw * 100)}% + 77% Kalshi’s mid: our own number ran high on these rungs)` : ''} · Kalshi ${Math.round(u.mid * 100)}% (${Math.round(kc * 100)}% with the fee)${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.opts.length === 1 ? ' · no Hard Rock / Novig price at this number' : ''}${mfTxt}${nve != null && nve >= .10 && nve <= .40 ? ` · Novig ${Math.round(nve * 100)}% under the other books’ fair: tracked, not proven` : ''}${kpTxt}">${num}${kp ? ' <b class="thtag">15%+ K pick</b>' : ''}${aStar(c.p, u)}${muDot(c.p, u.k)} ${KLAB[u.k]}${ladAvg(c.p, u.k)} ${u.opts.map(o => o === b ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${kp ? ` <b class="ledge">+${Math.round(kp.ke * 100)}% K</b>` : flagged ? ` <b class="ledge">+${Math.round(u.edge * 100)}%</b>` : u.p != null ? ` <i class="lbk">chance ${Math.round(u.p * 100)}%</i>` : ''}${ladRungFit(u, kp)}${mf ? ` <i class="lbk">fair ${Math.round(mf.f * 100)}%</i>` : ''}${nve != null && nve >= .10 && nve <= .40 ? ` <b class="lnv">NV +${Math.round(nve * 100)}% vs books</b>` : ''}${window.MKT && MKT.statMove ? MKT.statMove(c.g.id, c.p.n, u.k) : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(c.g.id), name: c.p.n, kind: u.k, line: u.l, book: b.b, o: b.b === 'Kalshi' ? Math.round(kc >= .5 ? -100 * kc / (1 - kc) : 100 * (1 - kc) / kc) : Number(String(b.price).replace('+', '')), glab: `${c.g.away} @ ${c.g.home}`, start: c.g.start_utc || null, lab: `${c.p.n} ${n(u.l)}+ ${KLAB[u.k]}`}) : ''}${rungSlip(c.g, c.p, u)}</span>`;
 }
 document.addEventListener('change', e => { const t = e.target.closest('[data-lrk]'); if (!t) return;
   const k = t.dataset.lrk, x = LADC[k]; LADSEL[k] = +t.value; const w = document.createElement('div'); w.innerHTML = lruChip(x.c, x.u0); t.closest('.lru').replaceWith(w.firstElementChild); });
@@ -573,8 +573,8 @@ function ladderCard(){
   }
   cards.sort(ladCmp);
   const soft = c => c.sts.map(st => { const m = mx(c.p, st);
-    return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}</span>`; }).join('');
-  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}${c.p.s && c.p.s.vegas && c.p.s.vegas.min ? ` · ${f0(c.p.s.vegas.min[MED])} min` : ''}</span>${soft(c)}${ladFit(c)}${[...new Set(ladPool(c).map(u => u.k))].map(st => drChip(c.p, st, 'card')).join('')}</div><div class="ladtg">${chips(c.p, c.g)}</div>
+    return `<span class="ladc soft" style="${MG(m.v)}" title="${mxWhy(c.p, st, m)} (context only: the model already uses it)">${esc(c.p.o)} ${sgn(m.v)} ${KLAB[st]} vs ${esc(m.da ? (ARCH_PL[c.p.ar] || PG_PL[c.p.pg]) : PG_PL[c.p.pg])}${MU[c.p.k] && MU[c.p.k].s[st] && MU[c.p.k].s[st][2] ? ` <b title="His team’s greenest ${KLAB[st]} matchup tonight (Matchups tab)">· best on ${esc(c.p.t)}</b>` : ''}</span>`; }).join('');
+  const row = c => `<div class="lad"><div class="ladh"><b>${esc(c.p.n)}</b> <span class="small muted">${esc(c.p.t)} vs ${esc(c.p.o)} · ${esc(c.p.pos)}${c.p.s && c.p.s.vegas && c.p.s.vegas.min ? ` · ${f0(c.p.s.vegas.min[MED])} min` : ''}</span>${soft(c)}${muTags(c.p, [...new Set(ladPool(c).map(u => u.k))], c.sts)}${ladFit(c)}${[...new Set(ladPool(c).map(u => u.k))].map(st => drChip(c.p, st, 'card')).join('')}</div><div class="ladtg">${chips(c.p, c.g)}</div>
     <div class="ladr">${ladShown(c).map(u => lruChip(c, u)).join('')}</div>${starElse(c)}</div>`;
   if (LADM && !cards.some(c => ladPool(c).some(u => ladMv(c, u) === LADM))) LADM = '';
   const nStar = cards.filter(c => starRungs(c).length).length, nK = cards.filter(c => c.kb != null).length;
@@ -626,7 +626,7 @@ function threesBoard(){
   const chip = (r, u) => { const pk = r.pick === u, e = Math.max(u.ek, u.eb);
     return `<span class="lru${pk ? ' thpk' : ''}" title="${n(u.l)}+ threes: threes-rule chance ${Math.round(u.q * 100)}% (ours ${Math.round(u.p * 100)}%, Kalshi mid ${Math.round(u.mid * 100)}%) · Kalshi ${Math.round(u.cost * 100)}% with the fee → edge ${u.ek >= 0 ? '+' : '−'}${Math.abs(Math.round(u.ek * 100))}%${u.opts.filter(o => o.b !== 'Kalshi').map(o => ` · ${o.b} ${o.price}`).join('')}${u.ob.map(o => ` · ${o.b} ${o.o > 0 ? '+' : ''}${o.o}`).join('')}${u.mf ? ` · every other book’s fair ${Math.round(u.mf.f * 100)}% from ${Object.keys(u.mf.parts).join(', ')}${u.ef != null ? ` → ${u.best.b} ${u.ef >= 0 ? '+' : '−'}${Math.abs(Math.round(u.ef * 100))}% vs it` : ''}` : ' · no other book prices this number'}${pk ? ' · the pick the Profit page grades' : ''}${u.agree ? ' · ✓ the other books agree' : ''}"><b>${n(u.l)}+</b>${pk ? ' <b class="thtag">pick</b>' : ''}${u.agree ? ' <b class="thok">✓ books</b>' : ''} ${u.opts.map(o => o === u.best ? (o.u ? `<a class="lbk best" href="${esc(o.u)}" target="_blank" rel="noopener">${tx(o)} ↗</a>` : `<i class="lbk best">${tx(o)}</i>`) : `<i class="lbk">${tx(o)}</i>`).join('')}${u.ob.length ? ` <i class="lbk thob">${esc(BKS[u.ob[0].b] || u.ob[0].b)} ${u.ob[0].o > 0 ? '+' : ''}${u.ob[0].o}${u.ob.length > 1 ? ` <small>+${u.ob.length - 1}</small>` : ''}</i>` : ''} <i class="lbk">${Math.round(u.q * 100)}%</i>${u.mf ? ` <i class="lbk thmf">books ${Math.round(u.mf.f * 100)}%</i>` : ''}${e >= .05 && e <= .6 ? ` <b class="ledge">+${Math.round(e * 100)}%${u.ek < .05 ? ` ${u.best.b === 'Hard Rock' ? 'HR' : 'NV'}` : ''}</b>` : ''}${window.WATCH ? ' ' + WATCH.both({sport: 'nba', gid: String(r.g.id), name: r.p.n, kind: 'fg3m', line: u.l, book: u.best.b, o: u.best.b === 'Kalshi' ? Math.round(u.cost >= .5 ? -100 * u.cost / (1 - u.cost) : 100 * (1 - u.cost) / u.cost) : Number(String(u.best.price).replace('+', '')), glab: `${r.g.away} @ ${r.g.home}`, start: r.g.start_utc || null, lab: `${r.p.n} ${n(u.l)}+ threes`}) : ''}${rungSlip(r.g, r.p, u, u.q)}</span>`; };
   const med = p => p.s.vegas && p.s.vegas.fg3m ? p.s.vegas.fg3m[MED] : null;
-  const row = r => `<div class="lad"><div class="ladh"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.t)} vs ${esc(r.p.o)} · ${esc(r.g.start || '')}${med(r.p) != null ? ` · our median ${f0(med(r.p))} 3PM` : ''}</span>${drChip(r.p, 'fg3m', 'card')}${r.p.ar ? ` <span class="ladc">${esc(r.p.ar)}</span>` : ''}</div>
+  const row = r => `<div class="lad"><div class="ladh"><b>${esc(r.p.n)}</b> <span class="small muted">${esc(r.p.t)} vs ${esc(r.p.o)} · ${esc(r.g.start || '')}${med(r.p) != null ? ` · our median ${f0(med(r.p))} 3PM` : ''}</span>${drChip(r.p, 'fg3m', 'card')}${muTags(r.p, ['fg3m'])}${r.p.ar ? ` <span class="ladc">${esc(r.p.ar)}</span>` : ''}</div>
     <div class="ladr">${(THA ? r.R : r.R.filter(u => u === r.pick || u === r.bk || u.agree || Math.max(u.ek, u.eb) >= .05 || Math.abs(u.mid - .5) < .2).slice(0, 4)).map(u => chip(r, u)).join('')}</div></div>`;
   const P = rows.filter(r => r.pick), B = rows.filter(r => !r.pick && r.bk), rest = rows.filter(r => !r.pick && !r.bk);
   return `<section class="panel"><div class="phead"><h2>Threes board <span class="exp3">experimental</span></h2><span class="small muted">${P.length} pick${P.length === 1 ? '' : 's'} · ${B.length} more at Hard Rock / Novig · ${rows.filter(r => r.agree).length} where every book agrees · ${rows.length} players</span></div>
@@ -818,6 +818,144 @@ function parlaysView(){
   return `<div class="pstack">${(window.MKT && MKT.dailyCard ? MKT.dailyCard() : '') + nbaPathLongshots() + nbaLadderLongshots() + tierParlays()}</div>`;
 }
 // Ladders tab (owner 2026-11-11: 'move the ladder edge ... and threes out side of the parlays tab and give them their own tab')
+/* ---------------- Matchups tab (owner 2026-11-21) ---------------- */
+// From a PDF the owner made with our data for the Nov 20 slate: 'Create a tab under nba that shows this for all slates from now
+// on. Make it exportable as a pdf from the page and make them easier to see when using ladders tab or screener'. One calculation,
+// nba/matchups.py -> D.mu (also the screener's tags via site.py ctx_nba): each player-stat's sheet cell = what tonight's defense
+// allows per minute vs the league to his position, blended with his archetype for points / threes (the number that shades his stat
+// cell), in fixed bands; best = his team's greenest for that stat; chip = the D rating; dis = green cell with a negative chip (or the
+// reverse). Players with 20+ projected minutes and real volume in the stat. Display only: nothing tracked.
+const MU = (D.mu && D.mu.p) || {}, ST4 = ['pts', 'reb', 'ast', 'fg3m'];
+const MUL = {3: 'Deep green', 2: 'Green', 1: 'Light green', 0: 'Neutral', '-1': 'Light red', '-2': 'Red', '-3': 'Deep red'};
+const muCls = lv => lv >= 0 ? `mul${lv}` : `muln${-lv}`;
+const muPct = v => `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}%`;
+const muChip = c => c == null ? '' : `${c > 0 ? '+' : c < 0 ? '−' : ''}${Math.abs(c).toFixed(1)}`;
+let MUV = 'game'; try { MUV = localStorage.getItem('nba-muv') || 'game'; } catch (e) {}
+const muGames = () => [...D.games].sort((a, b) => new Date(a.start_utc) - new Date(b.start_utc));
+function muRows(){
+  const R = [], last = n => { const w = String(n).replace(/\s+(jr\.?|sr\.?|ii|iii|iv)$/i, '').split(' '); return w[w.length - 1]; };
+  for (const p of D.players){
+    const x = MU[p.k], g = x && D.games.find(z => z.id === p.g); if (!g) continue;
+    for (const st of ST4){ const c = x.s[st]; if (c) R.push({p, g, st, m: x.m, v: c[0], lv: c[1], best: !!c[2], chip: c[3], dis: c[4]}); }
+  }
+  const cnt = {}; for (const n of new Set(R.map(r => r.p.n))){ const l = last(n); cnt[l] = (cnt[l] || 0) + 1; }
+  for (const r of R){ const l = last(r.p.n); r.sn = (cnt[l] > 1 ? r.p.n[0] + '. ' : '') + l + (r.m < 24 ? '*' : ''); }
+  return R;
+}
+const muWhy = r => `${r.p.n} (${r.p.t}): ${SL[r.st]} ${muPct(r.v)} per minute vs the league against ${r.p.o} (${MUL[r.lv].toLowerCase()})${r.chip != null ? ` · D rating ${muChip(r.chip)}` : ''} · ${f0(r.m)} projected min`;
+function muByGame(R){
+  const cell = (g, t, st) => {
+    const B = R.filter(r => r.g.id === g.id && r.p.t === t && r.st === st && r.best).sort((a, b) => b.v - a.v);
+    if (!B.length) return `<div class="muc mul0"><i>${SL[st]}</i><span class="muted">–</span></div>`;
+    return `<div class="muc ${muCls(B[0].lv)}" title="${MUL[B[0].lv]}"><i>${SL[st]}</i>${B.map(r => `<span class="mun" title="${esc(muWhy(r))}">${esc(r.sn)}</span>`).join(' / ')}</div>`;
+  };
+  return `<div class="mugh"><span>Game</span><span>Team</span>${ST4.map(st => `<span>${SL[st]}</span>`).join('')}</div>` + muGames().map(g =>
+    `<div class="mugg"><div class="mugl">${esc(g.away)} @ ${esc(g.home)}<small>${esc(g.start || '')}</small></div><div class="mugt">${[g.away, g.home].map(t =>
+      `<div class="mur"><b>${esc(t)}</b>${ST4.map(st => cell(g, t, st)).join('')}</div>`).join('')}</div></div>`).join('');
+}
+function muTable(B, chip){
+  if (!B.length) return '<p class="note">None on this slate.</p>';
+  return `<table class="mut"><thead><tr><th>Player</th><th>Team</th><th>Game</th>${chip ? '<th class="n">D chip</th>' : ''}<th>Cell</th></tr></thead><tbody>${B.map(r =>
+    `<tr title="${esc(muWhy(r))}"><td>${esc(r.sn)}</td><td>${esc(r.p.t)}</td><td>${esc(r.g.away)} @ ${esc(r.g.home)}</td>${chip ? `<td class="n">${muChip(r.chip)}</td>` : ''}<td class="c ${muCls(r.lv)}">${MUL[r.lv]} <span class="mup">${muPct(r.v)}</span></td></tr>`).join('')}</tbody></table>`;
+}
+const muByStat = (R, pick, chip) => `<div class="mus">${ST4.map(st => `<div><h3>${LAB[st]}</h3>${muTable(R.filter(r => r.st === st && pick(r)).sort((a, b) => b.lv - a.lv || b.v - a.v), chip)}</div>`).join('')}</div>`;
+function muDisGame(R){
+  const B = R.filter(r => r.dis), order = new Map(muGames().map((g, i) => [g.id, i]));
+  if (!B.length) return '<p class="note">None on this slate: no green cell has a slightly tough or tough D rating.</p>';
+  B.sort((a, b) => order.get(a.g.id) - order.get(b.g.id) || a.p.t.localeCompare(b.p.t) || a.sn.localeCompare(b.sn) || ST4.indexOf(a.st) - ST4.indexOf(b.st));
+  return `<div class="tw"><table class="mut"><thead><tr><th>Game</th><th>Team</th><th>Player</th><th>Stat</th><th class="n">D chip</th><th>Cell</th></tr></thead><tbody>${B.map((r, i) =>
+    `<tr title="${esc(muWhy(r))}"><td>${i && B[i - 1].g.id === r.g.id ? '' : `<b>${esc(r.g.away)} @ ${esc(r.g.home)}</b>`}</td><td>${esc(r.p.t)}</td><td>${esc(r.sn)}</td><td>${SL[r.st]}</td><td class="n">${muChip(r.chip)}</td><td class="c ${muCls(r.lv)}">${MUL[r.lv]} <span class="mup">${muPct(r.v)}</span></td></tr>`).join('')}</tbody></table></div>`;
+}
+function muView(){
+  if (!D.mu) return `<section class="panel"><div class="phead"><h2>Matchups</h2></div><p class="note">Matchup charts start with pages built from Nov 21, 2026. Open today’s page for them.</p></section>`;
+  const R = muRows(), nd = R.filter(r => r.dis).length;
+  const key = `<span class="mukey">${[3, 2, 1, 0, -1, -2, -3].map(lv => `<span class="${muCls(lv)}">${MUL[lv]}</span>`).join('')}</span>`;
+  const seg = `<div class="seg" role="group" aria-label="Group by">${[['game', 'By game'], ['stat', 'By stat']].map(([k, l]) => `<button type="button" data-muv="${k}" aria-pressed="${MUV === k}">${l}</button>`).join('')}</div>`;
+  return `<section class="panel"><div class="phead"><h2>Best matchup per stat, each team</h2><span class="small muted">${D.games.length} games · ${esc(D.date)}</span></div>
+    <div class="mubar">${seg}${key}<button type="button" class="mupdf" data-mupdf="1" title="Downloads all four charts as a PDF (the same layout as the shared one)">⤓ Download PDF</button></div>
+    <details class="how"><summary>How to read this</summary><p class="note"><b>Cell</b> = what tonight’s defense allows per minute against the league average, to his position (and his archetype for points and threes): the same number that shades his stat cell on the sheet. Bands: deep green +10% or more, green +5 to +10%, light green +2 to +5%, neutral within 2%, and the same steps in red. Each team’s cell lists the players with its greenest matchup for that stat (ties all listed); only players with 20+ projected minutes and real volume in the stat (8+ points, 3+ rebounds, 2+ assists, 1+ three projected), so big men with no threes don’t show up green on threes. * = under 24 projected minutes. The model already uses these matchups, so a green cell is context, not an edge; the same tags show on the Ladders tab and in the screener (‘Best matchups’). Display only.</p></details>
+    ${MUV === 'stat' ? muByStat(R, r => r.best) : muByGame(R)}</section>
+    <section class="panel"><div class="phead"><h2>Where the cell disagrees with the D rating</h2><span class="small muted">${nd} player-stat${nd === 1 ? '' : 's'}</span></div>
+    <p class="note" style="margin:0 0 8px">Green or deeper on the sheet while the D rating chip is −1.0 or lower, its slightly tough / tough grades (and the reverse: red with a chip of +1.0 or more; chips between are the rating’s neutral band). The rating adds the defense’s rest, travel and missing defenders to the same matchup and was tested against the market on unseen games: tough ratings ran 3-5 pts under the price, and no grade beat the price after the vig. When they disagree, the chip is the tested one: a reason to check before betting the over.</p>
+    ${MUV === 'stat' ? muByStat(R, r => r.dis, true) : muDisGame(R)}</section>`;
+}
+// PDF export: jsPDF + autoTable, loaded only when the button is tapped (pinned versions); if they can't load, the print dialog opens
+const MU_RGB = {3: [46, 158, 91], 2: [143, 213, 166], 1: [214, 240, 221], 0: [229, 231, 235], '-1': [250, 221, 221], '-2': [240, 163, 163], '-3': [214, 80, 80]};
+const muAsc = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’‘]/g, "'").replace(/[−–]/g, '-').replace(/[^\x20-\x7E]/g, '');
+function muLoad(){
+  if (window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API.autoTable) return Promise.resolve();
+  const add = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  return add('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js').then(() => add('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'));
+}
+async function muPdf(btn){
+  const t0 = btn.textContent; btn.disabled = true; btn.textContent = 'Building PDF…';
+  try {
+    await muLoad();
+    const doc = new window.jspdf.jsPDF({unit: 'pt', format: 'letter'}), W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
+    const R = muRows(), G = muGames(), gl = g => `${g.away} @ ${g.home}`, fill = lv => ({fillColor: MU_RGB[lv]});
+    const sty = {theme: 'grid', styles: {fontSize: 8, cellPadding: 3, textColor: [20, 20, 20], lineColor: [200, 204, 210], lineWidth: .5, valign: 'middle'},
+      headStyles: {fillColor: [31, 41, 55], textColor: 255, fontStyle: 'bold'}, margin: {left: 40, right: 40, top: 40}};
+    const title = (t, sub, first) => {
+      if (!first) doc.addPage();
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(16); doc.setTextColor(0); doc.text(muAsc(t), W / 2, 46, {align: 'center'});
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(90);
+      const L = doc.splitTextToSize(muAsc(sub), W - 80); doc.text(L, 40, 64); doc.setTextColor(0); return 64 + L.length * 10 + 6;
+    };
+    const base = `NBA ${D.date} (${G.length} games), built ${D.generated}. Cell = what tonight's defense allows per minute vs the league to his position (and archetype for points / threes): the shading on the sim sheet. Deep green +10%+, green +5-10%, light green +2-5%, neutral within 2% (reds the same). Only players with 20+ projected min and real volume in the stat; * = under 24 min.`;
+    const sub = (t, y) => { if (y > H - 90){ doc.addPage(); y = 50; } doc.setFont('helvetica', 'bolditalic'); doc.setFontSize(11); doc.text(t, 40, y); return y + 6; };
+    // Chart 1: best matchup per stat per team, by game
+    let y = title('Chart 1 - Best Matchup per Stat per Team (by game)', base, true);
+    const b1 = [];
+    for (const g of G) [g.away, g.home].forEach((t, i) => {
+      const row = i ? [] : [{content: muAsc(gl(g)), rowSpan: 2, styles: {fontStyle: 'bold'}}];
+      row.push({content: muAsc(t), styles: {fontStyle: 'bold'}});
+      for (const st of ST4){
+        const B = R.filter(r => r.g.id === g.id && r.p.t === t && r.st === st && r.best).sort((a, c) => c.v - a.v);
+        row.push(B.length ? {content: muAsc(B.map(r => r.sn).join(' / ')), styles: fill(B[0].lv)} : {content: '-', styles: fill(0)});
+      }
+      b1.push(row);
+    });
+    doc.autoTable({...sty, startY: y, head: [['Game', 'Team', 'Pts', 'Reb', 'Ast', '3PM']], body: b1, columnStyles: {0: {cellWidth: 72}, 1: {cellWidth: 38}}});
+    // Chart 2: cell vs D-rating chip disagreements, by game
+    const D2 = R.filter(r => r.dis), ord = new Map(G.map((g, i) => [g.id, i]));
+    D2.sort((a, c) => ord.get(a.g.id) - ord.get(c.g.id) || a.p.t.localeCompare(c.p.t) || a.sn.localeCompare(c.sn) || ST4.indexOf(a.st) - ST4.indexOf(c.st));
+    y = title('Chart 2 - Where the Cell Color Disagrees with the D-Rating Chip', `Cells that are green or deeper while the player's D-rating chip is -1.0 or lower (its slightly tough / tough grades), and red or deeper with a chip of +1.0 or more. The D rating adds the defense's rest, travel and missing defenders and was tested against the market (tough ran 3-5 pts under the price). 20+ min; * = under 24 min.`);
+    if (D2.length) doc.autoTable({...sty, startY: y, head: [['Game', 'Team', 'Player', 'Stat', 'Chip', 'Cell']],
+      body: D2.map((r, i) => [{content: i && D2[i - 1].g.id === r.g.id ? '' : muAsc(gl(r.g)), styles: {fontStyle: 'bold'}}, r.p.t, muAsc(r.sn), SL[r.st], muAsc(muChip(r.chip)), {content: `${MUL[r.lv]} ${muAsc(muPct(r.v))}`, styles: fill(r.lv)}])});
+    else { doc.setFontSize(10); doc.text('No disagreements on this slate.', 40, y + 12); }
+    // Charts 3 and 4: the same grouped by stat, greenest first
+    const byStat = (pick, chip) => {
+      for (const st of ST4){
+        const B = R.filter(r => r.st === st && pick(r)).sort((a, c) => c.lv - a.lv || c.v - a.v); if (!B.length) continue;
+        y = sub(SL[st], y + 14);
+        doc.autoTable({...sty, startY: y, head: [[`${SL[st]} - Player`, 'Team', 'Game', ...(chip ? ['Chip'] : []), 'Cell']],
+          body: B.map(r => [muAsc(r.sn), r.p.t, muAsc(gl(r.g)), ...(chip ? [muAsc(muChip(r.chip))] : []), {content: `${MUL[r.lv]} ${muAsc(muPct(r.v))}`, styles: fill(r.lv)}])});
+        y = doc.lastAutoTable.finalY;
+      }
+    };
+    y = title('Chart 3 - Best Matchups (Chart 1 players) Grouped by Stat', base + ' Sorted greenest first within each stat.'); y -= 8; byStat(r => r.best);
+    y = title('Chart 4 - Cell vs. Chip Disagreements Grouped by Stat', 'Same players as Chart 2, grouped by stat and sorted by how green the cell is. 20+ min; * = under 24 min.'); y -= 8;
+    if (D2.length) byStat(r => r.dis, true); else { doc.setFontSize(10); doc.text('No disagreements on this slate.', 40, y + 12); }
+    const n = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= n; i++){ doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(130); doc.text(`Sim Sheet - NBA matchup charts - ${D.date} - page ${i} of ${n} - display only, not a bet rule`, W / 2, H - 22, {align: 'center'}); }
+    doc.save(`NBA_matchup_charts_${D.date}.pdf`);
+  } catch (e) { console.error(e); window.print(); }
+  finally { btn.disabled = false; btn.textContent = t0; }
+}
+// tags for the Ladders tab: the stat's cell when it is his team's best (light green or better), and a warning when the cell
+// disagrees with the D rating
+function muTags(p, sts, noBest){
+  const x = MU[p.k]; if (!x) return '';
+  return sts.map(st => { const c = x.s[st]; if (!c) return ''; const [v, lv, best, chip, dis] = c; let h = '';
+    if (best && lv >= 1 && !(noBest || []).includes(st)) h += `<span class="mutag ${muCls(lv)}" title="${esc(`Best ${LAB[st].toLowerCase()} matchup on ${p.t} tonight: ${MUL[lv].toLowerCase()}, ${muPct(v)} per minute vs the league against ${p.o} (the sheet's cell; Matchups tab). The model already uses it: context, not an edge.`)}">Best ${SL[st]} matchup ${muPct(v)}</span>`;
+    if (dis) h += `<span class="mutag dis" title="${esc(`${SL[st]} cell ${MUL[lv].toLowerCase()} (${muPct(v)}) but the D rating is ${muChip(chip)}: the rating adds rest, travel and missing defenders and was tested against the market. Check before betting the over.`)}">${dis > 0 ? 'Green' : 'Red'} cell · D ${muChip(chip)}</span>`;
+    return h; }).join('');
+}
+// a dot on each ladder rung: the stat's cell color (ringed when it is his team's best)
+function muDot(p, st){
+  const c = MU[p.k] && MU[p.k].s[st]; if (!c || !c[1]) return '';
+  return `<i class="mud ${muCls(c[1])}${c[2] && c[1] >= 1 ? ' best' : ''}" title="${esc(`Matchup cell: ${MUL[c[1]].toLowerCase()} ${muPct(c[0])}${c[2] && c[1] >= 1 ? `, his team's best for ${LAB[st].toLowerCase()}` : ''}${c[4] ? ` · D rating ${muChip(c[3])} disagrees` : ''} (Matchups tab)`)}"></i>`;
+}
 function laddersView(){ return `<div class="pstack">${ladderCard() + threesBoard()}</div>`; }
 // + on every ladder / threes rung (owner 2026-11-11: 'make all bets in there able to be added to the parlay builder even if i
 // switch to a different leg'): the leg is the rung shown (a dropdown switch re-renders the chip with its own +); another rung of
@@ -834,7 +972,7 @@ function rungSlip(g, p, u, prob){
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   const main = document.getElementById('main');
-  try { main.innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : state.view === 'ladders' ? laddersView() : gameView(); }
+  try { main.innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : state.view === 'ladders' ? laddersView() : state.view === 'mu' ? muView() : gameView(); }
   catch (e) { console.error(e); main.innerHTML = `<div class="empty">This view hit an error (${esc(String(e && e.message || e))}). The other tabs still work; it is fixed on the next page build.</div>`; }
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }
@@ -850,6 +988,8 @@ document.addEventListener('click', e => {
   else if (t.dataset.bstat){ state.bstat = t.dataset.bstat; render(); }
   else if (t.dataset.dstat){ state.dstat = t.dataset.dstat; render(); }
   else if (t.dataset.dgrp){ state.dgrp = t.dataset.dgrp; render(); }
+  else if (t.dataset.muv){ MUV = t.dataset.muv; try { localStorage.setItem('nba-muv', MUV); } catch (e) {} render(); }
+  else if (t.dataset.mupdf){ muPdf(t); }
   else if (t.dataset.dsort != null){ state.dsort = state.dsort === t.dataset.dsort ? null : t.dataset.dsort; render(); }
 });
 document.addEventListener('input', e => {

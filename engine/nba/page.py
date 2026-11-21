@@ -119,6 +119,31 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
 .sl-meter .f-g1{background:var(--g1)} .sl-meter .f-g2{background:var(--g2)} .sl-meter .f-g3{background:var(--g3)}
 .sl-meter .f-r1{background:var(--r1)} .sl-meter .f-r2{background:var(--r2)} .sl-meter .f-r3{background:var(--r3)} .sl-meter .f-n{background:var(--whisker)}
 .noline{font-size:12.5px;color:#F2C14E}
+/* Matchups tab (owner 2026-11-21; nba/matchups.py): bands on the sheet's cell number, same greens / reds as the cells */
+.mul3{background:color-mix(in srgb,var(--good) 62%,transparent)}.mul2{background:color-mix(in srgb,var(--good) 36%,transparent)}.mul1{background:color-mix(in srgb,var(--good) 17%,transparent)}
+.mul0{background:color-mix(in srgb,var(--muted) 8%,transparent)}.muln1{background:color-mix(in srgb,var(--bad) 17%,transparent)}.muln2{background:color-mix(in srgb,var(--bad) 36%,transparent)}.muln3{background:color-mix(in srgb,var(--bad) 62%,transparent)}
+.mul3,.muln3{color:#fff}
+.mubar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin:0 0 10px}
+.mupdf{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:7px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer;margin-left:auto}
+.mupdf:disabled{opacity:.6;cursor:wait}
+.mukey{display:flex;flex-wrap:wrap;gap:4px;font-size:11.5px}.mukey span{border-radius:4px;padding:1px 7px;color:var(--ink)}
+.mugh,.mur{display:grid;grid-template-columns:52px repeat(4,minmax(0,1fr));gap:3px}
+.mugh{grid-template-columns:118px 52px repeat(4,minmax(0,1fr));font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;padding:0 0 4px}
+.mugg{display:grid;grid-template-columns:118px minmax(0,1fr);gap:3px;padding:5px 0;border-top:1px solid var(--faint)}
+.mugl{font-weight:700;font-size:13px;padding:6px 4px}.mugl small{display:block;color:var(--muted);font-weight:500;font-size:11.5px}
+.mugt{display:grid;gap:3px}.mur>b{font-size:12.5px;padding:6px 4px}
+.muc{border-radius:5px;padding:5px 7px;font-size:12.5px;line-height:1.35;min-height:28px;color:var(--ink)}
+.muc>i{display:none;font-style:normal;font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-right:5px}
+.muc .mun{white-space:nowrap}.muc .mup{color:var(--muted);font-size:11px;margin-left:3px}
+.mus{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mus h3,.mudh{font-size:13px;margin:4px 0 6px;letter-spacing:.02em}
+table.mut{width:100%;border-collapse:collapse;font-size:12.5px}table.mut th{text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding:4px 6px;border-bottom:1px solid var(--faint)}
+table.mut td{padding:4px 6px;border-bottom:1px solid var(--faint)}table.mut td.c{border-radius:4px}table.mut td.n{text-align:right;font-variant-numeric:tabular-nums}
+.mutag{display:inline-block;font-size:11px;font-weight:700;border-radius:4px;padding:1px 6px;margin-left:4px;color:var(--ink);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);vertical-align:1px}
+.mutag.dis{color:#F2C14E;border-color:currentColor;background:none}
+.mud{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 2px 0 4px;vertical-align:0;border:1px solid color-mix(in srgb,var(--ink) 25%,transparent)}
+.mud.best{box-shadow:0 0 0 2px color-mix(in srgb,var(--good) 70%,transparent)}
+@media (max-width:640px){.mugh{display:none}.mugg{grid-template-columns:1fr}.mugl{padding:2px 4px}.mur{grid-template-columns:40px minmax(0,1fr) minmax(0,1fr)}.mur>b{grid-row:span 2}.muc>i{display:inline}.mupdf{margin-left:0}.mus{grid-template-columns:1fr}}
 </style>
 <div class="wrap">
   <header>
@@ -127,6 +152,7 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
       <button role="tab" data-view="games">Games</button>
       <button role="tab" data-view="board">Player board</button>
       <button role="tab" data-view="dvp">Defense vs position</button>
+      <button role="tab" data-view="mu">Matchups</button>
       <button role="tab" data-view="ladders">Ladders</button>
       <button role="tab" data-view="parlays">Parlays</button>
     </div>

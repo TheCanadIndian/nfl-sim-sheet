@@ -496,6 +496,7 @@ SCREEN_CSS = """
 .sc-px b{font-size:14.5px}a.sc-px:hover{border-color:var(--accent)}.sc-px.nl{color:var(--muted)}
 .sc-tag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;border-radius:4px;padding:0 5px;margin-left:4px;border:1px solid currentColor;vertical-align:1px}
 .sc-cx{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:3px}.sc-cx span{font-size:11px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px;white-space:nowrap}.sc-cx span.g{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}.sc-cx span.b{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}.sc-tag.pin{color:#C084FC}.sc-tag.cons{color:#2DD4BF}.sc-tag.v{color:var(--good)}.sc-tag.lc{color:var(--away)}.sc-tag.off{color:#F2C14E}.sc-tag.alt{color:var(--muted)}.sc-tag.warn{color:var(--bad)}
+.sc-tag.mub{text-transform:none;letter-spacing:0;font-weight:700;color:var(--ink);border-color:color-mix(in srgb,var(--good) 55%,transparent)}.sc-tag.mub.mul1{background:color-mix(in srgb,var(--good) 17%,transparent)}.sc-tag.mub.mul2{background:color-mix(in srgb,var(--good) 36%,transparent)}.sc-tag.mub.mul3{background:color-mix(in srgb,var(--good) 62%,transparent)}.sc-tag.mudis{text-transform:none;letter-spacing:0;font-weight:700;color:#F2C14E}
 .sc-tag.scdr{text-transform:none;letter-spacing:0;font-weight:700}.sc-tag.scdr-tough{color:#fff;background:var(--bad);border-color:var(--bad)}.sc-tag.scdr-stough{color:var(--bad)}.sc-tag.scdr-neutral{color:var(--muted)}.sc-tag.scdr-ssoft{color:var(--good)}.sc-tag.scdr-soft{color:#0b2e17;background:var(--good);border-color:var(--good)}.sc-tag.knee{color:#FB923C}.sc-tag.open{color:#F472B6}.sc-tag.path{color:#60A5FA}.sc-path{display:flex;flex-wrap:wrap;gap:3px 6px;margin-top:3px}.sc-path span{font-size:11px;color:#93C5FD;border:1px solid color-mix(in srgb,#60A5FA 45%,transparent);border-radius:4px;padding:0 5px;white-space:nowrap}.sc-path span.s{color:var(--muted);border-color:var(--faint)}.sc-open{font-size:12px;color:var(--muted);margin-top:3px}.sc-open b{color:var(--text)}.sc-open .bad{color:var(--bad)}.sc-knee{font-size:12px;color:var(--muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:2px 6px;align-items:center}.sc-knee span{white-space:nowrap}.sc-knee span.me{color:#FB923C;font-weight:700}.sc-knee i{font-style:normal;opacity:.6}
 .sc-more{display:block;margin:12px auto;border:1px solid var(--faint);background:none;color:var(--ink);border-radius:999px;padding:7px 18px;font:600 13.5px var(--body);cursor:pointer}
 .sc-empty{color:var(--muted);padding:16px 4px}
@@ -520,6 +521,7 @@ def _pct(v):
 def ctx_nba(D):
     dvp = {(r["team"], r["pg"]): r for r in D.get("dvp") or []}
     tot = {str(g.get("id")): g.get("total") for g in D.get("games") or []}   # the books' game total (screener's narrowed K 15%+)
+    MU = (D.get("mu") or {}).get("p") or {}
     out = {}
     for q in D.get("players", []):
         c, st_ = [], {}
@@ -552,7 +554,8 @@ def ctx_nba(D):
                 st_[k] = [[f"{q.get('o')} {_pct(v)} {_NBA_SL[k]} vs {grp}", "g" if v > 1 else "b"]]
         mn = (vg.get("min") or [None] * 4)[3]                                   # projected minutes (median), for the narrowed K 15%+
         st = lu == "in" or (not q.get("lu") and bool(q.get("ls")))             # starter (in tonight's five, else started his last game): NBA longshots
-        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}), **({"st": 1} if st else {}),
+        mu = (MU.get(q.get("k")) or {}).get("s")                  # matchup charts (nba/matchups.py): {stat: [pct, level, best, chip, dis]}
+        out[(str(q["g"]), q["n"])] = dict(c=c, s=st_, ar=q.get("ar"), **({"m6": m6} if m6 else {}), **({"st": 1} if st else {}), **({"mu": mu} if mu else {}),
                                           **({"mn": round(mn, 1)} if mn is not None else {}), **({"tt": tot[str(q["g"])]} if tot.get(str(q["g"])) else {}))
     return out
 

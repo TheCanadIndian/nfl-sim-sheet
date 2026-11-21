@@ -18,6 +18,20 @@ function scDr(r){
   const [v, g] = x, L = SC_DRG[g] || SC_DRG.n, pv = `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(1)}`;
   return `<span class="sc-tag scdr ${L[1]}" title="Defense rating for this over: ${L[0]}, ${pv} pts vs the market price (at a 50/50 line), from tonight’s DvP, the defense’s rest / back-to-back / travel and its usual rim protector or 3-and-D starter being out. Tested on unseen data: tough ran 3-5 pts under the price; no grade beat the price after the vig. The NBA page’s chips list the reasons. Experimental.">D ${L[0]} ${pv}</span>`;
 }
+// Matchup charts (owner 2026-11-21: 'make them easier to see when using ladders tab or screener'; nba/matchups.py via site.py
+// ctx_nba): his stat's cell on the NBA sheet (what tonight's defense allows per minute to his position / archetype) when it is his
+// team's greenest for that stat, and a warning when the cell is green but the D rating is negative (or the reverse). Display only.
+const SC_MUL = {3: 'deep green', 2: 'green', 1: 'light green', 0: 'neutral', '-1': 'light red', '-2': 'red', '-3': 'deep red'};
+const SC_MSL = {pts: 'Pts', reb: 'Reb', ast: 'Ast', fg3m: '3PM'};
+const scE = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+function scMu(r){
+  const x = r.sport === 'nba' && r.mu; if (!x) return '';
+  const [v, lv, best, chip, dis] = x, pv = `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}%`, cv = chip == null ? '' : `${chip > 0 ? '+' : chip < 0 ? '−' : ''}${Math.abs(chip).toFixed(1)}`;
+  const out = [];
+  if (best && lv >= 1) out.push(`<span class="sc-tag mub mul${lv}" title="${scE(`Best ${SC_MSL[r.k] || r.k} matchup on his team tonight: ${SC_MUL[lv]}, ${pv} per minute vs the league to his position${r.k === 'pts' || r.k === 'fg3m' ? ' and archetype' : ''} (the shading on the NBA sheet; Matchups tab). The model already uses it; display only.`)}">Best ${SC_MSL[r.k] || r.k} matchup ${pv}</span>`);
+  if (dis) out.push(`<span class="sc-tag mudis" title="${scE(dis > 0 ? `The sheet’s cell is ${SC_MUL[lv]} (${pv}) but the D rating is ${cv}: the rating adds the defense’s rest, travel and missing defenders, and was tested against the market (tough ran 3-5 pts under the price). Read it as a reason to check before betting the over.` : `The sheet’s cell is ${SC_MUL[lv]} (${pv}) but the D rating is ${cv}.`)}">${dis > 0 ? 'Green cell' : 'Red cell'} · D ${cv}</span>`);
+  return out.join('');
+}
 function scStar(r, b){
   if (!SC_AODDS || r.sport !== 'nba' || !r.ar || !b || b.o == null || !SC_STN[r.k]) return '';
   const o = +b.o, band = (SC_OB.find(([lo, hi]) => o >= lo && o <= hi) || [])[2];
@@ -80,7 +94,7 @@ function scStar(r, b){
   // ---------------------------------------------------------------- state (remembered per device)
   // alt lines on (owner 2026-10-25: "I feel like we are missing prices"): every rung shows; their fair is carried from
   // the main line (shown with ≈ where only our distribution carries it). Devices that had saved 'off' are switched on once.
-  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', consk: 'all', due: false, offm: false, softm: false, soon: false, alts: true, promo: false, promok: 'all', pink: 'all', gap8: false, ls: 0, lsk: 'e5', sort: 'edge'};
+  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', consk: 'all', due: false, offm: false, softm: false, mub: false, soon: false, alts: true, promo: false, promok: 'all', pink: 'all', gap8: false, ls: 0, lsk: 'e5', sort: 'edge'};
   let S = {...DEF};
   try { Object.assign(S, JSON.parse(localStorage.getItem('simscreen-v2') || '{}')); } catch (e) {}
   if (!S.v3){ S.alts = true; S.v3 = 1; }
@@ -149,7 +163,7 @@ function scStar(r, b){
   const pick = o => Object.fromEntries(FKEYS.map(k => [k, o[k] ?? DEF[k]]));
   const same = f => FKEYS.every(k => (f[k] ?? DEF[k]) === S[k]);
   function suggest(){                                                         // a default name from what's switched on
-    const on = {ls: S.ls ? `NBA +${S.ls} ${LSK[S.lsk] ? LSK[S.lsk].t : ''}` : '', gap8: 'NFL gap 8+', promo: 'Study picks', tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', due: 'Due', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', soon: 'Next 6h'};
+    const on = {ls: S.ls ? `NBA +${S.ls} ${LSK[S.lsk] ? LSK[S.lsk].t : ''}` : '', gap8: 'NFL gap 8+', promo: 'Study picks', tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', due: 'Due', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', mub: 'Best matchups', soon: 'Next 6h'};
     const sub = {promo: S.promok !== 'all' && PROMO[S.promok] ? PROMO[S.promok].t : '', consmv: S.consk !== 'all' ? S.consk : '', pinmv: S.pink !== 'all' ? S.pink : ''};
     const bits = [S.sport === 'all' ? '' : SP[S.sport], ...Object.keys(on).filter(k => S[k]).map(k => sub[k] ? `${on[k]} (${sub[k]})` : on[k]), S.edge > -99 ? S.edge + '%+' : '', S.stat !== 'all' ? (STAT[S.stat] || S.stat) : '', S.price !== 'all' ? PRICE[S.price][2] : ''].filter(Boolean);
     return bits.join(' · ').slice(0, 40) || 'My filters'; }
@@ -265,7 +279,8 @@ function scStar(r, b){
                       open: opn[`${gid}|${nm}|${k}|${x.l}`] || null, gone: !!x.gone, path: pth[`${gid}|${nm}|${k}|${x.l}`] || null, lad: lad[`${gid}|${nm}|${k}|${x.l}`] || null});
             const R_ = out[out.length - 1], pm = [], cb = R_.cons && consK(R_) === 'both';
             R_.pinr = pinR.has(`${gid}|${nm}|${k}`);
-            R_.mn = cx ? cx.mn ?? null : null; R_.tt = cx ? cx.tt ?? null : null;   // projected minutes, game total (site.py ctx_nba)
+            R_.mn = cx ? cx.mn ?? null : null;
+            R_.mu = sport === 'nba' && cx && cx.mu ? cx.mu[k] || null : null;   // matchup charts (nba/matchups.py): [pct, level, best on team, D chip, disagree] R_.tt = cx ? cx.tt ?? null : null;   // projected minutes, game total (site.py ctx_nba)
             if (sport === 'nba' && cb && cx && (cx.m6 || []).includes(k)) pm.push('cs');
             if (sport === 'nba' && cb && pinR.has(`${gid}|${nm}|${k}`)) pm.push('cr');
             const kp = prices.find(y => y.b === 'Kalshi');
@@ -384,6 +399,7 @@ function scStar(r, b){
       if (S.consmv && S.consk !== 'all' && consK(r) !== S.consk) continue;
       if (S.due && !r.due) continue;
       if (S.softm && !r.soft) continue;
+      if (S.mub && !(r.mu && r.mu[2] && r.mu[1] >= 1)) continue;
       if (S.promo && !(r.promo && r.promo.length && (S.promok === 'all' || r.promo.includes(S.promok)))) continue;
       if (S.gap8 && !r.gap8) continue;
       if (q && !(norm(r.name).includes(q) || norm(r.team).includes(q) || norm(r.game).includes(q))) continue;
@@ -419,7 +435,7 @@ function scStar(r, b){
                     r.pin ? `<span class="sc-tag pin" title="Pinnacle moved this prop${r.pin.line ? ': line up ' + r.pin.line : ''}${r.pin.price ? (r.pin.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">PIN${r.pin.line ? ' ▲' : ''}${r.pin.price ? ' ▼odds' : ''}</span>` : '',
                     r.pinr ? '<span class="sc-tag pin" title="Pinnacle moved this stat and flagged a higher rung at your books priced 10-60% over its carried fair (tracked, experimental)">PIN rung</span>' : '',
                     r.cons ? `<span class="sc-tag cons ${consK(r)}" title="Our sharp consensus (Pinnacle, Novig, ProphetX) moved this prop${r.cons.line ? ': line up ' + r.cons.line : ''}${r.cons.price ? (r.cons.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">${{up: 'CONS ▲ line', odds: 'CONS ▼ odds', both: 'CONS ▲▼ both'}[consK(r)]}</span>` : '',
-                    r.due ? '<span class="sc-tag due" title="Due: 0.25+ expected goals a game this season and 0.10+ a game under it (tracked, experimental; +19% on 256 legs at your best price, Oct 12-29, not proven)">Due</span>' : '', r.knee ? `<span class="sc-tag knee" title="Ladder knee at ${esc(FULL[r.knee.bk] || r.knee.bk)}: stepping up to this rung costs little, the next one costs a lot (tracked, experimental)">KNEE</span>` : '', ...(r.lad ? r.lad.cats.map(c => `<span class="sc-tag lad" title="${esc(c)}: this rung is on the sport page’s ${esc(c.toLowerCase())} list (experimental)">${esc(LADT[c] || c)}</span>`) : []), r.path ? `<span class="sc-tag path" title="Path leg: ${r.path.f.length} of 5 path reasons (usage, matchup, rotation, ${r.sport === 'nfl' ? 'script' : 'game'}, price) on this rung (experimental)">PATH ${r.path.f.length}/5</span>` : '', r.k === 'tdbl' ? '<span class="sc-tag warn" title="Triple-double Yes has lost about half its stake: Kalshi Jan 2026 - now, every Yes -49% on 618 (priced 8.2%, hit 6.6%); no edge rule held up (research/nba_ddtd_market.py)">TD Yes −49% hist.</span>' : '', scDr(r), r.open ? `<span class="sc-tag open" title="Early opener: ${esc(FULL[r.open.bk] || r.open.bk)} posted this line already 3%+ under the sharp fair (tracked, experimental)">OPEN</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
+                    r.due ? '<span class="sc-tag due" title="Due: 0.25+ expected goals a game this season and 0.10+ a game under it (tracked, experimental; +19% on 256 legs at your best price, Oct 12-29, not proven)">Due</span>' : '', r.knee ? `<span class="sc-tag knee" title="Ladder knee at ${esc(FULL[r.knee.bk] || r.knee.bk)}: stepping up to this rung costs little, the next one costs a lot (tracked, experimental)">KNEE</span>` : '', ...(r.lad ? r.lad.cats.map(c => `<span class="sc-tag lad" title="${esc(c)}: this rung is on the sport page’s ${esc(c.toLowerCase())} list (experimental)">${esc(LADT[c] || c)}</span>`) : []), r.path ? `<span class="sc-tag path" title="Path leg: ${r.path.f.length} of 5 path reasons (usage, matchup, rotation, ${r.sport === 'nfl' ? 'script' : 'game'}, price) on this rung (experimental)">PATH ${r.path.f.length}/5</span>` : '', r.k === 'tdbl' ? '<span class="sc-tag warn" title="Triple-double Yes has lost about half its stake: Kalshi Jan 2026 - now, every Yes -49% on 618 (priced 8.2%, hit 6.6%); no edge rule held up (research/nba_ddtd_market.py)">TD Yes −49% hist.</span>' : '', scDr(r), scMu(r), r.open ? `<span class="sc-tag open" title="Early opener: ${esc(FULL[r.open.bk] || r.open.bk)} posted this line already 3%+ under the sharp fair (tracked, experimental)">OPEN</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
       const pl = r.path ? `<div class="sc-path">${r.path.sc ? `<span class="s">${esc(r.path.sc)}: us ${pc(r.path.us)} · market ${pc(r.path.mk)}</span>` : ''}${r.path.why.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : '';
       const ol = r.open ? `<div class="sc-open">Opened <b>${am(r.open.o)}</b> at ${esc(FULL[r.open.bk] || r.open.bk)}${r.open.t0 ? ' ' + esc(tm(r.open.t0 * 60e3)) : ''} · fair then ${pc(r.open.fair)} → ${r.open.gone ? '<span class="bad">line gone</span>' : `now <b>${am(r.open.now)}</b>`}${r.open.fnow != null ? ', fair now ' + pc(r.open.fnow) : ''}</div>` : '';
       const xo = r.offOnly ? `<div class="sc-open">${esc(FULL[r.offOnly.bk] || r.offOnly.bk)} implies ${pc(1 / dec(r.offOnly.o))} vs fair ${r.offOnly.carried ? '≈' : ''}${pc(r.offOnly.fair)} · <b>+${Math.round((r.offOnly.fair - 1 / dec(r.offOnly.o)) * 100)} pts</b>${r.offOnly.dep ? ` · $${Math.round(r.offOnly.dep).toLocaleString()} within 3¢` : ''} · often a stale or wrong line: check it first</div>` : '';
@@ -452,7 +468,7 @@ function scStar(r, b){
         <div class="sc-grp">${chip('books', 'mine', 'My books', S.books === 'mine')}${chip('books', 'all', 'All books', S.books === 'all')}</div>
         <div class="sc-grp"><span class="sc-l">Edge</span>${[[-100, 'Any'], [0, '0%+'], [3, '3%+'], [5, '5%+'], [10, '10%+']].map(([v, l]) => chip('edge', v, l, +S.edge === v)).join('')}</div>
         <div class="sc-grp">${Object.entries(PRICE).map(([k, v]) => chip('price', k, v[2], S.price === k)).join('')}</div>
-        <div class="sc-grp">${chip('ls', 'x', 'NBA longshots', !!S.ls)}${chip('promo', 'x', `★ Study picks · ${ROWS.filter(r => r.promo && r.promo.length && (S.sport === 'all' || r.sport === S.sport)).length}`, S.promo).replace('class="sc-chip', 'class="sc-chip promo')}${chip('gap8', 'x', `NFL gap 8+ · ${ROWS.filter(r => r.gap8).length}`, S.gap8)}${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('due', 'x', 'NHL due', S.due)}${chip('offm', 'x', 'Off market', S.offm)}${chip('knee', 'x', 'Ladder knees', S.knee)}${chip('lad', 'x', 'Ladders', S.lad)}${chip('path', 'x', 'Path legs', S.path)}${chip('open', 'x', 'Early openers', S.open)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
+        <div class="sc-grp">${chip('ls', 'x', 'NBA longshots', !!S.ls)}${chip('promo', 'x', `★ Study picks · ${ROWS.filter(r => r.promo && r.promo.length && (S.sport === 'all' || r.sport === S.sport)).length}`, S.promo).replace('class="sc-chip', 'class="sc-chip promo')}${chip('gap8', 'x', `NFL gap 8+ · ${ROWS.filter(r => r.gap8).length}`, S.gap8)}${chip('tagged', 'x', 'Tagged only', S.tagged)}${chip('pinmv', 'x', 'Pinnacle moved', S.pinmv)}${chip('consmv', 'x', 'Consensus moved', S.consmv)}${chip('due', 'x', 'NHL due', S.due)}${chip('offm', 'x', 'Off market', S.offm)}${chip('knee', 'x', 'Ladder knees', S.knee)}${chip('lad', 'x', 'Ladders', S.lad)}${chip('path', 'x', 'Path legs', S.path)}${chip('open', 'x', 'Early openers', S.open)}${chip('softm', 'x', 'Soft matchup', S.softm)}${chip('mub', 'x', 'Best matchups', S.mub).replace('class="sc-chip', 'title="NBA: his team’s greenest matchup for this stat tonight (the NBA page’s Matchups tab), light green or better. Display only, not a tested rule." class="sc-chip')}${chip('soon', 'x', 'Next 6 hours', S.soon)}${chip('alts', 'x', 'Alt lines', S.alts)}</div>
         ${S.lad ? (() => { const n = {}; ROWS.forEach(r => { if (r.lad && (S.sport === 'all' || r.sport === S.sport)) r.lad.cats.forEach(c => { n[c] = (n[c] || 0) + 1; }); });
           return `<div class="sc-grp"><span class="sc-l">Ladder</span>${chip('ladc', 'all', 'All', S.ladc === 'all')}${Object.keys(n).sort().map(c => chip('ladc', c, `${esc(c)}s · ${n[c]}`, S.ladc === c)).join('')}</div>`; })() : ''}
         ${S.ls ? (() => { const n = {}, qmax = 100 / (100 + S.ls) + 1e-9;
@@ -480,7 +496,7 @@ function scStar(r, b){
   document.addEventListener('click', e => {
     const c = e.target.closest('.sc-chip[data-k]');
     if (c){ const k = c.dataset.k, v = c.dataset.v;
-      if (k === 'ls') S.ls = v === 'x' ? (S.ls ? 0 : 350) : +v; else if (k === 'promo' || k === 'gap8' || k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'due' || k === 'knee' || k === 'offm' || k === 'open' || k === 'path' || k === 'lad' || k === 'softm' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
+      if (k === 'ls') S.ls = v === 'x' ? (S.ls ? 0 : 350) : +v; else if (k === 'promo' || k === 'gap8' || k === 'tagged' || k === 'pinmv' || k === 'consmv' || k === 'due' || k === 'knee' || k === 'offm' || k === 'open' || k === 'path' || k === 'lad' || k === 'softm' || k === 'mub' || k === 'soon' || k === 'alts') S[k] = !S[k]; else if (k === 'edge') S.edge = +v; else S[k] = v;
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }
