@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-22T21:15:36.327Z",
+"frozen_at": "2026-11-22T21:24:25.161Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,46 +15,33 @@
 "tier": "+600 to +1500",
 "legs": [
 {
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5372,
-"price": -104,
-"book": "Novig",
-"res": "W"
-},
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "xavier restrepo",
-"lab": "Xavier Restrepo over 9.5 rec yds",
-"p": 0.5367,
-"price": -104,
-"book": "Novig",
-"res": "L"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
 "kind": "rec",
 "side": "o",
-"line": 0.5,
-"name": "jordan watkins",
-"lab": "Jordan Watkins over 0.5 receptions",
-"p": 0.5908,
-"price": -122,
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4235,
+"price": 156,
 "book": "Novig"
+},
+{
+"gid": "2026_11_TB_DET",
+"start": "2026-11-22T13:00:00",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "TB moneyline",
+"p": 0.3664,
+"price": 190,
+"book": "Novig",
+"res": "L"
 }
 ],
-"p": 0.17032,
-"d": 7.001,
+"p": 0.15518,
+"d": 7.424,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core",
 "res": "L",
@@ -66,120 +53,119 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 5.5,
+"name": "carnell tate",
+"lab": "Carnell Tate over 5.5 receptions",
+"p": 0.4794,
+"price": 125,
+"book": "Novig",
+"res": "L"
+},
+{
+"gid": "2026_11_PIT_PHI",
+"start": "2026-11-22T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 26.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 26.5 rec yds",
+"p": 0.5458,
+"price": -106,
+"book": "Novig",
+"res": "L"
+},
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dawson knox",
+"lab": "Dawson Knox over 2.5 receptions",
+"p": 0.4509,
+"price": 135,
+"book": "Hard Rock",
+"res": "L"
+}
+],
+"p": 0.118,
+"d": 10.276,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "core",
+"res": "L",
+"locked": true,
+"final": true
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "dawson knox",
+"lab": "Dawson Knox over 2.5 receptions",
+"p": 0.4064,
+"price": 135,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation"
+],
+"v": [
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0597,
+"res": "L"
+},
+{
 "gid": "2026_11_ARI_KC",
 "start": "2026-11-22T13:00:00",
 "kind": "rec_yds",
 "side": "o",
 "line": 49.5,
 "name": "trey mcbride",
-"lab": "Trey Mcbride over 49.5 rec yds",
-"p": 0.5372,
-"price": -104,
+"lab": "Trey McBride over 49.5 rec yds",
+"p": 0.5053,
+"price": -106,
 "book": "Novig",
-"res": "W"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "jordan watkins",
-"lab": "Jordan Watkins over 0.5 receptions",
-"p": 0.5908,
-"price": -122,
-"book": "Novig"
-},
-{
-"gid": "2026_11_MIA_BUF",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 20.5,
-"name": "dawson knox",
-"lab": "Dawson Knox over 20.5 rec yds",
-"p": 0.5256,
-"price": 100,
-"book": "Novig",
+"f": [
+"usage"
+],
+"v": [
+"usage",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0523,
 "res": "W"
 }
 ],
-"p": 0.1668,
-"d": 7.139,
+"p": 0.20535,
+"d": 4.567,
 "first": "2026-11-22T18:00:00+00:00",
-"pick": "core",
-"res": null,
-"locked": true,
-"final": true
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "calvin ridley",
-"lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.3226,
-"price": 275,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.2098,
-"fair": 0.2705,
-"main": false,
-"res": "W"
-},
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "ted hurst",
-"lab": "Ted Hurst over 1.5 receptions",
-"p": 0.3594,
-"price": 230,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.1861,
-"fair": 0.322,
-"main": false,
-"res": "W"
-}
-],
-"p": 0.11594,
-"d": 12.375,
-"first": "2026-11-22T18:00:00+00:00",
-"res": "W",
-"locked": true,
-"paid": 12.375
+"res": "L",
+"locked": true
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "3 legs",
 "legs": [
 {
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "calvin ridley",
-"lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.3226,
-"price": 275,
-"book": "Hard Rock",
-"sport": "nfl",
-"edge": 0.2098,
-"fair": 0.2705,
-"main": false,
-"res": "W"
-},
-{
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
@@ -187,57 +173,31 @@
 "line": 1.5,
 "name": "ted hurst",
 "lab": "Ted Hurst over 1.5 receptions",
-"p": 0.3594,
+"p": 0.3631,
 "price": 230,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1861,
-"fair": 0.322,
+"edge": 0.1983,
+"fair": 0.3232,
 "main": false,
 "res": "W"
 },
 {
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-23T01:20:00+00:00",
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "myles price",
-"lab": "Myles Price over 1.5 receptions",
-"p": 0.3606,
-"price": 217,
+"name": "xavier restrepo",
+"lab": "Xavier Restrepo over 1.5 receptions",
+"p": 0.4234,
+"price": 178,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1433,
-"fair": 0.3177,
-"main": true
-}
-],
-"p": 0.04181,
-"d": 39.229,
-"first": "2026-11-22T18:00:00+00:00",
-"res": null,
-"locked": true
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-23T01:20:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "myles price",
-"lab": "Myles Price over 1.5 receptions",
-"p": 0.3606,
-"price": 217,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.1433,
-"fair": 0.3177,
-"main": true
+"edge": 0.1772,
+"fair": 0.3728,
+"main": true,
+"res": "L"
 },
 {
 "gid": "2026_11_MIA_BUF",
@@ -247,21 +207,126 @@
 "line": 1.5,
 "name": "kevin coleman",
 "lab": "Kevin Coleman over 1.5 receptions",
-"p": 0.3211,
+"p": 0.321,
 "price": 250,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1239,
-"fair": 0.2521,
+"edge": 0.1235,
+"fair": 0.2499,
 "main": false,
 "res": "L"
 }
 ],
-"p": 0.11579,
-"d": 11.095,
+"p": 0.04935,
+"d": 32.109,
 "first": "2026-11-22T18:00:00+00:00",
 "res": "L",
 "locked": true
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_11_MIA_BUF",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "kevin coleman",
+"lab": "Kevin Coleman over 1.5 receptions",
+"p": 0.321,
+"price": 250,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.1235,
+"fair": 0.2499,
+"main": false,
+"res": "L"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-23T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "myles price",
+"lab": "Myles Price over 1.5 receptions",
+"p": 0.3641,
+"price": 208,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1214,
+"fair": 0.3214,
+"main": true
+}
+],
+"p": 0.11688,
+"d": 10.78,
+"first": "2026-11-22T18:00:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "xavier restrepo",
+"lab": "Xavier Restrepo over 1.5 receptions",
+"p": 0.4234,
+"price": 178,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1772,
+"fair": 0.3728,
+"main": true,
+"res": "L"
+}
+],
+"p": 0.4234,
+"d": 2.78,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight",
+"res": "L",
+"locked": true,
+"final": true
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "calvin ridley",
+"lab": "Calvin Ridley over 0.5 receptions",
+"p": 0.5589,
+"price": 108,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1625,
+"fair": 0.4839,
+"main": true,
+"res": "W"
+}
+],
+"p": 0.5589,
+"d": 2.08,
+"first": "2026-11-22T18:00:00+00:00",
+"pick": "straight",
+"res": "W",
+"locked": true,
+"final": true,
+"paid": 2.08
 },
 {
 "card": "NFL edge straights (experimental)",
@@ -275,18 +340,18 @@
 "line": 4.5,
 "name": "kevin coleman",
 "lab": "Kevin Coleman over 4.5 rec yds",
-"p": 0.5485,
-"price": 106,
+"p": 0.5507,
+"price": 111,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1299,
-"fair": 0.4913,
+"edge": 0.1621,
+"fair": 0.491,
 "main": true,
 "res": "L"
 }
 ],
-"p": 0.5485,
-"d": 2.06,
+"p": 0.5507,
+"d": 2.11,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight",
 "res": "L",
@@ -305,17 +370,17 @@
 "line": 8.5,
 "name": "devin duvernay",
 "lab": "Devin Duvernay over 8.5 rec yds",
-"p": 0.5694,
+"p": 0.5726,
 "price": -111,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0824,
-"fair": 0.5292,
+"edge": 0.0884,
+"fair": 0.5301,
 "main": true,
 "res": "L"
 }
 ],
-"p": 0.5694,
+"p": 0.5726,
 "d": 1.901,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight",
@@ -328,28 +393,27 @@
 "tier": "straight",
 "legs": [
 {
-"gid": "2026_11_TEN_DAL",
+"gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "xavier restrepo",
-"lab": "Xavier Restrepo over 1.5 receptions",
-"p": 0.4378,
-"price": 147,
+"name": "brian thomas",
+"lab": "Brian Thomas over 1.5 receptions",
+"p": 0.4296,
+"price": 150,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0814,
-"fair": 0.3934,
-"main": true,
-"res": "L"
+"edge": 0.074,
+"fair": 0.3976,
+"main": true
 }
 ],
-"p": 0.4378,
-"d": 2.47,
+"p": 0.4296,
+"d": 2.5,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight",
-"res": "L",
+"res": null,
 "locked": true,
 "final": true
 },
@@ -365,17 +429,17 @@
 "line": 1.5,
 "name": "isaac teslaa",
 "lab": "Isaac Teslaa over 1.5 receptions",
-"p": 0.4268,
+"p": 0.4271,
 "price": 150,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0671,
-"fair": 0.404,
+"edge": 0.0677,
+"fair": 0.402,
 "main": true,
 "res": "L"
 }
 ],
-"p": 0.4268,
+"p": 0.4271,
 "d": 2.5,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight",
@@ -395,52 +459,21 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4838,
+"p": 0.4846,
 "price": 120,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0644,
-"fair": 0.4598,
+"edge": 0.066,
+"fair": 0.461,
 "main": true,
 "res": "L"
 }
 ],
-"p": 0.4838,
+"p": 0.4846,
 "d": 2.2,
 "first": "2026-11-22T18:00:00+00:00",
-"pick": "straight",
 "res": "L",
-"locked": true,
-"final": true
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "travis hunter",
-"lab": "Travis Hunter over 1.5 receptions",
-"p": 0.3602,
-"price": 194,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.059,
-"fair": 0.3469,
-"main": true
-}
-],
-"p": 0.3602,
-"d": 2.94,
-"first": "2026-11-22T18:00:00+00:00",
-"pick": "straight",
-"res": null,
-"locked": true,
-"final": true
+"locked": true
 },
 {
 "card": "NFL edge straights (experimental)",
@@ -454,47 +487,20 @@
 "line": 5.5,
 "name": "carnell tate",
 "lab": "Carnell Tate over 5.5 receptions",
-"p": 0.4705,
+"p": 0.4726,
 "price": 125,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0586,
-"fair": 0.4383,
+"edge": 0.0632,
+"fair": 0.4409,
 "main": true,
 "res": "L"
 }
 ],
-"p": 0.4705,
+"p": 0.4726,
 "d": 2.25,
 "first": "2026-11-22T18:00:00+00:00",
 "res": "L",
-"locked": true
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "brian thomas",
-"lab": "Brian Thomas over 1.5 receptions",
-"p": 0.4335,
-"price": 144,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0577,
-"fair": 0.4016,
-"main": true
-}
-],
-"p": 0.4335,
-"d": 2.44,
-"first": "2026-11-22T18:00:00+00:00",
-"res": null,
 "locked": true
 },
 {
@@ -509,7 +515,7 @@
 "line": 99.5,
 "name": "george pickens",
 "lab": "George Pickens 100+ rec yds",
-"p": 0.3073,
+"p": 0.311,
 "price": 252,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -529,19 +535,18 @@
 "line": 89.5,
 "name": "garrett wilson",
 "lab": "Garrett Wilson 90+ rec yds",
-"p": 0.3274,
+"p": 0.318,
 "price": 229,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"script",
-"price"
+"script"
 ]
 }
 ],
-"p": 0.10061,
+"p": 0.0989,
 "d": 11.581,
 "first": "2026-11-22T18:00:00+00:00",
 "res": null,
@@ -559,7 +564,7 @@
 "line": 69.5,
 "name": "elic ayomanor",
 "lab": "Elic Ayomanor 70+ rec yds",
-"p": 0.2472,
+"p": 0.2449,
 "price": 296,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -579,19 +584,18 @@
 "line": 89.5,
 "name": "garrett wilson",
 "lab": "Garrett Wilson 90+ rec yds",
-"p": 0.3274,
+"p": 0.318,
 "price": 229,
 "book": "Kalshi",
 "sc": "Shootout",
 "f": [
 "usage",
 "matchup",
-"script",
-"price"
+"script"
 ]
 }
 ],
-"p": 0.08094,
+"p": 0.07788,
 "d": 13.028,
 "first": "2026-11-22T18:00:00+00:00",
 "res": "L",
@@ -679,80 +683,6 @@
 ],
 "p": 0.01579,
 "d": 49.392,
-"first": "2026-11-22T18:00:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 8.5,
-"name": "devin duvernay",
-"lab": "Devin Duvernay over 8.5 rec yds",
-"p": 0.5728,
-"price": -111,
-"book": "Novig",
-"res": "L"
-},
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 6.5,
-"name": "ted hurst",
-"lab": "Ted Hurst over 6.5 rec yds",
-"p": 0.5631,
-"price": -115,
-"book": "Hard Rock",
-"res": "W"
-}
-],
-"p": 0.32251,
-"d": 3.554,
-"first": "2026-11-22T18:00:00+00:00",
-"res": "L",
-"locked": true
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "xavier restrepo",
-"lab": "Xavier Restrepo over 1.5 receptions",
-"p": 0.4385,
-"price": 147,
-"book": "Novig",
-"res": "L"
-},
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T13:00:00",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "TB moneyline",
-"p": 0.3658,
-"price": 190,
-"book": "Novig",
-"res": "L"
-}
-],
-"p": 0.16041,
-"d": 7.163,
 "first": "2026-11-22T18:00:00+00:00",
 "res": "L",
 "locked": true
@@ -2107,7 +2037,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2119,7 +2050,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2131,7 +2063,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2143,7 +2076,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2155,13 +2089,14 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 }
 ],
 "p": 0.106,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -2178,7 +2113,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2190,7 +2126,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2202,7 +2139,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2214,7 +2152,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2226,7 +2165,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2238,13 +2178,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 }
 ],
 "p": 0.0662,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -2261,7 +2202,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2273,7 +2215,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2285,7 +2228,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2297,7 +2241,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2309,7 +2254,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2321,7 +2267,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2333,13 +2280,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0373,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2356,7 +2304,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2368,7 +2317,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2380,7 +2330,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2392,7 +2343,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2404,13 +2356,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "L"
 }
 ],
 "p": 0.0747,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2427,7 +2380,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2439,7 +2393,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2451,7 +2406,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2463,7 +2419,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2475,7 +2432,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2487,13 +2445,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "mark andrews"
+"name": "mark andrews",
+"res": "L"
 }
 ],
 "p": 0.0418,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2510,7 +2469,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2522,7 +2482,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2534,7 +2495,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2546,7 +2508,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2558,7 +2521,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2570,7 +2534,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "mark andrews"
+"name": "mark andrews",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2582,13 +2547,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0234,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2605,7 +2571,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2617,7 +2584,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2629,13 +2597,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 59.5,
-"name": "tetairoa mcmillan"
+"name": "tetairoa mcmillan",
+"res": "W"
 }
 ],
 "p": 0.1368,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -2652,7 +2621,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2664,7 +2634,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2676,7 +2647,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 59.5,
-"name": "tetairoa mcmillan"
+"name": "tetairoa mcmillan",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2688,13 +2660,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0643,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2711,7 +2684,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2723,7 +2697,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2735,7 +2710,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2747,7 +2723,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2759,13 +2736,14 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 }
 ],
 "p": 0.0881,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -2782,7 +2760,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2794,7 +2773,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2806,7 +2786,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2818,7 +2799,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2830,7 +2812,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2842,13 +2825,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0499,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2865,7 +2849,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2877,7 +2862,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2889,7 +2875,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2901,7 +2888,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2913,7 +2901,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2925,7 +2914,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2937,13 +2927,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "mark andrews"
+"name": "mark andrews",
+"res": "L"
 }
 ],
 "p": 0.028,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -2960,7 +2951,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2972,7 +2964,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2984,7 +2977,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -2996,7 +2990,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3008,13 +3003,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 }
 ],
 "p": 0.0981,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -3031,7 +3027,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3043,7 +3040,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3055,7 +3053,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3067,7 +3066,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3079,7 +3079,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3091,13 +3092,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0542,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -3114,7 +3116,8 @@
 "kind": "ml",
 "side": "away",
 "line": null,
-"name": null
+"name": null,
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3126,7 +3129,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3138,7 +3142,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3150,7 +3155,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "zay flowers"
+"name": "zay flowers",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3162,13 +3168,14 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "tetairoa mcmillan"
+"name": "tetairoa mcmillan",
+"res": "W"
 }
 ],
 "p": 0.0358,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -3185,7 +3192,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3197,7 +3205,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3209,7 +3218,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3221,7 +3231,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "mark andrews"
+"name": "mark andrews",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3233,13 +3244,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 }
 ],
 "p": 0.0598,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -3256,7 +3268,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3268,7 +3281,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3280,7 +3294,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3292,7 +3307,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "mark andrews"
+"name": "mark andrews",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3304,7 +3320,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -3316,13 +3333,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "L"
 }
 ],
 "p": 0.0322,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11342,7 +11360,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11354,7 +11373,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11366,7 +11386,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11378,7 +11399,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11390,13 +11412,14 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 }
 ],
 "p": 0.1148,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -11413,7 +11436,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11425,7 +11449,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11437,7 +11462,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11449,7 +11475,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11461,7 +11488,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11473,13 +11501,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 }
 ],
 "p": 0.0715,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -11496,7 +11525,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11508,7 +11538,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11520,7 +11551,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11532,7 +11564,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11544,7 +11577,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11556,7 +11590,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11568,13 +11603,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0413,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11591,7 +11627,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 59.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11603,7 +11640,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11615,13 +11653,14 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 }
 ],
 "p": 0.1047,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -11638,7 +11677,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 59.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11650,7 +11690,8 @@
 "kind": "rec",
 "side": "o",
 "line": 2.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11662,7 +11703,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11674,13 +11716,14 @@
 "kind": "rec",
 "side": "o",
 "line": 4.5,
-"name": "tetairoa mcmillan"
+"name": "tetairoa mcmillan",
+"res": "W"
 }
 ],
 "p": 0.0561,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -11697,7 +11740,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11709,7 +11753,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11721,7 +11766,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11733,7 +11779,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11745,13 +11792,14 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 }
 ],
 "p": 0.0819,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -11768,7 +11816,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11780,7 +11829,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11792,7 +11842,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11804,7 +11855,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11816,7 +11868,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11828,13 +11881,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0477,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -11851,7 +11905,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11863,7 +11918,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11875,7 +11931,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11887,7 +11944,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11899,13 +11957,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 }
 ],
 "p": 0.1123,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -11922,7 +11981,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11934,7 +11994,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11946,7 +12007,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11958,7 +12020,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11970,7 +12033,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -11982,13 +12046,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0626,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12005,7 +12070,8 @@
 "kind": "ml",
 "side": "home",
 "line": null,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12017,7 +12083,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "chuba hubbard"
+"name": "chuba hubbard",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12029,7 +12096,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "bryce young"
+"name": "bryce young",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12041,7 +12109,8 @@
 "kind": "rush_yds",
 "side": "o",
 "line": 4.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12053,7 +12122,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "darren waller"
+"name": "darren waller",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12065,7 +12135,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12077,13 +12148,14 @@
 "kind": "rec",
 "side": "o",
 "line": 1.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 }
 ],
 "p": 0.0324,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12100,7 +12172,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12112,7 +12185,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
-"name": "mark andrews"
+"name": "mark andrews",
+"res": "L"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12124,7 +12198,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12136,7 +12211,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "zay flowers"
+"name": "zay flowers",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12148,13 +12224,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
-"name": "josh cuevas"
+"name": "josh cuevas",
+"res": "L"
 }
 ],
 "p": 0.0388,
 "d": 24.038,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -12171,7 +12248,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12183,7 +12261,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "zay flowers"
+"name": "zay flowers",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12195,7 +12274,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12207,7 +12287,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12219,13 +12300,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "rashod bateman"
+"name": "rashod bateman",
+"res": "W"
 }
 ],
 "p": 0.0519,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "W",
 "locked": true
 },
 {
@@ -12242,7 +12324,8 @@
 "kind": "td",
 "side": "o",
 "line": 0.5,
-"name": "derrick henry"
+"name": "derrick henry",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12254,7 +12337,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 69.5,
-"name": "zay flowers"
+"name": "zay flowers",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12266,7 +12350,8 @@
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
-"name": "jacoby brissett"
+"name": "jacoby brissett",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12278,7 +12363,8 @@
 "kind": "total",
 "side": "over",
 "line": 44.5,
-"name": null
+"name": null,
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12290,7 +12376,8 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
-"name": "rashod bateman"
+"name": "rashod bateman",
+"res": "W"
 },
 {
 "gid": "2026_11_BAL_CAR",
@@ -12302,13 +12389,14 @@
 "kind": "rec_yds",
 "side": "o",
 "line": 19.5,
-"name": "tommy tremble"
+"name": "tommy tremble",
+"res": "L"
 }
 ],
 "p": 0.0281,
 "d": null,
 "first": "2026-11-22T18:00:00+00:00",
-"res": null,
+"res": "L",
 "locked": true
 },
 {
@@ -20568,6 +20656,108 @@
 "locked": true
 },
 {
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "jaylen waddle",
+"lab": "Jaylen Waddle 60+ rec yds",
+"p": 0.325,
+"price": 189,
+"book": "Kalshi"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"kind": "rec",
+"side": "o",
+"line": 6.5,
+"name": "isaiah likely",
+"lab": "Isaiah Likely 7+ catches",
+"p": 0.285,
+"price": 229,
+"book": "Kalshi"
+}
+],
+"p": 0.09263,
+"d": 9.509,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 9.5 rec yds",
+"p": 0.5379,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"kind": "spread",
+"side": "home",
+"line": -3.5,
+"name": null,
+"lab": "SF \u22123.5",
+"p": 0.507,
+"price": 108,
+"book": "Novig"
+}
+],
+"p": 0.27271,
+"d": 4.08,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 9.5 rec yds",
+"p": 0.5379,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"kind": "total",
+"side": "over",
+"line": 46.5,
+"name": null,
+"lab": "MIN-SF over 46.5",
+"p": 0.4975,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.26759,
+"d": 4.178,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
 "card": "Parlays by payout (your books)",
 "tier": "+250 to +600",
 "legs": [
@@ -20579,7 +20769,7 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4309,
+"p": 0.4302,
 "price": 153,
 "book": "Novig"
 },
@@ -20596,54 +20786,112 @@
 "book": "Novig"
 }
 ],
-"p": 0.21847,
+"p": 0.21811,
 "d": 5.262,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"card": "Same-game parlays",
+"tier": "Higher lines \u00b7 3 legs",
 "legs": [
 {
-"gid": "2026_11_LV_DEN",
+"gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"kind": "rec",
+"lab": "Bhayshul Tuten over 59.5 rush yds",
+"p": 0.468,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rush_yds",
 "side": "o",
-"line": 1.5,
-"name": "marvin mims",
-"lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4309,
-"price": 153,
-"book": "Novig"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"kind": "spread",
-"side": "home",
-"line": -3.5,
-"name": null,
-"lab": "SF \u22123.5",
-"p": 0.507,
-"price": 108,
-"book": "Novig"
+"line": 59.5,
+"name": "bhayshul tuten"
 },
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"kind": "rec",
+"lab": "Malik Nabers over 69.5 rec yds",
+"p": 0.449,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
-"name": "brian thomas",
-"lab": "Brian Thomas over 1.5 receptions",
-"p": 0.4309,
-"price": 144,
-"book": "Novig"
+"line": 69.5,
+"name": "malik nabers"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "J.J. McCarthy over 249.5 pass yds",
+"p": 0.346,
+"price": 0.31,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "jj mccarthy"
 }
 ],
-"p": 0.09414,
-"d": 12.84,
+"p": 0.1098,
+"d": 10.953,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays",
+"tier": "Higher lines \u00b7 4 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Bhayshul Tuten over 59.5 rush yds",
+"p": 0.468,
+"price": 0.64,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "bhayshul tuten"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Malik Nabers over 69.5 rec yds",
+"p": 0.449,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 69.5,
+"name": "malik nabers"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "J.J. McCarthy over 249.5 pass yds",
+"p": 0.346,
+"price": 0.31,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 249.5,
+"name": "jj mccarthy"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely over 59.5 rec yds",
+"p": 0.425,
+"price": 0.36,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "isaiah likely"
+}
+],
+"p": 0.0613,
+"d": 30.395,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -20655,7 +20903,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.522,
+"p": 0.524,
 "price": null,
 "book": null,
 "kind": "total",
@@ -20667,8 +20915,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -20691,7 +20939,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.601,
+"p": 0.603,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -20703,7 +20951,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.535,
+"p": 0.537,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -20712,7 +20960,7 @@
 "name": "isaiah likely"
 }
 ],
-"p": 0.1256,
+"p": 0.1236,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -20725,7 +20973,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.522,
+"p": 0.524,
 "price": null,
 "book": null,
 "kind": "total",
@@ -20737,8 +20985,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -20761,7 +21009,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.601,
+"p": 0.603,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -20773,7 +21021,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.535,
+"p": 0.537,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -20785,7 +21033,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Bhayshul Tuten anytime TD",
-"p": 0.536,
+"p": 0.534,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "td",
@@ -20794,7 +21042,7 @@
 "name": "bhayshul tuten"
 }
 ],
-"p": 0.0765,
+"p": 0.0752,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -20807,7 +21055,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.522,
+"p": 0.524,
 "price": null,
 "book": null,
 "kind": "total",
@@ -20819,8 +21067,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -20843,7 +21091,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.601,
+"p": 0.603,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -20855,7 +21103,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.535,
+"p": 0.537,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -20867,7 +21115,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Bhayshul Tuten anytime TD",
-"p": 0.536,
+"p": 0.534,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "td",
@@ -20879,7 +21127,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Darnell Mooney over 14.5 rec yds",
-"p": 0.558,
+"p": 0.562,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -20888,7 +21136,7 @@
 "name": "darnell mooney"
 }
 ],
-"p": 0.0472,
+"p": 0.0455,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -20901,8 +21149,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
-"p": 0.7,
-"price": 0.54,
+"p": 0.704,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -20913,8 +21161,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -20925,7 +21173,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Malik Nabers over 64.5 rec yds",
-"p": 0.489,
+"p": 0.497,
 "price": 0.52,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -20936,30 +21184,276 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.403,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 59.5,
-"name": "cam skattebo"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
 "lab": "Trevor Lawrence over 9.5 rush yds",
-"p": 0.537,
-"price": 0.57,
+"p": 0.535,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 9.5,
 "name": "trevor lawrence"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Cam Skattebo anytime TD",
+"p": 0.368,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "cam skattebo"
 }
 ],
-"p": 0.0627,
-"d": 23.041,
+"p": 0.0645,
+"d": 26.178,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays",
+"tier": "JAX pulls away \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "JAX wins",
+"p": 0.675,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Bhayshul Tuten anytime TD",
+"p": 0.534,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bhayshul tuten"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Chris Rodriguez Jr. over 19.5 rush yds",
+"p": 0.47,
+"price": 0.47,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "chris rodriguez"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Parker Washington anytime TD",
+"p": 0.35,
+"price": 0.39,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "parker washington"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.747,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+}
+],
+"p": 0.0534,
+"d": null,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays",
+"tier": "JAX pulls away \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "JAX wins",
+"p": 0.675,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Bhayshul Tuten anytime TD",
+"p": 0.534,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bhayshul tuten"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Chris Rodriguez Jr. over 19.5 rush yds",
+"p": 0.47,
+"price": 0.47,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "chris rodriguez"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Parker Washington anytime TD",
+"p": 0.35,
+"price": 0.39,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "parker washington"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.747,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Trevor Lawrence over 224.5 pass yds",
+"p": 0.591,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "trevor lawrence"
+}
+],
+"p": 0.0348,
+"d": null,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays",
+"tier": "JAX pulls away \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "JAX wins",
+"p": 0.675,
+"price": null,
+"book": null,
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Bhayshul Tuten anytime TD",
+"p": 0.534,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "bhayshul tuten"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Chris Rodriguez Jr. over 19.5 rush yds",
+"p": 0.47,
+"price": 0.47,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "chris rodriguez"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Parker Washington anytime TD",
+"p": 0.35,
+"price": 0.39,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "parker washington"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.747,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Trevor Lawrence over 224.5 pass yds",
+"p": 0.591,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "trevor lawrence"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely over 4.5 receptions",
+"p": 0.574,
+"price": 0.58,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 4.5,
+"name": "isaiah likely"
+}
+],
+"p": 0.0209,
+"d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -20971,8 +21465,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
-"p": 0.7,
-"price": 0.54,
+"p": 0.704,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -20982,20 +21476,8 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Isaiah Likely anytime TD",
-"p": 0.38,
-"price": 0.29,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "isaiah likely"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.403,
+"p": 0.401,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -21006,9 +21488,21 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely anytime TD",
+"p": 0.382,
+"price": 0.29,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "isaiah likely"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -21019,7 +21513,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.601,
+"p": 0.603,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -21028,8 +21522,8 @@
 "name": "brenton strange"
 }
 ],
-"p": 0.0517,
-"d": 38.61,
+"p": 0.0515,
+"d": 43.103,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21041,8 +21535,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
-"p": 0.7,
-"price": 0.54,
+"p": 0.704,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21052,20 +21546,8 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Isaiah Likely anytime TD",
-"p": 0.38,
-"price": 0.29,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "isaiah likely"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.403,
+"p": 0.401,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -21076,9 +21558,21 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely anytime TD",
+"p": 0.382,
+"price": 0.29,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "isaiah likely"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -21089,7 +21583,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.601,
+"p": 0.603,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -21100,18 +21594,18 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Trevor Lawrence over 9.5 rush yds",
-"p": 0.537,
-"price": 0.57,
+"lab": "Darnell Mooney over 14.5 rec yds",
+"p": 0.562,
+"price": 0.54,
 "book": "Kalshi",
-"kind": "rush_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 9.5,
-"name": "trevor lawrence"
+"line": 14.5,
+"name": "darnell mooney"
 }
 ],
-"p": 0.0292,
-"d": 67.568,
+"p": 0.0317,
+"d": 80,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21123,8 +21617,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
-"p": 0.7,
-"price": 0.54,
+"p": 0.704,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21134,20 +21628,8 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Isaiah Likely anytime TD",
-"p": 0.38,
-"price": 0.29,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "isaiah likely"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.403,
+"p": 0.401,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -21158,9 +21640,21 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely anytime TD",
+"p": 0.382,
+"price": 0.29,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "isaiah likely"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.657,
-"price": 0.59,
+"p": 0.659,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -21171,7 +21665,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.601,
+"p": 0.603,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -21182,20 +21676,20 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Trevor Lawrence over 9.5 rush yds",
-"p": 0.537,
-"price": 0.57,
+"lab": "Darnell Mooney over 14.5 rec yds",
+"p": 0.562,
+"price": 0.54,
 "book": "Kalshi",
-"kind": "rush_yds",
+"kind": "rec_yds",
 "side": "o",
-"line": 9.5,
-"name": "trevor lawrence"
+"line": 14.5,
+"name": "darnell mooney"
 },
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Nate Boerkircher over 9.5 rec yds",
-"p": 0.544,
+"p": 0.545,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21204,8 +21698,8 @@
 "name": "nate boerkircher"
 }
 ],
-"p": 0.0162,
-"d": 128.205,
+"p": 0.0185,
+"d": 151.515,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21217,8 +21711,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21229,8 +21723,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
+"p": 0.768,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -21241,7 +21735,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
+"p": 0.655,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21252,30 +21746,30 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
-"price": 0.49,
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
-"line": 174.5,
-"name": "fernando mendoza"
+"line": 224.5,
+"name": "bo nix"
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.606,
-"price": 0.58,
+"lab": "Courtland Sutton over 29.5 rec yds",
+"p": 0.619,
+"price": 0.55,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
-"name": "jalen nailor"
+"line": 29.5,
+"name": "courtland sutton"
 }
 ],
-"p": 0.1738,
-"d": 22.422,
+"p": 0.1893,
+"d": 25.189,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21287,8 +21781,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21299,8 +21793,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
+"p": 0.768,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -21311,7 +21805,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
+"p": 0.655,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21322,42 +21816,42 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Courtland Sutton over 29.5 rec yds",
+"p": 0.619,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "courtland sutton"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
 "line": 174.5,
 "name": "fernando mendoza"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.606,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jalen nailor"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.513,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 40.5,
-"name": null
 }
 ],
-"p": 0.1134,
-"d": null,
+"p": 0.1262,
+"d": 51.282,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21369,8 +21863,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21381,8 +21875,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
+"p": 0.768,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -21393,7 +21887,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
+"p": 0.655,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21404,8 +21898,32 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Courtland Sutton over 29.5 rec yds",
+"p": 0.619,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "courtland sutton"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21416,41 +21934,17 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.606,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jalen nailor"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.513,
+"lab": "Over 41.5 total points",
+"p": 0.509,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "bo nix"
 }
 ],
-"p": 0.0818,
+"p": 0.0926,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -21463,8 +21957,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21474,21 +21968,9 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "bo nix"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.391,
-"price": 0.57,
+"p": 0.404,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -21499,8 +21981,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.755,
-"price": 0.55,
+"p": 0.76,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -21510,18 +21992,30 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
-"price": 0.51,
+"lab": "Courtland Sutton over 29.5 rec yds",
+"p": 0.619,
+"price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
-"line": 9.5,
-"name": "marvin mims"
+"line": 29.5,
+"name": "courtland sutton"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
 }
 ],
-"p": 0.1035,
-"d": 24.691,
+"p": 0.1123,
+"d": 22.173,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21533,8 +22027,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21544,21 +22038,9 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "bo nix"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.391,
-"price": 0.57,
+"p": 0.404,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -21569,8 +22051,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.755,
-"price": 0.55,
+"p": 0.76,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -21580,30 +22062,42 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "marvin mims"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
+"p": 0.619,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
 "line": 29.5,
 "name": "courtland sutton"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jaylen Waddle over 39.5 rec yds",
+"p": 0.536,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "jaylen waddle"
 }
 ],
-"p": 0.0725,
-"d": 45.045,
+"p": 0.0706,
+"d": 39.526,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21615,8 +22109,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -21626,21 +22120,9 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "bo nix"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.391,
-"price": 0.57,
+"p": 0.404,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -21651,8 +22133,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.755,
-"price": 0.55,
+"p": 0.76,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -21662,20 +22144,8 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
-"price": 0.51,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "marvin mims"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
+"p": 0.619,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21686,18 +22156,42 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.513,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 40.5,
-"name": null
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jaylen Waddle over 39.5 rec yds",
+"p": 0.536,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "jaylen waddle"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jalen Nailor over 1.5 receptions",
+"p": 0.603,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jalen nailor"
 }
 ],
-"p": 0.0519,
-"d": null,
+"p": 0.0437,
+"d": 64.935,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21709,8 +22203,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 3.5 receptions",
-"p": 0.475,
-"price": 0.4,
+"p": 0.487,
+"price": 0.41,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -21721,7 +22215,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 249.5 pass yds",
-"p": 0.38,
+"p": 0.413,
 "price": 0.32,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21733,7 +22227,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jaylen Waddle over 3.5 receptions",
-"p": 0.457,
+"p": 0.469,
 "price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
@@ -21742,8 +22236,8 @@
 "name": "jaylen waddle"
 }
 ],
-"p": 0.1281,
-"d": 13.947,
+"p": 0.1403,
+"d": 13.605,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21755,8 +22249,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 3.5 receptions",
-"p": 0.475,
-"price": 0.4,
+"p": 0.487,
+"price": 0.41,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -21767,7 +22261,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 249.5 pass yds",
-"p": 0.38,
+"p": 0.413,
 "price": 0.32,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21779,7 +22273,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jaylen Waddle over 3.5 receptions",
-"p": 0.457,
+"p": 0.469,
 "price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
@@ -21791,7 +22285,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Evan Engram over 2.5 receptions",
-"p": 0.44,
+"p": 0.449,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "rec",
@@ -21800,8 +22294,8 @@
 "name": "evan engram"
 }
 ],
-"p": 0.0624,
-"d": 31.746,
+"p": 0.0683,
+"d": 30.96,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -21812,21 +22306,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.513,
+"lab": "Over 41.5 total points",
+"p": 0.509,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
+"p": 0.768,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -21837,7 +22331,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21849,7 +22343,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
+"p": 0.574,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21861,7 +22355,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
+"p": 0.655,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21870,7 +22364,7 @@
 "name": "marvin mims"
 }
 ],
-"p": 0.1474,
+"p": 0.1544,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -21882,21 +22376,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.513,
+"lab": "Over 41.5 total points",
+"p": 0.509,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
+"p": 0.768,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -21907,7 +22401,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21919,7 +22413,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
+"p": 0.574,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -21931,7 +22425,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
+"p": 0.655,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21943,7 +22437,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
+"p": 0.619,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -21952,7 +22446,7 @@
 "name": "courtland sutton"
 }
 ],
-"p": 0.106,
+"p": 0.11,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -21964,21 +22458,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.513,
+"lab": "Over 41.5 total points",
+"p": 0.509,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
+"p": 0.768,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -21989,7 +22483,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22001,7 +22495,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
+"p": 0.574,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22013,7 +22507,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.653,
+"p": 0.655,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -22025,7 +22519,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
+"p": 0.619,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -22036,17 +22530,17 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Tre Tucker over 34.5 rec yds",
-"p": 0.526,
-"price": null,
-"book": null,
-"kind": "rec_yds",
+"lab": "Jalen Nailor over 1.5 receptions",
+"p": 0.603,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
 "side": "o",
-"line": 34.5,
-"name": "tre tucker"
+"line": 1.5,
+"name": "jalen nailor"
 }
 ],
-"p": 0.0713,
+"p": 0.0731,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -22059,8 +22553,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22071,8 +22565,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.391,
-"price": 0.57,
+"p": 0.404,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -22083,8 +22577,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.755,
-"price": 0.55,
+"p": 0.76,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -22094,90 +22588,8 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.606,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jalen nailor"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "courtland sutton"
-}
-],
-"p": 0.0929,
-"d": 18.182,
-"first": "2026-11-22T21:25:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays",
-"tier": "DEN pulls away \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 19.5,
-"name": "jk dobbins"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Jonah Coleman anytime TD",
-"p": 0.391,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "jonah coleman"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Michael Mayer over 3.5 receptions",
-"p": 0.755,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "michael mayer"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.606,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jalen nailor"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
+"p": 0.619,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -22189,7 +22601,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
+"p": 0.574,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22198,7 +22610,89 @@
 "name": "bo nix"
 }
 ],
-"p": 0.0636,
+"p": 0.1123,
+"d": 22.173,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays",
+"tier": "DEN pulls away \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "J.K. Dobbins over 19.5 rush yds",
+"p": 0.834,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "jk dobbins"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jonah Coleman anytime TD",
+"p": 0.404,
+"price": 0.59,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "jonah coleman"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Michael Mayer over 3.5 receptions",
+"p": 0.76,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "michael mayer"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Courtland Sutton over 29.5 rec yds",
+"p": 0.619,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "courtland sutton"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.574,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jaylen Waddle over 39.5 rec yds",
+"p": 0.536,
+"price": 0.56,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "jaylen waddle"
+}
+],
+"p": 0.0706,
 "d": 39.526,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -22211,8 +22705,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.828,
-"price": 0.55,
+"p": 0.834,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22223,8 +22717,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.391,
-"price": 0.57,
+"p": 0.404,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -22235,8 +22729,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.755,
-"price": 0.55,
+"p": 0.76,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -22246,20 +22740,8 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.606,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jalen nailor"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.608,
+"p": 0.619,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -22271,7 +22753,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.546,
+"p": 0.574,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22282,18 +22764,30 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Evan Engram over 19.5 rec yds",
-"p": 0.556,
-"price": 0.5,
+"lab": "Jaylen Waddle over 39.5 rec yds",
+"p": 0.536,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
-"line": 19.5,
-"name": "evan engram"
+"line": 39.5,
+"name": "jaylen waddle"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jalen Nailor over 1.5 receptions",
+"p": 0.603,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jalen nailor"
 }
 ],
-"p": 0.0397,
-"d": 78.74,
+"p": 0.0437,
+"d": 64.935,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -22304,21 +22798,9 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.765,
-"price": 0.56,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "michael mayer"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Ashton Jeanty over 29.5 rush yds",
-"p": 0.552,
-"price": 0.52,
+"p": 0.543,
+"price": 0.53,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22329,7 +22811,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22340,29 +22822,41 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Tre Tucker over 34.5 rec yds",
-"p": 0.526,
+"lab": "Tre Tucker over 39.5 rec yds",
+"p": 0.47,
 "price": null,
 "book": null,
 "kind": "rec_yds",
 "side": "o",
-"line": 34.5,
+"line": 39.5,
 "name": "tre tucker"
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Marvin Mims Jr. over 1.5 receptions",
-"p": 0.534,
-"price": 0.38,
+"lab": "Courtland Sutton over 3.5 receptions",
+"p": 0.487,
+"price": 0.41,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
-"line": 1.5,
-"name": "marvin mims"
+"line": 3.5,
+"name": "courtland sutton"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jalen Nailor over 19.5 rec yds",
+"p": 0.432,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "jalen nailor"
 }
 ],
-"p": 0.0981,
+"p": 0.0476,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -22375,8 +22869,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Ashton Jeanty over 29.5 rush yds",
-"p": 0.552,
-"price": 0.52,
+"p": 0.543,
+"price": 0.53,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22387,7 +22881,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.556,
+"p": 0.56,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22398,42 +22892,42 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Evan Engram over 2.5 receptions",
+"lab": "Over 41.5 total points",
+"p": 0.509,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 41.5,
+"name": null
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Tre Tucker over 39.5 rec yds",
 "p": 0.47,
-"price": 0.44,
+"price": null,
+"book": null,
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "tre tucker"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Jaylen Waddle over 3.5 receptions",
+"p": 0.494,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
-"line": 2.5,
-"name": "evan engram"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Jack Bech over 19.5 rec yds",
-"p": 0.411,
-"price": 0.48,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 19.5,
-"name": "jack bech"
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"lab": "Mike Washington Jr. over 24.5 rush yds",
-"p": 0.456,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 24.5,
-"name": "mike washington"
+"line": 3.5,
+"name": "jaylen waddle"
 }
 ],
-"p": 0.0365,
-"d": 35.088,
+"p": 0.065,
+"d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -22445,7 +22939,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Watkins over 0.5 receptions",
-"p": 0.665,
+"p": 0.66,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "rec",
@@ -22480,29 +22974,29 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.573,
+"price": null,
+"book": null,
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mike evans"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
 "name": "kirk cousins"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Over 46.5 total points",
-"p": 0.514,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 46.5,
-"name": null
 }
 ],
-"p": 0.0973,
+"p": 0.0887,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -22515,7 +23009,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Watkins over 0.5 receptions",
-"p": 0.665,
+"p": 0.66,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "rec",
@@ -22550,8 +23044,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.573,
+"price": null,
+"book": null,
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mike evans"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22563,28 +23069,16 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
 "line": 46.5,
 "name": null
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "christian mccaffrey"
 }
 ],
-"p": 0.061,
+"p": 0.0595,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -22597,7 +23091,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Watkins over 0.5 receptions",
-"p": 0.665,
+"p": 0.66,
 "price": 0.54,
 "book": "Kalshi",
 "kind": "rec",
@@ -22632,8 +23126,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.573,
+"price": null,
+"book": null,
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mike evans"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22645,7 +23151,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -22656,25 +23162,13 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"lab": "Keenan Allen over 24.5 rec yds",
+"p": 0.565,
+"price": 0.53,
 "book": "Kalshi",
-"kind": "td",
+"kind": "rec_yds",
 "side": "o",
-"line": 0.5,
-"name": "christian mccaffrey"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 2.5 receptions",
-"p": 0.566,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
+"line": 24.5,
 "name": "keenan allen"
 }
 ],
@@ -22703,7 +23197,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -22715,8 +23209,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22727,7 +23221,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -22738,17 +23232,17 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
-"price": 0.57,
+"lab": "Jordan Watkins over 0.5 receptions",
+"p": 0.66,
+"price": 0.54,
 "book": "Kalshi",
-"kind": "pass_yds",
+"kind": "rec",
 "side": "o",
-"line": 224.5,
-"name": "kirk cousins"
+"line": 0.5,
+"name": "jordan watkins"
 }
 ],
-"p": 0.0425,
+"p": 0.047,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -22773,7 +23267,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -22785,8 +23279,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22797,7 +23291,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -22808,29 +23302,29 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Jordan Watkins over 0.5 receptions",
+"p": 0.66,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "jordan watkins"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
 "name": "kirk cousins"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Myles Price over 9.5 rec yds",
-"p": 0.588,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "myles price"
 }
 ],
-"p": 0.0273,
+"p": 0.03,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -22855,7 +23349,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -22867,8 +23361,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -22879,7 +23373,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -22890,8 +23384,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Jordan Watkins over 0.5 receptions",
+"p": 0.66,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "jordan watkins"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -22910,21 +23416,9 @@
 "side": "o",
 "line": 9.5,
 "name": "myles price"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Mike Evans over 2.5 receptions",
-"p": 0.57,
-"price": null,
-"book": null,
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "mike evans"
 }
 ],
-"p": 0.0168,
+"p": 0.0192,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -22936,20 +23430,8 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Christian McCaffrey over 49.5 rush yds",
-"p": 0.478,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "christian mccaffrey"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
 "lab": "George Kittle over 3.5 receptions",
-"p": 0.431,
+"p": 0.429,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -22961,17 +23443,29 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.367,
+"p": 0.368,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
 "line": 249.5,
 "name": "brock purdy"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 54.5 rec yds",
+"p": 0.376,
+"price": null,
+"book": null,
+"kind": "rec_yds",
+"side": "o",
+"line": 54.5,
+"name": "mike evans"
 }
 ],
-"p": 0.092,
-"d": 6.775,
+"p": 0.1056,
+"d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 },
@@ -22982,20 +23476,8 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Christian McCaffrey over 49.5 rush yds",
-"p": 0.478,
-"price": 0.55,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 49.5,
-"name": "christian mccaffrey"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
 "lab": "George Kittle over 3.5 receptions",
-"p": 0.431,
+"p": 0.429,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -23007,7 +23489,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.367,
+"p": 0.368,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23018,17 +23500,29 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Mike Evans over 49.5 rec yds",
-"p": 0.416,
+"lab": "Mike Evans over 54.5 rec yds",
+"p": 0.376,
 "price": null,
 "book": null,
 "kind": "rec_yds",
 "side": "o",
-"line": 49.5,
+"line": 54.5,
 "name": "mike evans"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Christian McCaffrey over 29.5 rec yds",
+"p": 0.414,
+"price": 0.55,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "christian mccaffrey"
 }
 ],
-"p": 0.0521,
+"p": 0.0492,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -23041,7 +23535,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -23065,7 +23559,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23089,8 +23583,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"p": 0.557,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -23098,7 +23592,7 @@
 "name": "christian mccaffrey"
 }
 ],
-"p": 0.0908,
+"p": 0.0898,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -23111,7 +23605,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -23135,7 +23629,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23159,8 +23653,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"p": 0.557,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -23170,14 +23664,14 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.562,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rec_yds",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.573,
+"price": null,
+"book": null,
+"kind": "rec",
 "side": "o",
-"line": 24.5,
-"name": "keenan allen"
+"line": 2.5,
+"name": "mike evans"
 }
 ],
 "p": 0.0541,
@@ -23193,7 +23687,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.514,
+"p": 0.517,
 "price": null,
 "book": null,
 "kind": "total",
@@ -23217,7 +23711,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23241,8 +23735,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"p": 0.557,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -23252,29 +23746,29 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.562,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "keenan allen"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
 "lab": "Mike Evans over 2.5 receptions",
-"p": 0.57,
+"p": 0.573,
 "price": null,
 "book": null,
 "kind": "rec",
 "side": "o",
 "line": 2.5,
 "name": "mike evans"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Keenan Allen over 24.5 rec yds",
+"p": 0.565,
+"price": 0.53,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 24.5,
+"name": "keenan allen"
 }
 ],
-"p": 0.0318,
+"p": 0.0322,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -23287,7 +23781,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "SF wins",
-"p": 0.598,
+"p": 0.6,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -23299,8 +23793,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"p": 0.557,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -23311,7 +23805,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kaelon Black over 29.5 rush yds",
-"p": 0.433,
+"p": 0.439,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -23323,7 +23817,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.397,
+"p": 0.398,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23334,17 +23828,17 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.562,
-"price": 0.53,
-"book": "Kalshi",
+"lab": "Mike Evans over 39.5 rec yds",
+"p": 0.52,
+"price": null,
+"book": null,
 "kind": "rec_yds",
 "side": "o",
-"line": 24.5,
-"name": "keenan allen"
+"line": 39.5,
+"name": "mike evans"
 }
 ],
-"p": 0.0509,
+"p": 0.0533,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -23357,7 +23851,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "SF wins",
-"p": 0.598,
+"p": 0.6,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -23369,8 +23863,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"p": 0.557,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -23381,7 +23875,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kaelon Black over 29.5 rush yds",
-"p": 0.433,
+"p": 0.439,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -23393,7 +23887,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.397,
+"p": 0.398,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23404,29 +23898,29 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.562,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "keenan allen"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
 "lab": "Mike Evans over 39.5 rec yds",
-"p": 0.516,
+"p": 0.52,
 "price": null,
 "book": null,
 "kind": "rec_yds",
 "side": "o",
 "line": 39.5,
 "name": "mike evans"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Keenan Allen over 24.5 rec yds",
+"p": 0.565,
+"price": 0.53,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 24.5,
+"name": "keenan allen"
 }
 ],
-"p": 0.0334,
+"p": 0.0342,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -23439,7 +23933,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "SF wins",
-"p": 0.598,
+"p": 0.6,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -23451,8 +23945,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.555,
-"price": 0.58,
+"p": 0.557,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -23463,7 +23957,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kaelon Black over 29.5 rush yds",
-"p": 0.433,
+"p": 0.439,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -23475,7 +23969,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.397,
+"p": 0.398,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23486,20 +23980,8 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.562,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "keenan allen"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
 "lab": "Mike Evans over 39.5 rec yds",
-"p": 0.516,
+"p": 0.52,
 "price": null,
 "book": null,
 "kind": "rec_yds",
@@ -23510,8 +23992,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Keenan Allen over 24.5 rec yds",
+"p": 0.565,
+"price": 0.53,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 24.5,
+"name": "keenan allen"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Aaron Jones over 1.5 receptions",
-"p": 0.582,
+"p": 0.584,
 "price": 0.59,
 "book": "Kalshi",
 "kind": "rec",
@@ -23520,7 +24014,7 @@
 "name": "aaron jones"
 }
 ],
-"p": 0.0202,
+"p": 0.0204,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -23544,20 +24038,8 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 2.5 receptions",
-"p": 0.566,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "keenan allen"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -23569,7 +24051,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -23581,17 +24063,29 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 39.5,
 "name": "jordan mason"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "T.J. Hockenson over 49.5 rec yds",
+"p": 0.373,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "tj hockenson"
 }
 ],
-"p": 0.0337,
-"d": 30.769,
+"p": 0.0268,
+"d": 34.843,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 },
@@ -23614,8 +24108,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Brock Purdy over 19.5 rush yds",
+"p": 0.427,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "brock purdy"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -23627,8 +24133,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -23638,30 +24144,18 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Myles Price over 9.5 rec yds",
-"p": 0.588,
-"price": 0.46,
+"lab": "Jordan Watkins over 0.5 receptions",
+"p": 0.66,
+"price": 0.54,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 9.5,
-"name": "myles price"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "kirk cousins"
+"line": 0.5,
+"name": "jordan watkins"
 }
 ],
-"p": 0.0356,
-"d": 34.843,
+"p": 0.0302,
+"d": 36.765,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 },
@@ -23684,8 +24178,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Brock Purdy over 19.5 rush yds",
+"p": 0.427,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "brock purdy"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -23697,13 +24203,25 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 39.5,
 "name": "jordan mason"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Jordan Watkins over 0.5 receptions",
+"p": 0.66,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "jordan watkins"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -23716,34 +24234,10 @@
 "side": "o",
 "line": 9.5,
 "name": "myles price"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "kirk cousins"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 2.5 receptions",
-"p": 0.566,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "keenan allen"
 }
 ],
-"p": 0.0211,
-"d": 67.114,
+"p": 0.0175,
+"d": 80,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 },
@@ -23766,8 +24260,20 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
+"lab": "Brock Purdy over 19.5 rush yds",
+"p": 0.427,
+"price": 0.45,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 19.5,
+"name": "brock purdy"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
 "lab": "Justin Jefferson anytime TD",
-"p": 0.385,
+"p": 0.386,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "td",
@@ -23779,13 +24285,25 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.366,
-"price": 0.47,
+"p": 0.37,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 39.5,
 "name": "jordan mason"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Jordan Watkins over 0.5 receptions",
+"p": 0.66,
+"price": 0.54,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "jordan watkins"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -23803,41 +24321,17 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.508,
+"p": 0.51,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
 "name": "kirk cousins"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 2.5 receptions",
-"p": 0.566,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "keenan allen"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Mike Evans over 2.5 receptions",
-"p": 0.57,
-"price": null,
-"book": null,
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "mike evans"
 }
 ],
-"p": 0.0127,
-"d": null,
+"p": 0.0115,
+"d": 140.845,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 },
@@ -23849,7 +24343,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Theo Johnson over 0.5 receptions",
-"p": 0.752,
+"p": 0.756,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -23861,8 +24355,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -23873,7 +24367,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.654,
+"p": 0.658,
 "price": null,
 "book": null,
 "kind": "total",
@@ -23886,7 +24380,7 @@
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
 "p": 0.711,
-"price": 0.54,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -23909,7 +24403,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
+"p": 0.61,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -23918,7 +24412,7 @@
 "name": "brenton strange"
 }
 ],
-"p": 0.1385,
+"p": 0.1419,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -23931,7 +24425,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Theo Johnson over 0.5 receptions",
-"p": 0.752,
+"p": 0.756,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -23943,8 +24437,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -23955,7 +24449,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.654,
+"p": 0.658,
 "price": null,
 "book": null,
 "kind": "total",
@@ -23968,7 +24462,7 @@
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
 "p": 0.711,
-"price": 0.54,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -23991,7 +24485,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
+"p": 0.61,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24003,7 +24497,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.584,
+"p": 0.583,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -24012,7 +24506,253 @@
 "name": "isaiah likely"
 }
 ],
-"p": 0.0958,
+"p": 0.097,
+"d": null,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Expected: close game \u00b7 5 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely anytime TD",
+"p": 0.444,
+"price": 0.29,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "isaiah likely"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Cam Skattebo over 59.5 rush yds",
+"p": 0.432,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "cam skattebo"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Over 45.5 total points",
+"p": 0.658,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 45.5,
+"name": null
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "J.J. McCarthy over 199.5 pass yds",
+"p": 0.732,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "jj mccarthy"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.756,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+}
+],
+"p": 0.0967,
+"d": null,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Expected: close game \u00b7 6 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely anytime TD",
+"p": 0.444,
+"price": 0.29,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "isaiah likely"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Cam Skattebo over 59.5 rush yds",
+"p": 0.432,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "cam skattebo"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Over 45.5 total points",
+"p": 0.658,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 45.5,
+"name": null
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "J.J. McCarthy over 199.5 pass yds",
+"p": 0.732,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "jj mccarthy"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.756,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Trevor Lawrence over 224.5 pass yds",
+"p": 0.623,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "trevor lawrence"
+}
+],
+"p": 0.0694,
+"d": null,
+"first": "2026-11-22T21:25:00+00:00",
+"res": null
+},
+{
+"card": "Same-game parlays (market-blind)",
+"tier": "Expected: close game \u00b7 7 legs",
+"legs": [
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Isaiah Likely anytime TD",
+"p": 0.444,
+"price": 0.29,
+"book": "Kalshi",
+"kind": "td",
+"side": "o",
+"line": 0.5,
+"name": "isaiah likely"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Cam Skattebo over 59.5 rush yds",
+"p": 0.432,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 59.5,
+"name": "cam skattebo"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Over 45.5 total points",
+"p": 0.658,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 45.5,
+"name": null
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "J.J. McCarthy over 199.5 pass yds",
+"p": 0.732,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 199.5,
+"name": "jj mccarthy"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.756,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Trevor Lawrence over 224.5 pass yds",
+"p": 0.623,
+"price": 0.57,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "trevor lawrence"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Devin Singletary over 9.5 rush yds",
+"p": 0.711,
+"price": 0.5,
+"book": "Kalshi",
+"kind": "rush_yds",
+"side": "o",
+"line": 9.5,
+"name": "devin singletary"
+}
+],
+"p": 0.0495,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24025,7 +24765,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Malik Nabers over 5.5 receptions",
-"p": 0.471,
+"p": 0.472,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec",
@@ -24037,7 +24777,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 249.5 pass yds",
-"p": 0.433,
+"p": 0.434,
 "price": 0.31,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -24058,7 +24798,7 @@
 "name": "malachi fields"
 }
 ],
-"p": 0.1444,
+"p": 0.1418,
 "d": 14.065,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24071,7 +24811,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Malik Nabers over 5.5 receptions",
-"p": 0.471,
+"p": 0.472,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec",
@@ -24083,7 +24823,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 249.5 pass yds",
-"p": 0.433,
+"p": 0.434,
 "price": 0.31,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -24106,18 +24846,18 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Darnell Mooney over 24.5 rec yds",
-"p": 0.423,
-"price": 0.35,
+"lab": "Isaiah Likely over 5.5 receptions",
+"p": 0.419,
+"price": 0.41,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 24.5,
-"name": "darnell mooney"
+"line": 5.5,
+"name": "isaiah likely"
 }
 ],
-"p": 0.0686,
-"d": 40.161,
+"p": 0.0666,
+"d": 34.247,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -24129,7 +24869,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.654,
+"p": 0.658,
 "price": null,
 "book": null,
 "kind": "total",
@@ -24141,8 +24881,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24165,7 +24905,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.584,
+"p": 0.583,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -24177,7 +24917,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
+"p": 0.61,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24186,7 +24926,7 @@
 "name": "brenton strange"
 }
 ],
-"p": 0.1726,
+"p": 0.1728,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24199,7 +24939,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.654,
+"p": 0.658,
 "price": null,
 "book": null,
 "kind": "total",
@@ -24211,8 +24951,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24235,7 +24975,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.584,
+"p": 0.583,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -24247,7 +24987,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
+"p": 0.61,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24258,17 +24998,17 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Malik Nabers over 64.5 rec yds",
-"p": 0.541,
-"price": 0.52,
+"lab": "Bhayshul Tuten anytime TD",
+"p": 0.55,
+"price": 0.51,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "td",
 "side": "o",
-"line": 64.5,
-"name": "malik nabers"
+"line": 0.5,
+"name": "bhayshul tuten"
 }
 ],
-"p": 0.1102,
+"p": 0.1053,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24281,7 +25021,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Over 45.5 total points",
-"p": 0.654,
+"p": 0.658,
 "price": null,
 "book": null,
 "kind": "total",
@@ -24293,8 +25033,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24317,7 +25057,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 49.5 rec yds",
-"p": 0.584,
+"p": 0.583,
 "price": 0.47,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -24329,7 +25069,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
+"p": 0.61,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24340,29 +25080,29 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
-"lab": "Malik Nabers over 64.5 rec yds",
-"p": 0.541,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 64.5,
-"name": "malik nabers"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
 "lab": "Bhayshul Tuten anytime TD",
-"p": 0.548,
+"p": 0.55,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
 "line": 0.5,
 "name": "bhayshul tuten"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
+"lab": "Malik Nabers over 64.5 rec yds",
+"p": 0.538,
+"price": 0.52,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 64.5,
+"name": "malik nabers"
 }
 ],
-"p": 0.0664,
+"p": 0.0655,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24376,7 +25116,7 @@
 "start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
 "p": 0.711,
-"price": 0.54,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24387,8 +25127,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24399,7 +25139,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Malik Nabers over 64.5 rec yds",
-"p": 0.541,
+"p": 0.538,
 "price": 0.52,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -24411,7 +25151,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.436,
+"p": 0.432,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -24423,8 +25163,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Trevor Lawrence over 9.5 rush yds",
-"p": 0.539,
-"price": 0.57,
+"p": 0.543,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24432,8 +25172,8 @@
 "name": "trevor lawrence"
 }
 ],
-"p": 0.081,
-"d": 23.041,
+"p": 0.0807,
+"d": 26.178,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -24445,7 +25185,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "JAX wins",
-"p": 0.6,
+"p": 0.603,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -24457,7 +25197,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Bhayshul Tuten anytime TD",
-"p": 0.548,
+"p": 0.55,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "td",
@@ -24469,8 +25209,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Chris Rodriguez Jr. over 19.5 rush yds",
-"p": 0.465,
-"price": 0.53,
+"p": 0.463,
+"price": 0.47,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24481,7 +25221,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Parker Washington anytime TD",
-"p": 0.359,
+"p": 0.364,
 "price": 0.39,
 "book": "Kalshi",
 "kind": "td",
@@ -24493,7 +25233,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Theo Johnson over 0.5 receptions",
-"p": 0.752,
+"p": 0.756,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24502,7 +25242,7 @@
 "name": "theo johnson"
 }
 ],
-"p": 0.051,
+"p": 0.0542,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24515,7 +25255,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "JAX wins",
-"p": 0.6,
+"p": 0.603,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -24527,7 +25267,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Bhayshul Tuten anytime TD",
-"p": 0.548,
+"p": 0.55,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "td",
@@ -24539,8 +25279,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Chris Rodriguez Jr. over 19.5 rush yds",
-"p": 0.465,
-"price": 0.53,
+"p": 0.463,
+"price": 0.47,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24551,7 +25291,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Parker Washington anytime TD",
-"p": 0.359,
+"p": 0.364,
 "price": 0.39,
 "book": "Kalshi",
 "kind": "td",
@@ -24563,7 +25303,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Theo Johnson over 0.5 receptions",
-"p": 0.752,
+"p": 0.756,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24584,7 +25324,7 @@
 "name": "trevor lawrence"
 }
 ],
-"p": 0.0351,
+"p": 0.0378,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24597,7 +25337,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "JAX wins",
-"p": 0.6,
+"p": 0.603,
 "price": null,
 "book": null,
 "kind": "ml",
@@ -24609,7 +25349,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Bhayshul Tuten anytime TD",
-"p": 0.548,
+"p": 0.55,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "td",
@@ -24621,8 +25361,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Chris Rodriguez Jr. over 19.5 rush yds",
-"p": 0.465,
-"price": 0.53,
+"p": 0.463,
+"price": 0.47,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24633,7 +25373,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Parker Washington anytime TD",
-"p": 0.359,
+"p": 0.364,
 "price": 0.39,
 "book": "Kalshi",
 "kind": "td",
@@ -24645,7 +25385,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Theo Johnson over 0.5 receptions",
-"p": 0.752,
+"p": 0.756,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -24669,7 +25409,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely over 4.5 receptions",
-"p": 0.602,
+"p": 0.603,
 "price": 0.58,
 "book": "Kalshi",
 "kind": "rec",
@@ -24678,7 +25418,7 @@
 "name": "isaiah likely"
 }
 ],
-"p": 0.0225,
+"p": 0.0244,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -24691,7 +25431,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely anytime TD",
-"p": 0.441,
+"p": 0.444,
 "price": 0.29,
 "book": "Kalshi",
 "kind": "td",
@@ -24703,7 +25443,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.436,
+"p": 0.432,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -24715,8 +25455,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24726,30 +25466,30 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.756,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
 "p": 0.711,
-"price": 0.54,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 9.5,
 "name": "devin singletary"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
-"lab": "Trevor Lawrence over 224.5 pass yds",
-"p": 0.623,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "trevor lawrence"
 }
 ],
-"p": 0.0754,
-"d": 41.322,
+"p": 0.0844,
+"d": 43.103,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -24761,7 +25501,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely anytime TD",
-"p": 0.441,
+"p": 0.444,
 "price": 0.29,
 "book": "Kalshi",
 "kind": "td",
@@ -24773,7 +25513,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.436,
+"p": 0.432,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -24785,8 +25525,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24796,9 +25536,21 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.756,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
 "p": 0.711,
-"price": 0.54,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24816,22 +25568,10 @@
 "side": "o",
 "line": 224.5,
 "name": "trevor lawrence"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
-"lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
-"price": 0.61,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "brenton strange"
 }
 ],
-"p": 0.0507,
-"d": 67.568,
+"p": 0.0569,
+"d": 75.758,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -24843,7 +25583,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Isaiah Likely anytime TD",
-"p": 0.441,
+"p": 0.444,
 "price": 0.29,
 "book": "Kalshi",
 "kind": "td",
@@ -24855,7 +25595,7 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Cam Skattebo over 59.5 rush yds",
-"p": 0.436,
+"p": 0.432,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -24867,8 +25607,8 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "J.J. McCarthy over 199.5 pass yds",
-"p": 0.731,
-"price": 0.59,
+"p": 0.732,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
@@ -24878,9 +25618,21 @@
 {
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
+"lab": "Theo Johnson over 0.5 receptions",
+"p": 0.756,
+"price": 0.61,
+"book": "Kalshi",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "theo johnson"
+},
+{
+"gid": "2026_11_JAX_NYG",
+"start": "2026-11-22T16:25:00",
 "lab": "Devin Singletary over 9.5 rush yds",
 "p": 0.711,
-"price": 0.54,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24903,29 +25655,17 @@
 "gid": "2026_11_JAX_NYG",
 "start": "2026-11-22T16:25:00",
 "lab": "Brenton Strange over 2.5 receptions",
-"p": 0.614,
+"p": 0.61,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
 "line": 2.5,
 "name": "brenton strange"
-},
-{
-"gid": "2026_11_JAX_NYG",
-"start": "2026-11-22T16:25:00",
-"lab": "Malik Nabers over 64.5 rec yds",
-"p": 0.541,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 64.5,
-"name": "malik nabers"
 }
 ],
-"p": 0.0327,
-"d": 129.87,
+"p": 0.0393,
+"d": 123.457,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -24937,8 +25677,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -24949,8 +25689,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -24961,7 +25701,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -24973,7 +25713,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -24985,8 +25725,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.614,
-"price": 0.58,
+"p": 0.615,
+"price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -24994,8 +25734,8 @@
 "name": "jalen nailor"
 }
 ],
-"p": 0.1788,
-"d": 22.422,
+"p": 0.1784,
+"d": 21.322,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25007,8 +25747,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25019,8 +25759,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -25031,7 +25771,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25043,7 +25783,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25055,8 +25795,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.614,
-"price": 0.58,
+"p": 0.615,
+"price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25066,18 +25806,18 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 40.5,
-"name": null
+"lab": "Bo Nix over 224.5 pass yds",
+"p": 0.564,
+"price": 0.46,
+"book": "Kalshi",
+"kind": "pass_yds",
+"side": "o",
+"line": 224.5,
+"name": "bo nix"
 }
 ],
-"p": 0.1201,
-"d": null,
+"p": 0.1173,
+"d": 46.296,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25089,8 +25829,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25101,8 +25841,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -25113,7 +25853,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25125,7 +25865,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25137,8 +25877,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.614,
-"price": 0.58,
+"p": 0.615,
+"price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25148,29 +25888,29 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 40.5,
-"name": null
-},
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
 "side": "o",
 "line": 224.5,
 "name": "bo nix"
+},
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"lab": "Over 41.5 total points",
+"p": 0.503,
+"price": null,
+"book": null,
+"kind": "total",
+"side": "over",
+"line": 41.5,
+"name": null
 }
 ],
-"p": 0.0876,
+"p": 0.0846,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -25183,8 +25923,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25195,7 +25935,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25207,8 +25947,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.39,
-"price": 0.57,
+"p": 0.392,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -25219,8 +25959,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.769,
-"price": 0.55,
+"p": 0.766,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25231,7 +25971,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25240,8 +25980,8 @@
 "name": "courtland sutton"
 }
 ],
-"p": 0.1066,
-"d": 22.936,
+"p": 0.1081,
+"d": 22.173,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25253,8 +25993,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25265,7 +26005,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25277,8 +26017,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.39,
-"price": 0.57,
+"p": 0.392,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -25289,8 +26029,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.769,
-"price": 0.55,
+"p": 0.766,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25301,7 +26041,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25312,18 +26052,18 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 40.5,
-"name": null
+"lab": "Marvin Mims Jr. over 9.5 rec yds",
+"p": 0.653,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "marvin mims"
 }
 ],
-"p": 0.0778,
-"d": null,
+"p": 0.0764,
+"d": 43.478,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25335,8 +26075,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25347,7 +26087,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25359,8 +26099,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.39,
-"price": 0.57,
+"p": 0.392,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -25371,8 +26111,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.769,
-"price": 0.55,
+"p": 0.766,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25383,7 +26123,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25394,30 +26134,30 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 40.5,
-"name": null
+"lab": "Marvin Mims Jr. over 9.5 rec yds",
+"p": 0.653,
+"price": 0.51,
+"book": "Kalshi",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "marvin mims"
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jaylen Waddle over 39.5 rec yds",
-"p": 0.535,
-"price": 0.55,
+"lab": "Evan Engram over 19.5 rec yds",
+"p": 0.561,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
-"line": 39.5,
-"name": "jaylen waddle"
+"line": 19.5,
+"name": "evan engram"
 }
 ],
-"p": 0.05,
-"d": null,
+"p": 0.0477,
+"d": 86.957,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25429,8 +26169,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 3.5 receptions",
-"p": 0.474,
-"price": 0.4,
+"p": 0.477,
+"price": 0.41,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25441,7 +26181,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 249.5 pass yds",
-"p": 0.4,
+"p": 0.402,
 "price": 0.32,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25452,18 +26192,18 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jaylen Waddle over 3.5 receptions",
-"p": 0.462,
-"price": 0.56,
+"lab": "Jaylen Waddle over 49.5 rec yds",
+"p": 0.422,
+"price": 0.43,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 3.5,
+"line": 49.5,
 "name": "jaylen waddle"
 }
 ],
-"p": 0.1336,
-"d": 13.947,
+"p": 0.1319,
+"d": 17.73,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25475,8 +26215,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 3.5 receptions",
-"p": 0.474,
-"price": 0.4,
+"p": 0.477,
+"price": 0.41,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25487,7 +26227,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 249.5 pass yds",
-"p": 0.4,
+"p": 0.402,
 "price": 0.32,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25498,20 +26238,20 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jaylen Waddle over 3.5 receptions",
-"p": 0.462,
-"price": 0.56,
+"lab": "Jaylen Waddle over 49.5 rec yds",
+"p": 0.422,
+"price": 0.43,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 3.5,
+"line": 49.5,
 "name": "jaylen waddle"
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Evan Engram over 2.5 receptions",
-"p": 0.441,
+"p": 0.442,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "rec",
@@ -25520,8 +26260,8 @@
 "name": "evan engram"
 }
 ],
-"p": 0.0656,
-"d": 31.746,
+"p": 0.0641,
+"d": 40.323,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25532,21 +26272,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
+"lab": "Over 41.5 total points",
+"p": 0.503,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -25557,7 +26297,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25569,7 +26309,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25581,7 +26321,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25590,7 +26330,7 @@
 "name": "courtland sutton"
 }
 ],
-"p": 0.1574,
+"p": 0.1526,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -25602,21 +26342,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
+"lab": "Over 41.5 total points",
+"p": 0.503,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -25627,7 +26367,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25639,7 +26379,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25651,7 +26391,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25663,7 +26403,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25672,7 +26412,7 @@
 "name": "marvin mims"
 }
 ],
-"p": 0.1126,
+"p": 0.1092,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -25684,21 +26424,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Over 40.5 total points",
-"p": 0.534,
+"lab": "Over 41.5 total points",
+"p": 0.503,
 "price": null,
 "book": null,
 "kind": "total",
 "side": "over",
-"line": 40.5,
+"line": 41.5,
 "name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -25709,7 +26449,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25721,7 +26461,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25733,7 +26473,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25745,7 +26485,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25757,8 +26497,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.614,
-"price": 0.58,
+"p": 0.615,
+"price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25766,7 +26506,7 @@
 "name": "jalen nailor"
 }
 ],
-"p": 0.0757,
+"p": 0.0738,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -25779,8 +26519,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25791,8 +26531,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.39,
-"price": 0.57,
+"p": 0.392,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -25803,8 +26543,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.769,
-"price": 0.55,
+"p": 0.766,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25815,7 +26555,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25827,7 +26567,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25836,8 +26576,8 @@
 "name": "bo nix"
 }
 ],
-"p": 0.1071,
-"d": 24.691,
+"p": 0.1075,
+"d": 23.866,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25849,8 +26589,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25861,8 +26601,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.39,
-"price": 0.57,
+"p": 0.392,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -25873,8 +26613,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.769,
-"price": 0.55,
+"p": 0.766,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25885,7 +26625,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25897,7 +26637,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25909,7 +26649,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25918,8 +26658,8 @@
 "name": "courtland sutton"
 }
 ],
-"p": 0.0752,
-"d": 45.045,
+"p": 0.0764,
+"d": 43.478,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -25931,8 +26671,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "J.K. Dobbins over 19.5 rush yds",
-"p": 0.823,
-"price": 0.55,
+"p": 0.824,
+"price": 0.54,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -25943,8 +26683,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jonah Coleman anytime TD",
-"p": 0.39,
-"price": 0.57,
+"p": 0.392,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -25955,8 +26695,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 3.5 receptions",
-"p": 0.769,
-"price": 0.55,
+"p": 0.766,
+"price": 0.56,
 "book": "Kalshi",
 "kind": "rec",
 "side": "o",
@@ -25967,7 +26707,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Marvin Mims Jr. over 9.5 rec yds",
-"p": 0.648,
+"p": 0.653,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -25979,7 +26719,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Bo Nix over 224.5 pass yds",
-"p": 0.565,
+"p": 0.564,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -25991,7 +26731,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Courtland Sutton over 29.5 rec yds",
-"p": 0.616,
+"p": 0.621,
 "price": 0.55,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26002,18 +26742,18 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Jalen Nailor over 1.5 receptions",
-"p": 0.614,
-"price": 0.58,
+"lab": "Evan Engram over 19.5 rec yds",
+"p": 0.561,
+"price": 0.5,
 "book": "Kalshi",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
-"name": "jalen nailor"
+"line": 19.5,
+"name": "evan engram"
 }
 ],
-"p": 0.0474,
-"d": 77.519,
+"p": 0.0477,
+"d": 86.957,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
 },
@@ -26025,8 +26765,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Michael Mayer over 29.5 rec yds",
-"p": 0.772,
-"price": 0.56,
+"p": 0.771,
+"price": 0.57,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -26037,8 +26777,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Ashton Jeanty over 29.5 rush yds",
-"p": 0.551,
-"price": 0.52,
+"p": 0.553,
+"price": 0.53,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -26049,7 +26789,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26061,7 +26801,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Tre Tucker over 39.5 rec yds",
-"p": 0.473,
+"p": 0.477,
 "price": null,
 "book": null,
 "kind": "rec_yds",
@@ -26072,17 +26812,17 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Mike Washington Jr. over 24.5 rush yds",
-"p": 0.462,
-"price": 0.53,
+"lab": "Mike Washington Jr. over 29.5 rush yds",
+"p": 0.37,
+"price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
-"line": 24.5,
+"line": 29.5,
 "name": "mike washington"
 }
 ],
-"p": 0.0768,
+"p": 0.0632,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -26095,8 +26835,8 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Ashton Jeanty over 29.5 rush yds",
-"p": 0.551,
-"price": 0.52,
+"p": 0.553,
+"price": 0.53,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
@@ -26107,7 +26847,7 @@
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Fernando Mendoza over 174.5 pass yds",
-"p": 0.565,
+"p": 0.567,
 "price": 0.49,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26118,21 +26858,21 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Tre Tucker over 39.5 rec yds",
-"p": 0.473,
+"lab": "Over 41.5 total points",
+"p": 0.503,
 "price": null,
 "book": null,
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "tre tucker"
+"kind": "total",
+"side": "over",
+"line": 41.5,
+"name": null
 },
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
 "lab": "Jalen Nailor over 19.5 rec yds",
 "p": 0.436,
-"price": 0.49,
+"price": 0.5,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
@@ -26142,17 +26882,17 @@
 {
 "gid": "2026_11_LV_DEN",
 "start": "2026-11-22T16:25:00",
-"lab": "Mike Washington Jr. over 24.5 rush yds",
-"p": 0.462,
-"price": 0.53,
+"lab": "Mike Washington Jr. over 29.5 rush yds",
+"p": 0.37,
+"price": 0.46,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
-"line": 24.5,
+"line": 29.5,
 "name": "mike washington"
 }
 ],
-"p": 0.0452,
+"p": 0.0427,
 "d": null,
 "first": "2026-11-22T21:25:00+00:00",
 "res": null
@@ -26189,13 +26929,25 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
+"p": 0.588,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
 "name": "myles price"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.565,
+"price": null,
+"book": null,
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mike evans"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -26208,21 +26960,9 @@
 "side": "home",
 "line": null,
 "name": null
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "christian mccaffrey"
 }
 ],
-"p": 0.0885,
+"p": 0.0807,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26259,13 +26999,25 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
+"p": 0.588,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
 "name": "myles price"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.565,
+"price": null,
+"book": null,
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mike evans"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -26283,28 +27035,16 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
 "line": 0.5,
 "name": "christian mccaffrey"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.553,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "keenan allen"
 }
 ],
-"p": 0.0503,
+"p": 0.051,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26341,13 +27081,25 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
+"p": 0.588,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
 "line": 9.5,
 "name": "myles price"
+},
+{
+"gid": "2026_11_MIN_SF",
+"start": "2026-11-22T20:20:00",
+"lab": "Mike Evans over 2.5 receptions",
+"p": 0.565,
+"price": null,
+"book": null,
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mike evans"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -26365,8 +27117,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26377,28 +27129,16 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.553,
+"p": 0.556,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
 "line": 24.5,
 "name": "keenan allen"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Mike Evans over 2.5 receptions",
-"p": 0.561,
-"price": null,
-"book": null,
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "mike evans"
 }
 ],
-"p": 0.0275,
+"p": 0.0284,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26411,7 +27151,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.442,
+"p": 0.443,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26435,7 +27175,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "George Kittle over 3.5 receptions",
-"p": 0.426,
+"p": 0.423,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -26444,7 +27184,7 @@
 "name": "george kittle"
 }
 ],
-"p": 0.1165,
+"p": 0.1162,
 "d": 5.045,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26457,7 +27197,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.442,
+"p": 0.443,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26481,7 +27221,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "George Kittle over 3.5 receptions",
-"p": 0.426,
+"p": 0.423,
 "price": 0.61,
 "book": "Kalshi",
 "kind": "rec",
@@ -26493,7 +27233,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.345,
+"p": 0.346,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26502,7 +27242,7 @@
 "name": "brock purdy"
 }
 ],
-"p": 0.0563,
+"p": 0.0562,
 "d": 11.468,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26515,7 +27255,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.462,
+"p": 0.461,
 "price": null,
 "book": null,
 "kind": "total",
@@ -26539,8 +27279,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26551,7 +27291,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
+"p": 0.473,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26563,7 +27303,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
+"p": 0.588,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26572,7 +27312,7 @@
 "name": "myles price"
 }
 ],
-"p": 0.0773,
+"p": 0.0788,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26585,7 +27325,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.462,
+"p": 0.461,
 "price": null,
 "book": null,
 "kind": "total",
@@ -26609,8 +27349,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26621,7 +27361,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
+"p": 0.473,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26633,7 +27373,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
+"p": 0.588,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26645,7 +27385,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.553,
+"p": 0.556,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26654,7 +27394,7 @@
 "name": "keenan allen"
 }
 ],
-"p": 0.0468,
+"p": 0.0475,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26667,7 +27407,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Over 46.5 total points",
-"p": 0.462,
+"p": 0.461,
 "price": null,
 "book": null,
 "kind": "total",
@@ -26691,8 +27431,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26703,7 +27443,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
+"p": 0.473,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26715,7 +27455,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
+"p": 0.588,
 "price": 0.46,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26727,7 +27467,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.553,
+"p": 0.556,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26739,7 +27479,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Mike Evans over 2.5 receptions",
-"p": 0.561,
+"p": 0.565,
 "price": null,
 "book": null,
 "kind": "rec",
@@ -26748,7 +27488,7 @@
 "name": "mike evans"
 }
 ],
-"p": 0.0267,
+"p": 0.028,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26773,8 +27513,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26785,7 +27525,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kaelon Black over 29.5 rush yds",
-"p": 0.439,
+"p": 0.445,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -26797,7 +27537,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.375,
+"p": 0.376,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26818,7 +27558,7 @@
 "name": "mike evans"
 }
 ],
-"p": 0.0525,
+"p": 0.054,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26843,8 +27583,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26855,7 +27595,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kaelon Black over 29.5 rush yds",
-"p": 0.439,
+"p": 0.445,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -26867,7 +27607,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.375,
+"p": 0.376,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26891,7 +27631,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.553,
+"p": 0.556,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26900,7 +27640,7 @@
 "name": "keenan allen"
 }
 ],
-"p": 0.0341,
+"p": 0.0355,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -26925,8 +27665,8 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Christian McCaffrey anytime TD",
-"p": 0.546,
-"price": 0.58,
+"p": 0.549,
+"price": 0.59,
 "book": "Kalshi",
 "kind": "td",
 "side": "o",
@@ -26937,7 +27677,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kaelon Black over 29.5 rush yds",
-"p": 0.439,
+"p": 0.445,
 "price": 0.51,
 "book": "Kalshi",
 "kind": "rush_yds",
@@ -26949,7 +27689,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Brock Purdy over 249.5 pass yds",
-"p": 0.375,
+"p": 0.376,
 "price": 0.44,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -26973,7 +27713,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Keenan Allen over 24.5 rec yds",
-"p": 0.553,
+"p": 0.556,
 "price": 0.53,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -26984,17 +27724,17 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Jordan Watkins over 9.5 rec yds",
-"p": 0.51,
-"price": 0.49,
+"lab": "Aaron Jones over 1.5 receptions",
+"p": 0.58,
+"price": 0.59,
 "book": "Kalshi",
-"kind": "rec_yds",
+"kind": "rec",
 "side": "o",
-"line": 9.5,
-"name": "jordan watkins"
+"line": 1.5,
+"name": "aaron jones"
 }
 ],
-"p": 0.0199,
+"p": 0.0212,
 "d": null,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
@@ -27019,7 +27759,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
+"p": 0.473,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -27031,7 +27771,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "T.J. Hockenson over 49.5 rec yds",
-"p": 0.356,
+"p": 0.358,
 "price": 0.45,
 "book": "Kalshi",
 "kind": "rec_yds",
@@ -27042,14 +27782,14 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.356,
-"price": 0.47,
+"lab": "Brock Purdy over 19.5 rush yds",
+"p": 0.421,
+"price": 0.45,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
-"line": 39.5,
-"name": "jordan mason"
+"line": 19.5,
+"name": "brock purdy"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -27064,8 +27804,8 @@
 "name": "justin jefferson"
 }
 ],
-"p": 0.0233,
-"d": 35.587,
+"p": 0.0268,
+"d": 37.175,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 },
@@ -27089,7 +27829,7 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
+"p": 0.473,
 "price": 0.57,
 "book": "Kalshi",
 "kind": "pass_yds",
@@ -27100,154 +27840,14 @@
 {
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
-"lab": "Justin Jefferson anytime TD",
+"lab": "T.J. Hockenson over 49.5 rec yds",
 "p": 0.358,
-"price": 0.44,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "justin jefferson"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.356,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "jordan mason"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Over 46.5 total points",
-"p": 0.462,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 46.5,
-"name": null
-}
-],
-"p": 0.0358,
-"d": null,
-"first": "2026-11-23T01:20:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Close finish \u00b7 6 legs",
-"legs": [
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Aaron Jones over 29.5 rush yds",
-"p": 0.647,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 29.5,
-"name": "aaron jones"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "kirk cousins"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Justin Jefferson anytime TD",
-"p": 0.358,
-"price": 0.44,
-"book": "Kalshi",
-"kind": "td",
-"side": "o",
-"line": 0.5,
-"name": "justin jefferson"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.356,
-"price": 0.47,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 39.5,
-"name": "jordan mason"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Over 46.5 total points",
-"p": 0.462,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 46.5,
-"name": null
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
-"price": 0.46,
+"price": 0.45,
 "book": "Kalshi",
 "kind": "rec_yds",
 "side": "o",
-"line": 9.5,
-"name": "myles price"
-}
-],
-"p": 0.023,
-"d": null,
-"first": "2026-11-23T01:20:00+00:00",
-"res": null
-},
-{
-"card": "Same-game parlays (market-blind)",
-"tier": "Close finish \u00b7 7 legs",
-"legs": [
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Aaron Jones over 29.5 rush yds",
-"p": 0.647,
-"price": 0.53,
-"book": "Kalshi",
-"kind": "rush_yds",
-"side": "o",
-"line": 29.5,
-"name": "aaron jones"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Kirk Cousins over 224.5 pass yds",
-"p": 0.472,
-"price": 0.57,
-"book": "Kalshi",
-"kind": "pass_yds",
-"side": "o",
-"line": 224.5,
-"name": "kirk cousins"
+"line": 49.5,
+"name": "tj hockenson"
 },
 {
 "gid": "2026_11_MIN_SF",
@@ -27265,53 +27865,17 @@
 "gid": "2026_11_MIN_SF",
 "start": "2026-11-22T20:20:00",
 "lab": "Jordan Mason over 39.5 rush yds",
-"p": 0.356,
-"price": 0.47,
+"p": 0.354,
+"price": 0.48,
 "book": "Kalshi",
 "kind": "rush_yds",
 "side": "o",
 "line": 39.5,
 "name": "jordan mason"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Over 46.5 total points",
-"p": 0.462,
-"price": null,
-"book": null,
-"kind": "total",
-"side": "over",
-"line": 46.5,
-"name": null
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Myles Price over 9.5 rec yds",
-"p": 0.583,
-"price": 0.46,
-"book": "Kalshi",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "myles price"
-},
-{
-"gid": "2026_11_MIN_SF",
-"start": "2026-11-22T20:20:00",
-"lab": "Keenan Allen over 2.5 receptions",
-"p": 0.557,
-"price": 0.52,
-"book": "Kalshi",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "keenan allen"
 }
 ],
-"p": 0.0136,
-"d": null,
+"p": 0.0224,
+"d": 34.843,
 "first": "2026-11-23T01:20:00+00:00",
 "res": null
 }
