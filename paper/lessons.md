@@ -20,3 +20,4 @@
 - **2026-11-20:** Friday NBA-only slate: the filter gave one 2-leg parlay (+353). Daily record is now 2 wins of 13 bets. Keep the unit small; the test is whether the filter's legs beat their price over many bets.
 - **2026-11-21:** Saturday early slate is thin (NBA 1 PM, NHL 1 / 3:30). Took one half-unit 2-leg at 8.7x. Record 2 of 14; still no proof the filter beats price.
 - **2026-11-21 evening:** two 2-leg Novig parlays of SOG / rebounds overs (priced 41-46%, ours >= fair). Record now 2 of 16 parlays; still unproven. Raddysh's claimed edge near 20% is inside the range I distrust.
+- **2026-11-22:** NFL Sunday: used the only theme that held unseen (catches / rec yds main lines, ours 8+ pts over fair) at Novig. Web news search can't confirm 2026 status, so rely on the slate's inactive filter. Record 2 of 16 so far; judge on legs vs price.
