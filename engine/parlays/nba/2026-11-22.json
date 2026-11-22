@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-22",
 "lock": "2026-11-22T20:30:00+00:00",
-"frozen_at": "2026-11-22T16:13:00.054Z",
+"frozen_at": "2026-11-22T16:27:09.233Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,54 +10,6 @@
 ],
 "final_at": "2026-11-22T19:30:00+00:00",
 "parlays": [
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401910029",
-"start": "2026-11-22T20:30Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "onyeka okongwu",
-"lab": "Onyeka Okongwu 10+ reb",
-"p": 0.3274,
-"price": 208,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ ast",
-"p": 0.3403,
-"price": 210,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.1114,
-"d": 9.548,
-"first": "2026-11-22T20:30:00+00:00",
-"pick": "core",
-"res": null
-},
 {
 "card": "Path longshots",
 "tier": "2-leg",
@@ -104,70 +56,6 @@
 "d": 9.92,
 "first": "2026-11-22T23:00:00+00:00",
 "pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910029",
-"start": "2026-11-22T20:30Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "onyeka okongwu",
-"lab": "Onyeka Okongwu 10+ reb",
-"p": 0.3274,
-"price": 208,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "shai gilgeousalexander",
-"lab": "Shai Gilgeous-Alexander 7+ ast",
-"p": 0.3134,
-"price": 220,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910031",
-"start": "2026-11-23T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 3+ ast",
-"p": 0.381,
-"price": 160,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.03909,
-"d": 25.626,
-"first": "2026-11-22T20:30:00+00:00",
 "res": null
 },
 {
@@ -231,6 +119,68 @@
 "p": 0.02706,
 "d": 37.44,
 "first": "2026-11-22T20:30:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910030",
+"start": "2026-11-22T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "jared mccain",
+"lab": "Jared McCain 5+ reb",
+"p": 0.2862,
+"price": 260,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910031",
+"start": "2026-11-23T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "anthony davis",
+"lab": "Anthony Davis 3+ ast",
+"p": 0.381,
+"price": 160,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910032",
+"start": "2026-11-23T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 2+ threes",
+"p": 0.3979,
+"price": 150,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.04339,
+"d": 23.4,
+"first": "2026-11-22T23:00:00+00:00",
 "res": null
 },
 {
@@ -415,7 +365,7 @@
 },
 {
 "card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
+"tier": "3 legs",
 "legs": [
 {
 "gid": "401910031",
@@ -456,10 +406,30 @@
 "Pinnacle odds drop",
 "one rung above the main line (6.5)"
 ]
+},
+{
+"gid": "401910032",
+"start": "2026-11-23T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "matas buzelis",
+"lab": "Matas Buzelis over 2.5 assists",
+"p": 0.3403,
+"fair": 0.3365,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0548,
+"v": [
+"consensus odds drop",
+"one rung above the main line (1.5)",
+"soft matchup"
+]
 }
 ],
-"p": 0.14339,
-"d": 7.209,
+"p": 0.04825,
+"d": 22.348,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
