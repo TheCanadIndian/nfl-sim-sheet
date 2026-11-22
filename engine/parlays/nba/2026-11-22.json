@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-22",
 "lock": "2026-11-22T20:30:00+00:00",
-"frozen_at": "2026-11-22T22:32:08.940Z",
+"frozen_at": "2026-11-22T22:40:24.252Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -202,21 +202,21 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401910031",
-"start": "2026-11-23T00:00Z",
+"gid": "401910030",
+"start": "2026-11-22T23:00Z",
 "kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "desmond bane",
-"lab": "Desmond Bane 4+ ast",
-"p": 0.4141,
-"price": 141,
-"book": "Novig",
+"name": "aday mara",
+"lab": "Aday Mara 4+ ast",
+"p": 0.2997,
+"price": 266,
+"book": "Kalshi",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -227,7 +227,7 @@
 "line": 2.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 3+ ast",
-"p": 0.3415,
+"p": 0.3355,
 "price": 200,
 "book": "Hard Rock",
 "f": [
@@ -238,30 +238,32 @@
 ]
 }
 ],
-"p": 0.14141,
-"d": 7.23,
-"first": "2026-11-23T00:00:00+00:00",
+"p": 0.10056,
+"d": 10.98,
+"first": "2026-11-22T23:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "401910030",
 "start": "2026-11-22T23:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 13.5,
-"name": "isaiah hartenstein",
-"lab": "Isaiah Hartenstein 14+ reb",
-"p": 0.294,
-"price": 252,
+"line": 3.5,
+"name": "aday mara",
+"lab": "Aday Mara 4+ ast",
+"p": 0.2997,
+"price": 266,
 "book": "Kalshi",
 "f": [
 "usage",
 "rotation",
-"game"
+"game",
+"price"
 ]
 },
 {
@@ -281,92 +283,12 @@
 "rotation",
 "game"
 ]
-},
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "isaac okoro",
-"lab": "Isaac Okoro 2+ threes",
-"p": 0.4043,
-"price": 144,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.04921,
-"d": 20.699,
+"p": 0.12412,
+"d": 8.821,
 "first": "2026-11-22T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 13.5,
-"name": "isaiah hartenstein",
-"lab": "Isaiah Hartenstein 14+ reb",
-"p": 0.294,
-"price": 252,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910031",
-"start": "2026-11-23T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "anthony davis",
-"lab": "Anthony Davis 3+ ast",
-"p": 0.3871,
-"price": 155,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "isaac okoro",
-"lab": "Isaac Okoro 2+ threes",
-"p": 0.4043,
-"price": 144,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.046,
-"d": 21.901,
-"first": "2026-11-22T23:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -397,8 +319,44 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0098
+"edge": 0.0091
 },
+{
+"gid": "401910030",
+"start": "2026-11-22T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "andrew wiggins",
+"lab": "Andrew Wiggins over 3.5 rebounds",
+"p": 0.5,
+"price": -102,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0089
+}
+],
+"p": 0.2201,
+"d": 4.456,
+"first": "2026-11-22T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
 {
 "gid": "401910035",
 "start": "2026-11-23T01:30Z",
@@ -421,18 +379,8 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0376
-}
-],
-"p": 0.19096,
-"d": 5.4,
-"first": "2026-11-23T00:00:00+00:00",
-"res": null
+"edge": 0.0382
 },
-{
-"card": "Confluence parlays (experimental)",
-"tier": "3 legs",
-"legs": [
 {
 "gid": "401910034",
 "start": "2026-11-23T01:00Z",
@@ -455,32 +403,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0274
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell over 4.5 rebounds",
-"p": 0.4975,
-"price": 120,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0838
+"edge": 0.0289
 },
 {
 "gid": "401910033",
@@ -505,12 +428,12 @@
 "our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0042
+"edge": 0.004
 }
 ],
-"p": 0.11156,
-"d": 10.239,
-"first": "2026-11-22T23:00:00+00:00",
+"p": 0.09728,
+"d": 11.169,
+"first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
 {
@@ -541,7 +464,33 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0098
+"edge": 0.0091
+},
+{
+"gid": "401910030",
+"start": "2026-11-22T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "andrew wiggins",
+"lab": "Andrew Wiggins over 3.5 rebounds",
+"p": 0.5,
+"price": -102,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0089
 },
 {
 "gid": "401910035",
@@ -565,7 +514,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0376
+"edge": 0.0382
 },
 {
 "gid": "401910034",
@@ -589,36 +538,11 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0274
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell over 4.5 rebounds",
-"p": 0.4975,
-"price": 120,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0838
+"edge": 0.0289
 }
 ],
-"p": 0.04208,
-"d": 27.918,
+"p": 0.04229,
+"d": 25.131,
 "first": "2026-11-22T23:00:00+00:00",
 "res": null
 },
@@ -627,6 +551,26 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401910030",
+"start": "2026-11-22T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "isaiah hartenstein",
+"lab": "Isaiah Hartenstein over 11.5 rebounds",
+"p": 0.5513,
+"fair": 0.5487,
+"price": 115,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1854,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (10.5)"
+]
+},
+{
 "gid": "401910034",
 "start": "2026-11-23T01:00Z",
 "kind": "reb",
@@ -634,42 +578,21 @@
 "line": 9.5,
 "name": "josh hart",
 "lab": "Josh Hart over 9.5 rebounds",
-"p": 0.3615,
+"p": 0.3618,
 "fair": 0.3683,
 "price": 220,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1567,
+"edge": 0.1579,
 "v": [
 "Pinnacle line up",
 "consensus line up",
 "one rung above the main line (8.5)"
 ]
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell over 5.5 assists",
-"p": 0.4213,
-"fair": 0.4226,
-"price": 146,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.0365,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (4.5)",
-"soft matchup"
-]
 }
 ],
-"p": 0.15564,
-"d": 7.872,
+"p": 0.20209,
+"d": 6.88,
 "first": "2026-11-22T23:00:00+00:00",
 "res": null
 },
@@ -680,21 +603,22 @@
 {
 "gid": "401910032",
 "start": "2026-11-23T00:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 9.5,
+"line": 2.5,
 "name": "jalen smith",
-"lab": "Jalen Smith over 9.5 rebounds",
-"p": 0.3278,
-"fair": 0.3248,
-"price": 199,
+"lab": "Jalen Smith over 2.5 threes",
+"p": 0.3126,
+"fair": 0.3088,
+"price": 213,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.02,
+"edge": -0.0217,
 "v": [
 "Pinnacle odds drop",
-"consensus line up",
-"one rung above the main line (8.5)"
+"consensus odds drop",
+"one rung above the main line (1.5)",
+"soft matchup"
 ]
 },
 {
@@ -705,12 +629,12 @@
 "line": 2.5,
 "name": "jalen suggs",
 "lab": "Jalen Suggs over 2.5 threes",
-"p": 0.2946,
+"p": 0.2948,
 "fair": 0.2947,
 "price": 228,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0337,
+"edge": -0.0332,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -718,8 +642,8 @@
 ]
 }
 ],
-"p": 0.09572,
-"d": 9.807,
+"p": 0.091,
+"d": 10.266,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -728,6 +652,22 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401910030",
+"start": "2026-11-22T23:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 12.5,
+"name": "isaiah hartenstein",
+"lab": "Isaiah Hartenstein over 12.5 rebounds",
+"p": 0.4901,
+"price": 170,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.3232,
+"fair": 0.4888,
+"main": false
+},
+{
 "gid": "401910034",
 "start": "2026-11-23T01:00:00+00:00",
 "kind": "reb",
@@ -735,33 +675,17 @@
 "line": 9.5,
 "name": "josh hart",
 "lab": "Josh Hart over 9.5 rebounds",
-"p": 0.3547,
+"p": 0.3554,
 "price": 220,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1349,
+"edge": 0.1372,
 "fair": 0.3683,
-"main": false
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "bennett stirtz",
-"lab": "Bennett Stirtz over 3.5 assists",
-"p": 0.4079,
-"price": 175,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.1216,
-"fair": 0.4332,
 "main": false
 }
 ],
-"p": 0.14468,
-"d": 8.8,
+"p": 0.17418,
+"d": 8.64,
 "first": "2026-11-22T23:00:00+00:00",
 "res": null
 }

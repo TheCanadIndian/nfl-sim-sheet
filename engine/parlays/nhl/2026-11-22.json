@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-22",
 "lock": "2026-11-22T17:30:00+00:00",
-"frozen_at": "2026-11-22T22:32:06.547Z",
+"frozen_at": "2026-11-22T22:40:22.490Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -775,7 +775,7 @@
 "name": "mikko rantanen",
 "lab": "Mikko Rantanen to score",
 "p": 0.3619,
-"price": 178,
+"price": 182,
 "book": "Novig"
 },
 {
@@ -792,7 +792,7 @@
 }
 ],
 "p": 0.05297,
-"d": 19.694,
+"d": 19.977,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -820,13 +820,13 @@
 "line": 2.5,
 "name": "leon draisaitl",
 "lab": "Leon Draisaitl 3+ shots",
-"p": 0.5338,
+"p": 0.534,
 "price": -150,
 "book": "Hard Rock"
 }
 ],
-"p": 0.31335,
-"d": 3.191,
+"p": 0.31346,
+"d": 3.19,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -843,7 +843,7 @@
 "name": "connor mcdavid",
 "lab": "Connor McDavid to score",
 "p": 0.3923,
-"price": 150,
+"price": 147,
 "book": "Novig"
 },
 {
@@ -854,13 +854,13 @@
 "line": 2.5,
 "name": "connor mcdavid",
 "lab": "Connor McDavid 3+ shots",
-"p": 0.5477,
-"price": -144,
+"p": 0.5485,
+"price": -147,
 "book": "Novig"
 }
 ],
-"p": 0.29821,
-"d": 3.353,
+"p": 0.29865,
+"d": 3.348,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -956,13 +956,13 @@
 "line": 2.5,
 "name": "jason robertson",
 "lab": "Jason Robertson 3+ shots",
-"p": 0.612,
-"price": -170,
+"p": 0.6038,
+"price": -163,
 "book": "Novig"
 }
 ],
-"p": 0.32518,
-"d": 3.075,
+"p": 0.32079,
+"d": 3.117,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -1036,7 +1036,7 @@
 },
 {
 "card": "Same-game combos (experimental)",
-"tier": "3+ shots + goal",
+"tier": "Goal + win",
 "legs": [
 {
 "gid": "2026020376",
@@ -1044,27 +1044,27 @@
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "wyatt johnston",
-"lab": "Wyatt Johnston to score",
-"p": 0.3924,
-"price": 153,
+"name": "mikko rantanen",
+"lab": "Mikko Rantanen to score",
+"p": 0.3619,
+"price": 182,
 "book": "Novig"
 },
 {
 "gid": "2026020376",
 "start": "2026-11-23T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "wyatt johnston",
-"lab": "Wyatt Johnston 3+ shots",
-"p": 0.5063,
-"price": -113,
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "DAL moneyline",
+"p": 0.6794,
+"price": -217,
 "book": "Novig"
 }
 ],
-"p": 0.28826,
-"d": 3.469,
+"p": 0.2874,
+"d": 3.479,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -1126,13 +1126,13 @@
 "line": 2.5,
 "name": "jake debrusk",
 "lab": "Jake DeBrusk 3+ shots",
-"p": 0.4619,
+"p": 0.461,
 "price": 135,
 "book": "Hard Rock"
 }
 ],
-"p": 0.21818,
-"d": 4.583,
+"p": 0.21776,
+"d": 4.592,
 "first": "2026-11-23T01:00:00+00:00",
 "res": null
 },
@@ -1228,7 +1228,7 @@
 "line": 1.5,
 "name": "tyler seguin",
 "lab": "Tyler Seguin under 1.5 shots",
-"p": 0.5207,
+"p": 0.5192,
 "price": 105,
 "book": "Hard Rock"
 },
@@ -1245,7 +1245,7 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.22632,
+"p": 0.22568,
 "d": 8.414,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
@@ -1271,50 +1271,16 @@
 "start": "2026-11-23T01:00:00Z",
 "kind": "sog",
 "side": "o",
-"line": 2.5,
-"name": "jake debrusk",
-"lab": "Jake Debrusk over 2.5 shots",
-"p": 0.4619,
-"price": 135,
-"book": "Hard Rock"
-}
-],
-"p": 0.24723,
-"d": 4.43,
-"first": "2026-11-23T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026020376",
-"start": "2026-11-23T00:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "PIT moneyline",
-"p": 0.3206,
-"price": 213,
+"line": 1.5,
+"name": "filip hronek",
+"lab": "Filip Hronek over 1.5 shots",
+"p": 0.5233,
+"price": 108,
 "book": "Novig"
-},
-{
-"gid": "2026020377",
-"start": "2026-11-23T01:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "jake debrusk",
-"lab": "Jake Debrusk over 2.5 shots",
-"p": 0.4619,
-"price": 135,
-"book": "Hard Rock"
 }
 ],
-"p": 0.14808,
-"d": 7.356,
+"p": 0.2801,
+"d": 3.921,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -1337,14 +1303,14 @@
 {
 "gid": "2026020376",
 "start": "2026-11-23T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 3.5,
-"name": "jason robertson",
-"lab": "Jason Robertson over 3.5 shots",
-"p": 0.4282,
-"price": 138,
-"book": "FD"
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "PIT moneyline",
+"p": 0.3206,
+"price": 213,
+"book": "Novig"
 },
 {
 "gid": "2026020377",
@@ -1354,13 +1320,13 @@
 "line": 1.5,
 "name": "filip hronek",
 "lab": "Filip Hronek over 1.5 shots",
-"p": 0.5202,
+"p": 0.5233,
 "price": 108,
 "book": "Novig"
 }
 ],
-"p": 0.11923,
-"d": 9.331,
+"p": 0.0898,
+"d": 12.272,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -1377,7 +1343,7 @@
 "name": "jamie benn",
 "lab": "Jamie Benn to score",
 "p": 0.1666,
-"price": 376,
+"price": 388,
 "book": "Novig"
 },
 {
@@ -1394,7 +1360,7 @@
 }
 ],
 "p": 0.0415,
-"d": 15.851,
+"d": 16.25,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -1411,7 +1377,7 @@
 "name": "jamie benn",
 "lab": "Jamie Benn to score",
 "p": 0.1666,
-"price": 376,
+"price": 388,
 "book": "Novig"
 },
 {
@@ -1428,7 +1394,7 @@
 }
 ],
 "p": 0.02822,
-"d": 23.8,
+"d": 24.4,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 }

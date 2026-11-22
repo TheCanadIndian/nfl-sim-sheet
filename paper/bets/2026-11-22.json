@@ -129,6 +129,68 @@
      "why": "Novig -113 vs fair 53%, ours 70% (+17 gap), main line, Slot WR."
     }
    ]
+  },
+  {
+   "id": "2026-11-22-3",
+   "t": "2026-11-22T22:39:27+00:00",
+   "book": "Novig",
+   "stake": 4.0,
+   "dec": 4.576,
+   "odds": 358,
+   "q": 0.2185,
+   "p": 0.2475,
+   "edge": 0.1324,
+   "why": "Evening filter parlay: two main-line Novig overs priced ~45-48%, our chance >= fair, different games, no points/TD. Edge is small (+5-8%), so this is a test of the filter, not a conviction bet.",
+   "legs": [
+    {
+     "id": "nhl|2026020377|filip hronek|sog15|1.5|o",
+     "sport": "nhl",
+     "gid": "2026020377",
+     "game": "CHI @ VAN",
+     "start": "2026-11-23T01:00:00+00:00",
+     "name": "filip hronek",
+     "kind": "sog",
+     "side": "o",
+     "line": 1.5,
+     "lab": "Filip Hronek over 1.5 shots on goal",
+     "book": "Novig",
+     "price": 108,
+     "dec": 2.08,
+     "q": 0.4808,
+     "fair": 0.4754,
+     "ours": 0.565,
+     "p": 0.5202,
+     "edge": 0.082,
+     "main": true,
+     "sig": [],
+     "why": "Over 1.5 SOG +108 at Novig: fair 48%, ours 52%, edge +8.2%. D-man with steady volume; NHL legs have held ~0.97 of price. Risk: shot totals are noisy, lineup/PP time unknown."
+    },
+    {
+     "id": "nba|401910031|wendell carter|reb|8.5|o",
+     "sport": "nba",
+     "gid": "401910031",
+     "game": "ORL @ WSH",
+     "start": "2026-11-23T00:00:00+00:00",
+     "name": "wendell carter",
+     "kind": "reb",
+     "side": "o",
+     "line": 8.5,
+     "lab": "Wendell Carter Jr. over 8.5 rebounds",
+     "book": "Novig",
+     "price": 120,
+     "dec": 2.2,
+     "q": 0.4545,
+     "fair": 0.4788,
+     "ours": 0.4176,
+     "p": 0.4757,
+     "edge": 0.0466,
+     "main": true,
+     "sig": [
+      "archetype: Interior big"
+     ],
+     "why": "Over 8.5 reb +120 at Novig: fair 48%, ours 48%, +4.7%. Main line, interior big with volume; Novig is the sharpest book so no stale-price story. NBA lineups confirm ~30 min before 7 PM tip: minutes risk."
+    }
+   ]
   }
  ],
  "bankroll_open": 212.23,
