@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-22",
 "lock": "2026-11-22T18:00:00+00:00",
-"frozen_at": "2026-11-22T13:47:29.219Z",
+"frozen_at": "2026-11-22T14:01:34.057Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,40 @@
 ],
 "final_at": "2026-11-22T16:00:00+00:00",
 "parlays": [
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "courtland sutton",
+"lab": "Courtland Sutton 50+ rec yds",
+"p": 0.295,
+"price": 218,
+"book": "Kalshi"
+},
+{
+"gid": "2026_11_ARI_KC",
+"start": "2026-11-22T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "travis kelce",
+"lab": "Travis Kelce 60+ rec yds",
+"p": 0.285,
+"price": 229,
+"book": "Kalshi"
+}
+],
+"p": 0.08408,
+"d": 10.439,
+"first": "2026-11-22T18:00:00+00:00",
+"res": null
+},
 {
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
@@ -49,18 +83,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "courtland sutton",
-"lab": "Courtland Sutton 50+ rec yds",
-"p": 0.295,
-"price": 218,
-"book": "Kalshi"
-},
-{
 "gid": "2026_11_ARI_KC",
 "start": "2026-11-22T13:00:00",
 "kind": "rec_yds",
@@ -68,20 +90,10 @@
 "line": 59.5,
 "name": "travis kelce",
 "lab": "Travis Kelce 60+ rec yds",
-"p": 0.28,
+"p": 0.285,
 "price": 229,
 "book": "Kalshi"
-}
-],
-"p": 0.0826,
-"d": 10.439,
-"first": "2026-11-22T18:00:00+00:00",
-"res": null
 },
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
 {
 "gid": "2026_11_NO_CHI",
 "start": "2026-11-22T13:00:00",
@@ -93,21 +105,9 @@
 "p": 0.285,
 "price": 229,
 "book": "Kalshi"
-},
-{
-"gid": "2026_11_ARI_KC",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "travis kelce",
-"lab": "Travis Kelce 60+ rec yds",
-"p": 0.28,
-"price": 229,
-"book": "Kalshi"
 }
 ],
-"p": 0.0798,
+"p": 0.08123,
 "d": 10.791,
 "first": "2026-11-22T18:00:00+00:00",
 "res": null
@@ -160,40 +160,6 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_11_TEN_DAL",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 9.5,
-"name": "xavier restrepo",
-"lab": "Xavier Restrepo over 9.5 rec yds",
-"p": 0.5366,
-"price": -104,
-"book": "Novig"
-},
-{
-"gid": "2026_11_TB_DET",
-"start": "2026-11-22T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 6.5,
-"name": "ted hurst",
-"lab": "Ted Hurst over 6.5 rec yds",
-"p": 0.5843,
-"price": -115,
-"book": "Hard Rock"
-}
-],
-"p": 0.31349,
-"d": 3.667,
-"first": "2026-11-22T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
 {
@@ -204,7 +170,7 @@
 "line": 9.5,
 "name": "xavier restrepo",
 "lab": "Xavier Restrepo over 9.5 rec yds",
-"p": 0.5366,
+"p": 0.5383,
 "price": -104,
 "book": "Novig"
 },
@@ -233,7 +199,7 @@
 "book": "Novig"
 }
 ],
-"p": 0.16841,
+"p": 0.16895,
 "d": 7.193,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core",
@@ -246,64 +212,42 @@
 {
 "gid": "2026_11_TEN_DAL",
 "start": "2026-11-22T13:00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
+"line": 9.5,
 "name": "xavier restrepo",
-"lab": "Xavier Restrepo over 1.5 receptions",
-"p": 0.4459,
-"price": 147,
+"lab": "Xavier Restrepo over 9.5 rec yds",
+"p": 0.5383,
+"price": -104,
 "book": "Novig"
 },
 {
 "gid": "2026_11_TB_DET",
 "start": "2026-11-22T13:00:00",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "TB moneyline",
-"p": 0.3652,
-"price": 194,
-"book": "Novig"
-}
-],
-"p": 0.16286,
-"d": 7.262,
-"first": "2026-11-22T18:00:00+00:00",
-"res": null
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_11_LV_DEN",
-"start": "2026-11-22T16:25:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
-"line": 1.5,
-"name": "marvin mims",
-"lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4242,
-"price": 160,
-"book": "Novig"
+"line": 6.5,
+"name": "ted hurst",
+"lab": "Ted Hurst over 6.5 rec yds",
+"p": 0.5843,
+"price": -115,
+"book": "Hard Rock"
 },
 {
-"gid": "2026_11_TB_DET",
+"gid": "2026_11_NO_CHI",
 "start": "2026-11-22T13:00:00",
-"kind": "ml",
-"side": "away",
-"line": null,
+"kind": "total",
+"side": "over",
+"line": 48.5,
 "name": null,
-"lab": "TB moneyline",
-"p": 0.3652,
-"price": 194,
+"lab": "NO-CHI over 48.5",
+"p": 0.5016,
+"price": 111,
 "book": "Novig"
 }
 ],
-"p": 0.15494,
-"d": 7.644,
+"p": 0.15775,
+"d": 7.738,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "core",
 "res": null
@@ -24990,12 +24934,12 @@
 "line": 1.5,
 "name": "kevin coleman",
 "lab": "Kevin Coleman over 1.5 receptions",
-"p": 0.3259,
+"p": 0.3279,
 "price": 250,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1408,
-"fair": 0.2583,
+"edge": 0.1477,
+"fair": 0.2609,
 "main": false
 },
 {
@@ -25015,7 +24959,7 @@
 "main": true
 }
 ],
-"p": 0.11684,
+"p": 0.11755,
 "d": 11.095,
 "first": "2026-11-22T18:00:00+00:00",
 "res": null
@@ -25032,12 +24976,12 @@
 "line": 1.5,
 "name": "kevin coleman",
 "lab": "Kevin Coleman over 1.5 receptions",
-"p": 0.3259,
+"p": 0.3279,
 "price": 250,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.1408,
-"fair": 0.2583,
+"edge": 0.1477,
+"fair": 0.2609,
 "main": false
 },
 {
@@ -25073,8 +25017,50 @@
 "main": true
 }
 ],
-"p": 0.04937,
+"p": 0.04968,
 "d": 28.847,
+"first": "2026-11-22T18:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_11_LV_DEN",
+"start": "2026-11-22T21:25:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4226,
+"price": 160,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0987,
+"fair": 0.3817,
+"main": true
+},
+{
+"gid": "2026_11_TEN_DAL",
+"start": "2026-11-22T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "xavier restrepo",
+"lab": "Xavier Restrepo over 1.5 receptions",
+"p": 0.4439,
+"price": 147,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0964,
+"fair": 0.3995,
+"main": true
+}
+],
+"p": 0.18759,
+"d": 6.422,
 "first": "2026-11-22T18:00:00+00:00",
 "res": null
 },
@@ -25171,16 +25157,16 @@
 "line": 8.5,
 "name": "devin duvernay",
 "lab": "Devin Duvernay over 8.5 rec yds",
-"p": 0.5737,
+"p": 0.574,
 "price": -113,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0814,
-"fair": 0.5316,
+"edge": 0.082,
+"fair": 0.532,
 "main": true
 }
 ],
-"p": 0.5737,
+"p": 0.574,
 "d": 1.885,
 "first": "2026-11-22T18:00:00+00:00",
 "pick": "straight",
