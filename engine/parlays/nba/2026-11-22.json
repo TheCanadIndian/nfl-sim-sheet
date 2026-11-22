@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-22",
 "lock": "2026-11-22T20:30:00+00:00",
-"frozen_at": "2026-11-22T19:57:54.229Z",
+"frozen_at": "2026-11-22T20:06:51.870Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 6.5,
 "name": "shai gilgeousalexander",
 "lab": "Shai Gilgeous-Alexander 7+ ast",
-"p": 0.3309,
+"p": 0.331,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -36,24 +36,25 @@
 {
 "gid": "401910032",
 "start": "2026-11-23T00:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
 "line": 2.5,
-"name": "jalen smith",
-"lab": "Jalen Smith 3+ threes",
-"p": 0.2892,
-"price": 245,
-"book": "Novig",
+"name": "matas buzelis",
+"lab": "Matas Buzelis 3+ ast",
+"p": 0.339,
+"price": 210,
+"book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.0957,
-"d": 11.04,
+"p": 0.11221,
+"d": 9.92,
 "first": "2026-11-22T23:00:00+00:00",
 "pick": "core",
 "res": null
@@ -70,7 +71,7 @@
 "line": 6.5,
 "name": "shai gilgeousalexander",
 "lab": "Shai Gilgeous-Alexander 7+ ast",
-"p": 0.3309,
+"p": 0.331,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -84,24 +85,24 @@
 {
 "gid": "401910032",
 "start": "2026-11-23T00:00Z",
-"kind": "ast",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis 3+ ast",
-"p": 0.3208,
-"price": 210,
+"line": 8.5,
+"name": "jalen smith",
+"lab": "Jalen Smith 9+ reb",
+"p": 0.4472,
+"price": 145,
 "book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.10614,
-"d": 9.92,
+"p": 0.14802,
+"d": 7.84,
 "first": "2026-11-22T23:00:00+00:00",
 "pick": "core",
 "res": null
@@ -118,71 +119,7 @@
 "line": 1.5,
 "name": "john collins",
 "lab": "John Collins 2+ threes",
-"p": 0.3207,
-"price": 208,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "jared mccain",
-"lab": "Jared McCain 5+ reb",
-"p": 0.2935,
-"price": 260,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "jalen smith",
-"lab": "Jalen Smith 3+ threes",
-"p": 0.2892,
-"price": 245,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
-}
-],
-"p": 0.02723,
-"d": 38.254,
-"first": "2026-11-22T20:30:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401910029",
-"start": "2026-11-22T20:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "john collins",
-"lab": "John Collins 2+ threes",
-"p": 0.3207,
+"p": 0.3214,
 "price": 208,
 "book": "Novig",
 "f": [
@@ -218,20 +155,87 @@
 "line": 2.5,
 "name": "matas buzelis",
 "lab": "Matas Buzelis 3+ ast",
-"p": 0.3208,
+"p": 0.339,
 "price": 210,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.0302,
+"p": 0.03197,
 "d": 34.373,
 "first": "2026-11-22T20:30:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910029",
+"start": "2026-11-22T20:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "john collins",
+"lab": "John Collins 2+ threes",
+"p": 0.3214,
+"price": 208,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910030",
+"start": "2026-11-22T23:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "jared mccain",
+"lab": "Jared McCain 5+ reb",
+"p": 0.2935,
+"price": 260,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401910032",
+"start": "2026-11-23T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 8.5,
+"name": "jalen smith",
+"lab": "Jalen Smith 9+ reb",
+"p": 0.4472,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.04218,
+"d": 27.166,
+"first": "2026-11-22T20:30:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -246,7 +250,7 @@
 "line": 8.5,
 "name": "josh hart",
 "lab": "Josh Hart over 8.5 rebounds",
-"p": 0.4985,
+"p": 0.4989,
 "price": 135,
 "book": "Hard Rock",
 "f": [
@@ -254,7 +258,7 @@
 "rotation"
 ],
 "sport": "nba",
-"edge": 0.1715
+"edge": 0.1725
 },
 {
 "gid": "401910030",
@@ -274,10 +278,10 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.1191
+"edge": 0.1192
 }
 ],
-"p": 0.25359,
+"p": 0.25379,
 "d": 5.17,
 "first": "2026-11-22T23:00:00+00:00",
 "res": null
@@ -287,31 +291,30 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "401910032",
+"gid": "401910031",
 "start": "2026-11-23T00:00Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 7.5,
-"name": "jalen smith",
-"lab": "Jalen Smith over 7.5 rebounds",
-"p": 0.5351,
-"price": -115,
+"line": 4.5,
+"name": "jalen suggs",
+"lab": "Jalen Suggs over 4.5 assists",
+"p": 0.434,
+"price": 135,
 "book": "Hard Rock",
 "f": [
-"usage",
+"matchup",
 "rotation",
 "game"
 ],
 "v": [
-"usage",
+"matchup",
 "rotation",
 "game",
 "our model above fair",
-"consensus up",
-"pinnacle up"
+"consensus up"
 ],
 "sport": "nba",
-"edge": 0.0009
+"edge": 0.029
 },
 {
 "gid": "401910034",
@@ -335,7 +338,7 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0626
+"edge": 0.0628
 },
 {
 "gid": "401910035",
@@ -359,17 +362,17 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0524
+"edge": 0.0516
 }
 ],
-"p": 0.10887,
-"d": 10.32,
+"p": 0.0883,
+"d": 12.972,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "5-leg longshot",
+"tier": "4-leg longshot",
 "legs": [
 {
 "gid": "401910030",
@@ -399,35 +402,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.1191
-},
-{
-"gid": "401910031",
-"start": "2026-11-23T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 8.5,
-"name": "wendell carter",
-"lab": "Wendell Carter Jr. over 8.5 rebounds",
-"p": 0.5024,
-"price": 110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0476
+"edge": 0.1192
 },
 {
 "gid": "401910032",
@@ -437,7 +412,7 @@
 "line": 7.5,
 "name": "jalen smith",
 "lab": "Jalen Smith over 7.5 rebounds",
-"p": 0.5351,
+"p": 0.5442,
 "price": -115,
 "book": "Hard Rock",
 "f": [
@@ -449,12 +424,37 @@
 "usage",
 "rotation",
 "game",
-"our model above fair",
 "consensus up",
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0009
+"edge": 0.0158
+},
+{
+"gid": "401910031",
+"start": "2026-11-23T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "jalen suggs",
+"lab": "Jalen Suggs over 4.5 assists",
+"p": 0.434,
+"price": 135,
+"book": "Hard Rock",
+"f": [
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"matchup",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.029
 },
 {
 "gid": "401910034",
@@ -478,109 +478,18 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.0626
-},
-{
-"gid": "401910035",
-"start": "2026-11-23T01:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "brandin podziemski",
-"lab": "Brandin Podziemski over 2.5 threes",
-"p": 0.4402,
-"price": 140,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation"
-],
-"v": [
-"usage",
-"rotation",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0524
+"edge": 0.0628
 }
 ],
-"p": 0.0277,
-"d": 47.678,
+"p": 0.05529,
+"d": 22.231,
 "first": "2026-11-22T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910031",
-"start": "2026-11-23T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "wendell carter",
-"lab": "Wendell Carter Jr. over 9.5 rebounds",
-"p": 0.3775,
-"fair": 0.3802,
-"price": 170,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0193,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (8.5)",
-"soft matchup"
-]
-},
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 8.5,
-"name": "jalen smith",
-"lab": "Jalen Smith over 8.5 rebounds",
-"p": 0.413,
-"fair": 0.4127,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0119,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (7.5)"
-]
-}
-],
-"p": 0.15691,
-"d": 6.615,
-"first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "norman powell",
-"lab": "Norman Powell over 3.5 threes",
-"p": 0.4184,
-"price": 195,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.2343,
-"fair": 0.4184,
-"main": false
-},
 {
 "gid": "401910034",
 "start": "2026-11-23T01:00:00+00:00",
@@ -589,17 +498,33 @@
 "line": 9.5,
 "name": "josh hart",
 "lab": "Josh Hart over 9.5 rebounds",
-"p": 0.377,
+"p": 0.3775,
 "price": 220,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2063,
+"edge": 0.2079,
 "fair": 0.3925,
+"main": false
+},
+{
+"gid": "401910032",
+"start": "2026-11-23T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "demar derozan",
+"lab": "Demar Derozan over 3.5 assists",
+"p": 0.2917,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.167,
+"fair": 0.2936,
 "main": false
 }
 ],
-"p": 0.15774,
-"d": 9.44,
+"p": 0.11012,
+"d": 12.8,
 "first": "2026-11-23T00:00:00+00:00",
 "res": null
 },
@@ -617,14 +542,14 @@
 "lab": "Matas Buzelis over 3.5 assists",
 "p": 0.15,
 "fair": 0.15,
-"ours": 0.2143,
+"ours": 0.2218,
 "price": 490,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.265,
+"edge": 0.3093,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 21% vs 17% with the fee (+26%)",
+"Kalshi 4+ assists: our chance 22% vs 17% with the fee (+31%)",
 "game total 235.5",
 "projected 32 min"
 ]
@@ -639,14 +564,14 @@
 "lab": "Andrew Wiggins over 3.5 assists",
 "p": 0.095,
 "fair": 0.095,
-"ours": 0.1251,
+"ours": 0.1274,
 "price": 841,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.1769,
+"edge": 0.1985,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 13% vs 11% with the fee (+18%)",
+"Kalshi 4+ assists: our chance 13% vs 11% with the fee (+20%)",
 "game total 231.5",
 "projected 24 min"
 ]
@@ -664,23 +589,23 @@
 {
 "gid": "401910032",
 "start": "2026-11-23T00:00:00+00:00",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "josh giddey",
-"lab": "Josh Giddey over 2.5 threes",
-"p": 0.17,
-"fair": 0.17,
-"ours": 0.2389,
-"price": 425,
+"line": 3.5,
+"name": "aaron gordon",
+"lab": "Aaron Gordon over 3.5 assists",
+"p": 0.185,
+"fair": 0.185,
+"ours": 0.2502,
+"price": 398,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.2552,
+"edge": 0.2462,
 "grp": "k15n",
 "v": [
-"Kalshi 3+ threes: our chance 24% vs 19% with the fee (+26%)",
+"Kalshi 4+ assists: our chance 25% vs 20% with the fee (+25%)",
 "game total 235.5",
-"projected 31 min"
+"projected 28 min"
 ]
 },
 {
@@ -693,21 +618,75 @@
 "lab": "Andrew Wiggins over 3.5 assists",
 "p": 0.095,
 "fair": 0.095,
-"ours": 0.1251,
+"ours": 0.1274,
 "price": 841,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.1769,
+"edge": 0.1985,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 13% vs 11% with the fee (+18%)",
+"Kalshi 4+ assists: our chance 13% vs 11% with the fee (+20%)",
 "game total 231.5",
 "projected 24 min"
 ]
 }
 ],
-"p": 0.01615,
-"d": 49.403,
+"p": 0.01758,
+"d": 46.862,
+"first": "2026-11-22T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910032",
+"start": "2026-11-23T00:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 2.5 threes",
+"p": 0.17,
+"fair": 0.17,
+"ours": 0.2367,
+"price": 425,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.2436,
+"grp": "k15n",
+"v": [
+"Kalshi 3+ threes: our chance 24% vs 19% with the fee (+24%)",
+"game total 235.5",
+"projected 31 min"
+]
+},
+{
+"gid": "401910030",
+"start": "2026-11-22T23:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "isaiah hartenstein",
+"lab": "Isaiah Hartenstein over 13.5 rebounds",
+"p": 0.225,
+"fair": 0.225,
+"ours": 0.2839,
+"price": 313,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.1712,
+"grp": "k15n",
+"v": [
+"Kalshi 14+ rebounds: our chance 28% vs 24% with the fee (+17%)",
+"game total 231.5",
+"projected 29 min"
+]
+}
+],
+"p": 0.03825,
+"d": 21.683,
 "first": "2026-11-22T23:00:00+00:00",
 "res": null
 },
@@ -720,21 +699,21 @@
 "start": "2026-11-23T00:00:00+00:00",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "aaron gordon",
-"lab": "Aaron Gordon over 3.5 assists",
-"p": 0.185,
-"fair": 0.185,
-"ours": 0.2508,
-"price": 398,
+"line": 11.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 11.5 assists",
+"p": 0.16,
+"fair": 0.16,
+"ours": 0.219,
+"price": 456,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.2492,
+"edge": 0.2175,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 25% vs 20% with the fee (+25%)",
+"Kalshi 12+ assists: our chance 22% vs 18% with the fee (+22%)",
 "game total 235.5",
-"projected 28 min"
+"projected 31 min"
 ]
 },
 {
@@ -760,62 +739,8 @@
 ]
 }
 ],
-"p": 0.04163,
-"d": 20.567,
-"first": "2026-11-22T23:00:00+00:00",
-"res": null
-},
-{
-"card": "Study-pick parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401910032",
-"start": "2026-11-23T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 7.5,
-"name": "cameron johnson",
-"lab": "Cameron Johnson over 7.5 rebounds",
-"p": 0.055,
-"fair": 0.055,
-"ours": 0.0759,
-"price": 1464,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1869,
-"grp": "k15n",
-"v": [
-"Kalshi 8+ rebounds: our chance 8% vs 6% with the fee (+19%)",
-"game total 235.5",
-"projected 27 min"
-]
-},
-{
-"gid": "401910030",
-"start": "2026-11-22T23:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 13.5,
-"name": "isaiah hartenstein",
-"lab": "Isaiah Hartenstein over 13.5 rebounds",
-"p": 0.225,
-"fair": 0.225,
-"ours": 0.2839,
-"price": 313,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.1712,
-"grp": "k15n",
-"v": [
-"Kalshi 14+ rebounds: our chance 28% vs 24% with the fee (+17%)",
-"game total 231.5",
-"projected 29 min"
-]
-}
-],
-"p": 0.01238,
-"d": 64.593,
+"p": 0.036,
+"d": 22.963,
 "first": "2026-11-22T23:00:00+00:00",
 "res": null
 }
