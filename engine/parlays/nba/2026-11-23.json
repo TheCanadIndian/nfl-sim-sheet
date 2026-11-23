@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-23",
 "lock": "2026-11-24T00:00:00+00:00",
-"frozen_at": "2026-11-23T14:42:36.884Z",
+"frozen_at": "2026-11-23T14:56:33.657Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -152,8 +152,8 @@
 "line": 1.5,
 "name": "brandon ingram",
 "lab": "Brandon Ingram 2+ threes",
-"p": 0.3104,
-"price": 266,
+"p": 0.3054,
+"price": 280,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -162,8 +162,8 @@
 ]
 }
 ],
-"p": 0.05502,
-"d": 20.296,
+"p": 0.05413,
+"d": 21.073,
 "first": "2026-11-24T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -216,8 +216,8 @@
 "line": 1.5,
 "name": "brandon ingram",
 "lab": "Brandon Ingram 2+ threes",
-"p": 0.3104,
-"price": 266,
+"p": 0.3054,
+"price": 280,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -226,8 +226,8 @@
 ]
 }
 ],
-"p": 0.03413,
-"d": 31.162,
+"p": 0.03358,
+"d": 32.354,
 "first": "2026-11-24T00:30:00+00:00",
 "pick": "longshot",
 "res": null
@@ -326,10 +326,10 @@
 "lab": "Sion James over 5.5 rebounds",
 "p": 0.2689,
 "fair": 0.2667,
-"price": 257,
-"book": "Novig",
+"price": 266,
+"book": "Kalshi",
 "sport": "nba",
-"edge": -0.04,
+"edge": -0.0158,
 "v": [
 "consensus line up",
 "one rung above the main line (4.5)"
@@ -337,7 +337,7 @@
 }
 ],
 "p": 0.08553,
-"d": 11.781,
+"d": 12.078,
 "first": "2026-11-24T00:00:00+00:00",
 "res": null
 },
@@ -374,10 +374,10 @@
 "lab": "Sion James over 5.5 rebounds",
 "p": 0.2689,
 "fair": 0.2667,
-"price": 257,
-"book": "Novig",
+"price": 266,
+"book": "Kalshi",
 "sport": "nba",
-"edge": -0.04,
+"edge": -0.0158,
 "v": [
 "consensus line up",
 "one rung above the main line (4.5)"
@@ -404,7 +404,7 @@
 }
 ],
 "p": 0.03242,
-"d": 30.042,
+"d": 30.799,
 "first": "2026-11-24T00:00:00+00:00",
 "res": null
 },
@@ -467,28 +467,6 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401910041",
-"start": "2026-11-24T01:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "jalen smith",
-"lab": "Jalen Smith over 3.5 threes",
-"p": 0.165,
-"fair": 0.165,
-"ours": 0.2476,
-"price": 456,
-"book": "Kalshi",
-"sport": "nba",
-"edge": 0.3765,
-"grp": "k15n",
-"v": [
-"Kalshi 4+ threes: our chance 25% vs 18% with the fee (+38%)",
-"game total 241.5",
-"projected 31 min"
-]
-},
-{
 "gid": "401910037",
 "start": "2026-11-24T00:00:00+00:00",
 "kind": "ast",
@@ -509,10 +487,32 @@
 "game total 232.5",
 "projected 27 min"
 ]
+},
+{
+"gid": "401910041",
+"start": "2026-11-24T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "jalen smith",
+"lab": "Jalen Smith over 4.5 threes",
+"p": 0.075,
+"fair": 0.075,
+"ours": 0.1266,
+"price": 945,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3224,
+"grp": "k15n",
+"v": [
+"Kalshi 5+ threes: our chance 13% vs 10% with the fee (+32%)",
+"game total 241.5",
+"projected 31 min"
+]
 }
 ],
-"p": 0.02063,
-"d": 40.31,
+"p": 0.00937,
+"d": 75.762,
 "first": "2026-11-24T00:00:00+00:00",
 "res": null
 },
@@ -523,21 +523,21 @@
 {
 "gid": "401910041",
 "start": "2026-11-24T01:00:00+00:00",
-"kind": "ast",
+"kind": "fg3m",
 "side": "o",
-"line": 3.5,
-"name": "matas buzelis",
-"lab": "Matas Buzelis over 3.5 assists",
-"p": 0.135,
-"fair": 0.135,
-"ours": 0.2141,
-"price": 529,
+"line": 4.5,
+"name": "jalen smith",
+"lab": "Jalen Smith over 4.5 threes",
+"p": 0.075,
+"fair": 0.075,
+"ours": 0.1266,
+"price": 945,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.3472,
+"edge": 0.3224,
 "grp": "k15n",
 "v": [
-"Kalshi 4+ assists: our chance 21% vs 16% with the fee (+35%)",
+"Kalshi 5+ threes: our chance 13% vs 10% with the fee (+32%)",
 "game total 241.5",
 "projected 31 min"
 ]
@@ -565,8 +565,8 @@
 ]
 }
 ],
-"p": 0.01148,
-"d": 65.73,
+"p": 0.00638,
+"d": 109.202,
 "first": "2026-11-24T00:00:00+00:00",
 "res": null
 },
@@ -582,16 +582,16 @@
 "line": 7.5,
 "name": "jalen smith",
 "lab": "Jalen Smith over 7.5 rebounds",
-"p": 0.455,
-"fair": 0.455,
+"p": 0.46,
+"fair": 0.46,
 "ours": 0.6244,
-"price": 109,
+"price": 105,
 "book": "Kalshi",
 "sport": "nba",
-"edge": 0.308,
+"edge": 0.281,
 "grp": "k15n",
 "v": [
-"Kalshi 8+ rebounds: our chance 62% vs 48% with the fee (+31%)",
+"Kalshi 8+ rebounds: our chance 62% vs 49% with the fee (+28%)",
 "game total 241.5",
 "projected 31 min"
 ]
@@ -619,8 +619,8 @@
 ]
 }
 ],
-"p": 0.03868,
-"d": 21.84,
+"p": 0.0391,
+"d": 21.422,
 "first": "2026-11-24T00:00:00+00:00",
 "res": null
 },
