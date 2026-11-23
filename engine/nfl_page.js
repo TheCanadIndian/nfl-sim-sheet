@@ -818,6 +818,88 @@ const nfPC = (rows, cols) => rows.flatMap(r => cols.map(c => r * 3 + c));
 const NF_COVER = {CB1: {p: nfPC([1, 2, 3, 4, 5, 6], [0, 2])}, CB2: {p: nfPC([1, 2, 3, 4, 5, 6], [0, 2])}, CB3: {p: [...nfPC([1, 2, 3, 4], [1]), ...nfPC([0], [0, 2])]},
   S: {p: [...nfPC([5, 6], [0, 1, 2]), ...nfPC([3, 4], [1])]}, LB: {p: nfPC([0, 1, 2, 3, 4], [1]), r: [2, 3, 4]}, DL: {r: [0, 1, 2, 3, 4, 5, 6]}};
 const NF_RN = {CB1: 'top corner', CB2: 'No. 2 corner', CB3: 'slot corner', S: 'safety', LB: 'linebacker', DL: 'D-lineman'};
+// holes in the defense by unit (owner 2026-11-23: 'Holes in the defense the line or the secondary etc'): the areas each unit mostly
+// answers for (the same split as the missing-starter outlines); [key, name, what, areas (p = pass areas, r = run lanes; none = sacks)]
+const NF_UNITS = [['rush', 'Pass rush', 'sacks a dropback', null], ['in', 'Run D inside', 'middle and guard runs', {r: [2, 3, 4]}],
+  ['edge', 'Run D outside', 'tackle and end runs', {r: [0, 1, 5, 6]}], ['under', 'Underneath', 'screens, short middle', {p: [0, 1, 2, 4, 7]}],
+  ['cb', 'Corners', 'short and medium outside', {p: nfPC([1, 2, 3, 4], [0, 2])}], ['saf', 'Safeties', 'deep and medium middle', {p: [...nfPC([3, 4], [1]), ...nfPC([5, 6], [0, 1, 2])]}]];
+const NFUN = {};                                                  // team (offense) -> the unit picked in its opponent's holes table
+// a unit's record: yards on plays in its areas over what the league gains in the same areas on the same plays (25 plays at the
+// league's rate pulled in), success the same way, and the side's share of its passes / runs there; pass rush = 1 / (sack rate over
+// the league's, 150 dropbacks pulled in), so above 1 = good for the offense everywhere
+function nfUnitStat(T, side, u){
+  const L = NFM.lg;
+  if (!u[3]){ const x = T[side].sk || [0, 0], lr = L.sk ? L.sk[1] / L.sk[0] : null; if (!lr) return {v: 1, rate: null, lg: null};
+    return {v: 1 / (((x[1] + 150 * lr) / (x[0] + 150)) / lr), rate: x[0] ? x[1] / x[0] : null, lg: lr, n: x[0]}; }
+  const run = !!u[3].r, ix = run ? u[3].r : u[3].p, C = run ? T[side].r : T[side].p, LC = run ? L.r : L.p, K = 25;
+  let Y = 0, E = 0, S = 0, ES = 0, n = 0, ly = 0, ls_ = 0, ln = 0;
+  for (const i of ix){ const x = C[i], l = LC[i]; if (!l[0]) continue; Y += x[2]; E += x[0] * l[2] / l[0]; S += x[3]; ES += x[0] * l[3] / l[0]; n += x[0]; ly += l[2]; ls_ += l[3]; ln += l[0]; }
+  const rb = ly / ln, sb = ls_ / ln, N = nfSum(C), LN = nfSum(LC), A = run ? NF_A.r : NF_A.p, lsh = ln / LN;
+  return {v: (Y + K * rb) / (E + K * rb), sv: (S + K * sb) / (ES + K * sb), ypp: n ? Y / n : null, sr: n ? S / n : null, lg: rb, lsr: sb, n, sh: ((n + A * lsh) / (N + A)) / lsh, shr: N ? n / N : 0, lsh};
+}
+let NFHOLE = null;
+function nfHoles(){                                              // every team's units, ranked 1 = the biggest hole of the 32
+  if (NFHOLE && NFHOLE.src === NFM) return NFHOLE;
+  const H = {src: NFM, t: {}};
+  for (const [tm, T] of Object.entries(NFM.teams)) H.t[tm] = Object.fromEntries(NF_UNITS.map(u => [u[0], {d: nfUnitStat(T, 'd', u), o: nfUnitStat(T, 'o', u)}]));
+  for (const u of NF_UNITS) Object.entries(H.t).sort((a, b) => b[1][u[0]].d.v - a[1][u[0]].d.v).forEach(([tm], i) => { H.t[tm][u[0]].rk = i + 1; });
+  NFHOLE = H; return H;
+}
+const nfGrade = v => v >= 1.12 ? ['Hole', 'h2'] : v >= 1.05 ? ['Soft spot', 'h1'] : v > .95 ? ['Average', 'h0'] : v > .88 ? ['Solid', 's1'] : ['Strength', 's2'];
+// the blended map (owner 2026-11-23: 'Don't make it a grid you can blend it so it looks better'): each area's value sits at its
+// centre and is blended smoothly to its neighbours (smoothstep between centres) on a 1-yard canvas, which the browser scales up
+// smoothly; the areas are still there to tap
+const NF_XC = [53.33 / 6, 53.33 / 2, 53.33 * 5 / 6], NF_YC = [-3, 2.5, 7.5, 12.5, 17.5, 25, 36];
+const nfSeg = (C, v) => { if (v <= C[0]) return [0, 0, 0]; for (let j = 0; j < C.length - 1; j++) if (v < C[j + 1]){ const t = (v - C[j]) / (C[j + 1] - C[j]); return [j, j + 1, t * t * (3 - 2 * t)]; } const k = C.length - 1; return [k, k, 0]; };
+function nfRGBA(v, w){
+  if (NFMET === 'vol') return v >= 1 ? [255, 99, 71, Math.min(1, (v - 1) / .4) * .95 * w] : [70, 150, 255, Math.min(1, (1 - v) / .3) * .85 * w];
+  const s = NFMET === 'yds' ? .25 : .15;
+  return v >= 1 ? [52, 210, 122, Math.min(1, (v - 1) / s) * .95 * w] : [240, 72, 72, Math.min(1, (1 - v) / s) * .9 * w];
+}
+// a gentle Gaussian blur of the value grid (edges held), so neighbouring areas melt into each other instead of banding
+function nfBlur(A, w, h, sx, sy){
+  const ker = sg => { if (!sg) return [1]; const r = Math.ceil(sg * 2.5), a = []; let t = 0; for (let i = -r; i <= r; i++){ const v = Math.exp(-i * i / (2 * sg * sg)); a.push(v); t += v; } return a.map(v => v / t); };
+  const kx = ker(sx), ky = ker(sy), rx = (kx.length - 1) / 2, ry = (ky.length - 1) / 2, T = new Float32Array(w * h), O = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++){ let s_ = 0; for (let i = -rx; i <= rx; i++) s_ += A[y * w + Math.min(w - 1, Math.max(0, x + i))] * kx[i + rx]; T[y * w + x] = s_; }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++){ let s_ = 0; for (let j = -ry; j <= ry; j++) s_ += T[Math.min(h - 1, Math.max(0, y + j)) * w + x] * ky[j + ry]; O[y * w + x] = s_; }
+  return O;
+}
+const NFIMG = new Map();
+function nfImg(V, W, run){                                       // values (+ fade weights) -> a data URL, cached
+  const key = (run ? 'r' : 'p') + NFMET + V.map((v, i) => (v == null ? 'n' : v.toFixed(3)) + ':' + W[i].toFixed(2)).join(',');
+  if (NFIMG.has(key)) return NFIMG.get(key);
+  if (NFIMG.size > 300) NFIMG.clear();
+  let url = '';
+  try {
+    const cw = run ? 56 : 53, ch = run ? 1 : 48, cv = document.createElement('canvas'); cv.width = cw; cv.height = ch;
+    const ctx = cv.getContext('2d'), im = ctx.createImageData(cw, ch), val = i => V[i] == null ? 1 : V[i];
+    const GV = new Float32Array(cw * ch), GW = new Float32Array(cw * ch);
+    for (let py = 0; py < ch; py++){
+      const [r0, r1, ty] = run ? [0, 0, 0] : nfSeg(NF_YC, 42 - (py + .5));
+      for (let px = 0; px < cw; px++){
+        let v, w;
+        if (run){ const [a, b, t] = nfSeg([4, 12, 20, 28, 36, 44, 52], px + .5); v = val(a) * (1 - t) + val(b) * t; w = W[a] * (1 - t) + W[b] * t; }
+        else { const [c0, c1, tx] = nfSeg(NF_XC, px + .5), at = (r, c) => r * 3 + c;
+          const top = (i, j) => val(at(r0, i)) * (1 - tx) + val(at(r0, j)) * tx, bot = (i, j) => val(at(r1, i)) * (1 - tx) + val(at(r1, j)) * tx;
+          v = top(c0, c1) * (1 - ty) + bot(c0, c1) * ty;
+          const wt = (r, i, j) => W[at(r, i)] * (1 - tx) + W[at(r, j)] * tx; w = wt(r0, c0, c1) * (1 - ty) + wt(r1, c0, c1) * ty; }
+        GV[py * cw + px] = v; GW[py * cw + px] = w;
+      }
+    }
+    const BV = nfBlur(GV, cw, ch, run ? 3 : 3, run ? 0 : 2.2), BW = nfBlur(GW, cw, ch, run ? 3 : 3, run ? 0 : 2.2);
+    for (let q = 0; q < cw * ch; q++){ const [R, G, B, A] = nfRGBA(BV[q], BW[q]), o = q * 4;
+      im.data[o] = R; im.data[o + 1] = G; im.data[o + 2] = B; im.data[o + 3] = Math.round(Math.max(0, Math.min(1, A)) * 255); }
+    ctx.putImageData(im, 0, 0); url = cv.toDataURL();
+  } catch (e) { url = ''; }
+  NFIMG.set(key, url); return url;
+}
+// per column, the runs of consecutive rows in a set of pass areas (for outlines)
+function nfRuns(set){
+  const out = [];
+  for (let c = 0; c < 3; c++){ let r0 = null; for (let r = 0; r <= 7; r++){ const inn = r < 7 && set.has(r * 3 + c); if (inn && r0 == null) r0 = r; if (!inn && r0 != null){ out.push({c, r0, r1: r - 1}); r0 = null; } } }
+  return out;
+}
+const NF_HATCH = '<defs><pattern id="nfm-hatch" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)"><rect width="7" height="7" fill="rgba(242,193,78,.12)"/><line x1="0" y1="0" x2="0" y2="7" stroke="#F2C14E" stroke-width="1.6" stroke-opacity=".75"/></pattern></defs>';
 const NFB64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
 const NF_A = {p: 80, r: 60, g: 40}, NF_K = 12;                    // pseudo-plays toward the league's mix / rate
 const nfPc = v => v == null ? '–' : (v >= 1 ? '+' : '−') + Math.abs(Math.round((v - 1) * 100)) + '%';
@@ -839,12 +921,6 @@ function nfGrids(O, F, met, G){                                 // {P, R} for th
   const dP = G ? nfRel(F.g[G], L.g[G], NF_A.g, met) : nfRel(F.d.p, L.p, NF_A.p, met), dR = nfRel(F.d.r, L.r, NF_A.r, met);
   const P = NFMODE === 'off' ? oP : NFMODE === 'def' ? dP : nfMul(oP, dP), R = NFMODE === 'off' ? oR : NFMODE === 'def' ? dR : nfMul(oR, dR);
   return {P, R, oP, oR, dP, dR};
-}
-function nfFill(v, w){
-  if (v == null) return 'none';
-  if (NFMET === 'vol') return v >= 1 ? `rgba(255,99,71,${(Math.min(1, (v - 1) / .4) * .95 * w).toFixed(3)})` : `rgba(70,150,255,${(Math.min(1, (1 - v) / .3) * .85 * w).toFixed(3)})`;
-  const s = NFMET === 'yds' ? .25 : .15;
-  return v >= 1 ? `rgba(52,210,122,${(Math.min(1, (v - 1) / s) * .95 * w).toFixed(3)})` : `rgba(240,72,72,${(Math.min(1, (1 - v) / s) * .9 * w).toFixed(3)})`;
 }
 const nfSpFill = v => { if (v == null) return 'rgba(255,255,255,.10)'; const vol = NFMET === 'vol', d = v - 1, a = Math.min(1, Math.abs(d) / (vol ? .25 : NFMET === 'yds' ? .15 : .1));
   return `rgba(${d >= 0 ? (vol ? '255,99,71' : '52,210,122') : (vol ? '70,150,255' : '240,72,72')},${(.1 + .9 * a).toFixed(2)})`; };
@@ -871,39 +947,47 @@ function nfDots(T){
   });
   return out;
 }
-function nfSvg(team, V, marks, pick, dim, cover){
+function nfSvg(team, V, marks, pick, dim, cover, hl){
   const LP = NFM.lg.p, LN = nfSum(LP), dmax = Math.max(...LP.map(x => x[0] / LN));
-  let cells = '', hits = '', lab = '', cov = '';
+  const W = LP.map(x => Math.max(.5, Math.min(1, Math.sqrt(x[0] / LN / dmax) * 1.5)));
+  let hits = '', lab = '', cov = '', hat = '';
   for (let r = 0; r < 7; r++){
     const [, lo, hi] = NF_ROWS[r], y0 = nfY(hi), h = (hi - lo) * NFU;
     lab += `<text x="${NFX0 - 5}" y="${(y0 + h / 2 + 3.5).toFixed(1)}" class="nfm-rl">${NF_RL[r]}</text>`;
     for (let c = 0; c < 3; c++){
-      const i = r * 3 + c, x0 = nfCX(c), w = Math.max(.5, Math.min(1, Math.sqrt(LP[i][0] / LN / dmax) * 1.5));
-      cells += `<rect x="${(x0 + 1.5).toFixed(1)}" y="${(y0 + 1.5).toFixed(1)}" width="${(NFW / 3 - 3).toFixed(1)}" height="${(h - 3).toFixed(1)}" rx="3" fill="${nfFill(V[i], w)}"/>`;
-      if (cover && cover.p.has(i)) cov += `<rect x="${(x0 + 3).toFixed(1)}" y="${(y0 + 3).toFixed(1)}" width="${(NFW / 3 - 6).toFixed(1)}" height="${(h - 6).toFixed(1)}" rx="3" class="nfm-cov"/>`;
+      const i = r * 3 + c, x0 = nfCX(c);
+      if (hl && hl.has(i)) hat += `<rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${(NFW / 3).toFixed(1)}" height="${h}" fill="url(#nfm-hatch)"/>`;
       hits += `<rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${(NFW / 3).toFixed(1)}" height="${h}" class="nfm-hit${pick === 'p:' + i ? ' on' : ''}" data-nfc="${esc(team)}:p:${i}"/>`;
     }
   }
+  if (cover) for (const q of nfRuns(cover.p)){ const y1 = nfY(NF_ROWS[q.r1][2]), y2 = nfY(NF_ROWS[q.r0][1]);
+    cov += `<rect x="${(nfCX(q.c) + 3).toFixed(1)}" y="${(y1 + 3).toFixed(1)}" width="${(NFW / 3 - 6).toFixed(1)}" height="${(y2 - y1 - 6).toFixed(1)}" rx="6" class="nfm-cov"/>`; }
+  const url = nfImg(V, W, false);
+  const heat = url ? `<image href="${url}" x="${NFX0}" y="${NFTOP}" width="${NFW}" height="${48 * NFU}" preserveAspectRatio="none" class="nfm-heat"${dim ? ' opacity=".35"' : ''}/>` : '';
   let fl = `<rect x="${NFX0 + .5}" y="${NFTOP + .5}" width="${NFW - 1}" height="${48 * NFU - 1}" class="side"/>`;
   for (let yd = 5; yd <= 40; yd += 5) fl += `<line x1="${NFX0}" x2="${NFX0 + NFW}" y1="${nfY(yd)}" y2="${nfY(yd)}" class="yl${yd % 10 ? '' : ' ten'}"/>`;
   for (let yd = -5; yd <= 41; yd++) if (yd % 5) for (const hx of [23.58, 29.75]) fl += `<line x1="${(NFX0 + hx * NFU - 2).toFixed(1)}" x2="${(NFX0 + hx * NFU + 2).toFixed(1)}" y1="${nfY(yd)}" y2="${nfY(yd)}" class="hs"/>`;
   fl += `<line x1="${NFX0}" x2="${NFX0 + NFW}" y1="${nfY(0)}" y2="${nfY(0)}" class="los"/>`;
   const cl = NF_COLS.map((c, i) => `<text x="${(nfCX(i) + NFW / 6).toFixed(1)}" y="11" class="nfm-cl">${c}</text>`).join('');
   return `<svg class="nfm-svg" viewBox="0 0 ${NFX0 + NFW + 3} ${NFTOP + 48 * NFU + 3}" role="img" aria-label="${esc(team)} passes by depth and direction">
-    ${cl}${lab}<text x="${NFX0 - 5}" y="${nfY(0) + 3}" class="nfm-rl los">LOS</text><g${dim ? ' opacity=".35"' : ''}>${cells}</g><g class="nfm-field" fill="none">${fl}</g>${cov}${marks ? `<g>${marks}</g>` : ''}<g>${hits}</g></svg>`;
+    ${NF_HATCH}${cl}${lab}<text x="${NFX0 - 5}" y="${nfY(0) + 3}" class="nfm-rl los">LOS</text>${heat}${hat}<g class="nfm-field" fill="none">${fl}</g>${cov}${marks ? `<g>${marks}</g>` : ''}<g>${hits}</g></svg>`;
 }
-function nfRunSvg(team, V, marks, pick, dim, cover){
-  const w = NFW / 7; let cells = '', hits = '', lab = '', cov = '';
+function nfRunSvg(team, V, marks, pick, dim, cover, hl){
+  const w = NFW / 7; let hits = '', lab = '', cov = '', hat = '';
   for (let i = 0; i < 7; i++){
     const x0 = NFX0 + i * w;
-    cells += `<rect x="${(x0 + 1.5).toFixed(1)}" y="15.5" width="${(w - 3).toFixed(1)}" height="33" rx="3" fill="${nfFill(V[i], 1)}"/>`;
-    if (cover && cover.r.has(i)) cov += `<rect x="${(x0 + 3).toFixed(1)}" y="17" width="${(w - 6).toFixed(1)}" height="30" rx="3" class="nfm-cov"/>`;
+    if (hl && hl.has(i)) hat += `<rect x="${x0.toFixed(1)}" y="15" width="${w.toFixed(1)}" height="34" fill="url(#nfm-hatch)"/>`;
     lab += `<text x="${(x0 + w / 2).toFixed(1)}" y="61" class="nfm-ll">${NF_LANES[i]}</text>`;
     hits += `<rect x="${x0.toFixed(1)}" y="14" width="${w.toFixed(1)}" height="36" class="nfm-hit${pick === 'r:' + i ? ' on' : ''}" data-nfc="${esc(team)}:r:${i}"/>`;
   }
+  // the missing starters' lanes: one outline a run of neighbouring lanes
+  if (cover){ let a = null; for (let i = 0; i <= 7; i++){ const inn = i < 7 && cover.r.has(i); if (inn && a == null) a = i; if (!inn && a != null){
+    cov += `<rect x="${(NFX0 + a * w + 3).toFixed(1)}" y="17.5" width="${((i - a) * w - 6).toFixed(1)}" height="29" rx="6" class="nfm-cov"/>`; a = null; } } }
+  const url = nfImg(V, Array(7).fill(1), true);
+  const heat = url ? `<image href="${url}" x="${NFX0}" y="15" width="${NFW}" height="34" preserveAspectRatio="none" class="nfm-heat"${dim ? ' opacity=".35"' : ''}/>` : '';
   const ol = [1, 2, 3.5, 5, 6].map(k => `<circle cx="${(NFX0 + k * w).toFixed(1)}" cy="7.5" r="3.6" class="ol"/>`).join('');
   return `<svg class="nfm-svg nfm-run" viewBox="0 0 ${NFX0 + NFW + 3} 66" role="img" aria-label="${esc(team)} runs by lane">
-    <text x="${NFX0 - 5}" y="35" class="nfm-rl">runs</text><g${dim ? ' opacity=".35"' : ''}>${cells}</g><g class="nfm-field" fill="none"><line x1="${NFX0}" x2="${NFX0 + NFW}" y1="12.5" y2="12.5" class="los"/>${ol}</g>${cov}${lab}${marks ? `<g>${marks}</g>` : ''}<g>${hits}</g></svg>`;
+    ${NF_HATCH}<text x="${NFX0 - 5}" y="35" class="nfm-rl">runs</text>${heat}${hat}<g class="nfm-field" fill="none"><rect x="${NFX0 + .5}" y="15" width="${NFW - 1}" height="34" class="side"/><line x1="${NFX0}" x2="${NFX0 + NFW}" y1="12.5" y2="12.5" class="los"/>${ol}</g>${cov}${lab}${marks ? `<g>${marks}</g>` : ''}<g>${hits}</g></svg>`;
 }
 const nfFitOf = (cnt, vals) => { let w = 0, s = 0; cnt.forEach((n, i) => { if (n && vals[i] != null){ w += n; s += n * vals[i]; } }); return w ? s / w : null; };
 const nfAgg = (C, ix) => ix.reduce((a, i) => [a[0] + C[i][0], a[1] + C[i][1], a[2] + C[i][2], a[3] + C[i][3]], [0, 0, 0, 0]);
@@ -931,6 +1015,21 @@ function nfBlock(off, def, g){
   const outs = ((D.defout || {})[g.id] || {})[def] || [];
   const cover = outs.length && NFMODE !== 'off' ? {p: new Set(outs.flatMap(o => (NF_COVER[o.role] || {}).p || [])), r: new Set(outs.flatMap(o => (NF_COVER[o.role] || {}).r || []))} : null;
   const miss = outs.length ? `<div class="nfm-miss"><b>${esc(def)} missing:</b> ${outs.map(o => `${esc(o.name)} (${esc(NF_RN[o.role] || o.role)}${o.status && o.status !== 'out' ? ', ' + esc(o.status) : ''})`).join(', ')}${cover ? ' <small>dashed = where they usually play</small>' : ''}</div>` : '';
+  // holes in the defense by unit, ranked across the 32 defenses, with how much this offense goes at each; a tapped unit's areas are hatched
+  const H = nfHoles(), hd = H.t[def], ho = H.t[off], uk = NFUN[off], U = NF_UNITS.find(u => u[0] === uk);
+  const hlP = U && U[3] && U[3].p ? new Set(U[3].p) : null, hlR = U && U[3] && U[3].r ? new Set(U[3].r) : null;
+  const urow = u => { const k = u[0], d = hd[k].d, o = ho[k].o, [gl, gc] = nfGrade(d.v), on = uk === k, run = !!(u[3] && u[3].r), unit = run ? 'carry' : 'target';
+    const allow = !u[3] ? (d.rate != null ? `${(d.rate * 100).toFixed(1)}% <small>sacks · league ${(d.lg * 100).toFixed(1)}%</small>` : '–')
+      : d.ypp != null ? `${d.ypp.toFixed(1)} <small>yds a ${unit} · ${nfPc(d.v)}</small>` : '–';
+    const tip = !u[3] ? `${def} sacks the QB on ${d.rate != null ? (d.rate * 100).toFixed(1) : '–'}% of dropbacks (${d.n}) vs ${(d.lg * 100).toFixed(1)}% league-wide.`
+      : `${def} allows ${d.ypp != null ? d.ypp.toFixed(1) : '–'} yards a ${unit} on ${d.n} plays in these areas, ${nfPc(d.v)} vs what the league gains on the same plays; success on ${d.sr != null ? Math.round(d.sr * 100) : '–'}% (${nfPc(d.sv)}).`;
+    const into = u[3] && d.v >= 1.05 && o.sh >= 1.05;
+    const og = !u[3] ? (o.rate != null ? `${(o.rate * 100).toFixed(1)}% <small>sacks taken</small>` : '–')
+      : `<b class="${o.sh >= 1.1 ? 'up' : o.sh <= .9 ? 'dn' : ''}">${nfPc(o.sh)}</b> <small>${Math.round(o.shr * 100)}% of its ${run ? 'runs' : 'targets'}</small>${into ? ' <span class="nfm-into">goes at it</span>' : ''}`;
+    const otip = !u[3] ? `${off} is sacked on ${o.rate != null ? (o.rate * 100).toFixed(1) : '–'}% of its dropbacks.` : `${off} sends ${Math.round(o.shr * 100)}% of its ${run ? 'runs' : 'targets'} here (league ${Math.round(o.lsh * 100)}%) and gains ${o.ypp != null ? o.ypp.toFixed(1) : '–'} yards a ${unit} there (${nfPc(o.v)} vs the league on the same plays).`;
+    return `<tr class="${on ? 'on' : ''}"><td class="l"><button type="button" class="nfm-ub" data-nfu="${esc(off)}:${k}" aria-pressed="${on}"><b>${u[1]}</b><small>${u[2]}</small></button></td><td title="${esc(tip)}">${allow}</td><td><span class="nfm-g ${gc}">${gl}</span> <small class="nfm-rk" title="Rank among the 32 defenses: 1st = the biggest hole">${nfOrd(hd[k].rk)}</small></td><td title="${esc(otip)}">${og}</td></tr>`; };
+  const holes = `<div class="nfm-holes"><div class="nfm-hh">Holes in the ${esc(def)} defense <small>by unit · rank of 32 (1st = biggest hole) · tap a unit to hatch its areas on the field</small></div>
+    <div class="tw"><table class="t nfm-ht"><thead><tr><th class="l">Unit</th><th>${esc(def)} allows</th><th>Grade</th><th>${esc(off)} goes there</th></tr></thead><tbody>${NF_UNITS.map(urow).join('')}</tbody></table></div></div>`;
   // his spots on volume and yards (the line reports both whichever map is shown)
   let fitLine = '';
   if (SC){
@@ -995,8 +1094,8 @@ function nfBlock(off, def, g){
       <button type="button" class="nfm-x" data-nfmp="${esc(off)}:0">clear</button></div>` : '';
   const grpNote = G ? `<div class="nfm-arn">${esc(def)} vs ${esc(who)}: ${nfSum(F.g[G])} targets faced, against where the league throws to ${esc(who)}${nfSum(F.g[G]) < 60 ? ' (a small sample: the map stays close to average)' : ''}. Runs stay every carry.</div>` : '';
   const plHead = G ? (same.length ? `${esc(off)} ${esc(who)}` : `${esc(off)} receivers <small>no ${esc(who)} listed</small>`) : `${esc(off)} receivers and backs`;
-  return `<div class="nfm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${chips}${miss}
-    <div class="nfm-row"><div class="nfm-mapc">${grpNote}${selNote}${nfSvg(off, V.P, pMarks, cc, !!S, cover)}${nfRunSvg(off, V.R, rMarks, cc, !!S, cover)}${cellInfo}
+  return `<div class="nfm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${chips}${miss}${holes}
+    <div class="nfm-row"><div class="nfm-mapc">${grpNote}${selNote}${nfSvg(off, V.P, pMarks, cc, !!S, cover, hlP)}${nfRunSvg(off, V.R, rMarks, cc, !!S, cover, hlR)}${cellInfo}
       <ul class="nfm-list">${hot.map(x => `<li><b class="up">${nfPc(x.v)}</b> ${esc(nfName(x.k, x.i))}: ${say(true)}</li>`).join('')}${cold.map(x => `<li><b class="dn">${nfPc(x.v)}</b> ${esc(nfName(x.k, x.i))}: ${say(false)}</li>`).join('')}${!hot.length && !cold.length ? '<li class="muted">No area stands out.</li>' : ''}</ul>
       ${ztab}</div>
       <div class="nfm-pc"><div class="nfm-ph">${plHead} <small>tap one to plot his targets</small></div><div class="nfm-pl">${pl.length ? pl.map(prow).join('') : '<div class="muted small">No listed player has targets or carries this season.</div>'}</div></div></div></div>`;
@@ -1015,10 +1114,11 @@ function nfmPanel(g){
   return `<section class="panel"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: field map</h2><span class="muted small">this season · ${NFM.games} games through ${esc(NFM.through)}</span></div>
     <div class="nfm-top">${seg}${met}<div class="nfm-key">${key}<span class="muted">offense going up · faded where few passes go</span></div></div>${grp}
     ${nfBlock(g.away, g.home, g)}${nfBlock(g.home, g.away, g)}
-    <p class="note" style="margin:8px 0 0"><b>Passes</b> by where the ball was thrown: depth past the line of scrimmage (air yards) and left / middle / right, from each team’s targets this season; <b>runs</b> by the lane the play-by-play charts (designed runs, no scrambles or kneels). <b>Volume:</b> where they go = the offense’s share of its targets (or carries) in each area over the league’s share there; where it’s allowed = the same for plays against the defense; overlay = the two multiplied (red where this offense likes to go and this defense gives it up). <b>Yards a play</b> and <b>Success</b> (a play that raised the offense’s expected points): the rate in each area over the league’s rate there (green = good for the offense, also on the defense view). Each rate is pulled toward the league’s on small samples (80 targets / 60 carries for shares, 12 plays for rates), so thin areas stay pale. <b>Targets to</b> (Where it’s allowed): the defense against outside WRs, slot WRs (each receiver’s depth-chart alignment that week), TEs or RBs, against where the league throws to that group. Tap a player to see his spots: his targets this season (any team) grouped by area, each circle sized by how often he gets the ball there and filled with the map’s colour at that spot, plus his carries by lane; ‘Every target’ plots each one at its depth (gold = caught). ‘Likeliest tonight’ = his projected targets (carries) x his share in that area, leaning toward the league’s mix. Not route charts (the ball’s landing area only; those aren’t published during the season). Display only: no number on the page uses these maps and none has been tested as a betting signal; the projections already rate each defense.</p></section>`;
+    <p class="note" style="margin:8px 0 0"><b>Passes</b> by where the ball was thrown: depth past the line of scrimmage (air yards) and left / middle / right, from each team’s targets this season; <b>runs</b> by the lane the play-by-play charts (designed runs, no scrambles or kneels). <b>Volume:</b> where they go = the offense’s share of its targets (or carries) in each area over the league’s share there; where it’s allowed = the same for plays against the defense; overlay = the two multiplied (red where this offense likes to go and this defense gives it up). <b>Yards a play</b> and <b>Success</b> (a play that raised the offense’s expected points): the rate in each area over the league’s rate there (green = good for the offense, also on the defense view). Each rate is pulled toward the league’s on small samples (80 targets / 60 carries for shares, 12 plays for rates), so thin areas stay pale; each area’s value sits at its centre and blends smoothly into its neighbours (tap anywhere for the area it falls in). <b>Holes in the defense:</b> each unit is judged on the areas it mostly answers for (pass rush = sacks a dropback; run D inside = middle and guard runs; outside = tackle and end runs; underneath = screens and short middle, linebackers and nickel; corners = short and medium outside; safeties = deep and medium middle): yards a play there over what the league gains on the same plays (25 plays at the league’s rate pulled in), graded Hole (+12%+) / Soft spot (+5%) / Average / Solid / Strength, ranked among the 32 defenses (1st = the biggest hole); ‘goes at it’ = this offense also sends 5%+ more of its plays there than the league. Areas, not players: a unit’s numbers include whoever else was in that area. <b>Targets to</b> (Where it’s allowed): the defense against outside WRs, slot WRs (each receiver’s depth-chart alignment that week), TEs or RBs, against where the league throws to that group. Tap a player to see his spots: his targets this season (any team) grouped by area, each circle sized by how often he gets the ball there and filled with the map’s colour at that spot, plus his carries by lane; ‘Every target’ plots each one at its depth (gold = caught). ‘Likeliest tonight’ = his projected targets (carries) x his share in that area, leaning toward the league’s mix. Not route charts (the ball’s landing area only; those aren’t published during the season). Display only: no number on the page uses these maps and none has been tested as a betting signal; the projections already rate each defense.</p></section>`;
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-nfmode],[data-nfmet],[data-nfgrp],[data-nfdf],[data-nfpv],[data-nfmp],[data-nfc]'); if (!t) return;
+  const t = e.target.closest('[data-nfmode],[data-nfmet],[data-nfgrp],[data-nfdf],[data-nfpv],[data-nfmp],[data-nfc],[data-nfu]'); if (!t) return;
+  if (t.dataset.nfu){ const [tm, k] = t.dataset.nfu.split(':'); NFUN[tm] = NFUN[tm] === k ? null : k; render(); return; }
   if (t.dataset.nfmode){ NFMODE = t.dataset.nfmode; try { localStorage.setItem('nfl-fmode', NFMODE); } catch (x) {} }
   else if (t.dataset.nfmet){ NFMET = t.dataset.nfmet; try { localStorage.setItem('nfl-fmet', NFMET); } catch (x) {} }
   else if (t.dataset.nfgrp != null){ NFGRP = t.dataset.nfgrp; }

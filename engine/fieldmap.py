@@ -35,7 +35,7 @@ def _enc(v):
 
 def load(db, season):
     con = sqlite3.connect(db)
-    pl = pd.read_sql(f"""SELECT game_id, week, game_date, posteam, defteam, play_type, qb_scramble, qb_kneel, sack, two_point_attempt,
+    pl = pd.read_sql(f"""SELECT game_id, week, game_date, posteam, defteam, play_type, qb_dropback, qb_scramble, qb_kneel, sack, two_point_attempt,
                                 pass_location, air_yards, run_location, run_gap, receiver_player_id, receiver_player_name,
                                 rusher_player_id, rusher_player_name, complete_pass, yards_gained, success
                          FROM plays WHERE season = {int(season)}""", con)
@@ -50,7 +50,7 @@ def load(db, season):
         print("  field map: no depth labels:", e)
         lab = pd.DataFrame(columns=["game_id", "team", "player_id", "align"])
     con.close()
-    for c in ("qb_scramble", "qb_kneel", "sack", "two_point_attempt", "complete_pass", "success", "yards_gained"):
+    for c in ("qb_dropback", "qb_scramble", "qb_kneel", "sack", "two_point_attempt", "complete_pass", "success", "yards_gained"):
         pl[c] = pl[c].fillna(0)
     pos = pos.sort_values("week").drop_duplicates("gsis_id", keep="last").set_index("gsis_id").position.replace({"FB": "RB", "HB": "RB"})
     return pl, pos, lab
@@ -98,6 +98,10 @@ def build(db, season):
     tg = t[t.grp.notna()]
     dg = {k: cells(tg[tg.grp == k], 21, "defteam") for k in GRPS}
     ngames = pl.groupby("posteam").game_id.nunique()
+    # pass rush: sacks a dropback (the line's part of the 'holes' table)
+    dbk = pl[(pl.qb_dropback == 1) & (pl.two_point_attempt != 1)]
+    sko, skd = dbk.groupby("posteam").sack.agg(["size", "sum"]), dbk.groupby("defteam").sack.agg(["size", "sum"])
+    skv = lambda g, tm: [int(g["size"].get(tm, 0)), int(g["sum"].get(tm, 0))]
 
     # chips: per game volume, depth, yards (offense and allowed), ranked 1 = most
     def side(col):
@@ -105,10 +109,11 @@ def build(db, season):
         b = r.groupby(col)
         return pd.DataFrame(dict(tpg=a.size() / ngames, adot=a.air_yards.mean(), deep=a.apply(lambda x: (x.air_yards >= 20).mean()),
                                  scr=a.apply(lambda x: (x.air_yards <= 0).mean()), ypt=a.yards_gained.mean(), cr=a.complete_pass.mean(),
-                                 cpg=b.size() / ngames, ypc=b.yards_gained.mean(), out=b.apply(lambda x: x.cell.isin([0, 6]).mean())))
+                                 cpg=b.size() / ngames, ypc=b.yards_gained.mean(), out=b.apply(lambda x: x.cell.isin([0, 6]).mean()),
+                                 sk=dbk.groupby(col).sack.mean()))
     ko, kd = side("posteam"), side("defteam")
     rko, rkd = ko.rank(ascending=False, method="min"), kd.rank(ascending=False, method="min")
-    rnd = {"tpg": 1, "adot": 1, "deep": 3, "scr": 3, "ypt": 2, "cr": 3, "cpg": 1, "ypc": 2, "out": 3}
+    rnd = {"tpg": 1, "adot": 1, "deep": 3, "scr": 3, "ypt": 2, "cr": 3, "cpg": 1, "ypc": 2, "out": 3, "sk": 4}
 
     def chips(k, R, tm):
         if tm not in k.index:
@@ -118,9 +123,10 @@ def build(db, season):
     T = {}
     blank21, blank7 = [[0, 0, 0, 0]] * 21, [[0, 0, 0, 0]] * 7
     for tm in teams:
-        T[tm] = dict(n=int(ngames.get(tm, 0)), o=dict(p=op.get(tm, blank21), r=orr.get(tm, blank7)), d=dict(p=dp.get(tm, blank21), r=dr.get(tm, blank7)),
+        T[tm] = dict(n=int(ngames.get(tm, 0)), o=dict(p=op.get(tm, blank21), r=orr.get(tm, blank7), sk=skv(sko, tm)),
+                     d=dict(p=dp.get(tm, blank21), r=dr.get(tm, blank7), sk=skv(skd, tm)),
                      g={k: dg[k].get(tm, blank21) for k in GRPS}, ko=chips(ko, rko, tm), kd=chips(kd, rkd, tm))
-    lg = dict(p=cells(t, 21), r=cells(r, 7), g={k: cells(tg[tg.grp == k], 21) for k in GRPS})
+    lg = dict(p=cells(t, 21), r=cells(r, 7), g={k: cells(tg[tg.grp == k], 21) for k in GRPS}, sk=[int(len(dbk)), int(dbk.sack.sum())])
 
     # players: 5+ targets or carries this season; every target packed 2 chars ((air yards + 10) x 3 + direction) x 2 + caught
     P = {}
