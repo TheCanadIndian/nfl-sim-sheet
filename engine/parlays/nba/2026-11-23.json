@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-23",
 "lock": "2026-11-24T00:00:00+00:00",
-"frozen_at": "2026-11-23T12:55:14.731Z",
+"frozen_at": "2026-11-23T13:12:36.338Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -33,26 +33,28 @@
 ]
 },
 {
-"gid": "401910038",
-"start": "2026-11-24T00:30Z",
-"kind": "fg3m",
+"gid": "401910041",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 1.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell 2+ threes",
-"p": 0.3366,
-"price": 199,
-"book": "Novig",
+"line": 2.5,
+"name": "jarrett allen",
+"lab": "Jarrett Allen 3+ ast",
+"p": 0.303,
+"price": 250,
+"book": "Hard Rock",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"game",
+"price"
 ]
 }
 ],
-"p": 0.14366,
-"d": 6.967,
+"p": 0.12934,
+"d": 8.155,
 "first": "2026-11-24T00:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -60,42 +62,215 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "401910036",
-"start": "2026-11-24T00:00Z",
-"kind": "fg3m",
+"gid": "401910041",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
 "side": "o",
-"line": 1.5,
-"name": "sion james",
-"lab": "Sion James 2+ threes",
-"p": 0.3902,
-"price": 156,
+"line": 2.5,
+"name": "jarrett allen",
+"lab": "Jarrett Allen 3+ ast",
+"p": 0.303,
+"price": 250,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401910042",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "saddiq bey",
+"lab": "Saddiq Bey 3+ ast",
+"p": 0.415,
+"price": 138,
 "book": "Novig",
 "f": [
 "usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.12576,
+"d": 8.33,
+"first": "2026-11-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910037",
+"start": "2026-11-24T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "toumani camara",
+"lab": "Toumani Camara 3+ threes",
+"p": 0.4268,
+"price": 133,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
 "rotation",
 "game"
 ]
 },
 {
-"gid": "401910038",
-"start": "2026-11-24T00:30Z",
-"kind": "fg3m",
+"gid": "401910042",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "saddiq bey",
+"lab": "Saddiq Bey 3+ ast",
+"p": 0.415,
+"price": 138,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910044",
+"start": "2026-11-24T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "walker kessler",
+"lab": "Walker Kessler 3+ ast",
+"p": 0.3294,
+"price": 230,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.05833,
+"d": 18.3,
+"first": "2026-11-24T00:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910044",
+"start": "2026-11-24T03:00Z",
+"kind": "ast",
 "side": "o",
 "line": 1.5,
-"name": "ajay mitchell",
-"lab": "Ajay Mitchell 2+ threes",
-"p": 0.3366,
-"price": 199,
+"name": "walker kessler",
+"lab": "Walker Kessler over 1.5 assists",
+"p": 0.5567,
+"price": -120,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0224
+},
+{
+"gid": "401910038",
+"start": "2026-11-24T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 11.5,
+"name": "isaiah hartenstein",
+"lab": "Isaiah Hartenstein over 11.5 rebounds",
+"p": 0.4799,
+"price": 106,
 "book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0134
+}
+],
+"p": 0.26716,
+"d": 3.777,
+"first": "2026-11-24T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910044",
+"start": "2026-11-24T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "walker kessler",
+"lab": "Walker Kessler over 2.5 assists",
+"p": 0.3294,
+"fair": 0.3285,
+"price": 230,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0869,
+"v": [
+"consensus odds drop",
+"one rung above the main line (1.5)"
+]
+},
+{
+"gid": "401910036",
+"start": "2026-11-24T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "sion james",
+"lab": "Sion James over 5.5 rebounds",
+"p": 0.2688,
+"fair": 0.2667,
+"price": 257,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0403,
+"v": [
+"consensus line up",
+"one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.13136,
-"d": 7.654,
+"p": 0.08761,
+"d": 11.781,
 "first": "2026-11-24T00:00:00+00:00",
 "res": null
 },
