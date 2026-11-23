@@ -21,7 +21,7 @@ const state = {script:'all', view:'games', game:D.games[0]?.id, group:'receiving
 try { Object.assign(state, JSON.parse(localStorage.getItem('simsheet-ui') || '{}')); } catch (e) {}
 if (!D.games.some(g => g.id === state.game)) state.game = D.games[0]?.id;
 if (location.hash === '#books') location.replace('markets.html#books');          // Book odds moved to the Markets page
-if (['games','board','dvp','fair','props','agree','parlays','ladders'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
+if (['games','board','dvp','mu','fair','props','agree','parlays','ladders'].includes(location.hash.slice(1))) state.view = location.hash.slice(1);
 if (state.view === 'wfair') state.view = 'games';      // the Experimental tab is gone (graded in the background on the Profit page)
 if (state.view === 'props' && !D.props.length) state.view = 'games';
 if (state.view === 'rz') { state.view = 'games'; state.group = 'td'; }
@@ -35,6 +35,7 @@ document.getElementById('foot').innerHTML = `Every number comes from simulated g
 if (!D.props.length) document.getElementById('tab-props').hidden = true;
 if (!D.sgp) { document.getElementById('tab-parlays').hidden = true; if (state.view === 'parlays') state.view = 'games'; }
 if (!D.dvp && document.getElementById('tab-ladders')) { document.getElementById('tab-ladders').hidden = true; if (state.view === 'ladders') state.view = 'games'; }
+if (!D.dvp && document.getElementById('tab-mu')) { document.getElementById('tab-mu').hidden = true; if (state.view === 'mu') state.view = 'games'; }
 
 function scaleFor(rows, stat){
   let lo = 0, hi = 0;
@@ -1613,6 +1614,78 @@ function renderProps(){
   </section>`;
 }
 
+/* ---------------- Matchups heatmap (owner 2026-11-23: 'I was wondering if the matchup map for NFL should get a heatmap' -> 'yes build it') ---------------- */
+// The NBA Matchups heatmap for the NFL. Each cell = what tonight's defense allowed per game this season to the player's group (QB, RB,
+// slot / outside WR by his depth-chart alignment, TE) in that stat, over the league average: the number behind the matchup line under
+// each name (mxNFL), here for every eligible player and stat (not only 15%+), and in a second grid for every defense. This season's
+// raw per-game numbers like the line (no smoothing); defenses with under 3 games are blank. Display only: in our 2025-26 test, extra
+// position / archetype matchups added nothing beyond the projection's own defense terms.
+const NFH_COLS = [['pass_yds', 'Pass yds'], ['rush_yds', 'Rush yds'], ['rec', 'Catches'], ['rec_yds', 'Rec yds'], ['td', 'TDs']];
+// per position: column -> [DvP column, his projected average needed for the cell (td: anytime-TD chance)]
+const NFH_SPEC = {QB: {pass_yds: ['Pass yds', 150], rush_yds: ['Rush yds', 15], td: ['Pass TD', .15]},
+  RB: {rush_yds: ['Rush yds', 15], rec: ['Targets', 1.5], rec_yds: ['Rec yds', 10], td: ['Rush TD', .15]},
+  WR: {rec: ['Rec', 2], rec_yds: ['Rec yds', 15], td: ['Rec TD', .15]}, TE: {rec: ['Rec', 2], rec_yds: ['Rec yds', 15], td: ['Rec TD', .15]}};
+const NFH_GRP = {QB: 'QBs', RB: 'RBs', WR: 'WRs', SLOT: 'slot WRs', OUT: 'outside WRs', TE: 'TEs'};
+const nfhKey = p => { const al = (p.lab || '').split(' · ')[1] || ''; return p.pos === 'WR' ? (al === 'Slot' ? 'SLOT' : al === 'X' || al === 'Z' ? 'OUT' : 'WR') : p.pos; };
+const NFH_LG = {};
+function nfhVal(key, team, col){                               // [allowed a game, league average, games] or null
+  const T = D.dvp && D.dvp[key]; if (!T) return null;
+  const i = T.cols.indexOf(col); if (i < 0) return null;
+  const lk = key + '|' + col;
+  if (!(lk in NFH_LG)){ const xs = T.rows.filter(r => r.season_stats && (r.season_games || 0) >= 3).map(r => r.season_stats[i]).filter(x => x != null);
+    NFH_LG[lk] = xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null; }
+  const row = T.rows.find(r => r.team === team), lg = NFH_LG[lk];
+  if (!row || !row.season_stats || (row.season_games || 0) < 3 || !(lg > 0) || row.season_stats[i] == null) return null;
+  return [row.season_stats[i], lg, row.season_games];
+}
+// TDs are a handful a season per defense: pulled toward the league with 6 pseudo-games (yards / catches stay raw, like the matchup line)
+const nfhV = (x, col) => /TD$/.test(col) ? (x[0] * x[2] + x[1] * 6) / (x[2] + 6) / x[1] : x[0] / x[1];
+const nfhShade = v => { const d = v - 1, a = Math.min(1, Math.abs(d) / .3), w = Math.round(8 + a * 62);
+  return Math.abs(d) < .03 ? '' : `background:color-mix(in srgb,var(${d > 0 ? '--good' : '--bad'}) ${w}%,transparent)${a >= .75 ? ';color:#fff' : ''}`; };
+const nfhPct = v => { const n = Math.round((v - 1) * 100); return `${n > 0 ? '+' : n < 0 ? '−' : ''}${Math.abs(n)}<i>%</i>`; };
+function nfhTeam(g, team, opp){
+  const PO = {QB: 0, RB: 1, WR: 2, TE: 3}, use = p => p.pos === 'QB' ? (p.s.att || [0])[MEAN] : (p.s.tgt || [0])[MEAN] + (p.s.car || [0])[MEAN];
+  const rows = [];
+  for (const p of D.players.filter(x => x.g === g.id && x.t === team && NFH_SPEC[x.pos])){
+    const key = nfhKey(p), c = {};
+    for (const [st, [col, floor]] of Object.entries(NFH_SPEC[p.pos])){
+      const mine = st === 'td' ? (p.s.anytime_td || [0])[MEAN] : (p.s[st] || [0])[MEAN]; if (!(mine >= floor)) continue;
+      const k = key === 'SLOT' || key === 'OUT' ? key : p.pos, x = nfhVal(k, opp, col); if (!x) continue;
+      c[st] = {v: nfhV(x, col), tip: `${p.n}: ${opp} allowed ${f1(x[0])} ${col.toLowerCase()} a game to ${NFH_GRP[k]} (${x[2]} games) vs ${f1(x[1])} league average${/TD$/.test(col) ? ' (TDs pulled toward average with 6 games: they are few)' : ''}`};
+    }
+    if (Object.keys(c).length) rows.push({p, c});
+  }
+  rows.sort((a, b) => PO[a.p.pos] - PO[b.p.pos] || use(b.p) - use(a.p));
+  if (!rows.length) return `<div class="nfh-w"><div class="nfh-h">${esc(team)}</div><p class="note">No defense data yet.</p></div>`;
+  const best = {}; for (const [st] of NFH_COLS) best[st] = Math.max(...rows.map(r => r.c[st] ? r.c[st].v : 0));
+  return `<div class="nfh-w"><div class="nfh-h">${esc(team)} <small>vs ${esc(opp)} defense</small></div><div class="tw"><table class="nfh-t"><thead><tr><th class="l">Player</th>${NFH_COLS.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>${rows.map(({p, c}) =>
+    `<tr><td class="l"><b>${esc(lastName(p.n))}</b><small>${esc(p.lab || p.pos)}</small></td>${NFH_COLS.map(([st]) => { const x = c[st]; if (!x) return '<td class="na">–</td>';
+      const bst = x.v >= 1.05 && x.v === best[st];
+      return `<td class="${bst ? 'best' : ''}" style="${nfhShade(x.v)}" title="${esc(x.tip)}${bst ? ' · his team’s best for this stat' : ''}">${nfhPct(x.v)}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div></div>`;
+}
+const NFH_DEF = [['QB', 'Pass yds', 'QB', 'Pass'], ['QB', 'Rush yds', 'QB', 'Rush'], ['RB', 'Rush yds', 'RB', 'Rush'], ['RB', 'Rec yds', 'RB', 'Rec yds'],
+  ['SLOT', 'Rec yds', 'Slot WR', 'Rec yds'], ['OUT', 'Rec yds', 'Outside WR', 'Rec yds'], ['TE', 'Rec yds', 'TE', 'Rec yds'], ['TE', 'Rec TD', 'TE', 'TDs']];
+function nfhDefRow(team, faces){
+  return `<tr><td class="l"><b>${esc(team)}</b>${faces ? `<small>vs ${esc(faces)}</small>` : ''}</td>${NFH_DEF.map(([k, col]) => { const x = nfhVal(k, team, col); if (!x) return '<td class="na">–</td>';
+    const v = nfhV(x, col); return `<td style="${nfhShade(v)}" title="${esc(`${team} allowed ${f1(x[0])} ${col.toLowerCase()} a game to ${NFH_GRP[k]} (${x[2]} games) vs ${f1(x[1])} league average${/TD$/.test(col) ? ' (pulled toward average with 6 games)' : ''}`)}">${nfhPct(v)}</td>`; }).join('')}</tr>`;
+}
+function renderMatchups(){
+  if (!D.dvp) return '<section class="panel"><div class="empty">No defense-vs-position data on this page.</div></section>';
+  const games = [...D.games].sort((a, b) => String(a.sort || '').localeCompare(String(b.sort || '')));
+  const slate = new Set(games.flatMap(g => [g.home, g.away]));
+  const all = [...new Set(Object.values(D.dvp).flatMap(T => T.rows.map(r => r.team)))].sort();
+  const key = `<div class="nfh-k"><span class="nfh-g" aria-hidden="true"></span><span class="small muted">tough −30% … league average … +30% soft · <span class="nfh-kb">ringed</span> = his team’s best for that stat</span></div>`;
+  const head = `<thead><tr><th class="l">Defense</th>${NFH_DEF.map(([, , gl, sl]) => `<th>${gl}<small>${sl}</small></th>`).join('')}</tr></thead>`;
+  const rest = all.filter(t => !slate.has(t));
+  return `<section class="panel"><div class="phead"><h2>Matchup heatmap, every player</h2><span class="small muted">week ${esc(D.week)} · ${games.length} game${games.length === 1 ? '' : 's'} on this page</span></div>${key}
+    <details class="how"><summary>How to read this</summary><p class="note">Each cell is what tonight’s defense allowed per game this season to his group (QBs, RBs, slot or outside WRs by his depth-chart alignment, TEs) in that stat, against the league average: the same number as the matchup line under his name, shown here for every player and stat. Catches for RBs use targets allowed. TDs: passing TDs allowed for QBs, rushing TDs for RBs, receiving TDs for WRs and TEs (a handful a season, so they are pulled toward the league average with 6 games). Players need some volume in the stat (about 2+ projected catches, 15+ yards, 150+ passing yards, a 15%+ anytime-TD chance); defenses with under 3 games are blank. This season’s raw numbers (about 11 games each, so expect noise). Display only: the projections already use their own defense terms, and in our 2025-26 test extra position matchups added nothing beyond them.</p></details>
+    <div class="nfh-m">${games.map(g => `<div class="nfh-gm"><div class="nfh-gh">${esc(g.away)} @ ${esc(g.home)} <small>${esc(g.kickoff || '')}</small></div><div class="nfh-tt">${nfhTeam(g, g.away, g.home)}${nfhTeam(g, g.home, g.away)}</div></div>`).join('')}</div></section>
+    <section class="panel"><div class="phead"><h2>Every defense by position group</h2><span class="small muted">allowed a game vs league average · this season</span></div>
+    <div class="tw"><table class="nfh-t nfh-d">${head}<tbody>${games.flatMap(g => [nfhDefRow(g.home, g.away), nfhDefRow(g.away, g.home)]).join('')}</tbody></table></div>
+    ${rest.length ? `<details class="nfh-o"><summary>Other defenses (${rest.length})</summary><div class="tw"><table class="nfh-t nfh-d">${head}<tbody>${rest.map(t => nfhDefRow(t, null)).join('')}</tbody></table></div></details>` : ''}
+    <p class="note" style="margin:8px 0 0">Defenses in this page’s games first (each listed with the offense it faces), the rest below. Green = gives up more than average to that group (a softer matchup), red = less. Slot and outside splits use each receiver’s latest depth-chart alignment; TE TDs are receiving TDs allowed to tight ends.</p></section>`;
+}
+
 /* ---------------- shell ---------------- */
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
@@ -1620,7 +1693,7 @@ function render(){
   try {
   main.innerHTML = state.view === 'board' ? renderBoard() : state.view === 'props' ? renderProps()
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, away: g.away, home: g.home}))) : '<div class="empty">Loading prices…</div>')
-    : state.view === 'parlays' ? renderParlays() : state.view === 'ladders' ? renderLadders() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : renderGames();
+    : state.view === 'parlays' ? renderParlays() : state.view === 'ladders' ? renderLadders() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : state.view === 'mu' ? renderMatchups() : renderGames();
   } catch (e) { console.error(e); main.innerHTML = `<div class="empty">This view hit an error (${esc(String(e && e.message || e))}). The other tabs still work; it is fixed on the next page build.</div>`; }
   save();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
