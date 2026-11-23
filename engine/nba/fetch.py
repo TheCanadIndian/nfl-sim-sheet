@@ -14,6 +14,8 @@ Tables
   opps_v2  game_id, player_id, reb_ch, reb, ast_ch, ast -- rebounds available / teammate FGs while on the floor (opps.py;
            v2 2026-10-23: team rebounds left out, matching Basketball-Reference TRB%);
            new games as they're fetched, plus up to OPPS_BACKFILL earlier games of the season a run
+  shots    game_id, team, player_id, x, y, made, three -- every field-goal attempt's court location (shots.py, 2026-11-23; same
+           backfill), for the shot maps (shotmap.py)
 """
 
 import argparse
@@ -244,6 +246,19 @@ def main():
             print(f"{season}: assist pairs / first baskets for {TL.store(con, new_t)} games", flush=True)
         except Exception as e:                                       # noqa: BLE001 -- never block the box scores
             print(f"{season}: assist pairs skipped ({type(e).__name__}: {e})")
+        # shot locations for the shot maps (shots.py, owner 2026-11-23): new games, then earlier ones of the season
+        try:
+            import shots as SHOTS
+            new_s = {int(gid): sm for gid, sm in zip(todo.game_id, res) if sm}
+            back = [g for g in SHOTS.missing(con, [int(x) for x in done.game_id]) if g not in new_s][:OPPS_BACKFILL]
+            if back:
+                with ThreadPoolExecutor(max_workers=6) as ex:
+                    for gid, sm in zip(back, ex.map(lambda x: cached(os.path.join(RAW, str(season), f"{x}.json.gz"), f"{API}/summary?event={x}"), back)):
+                        if sm:
+                            new_s[gid] = sm
+            print(f"{season}: shot locations for {SHOTS.store(con, new_s)} games", flush=True)
+        except Exception as e:                                       # noqa: BLE001 -- never block the box scores
+            print(f"{season}: shot locations skipped ({type(e).__name__}: {e})")
         con.commit()
         print(f"{season}: {len(todo)} new final games, {len(rows)} player lines, {len(lines)} lines ({time.time() - t0:.0f}s)", flush=True)
 

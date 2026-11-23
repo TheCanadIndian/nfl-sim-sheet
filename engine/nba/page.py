@@ -119,6 +119,29 @@ tr.xrow td{background:color-mix(in srgb,var(--sel) 5%,transparent);padding:12px 
 .sl-meter .f-g1{background:var(--g1)} .sl-meter .f-g2{background:var(--g2)} .sl-meter .f-g3{background:var(--g3)}
 .sl-meter .f-r1{background:var(--r1)} .sl-meter .f-r2{background:var(--r2)} .sl-meter .f-r3{background:var(--r3)} .sl-meter .f-n{background:var(--whisker)}
 .noline{font-size:12.5px;color:#F2C14E}
+.nsm-top{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:0 0 12px}.nsm-seg{margin:0}
+.nsm-key{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px}.nsm-key i{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.nsm-b{border-top:1px solid var(--faint);padding:12px 0 6px}.nsm-b:first-of-type{border-top:0}.nsm-b h3{margin:0 0 6px}.nsm-b h3 small{font-family:var(--body);font-weight:400;font-size:13px;color:var(--muted);letter-spacing:0}
+.nsm-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.nsm-row{display:grid;gap:14px 22px;grid-template-columns:minmax(0,1fr)}
+@media(min-width:760px){.nsm-row{grid-template-columns:minmax(0,1.15fr) minmax(250px,.85fr);align-items:start}.nsm-pc{position:sticky;top:calc(var(--tbh,0px) + 8px)}.nsm-pl{max-height:min(640px,calc(100vh - var(--tbh,0px) - 70px));overflow-y:auto}}
+.nsm-mapc{display:grid;gap:8px;min-width:0;align-content:start}
+.nsm-svg{width:100%;max-width:460px;display:block;margin:0 auto;background:var(--sunk);border-radius:10px}
+.nsm-court rect,.nsm-court circle,.nsm-court path,.nsm-court line{stroke:var(--muted);stroke-width:1;opacity:.6}.nsm-court .hoop{stroke:#ff7a45;stroke-width:1.6;opacity:.9}.nsm-court .bb{stroke-width:2.2;opacity:.8}.nsm-court .arc{stroke-width:1.3;opacity:.75}
+.nsm-hit{fill:transparent;cursor:pointer}.nsm-hit:hover{stroke:var(--ink);stroke-opacity:.35}.nsm-hit.on{stroke:var(--ink);stroke-width:1.5}
+.nsm-dm{fill:#F2C14E;stroke:#0b0f14;stroke-width:.7}.nsm-dx{fill:none;stroke:var(--ink);stroke-opacity:.6;stroke-width:.9}
+.nsm-k{display:inline-block;width:9px;height:9px;border-radius:50%;margin:0 3px 0 4px;vertical-align:-1px}.nsm-k.m{background:#F2C14E}.nsm-k.x{border:1.2px solid var(--ink);opacity:.7}
+.nsm-ci{font-size:12.5px;text-align:center;min-height:18px}.nsm-x{background:none;border:1px solid var(--faint);border-radius:999px;color:var(--muted);font:inherit;font-size:11.5px;padding:0 8px;cursor:pointer;margin-left:4px}
+.nsm-list{margin:0;padding:0;list-style:none;display:grid;gap:3px;font-size:13px}.nsm-list b{display:inline-block;min-width:44px}.nsm-list b.up{color:#ff7a5c}.nsm-list b.dn{color:#5aa2ff}
+.nsm-sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.t.nsm-zt td,.t.nsm-zt th{text-align:right;white-space:nowrap;font-size:12.5px}.t.nsm-zt td.l,.t.nsm-zt th.l{text-align:left}.t.nsm-zt small{color:var(--muted)}.nsm-zt b.up{color:#ff7a5c}.nsm-zt b.dn{color:#5aa2ff}.nsm-zt .good,.nsm-pz .good{color:var(--good);font-weight:700}.nsm-zt .bad,.nsm-pz .bad{color:var(--bad);font-weight:700}
+.nsm-sel{font-size:12.5px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;padding:6px 8px;border:1px solid var(--faint);border-radius:8px;background:var(--sunk)}.nsm-pz{display:flex;flex-wrap:wrap;gap:2px 12px;width:100%}.nsm-pz span{white-space:nowrap}
+.nsm-ph{font-weight:700;font-size:13.5px;margin-bottom:4px}.nsm-ph small{font-weight:400;color:var(--muted);margin-left:4px}
+.nsm-pl{display:grid;gap:2px}.nsm-p{display:grid;gap:4px;text-align:left;background:none;border:1px solid transparent;border-radius:8px;padding:6px 8px;color:var(--ink);cursor:pointer;font:inherit;font-size:13px;width:100%}
+.nsm-p:hover{background:var(--sunk)}.nsm-p[aria-pressed="true"]{border-color:var(--accent);background:var(--sunk)}.nsm-pn small{color:var(--muted)}.nsm-ps{font-size:11.5px;color:var(--muted)}
+.nsm-zb{display:flex;height:7px;border-radius:4px;overflow:hidden;gap:1px}.nsm-zb i{display:block}
+.nsm-fit{font-size:11px;font-weight:600;border:1px solid;border-radius:999px;padding:0 6px;margin-left:5px;white-space:nowrap;cursor:help}.nsm-fit.up{color:var(--good);border-color:color-mix(in srgb,var(--good) 50%,transparent)}.nsm-fit.dn{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,transparent)}
+@media(max-width:759px){.nsm-pc{order:-1;min-width:0}.nsm-pl{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}.nsm-p{flex:none;width:168px;border-color:var(--faint);scroll-snap-align:start}.nsm-pn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nsm-pn .nsm-fit{display:none}}
 /* Matchups tab (owner 2026-11-21; nba/matchups.py): bands on the sheet's cell number, same greens / reds as the cells */
 .mul3{background:color-mix(in srgb,var(--good) 62%,transparent)}.mul2{background:color-mix(in srgb,var(--good) 36%,transparent)}.mul1{background:color-mix(in srgb,var(--good) 17%,transparent)}
 .mul0{background:color-mix(in srgb,var(--muted) 8%,transparent)}.muln1{background:color-mix(in srgb,var(--bad) 17%,transparent)}.muln2{background:color-mix(in srgb,var(--bad) 36%,transparent)}.muln3{background:color-mix(in srgb,var(--bad) 62%,transparent)}

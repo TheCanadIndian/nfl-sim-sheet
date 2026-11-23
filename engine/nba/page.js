@@ -279,6 +279,139 @@ function boxTable(g, team){
   return `<div class="tw"><table class="t bx"><thead><tr><th class="l">${esc(team)} · starters</th><th>MIN</th><th>PTS</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TOV</th><th>FG</th><th>3P</th><th>FT</th></tr></thead><tbody>
     ${rows.map(tr).join('')}<tr class="bxt"><td class="l"><b>Team</b></td><td>${T('min')}</td><td class="bxp">${T('pts')}</td><td>${T('reb')}</td><td>${T('ast')}</td><td>${T('stl')}</td><td>${T('blk')}</td><td>${T('tov')}</td><td>${T('fgm')}-${T('fga')}</td><td>${T('f3m')}-${T('f3a')}</td><td>${T('ftm')}-${T('fta')}</td></tr></tbody></table></div>${over.length ? `<div class="bxos"><span class="eyebrow">${esc(team)} above the books’ line</span>${over.join('')}</div>` : ''}`;
 }
+/* ---------------- shot maps (owner 2026-11-23: 'NBA shot map per player per team' -> 'defense and offense heatmaps like in nhl'
+   -> 'have the player list next to the shotmap so I dont have to scroll up and down'): nba/shotmap.py -> markets/shotmap_nba.json,
+   loaded the first time the Shot map view opens. This season's attempts; display only (no number on the page uses it). ---------------- */
+let NSM = null, NSM_ST = '';
+function nsmLoad(){
+  if (NSM || NSM_ST) return; NSM_ST = 'loading';
+  try { fetch('../markets/shotmap_nba.json?t=' + Date.now(), {cache: 'no-store'}).then(r => r.ok ? r.json() : null)
+    .then(d => { NSM = d && d.teams ? d : null; NSM_ST = NSM ? 'ok' : 'none'; render(); }).catch(() => { NSM_ST = 'none'; render(); }); } catch (e) { NSM_ST = 'none'; }
+}
+let NSMODE = 'ov';
+try { NSMODE = ['ov', 'off', 'def'].includes(localStorage.getItem('nba-smode')) ? localStorage.getItem('nba-smode') : 'ov'; } catch (e) {}
+const NSMP = {}, NSMC = {};                                   // team -> picked player id / tapped cell 'r:c'
+const NSZ = [['rim', 'At the rim', '#c92a2a'], ['paint', 'Paint', '#f08c00'], ['mid', 'Mid-range', '#ffe066'], ['c3', 'Corner 3', '#99e9f2'], ['ab3', 'Above-break 3', '#4c6ef5']];
+const NSB64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+const nsX = x => ((x + .5) * 6).toFixed(1), nsY = y => ((y + 4.5) * 6).toFixed(1);     // ft -> svg (6 px a foot; basket at the top)
+const nsPc = v => (v >= 1 ? '+' : '−') + Math.abs(Math.round((v - 1) * 100)) + '%';
+const nsOrd = n => { const s_ = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s_[(v - 20) % 10] || s_[v] || s_[0]); };
+const nsF = v => v == null ? '–' : (v * 100).toFixed(0) + '%';
+function nsZoneAt(r, c){                                       // the zone a cell's centre falls in (shotmap.zone_of)
+  const x = c * 3 + 1, y = r * 3 - 3, dx = x - 25, d = Math.hypot(dx, y - 1.25);
+  if (Math.abs(dx) >= 22 && y <= 10.2) return 'c3';
+  if (d >= 23.75) return 'ab3';
+  return d <= 4 ? 'rim' : Math.abs(dx) <= 8 && y <= 15 ? 'paint' : 'mid';
+}
+function nsFill(v, w){
+  if (v == null) return 'none';
+  return v >= 1 ? `rgba(255,99,71,${(Math.min(1, (v - 1) / .4) * .95 * w).toFixed(3)})` : `rgba(70,150,255,${(Math.min(1, (1 - v) / .3) * .85 * w).toFixed(3)})`;
+}
+function nsDots(s){
+  let out = '';
+  for (let i = 0; i + 1 < s.length; i += 2){
+    let v = NSB64.indexOf(s[i]) * 64 + NSB64.indexOf(s[i + 1]); const made = v % 2; v = (v - made) / 2;
+    const x = v % 51, y = Math.floor(v / 51) - 4;
+    if (y > 31) continue;
+    out += made ? `<circle cx="${nsX(x)}" cy="${nsY(y)}" r="2.9" class="nsm-dm"/>` : `<circle cx="${nsX(x)}" cy="${nsY(y)}" r="2.1" class="nsm-dx"/>`;
+  }
+  return out;
+}
+function nsSvg(team, vals, dots, pick){
+  const DN = NSM.lg.d, dmax = Math.max(...DN.flat().filter(x => x != null));
+  let cells = '';
+  for (let r = 0; r < Math.min(vals.length, 12); r++) for (let c = 0; c < 17; c++){
+    const v = vals[r][c]; if (v == null) continue;
+    const w = Math.max(.45, Math.min(1, Math.sqrt(DN[r][c] / dmax) * 1.4));
+    cells += `<rect x="${c * 18}" y="${r * 18}" width="18" height="18" fill="${nsFill(v, w)}"/>`;
+  }
+  let hits = '';                                               // tap targets (unblurred, invisible)
+  for (let r = 0; r < 12; r++) for (let c = 0; c < 17; c++) if (vals[r] && vals[r][c] != null)
+    hits += `<rect x="${c * 18}" y="${r * 18}" width="18" height="18" class="nsm-hit${pick === r + ':' + c ? ' on' : ''}" data-nsc="${esc(team)}:${r}:${c}"/>`;
+  const R = 23.75 * 6, cx = nsX(25), cy = nsY(1.25);
+  return `<svg class="nsm-svg" viewBox="0 0 306 216" role="img" aria-label="${esc(team)} shot map">
+    <defs><filter id="nsmblur" x="-5%" y="-5%" width="110%" height="110%"><feGaussianBlur stdDeviation="5"/></filter></defs>
+    <g filter="url(#nsmblur)"${dots ? ' opacity=".3"' : ''}>${cells}</g>
+    <g class="nsm-court" fill="none">
+      <rect x="0.5" y="${nsY(-4)}" width="305" height="${(216 - nsY(-4) - .5).toFixed(1)}"/>
+      <rect x="${nsX(17)}" y="${nsY(-4)}" width="${16 * 6}" height="${19 * 6}"/>
+      <circle cx="${cx}" cy="${nsY(15)}" r="36"/>
+      <path d="M${(+cx - 24).toFixed(1)},${cy} A24,24 0 0 0 ${(+cx + 24).toFixed(1)},${cy}"/>
+      <line x1="${nsX(22)}" y1="${nsY(0)}" x2="${nsX(28)}" y2="${nsY(0)}" class="bb"/><circle cx="${cx}" cy="${cy}" r="4.5" class="hoop"/>
+      <path d="M${nsX(3)},${nsY(-4)} L${nsX(3)},${nsY(10.2)} A${R},${R} 0 0 0 ${nsX(47)},${nsY(10.2)} L${nsX(47)},${nsY(-4)}" class="arc"/>
+    </g>${dots ? `<g>${dots}</g>` : ''}<g>${hits}</g></svg>`;
+}
+const nsBar = z => `<span class="nsm-zb" aria-hidden="true">${NSZ.map(([k, , col]) => `<i style="flex:${(z[k] || [0])[0]};background:${col}"></i>`).join('')}</span>`;
+// a player's zones vs what tonight's defense allows there: the defense's FG% by zone pulled toward the league (60 shots), x 2 or 3,
+// weighted by his zone mix, over the league's points per shot on the same mix. Untested; display only.
+function nsFit(pz, def){
+  const L = NSM.lg.z, K = 60; let a = 0, b = 0;
+  for (const [k] of NSZ){
+    const w = (pz[k] || [0])[0], d = def.zd[k] || [0, null, 0], m = k === 'c3' || k === 'ab3' ? 3 : 2, lf = L[k][1];
+    const f = d[1] == null ? lf : (d[1] * d[2] + lf * K) / (d[2] + K);
+    a += w * f * m; b += w * lf * m;
+  }
+  return b > 0 ? a / b : null;
+}
+function nsBlock(off, def, g){
+  const O = NSM.teams[off], F = NSM.teams[def], L = NSM.lg.z;
+  if (!O || !F) return `<div class="nsm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3><div class="empty">No shot data yet.</div></div>`;
+  const ov = O.off.map((row, r) => row.map((v, c) => v == null || F.dfn[r][c] == null ? null : v * F.dfn[r][c] / 1e4));
+  const vals = NSMODE === 'off' ? O.off.map(row => row.map(v => v == null ? null : v / 100))
+    : NSMODE === 'def' ? F.dfn.map(row => row.map(v => v == null ? null : v / 100)) : ov;
+  // players: tonight's listed players for the team with shots this season, most attempts a game first
+  const P = NSM.players || {};
+  const pl = D.players.filter(p => p.g === g.id && p.t === off && P[p.id]).map(p => ({p, x: P[p.id], fit: nsFit(P[p.id].z, F)}))
+    .sort((a, b) => b.x.n / b.x.gp - a.x.n / a.x.gp);
+  const sel = pl.find(r => String(r.p.id) === String(NSMP[off])), S = sel && sel.x;
+  const dots = S ? nsDots(S.s) : '';
+  // tapped square
+  const cc = NSMC[off], [cr, ccl] = cc ? cc.split(':').map(Number) : [];
+  const cellInfo = cc != null && O.off[cr] && O.off[cr][ccl] != null ? (() => { const zl = NSZ.find(z => z[0] === nsZoneAt(cr, ccl))[1];
+    return `<div class="nsm-ci"><b>${esc(zl)}</b> · ${esc(off)} shoots here ${nsPc(O.off[cr][ccl] / 100)} vs average · ${esc(def)} allows ${nsPc(F.dfn[cr][ccl] / 100)} · together ${nsPc(ov[cr][ccl])} <button type="button" class="nsm-x" data-nsc="${esc(off)}:x">close</button></div>`; })()
+    : '<div class="nsm-ci muted">Tap a square on the court for its numbers.</div>';
+  // zones where the two meet (share of attempts over the league's, offense x defense)
+  const zr = NSZ.map(([k, lab]) => ({k, lab, v: (O.zo[k][0] / L[k][0]) * (F.zd[k][0] / L[k][0])}));
+  const hot = zr.filter(x => x.v >= 1.08).sort((a, b) => b.v - a.v).slice(0, 2), cold = zr.filter(x => x.v <= .92).sort((a, b) => a.v - b.v).slice(0, 1);
+  const shr = (z, k) => { const v = z[0] / L[k][0]; return `<b class="${v >= 1.15 ? 'up' : v <= .87 ? 'dn' : ''}">${nsF(z[0])}</b>`; };
+  const fgc = (z, k, defn) => { if (z[1] == null) return '<span class="muted">–</span>'; const d = z[1] - L[k][1], n = z[2] >= 40;
+    return `<span class="${n && d >= .03 ? (defn ? 'bad' : 'good') : n && d <= -.03 ? (defn ? 'good' : 'bad') : ''}" title="${z[1] == null ? '' : `${Math.round(z[1] * z[2])} of ${z[2]} (league ${nsF(L[k][1])})`}">${nsF(z[1])}</span>`; };
+  const ztab = `<div class="tw"><table class="t nsm-zt"><thead><tr><th class="l">Zone</th><th title="Share of the league’s attempts from here">League</th><th title="${esc(off)}’s share of its attempts from here">${esc(off)} shoots</th><th title="${esc(off)}’s FG% from here">FG%</th><th title="Share of opponents’ attempts against ${esc(def)} from here">${esc(def)} allows</th><th title="Opponents’ FG% against ${esc(def)} from here">FG%</th></tr></thead><tbody>
+    ${NSZ.map(([k, lab, col]) => `<tr><td class="l"><i class="nsm-sw" style="background:${col}"></i>${lab}</td><td class="muted">${nsF(L[k][0])} <small>${nsF(L[k][1])}</small></td><td>${shr(O.zo[k], k)}</td><td>${fgc(O.zo[k], k)}</td><td>${shr(F.zd[k], k)}</td><td>${fgc(F.zd[k], k, true)}</td></tr>`).join('')}</tbody></table></div>`;
+  const prow = r => { const x = r.x, fit = r.fit, on = sel && r === sel;
+    const fc = fit != null && Math.abs(fit - 1) >= .05 ? `<span class="nsm-fit ${fit > 1 ? 'up' : 'dn'}" title="${esc(def)} allows ${nsPc(fit)} points per shot vs average in the zones ${esc(r.p.n)} shoots from (its FG% by zone, pulled toward average). Display only, untested.">${nsPc(fit)} pts/shot</span>` : '';
+    return `<button type="button" class="nsm-p" data-nsmp="${esc(off)}:${r.p.id}" aria-pressed="${!!on}">
+      <span class="nsm-pn"><b>${esc(r.p.n)}</b> <small>${esc(r.p.pos || '')}</small>${fc}</span>${nsBar(x.z)}
+      <span class="nsm-ps">${(x.n / x.gp).toFixed(1)} FGA · rim ${nsF(x.z.rim[0])} · 3PT ${nsF(x.z.c3[0] + x.z.ab3[0])} · FG ${nsF(x.fg)}</span></button>`; };
+  const selNote = S ? `<div class="nsm-sel"><b>${esc(sel.p.n)}</b> · last ${Math.min(S.n, 300)} of ${S.n} shots in ${S.gp} games · <i class="nsm-k m"></i>made <i class="nsm-k x"></i>missed
+      <span class="nsm-pz">${NSZ.map(([k, lab, col]) => { const z = S.z[k]; if (!z[2]) return ''; const d = z[1] - L[k][1];
+        return `<span title="${z[2]} attempts (league ${nsF(L[k][1])})"><i class="nsm-sw" style="background:${col}"></i>${lab} ${nsF(z[0])} · <b class="${z[2] >= 15 && d >= .04 ? 'good' : z[2] >= 15 && d <= -.04 ? 'bad' : ''}">${nsF(z[1])}</b></span>`; }).join('')}</span>
+      <button type="button" class="nsm-x" data-nsmp="${esc(off)}:0">clear</button></div>` : '';
+  const chips = `<div class="nsm-chips"><span class="ladc">${esc(off)} ${O.fga} FGA/gm (${nsOrd(O.rk.fga)})</span><span class="ladc">${nsF(O.p3)} threes (${nsOrd(O.rk.p3)} most)</span><span class="ladc">${nsF(O.rim)} at the rim (${nsOrd(O.rk.rim)})</span><span class="ladc">${O.pps.toFixed(2)} pts/shot (${nsOrd(O.rk.pps)})</span>
+    <span class="ladc">${esc(def)} allows ${nsF(F.a3)} threes (${nsOrd(F.rk.a3)} most)</span><span class="ladc">${nsF(F.arim)} at the rim (${nsOrd(F.rk.arim)} most)</span><span class="ladc">${F.apps.toFixed(2)} pts/shot (${nsOrd(F.rk.apps)} most)</span></div>`;
+  return `<div class="nsm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${chips}
+    <div class="nsm-row"><div class="nsm-mapc">${selNote}${nsSvg(off, vals, dots, cc)}${cellInfo}
+      <ul class="nsm-list">${hot.map(x => `<li><b class="up">${nsPc(x.v)}</b> ${x.lab}: ${esc(off)} goes there and ${esc(def)} gives it up</li>`).join('')}${cold.map(x => `<li><b class="dn">${nsPc(x.v)}</b> ${x.lab}: little of it for ${esc(off)} tonight</li>`).join('')}${!hot.length && !cold.length ? '<li class="muted">No zone stands out.</li>' : ''}</ul>
+      ${ztab}</div>
+      <div class="nsm-pc"><div class="nsm-ph">${esc(off)} shooters <small>tap one to plot his shots</small></div><div class="nsm-pl">${pl.length ? pl.map(prow).join('') : '<div class="muted small">No listed player has shots this season.</div>'}</div></div></div></div>`;
+}
+function nsmPanel(g, pv){
+  nsmLoad();
+  if (!NSM) return `<section class="panel"><div class="phead"><h2>Shot map</h2>${pv}</div><div class="empty">${NSM_ST === 'none' ? 'No shot maps yet: they appear after the next NBA run.' : 'Loading shot maps…'}</div></section>`;
+  const seg = `<div class="seg nsm-seg" role="group" aria-label="Map view">${[['ov', 'Overlay'], ['off', 'Where they shoot'], ['def', 'Where it’s allowed']].map(([k, l]) =>
+    `<button data-nsmode="${k}" aria-pressed="${NSMODE === k}">${l}</button>`).join('')}</div>`;
+  return `<section class="panel"><div class="phead"><h2>Shot map</h2>${pv}<span class="muted small">this season · ${NSM.games} games through ${esc(NSM.through)}</span></div>
+    <div class="nsm-top">${seg}<div class="nsm-key"><span><i style="background:rgba(255,99,71,.85)"></i>more than average</span><span><i style="background:rgba(70,150,255,.7)"></i>less</span><span class="muted">basket at the top · share of attempts · faded where few shots happen</span></div></div>
+    ${nsBlock(g.away, g.home, g)}${nsBlock(g.home, g.away, g)}
+    <p class="note" style="margin:8px 0 0">Where they shoot = each team’s share of its field-goal attempts in each 3-ft square over the league’s share there (this season, lightly smoothed, pulled toward average early on). Where it’s allowed = the same for opponents’ attempts against the defense. Overlay = the two multiplied: red where this offense likes to shoot and this defense gives those shots up. Zone FG% is colored at 40+ attempts and 3+ points from the league (green = good for the shooter’s side, red = good for the defense). Tap a player to plot his last 300 attempts this season (any team). Display only: no number on the page uses these maps, and none of it has been tested as a betting signal; the projections already rate each team’s defense by position and playstyle.</p></section>`;
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-nsmode],[data-nsmp],[data-nsc]'); if (!t) return;
+  if (t.dataset.nsmode){ NSMODE = t.dataset.nsmode; try { localStorage.setItem('nba-smode', NSMODE); } catch (x) {} }
+  else if (t.dataset.nsmp){ const [tm, id] = t.dataset.nsmp.split(':'); NSMP[tm] = id === '0' || NSMP[tm] === id ? null : id; }
+  else if (t.dataset.nsc){ const [tm, r, c] = t.dataset.nsc.split(':'); NSMC[tm] = r === 'x' || NSMC[tm] === r + ':' + c ? null : r + ':' + c; }
+  render();
+});
 function gameView(){
   const g = D.games.find(x => x.id === state.game) || D.games[0]; if (!g) return '<div class="empty">No games.</div>';
   const M = g.models[mode(g.id)], hw = M.home_win;
@@ -290,8 +423,8 @@ function gameView(){
     <div class="winbar"><div class="bar"><i style="flex:${1 - hw};background:var(--away)"></i><i style="flex:${hw};background:var(--accent)"></i></div></div>
     ${nbaGameBets(g)}
     ${window.MKT ? MKT.game(g.id, mode(g.id)) : ''}</section>`;
-  const pv = `<span class="gmsw" role="group" aria-label="Players view"><button data-pview="proj" aria-pressed="${PVIEW === 'proj'}">Projections</button><button data-pview="box" aria-pressed="${PVIEW === 'box'}">Box score</button></span>`;
-  const tables = PVIEW === 'box'
+  const pv = `<span class="gmsw" role="group" aria-label="Players view"><button data-pview="proj" aria-pressed="${PVIEW === 'proj'}">Projections</button><button data-pview="box" aria-pressed="${PVIEW === 'box'}">Box score</button><button data-pview="map" aria-pressed="${PVIEW === 'map'}">Shot map</button></span>`;
+  const tables = PVIEW === 'map' ? nsmPanel(g, pv) : PVIEW === 'box'
     ? `<section class="panel"><div class="phead"><h2>Projected box score <span class="exp3">highly experimental</span></h2>${pv}<span class="muted small">${mode(g.id) === 'vegas' ? 'With Vegas' : 'Market-blind'} · each player’s simulated average, rounded so team totals hold</span></div>${boxTable(g, g.away)}${boxTable(g, g.home)}
       <p class="note" style="margin:8px 0 0">One number per stat: the average of each player’s simulated games (the most accurate single guess, and averages add up to the team score). The 11 players with the most expected minutes (about how many play); the rest of the bench’s expected share goes to them so totals match the projected score. Tested on 2024-26 games: points off by 4.4 a player on average. Starters are the five with the most projected minutes; Q = questionable. Highlighted = above the books’ main line for that prop (an over lean; the chips list the line). On those chips, <b>Ladder</b> = that stat is on Ladder edges (Ladders tab); then <b>15%+ K</b> = a Kalshi rung where our chance beats the ask + fee by 15%+, and <b>NV +N%</b> = a Novig rung 10%+ under the other books’ fair (the rung number follows; both tracked, not proven). Points come from his makes (2 × twos + 3 × threes + free throws); shooting splits use his 3P% and FT% this season and last, pulled toward league average on small samples. <a href="boxes.html">How accurate it has been, graded every night →</a></p></section>`
     : `<section class="panel"><div class="phead"><h2>Players</h2>${pv}<span class="muted small" style="display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center">Median, with 8-in-10 range below. Tap a name to slide a line. ${mgKey('tough matchup', 'soft matchup')}</span></div>${softStrip(g)}${teamTable(g, g.away)}${teamTable(g, g.home)}</section>`;
@@ -1017,6 +1150,10 @@ function render(){
   const main = document.getElementById('main');
   try { main.innerHTML = state.view === 'board' ? board() : state.view === 'dvp' ? dvpView() : state.view === 'parlays' ? parlaysView() : state.view === 'ladders' ? laddersView() : state.view === 'mu' ? muView() : gameView(); }
   catch (e) { console.error(e); main.innerHTML = `<div class="empty">This view hit an error (${esc(String(e && e.message || e))}). The other tabs still work; it is fixed on the next page build.</div>`; }
+  // shot map player lists (a strip on phones, a scrolling column on desktop): keep the picked player in view after a redraw
+  for (const pl of document.querySelectorAll('.nsm-pl')){ const b = pl.querySelector('[aria-pressed="true"]'); if (!b) continue;
+    if (pl.scrollWidth > pl.clientWidth) pl.scrollLeft = b.offsetLeft - pl.offsetLeft - 8;
+    else if (pl.scrollHeight > pl.clientHeight) pl.scrollTop = b.offsetTop - pl.offsetTop - 8; }
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }
 }

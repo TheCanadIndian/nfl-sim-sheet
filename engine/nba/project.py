@@ -410,6 +410,11 @@ def main():
         payload["mu"] = MU.board(payload)
     except Exception as e:                                         # noqa: BLE001 -- display only
         print("matchup charts skipped:", type(e).__name__, e)
+    try:                                                           # shot maps (shotmap.py, owner 2026-11-23) -> markets/shotmap_nba.json
+        import shotmap as NSMAP
+        NSMAP.write(payload, F.DB, int(fut.season.iloc[0]))
+    except Exception as e:                                         # noqa: BLE001 -- display only
+        print("shot maps skipped:", type(e).__name__, e)
     try:                                                           # archetype map for the Profit page (owner 2026-11-06)
         write_arch_map(fr)
     except Exception as e:                                         # noqa: BLE001 -- display only
