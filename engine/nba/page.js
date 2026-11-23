@@ -294,6 +294,7 @@ const nsLS = (k, ok, dflt) => { try { const v = localStorage.getItem(k); return 
 let NSMODE = nsLS('nba-smode', ['ov', 'off', 'def'], 'ov');   // overlay / where they shoot / where it's allowed
 let NSMET = nsLS('nba-smet', ['att', 'fg'], 'att');           // attempts / makes vs misses
 let NSAR = '', NSDF = 'all';                                  // defense view: shooter archetype ('' = all); a player's dots: all / made / miss
+let NSPV = nsLS('nba-spv', ['spots', 'dots'], 'spots');      // a picked player: his spots (one circle a square) or every shot
 const NSMP = {}, NSMC = {};                                   // team -> picked player id / tapped cell 'r:c'
 const NSZ = [['rim', 'At the rim', '#c92a2a'], ['paint', 'Paint', '#f08c00'], ['mid', 'Mid-range', '#ffe066'], ['c3', 'Corner 3', '#99e9f2'], ['ab3', 'Above-break 3', '#4c6ef5']];
 const NSB64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
@@ -308,6 +309,7 @@ function nsDec(s){                                             // a packed grid 
     NSDC.set(s, g); }
   return NSDC.get(s);
 }
+const nsLast = n => { const w = String(n || '').replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/i, '').trim().split(/\s+/); return w[w.length - 1] || n; };
 const nsArLab = a => a === 'Scoring guard/wing' ? 'scoring guards / wings' : a === '3-and-D role player' ? '3-and-D role players' : a.toLowerCase() + 's';
 function nsZoneAt(r, c){                                       // the zone a cell's centre falls in (shotmap.zone_of)
   const x = c * 3 + 1, y = r * 3 - 3, dx = x - 25, d = Math.hypot(dx, y - 1.25);
@@ -330,7 +332,30 @@ function nsDots(s){
   }
   return out;
 }
-function nsSvg(team, vals, dots, pick){
+// a picked player's spots (owner 2026-11-23: 'make the NBA player shot overlay easier to visualize on the heat map right now I can barely
+// tell if the player shoots in a good location'): his last 300 attempts grouped by square, one circle each, sized by how often he shoots
+// there and FILLED with the map's colour at that square (strong colour = the map rates his spot strongly; a pale circle = about average),
+// the map faded behind; `fit` = the map's value averaged over his attempts (how favourable his spots are on the map shown)
+const nsSpFill = v => { if (v == null) return 'rgba(255,255,255,.10)'; const fg = NSMET === 'fg', d = v - 1, a = Math.min(1, Math.abs(d) / (fg ? .15 : .25));
+  return `rgba(${d >= 0 ? (fg ? '52,210,122' : '255,99,71') : (fg ? '240,72,72' : '70,150,255')},${(.1 + .9 * a).toFixed(2)})`; };
+function nsSpots(s, vals){
+  const cell = {};
+  for (let i = 0; i + 1 < s.length; i += 2){
+    let v = NSB64.indexOf(s[i]) * 64 + NSB64.indexOf(s[i + 1]); const made = v % 2; v = (v - made) / 2;
+    const x = v % 51, y = Math.floor(v / 51) - 4; if (y > 31) continue;
+    const r = Math.floor((y + 4) / 3), c = Math.min(16, Math.floor(x / 3)), k = r + ':' + c;
+    const e = cell[k] = cell[k] || {r, c, n: 0, m: 0}; e.n++; e.m += made;
+  }
+  const C = Object.values(cell), mx = Math.max(1, ...C.map(x => x.n));
+  let svg = '', w = 0, sv = 0, up = 0, dn = 0;
+  for (const x of C.sort((a, b) => b.n - a.n)){
+    const v = vals[x.r] && vals[x.r][x.c];
+    svg += `<circle cx="${x.c * 18 + 9}" cy="${x.r * 18 + 9}" r="${(3 + 6.5 * Math.sqrt(x.n / mx)).toFixed(1)}" class="nsm-sp" style="fill:${nsSpFill(v)}"/>`;
+    if (v != null){ w += x.n; sv += x.n * v; if (v >= 1.05) up += x.n; else if (v <= .95) dn += x.n; }
+  }
+  return {svg, cell, fit: w ? sv / w : null, up: w ? up / w : 0, dn: w ? dn / w : 0};
+}
+function nsSvg(team, vals, dots, pick, dim){
   const DN = NSM.lg.d, dmax = Math.max(...DN.flat().filter(x => x != null));
   let cells = '', hits = '';
   for (let r = 0; r < 12; r++) for (let c = 0; c < 17; c++){
@@ -341,7 +366,7 @@ function nsSvg(team, vals, dots, pick){
   }
   const R = 23.75 * 6, cx = nsX(25), cy = nsY(1.25);
   return `<svg class="nsm-svg" viewBox="0 0 306 216" role="img" aria-label="${esc(team)} shot map">
-    <g${dots ? ' opacity=".3"' : ''}>${cells}</g>
+    <g${dim ? ' opacity=".35"' : ''}>${cells}</g>
     <g class="nsm-court" fill="none">
       <rect x="0.5" y="${nsY(-4)}" width="305" height="${(216 - nsY(-4) - .5).toFixed(1)}"/>
       <rect x="${nsX(17)}" y="${nsY(-4)}" width="${16 * 6}" height="${19 * 6}"/>
@@ -379,14 +404,19 @@ function nsBlock(off, def, g){
     .sort((a, b) => b.x.n / b.x.gp - a.x.n / a.x.gp);
   const same = AR ? all.filter(r => r.x.ar === NSAR) : all, pl = same.length ? same : all;
   const sel = all.find(r => String(r.p.id) === String(NSMP[off])), S = sel && sel.x;
-  const dots = S ? nsDots(S.s) : '';
+  const SP = S && NSPV === 'spots' ? nsSpots(S.s, vals) : null, dots = S ? (SP ? SP.svg : nsDots(S.s)) : '';
+  // his spots on both measures (the summary line reports attempts and makes whichever map is shown)
+  const gridFor = m => { const o = nsDec(m ? O.offg : O.off), d = nsDec(AR ? (m ? AR.g : AR.a) : m ? F.dfng : F.dfn);
+    return NSMODE === 'off' ? o : NSMODE === 'def' ? d : o.map((row, r) => row.map((v, c) => v == null || d[r][c] == null ? null : v * d[r][c])); };
+  const SP2 = SP ? nsSpots(S.s, gridFor(!fg)) : null, fitA = SP ? (fg ? SP2.fit : SP.fit) : null, fitF = SP ? (fg ? SP.fit : SP2.fit) : null;
   // tapped square
   const cc = NSMC[off], [cr, ccl] = cc ? cc.split(':').map(Number) : [];
   const lfg = (r, c) => NSM.lg.fg && NSM.lg.fg[r] && NSM.lg.fg[r][c];
   const cellInfo = cc != null && vals[cr] && vals[cr][ccl] != null ? (() => { const zl = NSZ.find(z => z[0] === nsZoneAt(cr, ccl))[1], o = offG[cr][ccl], d = defG[cr][ccl], lf = lfg(cr, ccl);
     const txt = fg ? `${lf != null ? `league ${nsF(lf)} here · ` : ''}${esc(off)} makes ${o != null ? (lf != null && !AR ? `${nsF(lf * o)} (${nsPc(o)})` : nsPc(o)) : '–'} · ${esc(def)} lets ${who} make ${d != null ? (lf != null && !AR ? `${nsF(lf * d)} (${nsPc(d)})` : nsPc(d)) : '–'}`
       : `${esc(off)} shoots here ${o != null ? nsPc(o) : '–'} vs average · ${esc(def)} allows ${who} ${d != null ? nsPc(d) : '–'}${NSMODE === 'ov' && ovG[cr][ccl] != null ? ` · together ${nsPc(ovG[cr][ccl])}` : ''}`;
-    return `<div class="nsm-ci"><b>${esc(zl)}</b> · ${txt} <button type="button" class="nsm-x" data-nsc="${esc(off)}:x">close</button></div>`; })()
+    const me = SP && SP.cell[cr + ':' + ccl], lf0 = lfg(cr, ccl), meTxt = SP ? ` · <b>${esc(nsLast(sel.p.n))}</b> ${me ? `${me.m} of ${me.n} here${lf0 != null ? ` (league ${nsF(lf0)})` : ''}` : 'no shots here'}` : '';
+    return `<div class="nsm-ci"><b>${esc(zl)}</b> · ${txt}${meTxt} <button type="button" class="nsm-x" data-nsc="${esc(off)}:x">close</button></div>`; })()
     : '<div class="nsm-ci muted">Tap a square on the court for its numbers.</div>';
   // zones that stand out: attempts = offense share x defense share over the league's; makes = offense FG% x defense FG% allowed over the
   // league's (each zone pulled toward the league with 60 attempts). With an archetype picked: the defense against that archetype only.
@@ -413,7 +443,14 @@ function nsBlock(off, def, g){
       <span class="nsm-pn"><b>${esc(r.p.n)}</b> <small>${esc(r.p.pos || '')}</small>${fc}</span>${nsBar(x.z)}
       <span class="nsm-ps">${(x.n / x.gp).toFixed(1)} FGA · rim ${nsF(x.z.rim[0])} · 3PT ${nsF(x.z.c3[0] + x.z.ab3[0])} · FG ${nsF(x.fg)}${x.ar ? ` · ${esc(x.ar)}` : ''}</span></button>`; };
   const df = ['all', 'made', 'miss'].map(k => `<button type="button" data-nsdf="${k}" aria-pressed="${NSDF === k}">${k === 'all' ? 'All' : k === 'made' ? 'Makes' : 'Misses'}</button>`).join('');
-  const selNote = S ? `<div class="nsm-sel"><b>${esc(sel.p.n)}</b>${arTag(S.ar)} · last ${Math.min(S.n, 300)} of ${S.n} shots in ${S.gp} games <span class="gmsw nsm-df" role="group" aria-label="Shots shown">${df}</span> <i class="nsm-k m"></i>made <i class="nsm-k x"></i>missed
+  const pv2 = ['spots', 'dots'].map(k => `<button type="button" data-nspv="${k}" aria-pressed="${NSPV === k}">${k === 'spots' ? 'His spots' : 'Every shot'}</button>`).join('');
+  // how favourable his spots are (higher = better for his side in every view but 'Where they shoot'): attempts and makes both
+  const fpc = f => f == null ? '–' : `<b class="${NSMODE === 'off' ? '' : f >= 1.03 ? 'good' : f <= .97 ? 'bad' : ''}">${nsPc(f)}</b>`;
+  const fitSay = () => NSMODE === 'def' ? `From his spots ${esc(def)} allows ${esc(who)} ${fpc(fitA)} shots and lets them make ${fpc(fitF)} vs average`
+    : NSMODE === 'off' ? `From his spots ${esc(off)} shoots ${fpc(fitA)} and makes ${fpc(fitF)} vs average`
+    : `His spots tonight: ${fpc(fitA)} on attempts (${esc(off)} likes them, ${esc(def)} gives them up), ${fpc(fitF)} on makes`;
+  const fitLine = SP && (fitA != null || fitF != null) ? `<div class="nsm-fitl">${fitSay()} · on this map ${Math.round(SP.up * 100)}% of his shots come from squares above average, ${Math.round(SP.dn * 100)}% below</div>` : '';
+  const selNote = S ? `<div class="nsm-sel"><b>${esc(sel.p.n)}</b>${arTag(S.ar)} · last ${Math.min(S.n, 300)} of ${S.n} shots in ${S.gp} games <span class="gmsw nsm-df" role="group" aria-label="Show">${pv2}</span>${SP ? ' <span class="nsm-spk">circle size = how often he shoots there · colour = the map at that spot (pale = about average)</span>' : ` <span class="gmsw nsm-df" role="group" aria-label="Shots shown">${df}</span> <i class="nsm-k m"></i>made <i class="nsm-k x"></i>missed`}${fitLine}
       <span class="nsm-pz">${NSZ.map(([k, lab, col]) => { const z = S.z[k]; if (!z[2]) return ''; const d = z[1] - L[k][1];
         return `<span title="${Math.round(z[1] * z[2])} of ${z[2]} (league ${nsF(L[k][1])})"><i class="nsm-sw" style="background:${col}"></i>${lab} ${nsF(z[0])} · <b class="${z[2] >= 15 && d >= .04 ? 'good' : z[2] >= 15 && d <= -.04 ? 'bad' : ''}">${nsF(z[1])}</b></span>`; }).join('')}</span>
       <button type="button" class="nsm-x" data-nsmp="${esc(off)}:0">clear</button></div>` : '';
@@ -422,7 +459,7 @@ function nsBlock(off, def, g){
     <span class="ladc">${esc(def)} allows ${nsF(F.a3)} threes (${nsOrd(F.rk.a3)} most)</span><span class="ladc">${nsF(F.arim)} at the rim (${nsOrd(F.rk.arim)} most)</span><span class="ladc">${F.apps.toFixed(2)} pts/shot (${nsOrd(F.rk.apps)} most)</span></div>`;
   const plHead = AR ? (same.length ? `${esc(off)} ${esc(nsArLab(NSAR))}` : `${esc(off)} shooters <small>no ${esc(nsArLab(NSAR))} tonight</small>`) : `${esc(off)} shooters`;
   return `<div class="nsm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${chips}
-    <div class="nsm-row"><div class="nsm-mapc">${arNote}${selNote}${nsSvg(off, vals, dots, cc)}${cellInfo}
+    <div class="nsm-row"><div class="nsm-mapc">${arNote}${selNote}${nsSvg(off, vals, dots, cc, !!S)}${cellInfo}
       <ul class="nsm-list">${hot.map(x => `<li><b class="up">${nsPc(x.v)}</b> ${x.lab}: ${say(x, true)}</li>`).join('')}${cold.map(x => `<li><b class="dn">${nsPc(x.v)}</b> ${x.lab}: ${say(x, false)}</li>`).join('')}${!hot.length && !cold.length ? '<li class="muted">No zone stands out.</li>' : ''}</ul>
       ${ztab}</div>
       <div class="nsm-pc"><div class="nsm-ph">${plHead} <small>tap one to plot his shots</small></div><div class="nsm-pl">${pl.length ? pl.map(prow).join('') : '<div class="muted small">No listed player has shots this season.</div>'}</div></div></div></div>`;
@@ -442,14 +479,15 @@ function nsmPanel(g, pv){
   return `<section class="panel"><div class="phead"><h2>Shot map</h2>${pv}<span class="muted small">this season · ${NSM.games} games through ${esc(NSM.through)}</span></div>
     <div class="nsm-top">${seg}${met}<div class="nsm-key">${key}<span class="muted">basket at the top · faded where few shots happen</span></div></div>${arRow}
     ${nsBlock(g.away, g.home, g)}${nsBlock(g.home, g.away, g)}
-    <p class="note" style="margin:8px 0 0"><b>Attempts:</b> where they shoot = each team’s share of its field-goal attempts in each 3-ft square over the league’s share there; where it’s allowed = the same for opponents’ attempts against the defense; overlay = the two multiplied (red where this offense likes to shoot and this defense gives those shots up). <b>Makes vs misses:</b> FG% in each square over the league’s FG% there (offense, and what the defense allows; overlay = both), pulled toward the league’s on small samples (green = more makes, red = more misses). <b>Shooter type</b> (Where it’s allowed): what this defense allows to one playstyle archetype, against how that archetype shoots league-wide (each player’s latest archetype); the shooter list then shows tonight’s players of that type. This season’s regular-season shots, lightly smoothed; zone FG% is colored at 40+ attempts and 3+ points from its baseline (green = good for the shooter’s side). Tap a player to plot his last 300 attempts (any team; All / Makes / Misses). Display only: no number on the page uses these maps, and none of it has been tested as a betting signal; the projections already rate each team’s defense by position and playstyle.</p></section>`;
+    <p class="note" style="margin:8px 0 0"><b>Attempts:</b> where they shoot = each team’s share of its field-goal attempts in each 3-ft square over the league’s share there; where it’s allowed = the same for opponents’ attempts against the defense; overlay = the two multiplied (red where this offense likes to shoot and this defense gives those shots up). <b>Makes vs misses:</b> FG% in each square over the league’s FG% there (offense, and what the defense allows; overlay = both), pulled toward the league’s on small samples (green = more makes, red = more misses). <b>Shooter type</b> (Where it’s allowed): what this defense allows to one playstyle archetype, against how that archetype shoots league-wide (each player’s latest archetype); the shooter list then shows tonight’s players of that type. This season’s regular-season shots, lightly smoothed; zone FG% is colored at 40+ attempts and 3+ points from its baseline (green = good for the shooter’s side). Tap a player to see his spots: his last 300 attempts (any team) grouped by square, each circle sized by how often he shoots there and filled with the map’s colour at that square (a big, strongly coloured circle = he shoots a lot where the map is strong; pale = about average), plus a line saying how favourable his spots are on the map shown; tap a square for his makes there. ‘Every shot’ plots each attempt instead (All / Makes / Misses). Display only: no number on the page uses these maps, and none of it has been tested as a betting signal; the projections already rate each team’s defense by position and playstyle.</p></section>`;
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-nsmode],[data-nsmet],[data-nsar],[data-nsdf],[data-nsmp],[data-nsc]'); if (!t) return;
+  const t = e.target.closest('[data-nsmode],[data-nsmet],[data-nsar],[data-nsdf],[data-nspv],[data-nsmp],[data-nsc]'); if (!t) return;
   if (t.dataset.nsmode){ NSMODE = t.dataset.nsmode; try { localStorage.setItem('nba-smode', NSMODE); } catch (x) {} }
   else if (t.dataset.nsmet){ NSMET = t.dataset.nsmet; try { localStorage.setItem('nba-smet', NSMET); } catch (x) {} }
   else if (t.dataset.nsar != null){ NSAR = t.dataset.nsar; }
   else if (t.dataset.nsdf){ NSDF = t.dataset.nsdf; }
+  else if (t.dataset.nspv){ NSPV = t.dataset.nspv; try { localStorage.setItem('nba-spv', NSPV); } catch (x) {} }
   else if (t.dataset.nsmp){ const [tm, id] = t.dataset.nsmp.split(':'); NSMP[tm] = id === '0' || NSMP[tm] === id ? null : id; }
   else if (t.dataset.nsc){ const [tm, r, c] = t.dataset.nsc.split(':'); NSMC[tm] = r === 'x' || NSMC[tm] === r + ':' + c ? null : r + ':' + c; }
   render();
@@ -1212,8 +1250,8 @@ function render(){
   catch (e) { console.error(e); main.innerHTML = `<div class="empty">This view hit an error (${esc(String(e && e.message || e))}). The other tabs still work; it is fixed on the next page build.</div>`; }
   // shot map player lists (a strip on phones, a scrolling column on desktop): keep the picked player in view after a redraw
   for (const pl of document.querySelectorAll('.nsm-pl, .nsm-arr')){ const b = pl.querySelector('[aria-pressed="true"]'); if (!b) continue;
-    if (pl.scrollWidth > pl.clientWidth) pl.scrollLeft = b.offsetLeft - pl.offsetLeft - 8;
-    else if (pl.scrollHeight > pl.clientHeight) pl.scrollTop = b.offsetTop - pl.offsetTop - 8; }
+    if (pl.scrollWidth > pl.clientWidth){ const x = b.offsetLeft - pl.offsetLeft; if (x + b.offsetWidth > pl.clientWidth) pl.scrollLeft = x - 8; }
+    else if (pl.scrollHeight > pl.clientHeight){ const y = b.offsetTop - pl.offsetTop; if (y + b.offsetHeight > pl.clientHeight) pl.scrollTop = y - 8; } }
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }
 }
