@@ -158,7 +158,7 @@ table.muht{width:100%;border-collapse:separate;border-spacing:3px}table.muht th{
 table.muht td{text-align:center;font-weight:700;font-size:12.5px;border-radius:5px;padding:5px 2px;min-width:44px;position:relative;background:var(--sunk);font-variant-numeric:tabular-nums}table.muht td i{font-style:normal;font-weight:500;font-size:10px;opacity:.75}
 table.muht td.l{text-align:left;background:none;font-weight:400;padding-left:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}table.muht td.l small{color:var(--muted);margin-left:5px;font-size:11px}
 table.muht td.na{color:var(--muted);font-weight:400;background:none}table.muht td.best{box-shadow:inset 0 0 0 2px var(--ink)}table.muht td.dis::after{content:'';position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:#F2C14E}
-.mupdf{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:7px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer;margin-left:auto}
+.mupdf{border:1px solid var(--faint);background:var(--surface);color:var(--ink);border-radius:7px;padding:6px 12px;font-weight:600;font-size:13px;cursor:pointer;margin-left:auto}a.mupdf{text-decoration:none;display:inline-block;margin-left:6px}
 .mupdf:disabled{opacity:.6;cursor:wait}
 .mukey{display:flex;flex-wrap:wrap;gap:4px;font-size:11.5px}.mukey span{border-radius:4px;padding:1px 7px;color:var(--ink)}
 .mugh,.mur{display:grid;grid-template-columns:52px repeat(4,minmax(0,1fr));gap:3px}

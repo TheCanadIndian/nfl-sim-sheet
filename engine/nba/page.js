@@ -1099,11 +1099,12 @@ function muHeat(R){
 }
 function muView(){
   if (!D.mu) return `<section class="panel"><div class="phead"><h2>Matchups</h2></div><p class="note">Matchup charts start with pages built from Nov 21, 2026. Open today’s page for them.</p></section>`;
+  setTimeout(() => muLoad().catch(() => {}), 0);                    // the PDF libraries, ready before the tap
   const R = muRows(), nd = R.filter(r => r.dis).length;
   const key = `<span class="mukey">${[3, 2, 1, 0, -1, -2, -3].map(lv => `<span class="${muCls(lv)}">${MUL[lv]}</span>`).join('')}</span>`;
   const seg = `<div class="seg" role="group" aria-label="Group by">${[['game', 'By game'], ['stat', 'By stat'], ['heat', 'Heatmap']].map(([k, l]) => `<button type="button" data-muv="${k}" aria-pressed="${MUV === k}">${l}</button>`).join('')}</div>`;
   return `<section class="panel"><div class="phead"><h2>${MUV === 'heat' ? 'Matchup heatmap, every player' : 'Best matchup per stat, each team'}</h2><span class="small muted">${D.games.length} games · ${esc(D.date)}</span></div>
-    <div class="mubar">${seg}${MUV === 'heat' ? '' : key}<button type="button" class="mupdf" data-mupdf="1" title="Downloads all four charts as a PDF (the same layout as the shared one)">⤓ Download PDF</button></div>
+    <div class="mubar">${seg}${MUV === 'heat' ? '' : key}<button type="button" class="mupdf" data-mupdf="1" title="Downloads all four charts as a PDF (the same layout as the shared one)">⤓ Download PDF</button><a class="mupdf" href="../screener.html#nba-shortlist" title="The screener’s NBA shortlist: every NBA longshot (+350, Novig / Kalshi) and study pick, sorted by this sheet’s matchup cell and the D rating, with Copy list">Shortlist ↗</a></div>
     <details class="how"><summary>How to read this</summary><p class="note"><b>Cell</b> = what tonight’s defense allows per minute against the league average, to his position (and his archetype for points and threes): the same number that shades his stat cell on the sheet. Bands: deep green +10% or more, green +5 to +10%, light green +2 to +5%, neutral within 2%, and the same steps in red. Each team’s cell lists the players with its greenest matchup for that stat (ties all listed); only players with 20+ projected minutes and real volume in the stat (8+ points, 3+ rebounds, 2+ assists, 1+ three projected), so big men with no threes don’t show up green on threes. * = under 24 projected minutes. The model already uses these matchups, so a green cell is context, not an edge; the same tags show on the Ladders tab and in the screener (‘Best matchups’). Display only.</p></details>
     ${MUV === 'stat' ? muByStat(R, r => r.best) : MUV === 'heat' ? muHeat(R) : muByGame(R)}</section>
     <section class="panel"><div class="phead"><h2>Where the cell disagrees with the D rating</h2><span class="small muted">${nd} player-stat${nd === 1 ? '' : 's'}</span></div>
@@ -1149,15 +1150,33 @@ function muBetsView(){
 // PDF export: jsPDF + autoTable, loaded only when the button is tapped (pinned versions); if they can't load, the print dialog opens
 const MU_RGB = {3: [46, 158, 91], 2: [143, 213, 166], 1: [214, 240, 221], 0: [229, 231, 235], '-1': [250, 221, 221], '-2': [240, 163, 163], '-3': [214, 80, 80]};
 const muAsc = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[’‘]/g, "'").replace(/[−–]/g, '-').replace(/[^\x20-\x7E]/g, '');
+const muReady = () => !!(window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API.autoTable);
+let MU_LOADING = null;
 function muLoad(){
-  if (window.jspdf && window.jspdf.jsPDF && window.jspdf.jsPDF.API.autoTable) return Promise.resolve();
+  if (muReady()) return Promise.resolve();
+  if (MU_LOADING) return MU_LOADING;
   const add = src => new Promise((res, rej) => { const s = document.createElement('script'); s.src = src; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
-  return add('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js').then(() => add('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'));
+  MU_LOADING = add('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js').then(() => add('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js'))
+    .catch(e => { MU_LOADING = null; throw e; });
+  return MU_LOADING;
+}
+// phones (owner 2026-11-23: 'The pdf download wasn't working on mobile'): a download started after the libraries load has lost the
+// tap, and in-app browsers ignore downloads -- so the libraries load as the tab opens (muView), the PDF is built in the same tap and
+// goes to the phone's share sheet (Save to Files, send) when it offers one; otherwise an 'Open the PDF' link appears (a fresh tap works)
+const muTouch = () => { try { return matchMedia('(pointer: coarse)').matches; } catch (e) { return false; } };
+async function muOut(doc, name, btn){
+  if (!muTouch()){ doc.save(name); return; }
+  const blob = doc.output('blob');
+  try { const f = new File([blob], name, {type: 'application/pdf'});
+    if (navigator.canShare && navigator.canShare({files: [f]})){ await navigator.share({files: [f], title: name}); return; } }
+  catch (e) { if (e && e.name === 'AbortError') return; }
+  const url = URL.createObjectURL(blob), old = document.getElementById('mupdf-open'); if (old) old.remove();
+  btn.insertAdjacentHTML('afterend', `<a id="mupdf-open" class="mupdf" href="${url}" target="_blank" rel="noopener" download="${name}">Open the PDF</a>`);
 }
 async function muPdf(btn){
   const t0 = btn.textContent; btn.disabled = true; btn.textContent = 'Building PDF…';
   try {
-    await muLoad();
+    if (!muReady()) await muLoad();                                 // already loaded with the tab: no wait, so the tap still counts
     const doc = new window.jspdf.jsPDF({unit: 'pt', format: 'letter'}), W = doc.internal.pageSize.getWidth(), H = doc.internal.pageSize.getHeight();
     const R = muRows(), G = muGames(), gl = g => `${g.away} @ ${g.home}`, fill = lv => ({fillColor: MU_RGB[lv]});
     const sty = {theme: 'grid', styles: {fontSize: 8, cellPadding: 3, textColor: [20, 20, 20], lineColor: [200, 204, 210], lineWidth: .5, valign: 'middle'},
@@ -1212,7 +1231,7 @@ async function muPdf(btn){
     else { doc.setFontSize(10); doc.text('No 15%+ K pick lines up with a best matchup right now.', 40, y + 12); }
     const n = doc.internal.getNumberOfPages();
     for (let i = 1; i <= n; i++){ doc.setPage(i); doc.setFontSize(7.5); doc.setTextColor(130); doc.text(`Sim Sheet - NBA matchup charts - ${D.date} - page ${i} of ${n} - display only, not a bet rule`, W / 2, H - 22, {align: 'center'}); }
-    doc.save(`NBA_matchup_charts_${D.date}.pdf`);
+    await muOut(doc, `NBA_matchup_charts_${D.date}.pdf`, btn);
   } catch (e) { console.error(e); window.print(); }
   finally { btn.disabled = false; btn.textContent = t0; }
 }

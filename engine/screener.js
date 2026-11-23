@@ -32,6 +32,13 @@ function scMu(r){
   if (dis) out.push(`<span class="sc-tag mudis" title="${scE(dis > 0 ? `The sheet’s cell is ${SC_MUL[lv]} (${pv}) but the D rating is ${cv}: the rating adds the defense’s rest, travel and missing defenders, and was tested against the market (tough ran 3-5 pts under the price). Read it as a reason to check before betting the over.` : `The sheet’s cell is ${SC_MUL[lv]} (${pv}) but the D rating is ${cv}.`)}">${dis > 0 ? 'Green cell' : 'Red cell'} · D ${cv}</span>`);
   return out.join('');
 }
+function scMuSl(r){                                                          // shortlist: the cell for every row, not only the team's best
+  const x = r.sport === 'nba' && r.mu;
+  if (!x) return '<span class="sc-tag mub mul0" title="No matchup cell for this stat tonight (low volume, or not on the sheet).">matchup –</span>';
+  const [v, lv, best, chip, dis] = x, pv = `${v >= 0 ? '+' : '−'}${Math.abs(v).toFixed(1)}%`, st = SC_MSL[r.k] || r.k;
+  return `<span class="sc-tag mub mul${lv}" title="${scE(`His ${st} cell on tonight’s Matchups sheet: ${SC_MUL[lv]}, ${pv} per minute vs the league to his position${r.k === 'pts' || r.k === 'fg3m' ? ' and archetype' : ''}${best && lv >= 1 ? '; his team’s best for this stat' : ''}. The model already uses it; display only.`)}">${st} ${pv} ${SC_MUL[lv]}${best && lv >= 1 ? ' · best' : ''}</span>`
+    + (dis ? `<span class="sc-tag mudis" title="${scE(`The cell is ${SC_MUL[lv]} but the D rating disagrees (rest, travel, missing defenders).`)}">${dis > 0 ? 'Green cell' : 'Red cell'} · D ${chip > 0 ? '+' : chip < 0 ? '−' : ''}${Math.abs(chip).toFixed(1)}</span>` : '');
+}
 function scStar(r, b){
   if (!SC_AODDS || r.sport !== 'nba' || !r.ar || !b || b.o == null || !SC_STN[r.k]) return '';
   const o = +b.o, band = (SC_OB.find(([lo, hi]) => o >= lo && o <= hi) || [])[2];
@@ -94,7 +101,7 @@ function scStar(r, b){
   // ---------------------------------------------------------------- state (remembered per device)
   // alt lines on (owner 2026-10-25: "I feel like we are missing prices"): every rung shows; their fair is carried from
   // the main line (shown with ≈ where only our distribution carries it). Devices that had saved 'off' are switched on once.
-  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', consk: 'all', due: false, offm: false, softm: false, mub: false, soon: false, alts: true, promo: false, promok: 'all', pink: 'all', gap8: false, ls: 0, lsk: 'e5', sort: 'edge'};
+  const DEF = {sport: 'all', books: 'mine', edge: 5, price: 'all', stat: 'all', q: '', tagged: false, pinmv: false, consmv: false, knee: false, open: false, path: false, lad: false, ladc: 'all', consk: 'all', due: false, offm: false, softm: false, mub: false, soon: false, alts: true, promo: false, promok: 'all', pink: 'all', gap8: false, ls: 0, lsk: 'e5', sl: false, sort: 'edge'};
   let S = {...DEF};
   try { Object.assign(S, JSON.parse(localStorage.getItem('simscreen-v2') || '{}')); } catch (e) {}
   if (!S.v3){ S.alts = true; S.v3 = 1; }
@@ -139,6 +146,7 @@ function scStar(r, b){
   const lsRec = (lv, k) => { const r = (LSR[lv] || {})[k]; if (!r) return '';
     return `${r[1]} won of ${r[0]} (${(100 * r[1] / r[0]).toFixed(1)}%) vs ${r[2]} expected at the price, return ${sgn(r[3])} (Oct 20 – Nov 8 ${sgn(r[4])}, Nov 9–15 ${sgn(r[5])})`; };
   const QP = [
+    {n: 'NBA shortlist', top: 1, f: {sport: 'nba', sl: true}, t: 'One list for a phone: every NBA longshot (+350 and longer at Novig / Kalshi meeting any of the tested combinations) and every ★ study pick, each checked against tonight’s Matchups sheet and D rating, grouped good / neutral / tough matchup and sorted; Copy list gives it as text. A sorting of lists that are each unproven, not a tested rule.'},
     {n: 'NFL gap 8+', top: 1, f: {sport: 'nfl', gap8: true, edge: -100, alts: false}, t: 'NFL main-line overs on catches, receiving yards and anytime TDs at your books where our chance is 8+ pts above the other books’ no-vig fair (Pinnacle and Kalshi left out). 2026 search +18% on 319, unseen +40% on 164 (one per player-stat, best price); the same overs without the gap about even. Rushing / passing yards and alt lines lost with the same gap. Tracked on the Profit page; not proven.'},
     {n: 'Study picks', top: 1, f: {promo: true, edge: -100, alts: true}, t: 'Every line tagged ★ by the Nov 11 studies: NBA Kalshi rungs with our chance 15–40% over the cost (and the narrowed 230+ version), NBA consensus line-up + odds-drop moves with a soft matchup or a Pinnacle higher-rung outlier. Each held up in both halves; none is proven. (NHL PP1 top-3 was dropped Nov 12: its study had look-ahead.) Hover a ★ tag for its record.'},
     // ★ = most promising (research/screener_walkforward.py, owner 2026-11-04: 'remove chip labels but highlight most promising'): picking
@@ -162,8 +170,9 @@ function scStar(r, b){
   const savePre = () => { try { localStorage.setItem('simscreen-presets-v1', JSON.stringify(PRE)); } catch (e) {} };
   const pick = o => Object.fromEntries(FKEYS.map(k => [k, o[k] ?? DEF[k]]));
   const same = f => FKEYS.every(k => (f[k] ?? DEF[k]) === S[k]);
+  if (location.hash === '#nba-shortlist') S = {...S, ...pick(QP[0].f)};      // the NBA Matchups tab links here
   function suggest(){                                                         // a default name from what's switched on
-    const on = {ls: S.ls ? `NBA +${S.ls} ${LSK[S.lsk] ? LSK[S.lsk].t : ''}` : '', gap8: 'NFL gap 8+', promo: 'Study picks', tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', due: 'Due', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', mub: 'Best matchups', soon: 'Next 6h'};
+    const on = {ls: S.ls ? `NBA +${S.ls} ${LSK[S.lsk] ? LSK[S.lsk].t : ''}` : '', gap8: 'NFL gap 8+', promo: 'Study picks', tagged: 'Tagged', pinmv: 'PIN moved', consmv: 'CONS moved', due: 'Due', knee: 'Knees', path: 'Path legs', lad: 'Ladders', offm: 'Off market', open: 'Openers', softm: 'Soft', mub: 'Best matchups', soon: 'Next 6h', sl: 'NBA shortlist'};
     const sub = {promo: S.promok !== 'all' && PROMO[S.promok] ? PROMO[S.promok].t : '', consmv: S.consk !== 'all' ? S.consk : '', pinmv: S.pink !== 'all' ? S.pink : ''};
     const bits = [S.sport === 'all' ? '' : SP[S.sport], ...Object.keys(on).filter(k => S[k]).map(k => sub[k] ? `${on[k]} (${sub[k]})` : on[k]), S.edge > -99 ? S.edge + '%+' : '', S.stat !== 'all' ? (STAT[S.stat] || S.stat) : '', S.price !== 'all' ? PRICE[S.price][2] : ''].filter(Boolean);
     return bits.join(' · ').slice(0, 40) || 'My filters'; }
@@ -374,7 +383,53 @@ function scStar(r, b){
 
   // ---------------------------------------------------------------- filter + render
   const PRICE = {all: [-1e9, 1e9, 'All prices'], fav: [-1e9, -150, 'Favorites'], flip: [-150, 150, 'Coin flips'], plus: [150, 400, 'Plus money'], long: [400, 1e9, 'Longshots']};
+  // NBA shortlist (owner 2026-11-23, a reader's phone workflow: 'I take picture of all the matchups ... screenshot everything in the
+  // screener for the nba longshots and study picks ... went through heat map manually and found the best ones ... had it sort all the
+  // information' -> 'Can you do this workflow'): every NBA longshot (+350 and longer at Novig / Kalshi meeting any LSK combination,
+  // its best entry) and every study pick (PROMO), each with its Matchups-sheet cell (r.mu: [pct, level, team best, D chip, disagrees])
+  // and D rating; tiers: good = light green or better and D above -1, tough = a red cell or D -1 or lower, else neutral; then the cell,
+  // how many signals agree, edge. Display only.
+  const SL_T = ['Good matchup', 'Neutral matchup', 'Tough matchup or D rating'];
+  // the combinations a longshot meets, short: 'edge 5%+ · home · moved', '3-and-D soft · starter'
+  const LS_SH = {e5h: 'home', e5m: 'moved', e5t: 'O/U 220–230', p15: 'PIN odds ▼ · ours 15%+', d3s: '3-and-D soft', d3st: '3-and-D starter', rimc: 'rim protector · CONS odds ▼'};
+  const lsShort = met => { const e = met.filter(t => t === 'e5' || t === 'e5h' || t === 'e5m' || t === 'e5t'), o = met.filter(t => !e.includes(t));
+    return [e.length ? ['edge 5%+', ...e.filter(t => t !== 'e5').map(t => LS_SH[t])].join(' · ') : '', ...o.map(t => LS_SH[t])].filter(Boolean).join(' · '); };
+  function slView(){
+    const mine = new Set(MY), out = [], q = norm(S.q);
+    for (const r of ROWS){
+      if (r.sport !== 'nba' || r.gone || r.offOnly || !SC_MSL[r.k]) continue;
+      if (q && !(norm(r.name).includes(q) || norm(r.team).includes(q) || norm(r.game).includes(q))) continue;
+      let lsp = null, lsMet = [];
+      if (r.ls) for (const en of r.ls.ents){ if (en.e != null && en.e > .6) continue; const met = Object.keys(LSK).filter(t => LSK[t].f(r.ls, en));
+        if (met.length && (!lsp || (en.e ?? -9) > (lsp.e ?? -9))){ lsp = en; lsMet = met; } }
+      const pm = r.promo || [];
+      if (!lsp && !pm.length) continue;
+      const ps = r.prices.filter(x => mine.has(x.b)).sort((a, b) => dec(b.o) - dec(a.o));
+      const best = lsp ? r.prices.find(x => x.b === lsp.b) : pm.some(t => t === 'k15' || t === 'k15n') ? r.prices.find(x => x.b === 'Kalshi') : (ps.find(x => x.b === 'Hard Rock' || x.b === 'Novig') || ps[0]);
+      if (!best) continue;
+      const mu = r.mu, lv = mu ? mu[1] : 0, dch = mu && mu[3] != null ? +mu[3] : null, tough = lv < 0 || (dch != null && dch <= -1);
+      const ev = lsp && lsp.ch != null ? lsp.ch * dec(best.o) - 1 : best.edge;
+      // signals that agree: each list once (the longshot combinations overlap; K 15%+ and its narrowed version are one list)
+      const nsig = (lsp ? 1 : 0) + (pm.some(t => t === 'k15' || t === 'k15n') ? 1 : 0) + (pm.includes('cs') ? 1 : 0) + (pm.includes('cr') ? 1 : 0);
+      out.push({...r, best, n: ps.length, lsp, lsMet, tier: tough ? 2 : lv >= 1 ? 0 : 1, lv, nsig, ev});
+    }
+    return out.sort((a, b) => a.tier - b.tier || b.lv - a.lv || b.nsig - a.nsig || (b.ev ?? -9) - (a.ev ?? -9));
+  }
+  function slText(V){                                                         // Copy list: plain text, one line a bet, by tier
+    const tm = t => t ? new Date(t).toLocaleString([], {weekday: 'short', hour: 'numeric', minute: '2-digit'}) : '';
+    const L = [`NBA shortlist · ${new Date().toLocaleString([], {weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'})}`,
+      'Longshots (+350 and longer, Novig / Kalshi) and study picks, sorted by tonight’s matchup sheet. None proven: check each price before betting.'];
+    let t = -1, i = 0;
+    for (const r of V){
+      if (r.tier !== t){ t = r.tier; L.push('', SL_T[t].toUpperCase()); }
+      const b = r.best, mu = r.mu, sig = [...(r.lsp ? [`LS +350 (${lsShort(r.lsMet)})`] : []), ...(r.promo || []).map(k => PROMO[k].t)];
+      const mut = mu ? `${SC_MSL[r.k]} matchup ${mu[0] >= 0 ? '+' : '-'}${Math.abs(mu[0]).toFixed(1)}% ${SC_MUL[mu[1]]}${mu[2] && mu[1] >= 1 ? ', best on team' : ''}${mu[3] != null ? ` · D ${mu[3] > 0 ? '+' : ''}${(+mu[3]).toFixed(1)}` : ''}` : 'no matchup cell';
+      L.push(`${++i}. ${r.name} ${r.bet} · ${am(b.o)} ${b.b}${r.ev != null ? ` · edge ${r.ev >= 0 ? '+' : '-'}${Math.abs(Math.round(r.ev * 100))}%` : ''} · ${sig.join(' + ')} · ${mut} · ${r.game} ${tm(r.start)}`);
+    }
+    return L.join('\n');
+  }
   function view(){
+    if (S.sl) return slView();
     const q = norm(S.q), soon = Date.now() + 6 * 3600e3, mine = new Set(MY);
     const out = [];
     for (const r of ROWS){
@@ -430,12 +485,13 @@ function scStar(r, b){
     const row = r => { const b = r.best, lch = r.lsp && r.lsp.ch != null ? r.lsp.ch : null;
       const ev = lch != null ? lch * dec(b.o) - 1 : r.lsp ? null : b.edge;     // longshots: the study's chance against the price shown (Kalshi with the fee)
       const lsMet = r.lsp ? Object.keys(LSK).filter(t => LSK[t].f(r.ls, r.lsp)) : [];
-      const tags = [r.lsp ? `<span class="sc-tag promo" title="${esc(`NBA longshot +${S.ls}: ${lsMet.map(t => LSK[t].t).join(', ')}. ${r.lsp.e != null ? `Chance = .1 ours + .9 the sharp fair at this line (the study’s); edge ${sgn(r.lsp.e)} at ${r.lsp.b === 'Kalshi' ? 'Kalshi’s ask before the fee (the big number has the fee in)' : 'the Novig price'}. ` : ''}${LSK[S.lsk].t}: ${lsRec(S.ls, S.lsk)}. Picked after looking; not proven.`)}">LS +${S.ls}</span>` : '', ...(r.promo || []).map(t => `<span class="sc-tag promo" title="${esc(PROMO[t].tip)}">★ ${esc(PROMO[t].t)}</span>`), r.gap8 ? `<span class="sc-tag promo" title="Our chance ${Math.round(r.p * 100)}% vs the other books’ no-vig fair ${Math.round(r.gap8.fair * 100)}% at ${esc(r.gap8.b)}. NFL gap 8+: 2026 search +18% on 319, unseen +40% on 164; tracked on the Profit page, not proven.">GAP · ours ${Math.round(r.p * 100)}% vs ${Math.round(r.gap8.fair * 100)}%</span>` : '', r.value ? (b.fair != null && b.fair - 1 / dec(b.o) >= .15 ? '<span class="sc-tag off" title="The Value tag on this line sits 15+ pts under the sharp fair: usually a stale or broken quote. Check the price is real before betting (edge audit, Nov 11).">Off · check price</span>' : '<span class="sc-tag v" title="Value tag on the sport page">Value</span>') : '', r.lc ? '<span class="sc-tag lc" title="LC tag: beats the liquidity-weighted consensus">LC</span>' : '',
+      const lvl = S.sl ? 350 : S.ls;
+      const tags = [r.lsp ? `<span class="sc-tag promo" title="${esc(`NBA longshot +${lvl}: ${lsMet.map(t => LSK[t].t).join(', ')}. ${r.lsp.e != null ? `Chance = .1 ours + .9 the sharp fair at this line (the study’s); edge ${sgn(r.lsp.e)} at ${r.lsp.b === 'Kalshi' ? 'Kalshi’s ask before the fee (the big number has the fee in)' : 'the Novig price'}. ` : ''}${S.sl ? lsMet.map(t => `${LSK[t].t}: ${lsRec(350, t)}`).join('; ') : `${LSK[S.lsk].t}: ${lsRec(S.ls, S.lsk)}`}. Picked after looking; not proven.`)}">LS +${lvl}${S.sl ? ' · ' + esc(lsShort(lsMet)) : ''}</span>` : '', ...(r.promo || []).map(t => `<span class="sc-tag promo" title="${esc(PROMO[t].tip)}">★ ${esc(PROMO[t].t)}</span>`), r.gap8 ? `<span class="sc-tag promo" title="Our chance ${Math.round(r.p * 100)}% vs the other books’ no-vig fair ${Math.round(r.gap8.fair * 100)}% at ${esc(r.gap8.b)}. NFL gap 8+: 2026 search +18% on 319, unseen +40% on 164; tracked on the Profit page, not proven.">GAP · ours ${Math.round(r.p * 100)}% vs ${Math.round(r.gap8.fair * 100)}%</span>` : '', r.value ? (b.fair != null && b.fair - 1 / dec(b.o) >= .15 ? '<span class="sc-tag off" title="The Value tag on this line sits 15+ pts under the sharp fair: usually a stale or broken quote. Check the price is real before betting (edge audit, Nov 11).">Off · check price</span>' : '<span class="sc-tag v" title="Value tag on the sport page">Value</span>') : '', r.lc ? '<span class="sc-tag lc" title="LC tag: beats the liquidity-weighted consensus">LC</span>' : '',
                     r.off || r.offOnly ? '<span class="sc-tag off" title="Off-market price: 8+ pts from the fair (often stale; check before betting)">Off</span>' : '',
                     r.pin ? `<span class="sc-tag pin" title="Pinnacle moved this prop${r.pin.line ? ': line up ' + r.pin.line : ''}${r.pin.price ? (r.pin.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">PIN${r.pin.line ? ' ▲' : ''}${r.pin.price ? ' ▼odds' : ''}</span>` : '',
                     r.pinr ? '<span class="sc-tag pin" title="Pinnacle moved this stat and flagged a higher rung at your books priced 10-60% over its carried fair (tracked, experimental)">PIN rung</span>' : '',
                     r.cons ? `<span class="sc-tag cons ${consK(r)}" title="Our sharp consensus (Pinnacle, Novig, ProphetX) moved this prop${r.cons.line ? ': line up ' + r.cons.line : ''}${r.cons.price ? (r.cons.line ? ' and' : ':') + ' the over got shorter' : ''} (tracked, experimental)">${{up: 'CONS ▲ line', odds: 'CONS ▼ odds', both: 'CONS ▲▼ both'}[consK(r)]}</span>` : '',
-                    r.due ? '<span class="sc-tag due" title="Due: 0.25+ expected goals a game this season and 0.10+ a game under it (tracked, experimental; +19% on 256 legs at your best price, Oct 12-29, not proven)">Due</span>' : '', r.knee ? `<span class="sc-tag knee" title="Ladder knee at ${esc(FULL[r.knee.bk] || r.knee.bk)}: stepping up to this rung costs little, the next one costs a lot (tracked, experimental)">KNEE</span>` : '', ...(r.lad ? r.lad.cats.map(c => `<span class="sc-tag lad" title="${esc(c)}: this rung is on the sport page’s ${esc(c.toLowerCase())} list (experimental)">${esc(LADT[c] || c)}</span>`) : []), r.path ? `<span class="sc-tag path" title="Path leg: ${r.path.f.length} of 5 path reasons (usage, matchup, rotation, ${r.sport === 'nfl' ? 'script' : 'game'}, price) on this rung (experimental)">PATH ${r.path.f.length}/5</span>` : '', r.k === 'tdbl' ? '<span class="sc-tag warn" title="Triple-double Yes has lost about half its stake: Kalshi Jan 2026 - now, every Yes -49% on 618 (priced 8.2%, hit 6.6%); no edge rule held up (research/nba_ddtd_market.py)">TD Yes −49% hist.</span>' : '', scDr(r), scMu(r), r.open ? `<span class="sc-tag open" title="Early opener: ${esc(FULL[r.open.bk] || r.open.bk)} posted this line already 3%+ under the sharp fair (tracked, experimental)">OPEN</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
+                    r.due ? '<span class="sc-tag due" title="Due: 0.25+ expected goals a game this season and 0.10+ a game under it (tracked, experimental; +19% on 256 legs at your best price, Oct 12-29, not proven)">Due</span>' : '', r.knee ? `<span class="sc-tag knee" title="Ladder knee at ${esc(FULL[r.knee.bk] || r.knee.bk)}: stepping up to this rung costs little, the next one costs a lot (tracked, experimental)">KNEE</span>` : '', ...(r.lad ? r.lad.cats.map(c => `<span class="sc-tag lad" title="${esc(c)}: this rung is on the sport page’s ${esc(c.toLowerCase())} list (experimental)">${esc(LADT[c] || c)}</span>`) : []), r.path ? `<span class="sc-tag path" title="Path leg: ${r.path.f.length} of 5 path reasons (usage, matchup, rotation, ${r.sport === 'nfl' ? 'script' : 'game'}, price) on this rung (experimental)">PATH ${r.path.f.length}/5</span>` : '', r.k === 'tdbl' ? '<span class="sc-tag warn" title="Triple-double Yes has lost about half its stake: Kalshi Jan 2026 - now, every Yes -49% on 618 (priced 8.2%, hit 6.6%); no edge rule held up (research/nba_ddtd_market.py)">TD Yes −49% hist.</span>' : '', scDr(r), S.sl ? scMuSl(r) : scMu(r), r.open ? `<span class="sc-tag open" title="Early opener: ${esc(FULL[r.open.bk] || r.open.bk)} posted this line already 3%+ under the sharp fair (tracked, experimental)">OPEN</span>` : '', !r.main ? '<span class="sc-tag alt">alt</span>' : ''].join('');
       const pl = r.path ? `<div class="sc-path">${r.path.sc ? `<span class="s">${esc(r.path.sc)}: us ${pc(r.path.us)} · market ${pc(r.path.mk)}</span>` : ''}${r.path.why.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : '';
       const ol = r.open ? `<div class="sc-open">Opened <b>${am(r.open.o)}</b> at ${esc(FULL[r.open.bk] || r.open.bk)}${r.open.t0 ? ' ' + esc(tm(r.open.t0 * 60e3)) : ''} · fair then ${pc(r.open.fair)} → ${r.open.gone ? '<span class="bad">line gone</span>' : `now <b>${am(r.open.now)}</b>`}${r.open.fnow != null ? ', fair now ' + pc(r.open.fnow) : ''}</div>` : '';
       const xo = r.offOnly ? `<div class="sc-open">${esc(FULL[r.offOnly.bk] || r.offOnly.bk)} implies ${pc(1 / dec(r.offOnly.o))} vs fair ${r.offOnly.carried ? '≈' : ''}${pc(r.offOnly.fair)} · <b>+${Math.round((r.offOnly.fair - 1 / dec(r.offOnly.o)) * 100)} pts</b>${r.offOnly.dep ? ` · $${Math.round(r.offOnly.dep).toLocaleString()} within 3¢` : ''} · often a stale or wrong line: check it first</div>` : '';
@@ -489,8 +545,10 @@ function scStar(r, b){
       ${S.promo ? `<p class="sc-promo"><b>★ Study picks</b>${S.promok !== 'all' && PROMO[S.promok] ? ` · <b>${esc(PROMO[S.promok].t)}</b>: ${esc(PROMO[S.promok].tip)}` : ': slices that held up in both halves of the Nov 11 studies, none proven. Pick one above; hover a ★ tag for its record.'} No edge floor. Your own mix: combine the chips, e.g. Consensus moved → Odds down + Soft matchup.</p>` : ''}
       ${S.ls && LSK[S.lsk] ? (() => { const a = LSALL[S.ls];
         return `<p class="sc-promo"><b>NBA longshots +${S.ls} · ${esc(LSK[S.lsk].t)}</b>: ${esc(lsRec(S.ls, S.lsk))}. Every +${S.ls} over at Novig / Kalshi: ${sgn(a[3])} (${a[1].toLocaleString()} won of ${a[0].toLocaleString()}). Green = up both before and after Nov 9, but picked after looking at the results${S.ls === 350 ? '; at +350 such picks did no better than every +350 bet on later games' : '; at +800 such picks made −1% on Nov 9–15 vs −26% for every +800 bet, but the five best-looking lost 43%'}. Not proven.</p>`; })() : ''}
+      ${S.sl ? `<p class="sc-promo"><b>NBA shortlist</b>: every NBA longshot (+350 and longer at Novig / Kalshi meeting any of the tested combinations) and every ★ study pick, each checked against tonight’s Matchups sheet (the NBA page): <b>good</b> = his stat’s cell is light green or better and the D rating is above −1; <b>tough</b> = a red cell or a D rating of −1 or lower. Sorted by the cell, then how many signals agree, then edge. A sorting of lists that are each unproven (the model already uses the matchups), not a tested rule. <span class="sc-slb"><button class="sc-chip on" id="sc-copy">Copy list</button>${navigator.share ? '<button class="sc-chip" id="sc-share">Share</button>' : ''}<span id="sc-cmsg" class="sc-cmsg" aria-live="polite"></span></span></p>` : ''}
       <p class="sc-count"><b>${V.length}</b> over price${V.length === 1 ? '' : 's'}${S.books === 'mine' ? ' at ' + esc(MY.join(', ')) : ' at every book'}${when ? ` · prices as of ${esc(when)}` : ''}</p>
-      <div class="sc-list">${V.slice(0, SHOW).map(row).join('') || '<p class="sc-empty">Nothing matches. Try a lower edge or All books.</p>'}</div>
+      <div class="sc-list">${(S.sl ? V.slice(0, SHOW).map((r, i, A) => (i && A[i - 1].tier === r.tier ? '' : `<h3 class="sc-tier t${r.tier}">${SL_T[r.tier]} · ${V.filter(x => x.tier === r.tier).length}</h3>`) + row(r)).join('')
+        : V.slice(0, SHOW).map(row).join('')) || `<p class="sc-empty">${S.sl ? 'No NBA longshots or study picks on the board right now.' : 'Nothing matches. Try a lower edge or All books.'}</p>`}</div>
       ${V.length > SHOW ? `<button class="sc-more" id="sc-more">Show ${Math.min(60, V.length - SHOW)} more</button>` : ''}`;
   }
   document.addEventListener('click', e => {
@@ -500,6 +558,12 @@ function scStar(r, b){
       if (k === 'sport') S.stat = 'all';
       SHOW = 60; save(); render(); return; }
     if (e.target.id === 'sc-more'){ SHOW += 60; render(); return; }
+    if (e.target.id === 'sc-copy' || e.target.id === 'sc-share'){ const txt = slText(view()), msg = m => { const el = document.getElementById('sc-cmsg'); if (el) el.textContent = m; };
+      if (e.target.id === 'sc-share'){ navigator.share({title: 'NBA shortlist', text: txt}).catch(() => {}); return; }
+      const fall = () => { const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '-1000px'; document.body.appendChild(ta); ta.select();
+        let ok = false; try { ok = document.execCommand('copy'); } catch (x) {} ta.remove(); msg(ok ? 'Copied' : 'Copy failed: use Share'); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => msg('Copied'), fall); else fall();
+      return; }
     const qp = e.target.closest('[data-qp]'); if (qp){ const f = pick(QP[+qp.dataset.qp].f); S = same(f) ? {...DEF} : {...S, ...f}; SHOW = 60; save(); render(); return; }
     const pa = e.target.closest('.sc-pa'); if (pa){ S = {...S, ...pick(PRE[+pa.dataset.i].f)}; SHOW = 60; save(); render(); return; }
     const px = e.target.closest('.sc-px2'); if (px){ PRE.splice(+px.dataset.i, 1); savePre(); render(); return; }
