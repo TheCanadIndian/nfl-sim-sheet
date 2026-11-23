@@ -1041,15 +1041,33 @@ function muDisGame(R){
   return `<div class="tw"><table class="mut"><thead><tr><th>Game</th><th>Team</th><th>Player</th><th>Stat</th><th class="n">D chip</th><th>Cell</th></tr></thead><tbody>${B.map((r, i) =>
     `<tr title="${esc(muWhy(r))}"><td>${i && B[i - 1].g.id === r.g.id ? '' : `<b>${esc(r.g.away)} @ ${esc(r.g.home)}</b>`}</td><td>${esc(r.p.t)}</td><td>${esc(r.sn)}</td><td>${SL[r.st]}</td><td class="n">${muChip(r.chip)}</td><td class="c ${muCls(r.lv)}">${MUL[r.lv]} <span class="mup">${muPct(r.v)}</span></td></tr>`).join('')}</tbody></table></div>`;
 }
+// Heatmap view (owner 2026-11-23: 'can the matchup maps be like heatmaps as well?'): every eligible player x the four stats, each cell
+// shaded on a continuous scale by the same matchup number (full colour at +/-15%), the team's best for that stat ringed, a cell the D
+// rating disagrees with marked; players by projected minutes. Display only.
+function muHeat(R){
+  const shade = v => { const a = Math.min(1, Math.abs(v) / 15), w = Math.round(8 + a * 62);
+    return Math.abs(v) < .5 ? '' : `background:color-mix(in srgb,var(${v > 0 ? '--good' : '--bad'}) ${w}%,transparent)${a >= .75 ? ';color:#fff' : ''}`; };
+  const team = (g, t) => {
+    const by = new Map(); for (const r of R) if (r.g.id === g.id && r.p.t === t){ if (!by.has(r.p.k)) by.set(r.p.k, {r, c: {}}); by.get(r.p.k).c[r.st] = r; }
+    const rows = [...by.values()].sort((a, b) => b.r.m - a.r.m);
+    if (!rows.length) return `<div class="muht-w"><div class="muht-h">${esc(t)}</div><p class="note">No eligible players.</p></div>`;
+    return `<div class="muht-w"><div class="muht-h">${esc(t)} <small>vs ${esc(rows[0].r.p.o)} defense</small></div><table class="muht"><thead><tr><th class="l">Player</th>${ST4.map(st => `<th>${SL[st]}</th>`).join('')}</tr></thead><tbody>${rows.map(({r, c}) =>
+      `<tr><td class="l"><b>${esc(r.sn)}</b><small>${f0(r.m)}m</small></td>${ST4.map(st => { const x = c[st]; if (!x) return '<td class="na">–</td>';
+        const bst = x.best && x.lv >= 1, n = Math.round(x.v);
+        return `<td class="${bst ? 'best' : ''}${x.dis ? ' dis' : ''}" style="${shade(x.v)}" title="${esc(muWhy(x))}${bst ? ' · his team’s best for this stat' : ''}${x.dis ? ' · the D rating disagrees' : ''}">${n > 0 ? '+' : n < 0 ? '−' : ''}${Math.abs(n)}<i>%</i></td>`; }).join('')}</tr>`).join('')}</tbody></table></div>`;
+  };
+  return `<div class="muhk"><span class="muhg" aria-hidden="true"></span><span class="small muted">tough −15% … neutral … +15% soft · <span class="muhk-b">ringed</span> = team’s best (light green or better) · <span class="muhk-d">dot</span> = D rating disagrees · m = projected minutes</span></div>
+    <div class="muhm">${muGames().map(g => `<div class="muhm-g"><div class="muhm-gh">${esc(g.away)} @ ${esc(g.home)} <small>${esc(g.start || '')}</small></div><div class="muhm-t">${team(g, g.away)}${team(g, g.home)}</div></div>`).join('')}</div>`;
+}
 function muView(){
   if (!D.mu) return `<section class="panel"><div class="phead"><h2>Matchups</h2></div><p class="note">Matchup charts start with pages built from Nov 21, 2026. Open today’s page for them.</p></section>`;
   const R = muRows(), nd = R.filter(r => r.dis).length;
   const key = `<span class="mukey">${[3, 2, 1, 0, -1, -2, -3].map(lv => `<span class="${muCls(lv)}">${MUL[lv]}</span>`).join('')}</span>`;
-  const seg = `<div class="seg" role="group" aria-label="Group by">${[['game', 'By game'], ['stat', 'By stat']].map(([k, l]) => `<button type="button" data-muv="${k}" aria-pressed="${MUV === k}">${l}</button>`).join('')}</div>`;
-  return `<section class="panel"><div class="phead"><h2>Best matchup per stat, each team</h2><span class="small muted">${D.games.length} games · ${esc(D.date)}</span></div>
-    <div class="mubar">${seg}${key}<button type="button" class="mupdf" data-mupdf="1" title="Downloads all four charts as a PDF (the same layout as the shared one)">⤓ Download PDF</button></div>
+  const seg = `<div class="seg" role="group" aria-label="Group by">${[['game', 'By game'], ['stat', 'By stat'], ['heat', 'Heatmap']].map(([k, l]) => `<button type="button" data-muv="${k}" aria-pressed="${MUV === k}">${l}</button>`).join('')}</div>`;
+  return `<section class="panel"><div class="phead"><h2>${MUV === 'heat' ? 'Matchup heatmap, every player' : 'Best matchup per stat, each team'}</h2><span class="small muted">${D.games.length} games · ${esc(D.date)}</span></div>
+    <div class="mubar">${seg}${MUV === 'heat' ? '' : key}<button type="button" class="mupdf" data-mupdf="1" title="Downloads all four charts as a PDF (the same layout as the shared one)">⤓ Download PDF</button></div>
     <details class="how"><summary>How to read this</summary><p class="note"><b>Cell</b> = what tonight’s defense allows per minute against the league average, to his position (and his archetype for points and threes): the same number that shades his stat cell on the sheet. Bands: deep green +10% or more, green +5 to +10%, light green +2 to +5%, neutral within 2%, and the same steps in red. Each team’s cell lists the players with its greenest matchup for that stat (ties all listed); only players with 20+ projected minutes and real volume in the stat (8+ points, 3+ rebounds, 2+ assists, 1+ three projected), so big men with no threes don’t show up green on threes. * = under 24 projected minutes. The model already uses these matchups, so a green cell is context, not an edge; the same tags show on the Ladders tab and in the screener (‘Best matchups’). Display only.</p></details>
-    ${MUV === 'stat' ? muByStat(R, r => r.best) : muByGame(R)}</section>
+    ${MUV === 'stat' ? muByStat(R, r => r.best) : MUV === 'heat' ? muHeat(R) : muByGame(R)}</section>
     <section class="panel"><div class="phead"><h2>Where the cell disagrees with the D rating</h2><span class="small muted">${nd} player-stat${nd === 1 ? '' : 's'}</span></div>
     <p class="note" style="margin:0 0 8px">Green or deeper on the sheet while the D rating chip is −1.0 or lower, its slightly tough / tough grades (and the reverse: red with a chip of +1.0 or more; chips between are the rating’s neutral band). The rating adds the defense’s rest, travel and missing defenders to the same matchup and was tested against the market on unseen games: tough ratings ran 3-5 pts under the price, and no grade beat the price after the vig. When they disagree, the chip is the tested one: a reason to check before betting the over.</p>
     ${MUV === 'stat' ? muByStat(R, r => r.dis, true) : muDisGame(R)}</section>${muBetsView()}`;

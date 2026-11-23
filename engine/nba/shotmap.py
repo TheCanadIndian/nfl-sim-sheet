@@ -83,7 +83,12 @@ def _base(df):
     """A baseline: attempt share and FG% per cell, and the cells too rare to show."""
     a = _grid(df)
     d = a / max(len(df), 1)
-    return d, _grid(df, True) / np.where(a > 0, a, 1), d < .25 * d.mean()
+    msk = d < .25 * d.mean()
+    # the baseline row (2-4 ft behind the rim) between the two corners: only ~0.2% of shots are logged behind the backboard, but the
+    # smoothing spread the rim's volume up into it, so the map showed shots 'behind the basket' (owner 2026-11-23). Blank; the two
+    # corner cells keep the corner threes taken on the baseline.
+    msk[0, 2:COLS - 2] = True
+    return d, _grid(df, True) / np.where(a > 0, a, 1), msk
 
 
 def _rel(df, d, msk, a=A):
