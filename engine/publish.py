@@ -29,7 +29,7 @@ import time
 LIVE = os.environ.get("LIVE_BRANCH", "live")
 META = {".gitignore", ".gitattributes", "CLAUDE.md", "README.md", "engine/.gitignore"}
 # markets files rebuilt from data on every run that no study reads the history of: live only (2026-11-23, the NBA shot maps, ~110 KB)
-LIVE_JSON = {"markets/shotmap_nba.json"}
+LIVE_JSON = {"markets/shotmap_nba.json", "markets/fieldmap_nfl.json"}
 
 
 def root():

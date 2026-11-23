@@ -979,6 +979,12 @@ def main():
                         subtitle=("Experimental market-blind build: no Vegas lines. The 'Vegas' figures shown are "
                                   "this model's own points forecast." if args.blind else None))
     print(f"Wrote {page}  (open in a browser)")
+    if live and not args.blind:                                  # Field map game view: markets/fieldmap_nfl.json (display only)
+        try:
+            import fieldmap
+            fieldmap.write(args.db, int(season))
+        except Exception as e:                                   # noqa: BLE001
+            print("Field map skipped:", e)
     if live:
         shutil.copyfile(page, os.path.join(args.out, "index.html"))
         if not args.blind:

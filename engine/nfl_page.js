@@ -788,54 +788,246 @@ function summaryPanel(g){
     ${L.length ? `<div class="sp-list">${L.map(row).join('')}</div>` : '<div class="empty" style="padding:8px 0">No notable changes for this game: no snap jumps, injuries opening up volume, or missing defenders.</div>'}
     <p class="note">Context only: the projections already include these.</p></section>`;
 }
-// Matchup map: where each offense goes (number = share of its passes or runs) and how this defense does there
-// (color = success it allows vs the league in that spot; striped = few plays, so the color is mostly league average)
-const FM_ROWS = [['deep', 'Deep 20+'], ['inter', 'Medium 10-19'], ['short', 'Short 1-9'], ['behind', 'Screens / behind line']];
-const FM_COLS = [['left', 'Left'], ['middle', 'Middle'], ['right', 'Right']];
-const FM_RUN = [['left|end', 'L end'], ['left|tackle', 'L tackle'], ['left|guard', 'L guard'], ['middle|', 'Middle'], ['right|guard', 'R guard'], ['right|tackle', 'R tackle'], ['right|end', 'R end']];
-// areas a missing defensive starter usually covers (boxscore/defout.py roles), for the dashed outline
-const FM_COVER = {CB1: ['short|left', 'short|right', 'inter|left', 'inter|right', 'deep|left', 'deep|right'], CB2: ['short|left', 'short|right', 'inter|left', 'inter|right', 'deep|left', 'deep|right'],
-  CB3: ['short|middle', 'inter|middle', 'behind|left', 'behind|right'], S: ['deep|left', 'deep|middle', 'deep|right', 'inter|middle'],
-  LB: ['short|middle', 'inter|middle', 'behind|middle', 'run|middle|', 'run|left|guard', 'run|right|guard'],
-  DL: ['run|middle|', 'run|left|guard', 'run|right|guard', 'run|left|tackle', 'run|right|tackle', 'run|left|end', 'run|right|end']};
-function fmZoneName(z){
-  const [a, b, c] = z.split('|');
-  if (a === 'run') return b === 'middle' ? 'runs up the middle' : `runs off the ${b} ${c}`;
-  return `${{deep: 'deep', inter: 'medium', short: 'short', behind: 'screen/behind-the-line'}[a]} ${b} passes`;
+/* ---------------- field map (owner 2026-11-23: 'I want a heat map for nfl like the nhl shot map or nba shot map'): fieldmap.py ->
+   markets/fieldmap_nfl.json, loaded the first time the Field map view opens. Replaces the old Matchup map grid (the same depth x
+   direction areas, finer, and the run lanes) with a heat map: where the offense goes / what the defense allows / both, by volume,
+   yards a play or success, the defense against one receiver group, and each listed player's targets and carries. This season's
+   regular-season plays; display only (no number on the page uses it). ---------------- */
+let NFM = null, NFM_ST = '';
+function nfmLoad(){
+  if (NFM || NFM_ST) return; NFM_ST = 'loading';
+  try { fetch(SCR_ROOT + 'markets/fieldmap_nfl.json?t=' + Math.floor(Date.now() / 6e5), {cache: 'no-store'}).then(r => r.ok ? r.json() : null)
+    .then(d => { NFM = d && d.teams ? d : null; NFM_ST = NFM ? 'ok' : 'none'; render(); }).catch(() => { NFM_ST = 'none'; render(); }); } catch (e) { NFM_ST = 'none'; }
 }
-function fmCell(c, def, off, z, outs){
-  if (!c) return '<div class="fm-c"><small class="muted">–</small></div>';
-  const ob = (outs || []).filter(o => (FM_COVER[o.role] || []).includes(z)).map(o => o.role);
-  const e = c.da - c.lg, a = Math.min(Math.abs(e) / .10, 1) * .55, thin = c.n < 12;
-  const bg = Math.abs(e) < .015 ? '' : `background-color:color-mix(in srgb,var(${e > 0 ? '--good' : '--bad'}) ${Math.round(a * 100)}%,var(--sunk))`;
-  const W = c.who || [], unit = z.startsWith('run') ? 'carries' : 'targets';
-  const wh = W.length ? `<span class="wh">${W.slice(0, 2).map(([n, e], i) => `<span>${i ? ' · ' : ''}${esc(n)} <em>${(+e).toFixed(1)}</em></span>`).join('')}</span>` : '';
-  const tip = `${off}: ${Math.round(c.s * 100)}% of its ${z.startsWith('run') ? 'runs' : 'passes'} go here${W.length ? ` (likeliest: ${W.map(([n, e]) => n + ' ' + e + ' ' + unit).join(', ')})` : ''}. ${def} allows success on ${Math.round(c.da * 100)}% of these (league ${Math.round(c.lg * 100)}%)${thin ? '; few plays here, so mostly league average' : ''}.`;
-  return `<div class="fm-c${thin ? ' thin' : ''}${ob.length ? ' out' : ''}" style="${bg}" title="${esc(tip + (ob.length ? ' Missing here: ' + ob.join(', ') + '.' : ''))}"><b>${Math.round(c.s * 100)}%</b><small>${Math.abs(e) < .015 ? 'even' : (e > 0 ? '+' : '−') + Math.round(Math.abs(e) * 100) + ' pts'}</small>${wh}${ob.length ? `<span class="ob">${[...new Set(ob)].join(' · ')} out</span>` : ''}</div>`;
+const nfLS = (k, ok, dflt) => { try { const v = localStorage.getItem(k); return ok.includes(v) ? v : dflt; } catch (e) { return dflt; } };
+let NFMODE = nfLS('nfl-fmode', ['ov', 'off', 'def'], 'ov');     // overlay / where they go / what the defense allows
+let NFMET = nfLS('nfl-fmet', ['vol', 'yds', 'suc'], 'vol');     // volume / yards a play / success rate
+let NFPV = nfLS('nfl-fpv', ['spots', 'dots'], 'spots');         // a picked player: his spots or every target
+let NFGRP = '', NFDF = 'all';                                    // defense view: targets to one group; dots: all / caught / not
+const NFMP = {}, NFMC = {};                                      // team -> picked player id / tapped area 'p:i' (pass) or 'r:i' (run)
+// pass areas: 7 air-yard bands (bottom = behind the line) x left / middle / right, index row * 3 + col; [label, from, to] in yards
+const NF_ROWS = [['Behind the line', -6, 0], ['1-4 yds', 0, 5], ['5-9 yds', 5, 10], ['10-14 yds', 10, 15], ['15-19 yds', 15, 20], ['20-29 yds', 20, 30], ['30+ yds', 30, 42]];
+const NF_RL = ['behind', '1-4', '5-9', '10-14', '15-19', '20-29', '30+'];
+const NF_COLS = ['left', 'middle', 'right'];
+const NF_LANES = ['L end', 'L tackle', 'L guard', 'Middle', 'R guard', 'R tackle', 'R end'];
+const NF_GRP = {OUT: 'outside WRs', SLOT: 'slot WRs', TE: 'TEs', RB: 'RBs'};
+const NF_PZ = [['Behind line', [0, 1, 2], '#99e9f2'], ['Short 1-9', [3, 4, 5, 6, 7, 8], '#4c6ef5'], ['Medium 10-19', [9, 10, 11, 12, 13, 14], '#f08c00'], ['Deep 20+', [15, 16, 17, 18, 19, 20], '#c92a2a']];
+const NF_RZ = [['Inside runs', [2, 3, 4]], ['Off tackle', [1, 5]], ['Outside runs', [0, 6]]];
+const nfPC = (rows, cols) => rows.flatMap(r => cols.map(c => r * 3 + c));
+// areas a missing defensive starter usually covers (boxscore/defout.py roles), outlined dashed
+const NF_COVER = {CB1: {p: nfPC([1, 2, 3, 4, 5, 6], [0, 2])}, CB2: {p: nfPC([1, 2, 3, 4, 5, 6], [0, 2])}, CB3: {p: [...nfPC([1, 2, 3, 4], [1]), ...nfPC([0], [0, 2])]},
+  S: {p: [...nfPC([5, 6], [0, 1, 2]), ...nfPC([3, 4], [1])]}, LB: {p: nfPC([0, 1, 2, 3, 4], [1]), r: [2, 3, 4]}, DL: {r: [0, 1, 2, 3, 4, 5, 6]}};
+const NF_RN = {CB1: 'top corner', CB2: 'No. 2 corner', CB3: 'slot corner', S: 'safety', LB: 'linebacker', DL: 'D-lineman'};
+const NFB64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+const NF_A = {p: 80, r: 60, g: 40}, NF_K = 12;                    // pseudo-plays toward the league's mix / rate
+const nfPc = v => v == null ? '–' : (v >= 1 ? '+' : '−') + Math.abs(Math.round((v - 1) * 100)) + '%';
+const nfOrd = n => { const s_ = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s_[(v - 20) % 10] || s_[v] || s_[0]); };
+const nfLast = n => { const w = String(n || '').replace(/\s+(Jr\.?|Sr\.?|II|III|IV|V)$/i, '').trim().split(/\s+/); return w[w.length - 1] || n; };
+const nfSum = C => C.reduce((s, x) => s + x[0], 0);
+// each area: the side's share of its plays over the league's share there (A pseudo-plays at the league's mix), or yards a play /
+// success rate over the league's in that area (NF_K pseudo-plays at the league's rate); null where the league has none
+function nfRel(C, LC, A, met){
+  const N = nfSum(C), LN = nfSum(LC);
+  return C.map((x, i) => { const L = LC[i]; if (!L || !L[0] || !LN) return null;
+    if (met === 'vol'){ const d = L[0] / LN; return (x[0] + A * d) / (N + A) / d; }
+    const j = met === 'yds' ? 2 : 3, lr = L[j] / L[0]; if (!(lr > 0)) return null;
+    return ((x[j] + NF_K * lr) / (x[0] + NF_K)) / lr; });
 }
-function mapPanel(g){
-  const M = D.fmap[g.id];
-  const block = off => {
-    const X = M[off]; if (!X) return ''; const C = X.cells, def = X.vs;
-    const outs = ((D.defout || {})[g.id] || {})[def] || [];
-    const RN = {CB1: 'top corner', CB2: 'No. 2 corner', CB3: 'slot corner', S: 'safety', LB: 'linebacker', DL: 'D-lineman'};
-    const miss = outs.length ? `<div class="fm-miss"><b>${esc(def)} missing:</b> ${outs.map(o => `${esc(o.name)} (${esc(RN[o.role] || o.role)}${o.status && o.status !== 'out' ? ', ' + esc(o.status) : ''})`).join(', ')}
-      <small>Dashed boxes are where they usually play. In 2022-26 games, a missing starter changed the success allowed in his area by only about 1-2 points (not enough to trust), so the colors stay as they are.</small></div>` : '';
-    const grid = `<div class="fm-grid"><span></span>${FM_COLS.map(([, l]) => `<span class="cl">${l}</span>`).join('')}
-      ${FM_ROWS.map(([r, lab], i) => `${i === 3 ? '<div class="fm-los"><span>LINE OF SCRIMMAGE</span></div>' : ''}<span class="rl">${lab}</span>${FM_COLS.map(([c]) => fmCell(C[r + '|' + c], def, off, r + '|' + c, outs)).join('')}`).join('')}</div>`;
-    const run = `<div class="fm-sub" style="margin-top:14px">Runs, by lane</div><div class="fm-run">${FM_RUN.map(([z]) => fmCell(C['run|' + z], def, off, 'run|' + z, outs)).join('')}${FM_RUN.map(([, l]) => `<span class="cl">${l}</span>`).join('')}</div>`;
-    const Z = Object.entries(C).filter(([, c]) => c.s >= .05 && c.n >= 12).map(([z, c]) => ({z, c, e: c.da - c.lg, w: c.s * (c.da - c.lg)}));
-    const line = ({z, c, e}) => `<li><b>${esc(fmZoneName(z)[0].toUpperCase() + fmZoneName(z).slice(1))}</b>: ${esc(off)} goes here ${Math.round(c.s * 100)}% of the time; ${esc(def)} allows success on <span class="${e > 0 ? 'up' : 'dn'}">${Math.round(c.da * 100)}%</span> (league ${Math.round(c.lg * 100)}%).${(c.who || []).length ? ` Likeliest: ${c.who.slice(0, 2).map(([n, x]) => `${esc(n)} (${(+x).toFixed(1)} ${z.startsWith('run') ? 'carries' : 'targets'})`).join(', ')}.` : ''}</li>`;
-    const best = Z.filter(x => x.e > .02).sort((a, b) => b.w - a.w).slice(0, 3), tough = Z.filter(x => x.e < -.02).sort((a, b) => a.w - b.w).slice(0, 2);
-    return `<div class="fm-off"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${miss}<div class="fm-wrap"><div><div class="fm-sub">Passes, by depth and direction</div>${grid}</div>
-      <div>${run}<div class="fm-sub" style="margin-top:16px">Where ${esc(off)} should find room</div><ul class="fm-list">${best.map(line).join('') || '<li class="muted">No spot stands out.</li>'}</ul>
-      <div class="fm-sub" style="margin-top:12px">Where ${esc(def)} is tough</div><ul class="fm-list">${tough.map(line).join('') || '<li class="muted">No spot stands out.</li>'}</ul></div></div></div>`;
-  };
-  return `<section class="panel"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: matchup map</h2><span class="small muted">${esc(g.kickoff)}</span></div>
-    <div class="fm-key"><span><b style="color:var(--ink)">22%</b> = how often the offense goes there</span><span><i style="background:color-mix(in srgb,var(--good) 55%,var(--sunk))"></i>defense gives up more than average</span><span><i style="background:color-mix(in srgb,var(--bad) 55%,var(--sunk))"></i>defense is tougher than average</span><span><i style="background:var(--sunk);background-image:repeating-linear-gradient(45deg,transparent 0 3px,rgba(127,127,127,.35) 3px 6px)"></i>few plays: mostly league average</span><span><b style="color:var(--ink)">Name 1.7</b> = expected targets (or carries) there this game</span></div>
-    ${block(g.away)}${block(g.home)}
-    <p class="note">Names: who is likeliest to get the ball in each spot, from this week's projected targets and carries times where his targets and carries have gone (players with few looks lean toward their position's usual spread). Where the ball was thrown, not full route charts, which aren't published during the season. Success = a play that improved the offense's expected points. This season so far (last season counts a third as much); each defense's rates lean toward the league average until it has enough plays in a spot. Context only: the projections already include each defense's overall strength.</p></section>`;
+const nfMul = (a, b) => a.map((v, i) => v == null || b[i] == null ? null : v * b[i]);
+function nfGrids(O, F, met, G){                                 // {P, R} for the view shown + each side's own
+  const L = NFM.lg, oP = nfRel(O.o.p, L.p, NF_A.p, met), oR = nfRel(O.o.r, L.r, NF_A.r, met);
+  const dP = G ? nfRel(F.g[G], L.g[G], NF_A.g, met) : nfRel(F.d.p, L.p, NF_A.p, met), dR = nfRel(F.d.r, L.r, NF_A.r, met);
+  const P = NFMODE === 'off' ? oP : NFMODE === 'def' ? dP : nfMul(oP, dP), R = NFMODE === 'off' ? oR : NFMODE === 'def' ? dR : nfMul(oR, dR);
+  return {P, R, oP, oR, dP, dR};
 }
+function nfFill(v, w){
+  if (v == null) return 'none';
+  if (NFMET === 'vol') return v >= 1 ? `rgba(255,99,71,${(Math.min(1, (v - 1) / .4) * .95 * w).toFixed(3)})` : `rgba(70,150,255,${(Math.min(1, (1 - v) / .3) * .85 * w).toFixed(3)})`;
+  const s = NFMET === 'yds' ? .25 : .15;
+  return v >= 1 ? `rgba(52,210,122,${(Math.min(1, (v - 1) / s) * .95 * w).toFixed(3)})` : `rgba(240,72,72,${(Math.min(1, (1 - v) / s) * .9 * w).toFixed(3)})`;
+}
+const nfSpFill = v => { if (v == null) return 'rgba(255,255,255,.10)'; const vol = NFMET === 'vol', d = v - 1, a = Math.min(1, Math.abs(d) / (vol ? .25 : NFMET === 'yds' ? .15 : .1));
+  return `rgba(${d >= 0 ? (vol ? '255,99,71' : '52,210,122') : (vol ? '70,150,255' : '240,72,72')},${(.1 + .9 * a).toFixed(2)})`; };
+const nfRow = a => a <= 0 ? 0 : a <= 4 ? 1 : a <= 9 ? 2 : a <= 14 ? 3 : a <= 19 ? 4 : a <= 29 ? 5 : 6;
+const NFTC = new Map();
+function nfTg(s){                                               // packed targets -> [{a: air yards, c: direction, k: caught, cell}]
+  if (!s) return [];
+  if (!NFTC.has(s)){ const o = [];
+    for (let i = 0; i + 1 < s.length; i += 2){ let v = NFB64.indexOf(s[i]) * 64 + NFB64.indexOf(s[i + 1]); const k = v % 2; v = (v - k) / 2;
+      const c = v % 3, a = (v - c) / 3 - 10; o.push({a, c, k, cell: nfRow(a) * 3 + c}); }
+    NFTC.set(s, o); }
+  return NFTC.get(s);
+}
+// geometry: 53 1/3 yds wide = 318 px (6 px a yard), a 36 px gutter for the depth labels, -6 (behind the line) to 42 yds downfield
+const NFX0 = 36, NFW = 318, NFU = 6, NFTOP = 16;
+const nfY = yd => NFTOP + (42 - yd) * NFU, nfCX = c => NFX0 + c * NFW / 3;
+const nfCell = i => { const r = Math.floor(i / 3), c = i % 3, [, lo, hi] = NF_ROWS[r]; return {r, c, x: nfCX(c) + NFW / 6, y: (nfY(lo) + nfY(hi)) / 2, h: (hi - lo) * NFU}; };
+function nfDots(T){
+  let out = '';
+  T.forEach((x, i) => {
+    if ((NFDF === 'made' && !x.k) || (NFDF === 'miss' && x.k)) return;
+    const jit = (((i * 37 + x.a * 11) % 29) / 28 - .5) * NFW / 3 * .82, cx = (nfCX(x.c) + NFW / 6 + jit).toFixed(1), cy = nfY(Math.max(-5.6, Math.min(41.5, x.a + (x.a <= 0 ? -1.5 : 0)))).toFixed(1);
+    out += x.k ? `<circle cx="${cx}" cy="${cy}" r="2.9" class="nfm-dm"/>` : `<circle cx="${cx}" cy="${cy}" r="2.2" class="nfm-dx"/>`;
+  });
+  return out;
+}
+function nfSvg(team, V, marks, pick, dim, cover){
+  const LP = NFM.lg.p, LN = nfSum(LP), dmax = Math.max(...LP.map(x => x[0] / LN));
+  let cells = '', hits = '', lab = '', cov = '';
+  for (let r = 0; r < 7; r++){
+    const [, lo, hi] = NF_ROWS[r], y0 = nfY(hi), h = (hi - lo) * NFU;
+    lab += `<text x="${NFX0 - 5}" y="${(y0 + h / 2 + 3.5).toFixed(1)}" class="nfm-rl">${NF_RL[r]}</text>`;
+    for (let c = 0; c < 3; c++){
+      const i = r * 3 + c, x0 = nfCX(c), w = Math.max(.5, Math.min(1, Math.sqrt(LP[i][0] / LN / dmax) * 1.5));
+      cells += `<rect x="${(x0 + 1.5).toFixed(1)}" y="${(y0 + 1.5).toFixed(1)}" width="${(NFW / 3 - 3).toFixed(1)}" height="${(h - 3).toFixed(1)}" rx="3" fill="${nfFill(V[i], w)}"/>`;
+      if (cover && cover.p.has(i)) cov += `<rect x="${(x0 + 3).toFixed(1)}" y="${(y0 + 3).toFixed(1)}" width="${(NFW / 3 - 6).toFixed(1)}" height="${(h - 6).toFixed(1)}" rx="3" class="nfm-cov"/>`;
+      hits += `<rect x="${x0.toFixed(1)}" y="${y0.toFixed(1)}" width="${(NFW / 3).toFixed(1)}" height="${h}" class="nfm-hit${pick === 'p:' + i ? ' on' : ''}" data-nfc="${esc(team)}:p:${i}"/>`;
+    }
+  }
+  let fl = `<rect x="${NFX0 + .5}" y="${NFTOP + .5}" width="${NFW - 1}" height="${48 * NFU - 1}" class="side"/>`;
+  for (let yd = 5; yd <= 40; yd += 5) fl += `<line x1="${NFX0}" x2="${NFX0 + NFW}" y1="${nfY(yd)}" y2="${nfY(yd)}" class="yl${yd % 10 ? '' : ' ten'}"/>`;
+  for (let yd = -5; yd <= 41; yd++) if (yd % 5) for (const hx of [23.58, 29.75]) fl += `<line x1="${(NFX0 + hx * NFU - 2).toFixed(1)}" x2="${(NFX0 + hx * NFU + 2).toFixed(1)}" y1="${nfY(yd)}" y2="${nfY(yd)}" class="hs"/>`;
+  fl += `<line x1="${NFX0}" x2="${NFX0 + NFW}" y1="${nfY(0)}" y2="${nfY(0)}" class="los"/>`;
+  const cl = NF_COLS.map((c, i) => `<text x="${(nfCX(i) + NFW / 6).toFixed(1)}" y="11" class="nfm-cl">${c}</text>`).join('');
+  return `<svg class="nfm-svg" viewBox="0 0 ${NFX0 + NFW + 3} ${NFTOP + 48 * NFU + 3}" role="img" aria-label="${esc(team)} passes by depth and direction">
+    ${cl}${lab}<text x="${NFX0 - 5}" y="${nfY(0) + 3}" class="nfm-rl los">LOS</text><g${dim ? ' opacity=".35"' : ''}>${cells}</g><g class="nfm-field" fill="none">${fl}</g>${cov}${marks ? `<g>${marks}</g>` : ''}<g>${hits}</g></svg>`;
+}
+function nfRunSvg(team, V, marks, pick, dim, cover){
+  const w = NFW / 7; let cells = '', hits = '', lab = '', cov = '';
+  for (let i = 0; i < 7; i++){
+    const x0 = NFX0 + i * w;
+    cells += `<rect x="${(x0 + 1.5).toFixed(1)}" y="15.5" width="${(w - 3).toFixed(1)}" height="33" rx="3" fill="${nfFill(V[i], 1)}"/>`;
+    if (cover && cover.r.has(i)) cov += `<rect x="${(x0 + 3).toFixed(1)}" y="17" width="${(w - 6).toFixed(1)}" height="30" rx="3" class="nfm-cov"/>`;
+    lab += `<text x="${(x0 + w / 2).toFixed(1)}" y="61" class="nfm-ll">${NF_LANES[i]}</text>`;
+    hits += `<rect x="${x0.toFixed(1)}" y="14" width="${w.toFixed(1)}" height="36" class="nfm-hit${pick === 'r:' + i ? ' on' : ''}" data-nfc="${esc(team)}:r:${i}"/>`;
+  }
+  const ol = [1, 2, 3.5, 5, 6].map(k => `<circle cx="${(NFX0 + k * w).toFixed(1)}" cy="7.5" r="3.6" class="ol"/>`).join('');
+  return `<svg class="nfm-svg nfm-run" viewBox="0 0 ${NFX0 + NFW + 3} 66" role="img" aria-label="${esc(team)} runs by lane">
+    <text x="${NFX0 - 5}" y="35" class="nfm-rl">runs</text><g${dim ? ' opacity=".35"' : ''}>${cells}</g><g class="nfm-field" fill="none"><line x1="${NFX0}" x2="${NFX0 + NFW}" y1="12.5" y2="12.5" class="los"/>${ol}</g>${cov}${lab}${marks ? `<g>${marks}</g>` : ''}<g>${hits}</g></svg>`;
+}
+const nfFitOf = (cnt, vals) => { let w = 0, s = 0; cnt.forEach((n, i) => { if (n && vals[i] != null){ w += n; s += n * vals[i]; } }); return w ? s / w : null; };
+const nfAgg = (C, ix) => ix.reduce((a, i) => [a[0] + C[i][0], a[1] + C[i][1], a[2] + C[i][2], a[3] + C[i][3]], [0, 0, 0, 0]);
+const nfName = (k, i) => k === 'r' ? `Runs ${NF_LANES[i] === 'Middle' ? 'up the middle' : 'off ' + NF_LANES[i].replace('L ', 'left ').replace('R ', 'right ')}`
+  : (() => { const r = Math.floor(i / 3), c = i % 3; return r ? `${NF_COLS[c][0].toUpperCase() + NF_COLS[c].slice(1)}, ${NF_ROWS[r][0]}` : `Behind the line, ${NF_COLS[c]}`; })();
+function nfBlock(off, def, g){
+  const O = NFM.teams[off], F = NFM.teams[def];
+  if (!O || !F) return `<div class="nfm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3><div class="empty">No plays yet this season.</div></div>`;
+  const G = NFMODE === 'def' && NFGRP ? NFGRP : '', who = G ? NF_GRP[G] : 'opponents';
+  const V = nfGrids(O, F, NFMET, G), LP = NFM.lg.p, LR = NFM.lg.r, LNp = nfSum(LP), LNr = nfSum(LR);
+  // players: tonight's listed RBs / WRs / TEs (and running QBs) with targets or carries this season, most projected looks first
+  const P = NFM.players || {}, mean = (p, st) => p.s && p.s[st] ? p.s[st][MEAN] : 0;
+  const all = D.players.filter(p => p.g === g.id && p.t === off && P[p.id] && (mean(p, 'tgt') >= 1 || mean(p, 'car') >= 2) && (p.pos !== 'QB' || mean(p, 'car') >= 3))
+    .map(p => ({p, x: P[p.id], key: nfhKey(p)})).sort((a, b) => mean(b.p, 'tgt') + mean(b.p, 'car') - mean(a.p, 'tgt') - mean(a.p, 'car'));
+  const same = G ? all.filter(r => r.key === G) : all, pl = same.length ? same : all;
+  const sel = all.find(r => String(r.p.id) === String(NFMP[off])), S = sel && sel.x;
+  const cnt = x => { const T = nfTg(x && x.t), pc = Array(21).fill(0), pk = Array(21).fill(0); for (const t of T){ pc[t.cell]++; pk[t.cell] += t.k; }
+    return {T, pc, pk, rc: x && x.r ? x.r.map(y => y[0]) : Array(7).fill(0)}; };
+  const SC = S ? cnt(S) : null, spots = S && NFPV === 'spots';
+  const mxP = SC ? Math.max(1, ...SC.pc) : 1, mxR = SC ? Math.max(1, ...SC.rc) : 1;
+  const pMarks = !SC ? '' : spots ? SC.pc.map((n, i) => { if (!n) return ''; const q = nfCell(i);
+    return `<circle cx="${q.x.toFixed(1)}" cy="${q.y.toFixed(1)}" r="${Math.min(q.h / 2 - 1.5, 3.5 + 11 * Math.sqrt(n / mxP)).toFixed(1)}" class="nfm-sp" style="fill:${nfSpFill(V.P[i])}"/>`; }).join('') : nfDots(SC.T);
+  const rMarks = SC ? SC.rc.map((n, i) => n ? `<circle cx="${(NFX0 + (i + .5) * NFW / 7).toFixed(1)}" cy="32" r="${(3 + 11.5 * Math.sqrt(n / mxR)).toFixed(1)}" class="nfm-sp" style="fill:${nfSpFill(V.R[i])}"/>` : '').join('') : '';
+  // missing defensive starters and the areas they usually cover (shown on the defense and overlay views)
+  const outs = ((D.defout || {})[g.id] || {})[def] || [];
+  const cover = outs.length && NFMODE !== 'off' ? {p: new Set(outs.flatMap(o => (NF_COVER[o.role] || {}).p || [])), r: new Set(outs.flatMap(o => (NF_COVER[o.role] || {}).r || []))} : null;
+  const miss = outs.length ? `<div class="nfm-miss"><b>${esc(def)} missing:</b> ${outs.map(o => `${esc(o.name)} (${esc(NF_RN[o.role] || o.role)}${o.status && o.status !== 'out' ? ', ' + esc(o.status) : ''})`).join(', ')}${cover ? ' <small>dashed = where they usually play</small>' : ''}</div>` : '';
+  // his spots on volume and yards (the line reports both whichever map is shown)
+  let fitLine = '';
+  if (SC){
+    const Gv = nfGrids(O, F, 'vol', G), Gy = nfGrids(O, F, 'yds', G), nt = SC.T.length, nr = SC.rc.reduce((s, n) => s + n, 0);
+    const fpc = f => f == null ? '–' : `<b class="${NFMODE === 'off' ? '' : f >= 1.03 ? 'good' : f <= .97 ? 'bad' : ''}">${nfPc(f)}</b>`;
+    const say = (fv, fy, run) => NFMODE === 'def' ? `${run ? 'On his run lanes' : 'From his spots'} ${esc(def)} allows ${run ? 'opponents' : esc(who)} ${fpc(fv)} ${run ? 'carries' : 'targets'} and ${fpc(fy)} yards a ${run ? 'carry' : 'target'} vs average`
+      : NFMODE === 'off' ? `${run ? 'On his run lanes' : 'From his spots'} ${esc(off)} ${run ? 'runs' : 'throws'} ${fpc(fv)} and gains ${fpc(fy)} yards a ${run ? 'carry' : 'target'} vs average`
+      : `His ${run ? 'run lanes' : 'spots'} tonight: ${fpc(fv)} on volume (${esc(off)} goes there, ${esc(def)} gives it up), ${fpc(fy)} on yards`;
+    const share = (pc, vals) => { let w = 0, u = 0, d = 0; pc.forEach((n, i) => { if (n && vals[i] != null){ w += n; if (vals[i] >= 1.05) u += n; else if (vals[i] <= .95) d += n; } }); return w ? [u / w, d / w] : null; };
+    const sh = nt ? share(SC.pc, V.P) : null;
+    fitLine = [nt >= 5 ? `<div class="nfm-fitl">${say(nfFitOf(SC.pc, Gv.P), nfFitOf(SC.pc, Gy.P), false)}${sh ? ` · on this map ${Math.round(sh[0] * 100)}% of his targets come from areas above average, ${Math.round(sh[1] * 100)}% below` : ''}</div>` : '',
+      nr >= 5 ? `<div class="nfm-fitl">${say(nfFitOf(SC.rc, Gv.R), nfFitOf(SC.rc, Gy.R), true)}</div>` : ''].join('');
+  }
+  // tapped area: both sides' raw numbers, the likeliest players there tonight, and the picked player's
+  const cc = NFMC[off];
+  const cellInfo = cc ? (() => { const [k, si] = cc.split(':'), i = +si, run = k === 'r';
+    const L = run ? LR : LP, Oc = run ? O.o.r : O.o.p, Dc = run ? F.d.r : G ? F.g[G] : F.d.p, Lc = run ? LR : G ? NFM.lg.g[G] : LP;
+    const raw = (C, i_) => { const x = C[i_], N = nfSum(C); return x[0] ? `${Math.round(x[0] / N * 100)}% of ${run ? 'carries' : 'targets'} · ${(x[2] / x[0]).toFixed(1)} yds${run ? '' : ` · ${Math.round(x[1] / x[0] * 100)}% caught`} <small>(${x[0]})</small>` : 'none'; };
+    const unit = run ? 'carries' : 'targets', st = run ? 'car' : 'tgt';
+    const lik = all.map(r => { const c2 = cnt(r.x), n = run ? c2.rc.reduce((s, y) => s + y, 0) : c2.T.length, own = run ? c2.rc[i] : c2.pc[i], ls = L[i][0] / (run ? LNr : LNp);
+      return [r.p.n, mean(r.p, st) * (own + 6 * ls) / (n + 6)]; }).filter(x => x[1] >= .15).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const me = SC ? (run ? ` · <b>${esc(nfLast(sel.p.n))}</b> ${SC.rc[i]} of ${SC.rc.reduce((s, y) => s + y, 0)} carries here` : ` · <b>${esc(nfLast(sel.p.n))}</b> ${SC.pc[i]} of ${SC.T.length} targets here${SC.pc[i] ? `, ${SC.pk[i]} caught` : ''}`) : '';
+    return `<div class="nfm-ci"><b>${esc(nfName(k, i))}</b> · league ${raw(L, i)}<br>${esc(off)} ${raw(Oc, i)} · ${esc(def)} allows${G && !run ? ' ' + esc(who) : ''} ${raw(Dc, i)}${lik.length ? `<br>Likeliest tonight: ${lik.map(([n, e]) => `${esc(nfLast(n))} ${e.toFixed(1)}`).join(', ')} ${unit}` : ''}${me} <button type="button" class="nfm-x" data-nfc="${esc(off)}:x:0">close</button></div>`; })()
+    : '<div class="nfm-ci muted">Tap an area of the field for its numbers.</div>';
+  // areas that stand out on the map shown (passes where the league throws 2.5%+ of its targets, every run lane)
+  const th = NFMET === 'vol' ? [1.12, .88] : [1.06, .94];
+  const cand = [...V.P.map((v, i) => ({k: 'p', i, v, ok: LP[i][0] / LNp >= .025})), ...V.R.map((v, i) => ({k: 'r', i, v, ok: true}))].filter(x => x.ok && x.v != null);
+  const hot = cand.filter(x => x.v >= th[0]).sort((a, b) => b.v - a.v).slice(0, 3), cold = cand.filter(x => x.v <= th[1]).sort((a, b) => a.v - b.v).slice(0, 2);
+  const word = {vol: ['goes there a lot', 'rarely goes there', 'gives it up', 'takes it away', 'goes there and', 'gives it up', 'little of it for'],
+    yds: ['gains a lot there', 'gains little there', 'gives up yards there', 'is stingy there', 'gains there and', 'gives up yards', 'not much there for'],
+    suc: ['succeeds there', 'struggles there', 'gives up success there', 'stops it there', 'succeeds there and', 'allows it', 'little success there for']}[NFMET];
+  const say = up => NFMODE === 'off' ? `${esc(off)} ${up ? word[0] : word[1]}` : NFMODE === 'def' ? `${esc(def)} ${up ? word[2] : word[3]}`
+    : up ? `${esc(off)} ${word[4]} ${esc(def)} ${word[5]}` : `${word[6]} ${esc(off)} tonight`;
+  // area table: the current view's columns (overlay: both sides); shares of passes / runs and yards a play
+  const showO = NFMODE !== 'def', showD = NFMODE !== 'off';
+  const zc = (C, LC, ix, run) => { const a = nfAgg(C, ix), l = nfAgg(LC, ix), N = nfSum(C), LN = nfSum(LC); if (!a[0]) return '<td class="muted">–</td><td class="muted">–</td>';
+    const sh = a[0] / N, lsh = l[0] / LN, y = a[2] / a[0], ly = l[2] / l[0], v = sh / lsh, dy = y - ly, big = a[0] >= 30, tol = run ? .4 : .8;
+    return `<td><b class="${v >= 1.15 ? 'up' : v <= .87 ? 'dn' : ''}">${Math.round(sh * 100)}%</b></td><td class="${big && dy >= tol ? 'good' : big && dy <= -tol ? 'bad' : ''}" title="${a[0]} ${run ? 'carries' : 'targets'}${run ? '' : `, ${Math.round(a[1] / a[0] * 100)}% caught`}, ${Math.round(a[3] / a[0] * 100)}% successful (league ${ly.toFixed(1)} yds${run ? '' : `, ${Math.round(l[1] / l[0] * 100)}% caught`})">${y.toFixed(1)}</td>`; };
+  const zrow = (lab, ix, run, sw) => { const LC = run ? LR : G ? NFM.lg.g[G] : LP, l = nfAgg(LC, ix);
+    return `<tr><td class="l">${sw ? `<i class="nfm-sw" style="background:${sw}"></i>` : ''}${lab}</td><td class="muted">${Math.round(l[0] / nfSum(LC) * 100)}% <small>${(l[2] / l[0]).toFixed(1)}</small></td>${showO ? zc(run ? O.o.r : O.o.p, run ? LR : LP, ix, run) : ''}${showD ? zc(run ? F.d.r : G ? F.g[G] : F.d.p, LC, ix, run) : ''}</tr>`; };
+  const ztab = `<div class="tw"><table class="t nfm-zt"><thead><tr><th class="l">Area</th><th title="${G ? `Share of the league’s targets to ${esc(who)}` : 'Share of the league’s targets (runs: carries) here, and its yards a play'}">League${G ? ' <small>' + esc(who) + '</small>' : ''}</th>${showO ? `<th title="${esc(off)}’s share of its targets (runs: carries) here">${esc(off)} goes</th><th title="${esc(off)}’s yards a target (a carry) here">yds</th>` : ''}${showD ? `<th title="Share of ${esc(who)}’ targets (runs: carries) against ${esc(def)} here">${esc(def)} allows</th><th title="Yards a target (a carry) ${esc(def)} allows here">yds</th>` : ''}</tr></thead><tbody>
+    ${NF_PZ.map(([lab, ix, sw]) => zrow(lab, ix, false, sw)).join('')}${NF_RZ.map(([lab, ix]) => zrow(lab, ix, true)).join('')}</tbody></table></div>`;
+  const ko = O.ko || {}, kd = F.kd || {}, ch = (x, f) => x ? `${f(x[0])} (${nfOrd(x[1])})` : '–', p0 = v => Math.round(v * 100) + '%';
+  const chips = `<div class="nfm-chips"><span class="ladc">${esc(off)} ${ch(ko.tpg, f1)} targets a game</span><span class="ladc">aDOT ${ch(ko.adot, f1)}</span><span class="ladc">${ch(ko.deep, p0)} deep 20+</span><span class="ladc">${ch(ko.scr, p0)} behind the line</span><span class="ladc">${ch(ko.ypt, f1)} yds a target</span><span class="ladc">${ch(ko.ypc, f1)} yds a carry</span>
+    <span class="ladc">${esc(def)} allows ${ch(kd.ypt, f1)} yds a target</span><span class="ladc">${ch(kd.deep, p0)} deep</span><span class="ladc">${ch(kd.cr, p0)} caught</span><span class="ladc">${ch(kd.ypc, f1)} yds a carry</span></div>`;
+  const bar = T => { const z = NF_PZ.map(([, ix]) => T.filter(t => ix.includes(t.cell)).length); return `<span class="nfm-zb" aria-hidden="true">${NF_PZ.map(([, , col], j) => `<i style="flex:${z[j]};background:${col}"></i>`).join('')}</span>`; };
+  const defY = nfGrids(O, F, 'yds', '').dP, defYR = nfGrids(O, F, 'yds', '').dR;
+  const prow = r => { const x = r.x, c2 = cnt(x), nt = c2.T.length, nr = c2.rc.reduce((s, n) => s + n, 0), on = sel && r === sel;
+    const adot = nt ? c2.T.reduce((s, t) => s + t.a, 0) / nt : 0, ck = nt ? c2.T.reduce((s, t) => s + t.k, 0) / nt : 0, ry = x.r ? x.r.reduce((s, y) => s + y[1], 0) : 0;
+    // chip: yards tonight's defense allows at his spots (its yards a play by area, pulled toward the league) vs average. Untested.
+    const fy = nt >= 10 ? nfFitOf(c2.pc, defY) : nr >= 15 ? nfFitOf(c2.rc, defYR) : null, unit = nt >= 10 ? 'target' : 'carry';
+    const fc = fy != null && Math.abs(fy - 1) >= .05 ? `<span class="nfm-fit ${fy > 1 ? 'up' : 'dn'}" title="${esc(def)} allows ${nfPc(fy)} yards a ${unit} vs average in the areas ${esc(r.p.n)} ${nt >= 10 ? 'is targeted' : 'runs'} (its yards by area, pulled toward average). Display only, untested.">${nfPc(fy)} yds</span>` : '';
+    const proj = [mean(r.p, 'tgt') >= .5 ? `${f1(mean(r.p, 'tgt'))} tgt` : '', mean(r.p, 'car') >= 1 ? `${f1(mean(r.p, 'car'))} car` : ''].filter(Boolean).join(' · ');
+    const ssn = [nt ? `${nt} tgt · aDOT ${adot.toFixed(1)} · ${Math.round(ck * 100)}% caught` : '', nr >= 5 ? `${nr} car · ${(ry / nr).toFixed(1)} ypc` : ''].filter(Boolean).join(' · ');
+    return `<button type="button" class="nfm-p" data-nfmp="${esc(off)}:${esc(r.p.id)}" aria-pressed="${!!on}">
+      <span class="nfm-pn"><b>${esc(r.p.n)}</b> <small>${esc(r.p.lab || r.p.pos)}</small>${fc}</span>${nt >= 5 ? bar(c2.T) : ''}
+      <span class="nfm-ps">tonight ${proj} · season ${ssn} (${x.gp} gm)</span></button>`; };
+  const df = ['all', 'made', 'miss'].map(k => `<button type="button" data-nfdf="${k}" aria-pressed="${NFDF === k}">${k === 'all' ? 'All' : k === 'made' ? 'Caught' : 'Not caught'}</button>`).join('');
+  const pv2 = ['spots', 'dots'].map(k => `<button type="button" data-nfpv="${k}" aria-pressed="${NFPV === k}">${k === 'spots' ? 'His spots' : 'Every target'}</button>`).join('');
+  const selNote = S ? `<div class="nfm-sel"><b>${esc(sel.p.n)}</b> · ${SC.T.length} targets${SC.rc.some(n => n) ? `, ${SC.rc.reduce((s, n) => s + n, 0)} carries` : ''} this season (${S.gp} games) ${SC.T.length ? `<span class="gmsw nfm-df" role="group" aria-label="Show">${pv2}</span>` : ''}${spots || !SC.T.length ? ' <span class="nfm-spk">circle size = how often he gets the ball there · colour = the map at that spot (pale = about average)</span>' : ` <span class="gmsw nfm-df" role="group" aria-label="Targets shown">${df}</span> <i class="nfm-k m"></i>caught <i class="nfm-k x"></i>not caught`}${fitLine}
+      <span class="nfm-pz">${NF_PZ.map(([lab, ix, col]) => { const a = ix.reduce((s, i) => s + SC.pc[i], 0), k = ix.reduce((s, i) => s + SC.pk[i], 0); return a ? `<span><i class="nfm-sw" style="background:${col}"></i>${lab} ${a} · ${Math.round(k / a * 100)}% caught</span>` : ''; }).join('')}</span>
+      <button type="button" class="nfm-x" data-nfmp="${esc(off)}:0">clear</button></div>` : '';
+  const grpNote = G ? `<div class="nfm-arn">${esc(def)} vs ${esc(who)}: ${nfSum(F.g[G])} targets faced, against where the league throws to ${esc(who)}${nfSum(F.g[G]) < 60 ? ' (a small sample: the map stays close to average)' : ''}. Runs stay every carry.</div>` : '';
+  const plHead = G ? (same.length ? `${esc(off)} ${esc(who)}` : `${esc(off)} receivers <small>no ${esc(who)} listed</small>`) : `${esc(off)} receivers and backs`;
+  return `<div class="nfm-b"><h3>${esc(off)} offense <small>vs ${esc(def)} defense</small></h3>${chips}${miss}
+    <div class="nfm-row"><div class="nfm-mapc">${grpNote}${selNote}${nfSvg(off, V.P, pMarks, cc, !!S, cover)}${nfRunSvg(off, V.R, rMarks, cc, !!S, cover)}${cellInfo}
+      <ul class="nfm-list">${hot.map(x => `<li><b class="up">${nfPc(x.v)}</b> ${esc(nfName(x.k, x.i))}: ${say(true)}</li>`).join('')}${cold.map(x => `<li><b class="dn">${nfPc(x.v)}</b> ${esc(nfName(x.k, x.i))}: ${say(false)}</li>`).join('')}${!hot.length && !cold.length ? '<li class="muted">No area stands out.</li>' : ''}</ul>
+      ${ztab}</div>
+      <div class="nfm-pc"><div class="nfm-ph">${plHead} <small>tap one to plot his targets</small></div><div class="nfm-pl">${pl.length ? pl.map(prow).join('') : '<div class="muted small">No listed player has targets or carries this season.</div>'}</div></div></div></div>`;
+}
+function nfmPanel(g){
+  nfmLoad();
+  if (!NFM) return `<section class="panel"><div class="phead"><h2>Field map</h2></div><div class="empty">${NFM_ST === 'none' ? 'No field map yet: it appears after the next NFL run.' : 'Loading the field map…'}</div></section>`;
+  const seg = `<div class="gmsw nfm-seg" role="group" aria-label="Map view">${[['ov', 'Overlay'], ['off', 'Where they go'], ['def', 'Where it’s allowed']].map(([k, l]) =>
+    `<button data-nfmode="${k}" aria-pressed="${NFMODE === k}">${l}</button>`).join('')}</div>`;
+  const met = `<div class="gmsw nfm-seg" role="group" aria-label="Measure">${[['vol', 'Volume'], ['yds', 'Yards a play'], ['suc', 'Success']].map(([k, l]) =>
+    `<button data-nfmet="${k}" aria-pressed="${NFMET === k}">${l}</button>`).join('')}</div>`;
+  const grp = NFMODE === 'def' ? `<div class="nfm-arr"><span class="small muted">Targets to:</span><button type="button" data-nfgrp="" aria-pressed="${!NFGRP}">All</button>${Object.entries(NF_GRP).map(([k, l]) =>
+    `<button type="button" data-nfgrp="${k}" aria-pressed="${NFGRP === k}">${l[0].toUpperCase() + l.slice(1)}</button>`).join('')}</div>` : '';
+  const key = NFMET === 'vol' ? `<span><i style="background:rgba(255,99,71,.85)"></i>more of the plays than average</span><span><i style="background:rgba(70,150,255,.7)"></i>fewer</span>`
+    : `<span><i style="background:rgba(52,210,122,.85)"></i>${NFMET === 'yds' ? 'more yards a play' : 'more successful plays'} than average</span><span><i style="background:rgba(240,72,72,.8)"></i>${NFMET === 'yds' ? 'fewer yards' : 'less success'}</span>`;
+  return `<section class="panel"><div class="phead"><h2>${esc(g.away)} at ${esc(g.home)}: field map</h2><span class="muted small">this season · ${NFM.games} games through ${esc(NFM.through)}</span></div>
+    <div class="nfm-top">${seg}${met}<div class="nfm-key">${key}<span class="muted">offense going up · faded where few passes go</span></div></div>${grp}
+    ${nfBlock(g.away, g.home, g)}${nfBlock(g.home, g.away, g)}
+    <p class="note" style="margin:8px 0 0"><b>Passes</b> by where the ball was thrown: depth past the line of scrimmage (air yards) and left / middle / right, from each team’s targets this season; <b>runs</b> by the lane the play-by-play charts (designed runs, no scrambles or kneels). <b>Volume:</b> where they go = the offense’s share of its targets (or carries) in each area over the league’s share there; where it’s allowed = the same for plays against the defense; overlay = the two multiplied (red where this offense likes to go and this defense gives it up). <b>Yards a play</b> and <b>Success</b> (a play that raised the offense’s expected points): the rate in each area over the league’s rate there (green = good for the offense, also on the defense view). Each rate is pulled toward the league’s on small samples (80 targets / 60 carries for shares, 12 plays for rates), so thin areas stay pale. <b>Targets to</b> (Where it’s allowed): the defense against outside WRs, slot WRs (each receiver’s depth-chart alignment that week), TEs or RBs, against where the league throws to that group. Tap a player to see his spots: his targets this season (any team) grouped by area, each circle sized by how often he gets the ball there and filled with the map’s colour at that spot, plus his carries by lane; ‘Every target’ plots each one at its depth (gold = caught). ‘Likeliest tonight’ = his projected targets (carries) x his share in that area, leaning toward the league’s mix. Not route charts (the ball’s landing area only; those aren’t published during the season). Display only: no number on the page uses these maps and none has been tested as a betting signal; the projections already rate each defense.</p></section>`;
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-nfmode],[data-nfmet],[data-nfgrp],[data-nfdf],[data-nfpv],[data-nfmp],[data-nfc]'); if (!t) return;
+  if (t.dataset.nfmode){ NFMODE = t.dataset.nfmode; try { localStorage.setItem('nfl-fmode', NFMODE); } catch (x) {} }
+  else if (t.dataset.nfmet){ NFMET = t.dataset.nfmet; try { localStorage.setItem('nfl-fmet', NFMET); } catch (x) {} }
+  else if (t.dataset.nfgrp != null){ NFGRP = t.dataset.nfgrp; }
+  else if (t.dataset.nfdf){ NFDF = t.dataset.nfdf; }
+  else if (t.dataset.nfpv){ NFPV = t.dataset.nfpv; try { localStorage.setItem('nfl-fpv', NFPV); } catch (x) {} }
+  else if (t.dataset.nfmp){ const j = t.dataset.nfmp.indexOf(':'), tm = t.dataset.nfmp.slice(0, j), id = t.dataset.nfmp.slice(j + 1); NFMP[tm] = id === '0' || NFMP[tm] === id ? null : id; }
+  else if (t.dataset.nfc){ const [tm, k, i] = t.dataset.nfc.split(':'); NFMC[tm] = k === 'x' || NFMC[tm] === k + ':' + i ? null : k + ':' + i; }
+  render();
+});
 // Game script tab: the game lines (who's favored, by how much, the total) and, for the high-usage players and the ones
 // facing a soft defense, each prop's over ladder (main line + alt lines + Kalshi rungs) at the viewer's books. Chance
 // = ours weighted with the market's fair at that line (MKT.altLadder: sharp consensus / the books' alt-line fair / Kalshi
@@ -972,12 +1164,12 @@ function scriptPanel(g){
 }
 function gameDetail(){
   const g = D.games.find(x => x.id === state.game); if (!g) return '<div class="empty">No games.</div>';
-  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ['box', 'Box score'], ...(D.sgp ? [['script', 'Game script']] : []), ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ...(D.fmap && D.fmap[g.id] ? [['map', 'Matchup map']] : []), ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
+  const gsw = (D.sgp || D.spot) ? `<div class="seg gsw" role="group" aria-label="Game view">${[['proj', 'Projections'], ['box', 'Box score'], ...(D.sgp ? [['script', 'Game script']] : []), ...(D.spot && g.id in D.spot ? [['sum', 'Summary']] : []), ['map', 'Field map'], ...(D.sgp ? [['sgp', 'Same-game parlays']] : [])].map(([k, l]) => `<button data-gtab="${k}" aria-pressed="${(state.gtab || 'proj') === k}">${l}</button>`).join('')}</div>` : '';
   if (state.gtab === 'box') return gsw + boxPanel(g);
   if (D.sgp && state.gtab === 'sgp') return gsw + sgpPanel(g);
   if (D.sgp && state.gtab === 'script') return gsw + scriptPanel(g);
   if (state.gtab === 'sum' && D.spot && g.id in D.spot) return gsw + summaryPanel(g);
-  if (state.gtab === 'map' && D.fmap && D.fmap[g.id]) return gsw + mapPanel(g);
+  if (state.gtab === 'map') return gsw + nfmPanel(g);
   return gsw + gameDetailMain(g);
 }
 // game bets for the parlay slip: moneyline, spread and total at the Vegas lines (judged in the same saved simulations)
@@ -1695,6 +1887,10 @@ function render(){
     : state.view === 'books' ? (window.MKT && MKT.oddsView ? MKT.oddsView(D.games.map(g => ({id: g.id, label: `${g.away} @ ${g.home}`, away: g.away, home: g.home}))) : '<div class="empty">Loading prices…</div>')
     : state.view === 'parlays' ? renderParlays() : state.view === 'ladders' ? renderLadders() : state.view === 'fair' ? renderFair() : state.view === 'agree' ? renderAgree() : state.view === 'dvp' ? renderDvp() : state.view === 'mu' ? renderMatchups() : renderGames();
   } catch (e) { console.error(e); main.innerHTML = `<div class="empty">This view hit an error (${esc(String(e && e.message || e))}). The other tabs still work; it is fixed on the next page build.</div>`; }
+  // field map player lists (a strip on phones, a scrolling column on desktop): keep the picked player in view after a redraw
+  for (const pl of document.querySelectorAll('.nfm-pl, .nfm-arr')){ const b = pl.querySelector('[aria-pressed="true"]'); if (!b) continue;
+    if (pl.scrollWidth > pl.clientWidth){ const x = b.offsetLeft - pl.offsetLeft; if (x + b.offsetWidth > pl.clientWidth) pl.scrollLeft = x - 8; }
+    else if (pl.scrollHeight > pl.clientHeight){ const y = b.offsetTop - pl.offsetTop; if (y + b.offsetHeight > pl.clientHeight) pl.scrollTop = y - 8; } }
   save();
   const cur = document.querySelector('.rail .game-btn[aria-current="true"]');
   if (cur){ const r = cur.parentElement, rr = r.getBoundingClientRect(), cr = cur.getBoundingClientRect(); if (r.scrollWidth > r.clientWidth && (cr.left < rr.left || cr.right > rr.right)) r.scrollLeft += cr.left - rr.left - 12; if (r.scrollHeight > r.clientHeight && (cr.top < rr.top || cr.bottom > rr.bottom - 64)) r.scrollTop += cr.top - rr.top - (r.clientHeight - cr.height) / 2; }
