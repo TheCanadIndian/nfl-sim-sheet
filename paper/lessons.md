@@ -22,3 +22,4 @@
 - **2026-11-21 evening:** two 2-leg Novig parlays of SOG / rebounds overs (priced 41-46%, ours >= fair). Record now 2 of 16 parlays; still unproven. Raddysh's claimed edge near 20% is inside the range I distrust.
 - **2026-11-22:** NFL Sunday: used the only theme that held unseen (catches / rec yds main lines, ours 8+ pts over fair) at Novig. Web news search can't confirm 2026 status, so rely on the slate's inactive filter. Record 2 of 16 so far; judge on legs vs price.
 - **2026-11-22 evening:** account -61% on 18 settled (2 won vs 3.6 priced; legs 7 of 23 vs 10.2). Still below price on every sport; sample is small but no sign the filter helps. Large slate edges are stale alts; only 2 clean candidates tonight. Consider pausing if the next ~10 bets stay under price.
+- **2026-11-23:** Monday 11:30 run: no games before 6 PM ET, so no bets. Record 2 of 19 parlays, legs 7 of 24 vs 10.6 priced. At $200 the unit is 2%; below $175 it drops to 1%.
