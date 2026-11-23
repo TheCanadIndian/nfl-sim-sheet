@@ -1,15 +1,15 @@
 {
-"updated": "2026-11-23T03:51:04+00:00",
-"rows": 1337,
-"live_rows": 1031,
+"updated": "2026-11-23T04:06:03+00:00",
+"rows": 1338,
+"live_rows": 1032,
 "segments": [
 {
 "seg": "NHL",
-"n": 1095,
-"ret": -0.0642,
+"n": 1096,
+"ret": -0.0629,
 "h1": -0.1028,
-"h2": -0.0217,
-"z": -0.96,
+"h2": -0.0191,
+"z": -0.95,
 "status": "Watching"
 },
 {
@@ -59,11 +59,11 @@
 },
 {
 "seg": "NHL \u00b7 pp1",
-"n": 462,
-"ret": 0.0427,
+"n": 463,
+"ret": 0.0455,
 "h1": 0.2022,
-"h2": -0.1224,
-"z": 0.49,
+"h2": -0.116,
+"z": 0.52,
 "status": "Watching"
 },
 {
@@ -104,11 +104,11 @@
 },
 {
 "seg": "NHL \u00b7 2 reasons",
-"n": 230,
-"ret": 0.0767,
+"n": 231,
+"ret": 0.0822,
 "h1": 0.1843,
-"h2": -0.0368,
-"z": 0.66,
+"h2": -0.0245,
+"z": 0.71,
 "status": "Watching"
 },
 {
@@ -149,20 +149,20 @@
 },
 {
 "seg": "NHL \u00b7 usage",
-"n": 82,
-"ret": -0.0821,
+"n": 83,
+"ret": -0.0648,
 "h1": 0.0202,
-"h2": -0.2265,
-"z": -0.57,
+"h2": -0.1814,
+"z": -0.46,
 "status": "Watching"
 },
 {
 "seg": "NHL \u00b7 fits a path",
-"n": 81,
-"ret": -0.0707,
+"n": 82,
+"ret": -0.0534,
 "h1": 0.0419,
-"h2": -0.2265,
-"z": -0.49,
+"h2": -0.1814,
+"z": -0.37,
 "status": "Watching"
 },
 {
@@ -194,11 +194,11 @@
 },
 {
 "seg": "NHL \u00b7 3+ shots",
-"n": 67,
-"ret": -0.0251,
+"n": 68,
+"ret": -0.0049,
 "h1": 0.0245,
-"h2": -0.0629,
-"z": -0.18,
+"h2": -0.0267,
+"z": -0.04,
 "status": "Watching"
 },
 {
@@ -275,12 +275,12 @@
 },
 {
 "seg": "NHL \u00b7 3+ shots \u00b7 edge 5-10%",
-"n": 51,
-"ret": 0.1482,
+"n": 52,
+"ret": 0.1713,
 "h1": 0.135,
-"h2": 0.16,
-"z": 0.91,
-"status": "Watching"
+"h2": 0.2025,
+"z": 1.06,
+"status": "Proven"
 },
 {
 "seg": "NBA \u00b7 game",
@@ -310,21 +310,21 @@
 "status": "Dropped"
 },
 {
+"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
+"n": 43,
+"ret": 0.2107,
+"h1": 0.22,
+"h2": 0.2026,
+"z": 1.21,
+"status": "Proven"
+},
+{
 "seg": "NFL \u00b7 receptions \u00b7 coin flip",
 "n": 43,
 "ret": 0.2048,
 "h1": 0.4099,
 "h2": 0.0265,
 "z": 1.32,
-"status": "Proven"
-},
-{
-"seg": "NHL \u00b7 3+ shots \u00b7 coin flip",
-"n": 42,
-"ret": 0.1836,
-"h1": 0.22,
-"h2": 0.1505,
-"z": 1.04,
 "status": "Proven"
 },
 {
@@ -553,6 +553,15 @@
 "status": "Learning"
 },
 {
+"seg": "NHL \u00b7 Hard Rock",
+"n": 17,
+"ret": -0.1527,
+"h1": -0.1835,
+"h2": -0.131,
+"z": -0.59,
+"status": "Learning"
+},
+{
 "seg": "NFL \u00b7 Hard Rock",
 "n": 17,
 "ret": -0.1892,
@@ -568,15 +577,6 @@
 "h1": -1.0,
 "h2": -0.324,
 "z": -2.54,
-"status": "Learning"
-},
-{
-"seg": "NHL \u00b7 Hard Rock",
-"n": 16,
-"ret": -0.2466,
-"h1": -0.1835,
-"h2": -0.2956,
-"z": -0.97,
 "status": "Learning"
 },
 {
@@ -950,14 +950,6 @@
 }
 ],
 "changes": [
-{
-"date": "2026-11-01",
-"seg": "NFL \u00b7 receptions",
-"was": "Learning",
-"now": "Proven",
-"n": 31,
-"ret": 0.4838
-},
 {
 "date": "2026-11-01",
 "seg": "NHL \u00b7 goals \u00b7 plus money",
@@ -1429,6 +1421,14 @@
 "now": "Watching",
 "n": 1007,
 "ret": -0.0675
+},
+{
+"date": "2026-11-22",
+"seg": "NHL \u00b7 3+ shots \u00b7 edge 5-10%",
+"was": "Watching",
+"now": "Proven",
+"n": 52,
+"ret": 0.1713
 }
 ],
 "builder": {
