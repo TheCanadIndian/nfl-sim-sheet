@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-24",
 "lock": "2026-11-25T00:00:00+00:00",
-"frozen_at": "2026-11-24T21:07:22.661Z",
+"frozen_at": "2026-11-24T21:12:55.208Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,53 @@
 "line": 4.5,
 "name": "desmond bane",
 "lab": "Desmond Bane 5+ reb",
-"p": 0.3902,
+"p": 0.3925,
+"price": 175,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909316",
+"start": "2026-11-25T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "zaccharie risacher",
+"lab": "Zaccharie Risacher 2+ threes",
+"p": 0.3287,
+"price": 223,
+"book": "Novig",
+"f": [
+"matchup",
+"game",
+"price"
+]
+}
+],
+"p": 0.12904,
+"d": 8.883,
+"first": "2026-11-25T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909314",
+"start": "2026-11-25T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "desmond bane",
+"lab": "Desmond Bane 5+ reb",
+"p": 0.3925,
 "price": 175,
 "book": "Hard Rock",
 "f": [
@@ -50,54 +96,10 @@
 ]
 }
 ],
-"p": 0.15512,
+"p": 0.15603,
 "d": 6.875,
 "first": "2026-11-25T00:00:00+00:00",
 "pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909314",
-"start": "2026-11-25T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "ausar thompson",
-"lab": "Ausar Thompson 6+ ast",
-"p": 0.3087,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909316",
-"start": "2026-11-25T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "aaron gordon",
-"lab": "Aaron Gordon 3+ ast",
-"p": 0.3975,
-"price": 150,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"game"
-]
-}
-],
-"p": 0.12271,
-"d": 8.25,
-"first": "2026-11-25T00:00:00+00:00",
 "res": null
 },
 {
@@ -112,7 +114,7 @@
 "line": 3.5,
 "name": "desmond bane",
 "lab": "Desmond Bane over 3.5 rebounds",
-"p": 0.5439,
+"p": 0.5464,
 "price": -115,
 "book": "Hard Rock",
 "f": [
@@ -128,7 +130,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0154
+"edge": 0.0199
 },
 {
 "gid": "401909315",
@@ -154,58 +156,8 @@
 "edge": 0.03
 }
 ],
-"p": 0.24894,
+"p": 0.25009,
 "d": 4.207,
-"first": "2026-11-25T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909314",
-"start": "2026-11-25T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "desmond bane",
-"lab": "Desmond Bane over 4.5 rebounds",
-"p": 0.3902,
-"fair": 0.391,
-"price": 175,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0731,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (3.5)"
-]
-},
-{
-"gid": "401909315",
-"start": "2026-11-25T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "derrick white",
-"lab": "Derrick White over 4.5 rebounds",
-"p": 0.2963,
-"fair": 0.2962,
-"price": 250,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0369,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (3.5)"
-]
-}
-],
-"p": 0.11581,
-"d": 9.625,
 "first": "2026-11-25T00:00:00+00:00",
 "res": null
 },
@@ -213,6 +165,22 @@
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909316",
+"start": "2026-11-25T03:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "zaccharie risacher",
+"lab": "Zaccharie Risacher over 1.5 threes",
+"p": 0.3299,
+"price": 223,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0655,
+"fair": 0.3276,
+"main": false
+},
 {
 "gid": "401909315",
 "start": "2026-11-25T01:00:00+00:00",
@@ -228,27 +196,11 @@
 "edge": 0.0641,
 "fair": 0.4449,
 "main": false
-},
-{
-"gid": "401909314",
-"start": "2026-11-25T00:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "daniss jenkins",
-"lab": "Daniss Jenkins over 4.5 rebounds",
-"p": 0.411,
-"price": 156,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0521,
-"fair": 0.4208,
-"main": false
 }
 ],
-"p": 0.1785,
-"d": 6.272,
-"first": "2026-11-25T00:00:00+00:00",
+"p": 0.14328,
+"d": 7.914,
+"first": "2026-11-25T01:00:00+00:00",
 "res": null
 }
 ],
