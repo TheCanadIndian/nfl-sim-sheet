@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-23",
 "lock": "2026-11-24T00:00:00+00:00",
-"frozen_at": "2026-11-24T00:42:25.700Z",
+"frozen_at": "2026-11-24T00:47:47.843Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -510,7 +510,7 @@
 "line": 2.5,
 "name": "jalen smith",
 "lab": "Jalen Smith 3+ threes",
-"p": 0.3045,
+"p": 0.3043,
 "price": 228,
 "book": "Novig",
 "f": [
@@ -528,7 +528,7 @@
 "line": 3.5,
 "name": "brandon ingram",
 "lab": "Brandon Ingram 4+ ast",
-"p": 0.3026,
+"p": 0.3052,
 "price": 280,
 "book": "Kalshi",
 "f": [
@@ -538,7 +538,7 @@
 ]
 }
 ],
-"p": 0.09216,
+"p": 0.09286,
 "d": 12.464,
 "first": "2026-11-24T01:00:00+00:00",
 "pick": "core",
@@ -554,9 +554,9 @@
 "kind": "ast",
 "side": "o",
 "line": 3.5,
-"name": "miles bridges",
-"lab": "Miles Bridges 4+ ast",
-"p": 0.354,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.3524,
 "price": 178,
 "book": "Novig",
 "f": [
@@ -574,7 +574,7 @@
 "line": 3.5,
 "name": "brandon ingram",
 "lab": "Brandon Ingram 4+ ast",
-"p": 0.3026,
+"p": 0.3052,
 "price": 280,
 "book": "Kalshi",
 "f": [
@@ -584,10 +584,196 @@
 ]
 }
 ],
-"p": 0.10714,
+"p": 0.10755,
 "d": 10.564,
 "first": "2026-11-24T01:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910041",
+"start": "2026-11-24T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "meleek thomas",
+"lab": "Meleek Thomas 3+ threes",
+"p": 0.2928,
+"price": 266,
+"book": "Kalshi",
+"f": [
+"matchup",
+"game",
+"price"
+]
+},
+{
+"gid": "401910042",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "zion williamson",
+"lab": "Zion Williamson 4+ ast",
+"p": 0.3524,
+"price": 178,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910045",
+"start": "2026-11-24T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 4+ ast",
+"p": 0.4035,
+"price": 144,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+}
+],
+"p": 0.04164,
+"d": 24.827,
+"first": "2026-11-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401910041",
+"start": "2026-11-24T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "meleek thomas",
+"lab": "Meleek Thomas 3+ threes",
+"p": 0.2928,
+"price": 266,
+"book": "Kalshi",
+"f": [
+"matchup",
+"game",
+"price"
+]
+},
+{
+"gid": "401910042",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "trey murphy",
+"lab": "Trey Murphy III 4+ ast",
+"p": 0.3625,
+"price": 170,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401910045",
+"start": "2026-11-24T03:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "victor wembanyama",
+"lab": "Victor Wembanyama 4+ ast",
+"p": 0.4035,
+"price": 144,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+}
+],
+"p": 0.04283,
+"d": 24.112,
+"first": "2026-11-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910042",
+"start": "2026-11-24T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jalen green",
+"lab": "Jalen Green over 1.5 threes",
+"p": 0.4501,
+"price": 122,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0049
+},
+{
+"gid": "401910041",
+"start": "2026-11-24T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 9.5,
+"name": "josh giddey",
+"lab": "Josh Giddey over 9.5 assists",
+"p": 0.458,
+"price": 117,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.001
+}
+],
+"p": 0.20615,
+"d": 4.817,
+"first": "2026-11-24T01:00:00+00:00",
 "res": null
 },
 {
@@ -602,12 +788,12 @@
 "line": 3.5,
 "name": "devin vassell",
 "lab": "Devin Vassell over 3.5 assists",
-"p": 0.3682,
+"p": 0.368,
 "fair": 0.3686,
 "price": 170,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0057,
+"edge": -0.0064,
 "v": [
 "consensus odds drop",
 "one rung above the main line (2.5)"
@@ -621,12 +807,12 @@
 "line": 3.5,
 "name": "buddy hield",
 "lab": "Buddy Hield over 3.5 threes",
-"p": 0.3424,
+"p": 0.3423,
 "fair": 0.3444,
 "price": 170,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0756,
+"edge": -0.0757,
 "v": [
 "consensus odds drop",
 "one rung above the main line (2.5)"
@@ -650,11 +836,11 @@
 "line": 0.5,
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis over 0.5 threes",
-"p": 0.3223,
+"p": 0.3226,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2892,
+"edge": 0.2904,
 "fair": 0.3266,
 "main": true
 },
@@ -666,17 +852,125 @@
 "line": 7.5,
 "name": "josh giddey",
 "lab": "Josh Giddey over 7.5 rebounds",
-"p": 0.4375,
+"p": 0.4363,
 "price": 144,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0675,
+"edge": 0.0645,
 "fair": 0.4401,
 "main": false
 }
 ],
-"p": 0.14101,
+"p": 0.14075,
 "d": 9.76,
+"first": "2026-11-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910041",
+"start": "2026-11-24T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "jalen smith",
+"lab": "Jalen Smith over 4.5 threes",
+"p": 0.055,
+"fair": 0.055,
+"ours": 0.1033,
+"price": 1241,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3855,
+"grp": "k15n",
+"v": [
+"Kalshi 5+ threes: our chance 10% vs 7% with the fee (+39%)",
+"game total 240.5",
+"projected 29 min"
+]
+},
+{
+"gid": "401910042",
+"start": "2026-11-24T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "jalen green",
+"lab": "Jalen Green over 3.5 threes",
+"p": 0.08,
+"fair": 0.08,
+"ours": 0.1262,
+"price": 945,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3182,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ threes: our chance 13% vs 10% with the fee (+32%)",
+"game total 232.5",
+"projected 26 min"
+]
+}
+],
+"p": 0.0044,
+"d": 140.135,
+"first": "2026-11-24T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Study-pick parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401910042",
+"start": "2026-11-24T01:00:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "jalen green",
+"lab": "Jalen Green over 3.5 threes",
+"p": 0.08,
+"fair": 0.08,
+"ours": 0.1262,
+"price": 945,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3182,
+"grp": "k15n",
+"v": [
+"Kalshi 4+ threes: our chance 13% vs 10% with the fee (+32%)",
+"game total 232.5",
+"projected 26 min"
+]
+},
+{
+"gid": "401910041",
+"start": "2026-11-24T01:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "peyton watson",
+"lab": "Peyton Watson over 5.5 assists",
+"p": 0.03,
+"fair": 0.03,
+"ours": 0.056,
+"price": 2243,
+"book": "Kalshi",
+"sport": "nba",
+"edge": 0.3118,
+"grp": "k15n",
+"v": [
+"Kalshi 6+ assists: our chance 6% vs 4% with the fee (+31%)",
+"game total 240.5",
+"projected 27 min"
+]
+}
+],
+"p": 0.0024,
+"d": 244.843,
 "first": "2026-11-24T01:00:00+00:00",
 "res": null
 }
