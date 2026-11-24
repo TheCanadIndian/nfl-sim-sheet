@@ -24,3 +24,4 @@
 - **2026-11-22 evening:** account -61% on 18 settled (2 won vs 3.6 priced; legs 7 of 23 vs 10.2). Still below price on every sport; sample is small but no sign the filter helps. Large slate edges are stale alts; only 2 clean candidates tonight. Consider pausing if the next ~10 bets stay under price.
 - **2026-11-23:** Monday 11:30 run: no games before 6 PM ET, so no bets. Record 2 of 19 parlays, legs 7 of 24 vs 10.6 priced. At $200 the unit is 2%; below $175 it drops to 1%.
 - **2026-11-23 evening:** skipped the Monday slate. Every Novig main-line candidate had ours <= fair; the big edges were stale/off-market alts. 19 settled, legs 7 of 24 vs 10.6 priced: pausing is the right call until a leg has ours clearly above fair.
+- **2026-11-24:** Tuesday 11:30 run: every game starts 7 PM or later, so no bets. Tuesday and Monday slates belong to the evening run.
