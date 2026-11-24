@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 
@@ -31,4 +32,23 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: /tmp/pages
-      - uses: actions/deploy-pages@v4
+      # GitHub can take a while to list a just-uploaded artifact: on 2026-11-24 four deploys in a row
+      # failed with 'No artifacts named github-pages' 0.3-0.6 s after the upload finalized (it was listed
+      # a few minutes later), so the site sat an hour behind. Wait until it is listed, then retry once.
+      - name: Wait for the artifact to be listed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 0 24); do
+            n=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?name=github-pages" --jq .total_count 2>/dev/null || echo 0)
+            if [ "${n:-0}" -ge 1 ]; then echo "listed after $((i*5)) s"; exit 0; fi
+            sleep 5
+          done
+          echo "::warning::github-pages artifact still not listed after 2 min; deploying anyway"
+      - id: deploy
+        uses: actions/deploy-pages@v4
+        continue-on-error: true
+      - if: steps.deploy.outcome == 'failure'
+        run: sleep 45
+      - if: steps.deploy.outcome == 'failure'
+        uses: actions/deploy-pages@v4
