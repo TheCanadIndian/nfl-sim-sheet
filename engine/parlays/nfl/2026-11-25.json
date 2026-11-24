@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-25",
 "lock": "2026-11-26T01:00:00+00:00",
-"frozen_at": "2026-11-24T19:23:58.047Z",
+"frozen_at": "2026-11-24T19:53:48.121Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -75,6 +75,40 @@
 "p": 0.07625,
 "d": 10.908,
 "first": "2026-11-26T01:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-25T20:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 9.5,
+"name": "xavier smith",
+"lab": "Xavier Smith over 9.5 rec yds",
+"p": 0.5425,
+"price": -102,
+"book": "Novig"
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4009,
+"price": 163,
+"book": "Novig"
+}
+],
+"p": 0.21747,
+"d": 5.208,
+"first": "2026-11-26T01:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Same-game parlays",
@@ -2513,47 +2547,6 @@
 "first": "2026-11-26T01:00:00+00:00"
 },
 {
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_12_DEN_PIT",
-"start": "2026-11-27T20:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 3.5,
-"name": "dk metcalf",
-"lab": "DK Metcalf over 3.5 receptions",
-"p": 0.3862,
-"price": 178,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0736,
-"fair": 0.3866,
-"main": false
-},
-{
-"gid": "2026_12_GB_LA",
-"start": "2026-11-26T01:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "xavier smith",
-"lab": "Xavier Smith over 1.5 receptions",
-"p": 0.3766,
-"price": 185,
-"book": "Kalshi",
-"sport": "nfl",
-"edge": 0.0733,
-"fair": 0.3161,
-"main": false
-}
-],
-"p": 0.14544,
-"d": 7.923,
-"first": "2026-11-26T01:00:00+00:00"
-},
-{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -2565,16 +2558,16 @@
 "line": 9.5,
 "name": "xavier smith",
 "lab": "Xavier Smith over 9.5 rec yds",
-"p": 0.5399,
+"p": 0.5387,
 "price": -102,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0692,
-"fair": 0.4965,
+"edge": 0.0668,
+"fair": 0.4949,
 "main": true
 }
 ],
-"p": 0.5399,
+"p": 0.5387,
 "d": 1.98,
 "first": "2026-11-26T01:00:00+00:00",
 "pick": "straight"
