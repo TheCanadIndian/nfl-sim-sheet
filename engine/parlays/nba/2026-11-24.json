@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-24",
 "lock": "2026-11-25T00:00:00+00:00",
-"frozen_at": "2026-11-24T21:57:58.828Z",
+"frozen_at": "2026-11-24T22:04:25.420Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,19 +17,64 @@
 {
 "gid": "401909314",
 "start": "2026-11-25T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "john collins",
+"lab": "John Collins 2+ threes",
+"p": 0.3307,
+"price": 199,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909316",
+"start": "2026-11-25T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "zaccharie risacher",
+"lab": "Zaccharie Risacher 2+ threes",
+"p": 0.3287,
+"price": 223,
+"book": "Novig",
+"f": [
+"matchup",
+"game",
+"price"
+]
+}
+],
+"p": 0.10873,
+"d": 9.658,
+"first": "2026-11-25T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909314",
+"start": "2026-11-25T00:00Z",
 "kind": "reb",
 "side": "o",
 "line": 4.5,
 "name": "desmond bane",
 "lab": "Desmond Bane 5+ reb",
 "p": 0.39,
-"price": 175,
+"price": 165,
 "book": "Hard Rock",
 "f": [
 "usage",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
@@ -51,15 +96,35 @@
 }
 ],
 "p": 0.12819,
-"d": 8.883,
+"d": 8.559,
 "first": "2026-11-25T00:00:00+00:00",
 "pick": "core",
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "2-leg",
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
 "legs": [
+{
+"gid": "401909315",
+"start": "2026-11-25T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "derrick white",
+"lab": "Derrick White over 4.5 rebounds",
+"p": 0.2963,
+"fair": 0.2962,
+"price": 250,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0369,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (3.5)"
+]
+},
 {
 "gid": "401909314",
 "start": "2026-11-25T00:00Z",
@@ -67,142 +132,23 @@
 "side": "o",
 "line": 4.5,
 "name": "desmond bane",
-"lab": "Desmond Bane 5+ reb",
+"lab": "Desmond Bane over 4.5 rebounds",
 "p": 0.39,
-"price": 175,
+"fair": 0.3907,
+"price": 165,
 "book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909316",
-"start": "2026-11-25T03:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "aaron gordon",
-"lab": "Aaron Gordon 3+ ast",
-"p": 0.3975,
-"price": 150,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"game"
+"sport": "nba",
+"edge": 0.0334,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (3.5)"
 ]
 }
 ],
-"p": 0.15501,
-"d": 6.875,
+"p": 0.11573,
+"d": 9.275,
 "first": "2026-11-25T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Confluence parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909314",
-"start": "2026-11-25T00:00Z",
-"kind": "reb",
-"side": "o",
-"line": 6.5,
-"name": "franz wagner",
-"lab": "Franz Wagner over 6.5 rebounds",
-"p": 0.5157,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.0371
-},
-{
-"gid": "401909315",
-"start": "2026-11-25T01:00Z",
-"kind": "reb",
-"side": "o",
-"line": 3.5,
-"name": "derrick white",
-"lab": "Derrick White over 3.5 rebounds",
-"p": 0.4577,
-"price": 125,
-"book": "Hard Rock",
-"f": [
-"usage"
-],
-"v": [
-"usage",
-"our model above fair",
-"consensus up",
-"pinnacle up"
-],
-"sport": "nba",
-"edge": 0.03
-}
-],
-"p": 0.23604,
-"d": 4.612,
-"first": "2026-11-25T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909315",
-"start": "2026-11-25T01:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "neemias queta",
-"lab": "Neemias Queta over 9.5 rebounds",
-"p": 0.4364,
-"price": 145,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0691,
-"fair": 0.4472,
-"main": false
-},
-{
-"gid": "401909316",
-"start": "2026-11-25T03:00:00+00:00",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "zaccharie risacher",
-"lab": "Zaccharie Risacher over 1.5 threes",
-"p": 0.3299,
-"price": 223,
-"book": "Novig",
-"sport": "nba",
-"edge": 0.0655,
-"fair": 0.3276,
-"main": false
-}
-],
-"p": 0.14397,
-"d": 7.914,
-"first": "2026-11-25T01:00:00+00:00",
 "res": null
 }
 ],
