@@ -2,7 +2,7 @@
 "sport": "slate",
 "date": "2026-11-25",
 "lock": "2026-11-26T00:00:00+00:00",
-"frozen_at": "2026-11-25T21:00:40.517255+00:00",
+"frozen_at": "2026-11-25T21:15:22.766570+00:00",
 "books": [
 "Hard Rock",
 "Novig",
@@ -66,25 +66,51 @@
 "tier": "straight",
 "legs": [
 {
-"gid": "401909322",
-"start": "2026-11-26T01:00:00+00:00",
-"kind": "ast",
+"gid": "401909324",
+"start": "2026-11-26T03:00:00+00:00",
+"kind": "reb",
 "side": "o",
-"line": 3.5,
-"name": "kyle kuzma",
-"lab": "Kyle Kuzma over 3.5 ast",
-"p": 0.3043,
-"price": 250,
+"line": 15.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis over 15.5 reb",
+"p": 0.268,
+"price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0652,
-"fair": 0.3031,
+"edge": 0.0721,
+"fair": 0.2945,
 "dry": null
 }
 ],
-"p": 0.3043,
-"d": 3.5,
-"first": "2026-11-26T01:00:00+00:00",
+"p": 0.268,
+"d": 4.0,
+"first": "2026-11-26T03:00:00+00:00",
+"res": null
+},
+{
+"card": "Plus-money slate \u00b7 straight",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026020390",
+"start": "2026-11-26T00:00:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "dylan holloway",
+"lab": "Dylan Holloway to score",
+"p": 0.28,
+"price": 277,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.0556,
+"fair": 0.2967,
+"dry": 2
+}
+],
+"p": 0.28,
+"d": 3.77,
+"first": "2026-11-26T00:00:00+00:00",
 "res": null
 },
 {
@@ -126,6 +152,48 @@
 ],
 "p": 0.10222,
 "d": 13.5,
+"first": "2026-11-26T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Plus-money slate \u00b7 parlay",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909324",
+"start": "2026-11-26T03:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 15.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis over 15.5 reb",
+"p": 0.268,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0721,
+"fair": 0.2945,
+"dry": null
+},
+{
+"gid": "2026020390",
+"start": "2026-11-26T00:00:00+00:00",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "dylan holloway",
+"lab": "Dylan Holloway to score",
+"p": 0.28,
+"price": 277,
+"book": "Novig",
+"sport": "nhl",
+"edge": 0.0556,
+"fair": 0.2967,
+"dry": 2
+}
+],
+"p": 0.07504,
+"d": 15.08,
 "first": "2026-11-26T00:00:00+00:00",
 "res": null
 }
