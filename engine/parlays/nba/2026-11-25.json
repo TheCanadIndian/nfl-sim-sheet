@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-25",
 "lock": "2026-11-25T22:00:00+00:00",
-"frozen_at": "2026-11-25T21:15:30.218Z",
+"frozen_at": "2026-11-25T21:31:32.581Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -17,17 +17,16 @@
 {
 "gid": "401909318",
 "start": "2026-11-26T00:00Z",
-"kind": "fg3m",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "jalen smith",
-"lab": "Jalen Smith 3+ threes",
-"p": 0.3227,
-"price": 229,
-"book": "Kalshi",
+"line": 9.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 10+ ast",
+"p": 0.4128,
+"price": 160,
+"book": "Novig",
 "f": [
 "usage",
-"matchup",
 "rotation",
 "game",
 "price"
@@ -52,8 +51,8 @@
 ]
 }
 ],
-"p": 0.10071,
-"d": 12.338,
+"p": 0.12885,
+"d": 9.75,
 "first": "2026-11-26T00:00:00+00:00",
 "pick": "core",
 "res": null
@@ -70,61 +69,14 @@
 "line": 2.5,
 "name": "jalen smith",
 "lab": "Jalen Smith 3+ threes",
-"p": 0.3227,
-"price": 229,
-"book": "Kalshi",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909319",
-"start": "2026-11-26T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "karlanthony towns",
-"lab": "Karl-Anthony Towns 3+ threes",
-"p": 0.3657,
-"price": 167,
+"p": 0.2869,
+"price": 245,
 "book": "Novig",
 "f": [
 "usage",
 "matchup",
 "rotation",
 "game"
-]
-}
-],
-"p": 0.11801,
-"d": 8.784,
-"first": "2026-11-26T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909318",
-"start": "2026-11-26T00:00Z",
-"kind": "ast",
-"side": "o",
-"line": 10.5,
-"name": "josh giddey",
-"lab": "Josh Giddey 11+ ast",
-"p": 0.3298,
-"price": 230,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
 ]
 },
 {
@@ -144,30 +96,12 @@
 "game",
 "price"
 ]
-},
-{
-"gid": "401909322",
-"start": "2026-11-26T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "michael porter",
-"lab": "Michael Porter Jr. 3+ ast",
-"p": 0.3738,
-"price": 153,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 }
 ],
-"p": 0.03848,
-"d": 31.309,
+"p": 0.08956,
+"d": 12.938,
 "first": "2026-11-26T00:00:00+00:00",
-"pick": "longshot",
+"pick": "core",
 "res": null
 },
 {
@@ -175,16 +109,34 @@
 "tier": "3-leg",
 "legs": [
 {
+"gid": "401909317",
+"start": "2026-11-25T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 3+ threes",
+"p": 0.2603,
+"price": 277,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
 "gid": "401909318",
 "start": "2026-11-26T00:00Z",
 "kind": "ast",
 "side": "o",
-"line": 10.5,
+"line": 9.5,
 "name": "josh giddey",
-"lab": "Josh Giddey 11+ ast",
-"p": 0.3298,
-"price": 230,
-"book": "Hard Rock",
+"lab": "Josh Giddey 10+ ast",
+"p": 0.4128,
+"price": 160,
+"book": "Novig",
 "f": [
 "usage",
 "rotation",
@@ -209,17 +161,27 @@
 "rotation",
 "game"
 ]
+}
+],
+"p": 0.03931,
+"d": 26.171,
+"first": "2026-11-25T22:00:00+00:00",
+"res": null
 },
 {
-"gid": "401909322",
-"start": "2026-11-26T01:00Z",
-"kind": "ast",
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909317",
+"start": "2026-11-25T22:00Z",
+"kind": "fg3m",
 "side": "o",
 "line": 2.5,
-"name": "michael porter",
-"lab": "Michael Porter Jr. 3+ ast",
-"p": 0.3738,
-"price": 153,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 3+ threes",
+"p": 0.2603,
+"price": 277,
 "book": "Novig",
 "f": [
 "usage",
@@ -227,11 +189,47 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401909318",
+"start": "2026-11-26T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "jalen smith",
+"lab": "Jalen Smith 3+ threes",
+"p": 0.2869,
+"price": 245,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandon ingram",
+"lab": "Brandon Ingram 6+ reb",
+"p": 0.3027,
+"price": 266,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
 }
 ],
-"p": 0.04508,
-"d": 22.292,
-"first": "2026-11-26T00:00:00+00:00",
+"p": 0.02261,
+"d": 47.604,
+"first": "2026-11-25T22:00:00+00:00",
+"pick": "longshot",
 "res": null
 },
 {
@@ -265,7 +263,7 @@
 "line": 13.5,
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis over 13.5 rebounds",
-"p": 0.4453,
+"p": 0.4447,
 "price": 145,
 "book": "Hard Rock",
 "f": [
@@ -273,10 +271,10 @@
 "rotation"
 ],
 "sport": "nba",
-"edge": 0.091
+"edge": 0.0896
 }
 ],
-"p": 0.23953,
+"p": 0.2392,
 "d": 5.268,
 "first": "2026-11-26T00:30:00+00:00",
 "res": null
@@ -320,7 +318,7 @@
 "game"
 ],
 "sport": "nba",
-"edge": 0.0562
+"edge": 0.0564
 }
 ],
 "p": 0.14993,
@@ -382,7 +380,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0029
+"edge": 0.0025
 },
 {
 "gid": "401909324",
@@ -406,36 +404,35 @@
 "lc"
 ],
 "sport": "nba",
-"edge": 0.091
+"edge": 0.0896
 },
 {
-"gid": "401909322",
-"start": "2026-11-26T01:00Z",
-"kind": "ast",
+"gid": "401909325",
+"start": "2026-11-26T03:00Z",
+"kind": "fg3m",
 "side": "o",
-"line": 2.5,
-"name": "kyle kuzma",
-"lab": "Kyle Kuzma over 2.5 assists",
-"p": 0.5127,
-"price": 100,
+"line": 1.5,
+"name": "sidy cissoko",
+"lab": "Sidy Cissoko over 1.5 threes",
+"p": 0.3301,
+"price": 220,
 "book": "Hard Rock",
 "f": [
-"usage",
-"matchup",
+"rotation",
 "game"
 ],
 "v": [
-"usage",
-"matchup",
+"rotation",
 "game",
+"our model above fair",
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0139
+"edge": 0.0564
 }
 ],
-"p": 0.05473,
-"d": 22.482,
+"p": 0.03524,
+"d": 35.971,
 "first": "2026-11-26T00:00:00+00:00",
 "res": null
 },
@@ -451,12 +448,12 @@
 "line": 3.5,
 "name": "tyrese maxey",
 "lab": "Tyrese Maxey over 3.5 threes",
-"p": 0.3399,
+"p": 0.34,
 "fair": 0.3464,
 "price": 186,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0279,
+"edge": -0.0276,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -518,16 +515,16 @@
 "line": 15.5,
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis over 15.5 rebounds",
-"p": 0.2798,
+"p": 0.2802,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1193,
+"edge": 0.1208,
 "fair": 0.2945,
 "main": false
 }
 ],
-"p": 0.10333,
+"p": 0.10348,
 "d": 13.2,
 "first": "2026-11-26T00:30:00+00:00",
 "res": null
@@ -560,11 +557,11 @@
 "line": 15.5,
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis over 15.5 rebounds",
-"p": 0.2798,
+"p": 0.2802,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1193,
+"edge": 0.1208,
 "fair": 0.2945,
 "main": false
 },
@@ -585,7 +582,7 @@
 "main": true
 }
 ],
-"p": 0.04045,
+"p": 0.04051,
 "d": 37.62,
 "first": "2026-11-26T00:30:00+00:00",
 "res": null
@@ -611,25 +608,25 @@
 "main": true
 },
 {
-"gid": "401909317",
-"start": "2026-11-25T22:00:00+00:00",
-"kind": "fg3m",
+"gid": "401909318",
+"start": "2026-11-26T00:00:00+00:00",
+"kind": "ast",
 "side": "o",
-"line": 2.5,
-"name": "anfernee simons",
-"lab": "Anfernee Simons over 2.5 threes",
-"p": 0.3618,
-"price": 200,
+"line": 5.5,
+"name": "coby white",
+"lab": "Coby White over 5.5 assists",
+"p": 0.2997,
+"price": 260,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0853,
-"fair": 0.3676,
+"edge": 0.0788,
+"fair": 0.3051,
 "main": false
 }
 ],
-"p": 0.14164,
-"d": 8.55,
-"first": "2026-11-25T22:00:00+00:00",
+"p": 0.11733,
+"d": 10.26,
+"first": "2026-11-26T00:00:00+00:00",
 "res": null
 }
 ],
