@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-25",
 "lock": "2026-11-26T01:00:00+00:00",
-"frozen_at": "2026-11-25T18:40:46.552Z",
+"frozen_at": "2026-11-25T18:55:11.464Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,40 @@
 ],
 "final_at": "2026-11-25T23:00:00+00:00",
 "parlays": [
+{
+"card": "Primetime ladders (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-25T20:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "tutu atwell",
+"lab": "Tutu Atwell 40+ rec yds",
+"p": 0.3,
+"price": 208,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-25T20:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 49.5,
+"name": "konata mumpfield",
+"lab": "Konata Mumpfield 50+ rec yds",
+"p": 0.315,
+"price": 198,
+"book": "Kalshi"
+}
+],
+"p": 0.09293,
+"d": 9.179,
+"first": "2026-11-26T01:00:00+00:00",
+"res": null
+},
 {
 "card": "Primetime ladders (experimental)",
 "tier": "2-leg",
@@ -68,47 +102,13 @@
 "line": 69.5,
 "name": "colston loveland",
 "lab": "Colston Loveland 70+ rec yds",
-"p": 0.31,
-"price": 198,
+"p": 0.305,
+"price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.09765,
-"d": 8.898,
-"first": "2026-11-26T01:00:00+00:00",
-"res": null
-},
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026_12_GB_LA",
-"start": "2026-11-25T20:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 49.5,
-"name": "konata mumpfield",
-"lab": "Konata Mumpfield 50+ rec yds",
-"p": 0.315,
-"price": 198,
-"book": "Kalshi"
-},
-{
-"gid": "2026_12_PHI_DAL",
-"start": "2026-11-26T16:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 99.5,
-"name": "george pickens",
-"lab": "George Pickens 100+ rec yds",
-"p": 0.265,
-"price": 252,
-"book": "Kalshi"
-}
-],
-"p": 0.08348,
-"d": 10.511,
+"p": 0.09607,
+"d": 9.179,
 "first": "2026-11-26T01:00:00+00:00",
 "res": null
 },
@@ -2847,6 +2847,48 @@
 ],
 "p": 0.0397,
 "d": null,
+"first": "2026-11-26T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-26T01:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "xavier smith",
+"lab": "Xavier Smith over 1.5 receptions",
+"p": 0.3695,
+"price": 190,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.0714,
+"fair": 0.3064,
+"main": false
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T20:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4057,
+"price": 160,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0549,
+"fair": 0.3677,
+"main": true
+}
+],
+"p": 0.14991,
+"d": 7.54,
 "first": "2026-11-26T01:00:00+00:00",
 "res": null
 }
