@@ -1138,13 +1138,14 @@ function muBetsView(){
   const B = muBets();
   const body = !B.length ? `<p class="note">${window.MKT && MKT.ladderAll ? 'No 15%+ K pick lines up with a best matchup right now. Picks move with Kalshi’s prices and lineups; this updates through the day.' : 'Loading Kalshi prices…'}</p>`
     : `<div class="tw"><table class="mut mubt"><thead><tr><th>Bet</th><th>Game</th><th>Kalshi</th><th>Hard Rock</th><th>Novig</th><th class="n">Edge</th><th>Matchup</th><th class="n">D chip</th></tr></thead><tbody>${B.map(r =>
-      `<tr><td><b>${esc(r.p.n)}</b> ${esc(muRung(r))}${r.mates.length ? ` <span class="mutag dis" title="Same team as ${esc(r.mates.join(', '))}: teammates’ overs pull slightly against each other, so take one, or keep them out of the same parlay">same team</span>` : ''}</td>
+      `<tr><td>${rungSlip(r.g, r.p, r.u).trim()} <b>${esc(r.p.n)}</b> ${esc(muRung(r))}${r.mates.length ? ` <span class="mutag dis" title="Same team as ${esc(r.mates.join(', '))}: teammates’ overs pull slightly against each other, so take one, or keep them out of the same parlay">same team</span>` : ''}</td>
         <td>${esc(r.p.t)} · ${esc(r.g.away)} @ ${esc(r.g.home)}<small class="muted"> ${esc(r.g.start || '')}</small></td>
         <td>${r.kal ? `<b>${esc(r.kal.price)}</b>` : '–'}</td><td>${r.hr ? (r.hr.u ? `<a href="${esc(r.hr.u)}" target="_blank" rel="noopener">${esc(r.hr.price)} ↗</a>` : esc(r.hr.price)) : '–'}</td>
         <td>${r.nv ? esc(r.nv.price) : '–'}${r.nvok ? ` <span class="mutag mul2" title="Novig ${Math.round(r.nve * 100)}% under the other books’ fair at this number (2+ sources, 30% ours): the tracked Novig check, a lead">NV +${Math.round(r.nve * 100)}%</span>` : ''}</td>
         <td class="n"><b>+${Math.round(r.ke * 100)}%</b></td><td class="c ${muCls(r.c[1])}">${MUL[r.c[1]]} <span class="mup">${muPct(r.c[0])}</span></td><td class="n">${r.c[3] != null ? muChip(r.c[3]) : '–'}</td></tr>`).join('')}</tbody></table></div>`;
-  return `<section class="panel"><div class="phead"><h2>Best bets <span class="exp3">experimental</span></h2><span class="small muted">${B.length} pick${B.length === 1 ? '' : 's'} · overs</span></div>
-    <p class="note" style="margin:0 0 8px">A matchup alone isn’t an edge (the market already prices it), so this list starts from the one ladder rule that is ahead since the Nov 11 model fixes, the <b>15%+ K pick</b> (Ladders tab: our chance 15-40% over Kalshi’s ask + fee, one rung per stat; graded on the Profit page as ‘NBA study pick’, not proven), and keeps the picks whose stat is his team’s <b>best matchup</b> on the sheet (light green or better) with a <b>D rating above −1.0</b>. Edge = our chance vs Kalshi with the fee. Longshot rungs: most lose on any one night. Prices and picks move until lineups are confirmed (about 30 minutes before tip), so check again then.</p>
+  const all = window.SLIP && B.length > 1 ? ' ' + SLIP.allBtn(B.map(r => slipLeg(r.g, r.p, r.u)), `+ Add all ${B.length} to my parlay`) : '';
+  return `<section class="panel"><div class="phead"><h2>Best bets <span class="exp3">experimental</span></h2><span class="small muted">${B.length} pick${B.length === 1 ? '' : 's'} · overs${all}</span></div>
+    <p class="note" style="margin:0 0 8px">A matchup alone isn’t an edge (the market already prices it), so this list starts from the one ladder rule that is ahead since the Nov 11 model fixes, the <b>15%+ K pick</b> (Ladders tab: our chance 15-40% over Kalshi’s ask + fee, one rung per stat; graded on the Profit page as ‘NBA study pick’, not proven), and keeps the picks whose stat is his team’s <b>best matchup</b> on the sheet (light green or better) with a <b>D rating above −1.0</b>. Edge = our chance vs Kalshi with the fee. Longshot rungs: most lose on any one night. Prices and picks move until lineups are confirmed (about 30 minutes before tip), so check again then. <b>+</b> adds a pick to My parlay (chance = the Ladders tab’s market-anchored one; legs from one game are judged together in the saved sims; with 3+ legs the slip can also build a round robin).</p>
     ${body}</section>`;
 }
 // PDF export: jsPDF + autoTable, loaded only when the button is tapped (pinned versions); if they can't load, the print dialog opens
@@ -1254,14 +1255,14 @@ function laddersView(){ return `<div class="pstack">${ladderCard() + threesBoard
 // switch to a different leg'): the leg is the rung shown (a dropdown switch re-renders the chip with its own +); another rung of
 // the same player-stat replaces it in the slip. Prices: every book at that number (Kalshi with its fee) for 'Each book pays'
 const amK = c => Math.round(c >= .5 ? -100 * c / (1 - c) : 100 * (1 - c) / c);
-function rungSlip(g, p, u, prob){
-  if (!window.SLIP || !u) return '';
+function slipLeg(g, p, u, prob){
   const px = {};
   for (const o of u.opts || []) px[o.b] = o.b === 'Kalshi' ? amK(u.cost) : Number(String(o.price).replace('+', ''));
   const b = (u.best && u.best.b) || 'Kalshi';
-  return ' ' + SLIP.btn({id: `nba|${g.id}|${p.k}|${u.k}|over|${u.l}|vegas`, sport: 'nba', g: g.id, glab: `${g.away} @ ${g.home}`, lab: `${p.n} ${Math.round(u.l + .5)}+ ${SLIP_LAB[u.k] || u.k}`,
-    p: prob != null ? prob : u.p, side: 'over', stat: u.k, line: u.l, pk: p.k, model: 'vegas', draws: `nba/draws/${g.id}.json`, book: b, o: px[b], px});
+  return {id: `nba|${g.id}|${p.k}|${u.k}|over|${u.l}|vegas`, sport: 'nba', g: g.id, glab: `${g.away} @ ${g.home}`, lab: `${p.n} ${Math.round(u.l + .5)}+ ${SLIP_LAB[u.k] || u.k}`,
+    p: prob != null ? prob : u.p, side: 'over', stat: u.k, line: u.l, pk: p.k, model: 'vegas', draws: `nba/draws/${g.id}.json`, book: b, o: px[b], px};
 }
+function rungSlip(g, p, u, prob){ return window.SLIP && u ? ' ' + SLIP.btn(slipLeg(g, p, u, prob)) : ''; }
 function render(){
   for (const b of document.querySelectorAll('.tabs button')) b.setAttribute('aria-selected', b.dataset.view === state.view);
   const main = document.getElementById('main');
