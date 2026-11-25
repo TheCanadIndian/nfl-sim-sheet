@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-25",
 "lock": "2026-11-25T22:00:00+00:00",
-"frozen_at": "2026-11-25T16:04:14.937Z",
+"frozen_at": "2026-11-25T16:37:12.055Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -125,15 +125,15 @@
 ]
 },
 {
-"gid": "401909320",
+"gid": "401909319",
 "start": "2026-11-26T00:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "jared mccain",
-"lab": "Jared McCain 5+ reb",
-"p": 0.3456,
-"price": 195,
+"line": 5.5,
+"name": "josh hart",
+"lab": "Josh Hart 6+ ast",
+"p": 0.3124,
+"price": 230,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -159,8 +159,8 @@
 ]
 }
 ],
-"p": 0.03957,
-"d": 26.55,
+"p": 0.03577,
+"d": 29.7,
 "first": "2026-11-26T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -188,15 +188,15 @@
 ]
 },
 {
-"gid": "401909320",
+"gid": "401909319",
 "start": "2026-11-26T00:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "jared mccain",
-"lab": "Jared McCain 5+ reb",
-"p": 0.3456,
-"price": 195,
+"line": 5.5,
+"name": "josh hart",
+"lab": "Josh Hart 6+ ast",
+"p": 0.3124,
+"price": 230,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -222,14 +222,148 @@
 ]
 }
 ],
-"p": 0.04647,
-"d": 22.567,
+"p": 0.04201,
+"d": 25.245,
+"first": "2026-11-26T00:00:00+00:00",
+"pick": "longshot",
+"res": null
+},
+{
+"card": "Learning parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909317",
+"start": "2026-11-25T22:00Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe over 3.5 assists",
+"p": 0.5751,
+"price": -115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"game"
+],
+"sport": "nba",
+"edge": 0.0751
+},
+{
+"gid": "401909319",
+"start": "2026-11-26T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "josh hart",
+"lab": "Josh Hart over 4.5 assists",
+"p": 0.4906,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"sport": "nba",
+"edge": 0.0548
+}
+],
+"p": 0.28214,
+"d": 4.02,
+"first": "2026-11-25T22:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909318",
+"start": "2026-11-26T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "brandon miller",
+"lab": "Brandon Miller over 4.5 rebounds",
+"p": 0.5289,
+"price": -110,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0036
+},
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "cam spencer",
+"lab": "Cam Spencer over 1.5 threes",
+"p": 0.4799,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0413
+},
+{
+"gid": "401909320",
+"start": "2026-11-26T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball over 4.5 rebounds",
+"p": 0.4729,
+"price": 113,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0113
+}
+],
+"p": 0.12003,
+"d": 8.743,
 "first": "2026-11-26T00:00:00+00:00",
 "res": null
 },
 {
 "card": "Confluence parlays (experimental)",
-"tier": "2 legs",
+"tier": "5-leg longshot",
 "legs": [
 {
 "gid": "401909317",
@@ -258,6 +392,32 @@
 "edge": 0.0751
 },
 {
+"gid": "401909319",
+"start": "2026-11-26T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "mikal bridges",
+"lab": "Mikal Bridges over 2.5 assists",
+"p": 0.4715,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.0192
+},
+{
 "gid": "401909318",
 "start": "2026-11-26T00:00Z",
 "kind": "reb",
@@ -281,10 +441,60 @@
 ],
 "sport": "nba",
 "edge": 0.0036
+},
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "cam spencer",
+"lab": "Cam Spencer over 1.5 threes",
+"p": 0.4799,
+"price": 115,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0413
+},
+{
+"gid": "401909320",
+"start": "2026-11-26T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball over 4.5 rebounds",
+"p": 0.4729,
+"price": 113,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0113
 }
 ],
-"p": 0.30634,
-"d": 3.569,
+"p": 0.03278,
+"d": 35.142,
 "first": "2026-11-25T22:00:00+00:00",
 "res": null
 },
@@ -383,27 +593,27 @@
 ]
 },
 {
-"gid": "401909321",
-"start": "2026-11-26T01:00Z",
+"gid": "401909320",
+"start": "2026-11-26T00:30Z",
 "kind": "reb",
 "side": "o",
-"line": 8.5,
-"name": "zach edey",
-"lab": "Zach Edey over 8.5 rebounds",
-"p": 0.424,
-"fair": 0.4202,
-"price": 145,
+"line": 6.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 6.5 rebounds",
+"p": 0.3843,
+"fair": 0.3898,
+"price": 150,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0388,
+"edge": -0.0392,
 "v": [
-"consensus odds drop",
-"one rung above the main line (7.5)"
+"Pinnacle odds drop",
+"one rung above the main line (5.5)"
 ]
 }
 ],
-"p": 0.04969,
-"d": 21.425,
+"p": 0.0461,
+"d": 21.862,
 "first": "2026-11-25T22:00:00+00:00",
 "res": null
 },
@@ -412,6 +622,25 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401909320",
+"start": "2026-11-26T00:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "jaden mcdaniels",
+"lab": "Jaden McDaniels over 6.5 rebounds",
+"p": 0.3843,
+"fair": 0.3898,
+"price": 150,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": -0.0392,
+"v": [
+"Pinnacle odds drop",
+"one rung above the main line (5.5)"
+]
+},
+{
 "gid": "401909321",
 "start": "2026-11-26T01:00Z",
 "kind": "reb",
@@ -429,30 +658,53 @@
 "consensus odds drop",
 "one rung above the main line (7.5)"
 ]
-},
-{
-"gid": "401909323",
-"start": "2026-11-26T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "amen thompson",
-"lab": "Amen Thompson over 4.5 assists",
-"p": 0.271,
-"fair": 0.2685,
-"price": 275,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0164,
-"v": [
-"consensus line up",
-"one rung above the main line (3.5)"
-]
 }
 ],
-"p": 0.11282,
-"d": 9.188,
-"first": "2026-11-26T01:00:00+00:00",
+"p": 0.16379,
+"d": 6.125,
+"first": "2026-11-26T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "zach edey",
+"lab": "Zach Edey over 9.5 rebounds",
+"p": 0.3274,
+"price": 230,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0804,
+"fair": 0.3209,
+"main": false
+},
+{
+"gid": "401909320",
+"start": "2026-11-26T00:30:00+00:00",
+"kind": "reb",
+"side": "o",
+"line": 3.5,
+"name": "alex caruso",
+"lab": "Alex Caruso over 3.5 rebounds",
+"p": 0.3689,
+"price": 185,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0514,
+"fair": 0.3711,
+"main": false
+}
+],
+"p": 0.12078,
+"d": 9.405,
+"first": "2026-11-26T00:30:00+00:00",
 "res": null
 }
 ],
