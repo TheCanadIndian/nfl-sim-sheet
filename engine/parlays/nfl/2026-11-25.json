@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-25",
 "lock": "2026-11-26T01:00:00+00:00",
-"frozen_at": "2026-11-25T12:56:49.597Z",
+"frozen_at": "2026-11-25T13:20:27.477Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,40 @@
 ],
 "final_at": "2026-11-25T23:00:00+00:00",
 "parlays": [
+{
+"card": "Primetime ladders (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-25T20:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 29.5,
+"name": "kyren williams",
+"lab": "Kyren Williams 30+ rec yds",
+"p": 0.345,
+"price": 173,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-25T20:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "tutu atwell",
+"lab": "Tutu Atwell 40+ rec yds",
+"p": 0.3,
+"price": 208,
+"book": "Kalshi"
+}
+],
+"p": 0.099,
+"d": 8.409,
+"first": "2026-11-26T01:00:00+00:00",
+"res": null
+},
 {
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
@@ -22,7 +56,7 @@
 "line": 69.5,
 "name": "colston loveland",
 "lab": "Colston Loveland 70+ rec yds",
-"p": 0.32,
+"p": 0.315,
 "price": 189,
 "book": "Kalshi"
 },
@@ -34,47 +68,47 @@
 "line": 39.5,
 "name": "tutu atwell",
 "lab": "Tutu Atwell 40+ rec yds",
-"p": 0.295,
+"p": 0.3,
 "price": 208,
 "book": "Kalshi"
 }
 ],
-"p": 0.0944,
+"p": 0.0945,
 "d": 8.907,
 "first": "2026-11-26T01:00:00+00:00",
 "res": null
 },
 {
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
 "legs": [
 {
 "gid": "2026_12_GB_LA",
 "start": "2026-11-25T20:00:00",
 "kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "tutu atwell",
-"lab": "Tutu Atwell 40+ rec yds",
-"p": 0.295,
-"price": 208,
-"book": "Kalshi"
+"side": "u",
+"line": 37.5,
+"name": "tucker kraft",
+"lab": "Tucker Kraft under 37.5 rec yds",
+"p": 0.5261,
+"price": 108,
+"book": "Novig"
 },
 {
-"gid": "2026_12_PHI_DAL",
-"start": "2026-11-26T16:30:00",
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 99.5,
-"name": "george pickens",
-"lab": "George Pickens 100+ rec yds",
-"p": 0.255,
-"price": 266,
-"book": "Kalshi"
+"line": 5.5,
+"name": "troy franklin",
+"lab": "Troy Franklin over 5.5 rec yds",
+"p": 0.5074,
+"price": 108,
+"book": "Novig"
 }
 ],
-"p": 0.07523,
-"d": 11.252,
+"p": 0.26696,
+"d": 4.326,
 "first": "2026-11-26T01:00:00+00:00",
 "res": null
 },
@@ -2719,6 +2753,48 @@
 ],
 "p": 0.0388,
 "d": null,
+"first": "2026-11-26T01:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T20:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "germie bernard",
+"lab": "Germie Bernard over 3.5 receptions",
+"p": 0.4179,
+"price": 156,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0698,
+"fair": 0.3931,
+"main": false
+},
+{
+"gid": "2026_12_GB_LA",
+"start": "2026-11-26T01:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "tutu atwell",
+"lab": "Tutu Atwell over 2.5 receptions",
+"p": 0.3833,
+"price": 175,
+"book": "Hard Rock",
+"sport": "nfl",
+"edge": 0.054,
+"fair": 0.3527,
+"main": false
+}
+],
+"p": 0.16018,
+"d": 7.04,
 "first": "2026-11-26T01:00:00+00:00",
 "res": null
 }
