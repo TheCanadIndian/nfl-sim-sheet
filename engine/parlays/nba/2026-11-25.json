@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-25",
 "lock": "2026-11-25T22:00:00+00:00",
-"frozen_at": "2026-11-25T18:55:14.040Z",
+"frozen_at": "2026-11-25T19:12:53.773Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -217,7 +217,7 @@
 "line": 5.5,
 "name": "brandon ingram",
 "lab": "Brandon Ingram 6+ reb",
-"p": 0.3045,
+"p": 0.3021,
 "price": 252,
 "book": "Kalshi",
 "f": [
@@ -227,7 +227,7 @@
 ]
 }
 ],
-"p": 0.0492,
+"p": 0.0488,
 "d": 22.572,
 "first": "2026-11-26T00:00:00+00:00",
 "pick": "longshot",
@@ -286,6 +286,31 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401909324",
+"start": "2026-11-26T03:00Z",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis over 13.5 rebounds",
+"p": 0.454,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0913
+},
+{
 "gid": "401909317",
 "start": "2026-11-25T22:00Z",
 "kind": "ast",
@@ -309,7 +334,17 @@
 ],
 "sport": "nba",
 "edge": 0.0658
+}
+],
+"p": 0.21084,
+"d": 5.758,
+"first": "2026-11-25T22:00:00+00:00",
+"res": null
 },
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
 {
 "gid": "401909318",
 "start": "2026-11-26T00:00Z",
@@ -335,17 +370,7 @@
 ],
 "sport": "nba",
 "edge": 0.0297
-}
-],
-"p": 0.20434,
-"d": 5.523,
-"first": "2026-11-25T22:00:00+00:00",
-"res": null
 },
-{
-"card": "Confluence parlays (experimental)",
-"tier": "3 legs",
-"legs": [
 {
 "gid": "401909319",
 "start": "2026-11-26T00:30Z",
@@ -380,7 +405,7 @@
 "line": 2.5,
 "name": "kyle kuzma",
 "lab": "Kyle Kuzma over 2.5 assists",
-"p": 0.5266,
+"p": 0.5213,
 "price": 100,
 "book": "Hard Rock",
 "f": [
@@ -395,37 +420,12 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0401
-},
-{
-"gid": "401909321",
-"start": "2026-11-26T01:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "cam spencer",
-"lab": "Cam Spencer over 1.5 threes",
-"p": 0.4467,
-"price": 122,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
-],
-"v": [
-"usage",
-"matchup",
-"rotation",
-"our model above fair"
-],
-"sport": "nba",
-"edge": 0.0057
+"edge": 0.03
 }
 ],
-"p": 0.12154,
-"d": 8.669,
-"first": "2026-11-26T00:30:00+00:00",
+"p": 0.11852,
+"d": 9.176,
+"first": "2026-11-26T00:00:00+00:00",
 "res": null
 },
 {
@@ -433,6 +433,31 @@
 "tier": "4-leg longshot",
 "legs": [
 {
+"gid": "401909324",
+"start": "2026-11-26T03:00Z",
+"kind": "reb",
+"side": "o",
+"line": 13.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis over 13.5 rebounds",
+"p": 0.454,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation"
+],
+"v": [
+"usage",
+"rotation",
+"consensus up",
+"lc",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0913
+},
+{
 "gid": "401909317",
 "start": "2026-11-25T22:00Z",
 "kind": "ast",
@@ -508,35 +533,10 @@
 ],
 "sport": "nba",
 "edge": 0.0057
-},
-{
-"gid": "401909322",
-"start": "2026-11-26T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "kyle kuzma",
-"lab": "Kyle Kuzma over 2.5 assists",
-"p": 0.5266,
-"price": 100,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"game"
-],
-"v": [
-"usage",
-"matchup",
-"game",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0401
 }
 ],
-"p": 0.0556,
-"d": 21.564,
+"p": 0.04793,
+"d": 26.416,
 "first": "2026-11-25T22:00:00+00:00",
 "res": null
 },
@@ -544,6 +544,27 @@
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
 "legs": [
+{
+"gid": "401909324",
+"start": "2026-11-26T03:00Z",
+"kind": "reb",
+"side": "o",
+"line": 14.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis over 14.5 rebounds",
+"p": 0.3564,
+"fair": 0.364,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1049,
+"v": [
+"Pinnacle odds drop",
+"consensus line up",
+"one rung above the main line (13.5)",
+"LC"
+]
+},
 {
 "gid": "401909318",
 "start": "2026-11-26T00:00Z",
@@ -563,32 +584,11 @@
 "consensus line up",
 "one rung above the main line (4.5)"
 ]
-},
-{
-"gid": "401909317",
-"start": "2026-11-25T22:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 3.5,
-"name": "tyrese maxey",
-"lab": "Tyrese Maxey over 3.5 threes",
-"p": 0.3307,
-"fair": 0.3382,
-"price": 210,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0252,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (2.5)",
-"soft matchup"
-]
 }
 ],
-"p": 0.09882,
+"p": 0.10636,
 "d": 11.16,
-"first": "2026-11-25T22:00:00+00:00",
+"first": "2026-11-26T00:00:00+00:00",
 "res": null
 },
 {
@@ -596,6 +596,27 @@
 "tier": "3 legs",
 "legs": [
 {
+"gid": "401909324",
+"start": "2026-11-26T03:00Z",
+"kind": "reb",
+"side": "o",
+"line": 14.5,
+"name": "domantas sabonis",
+"lab": "Domantas Sabonis over 14.5 rebounds",
+"p": 0.3564,
+"fair": 0.364,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1049,
+"v": [
+"Pinnacle odds drop",
+"consensus line up",
+"one rung above the main line (13.5)",
+"LC"
+]
+},
+{
 "gid": "401909318",
 "start": "2026-11-26T00:00Z",
 "kind": "ast",
@@ -635,31 +656,10 @@
 "one rung above the main line (2.5)",
 "soft matchup"
 ]
-},
-{
-"gid": "401909322",
-"start": "2026-11-26T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "julius randle",
-"lab": "Julius Randle over 5.5 assists",
-"p": 0.3704,
-"fair": 0.3726,
-"price": 163,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0258,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (4.5)",
-"soft matchup"
-]
 }
 ],
-"p": 0.03682,
-"d": 29.351,
+"p": 0.03597,
+"d": 34.596,
 "first": "2026-11-25T22:00:00+00:00",
 "res": null
 },
@@ -668,6 +668,27 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "401909317",
+"start": "2026-11-25T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "tyrese maxey",
+"lab": "Tyrese Maxey over 3.5 threes",
+"p": 0.3307,
+"fair": 0.3382,
+"price": 210,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0252,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (2.5)",
+"soft matchup"
+]
+},
+{
 "gid": "401909322",
 "start": "2026-11-26T01:00Z",
 "kind": "ast",
@@ -675,85 +696,23 @@
 "line": 5.5,
 "name": "julius randle",
 "lab": "Julius Randle over 5.5 assists",
-"p": 0.3704,
-"fair": 0.3726,
-"price": 163,
-"book": "Novig",
+"p": 0.3791,
+"fair": 0.3817,
+"price": 160,
+"book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0258,
+"edge": -0.0144,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
 "one rung above the main line (4.5)",
 "soft matchup"
 ]
-},
-{
-"gid": "401909319",
-"start": "2026-11-26T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "mikal bridges",
-"lab": "Mikal Bridges over 2.5 threes",
-"p": 0.2555,
-"fair": 0.2562,
-"price": 277,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0367,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (1.5)"
-]
 }
 ],
-"p": 0.09546,
-"d": 9.915,
-"first": "2026-11-26T00:30:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909320",
-"start": "2026-11-26T00:30:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 3.5,
-"name": "alex caruso",
-"lab": "Alex Caruso over 3.5 rebounds",
-"p": 0.3709,
-"price": 185,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0571,
-"fair": 0.3738,
-"main": false
-},
-{
-"gid": "401909322",
-"start": "2026-11-26T01:00:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "kyle kuzma",
-"lab": "Kyle Kuzma over 3.5 assists",
-"p": 0.3014,
-"price": 250,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0548,
-"fair": 0.3108,
-"main": false
-}
-],
-"p": 0.11179,
-"d": 9.975,
-"first": "2026-11-26T00:30:00+00:00",
+"p": 0.12909,
+"d": 8.06,
+"first": "2026-11-25T22:00:00+00:00",
 "res": null
 }
 ],
