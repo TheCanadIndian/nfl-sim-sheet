@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-26",
 "lock": "2026-11-26T18:00:00+00:00",
-"frozen_at": "2026-11-25T23:30:38.830Z",
+"frozen_at": "2026-11-25T23:47:29.647Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -42,6 +42,164 @@
 "p": 0.08388,
 "d": 9.778,
 "first": "2026-11-26T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_12_SEA_SF",
+"start": "2026-11-29T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 6.5,
+"name": "jordan watkins",
+"lab": "Jordan Watkins over 6.5 rec yds",
+"p": 0.6368,
+"price": -115,
+"book": "Hard Rock"
+},
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-26T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 19.5 rec yds",
+"p": 0.5852,
+"price": -115,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_BAL_HOU",
+"start": "2026-11-29T13:00:00",
+"kind": "spread",
+"side": "away",
+"line": 6.5,
+"name": null,
+"lab": "BAL +6.5",
+"p": 0.4989,
+"price": 111,
+"book": "Novig"
+}
+],
+"p": 0.18588,
+"d": 7.375,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_12_SEA_SF",
+"start": "2026-11-29T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 6.5,
+"name": "jordan watkins",
+"lab": "Jordan Watkins over 6.5 rec yds",
+"p": 0.6368,
+"price": -115,
+"book": "Hard Rock"
+},
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-26T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 19.5 rec yds",
+"p": 0.5852,
+"price": -115,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "roman wilson",
+"lab": "Roman Wilson over 1.5 receptions",
+"p": 0.4852,
+"price": 117,
+"book": "Novig"
+}
+],
+"p": 0.1808,
+"d": 7.585,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_12_CHI_DET",
+"start": "2026-11-26T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 7.5,
+"name": "sam roush",
+"lab": "Sam Roush under 7.5 rec yds",
+"p": 0.545,
+"price": -106,
+"book": "Novig"
+},
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 17.5,
+"name": "anthony gould",
+"lab": "Anthony Gould under 17.5 rec yds",
+"p": 0.53,
+"price": 111,
+"book": "Novig"
+}
+],
+"p": 0.28885,
+"d": 4.101,
+"first": "2026-11-26T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 17.5,
+"name": "anthony gould",
+"lab": "Anthony Gould under 17.5 rec yds",
+"p": 0.53,
+"price": 111,
+"book": "Novig"
+},
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-26T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 2.5 receptions",
+"p": 0.4438,
+"price": 144,
+"book": "Novig"
+}
+],
+"p": 0.23523,
+"d": 5.148,
+"first": "2026-11-27T01:20:00+00:00"
 },
 {
 "card": "Same-game parlays",
@@ -6861,6 +7019,58 @@
 "p": 0.0206,
 "d": 58.824,
 "first": "2026-11-26T21:30:00+00:00"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_PHI_DAL",
+"start": "2026-11-26T21:30:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "zach ertz",
+"lab": "Zach Ertz over 0.5 receptions",
+"p": 0.573,
+"price": -117,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0627,
+"fair": 0.4968,
+"main": true
+}
+],
+"p": 0.573,
+"d": 1.855,
+"first": "2026-11-26T21:30:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-27T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 2.5 receptions",
+"p": 0.4408,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0756,
+"fair": 0.402,
+"main": true
+}
+],
+"p": 0.4408,
+"d": 2.44,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "straight"
 }
 ],
 "graded": false
