@@ -27,3 +27,4 @@
 - **2026-11-24:** Tuesday 11:30 run: every game starts 7 PM or later, so no bets. Tuesday and Monday slates belong to the evening run.
 - **2026-11-24 evening:** skipped Tuesday again. A one-game NHL card plus NBA legs at ours = fair leaves no cross-game pair with ours above fair. Single-game sports can't be paired with themselves (one leg per game), so thin slates mean no bet.
 - **2026-11-25:** Wednesday 11:30 run: only one game before 6 PM ET, so no parlay is possible. Note: `engine/paper.py slate nhl` crashes on a string Value-tag entry (`_signals`); NBA and NFL slates work.
+- **2026-11-25 evening:** bet one small 2-leg (NHL SOG, Novig main lines, ours > fair). Everything else on a 26-game slate was alts, stale off-market, or priced under 25%. SOG legs are 1 of 6 so far: if this loses, stop SOG until it beats its price.

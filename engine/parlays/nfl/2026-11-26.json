@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-26",
 "lock": "2026-11-26T18:00:00+00:00",
-"frozen_at": "2026-11-25T22:31:31.006Z",
+"frozen_at": "2026-11-25T22:46:03.997Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -27,20 +27,154 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_12_PHI_DAL",
-"start": "2026-11-26T16:30:00",
+"gid": "2026_12_NO_CIN",
+"start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 99.5,
-"name": "george pickens",
-"lab": "George Pickens 100+ rec yds",
-"p": 0.265,
-"price": 252,
+"line": 39.5,
+"name": "chase brown",
+"lab": "Chase Brown 40+ rec yds",
+"p": 0.275,
+"price": 218,
 "book": "Kalshi"
 }
 ],
-"p": 0.08083,
-"d": 10.843,
+"p": 0.08388,
+"d": 9.778,
+"first": "2026-11-26T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_12_NE_LAC",
+"start": "2026-11-29T16:05:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "LAC moneyline",
+"p": 0.5187,
+"price": 113,
+"book": "Novig"
+},
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-26T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 19.5 rec yds",
+"p": 0.5852,
+"price": -115,
+"book": "Kalshi"
+}
+],
+"p": 0.30355,
+"d": 3.982,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-26T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 19.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 19.5 rec yds",
+"p": 0.5852,
+"price": -115,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "roman wilson",
+"lab": "Roman Wilson over 1.5 receptions",
+"p": 0.4847,
+"price": 117,
+"book": "Novig"
+}
+],
+"p": 0.28362,
+"d": 4.057,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_12_CHI_DET",
+"start": "2026-11-26T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 7.5,
+"name": "sam roush",
+"lab": "Sam Roush under 7.5 rec yds",
+"p": 0.545,
+"price": -106,
+"book": "Novig"
+},
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 17.5,
+"name": "anthony gould",
+"lab": "Anthony Gould under 17.5 rec yds",
+"p": 0.53,
+"price": 111,
+"book": "Novig"
+}
+],
+"p": 0.28885,
+"d": 4.101,
+"first": "2026-11-26T18:00:00+00:00"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_12_CHI_DET",
+"start": "2026-11-26T13:00:00",
+"kind": "rec_yds",
+"side": "u",
+"line": 7.5,
+"name": "sam roush",
+"lab": "Sam Roush under 7.5 rec yds",
+"p": 0.545,
+"price": -106,
+"book": "Novig"
+},
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "gunnar helm",
+"lab": "Gunnar Helm under 2.5 receptions",
+"p": 0.4794,
+"price": 120,
+"book": "Novig"
+}
+],
+"p": 0.26129,
+"d": 4.275,
 "first": "2026-11-26T18:00:00+00:00"
 },
 {
@@ -5898,6 +6032,99 @@
 "p": 0.0135,
 "d": 112.36,
 "first": "2026-11-26T21:30:00+00:00"
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-27T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 2.5 receptions",
+"p": 0.4405,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0749,
+"fair": 0.402,
+"main": true
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T20:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4061,
+"price": 160,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0558,
+"fair": 0.3667,
+"main": true
+}
+],
+"p": 0.17889,
+"d": 6.344,
+"first": "2026-11-27T01:20:00+00:00"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_PHI_DAL",
+"start": "2026-11-26T21:30:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 0.5,
+"name": "zach ertz",
+"lab": "Zach Ertz over 0.5 receptions",
+"p": 0.5729,
+"price": -115,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.071,
+"fair": 0.4964,
+"main": true
+}
+],
+"p": 0.5729,
+"d": 1.87,
+"first": "2026-11-26T21:30:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-27T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 2.5 receptions",
+"p": 0.4405,
+"price": 144,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0749,
+"fair": 0.402,
+"main": true
+}
+],
+"p": 0.4405,
+"d": 2.44,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "straight"
 }
 ],
 "graded": false
