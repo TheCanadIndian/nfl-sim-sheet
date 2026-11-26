@@ -1,7 +1,7 @@
 {
-"updated": "2026-11-26T21:28:41+00:00",
-"rows": 1416,
-"live_rows": 1110,
+"updated": "2026-11-26T21:37:27+00:00",
+"rows": 1418,
+"live_rows": 1112,
 "segments": [
 {
 "seg": "NHL",
@@ -113,11 +113,20 @@
 },
 {
 "seg": "NFL",
-"n": 182,
-"ret": 0.01,
-"h1": 0.0879,
-"h2": -0.0663,
-"z": 0.09,
+"n": 184,
+"ret": -0.001,
+"h1": 0.1393,
+"h2": -0.1413,
+"z": -0.01,
+"status": "Watching"
+},
+{
+"seg": "NFL \u00b7 Novig",
+"n": 157,
+"ret": 0.0212,
+"h1": 0.1176,
+"h2": -0.0765,
+"z": 0.16,
 "status": "Watching"
 },
 {
@@ -130,21 +139,21 @@
 "status": "Watching"
 },
 {
-"seg": "NFL \u00b7 Novig",
-"n": 155,
-"ret": 0.0344,
-"h1": 0.057,
-"h2": 0.012,
-"z": 0.26,
-"status": "Watching"
-},
-{
 "seg": "NFL \u00b7 usage",
 "n": 98,
 "ret": -0.1147,
 "h1": 0.0166,
 "h2": -0.3311,
 "z": -0.84,
+"status": "Watching"
+},
+{
+"seg": "NFL \u00b7 no path",
+"n": 90,
+"ret": -0.0478,
+"h1": 0.0196,
+"h2": -0.1359,
+"z": -0.26,
 "status": "Watching"
 },
 {
@@ -157,15 +166,6 @@
 "status": "Watching"
 },
 {
-"seg": "NFL \u00b7 no path",
-"n": 89,
-"ret": -0.0371,
-"h1": 0.0196,
-"h2": -0.1131,
-"z": -0.2,
-"status": "Watching"
-},
-{
 "seg": "NHL \u00b7 fits a path",
 "n": 88,
 "ret": 0.0019,
@@ -175,21 +175,21 @@
 "status": "Watching"
 },
 {
+"seg": "NFL \u00b7 anytime TD",
+"n": 77,
+"ret": -0.0832,
+"h1": -0.16,
+"h2": 0.0042,
+"z": -0.38,
+"status": "Watching"
+},
+{
 "seg": "NBA",
 "n": 76,
 "ret": 0.0726,
 "h1": -0.2493,
 "h2": 0.2499,
 "z": 0.44,
-"status": "Watching"
-},
-{
-"seg": "NFL \u00b7 anytime TD",
-"n": 75,
-"ret": -0.0588,
-"h1": -0.16,
-"h2": 0.0632,
-"z": -0.26,
 "status": "Watching"
 },
 {
@@ -212,20 +212,20 @@
 },
 {
 "seg": "NFL \u00b7 fits a path",
-"n": 70,
-"ret": -0.1078,
-"h1": -0.0449,
+"n": 71,
+"ret": -0.1203,
+"h1": -0.0644,
 "h2": -0.2448,
-"z": -0.71,
+"z": -0.8,
 "status": "Watching"
 },
 {
 "seg": "NFL \u00b7 1 reason",
-"n": 66,
-"ret": -0.1205,
+"n": 67,
+"ret": -0.1336,
 "h1": -0.113,
-"h2": -0.1299,
-"z": -0.61,
+"h2": -0.1589,
+"z": -0.69,
 "status": "Watching"
 },
 {
@@ -239,11 +239,11 @@
 },
 {
 "seg": "NFL \u00b7 anytime TD \u00b7 edge 5-10%",
-"n": 58,
-"ret": 0.0033,
-"h1": -0.09,
-"h2": 0.1032,
-"z": 0.01,
+"n": 59,
+"ret": -0.0137,
+"h1": -0.1469,
+"h2": 0.1441,
+"z": -0.05,
 "status": "Watching"
 },
 {
@@ -392,11 +392,20 @@
 },
 {
 "seg": "NFL \u00b7 0 reasons",
-"n": 28,
-"ret": 0.2633,
-"h1": 0.6301,
+"n": 29,
+"ret": 0.2197,
+"h1": 0.5214,
 "h2": -0.1036,
-"z": 0.66,
+"z": 0.56,
+"status": "Learning"
+},
+{
+"seg": "NFL \u00b7 anytime TD \u00b7 longshot",
+"n": 27,
+"ret": -0.0537,
+"h1": 0.2764,
+"h2": -0.2806,
+"z": -0.11,
 "status": "Learning"
 },
 {
@@ -424,15 +433,6 @@
 "h1": -1.0,
 "h2": 0.395,
 "z": -1.71,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 longshot",
-"n": 25,
-"ret": 0.022,
-"h1": 0.2764,
-"h2": -0.1779,
-"z": 0.04,
 "status": "Learning"
 },
 {
@@ -590,11 +590,11 @@
 },
 {
 "seg": "NFL \u00b7 script",
-"n": 16,
-"ret": 0.1669,
+"n": 17,
+"ret": 0.0982,
 "h1": 0.173,
-"h2": 0.1567,
-"z": 0.32,
+"h2": -0.0086,
+"z": 0.2,
 "status": "Learning"
 },
 {
@@ -607,21 +607,21 @@
 "status": "Learning"
 },
 {
+"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
+"n": 15,
+"ret": -0.6493,
+"h1": -1.0,
+"h2": -0.3425,
+"z": -2.1,
+"status": "Learning"
+},
+{
 "seg": "NBA \u00b7 threes",
 "n": 14,
 "ret": 0.2559,
 "h1": -0.022,
 "h2": 0.4103,
 "z": 0.83,
-"status": "Learning"
-},
-{
-"seg": "NFL \u00b7 anytime TD \u00b7 edge 10-20%",
-"n": 14,
-"ret": -0.6243,
-"h1": -1.0,
-"h2": -0.3425,
-"z": -1.88,
 "status": "Learning"
 },
 {
