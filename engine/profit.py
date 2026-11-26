@@ -60,8 +60,34 @@ def _soft(week):
     return {(g, str(p)) for g, p, pos, o in zip(P.game_id, P.player_id, P.pos, P.opp) if o in soft.get(pos, set())}
 
 
+LADDER_KINDS = ("pts", "reb", "ast", "fg3m", "rec", "rec_yds", "rush_yds", "pass_yds")
+
+
+def rung_heights(mk):
+    """How many rungs above the 50/50 rung each Kalshi ladder rung sits (owner 2026-11-26: 'a label that measures how many rungs
+    above 50/50 something is'): per player-stat, the rungs with a 10c-or-less spread in line order (as mkt.js MKT.ladder / rungH),
+    the 50/50 rung = mid nearest 50c, h = rung index - its index (0 = the 50/50 rung, -1 = one below). {(game, pid, kind, line): h}"""
+    by = {}
+    for r in mk:
+        if r.get("source") == "kalshi" and r.get("kind") in LADDER_KINDS and r.get("line") is not None \
+                and r.get("yes_ask") and r.get("yes_bid") is not None and r["yes_ask"] - r["yes_bid"] <= .10:
+            by.setdefault((str(r["game"]), str(r.get("pid")), r["kind"]), {})[float(r["line"])] = (r["yes_ask"] + r["yes_bid"]) / 2
+    H = {}
+    for key, L in by.items():
+        ls = sorted(L)
+        i0 = min(range(len(ls)), key=lambda i: abs(L[ls[i]] - .5))
+        for i, l in enumerate(ls):
+            H[key + (l,)] = i - i0
+    return H
+
+
+def _rh(H, r):
+    return H.get((str(r.get("game")), str(r.get("pid")), r.get("kind"), float(r["line"]) if r.get("line") is not None else None))
+
+
 def ladder_rows(date, mk, R, GM):
     """Ladder candidates (experimental): YES on Kalshi rungs 2+ above the ~50/50 rung for players facing a soft defense."""
+    H = rung_heights(mk)
     by = {}
     for r in mk:
         if r.get("source") == "kalshi" and r.get("kind") in ("rec", "rec_yds", "rush_yds", "pass_yds") and r.get("line") is not None                 and r.get("yes_ask") and r.get("yes_bid") is not None:
@@ -88,7 +114,7 @@ def ladder_rows(date, mk, R, GM):
                 cl = lambda v: min(max(v, .002), .998)
                 po = 1 / (1 + math.exp(-(.21 + .70 * math.log(cl(mid(r)) / (1 - cl(mid(r)))) + .25 * math.log(cl(po) / (1 - cl(po))))))
             out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates (experimental)", src="kalshi", kind=k, title=r.get("title"), t0=r.get("start"),
-                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4)))
+                            bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if po is None else round(po, 4), won=int(y), pnl=round(y / cy - 1, 4), h=_rh(H, r)))
         # one rung per ladder (owner 2026-11-17 'Yes' after research/nfl_ladder_candidates.py, ledger 96): the LOWEST rung 2+ above the
         # 50/50 rung with spread 6c or less and mid 3-97c; unseen wk 6-10 +18.2% at the ask on 588 ladders (fee-in +12.1%, halves
         # +18 / +18), hit 3.8 pts over the mid vs non-candidate ladders -2.0. Forward record from 2026-11-17; recheck 2026-12-08.
@@ -103,7 +129,7 @@ def ladder_rows(date, mk, R, GM):
                     po = round(1 / (1 + math.exp(-(.21 + .70 * math.log(cl(mid(one)) / (1 - cl(mid(one)))) + .25 * math.log(cl(po) / (1 - cl(po)))))), 4)
                 out.append(dict(date=date, sport="nfl", cat="NFL ladder candidates · one rung per ladder, lowest 2+ above 50/50 (experimental)",
                                 src="kalshi", kind=k, title=one.get("title"), t0=one.get("start"), bet="YES", cost=round(cy, 4), q=round(mid(one), 4),
-                                p=po, won=int(y), pnl=round(y / cy - 1, 4)))
+                                p=po, won=int(y), pnl=round(y / cy - 1, 4), h=_rh(H, one)))
     # receiving yards, one rung per player (owner 2026-11-03 after research/nfl_ladders.py market: Kalshi KXNFLRECYDS Oct 2025 - wk 9,
     # one rung per player +38% on 778 at 5%+ walk-forward, -5 / +13 / +77% by period; catches / rushing / passing lost): every Kalshi
     # receiving-yards rung, spread 5c or less, mid 3-97c; chance = Kalshi's mid recalibrated (logit .0711 + .9303 logit mid) moved .35
@@ -127,7 +153,7 @@ def ladder_rows(date, mk, R, GM):
                 y = GM.outcome("nfl", best[1], R)
                 if y is not None:
                     out.append(dict(date=date, sport="nfl", cat="NFL receiving yards: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="rec_yds",
-                                    title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
+                                    title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4), h=_rh(H, best[1])))
     return out
 
 
@@ -135,6 +161,7 @@ def nba_ladder_rows(date, mk, R, GM):
     """NBA ladders (experimental), YES on Kalshi pts/reb/ast/3pm rungs 2+ above the ~50/50 rung, two versions:
     'candidates' = his stat faced a soft matchup (dvp >= 1.07 for his position) in that night's frozen page data;
     'edge' (what the page shows) = a 20+ minute player and our chance beats the price with the fee by 5%+."""
+    H = rung_heights(mk)
     f = os.path.join(HERE, "nba", "projections", f"{date}.json")
     if not os.path.exists(f):
         return []
@@ -191,7 +218,7 @@ def nba_ladder_rows(date, mk, R, GM):
             for cat in cats:
                 pc = pa if cat.endswith("anchored (experimental)") else p
                 out.append(dict(date=date, sport="nba", cat=cat, src="kalshi", kind=r["kind"], title=r.get("title"), t0=r.get("start"),
-                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if pc is None else round(pc, 4), won=int(y), pnl=round(y / cy - 1, 4)))
+                                bet="YES", cost=round(cy, 4), q=round(mid(r), 4), p=None if pc is None else round(pc, 4), won=int(y), pnl=round(y / cy - 1, 4), h=_rh(H, r)))
     # threes, one rung per player (owner 2026-11-03 after research/threes_market.py, KSplit's idea tested: his whole-ladder sizing lost
     # to one rung per player; our threes = threes.py blend from today): every Kalshi 3PM rung, spread 5c or less, mid 3-97c; chance =
     # Kalshi's mid recalibrated (logit -.079 + 1.002 logit mid) moved .75 of the way to ours in log-odds; best edge per player, 5-60%
@@ -214,7 +241,7 @@ def nba_ladder_rows(date, mk, R, GM):
                 y = GM.outcome("nba", best[1], R)
                 if y is not None:
                     out.append(dict(date=date, sport="nba", cat="NBA threes: one rung per player, 5%+ edge (experimental)", src="kalshi", kind="fg3m",
-                                    title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4)))
+                                    title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4), won=int(y), pnl=round(y / best[2] - 1, 4), h=_rh(H, best[1])))
     # study pick 'K 15%+' (owner 2026-11-11: 'yes add it'; research/nba_criteria_kalshi.py: one rung per player-stat at 15-40%,
     # +11.6% on 1,864 Jan - Nov 2026, up in all four periods): every Kalshi pts / reb / ast / 3PM rung, spread 5c or less, mid
     # 3-97c, our chance (the market file's 'ours', the live model) 15-40% over the ask + fee; the player-stat's biggest edge
@@ -233,7 +260,7 @@ def nba_ladder_rows(date, mk, R, GM):
                 if y is not None:
                     row = dict(date=date, sport="nba", cat="NBA study pick: Kalshi rung, our chance 15-40% over the cost, one per player (experimental)", src="kalshi",
                                kind=best[1]["kind"], title=best[1].get("title"), t0=best[1].get("start"), bet="YES", cost=round(best[2], 4), q=round(best[4], 4), p=round(best[3], 4),
-                               won=int(y), pnl=round(y / best[2] - 1, 4))
+                               won=int(y), pnl=round(y / best[2] - 1, 4), h=_rh(H, best[1]))
                     out.append(row)
                     # narrowed (owner 2026-11-12 'okay'): the live model flags ~7 K 15%+ picks a game vs ~2 in the study (Nov 11: 72 won 18
                     # vs 18.3 priced). Inside the study's 1,864 picks, cuts chosen on earlier periods only and scored on the next returned
@@ -441,6 +468,7 @@ def market_rows(sport):
     for f in files:
         date = os.path.basename(f)[len(sport) + 1:len(sport) + 11]
         mk = [r for r in json.load(open(f)).get("markets", []) if not r.get("ticker") or last.get(r["ticker"]) == f]
+        H = rung_heights(mk)
         # NHL: our top 3 per game among the listed scorers
         rank = {}
         if sport == "nhl":
@@ -532,13 +560,16 @@ def market_rows(sport):
             fair = None if fy is None else (fy if bet == "YES" else 1 - fy)
             rows.append(dict(date=date, sport=sport, cat=cat, src=src, kind=k, title=r.get("title"), t0=r.get("start"), bet=bet, cost=round(cost, 4),
                              q=round(win, 4), won=int(hit), pnl=round(hit / cost - 1, 4),
-                             clv=None if fair is None else round(fair - cost, 4)))
+                             clv=None if fair is None else round(fair - cost, 4), h=_rh(H, r) if src == "kalshi" and k in LADDER_KINDS else None))
         if sport == "nfl":
             rows += ladder_rows(date, mk, R, GM)
         if sport == "nba":
             rows += nba_ladder_rows(date, mk, R, GM)
     if sport == "nba":
         rows += nba_ladder_move_rows(rows)
+    for x in rows:                                     # rung height only where there is one (keeps the file small)
+        if x.get("h") is None:
+            x.pop("h", None)
     json.dump(dict(sport=sport, rows=rows), open(os.path.join(OUT, f"profit_{sport}.json"), "w"), separators=(",", ":"))
     print(f"profit {sport}: {len(rows)} graded market picks")
 
@@ -2111,7 +2142,7 @@ def feed_data():
             seen.add(k)
             items.append(dict(_pt=ref, date=r["date"], sport=r["sport"], t="bet", cat=r["cat"], title=f"{r.get('title') or ''} {r.get('bet') or ''}".strip(), pn=str(r.get("title") or "").split(":")[0], st=r.get("kind"),
                               book="Kalshi" if r.get("src") == "kalshi" else "Polymarket", pay=round(1 / r["cost"], 2) if r.get("cost") else None,
-                              q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2)))
+                              q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2), **({"h": r["h"]} if r.get("h") is not None else {})))
     tp = os.path.join(OUT, "profit_tags.json")
     tseen = set()                                            # the same prop at the same book under several tags: counted once
     TG = sorted((json.load(open(tp)) if os.path.exists(tp) else {}).values(), key=lambda e: str(e.get("first")))
@@ -2296,6 +2327,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .fi{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--faint);font-size:13.5px}
 .fi .m{font-weight:800}.fi.W .m{color:var(--good)}.fi.L .m{color:var(--bad)}.fi.L{opacity:.8}.fi .c{font-size:11.5px;color:var(--muted)}
 .fi .net{font-weight:800;white-space:nowrap;text-align:right}.fi.W .net{color:var(--good)}.fi.L .net{color:var(--muted)}
+.rhc{font-style:normal;font-size:10.5px;font-weight:600;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px;margin-left:4px;white-space:nowrap;cursor:help}.rhc b{color:var(--ink);font-weight:800}
 .fi .tgs{grid-column:2/4;display:flex;flex-wrap:wrap;gap:3px 4px;align-items:center;margin-top:1px}.tgc{display:inline-block;font:600 10.5px/1.6 var(--body);padding:0 6px;border-radius:999px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);white-space:nowrap}.tgc.ar{background:none;color:var(--muted);font-weight:500;font-style:italic}
 .fi .also{flex-basis:100%;font-size:11.5px;color:var(--muted)}.fi .also>summary{cursor:pointer;width:max-content;max-width:100%}.fi .also .ap{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;margin:4px 12px 0 0}.fi .also .ap b{font-weight:600;color:var(--ink);margin-right:1px}.fi .lg .tgc{font-size:10px;margin-left:4px;vertical-align:1px}
 .fi .lg{grid-column:2/4;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12.5px}.fi .lg span.W{color:var(--good)}.fi .lg span.L{color:var(--bad)}.fi .lg span.V{color:var(--muted)}
@@ -2372,7 +2404,9 @@ function feed(){
     const ch = mine.map(tgc).join('') + (P[0] ? `<span class="tgc ar" title="${x.sport === 'nfl' ? 'His role this season' : 'His playstyle archetype (latest)'}">${esc(P[0])}</span>` : '');
     const al = oth.length ? `<details class="also"><summary>${oth.length} other tagged line${oth.length > 1 ? 's' : ''} that day</summary>${oth.map(([p, ts]) => `<span class="ap"><b>${esc(p)}</b>${ts.map(tgc).join('')}</span>`).join('')}</details>` : '';
     return ch || al ? `<span class="tgs">${ch}${al}</span>` : ''; };
-  const row = x => `<div class="fi ${x.res}" title="${tip(x)}"><span class="m">${x.res === 'W' ? '✓' : '✗'}</span><span><b>${x.t === 'parlay' ? `${esc(x.cat)}${x.tier ? ` · ${esc(x.tier)}` : ''}` : esc(x.title)}</b>
+  // rungs above the 50/50 rung on his Kalshi ladder when the bet was graded (owner 2026-11-26; profit.py rung_heights)
+  const rhc = h => h == null ? '' : ` <i class="rhc" title="${h === 0 ? 'The Kalshi rung priced nearest 50/50 on his ladder' : `${Math.abs(h)} rung${Math.abs(h) === 1 ? '' : 's'} ${h > 0 ? 'above' : 'below'} the Kalshi rung priced nearest 50/50 on his ladder`} (last pregame quote)">${h === 0 ? '<b>50/50</b>' : `50/50 <b>${h > 0 ? '+' : '−'}${Math.abs(h)}</b>`}</i>`;
+  const row = x => `<div class="fi ${x.res}" title="${tip(x)}"><span class="m">${x.res === 'W' ? '✓' : '✗'}</span><span><b>${x.t === 'parlay' ? `${esc(x.cat)}${x.tier ? ` · ${esc(x.tier)}` : ''}` : esc(x.title)}</b>${rhc(x.h)}
       <span class="c"> · ${esc(x.sport.toUpperCase())}${x.pay ? ` · ${x.pay.toFixed(x.pay < 10 ? 2 : 0)}x` : ''}</span></span>
       <span class="net">${usd(x.net)}</span>${x.t === 'parlay' ? `<span class="lg">${x.legs.map(L => `<span class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'} ${esc(L.lab)}${L.sport ? ` <small>${esc(L.sport.toUpperCase())}</small>` : ''}${legTg(L)}</span>`).join('')}</span>` : tgRow(x)}</div>`;
   const tot = A.reduce((s, x) => s + x.net, 0), w = A.filter(x => x.res === 'W').length;
@@ -2678,6 +2712,43 @@ def fg_records(d):
     json.dump(out, open(os.path.join(site, "markets", "fgrec_nhl.json"), "w"), separators=(",", ":"))
 
 
+def rung_records():
+    """markets/rungh.json for the 'rungs above 50/50' label's tooltip (owner 2026-11-26; mkt.js rungTag, screener.js scRh): every
+    Kalshi rung bet the Profit page grades (YES, each bet once by date + market), by rung height (-1 = one or more below the 50/50
+    rung, 5 = 5+ above), since the Nov 11 model fixes, plus the NBA 15%+ K pick and NFL ladder candidates: [bets, won, priced
+    (Kalshi mid), return with the fee]. No timestamp, so the file changes only when a result does."""
+    since = "2026-11-11"
+    out = {"since": "Nov 11"}
+    for sp, extra in (("nba", ("k15", "NBA study pick: Kalshi rung")), ("nfl", ("cand", "NFL ladder candidates (experimental)"))):
+        try:
+            rows = json.load(open(os.path.join(OUT, f"profit_{sp}.json")))["rows"]
+        except (OSError, ValueError, KeyError):
+            continue
+        rows = [r for r in rows if r.get("h") is not None and r.get("bet") == "YES" and r.get("date", "") >= since]
+        seen, A = set(), []
+        for r in rows:
+            k = (r["date"], r.get("title"))
+            if k not in seen:
+                seen.add(k)
+                A.append(r)
+        def tab(rs):
+            T = {}
+            for r in rs:
+                t = T.setdefault(str(max(-1, min(5, r["h"]))), [0, 0, 0.0, 0.0])
+                t[0] += 1; t[1] += r["won"]; t[2] += r.get("q") or 0; t[3] += r["pnl"]
+            return {b: [t[0], t[1], round(t[2], 1), round(t[3] / t[0], 3)] for b, t in T.items()}
+        out[sp] = {"all": tab(A), extra[0]: tab([r for r in rows if r["cat"].startswith(extra[1])])}
+    site = os.environ.get("SIM_SITE") or os.path.join(HERE, "site")
+    p = os.path.join(site, "markets", "rungh.json")
+    txt = json.dumps(out, separators=(",", ":"))
+    try:
+        if open(p, encoding="utf-8").read() == txt:
+            return
+    except OSError:
+        pass
+    open(p, "w", encoding="utf-8").write(txt)
+
+
 def page():
     import importlib.util
     import report
@@ -2685,6 +2756,10 @@ def page():
     S = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(S)
     d = page_data()
+    try:                                     # the 'rungs above 50/50' label's record (owner 2026-11-26)
+        rung_records()
+    except Exception as e:                   # noqa: BLE001
+        print(f"rung records: skipped ({type(e).__name__}: {e})")
     try:                                     # NHL All players chips (owner 2026-11-12: 'make them easier to identify in the all players tab')
         fg_records(d)
     except Exception as e:                   # noqa: BLE001

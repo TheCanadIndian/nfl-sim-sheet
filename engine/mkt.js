@@ -28,7 +28,7 @@
   const usd = v => v == null ? '–' : v >= 1e6 ? '$' + (v / 1e6).toFixed(1) + 'M' : v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'k' : '$' + Math.round(v);
   const shade = e => e >= .08 ? 'g3' : e >= .05 ? 'g2' : e >= .02 ? 'g1' : '';
   let D = null, stamp = null, timer = null;
-  let BK = null, FL = null, PR = null, CARD = null, BL = null;   // BL: books' main lines frozen at each start (boxgrade.py lines)
+  let BK = null, FL = null, PR = null, CARD = null, BL = null, RHR = null;   // RHR: record by rung height (markets/rungh.json, profit.py rung_records)   // BL: books' main lines frozen at each start (boxgrade.py lines)
   //            // PR: every player's prices, markets/props_<sport>.json (Unabated)                        // FL: value tags, markets/flags_<sport>.json (sharp.py: our inference only)                                   // sportsbook game lines: markets/books_<sport>.json (The Odds API, books.py)
   const BKS = {hardrockbet: 'Hard Rock', novig: 'Novig', draftkings: 'DK', fanduel: 'FD', betmgm: 'MGM', williamhill_us: 'Caesars', espnbet: 'ESPN', betrivers: 'BetRivers', fliff: 'Fliff', ballybet: 'Bally'};
   const FULL = {DK: 'DraftKings', FD: 'FanDuel', MGM: 'BetMGM', ESPN: 'ESPN BET', Bally: 'Bally Bet'};
@@ -229,6 +229,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
 .why{display:inline-block;font-size:11px;color:var(--muted);border:1px dashed var(--faint);border-radius:999px;padding:0 8px;margin:2px 4px 0 0;white-space:nowrap}.why b{color:var(--ink);font-weight:600}.why.none{opacity:.75}
 .vtag.lct{border-color:color-mix(in srgb,#6CB4FF 60%,transparent);color:#6CB4FF}.vtag.pmv{border-color:color-mix(in srgb,#C084FC 55%,transparent);color:#C084FC}.vtag.pmv.st{background:color-mix(in srgb,#C084FC 14%,transparent);font-weight:700}.vtag.pmv i{font-style:normal;font-weight:700}.vtag.lct i{font-style:normal;font-weight:700;margin-left:2px}
 .vtag{display:inline-block;margin-left:6px;padding:0 7px;border-radius:9px;border:1px solid color-mix(in srgb,var(--good) 60%,transparent);color:var(--good);font-size:10.5px;font-weight:700;line-height:16px;white-space:nowrap;cursor:help;vertical-align:1px}
+.rhc{display:inline-block;font-style:normal;font-size:10.5px;font-weight:600;line-height:16px;color:var(--muted);border:1px solid var(--faint);border-radius:4px;padding:0 5px;margin-left:5px;white-space:nowrap;cursor:help;vertical-align:1px}.rhc b{color:var(--ink);font-weight:800}
+.rhc.rh1{background:color-mix(in srgb,var(--ink) 7%,transparent)}.rhc.rh2{background:color-mix(in srgb,var(--ink) 14%,transparent)}.rhc.rh3{background:color-mix(in srgb,var(--ink) 22%,transparent);color:var(--ink)}.rhc.rh4{background:color-mix(in srgb,var(--ink) 32%,transparent);color:var(--ink);border-color:color-mix(in srgb,var(--ink) 40%,transparent)}
 @container (max-width:640px){ .mkx-r{grid-template-columns:minmax(0,1fr)} .mkx-p{font-size:12.5px} }`;
   document.head.appendChild(css);
 
@@ -333,6 +335,33 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
   const same = (a, b) => String(a) === String(b);
   const forGame = gid => (D ? D.rows.filter(r => same(r.g, gid)) : []);
   const forPlayer = (gid, pid, name) => forGame(gid).filter(r => r.n && ((pid != null && r.pid != null && same(r.pid, pid)) || norm(r.n) === norm(name)));
+  // Rungs above the 50/50 rung (owner 2026-11-26: 'a label that measures how many rungs above 50/50 something is'): his Kalshi
+  // ladder for that stat, rungs with a 10c-or-less spread in line order (as MKT.ladder), the 50/50 rung = mid nearest 50c, h = this
+  // rung's place minus its place (0 = the 50/50 rung, -1 = one below). Only numbers Kalshi lists (a book's line at the same number
+  // counts); null otherwise. Twin of profit.py rung_heights (the Profit rows' `h`); screener.js scRh is its other twin.
+  const RH_KINDS = ['pts', 'reb', 'ast', 'fg3m', 'rec', 'rec_yds', 'rush_yds', 'pass_yds'];
+  function rungH(gid, pid, name, kind, line){
+    if (line == null || !RH_KINDS.includes(kind)) return null;
+    const L = forPlayer(gid, pid, name).filter(r => r.s === 'kalshi' && r.k === kind && r.l != null && r.ya > 0 && r.yb != null && r.ya - r.yb <= .10).sort((a, b) => a.l - b.l);
+    const i = L.findIndex(r => Math.abs(r.l - line) < 1e-9); if (i < 0) return null;
+    const mid = r => (r.ya + r.yb) / 2; let i0 = 0;
+    L.forEach((r, j) => { if (Math.abs(mid(r) - .5) < Math.abs(mid(L[i0]) - .5)) i0 = j; });
+    return {h: i - i0, l0: L[i0].l, m0: mid(L[i0]), top: L.length - 1 - i};
+  }
+  const rhLab = h => h === 0 ? '<b>50/50</b>' : `50/50 <b>${h > 0 ? '+' : '−'}${Math.abs(h)}</b>`;
+  const rhRec = (h, sp) => {                       // the Profit page's record at this height (profit.py rung_records)
+    const R = RHR && RHR[sp]; if (!R) return '';
+    const b = String(h <= -1 ? -1 : Math.min(h, 5)), lab = h <= -1 ? 'one or more below 50/50' : h === 0 ? 'the 50/50 rung' : h >= 5 ? '5+ above' : `+${h}`;
+    const one = (x, what) => x && x[0] ? `${what} at ${lab}: won ${x[1]} vs ${x[2].toFixed(1)} priced on ${x[0]}, ${x[3] >= 0 ? '+' : '−'}${Math.abs(Math.round(x[3] * 100))}%` : '';
+    const parts = [one((R.all || {})[b], 'every Kalshi rung bet the Profit page graded'), one((R.k15 || {})[b], '15%+ K picks'), one((R.cand || {})[b], 'ladder candidates')].filter(Boolean);
+    return parts.length ? ` Since ${RHR.since}, ${parts.join('; ')} (each bet once, Kalshi fee in). Picked after the fact; the label is a measure, not a rule.` : '';
+  };
+  function rungTag(gid, pid, name, kind, line, sp){
+    const x = rungH(gid, pid, name, kind, line); if (!x) return '';
+    const n = l => Math.round(l + .5), a = Math.abs(x.h);
+    const where = x.h === 0 ? 'This is the Kalshi rung priced nearest 50/50 on his ladder' : `${a} rung${a === 1 ? '' : 's'} ${x.h > 0 ? 'above' : 'below'} the Kalshi rung priced nearest 50/50 on his ladder`;
+    return ` <i class="rhc rh${Math.max(0, Math.min(x.h, 4))}" title="${esc(`${where} (${n(x.l0)}+ at ${Math.round(x.m0 * 100)}¢)${x.top ? `; ${x.top} more rung${x.top === 1 ? '' : 's'} above this one` : '; the top rung listed'}.${rhRec(x.h, sp || sport)}`)}">${rhLab(x.h)}</i>`;
+  }
   const order = (a, b) => a.k.localeCompare(b.k) || (a.l ?? 0) - (b.l ?? 0) || a.s.localeCompare(b.s);
 
   // prop patterns (patterns.py): traits that props which hit had in common, with a tracked record
@@ -1256,6 +1285,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       const v = Object.values(parts); if (!v.length) return null;
       return {f: 1 / (1 + Math.exp(-v.reduce((s, x) => s + L(x), 0) / v.length)), n, parts};
     },
+    rungH(gid, pid, name, kind, line){ return rungH(gid, pid, name, kind, line); },
+    rungTag(gid, pid, name, kind, line){ return rungTag(gid, pid, name, kind, line); },
     ladder(gid, pid, name, kinds){
       kinds = kinds || ['rec', 'rec_yds', 'rush_yds', 'pass_yds'];
       // wide quotes (spread over 10c) say nothing about the price: left out
@@ -1391,5 +1422,8 @@ a.vtag{text-decoration:none} a.vtag:hover{background:color-mix(in srgb,var(--goo
       CARD = d; rerender();
     }).catch(() => {});
   }
+  if (sport === 'nba' || sport === 'nfl') fetch(base + 'markets/rungh.json?t=' + Date.now(), {cache: 'no-store'}).then(x => x.ok ? x.json() : null).then(d => {
+    if (d){ RHR = d; rerender(); }
+  }).catch(() => {});
   if (sport){ load(); loadBooks(); timer = setInterval(() => { load(); loadBooks(); }, 120000); }
 })();
