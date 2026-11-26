@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-25",
 "lock": "2026-11-25T22:00:00+00:00",
-"frozen_at": "2026-11-26T01:25:12.390Z",
+"frozen_at": "2026-11-26T01:35:32.479Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,139 @@
 ],
 "final_at": "2026-11-25T21:00:00+00:00",
 "parlays": [
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909317",
+"start": "2026-11-25T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 3+ threes",
+"p": 0.2603,
+"price": 277,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"res": "L"
+},
+{
+"gid": "401909318",
+"start": "2026-11-26T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 9.5,
+"name": "josh giddey",
+"lab": "Josh Giddey 10+ ast",
+"p": 0.4128,
+"price": 160,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909319",
+"start": "2026-11-26T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "karlanthony towns",
+"lab": "Karl-Anthony Towns 3+ threes",
+"p": 0.3657,
+"price": 167,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.03931,
+"d": 26.171,
+"first": "2026-11-25T22:00:00+00:00",
+"res": "L",
+"locked": true
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909317",
+"start": "2026-11-25T22:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "vj edgecombe",
+"lab": "VJ Edgecombe 3+ threes",
+"p": 0.2603,
+"price": 277,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+],
+"res": "L"
+},
+{
+"gid": "401909318",
+"start": "2026-11-26T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "jalen smith",
+"lab": "Jalen Smith 3+ threes",
+"p": 0.2869,
+"price": 245,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandon ingram",
+"lab": "Brandon Ingram 6+ reb",
+"p": 0.3027,
+"price": 266,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.02261,
+"d": 47.604,
+"first": "2026-11-25T22:00:00+00:00",
+"pick": "longshot",
+"res": "L",
+"locked": true,
+"final": true
+},
 {
 "card": "Sharp move parlays (experimental)",
 "tier": "2 legs",
@@ -22,12 +155,12 @@
 "line": 3.5,
 "name": "tyrese maxey",
 "lab": "Tyrese Maxey over 3.5 threes",
-"p": 0.3371,
-"fair": 0.3432,
-"price": 190,
+"p": 0.34,
+"fair": 0.3464,
+"price": 186,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0223,
+"edge": -0.0276,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -44,12 +177,12 @@
 "line": 5.5,
 "name": "julius randle",
 "lab": "Julius Randle over 5.5 assists",
-"p": 0.3685,
+"p": 0.3686,
 "fair": 0.371,
 "price": 167,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0161,
+"edge": -0.0159,
 "v": [
 "Pinnacle odds drop",
 "one rung above the main line (4.5)",
@@ -57,10 +190,74 @@
 ]
 }
 ],
-"p": 0.12733,
-"d": 7.743,
+"p": 0.12851,
+"d": 7.636,
 "first": "2026-11-25T22:00:00+00:00",
 "res": "L",
+"locked": true
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909318",
+"start": "2026-11-26T00:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "isaac okoro",
+"lab": "Isaac Okoro 2+ threes",
+"p": 0.434,
+"price": 127,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909320",
+"start": "2026-11-26T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jonathan kuminga",
+"lab": "Jonathan Kuminga 2+ threes",
+"p": 0.4477,
+"price": 122,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "brandon ingram",
+"lab": "Brandon Ingram 6+ reb",
+"p": 0.3096,
+"price": 240,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"price"
+]
+}
+],
+"p": 0.06015,
+"d": 17.134,
+"first": "2026-11-26T00:00:00+00:00",
+"res": null,
 "locked": true
 },
 {
@@ -75,7 +272,7 @@
 "line": 1.5,
 "name": "keegan murray",
 "lab": "Keegan Murray over 1.5 threes",
-"p": 0.5172,
+"p": 0.5131,
 "price": 105,
 "book": "Hard Rock",
 "f": [
@@ -92,7 +289,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0517
+"edge": 0.0437
 },
 {
 "gid": "401909318",
@@ -121,7 +318,7 @@
 "edge": 0.0124
 }
 ],
-"p": 0.25989,
+"p": 0.25783,
 "d": 4.1,
 "first": "2026-11-26T00:00:00+00:00",
 "res": null,
@@ -139,7 +336,7 @@
 "line": 1.5,
 "name": "keegan murray",
 "lab": "Keegan Murray over 1.5 threes",
-"p": 0.5172,
+"p": 0.5131,
 "price": 105,
 "book": "Hard Rock",
 "f": [
@@ -156,7 +353,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0517
+"edge": 0.0437
 },
 {
 "gid": "401909318",
@@ -209,15 +406,15 @@
 "edge": 0.0431
 },
 {
-"gid": "401909319",
+"gid": "401909320",
 "start": "2026-11-26T00:30Z",
 "kind": "fg3m",
 "side": "o",
-"line": 2.5,
-"name": "donovan mitchell",
-"lab": "Donovan Mitchell over 2.5 threes",
-"p": 0.4456,
-"price": 130,
+"line": 3.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball over 3.5 threes",
+"p": 0.4735,
+"price": 111,
 "book": "Novig",
 "f": [
 "usage",
@@ -228,14 +425,65 @@
 "usage",
 "rotation",
 "game",
-"lc"
+"our model above fair"
 ],
 "sport": "nba",
-"edge": 0.0232
+"edge": 0.0091
 }
 ],
-"p": 0.03767,
-"d": 30.176,
+"p": 0.03971,
+"d": 27.683,
+"first": "2026-11-26T00:00:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Sharp move parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "cam spencer",
+"lab": "Cam Spencer over 5.5 assists",
+"p": 0.4175,
+"fair": 0.4088,
+"price": 135,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0189,
+"v": [
+"Pinnacle odds drop",
+"consensus odds drop",
+"one rung above the main line (4.5)"
+]
+},
+{
+"gid": "401909318",
+"start": "2026-11-26T00:00Z",
+"kind": "ast",
+"side": "o",
+"line": 5.5,
+"name": "coby white",
+"lab": "Coby White over 5.5 assists",
+"p": 0.301,
+"fair": 0.3021,
+"price": 223,
+"book": "Novig",
+"sport": "nba",
+"edge": -0.0278,
+"v": [
+"Pinnacle line up",
+"consensus line up + odds drop",
+"one rung above the main line (4.5)"
+]
+}
+],
+"p": 0.1235,
+"d": 7.591,
 "first": "2026-11-26T00:00:00+00:00",
 "res": null,
 "locked": true
@@ -263,28 +511,30 @@
 ]
 },
 {
-"gid": "401909324",
-"start": "2026-11-26T03:00Z",
-"kind": "fg3m",
+"gid": "401909321",
+"start": "2026-11-26T01:00Z",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "deandre hunter",
-"lab": "De'Andre Hunter 3+ threes",
-"p": 0.3635,
-"price": 178,
-"book": "Novig",
+"line": 5.5,
+"name": "brandon ingram",
+"lab": "Brandon Ingram 6+ reb",
+"p": 0.3139,
+"price": 240,
+"book": "Kalshi",
 "f": [
 "usage",
-"matchup",
-"rotation"
+"rotation",
+"price"
 ]
 }
 ],
-"p": 0.16116,
-"d": 6.255,
+"p": 0.13914,
+"d": 7.65,
 "first": "2026-11-26T00:30:00+00:00",
+"pick": "core",
 "res": null,
-"locked": true
+"locked": true,
+"final": true
 },
 {
 "card": "Path longshots",
@@ -332,7 +582,7 @@
 "line": 1.5,
 "name": "donovan clingan",
 "lab": "Donovan Clingan 2+ threes",
-"p": 0.298,
+"p": 0.2981,
 "price": 233,
 "book": "Novig",
 "f": [
@@ -349,56 +599,6 @@
 "locked": true
 },
 {
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909321",
-"start": "2026-11-26T01:00Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "cam spencer",
-"lab": "Cam Spencer over 5.5 assists",
-"p": 0.4237,
-"fair": 0.4154,
-"price": 133,
-"book": "Novig",
-"sport": "nba",
-"edge": -0.0128,
-"v": [
-"Pinnacle odds drop",
-"consensus odds drop",
-"one rung above the main line (4.5)"
-]
-},
-{
-"gid": "401909323",
-"start": "2026-11-26T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "amen thompson",
-"lab": "Amen Thompson over 4.5 assists",
-"p": 0.275,
-"fair": 0.2734,
-"price": 275,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0313,
-"v": [
-"consensus line up",
-"one rung above the main line (3.5)"
-]
-}
-],
-"p": 0.11357,
-"d": 8.738,
-"first": "2026-11-26T01:00:00+00:00",
-"res": null,
-"locked": true
-},
-{
 "card": "Path longshots",
 "tier": "2-leg",
 "legs": [
@@ -410,7 +610,7 @@
 "line": 5.5,
 "name": "domantas sabonis",
 "lab": "Domantas Sabonis 6+ ast",
-"p": 0.416,
+"p": 0.4163,
 "price": 144,
 "book": "Novig",
 "f": [
@@ -437,8 +637,52 @@
 ]
 }
 ],
-"p": 0.16953,
+"p": 0.16965,
 "d": 5.954,
+"first": "2026-11-26T03:00:00+00:00",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909324",
+"start": "2026-11-26T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "deandre hunter",
+"lab": "De'Andre Hunter 3+ threes",
+"p": 0.3645,
+"price": 178,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+},
+{
+"gid": "401909325",
+"start": "2026-11-26T03:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "toumani camara",
+"lab": "Toumani Camara 3+ threes",
+"p": 0.4075,
+"price": 144,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.14854,
+"d": 6.783,
 "first": "2026-11-26T03:00:00+00:00",
 "res": null
 },
@@ -454,12 +698,12 @@
 "line": 2.5,
 "name": "keegan murray",
 "lab": "Keegan Murray over 2.5 threes",
-"p": 0.2684,
+"p": 0.2683,
 "fair": 0.2719,
 "price": 257,
 "book": "Novig",
 "sport": "nba",
-"edge": -0.0419,
+"edge": -0.0422,
 "v": [
 "Pinnacle odds drop",
 "consensus odds drop",
@@ -475,19 +719,19 @@
 "line": 4.5,
 "name": "sidy cissoko",
 "lab": "Sidy Cissoko over 4.5 rebounds",
-"p": 0.2677,
-"fair": 0.2679,
+"p": 0.2769,
+"fair": 0.2768,
 "price": 230,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.1166,
+"edge": -0.0863,
 "v": [
 "consensus line up + odds drop",
 "one rung above the main line (3.5)"
 ]
 }
 ],
-"p": 0.07284,
+"p": 0.07526,
 "d": 11.781,
 "first": "2026-11-26T03:00:00+00:00",
 "res": null
