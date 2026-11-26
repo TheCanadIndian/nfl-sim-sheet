@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-26",
 "lock": "2026-11-26T18:00:00+00:00",
-"frozen_at": "2026-11-26T22:40:35.659Z",
+"frozen_at": "2026-11-26T22:49:49.064Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -4764,7 +4764,41 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-26T20:20:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 20.5,
+"name": "xavier worthy",
+"lab": "Xavier Worthy over 20.5 rec yds",
+"p": 0.5276,
+"price": 100,
+"book": "Novig"
+},
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "IND moneyline",
+"p": 0.2957,
+"price": 257,
+"book": "Novig"
+}
+],
+"p": 0.15601,
+"d": 7.14,
+"first": "2026-11-27T01:20:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
 "legs": [
 {
 "gid": "2026_12_KC_BUF",
@@ -4789,44 +4823,22 @@
 "p": 0.6004,
 "price": -120,
 "book": "Kalshi"
-}
-],
-"p": 0.31677,
-"d": 3.667,
-"first": "2026-11-27T01:20:00+00:00",
-"res": null
 },
 {
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_12_KC_BUF",
-"start": "2026-11-26T20:20:00",
-"kind": "rec_yds",
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec",
 "side": "o",
-"line": 20.5,
-"name": "xavier worthy",
-"lab": "Xavier Worthy over 20.5 rec yds",
-"p": 0.5276,
-"price": 100,
+"line": 1.5,
+"name": "michael pittman",
+"lab": "Michael Pittman over 1.5 receptions",
+"p": 0.484,
+"price": 122,
 "book": "Novig"
-},
-{
-"gid": "2026_12_NYG_IND",
-"start": "2026-11-29T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 14.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 14.5 rec yds",
-"p": 0.5773,
-"price": -120,
-"book": "Kalshi"
 }
 ],
-"p": 0.30459,
-"d": 3.667,
+"p": 0.15331,
+"d": 8.14,
 "first": "2026-11-27T01:20:00+00:00",
 "res": null
 },
@@ -7995,22 +8007,6 @@
 "tier": "3 legs",
 "legs": [
 {
-"gid": "2026_12_TEN_JAX",
-"start": "2026-11-29T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "calvin ridley",
-"lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.434,
-"price": 153,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0981,
-"fair": 0.3836,
-"main": true
-},
-{
 "gid": "2026_12_KC_BUF",
 "start": "2026-11-27T01:20:00+00:00",
 "kind": "rec",
@@ -8018,12 +8014,28 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4484,
-"price": 144,
+"p": 0.4479,
+"price": 147,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.094,
-"fair": 0.412,
+"edge": 0.1063,
+"fair": 0.4114,
+"main": true
+},
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "calvin ridley",
+"lab": "Calvin Ridley over 1.5 receptions",
+"p": 0.432,
+"price": 156,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1059,
+"fair": 0.3809,
 "main": true
 },
 {
@@ -8034,17 +8046,17 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4093,
+"p": 0.4096,
 "price": 167,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.093,
-"fair": 0.3705,
+"edge": 0.0936,
+"fair": 0.3708,
 "main": true
 }
 ],
-"p": 0.07965,
-"d": 16.482,
+"p": 0.07925,
+"d": 16.883,
 "first": "2026-11-27T01:20:00+00:00",
 "res": null
 },
@@ -8060,17 +8072,44 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4484,
-"price": 144,
+"p": 0.4479,
+"price": 147,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.094,
-"fair": 0.412,
+"edge": 0.1063,
+"fair": 0.4114,
 "main": true
 }
 ],
-"p": 0.4484,
-"d": 2.44,
+"p": 0.4479,
+"d": 2.47,
+"first": "2026-11-27T01:20:00+00:00",
+"pick": "straight",
+"res": null
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_KC_BUF",
+"start": "2026-11-27T01:20:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "noah gray",
+"lab": "Noah Gray over 1.5 receptions",
+"p": 0.4736,
+"price": 122,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0513,
+"fair": 0.4569,
+"main": true
+}
+],
+"p": 0.4736,
+"d": 2.22,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "straight",
 "res": null
