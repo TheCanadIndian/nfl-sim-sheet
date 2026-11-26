@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-27",
 "lock": "2026-11-27T20:00:00+00:00",
-"frozen_at": "2026-11-26T23:37:35.992Z",
+"frozen_at": "2026-11-26T23:49:03.668Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 1.5,
 "name": "michael pittman",
 "lab": "Michael Pittman over 1.5 receptions",
-"p": 0.483,
+"p": 0.485,
 "price": 125,
 "book": "Novig"
 },
@@ -39,7 +39,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.28484,
+"p": 0.28603,
 "d": 4.125,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "core"
@@ -53,11 +53,11 @@
 "start": "2026-11-27T15:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 10.5,
-"name": "michael pittman",
-"lab": "Michael Pittman over 10.5 rec yds",
-"p": 0.5376,
-"price": -102,
+"line": 22.5,
+"name": "germie bernard",
+"lab": "Germie Bernard over 22.5 rec yds",
+"p": 0.5275,
+"price": 106,
 "book": "Novig"
 },
 {
@@ -80,48 +80,15 @@
 "line": 2.5,
 "name": "jonathan taylor",
 "lab": "Jonathan Taylor over 2.5 receptions",
-"p": 0.5266,
+"p": 0.5293,
 "price": 100,
 "book": "Novig"
 }
 ],
-"p": 0.16698,
-"d": 7.261,
+"p": 0.16466,
+"d": 7.553,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
-{
-"gid": "2026_12_DEN_PIT",
-"start": "2026-11-27T15:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 10.5,
-"name": "michael pittman",
-"lab": "Michael Pittman over 10.5 rec yds",
-"p": 0.5376,
-"price": -102,
-"book": "Novig"
-},
-{
-"gid": "2026_12_NYG_IND",
-"start": "2026-11-29T13:00:00",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "IND moneyline",
-"p": 0.2957,
-"price": 257,
-"book": "Novig"
-}
-],
-"p": 0.15897,
-"d": 7.07,
-"first": "2026-11-27T20:00:00+00:00"
 },
 {
 "card": "Same-game parlays",
@@ -2653,6 +2620,47 @@
 "first": "2026-11-27T20:00:00+00:00"
 },
 {
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "calvin ridley",
+"lab": "Calvin Ridley over 1.5 receptions",
+"p": 0.4309,
+"price": 156,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1032,
+"fair": 0.3789,
+"main": true
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T20:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "marvin mims",
+"lab": "Marvin Mims over 1.5 receptions",
+"p": 0.4083,
+"price": 170,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1025,
+"fair": 0.3706,
+"main": true
+}
+],
+"p": 0.17594,
+"d": 6.912,
+"first": "2026-11-27T20:00:00+00:00"
+},
+{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -2664,16 +2672,16 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.409,
+"p": 0.4083,
 "price": 170,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1044,
+"edge": 0.1025,
 "fair": 0.3706,
 "main": true
 }
 ],
-"p": 0.409,
+"p": 0.4083,
 "d": 2.7,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "straight"
@@ -2690,16 +2698,16 @@
 "line": 1.5,
 "name": "michael pittman",
 "lab": "Michael Pittman over 1.5 receptions",
-"p": 0.4832,
+"p": 0.4848,
 "price": 125,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0871,
-"fair": 0.4423,
+"edge": 0.0907,
+"fair": 0.4432,
 "main": true
 }
 ],
-"p": 0.4832,
+"p": 0.4848,
 "d": 2.25,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "straight"
@@ -2716,17 +2724,17 @@
 "line": 22.5,
 "name": "germie bernard",
 "lab": "Germie Bernard over 22.5 rec yds",
-"p": 0.5264,
-"price": 100,
+"p": 0.52,
+"price": 106,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0529,
-"fair": 0.4986,
+"edge": 0.0712,
+"fair": 0.49,
 "main": true
 }
 ],
-"p": 0.5264,
-"d": 2.0,
+"p": 0.52,
+"d": 2.06,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "straight"
 }
