@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-27",
 "lock": "2026-11-27T20:00:00+00:00",
-"frozen_at": "2026-11-26T20:24:43.569Z",
+"frozen_at": "2026-11-26T20:46:17.408Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,86 @@
 ],
 "final_at": "2026-11-27T18:00:00+00:00",
 "parlays": [
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 22.5,
+"name": "germie bernard",
+"lab": "Germie Bernard over 22.5 rec yds",
+"p": 0.542,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "jonathan taylor",
+"lab": "Jonathan Taylor over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.31697,
+"d": 3.596,
+"first": "2026-11-27T20:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 22.5,
+"name": "germie bernard",
+"lab": "Germie Bernard over 22.5 rec yds",
+"p": 0.542,
+"price": -104,
+"book": "Novig"
+},
+{
+"gid": "2026_12_LV_CLE",
+"start": "2026-11-29T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4663,
+"price": 127,
+"book": "Novig"
+},
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 14.5,
+"name": "jonathan taylor",
+"lab": "Jonathan Taylor over 14.5 rec yds",
+"p": 0.5848,
+"price": -120,
+"book": "Kalshi"
+}
+],
+"p": 0.1478,
+"d": 8.163,
+"first": "2026-11-27T20:00:00+00:00",
+"pick": "core"
+},
 {
 "card": "Same-game parlays",
 "tier": "Most likely \u00b7 5 legs",
@@ -2718,6 +2798,22 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "calvin ridley",
+"lab": "Calvin Ridley over 1.5 receptions",
+"p": 0.4312,
+"price": 153,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.091,
+"fair": 0.3817,
+"main": true
+},
+{
 "gid": "2026_12_DEN_PIT",
 "start": "2026-11-27T20:00:00+00:00",
 "kind": "rec",
@@ -2725,33 +2821,17 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4049,
+"p": 0.4072,
 "price": 167,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0811,
-"fair": 0.3663,
-"main": true
-},
-{
-"gid": "2026_12_LV_CLE",
-"start": "2026-11-30T01:20:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "jack bech",
-"lab": "Jack Bech over 1.5 receptions",
-"p": 0.462,
-"price": 133,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0765,
-"fair": 0.419,
+"edge": 0.0871,
+"fair": 0.3693,
 "main": true
 }
 ],
-"p": 0.18706,
-"d": 6.221,
+"p": 0.17558,
+"d": 6.755,
 "first": "2026-11-27T20:00:00+00:00"
 },
 {
@@ -2766,17 +2846,43 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4049,
+"p": 0.4072,
 "price": 167,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0811,
-"fair": 0.3663,
+"edge": 0.0871,
+"fair": 0.3693,
 "main": true
 }
 ],
-"p": 0.4049,
+"p": 0.4072,
 "d": 2.67,
+"first": "2026-11-27T20:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T20:00:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 22.5,
+"name": "germie bernard",
+"lab": "Germie Bernard over 22.5 rec yds",
+"p": 0.5394,
+"price": -104,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0581,
+"fair": 0.4992,
+"main": true
+}
+],
+"p": 0.5394,
+"d": 1.962,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "straight"
 }
