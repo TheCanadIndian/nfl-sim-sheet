@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-26",
 "lock": "2026-11-26T18:00:00+00:00",
-"frozen_at": "2026-11-26T16:16:19.851Z",
+"frozen_at": "2026-11-26T16:27:35.146Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -95,18 +95,6 @@
 "book": "Kalshi"
 },
 {
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "chig okonkwo",
-"lab": "Chig Okonkwo 60+ rec yds",
-"p": 0.23,
-"price": 280,
-"book": "Kalshi"
-},
-{
 "gid": "2026_12_TEN_JAX",
 "start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
@@ -117,10 +105,22 @@
 "p": 0.225,
 "price": 296,
 "book": "Kalshi"
+},
+{
+"gid": "2026_12_WAS_ARI",
+"start": "2026-11-29T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "chig okonkwo",
+"lab": "Chig Okonkwo 60+ rec yds",
+"p": 0.225,
+"price": 296,
+"book": "Kalshi"
 }
 ],
-"p": 0.01371,
-"d": 52.98,
+"p": 0.01342,
+"d": 55.15,
 "first": "2026-11-26T21:30:00+00:00",
 "res": null
 },
@@ -136,8 +136,8 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4359,
-"price": 150,
+"p": 0.434,
+"price": 147,
 "book": "Novig"
 },
 {
@@ -148,13 +148,13 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4073,
+"p": 0.4014,
 "price": 167,
 "book": "Novig"
 }
 ],
-"p": 0.17752,
-"d": 6.675,
+"p": 0.17422,
+"d": 6.595,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "core",
 "res": null
@@ -171,8 +171,8 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4359,
-"price": 150,
+"p": 0.434,
+"price": 147,
 "book": "Novig"
 },
 {
@@ -188,8 +188,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.12073,
-"d": 9.625,
+"p": 0.1202,
+"d": 9.509,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "core",
 "res": null
@@ -7105,64 +7105,6 @@
 "res": null
 },
 {
-"card": "Confluence parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "2026_12_PHI_DAL",
-"start": "2026-11-26T16:30:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 29.5,
-"name": "makai lemon",
-"lab": "Makai Lemon over 29.5 rec yds",
-"p": 0.498,
-"price": 100,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"lc"
-],
-"sport": "nfl",
-"edge": 0.047
-},
-{
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "trey mcbride",
-"lab": "Trey McBride over 59.5 rec yds",
-"p": 0.4965,
-"price": -113,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"consensus up"
-],
-"sport": "nfl",
-"edge": 0.0318
-}
-],
-"p": 0.24726,
-"d": 3.77,
-"first": "2026-11-26T21:30:00+00:00",
-"res": null
-},
-{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -7174,16 +7116,16 @@
 "line": 1.5,
 "name": "isaac teslaa",
 "lab": "Isaac TeSlaa over 1.5 receptions",
-"p": 0.4527,
+"p": 0.4526,
 "price": 133,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0548,
-"fair": 0.4347,
+"edge": 0.0547,
+"fair": 0.4346,
 "main": true
 }
 ],
-"p": 0.4527,
+"p": 0.4526,
 "d": 2.33,
 "first": "2026-11-26T18:00:00+00:00",
 "pick": "straight",
@@ -7201,17 +7143,17 @@
 "line": 0.5,
 "name": "zach ertz",
 "lab": "Zach Ertz over 0.5 receptions",
-"p": 0.5766,
-"price": -102,
+"p": 0.574,
+"price": 100,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1419,
-"fair": 0.5,
+"edge": 0.148,
+"fair": 0.4965,
 "main": true
 }
 ],
-"p": 0.5766,
-"d": 1.98,
+"p": 0.574,
+"d": 2.0,
 "first": "2026-11-26T21:30:00+00:00",
 "pick": "straight",
 "res": null
@@ -7228,44 +7170,17 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4366,
-"price": 150,
+"p": 0.436,
+"price": 147,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0914,
-"fair": 0.3983,
+"edge": 0.0769,
+"fair": 0.3975,
 "main": true
 }
 ],
-"p": 0.4366,
-"d": 2.5,
-"first": "2026-11-27T01:20:00+00:00",
-"pick": "straight",
-"res": null
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_12_KC_BUF",
-"start": "2026-11-27T01:20:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "cyrus allen",
-"lab": "Cyrus Allen over 1.5 receptions",
-"p": 0.3585,
-"price": 194,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.054,
-"fair": 0.3482,
-"main": true
-}
-],
-"p": 0.3585,
-"d": 2.94,
+"p": 0.436,
+"d": 2.47,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "straight",
 "res": null
