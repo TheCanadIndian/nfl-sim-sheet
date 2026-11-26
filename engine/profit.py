@@ -804,6 +804,81 @@ def tag_label(e):
     return "LC tags (experimental)" if e.get("src") == "lc" else "Off-market prices (experimental)" if e.get("src") == "off" else "Value tags"
 
 
+# Short chips for every tag a bet had (owner 2026-11-25: 'show all the tags for the people on the profit page'); first match wins,
+# a ladder rule's '+ consensus ...' twin adds the move chip too
+TAG_SHORT = [
+    ("study pick + best matchup", "15%+ K + best matchup"), ("study pick (narrowed)", "15%+ K · 230+"), ("study pick: kalshi rung", "15%+ K pick"),
+    ("study pick: consensus line up + odds drop, soft", "Study: CONS + soft"), ("study pick: consensus line up + odds drop, pinnacle", "Study: CONS + PIN rung"),
+    ("ladder candidates", "Ladder candidate"), ("ladder edge", "Ladder edge"), ("threes: one rung per player", "Threes rule"),
+    ("receiving yards: one rung per player", "Rec yds rule"), ("anytime td: kalshi under the sharp line", "TD under sharp"),
+    ("anytime goals (top 3)", "Goal top 3"), ("home runs (value)", "HR Value"), ("player props", "Kalshi props rule"), ("game lines", "Game line"),
+    ("value tags", "Value"), ("lc tags", "LC"), ("off-market", "Off market"), ("early opener", "Opener"), ("ladder knee", "Knee"),
+    ("novig rung 10%+", "NV +10% vs books"), ("gap 8+", "Gap 8+"), ("double-double edge", "DD edge"), ("triple-double edge", "Triple-dbl edge"),
+    ("double-double: our sims 5%+ over the price at kalshi", "DD sims · K"), ("double-double: our sims", "DD sims · HR/NV"),
+    ("teammate link: key teammate out, assists", "▲ ast free"), ("teammate link: key teammate out who fed", "▼ feeder out"),
+    ("2+ goals: edge", "2+ goals edge"), ("goal drought 3+", "No goal 3+"), ("without pinnacle: four-book", "No-Pin edge"),
+    ("without pinnacle: exchanges", "No-Pin edge (old)"), ("goal luck: due, on a goal drought", "Due + drought"), ("goal luck: due", "Due"),
+    ("vs a team missing a regular d", "vs D out"), ("pp1 top-3-usage", "PP1 top 3"), ("spot-up shooters, your book 3%+", "Spot-up 3%+"),
+    ("spot-up shooters", "Spot-up threes"), ("injury watch: teammates who gain", "Gains: regular out"), ("injury watch: backups", "Injury watch"),
+    ("first basket: model 10%+ over hard rock", "1st basket edge · yours"), ("first basket: model", "1st basket edge"),
+    ("first goal: kalshi, our chance", "1st goal K edge"), ("first goal: fanduel + bovada longer than every other book, and our", "FD+BV+edge"),
+    ("first goal: fanduel + bovada", "FD+BV")]
+MOVE_SHORT = {"line up + odds drop": "▲▼ both", "line up": "▲ line", "odds drop": "▼ odds", "higher rung outlier": "rung",
+              "up + odds down": "▲▼ both", "odds down": "▼ odds", "up": "▲ line"}
+
+
+def tag_short(full):
+    s = str(full or "").lower()
+    m = _re.search(r"(pinnacle|consensus) move: (.+?) \(", s)
+    if m:
+        return [f"{'PIN' if m.group(1) == 'pinnacle' else 'CONS'} {MOVE_SHORT.get(m.group(2), m.group(2))}"]
+    out = [next((v for k, v in TAG_SHORT if k in s), None)]
+    m = _re.search(r"\+ consensus (up \+ odds down|odds down|up) \(", s)
+    if m:
+        out.append("CONS " + MOVE_SHORT[m.group(1)])
+    if not out[0]:
+        t = _re.sub(r"\s*\((experimental|baseline|retired[^)]*)\)", "", str(full or "")).strip()
+        t = _re.sub(r"^(NBA|NFL|NHL|MLB) ", "", t)
+        out[0] = t.split(":")[0][:28]
+    return [x for x in out if x]
+
+
+def tag_full(full):
+    """A tag's tooltip: the Profit row's name without the sport and '(experimental)'."""
+    return _re.sub(r"^(NBA|NFL|NHL|MLB) ", "", _re.sub(r"\s*\(experimental\)", "", str(full or ""))).strip()
+
+
+_PK_ST = dict(goal="Goals", goals="Goals", touchdowns="Anytime TD", hr="Home runs", sog="Shots")   # + ST_LAB (defined below)
+_PL_ST = {"Points": "pts", "Rebounds": "reb", "Assists": "ast", "Threes": "threes", "Receiving yds": "rec yds", "Catches": "catches",
+          "Rushing yds": "rush yds", "Passing yds": "pass yds", "Anytime TD": "TD", "Goals": "goals", "Shots": "shots", "Home runs": "HR",
+          "Double-double": "double-double", "Triple-double": "triple-double", "First basket": "first basket"}
+
+
+def _prop_lab(stat, line):
+    """One label per prop, the same from a tag, a Kalshi rule row and a parlay leg: '4+ threes', 'TD', 'double-double'."""
+    st = str(stat or "").strip()
+    st = "Shots" if st.startswith("sog") else _PK_ST.get(st) or ST_LAB.get(st, st)
+    s = _PL_ST.get(st, st)
+    try:
+        n = float(line) + .5
+    except (TypeError, ValueError):
+        return s
+    if st in ("Anytime TD", "Goals", "Home runs") and n == 1:
+        return {"Anytime TD": "TD", "Goals": "goal", "Home runs": "HR"}[st]
+    return f"{n:g}+ {s}"
+
+
+def _tag_prop(bet):
+    b = str(bet or "").strip()
+    m = _re.match(r"^over ([\d.]+) (.+)$", b)
+    if m:
+        return m.group(2), float(m.group(1))
+    m = _re.match(r"^(\d+)\+ (.+)$", b)
+    if m:
+        return m.group(2), int(m.group(1)) - .5
+    return (b, .5) if b in ("goal", "TD") else (b, None)
+
+
 def _et_day(ts):
     """The Eastern date of a start time (2026-10-24 fix: UTC starts were cut to their UTC date, so every game from 8 PM
     ET on -- and Sunday / Monday night NFL -- was filed under the next day on the Profit page)."""
@@ -2003,6 +2078,21 @@ def feed_data():
     since = (dt.datetime.now(ET).date() - dt.timedelta(days=FEED_DAYS)).isoformat()
     since30 = (dt.datetime.now(ET).date() - dt.timedelta(days=30)).isoformat()
     items, seen = [], set()
+    PT, TL = {}, {}                                          # every tag a player-prop had each day (owner 2026-11-25: 'show all the tags')
+    def ptag(date, sport, name, stat, line, full):
+        nm = _norm(name)
+        if not nm or nm == "full game" or date < since:
+            return None
+        pk, pl = f"{date}|{sport}|{nm}", _prop_lab(stat, line)
+        tg = PT.setdefault(pk, {}).setdefault(pl, [])
+        for sh in tag_short(full) if full else ():
+            TL.setdefault(sh, tag_full(full))
+            if sh not in tg:
+                tg.append(sh)
+        return pk, pl
+    def kprop(r):                                            # Kalshi rule rows: 'Caleb Martin: 4+ threes'
+        m = _re.match(r"^(.+?): (\d+)\+ ", str(r.get("title") or ""))
+        return (m.group(1), r.get("kind"), int(m.group(2)) - .5) if m else None
     for f in _g.glob(os.path.join(OUT, "profit_*.json")):
         if f.endswith(("profit_tags.json", "profit_wfair.json")):
             continue
@@ -2013,16 +2103,23 @@ def feed_data():
         for r in rs:
             if r["date"] < since30 or not _plays(r["cat"], r.get("bet")):
                 continue
+            kp = kprop(r)
+            ref = ptag(r["date"], r["sport"], *kp, r["cat"]) if kp else None
             k = (r["date"], r.get("title"), r.get("bet"))
             if k in seen:
                 continue
             seen.add(k)
-            items.append(dict(date=r["date"], sport=r["sport"], t="bet", cat=r["cat"], title=f"{r.get('title') or ''} {r.get('bet') or ''}".strip(), pn=str(r.get("title") or "").split(":")[0], st=r.get("kind"),
+            items.append(dict(_pt=ref, date=r["date"], sport=r["sport"], t="bet", cat=r["cat"], title=f"{r.get('title') or ''} {r.get('bet') or ''}".strip(), pn=str(r.get("title") or "").split(":")[0], st=r.get("kind"),
                               book="Kalshi" if r.get("src") == "kalshi" else "Polymarket", pay=round(1 / r["cost"], 2) if r.get("cost") else None,
                               q=r.get("q"), res="W" if r.get("won") else "L", net=round(STRAIGHT * r["pnl"], 2)))
     tp = os.path.join(OUT, "profit_tags.json")
     tseen = set()                                            # the same prop at the same book under several tags: counted once
-    for e in sorted((json.load(open(tp)) if os.path.exists(tp) else {}).values(), key=lambda e: str(e.get("first"))):
+    TG = sorted((json.load(open(tp)) if os.path.exists(tp) else {}).values(), key=lambda e: str(e.get("first")))
+    for e in TG:                                             # chips: every tag but the baselines (incl. ones kept off the bets feed)
+        if e.get("grp") == "all" or str(e.get("bet", "")).lower().startswith("under") or not e.get("name"):
+            continue
+        ptag(_et_day(e.get("start") or e["first"]), e["sport"], e.get("name"), *_tag_prop(e.get("bet")), f"{e['sport'].upper()} {tag_label(e)}")
+    for e in TG:
         d0 = _et_day(e.get("start") or e["first"])
         if e.get("res") not in ("W", "L") or d0 < since30 or str(e.get("bet", "")).lower().startswith("under") or e.get("grp") == "all" or e.get("src") in ("fg", "fb", "pp1t3", "arch3", "sit") or (e.get("src") == "tl" and e.get("grp") == "fed"):
             continue
@@ -2030,7 +2127,7 @@ def feed_data():
         tk = (e["sport"], str(e.get("gid")), e.get("name"), e.get("bet"), e.get("book"))
         dup = tk in tseen
         tseen.add(tk)
-        items.append(dict(dup=dup, date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}", pn=e.get("name"), st=_re.sub(r"^(over|under) [\d.]+ ", "", str(e.get("bet") or "")),
+        items.append(dict(_pt=ptag(d0, e["sport"], e.get("name"), *_tag_prop(e.get("bet")), None), dup=dup, date=d0, sport=e["sport"], t="bet", cat=f"{e['sport'].upper()} {tag_label(e)}", title=f"{e['name'].title()} {e['bet']}", pn=e.get("name"), st=_re.sub(r"^(over|under) [\d.]+ ", "", str(e.get("bet") or "")),
                           book=e.get("book"), pay=round(dd, 2), q=e.get("p"), res=e["res"], net=round(STRAIGHT * ((dd - 1) if e["res"] == "W" else -1), 2)))
     legs = []
     for f in _g.glob(os.path.join(HERE, "parlays", "*", "????-??-??.json")):
@@ -2053,7 +2150,8 @@ def feed_data():
             if d["date"] < since30:
                 continue
             items.append(dict(date=d["date"], sport=d["sport"], t="parlay", cat="Today’s card" if q.get("pick") else q["card"], tier=q.get("tier"),
-                              legs=[dict(lab=L.get("lab"), res=L.get("res"), sport=L.get("sport")) for L in q["legs"]], pay=round(pay, 2), q=q.get("p"),
+                              legs=[dict(_pt=ptag(d["date"], L.get("sport") or d["sport"], L.get("name"), L.get("kind"), L.get("line"), None) if L.get("name") else None,
+                                         lab=L.get("lab"), res=L.get("res"), sport=L.get("sport")) for L in q["legs"]], pay=round(pay, 2), q=q.get("p"),
                               res=q["res"], net=round((STRAIGHT if q.get("tier") == "straight" else PARLAY) * ((pay - 1) if q["res"] == "W" else -1), 2)))
     items.sort(key=lambda x: (x["date"], x["res"] == "W", x["net"]), reverse=True)
     # your bets, last 30 days (the record at the top of the page)
@@ -2148,7 +2246,38 @@ def feed_data():
         if not x.get("dup"):
             x.pop("dup", None)
     items = [x for x in items if x["date"] >= since]          # the day-by-day list: last 14 days
-    return dict(items=items, you=you, types=types, legs=legt, odds=odds, odds_arch=odds_arch, odds_role=odds_role, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
+    # tags: one entry per player-day [archetype / role, [[prop, [tag...]], ...]], each bet / leg points at [player, its prop]
+    tagl, li, pt, pi = [], {}, [], {}
+    def tix(sh):
+        if sh not in li:
+            li[sh] = len(tagl); tagl.append([sh, TL.get(sh, sh)])
+        return li[sh]
+    def pref(ref):
+        if not ref:
+            return None
+        pk, pl = ref
+        P = {p: ts for p, ts in PT.get(pk, {}).items() if ts}
+        if not P:
+            return None                                      # nothing to show: no tagged prop for him that day
+        if pk not in pi:
+            sp, nm = pk.split("|")[1:3]
+            ar = AR.get(nm) if sp == "nba" else RL.get(nm) if sp == "nfl" else None
+            pi[pk] = len(pt)
+            def pk_(p):                                      # '4+ threes' before '10+ threes', by stat then number
+                m = _re.match(r"^([\d.]+)\+ (.+)$", p)
+                return (m.group(2), float(m.group(1))) if m else (p, 0.0)
+            pt.append([ar or "", [[p, [tix(t) for t in ts]] for p, ts in sorted(P.items(), key=lambda kv: pk_(kv[0]))]])
+        return [pi[pk], next((j for j, (p, _) in enumerate(pt[pi[pk]][1]) if p == pl), -1)]
+    for x in items:
+        r = pref(x.pop("_pt", None))
+        if r:
+            x["pt"] = r
+        for L in x.get("legs") or []:
+            r = pref(L.pop("_pt", None))
+            if r:
+                L["pt"] = r
+    cs = {c: [tix(t) for t in tag_short(c)] for c in {x["cat"] for x in items if x["t"] == "bet"}}
+    return dict(items=items, tagl=tagl, pt=pt, cs=cs, you=you, types=types, legs=legt, odds=odds, odds_arch=odds_arch, odds_role=odds_role, days=FEED_DAYS, stake=dict(straight=STRAIGHT, parlay=PARLAY))
 
 
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -2167,6 +2296,8 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 .fi{display:grid;grid-template-columns:22px 1fr auto;gap:2px 8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--faint);font-size:13.5px}
 .fi .m{font-weight:800}.fi.W .m{color:var(--good)}.fi.L .m{color:var(--bad)}.fi.L{opacity:.8}.fi .c{font-size:11.5px;color:var(--muted)}
 .fi .net{font-weight:800;white-space:nowrap;text-align:right}.fi.W .net{color:var(--good)}.fi.L .net{color:var(--muted)}
+.fi .tgs{grid-column:2/4;display:flex;flex-wrap:wrap;gap:3px 4px;align-items:center;margin-top:1px}.tgc{display:inline-block;font:600 10.5px/1.6 var(--body);padding:0 6px;border-radius:999px;border:1px solid var(--faint);background:var(--sunk);color:var(--ink);white-space:nowrap}.tgc.ar{background:none;color:var(--muted);font-weight:500;font-style:italic}
+.fi .also{flex-basis:100%;font-size:11.5px;color:var(--muted)}.fi .also>summary{cursor:pointer;width:max-content;max-width:100%}.fi .also .ap{display:inline-flex;flex-wrap:wrap;gap:3px;align-items:center;margin:4px 12px 0 0}.fi .also .ap b{font-weight:600;color:var(--ink);margin-right:1px}.fi .lg .tgc{font-size:10px;margin-left:4px;vertical-align:1px}
 .fi .lg{grid-column:2/4;display:flex;flex-wrap:wrap;gap:2px 10px;font-size:12.5px}.fi .lg span.W{color:var(--good)}.fi .lg span.L{color:var(--bad)}.fi .lg span.V{color:var(--muted)}
 .lt table{width:100%;border-collapse:collapse;font-size:13px}.lt td,.lt th{padding:4px 6px;border-top:1px solid var(--faint);text-align:right}.lt td:first-child,.lt th:first-child{text-align:left}
 .rp{color:var(--good)}.rn{color:var(--bad)}
@@ -2232,11 +2363,21 @@ function feed(){
   const sw = `<div class="fsw"><button data-fw="1" aria-pressed="${FF.w}" title="Inside each bet type, list only the winners">Winners only</button>${['all', ...sports].map(k => `<button data-fs="${k}" aria-pressed="${FF.s === k}">${k === 'all' ? 'All sports' : k.toUpperCase()}</button>`).join('')}</div>`;
   const days = [...new Set(I.map(x => x.date))];
   const tip = x => esc(`${x.t === 'bet' ? x.cat + ' · ' + (x.book || '') : x.cat}${x.q ? ' · our chance ' + Math.round(x.q * 100) + '%' : ''}`);
+  // every tag the bet had that day besides its bet type, his archetype / role, his other tagged lines (owner 2026-11-25)
+  const TGL = FE.tagl || [], PTL = FE.pt || [], CS = FE.cs || {};
+  const tgc = i => { const t = TGL[i]; return t ? `<span class="tgc" title="${esc(t[1])}">${esc(t[0])}</span>` : ''; };
+  const legTg = L => { const P = L.pt && PTL[L.pt[0]]; return P && L.pt[1] >= 0 ? P[1][L.pt[1]][1].map(tgc).join('') : ''; };
+  const tgRow = x => { const P = x.pt && PTL[x.pt[0]]; if (!P) return '';
+    const own = new Set(CS[x.cat] || []), mine = x.pt[1] >= 0 ? P[1][x.pt[1]][1].filter(i => !own.has(i)) : [], oth = P[1].filter((_, j) => j !== x.pt[1]);
+    const ch = mine.map(tgc).join('') + (P[0] ? `<span class="tgc ar" title="${x.sport === 'nfl' ? 'His role this season' : 'His playstyle archetype (latest)'}">${esc(P[0])}</span>` : '');
+    const al = oth.length ? `<details class="also"><summary>${oth.length} other tagged line${oth.length > 1 ? 's' : ''} that day</summary>${oth.map(([p, ts]) => `<span class="ap"><b>${esc(p)}</b>${ts.map(tgc).join('')}</span>`).join('')}</details>` : '';
+    return ch || al ? `<span class="tgs">${ch}${al}</span>` : ''; };
   const row = x => `<div class="fi ${x.res}" title="${tip(x)}"><span class="m">${x.res === 'W' ? '✓' : '✗'}</span><span><b>${x.t === 'parlay' ? `${esc(x.cat)}${x.tier ? ` · ${esc(x.tier)}` : ''}` : esc(x.title)}</b>
       <span class="c"> · ${esc(x.sport.toUpperCase())}${x.pay ? ` · ${x.pay.toFixed(x.pay < 10 ? 2 : 0)}x` : ''}</span></span>
-      <span class="net">${usd(x.net)}</span>${x.t === 'parlay' ? `<span class="lg">${x.legs.map(L => `<span class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'} ${esc(L.lab)}${L.sport ? ` <small>${esc(L.sport.toUpperCase())}</small>` : ''}</span>`).join('')}</span>` : ''}</div>`;
+      <span class="net">${usd(x.net)}</span>${x.t === 'parlay' ? `<span class="lg">${x.legs.map(L => `<span class="${L.res || ''}">${L.res === 'W' ? '✓' : L.res === 'L' ? '✗' : '·'} ${esc(L.lab)}${L.sport ? ` <small>${esc(L.sport.toUpperCase())}</small>` : ''}${legTg(L)}</span>`).join('')}</span>` : tgRow(x)}</div>`;
   const tot = A.reduce((s, x) => s + x.net, 0), w = A.filter(x => x.res === 'W').length;
   return `<section class="panel fd"><div class="phead"><h2>Results</h2><span class="small muted">last ${FE.days} days · ${w} of ${A.length} won · net ${usd(tot)}</span></div>${sw}
+    ${PTL.length ? '<p class="small muted" style="margin:-4px 0 8px">Under each bet: every other tag it had that day (the bet type it’s listed under is left out), his playstyle / role in grey, and his other tagged lines that day. Parlay legs show their tags too.</p>' : ''}
     ${days.map((d, i) => { const XA = A.filter(x => x.date === d), n = XA.reduce((s, x) => s + x.net, 0);
       // one line per bet type that day (record and net), its bets inside
       const G = {}; XA.forEach(x => { const k = x.sport + '|' + x.cat; (G[k] = G[k] || []).push(x); });
