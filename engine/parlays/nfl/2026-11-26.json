@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-26",
 "lock": "2026-11-26T18:00:00+00:00",
-"frozen_at": "2026-11-26T21:07:13.737Z",
+"frozen_at": "2026-11-26T21:17:41.600Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -2207,7 +2207,7 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
 "gid": "2026_12_NYG_IND",
@@ -2217,21 +2217,9 @@
 "line": 29.5,
 "name": "tyler warren",
 "lab": "Tyler Warren over 29.5 rec yds",
-"p": 0.5986,
+"p": 0.5954,
 "price": -120,
 "book": "Kalshi"
-},
-{
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 59.5 rec yds",
-"p": 0.55,
-"price": -106,
-"book": "Novig"
 },
 {
 "gid": "2026_12_PHI_DAL",
@@ -2246,8 +2234,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.17255,
-"d": 7.197,
+"p": 0.31203,
+"d": 3.703,
 "first": "2026-11-26T21:30:00+00:00",
 "pick": "core",
 "res": null,
@@ -2263,23 +2251,23 @@
 "start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 14.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 14.5 rec yds",
-"p": 0.5848,
+"line": 29.5,
+"name": "tyler warren",
+"lab": "Tyler Warren over 29.5 rec yds",
+"p": 0.5954,
 "price": -120,
 "book": "Kalshi"
 },
 {
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
-"kind": "rec_yds",
+"gid": "2026_12_LV_CLE",
+"start": "2026-11-29T20:20:00",
+"kind": "rec",
 "side": "o",
-"line": 59.5,
-"name": "trey mcbride",
-"lab": "Trey Mcbride over 59.5 rec yds",
-"p": 0.55,
-"price": -106,
+"line": 1.5,
+"name": "quinshon judkins",
+"lab": "Quinshon Judkins over 1.5 receptions",
+"p": 0.4663,
+"price": 127,
 "book": "Novig"
 },
 {
@@ -2295,8 +2283,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.16857,
-"d": 7.197,
+"p": 0.1455,
+"d": 8.407,
 "first": "2026-11-26T21:30:00+00:00",
 "pick": "core",
 "res": null,
@@ -2310,22 +2298,22 @@
 {
 "gid": "2026_12_PHI_DAL",
 "start": "2026-11-26T21:30:00+00:00",
-"kind": "rec",
+"kind": "rec_yds",
 "side": "o",
 "line": 0.5,
 "name": "zach ertz",
-"lab": "Zach Ertz over 0.5 receptions",
-"p": 0.5803,
-"price": -106,
+"lab": "Zach Ertz over 0.5 rec yds",
+"p": 0.5509,
+"price": 106,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1278,
-"fair": 0.5048,
+"edge": 0.1349,
+"fair": 0.4812,
 "main": true
 }
 ],
-"p": 0.5803,
-"d": 1.943,
+"p": 0.5509,
+"d": 2.06,
 "first": "2026-11-26T21:30:00+00:00",
 "pick": "straight",
 "res": null,
@@ -2362,9 +2350,50 @@
 "final": true
 },
 {
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_PHI_DAL",
+"start": "2026-11-26T21:30:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 4.5,
+"name": "kavontae turpin",
+"lab": "Kavontae Turpin over 4.5 rec yds",
+"p": 0.4983,
+"price": 111,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0514,
+"fair": 0.4844,
+"main": true
+}
+],
+"p": 0.4983,
+"d": 2.11,
+"first": "2026-11-26T21:30:00+00:00",
+"pick": "straight",
+"res": null,
+"locked": true,
+"final": true
+},
+{
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
 "legs": [
+{
+"gid": "2026_12_NE_LAC",
+"start": "2026-11-29T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "mack hollins",
+"lab": "Mack Hollins 40+ rec yds",
+"p": 0.295,
+"price": 208,
+"book": "Kalshi"
+},
 {
 "gid": "2026_12_PHI_DAL",
 "start": "2026-11-26T16:30:00",
@@ -2376,22 +2405,10 @@
 "p": 0.285,
 "price": 229,
 "book": "Kalshi"
-},
-{
-"gid": "2026_12_NE_LAC",
-"start": "2026-11-29T16:05:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "mack hollins",
-"lab": "Mack Hollins 40+ rec yds",
-"p": 0.285,
-"price": 229,
-"book": "Kalshi"
 }
 ],
-"p": 0.08123,
-"d": 10.791,
+"p": 0.08408,
+"d": 10.109,
 "first": "2026-11-26T21:30:00+00:00",
 "res": null
 },
@@ -7401,12 +7418,12 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.445,
-"price": 147,
+"p": 0.4431,
+"price": 150,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0993,
-"fair": 0.4085,
+"edge": 0.1078,
+"fair": 0.4075,
 "main": true
 },
 {
@@ -7417,11 +7434,11 @@
 "line": 1.5,
 "name": "calvin ridley",
 "lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.4324,
+"p": 0.4312,
 "price": 153,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0938,
+"edge": 0.091,
 "fair": 0.3817,
 "main": true
 },
@@ -7433,17 +7450,17 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4093,
+"p": 0.404,
 "price": 167,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0927,
-"fair": 0.3705,
+"edge": 0.0787,
+"fair": 0.3651,
 "main": true
 }
 ],
-"p": 0.07876,
-"d": 16.685,
+"p": 0.07719,
+"d": 16.888,
 "first": "2026-11-27T01:20:00+00:00",
 "res": null
 },
@@ -7459,17 +7476,17 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.445,
-"price": 147,
+"p": 0.4431,
+"price": 150,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0993,
-"fair": 0.4085,
+"edge": 0.1078,
+"fair": 0.4075,
 "main": true
 }
 ],
-"p": 0.445,
-"d": 2.47,
+"p": 0.4431,
+"d": 2.5,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "straight",
 "res": null
