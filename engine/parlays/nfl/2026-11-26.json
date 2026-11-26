@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-26",
 "lock": "2026-11-26T18:00:00+00:00",
-"frozen_at": "2026-11-26T19:17:54.681Z",
+"frozen_at": "2026-11-26T19:30:11.576Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -2251,25 +2251,25 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4494,
-"price": 141,
+"p": 0.4478,
+"price": 144,
 "book": "Novig"
 },
 {
-"gid": "2026_12_DEN_PIT",
-"start": "2026-11-27T15:00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "marvin mims",
-"lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4044,
-"price": 163,
+"gid": "2026_12_NE_LAC",
+"start": "2026-11-29T16:05:00",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "NE moneyline",
+"p": 0.5563,
+"price": -111,
 "book": "Novig"
 }
 ],
-"p": 0.18172,
-"d": 6.338,
+"p": 0.24909,
+"d": 4.638,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "core",
 "res": null
@@ -2286,25 +2286,25 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4494,
-"price": 141,
+"p": 0.4478,
+"price": 144,
 "book": "Novig"
 },
 {
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
 "kind": "ml",
 "side": "home",
 "line": null,
 "name": null,
-"lab": "ARI moneyline",
-"p": 0.272,
-"price": 292,
+"lab": "IND moneyline",
+"p": 0.2957,
+"price": 257,
 "book": "Novig"
 }
 ],
-"p": 0.12222,
-"d": 9.447,
+"p": 0.1324,
+"d": 8.711,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "core",
 "res": null
@@ -7390,6 +7390,31 @@
 "tier": "2 legs",
 "legs": [
 {
+"gid": "2026_12_WAS_ARI",
+"start": "2026-11-29T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "trey mcbride",
+"lab": "Trey McBride over 59.5 rec yds",
+"p": 0.4979,
+"price": -106,
+"book": "Novig",
+"f": [
+"usage",
+"matchup"
+],
+"v": [
+"usage",
+"matchup",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0658
+},
+{
 "gid": "2026_12_PHI_DAL",
 "start": "2026-11-26T16:30:00",
 "kind": "rec",
@@ -7397,7 +7422,7 @@
 "line": 3.5,
 "name": "makai lemon",
 "lab": "Makai Lemon over 3.5 receptions",
-"p": 0.4349,
+"p": 0.4353,
 "price": 133,
 "book": "Novig",
 "f": [
@@ -7411,35 +7436,11 @@
 "pinnacle up"
 ],
 "sport": "nfl",
-"edge": 0.0495
-},
-{
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 59.5,
-"name": "trey mcbride",
-"lab": "Trey McBride over 59.5 rec yds",
-"p": 0.4965,
-"price": -113,
-"book": "Novig",
-"f": [
-"usage",
-"matchup"
-],
-"v": [
-"usage",
-"matchup",
-"our model above fair",
-"consensus up"
-],
-"sport": "nfl",
-"edge": 0.0318
+"edge": 0.0502
 }
 ],
-"p": 0.21593,
-"d": 4.392,
+"p": 0.21674,
+"d": 4.528,
 "first": "2026-11-26T21:30:00+00:00",
 "res": null
 },
@@ -7455,17 +7456,44 @@
 "line": 0.5,
 "name": "zach ertz",
 "lab": "Zach Ertz over 0.5 receptions",
-"p": 0.5741,
-"price": 100,
+"p": 0.5819,
+"price": -106,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1482,
-"fair": 0.4965,
+"edge": 0.1308,
+"fair": 0.5069,
 "main": true
 }
 ],
-"p": 0.5741,
-"d": 2.0,
+"p": 0.5819,
+"d": 1.943,
+"first": "2026-11-26T21:30:00+00:00",
+"pick": "straight",
+"res": null
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_PHI_DAL",
+"start": "2026-11-26T21:30:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 3.5,
+"name": "makai lemon",
+"lab": "Makai Lemon over 3.5 receptions",
+"p": 0.4507,
+"price": 133,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.0502,
+"fair": 0.4353,
+"main": true
+}
+],
+"p": 0.4507,
+"d": 2.33,
 "first": "2026-11-26T21:30:00+00:00",
 "pick": "straight",
 "res": null
@@ -7482,17 +7510,17 @@
 "line": 2.5,
 "name": "xavier worthy",
 "lab": "Xavier Worthy over 2.5 receptions",
-"p": 0.4476,
-"price": 141,
+"p": 0.4454,
+"price": 144,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0788,
-"fair": 0.4135,
+"edge": 0.0867,
+"fair": 0.4105,
 "main": true
 }
 ],
-"p": 0.4476,
-"d": 2.41,
+"p": 0.4454,
+"d": 2.44,
 "first": "2026-11-27T01:20:00+00:00",
 "pick": "straight",
 "res": null
