@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-27",
 "lock": "2026-11-27T20:00:00+00:00",
-"frozen_at": "2026-11-26T01:38:35.067Z",
+"frozen_at": "2026-11-26T01:56:31.643Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -15,16 +15,50 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_12_NE_LAC",
-"start": "2026-11-29T16:05:00",
-"kind": "rec",
+"gid": "2026_12_NYJ_MIA",
+"start": "2026-11-29T13:00:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "MIA moneyline",
+"p": 0.353,
+"price": 208,
+"book": "Novig"
+},
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T15:00:00",
+"kind": "rec_yds",
 "side": "o",
-"line": 2.5,
-"name": "mack hollins",
-"lab": "Mack Hollins over 2.5 receptions",
-"p": 0.6366,
-"price": -110,
-"book": "Hard Rock"
+"line": 5.5,
+"name": "troy franklin",
+"lab": "Troy Franklin over 5.5 rec yds",
+"p": 0.5058,
+"price": 108,
+"book": "Novig"
+}
+],
+"p": 0.17857,
+"d": 6.406,
+"first": "2026-11-27T20:00:00+00:00",
+"pick": "core"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_12_NYJ_MIA",
+"start": "2026-11-29T13:00:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "MIA moneyline",
+"p": 0.353,
+"price": 208,
+"book": "Novig"
 },
 {
 "gid": "2026_12_DEN_PIT",
@@ -34,47 +68,13 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4039,
-"price": 160,
+"p": 0.4089,
+"price": 163,
 "book": "Novig"
 }
 ],
-"p": 0.25714,
-"d": 4.964,
-"first": "2026-11-27T20:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_12_NE_LAC",
-"start": "2026-11-29T16:05:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "mack hollins",
-"lab": "Mack Hollins over 2.5 receptions",
-"p": 0.6366,
-"price": -110,
-"book": "Hard Rock"
-},
-{
-"gid": "2026_12_DEN_PIT",
-"start": "2026-11-27T15:00:00",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "PIT moneyline",
-"p": 0.3651,
-"price": 190,
-"book": "Novig"
-}
-],
-"p": 0.23241,
-"d": 5.536,
+"p": 0.14434,
+"d": 8.1,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "core"
 },
@@ -3036,17 +3036,43 @@
 "line": 1.5,
 "name": "marvin mims",
 "lab": "Marvin Mims over 1.5 receptions",
-"p": 0.4044,
-"price": 160,
+"p": 0.4082,
+"price": 163,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0516,
-"fair": 0.3648,
+"edge": 0.0736,
+"fair": 0.3698,
 "main": true
 }
 ],
-"p": 0.4044,
-"d": 2.6,
+"p": 0.4082,
+"d": 2.63,
+"first": "2026-11-27T20:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_DEN_PIT",
+"start": "2026-11-27T20:00:00+00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 5.5,
+"name": "troy franklin",
+"lab": "Troy Franklin over 5.5 rec yds",
+"p": 0.5072,
+"price": 108,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.055,
+"fair": 0.4696,
+"main": true
+}
+],
+"p": 0.5072,
+"d": 2.08,
 "first": "2026-11-27T20:00:00+00:00",
 "pick": "straight"
 }
