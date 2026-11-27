@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-27",
 "lock": "2026-11-27T18:00:00+00:00",
-"frozen_at": "2026-11-27T09:47:32.006Z",
+"frozen_at": "2026-11-27T10:00:05.517Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -1360,13 +1360,13 @@
 "line": null,
 "name": null,
 "lab": "ANA moneyline",
-"p": 0.5027,
+"p": 0.5299,
 "price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.27201,
-"d": 3.676,
+"p": 0.2826,
+"d": 3.539,
 "first": "2026-11-27T21:00:00+00:00",
 "res": null
 },
@@ -1382,7 +1382,7 @@
 "line": 0.5,
 "name": "adrian kempe",
 "lab": "Adrian Kempe to score",
-"p": 0.3396,
+"p": 0.3247,
 "price": 186,
 "book": "Novig"
 },
@@ -1399,42 +1399,8 @@
 "book": "Novig"
 }
 ],
-"p": 0.23,
-"d": 4.348,
-"first": "2026-11-27T21:00:00+00:00",
-"res": null
-},
-{
-"card": "Same-game combos (experimental)",
-"tier": "Goal + win",
-"legs": [
-{
-"gid": "2026020409",
-"start": "2026-11-27T21:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "adrian kempe",
-"lab": "Adrian Kempe to score",
-"p": 0.3396,
-"price": 186,
-"book": "Novig"
-},
-{
-"gid": "2026020409",
-"start": "2026-11-27T21:00:00Z",
-"kind": "ml",
-"side": "away",
-"line": null,
-"name": null,
-"lab": "LAK moneyline",
-"p": 0.4973,
-"price": -104,
-"book": "Novig"
-}
-],
-"p": 0.22142,
-"d": 4.516,
+"p": 0.22292,
+"d": 4.486,
 "first": "2026-11-27T21:00:00+00:00",
 "res": null
 },
@@ -1467,8 +1433,42 @@
 "book": "Hard Rock"
 }
 ],
-"p": 0.21794,
-"d": 4.589,
+"p": 0.21513,
+"d": 4.648,
+"first": "2026-11-27T21:00:00+00:00",
+"res": null
+},
+{
+"card": "Same-game combos (experimental)",
+"tier": "Goal + win",
+"legs": [
+{
+"gid": "2026020409",
+"start": "2026-11-27T21:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "beckett sennecke",
+"lab": "Beckett Sennecke to score",
+"p": 0.3277,
+"price": 199,
+"book": "Novig"
+},
+{
+"gid": "2026020409",
+"start": "2026-11-27T21:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "ANA moneyline",
+"p": 0.5299,
+"price": 102,
+"book": "Novig"
+}
+],
+"p": 0.21396,
+"d": 4.674,
 "first": "2026-11-27T21:00:00+00:00",
 "res": null
 },
@@ -2268,12 +2268,12 @@
 "line": 2.5,
 "name": "alex laferriere",
 "lab": "Alex Laferriere over 2.5 shots",
-"p": 0.5181,
+"p": 0.513,
 "price": 102,
 "book": "Novig"
 }
 ],
-"p": 0.28337,
+"p": 0.28055,
 "d": 3.746,
 "first": "2026-11-27T21:00:00+00:00",
 "pick": "core",
@@ -2311,41 +2311,6 @@
 "p": 0.27957,
 "d": 3.802,
 "first": "2026-11-27T21:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026020406",
-"start": "2026-11-27T20:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "WSH moneyline",
-"p": 0.5173,
-"price": 104,
-"book": "Novig"
-},
-{
-"gid": "2026020409",
-"start": "2026-11-27T21:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 2.5,
-"name": "alex laferriere",
-"lab": "Alex Laferriere over 2.5 shots",
-"p": 0.5181,
-"price": 102,
-"book": "Novig"
-}
-],
-"p": 0.26804,
-"d": 4.121,
-"first": "2026-11-27T20:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -2451,6 +2416,74 @@
 "res": null
 },
 {
+"card": "Shots + moneyline parlays",
+"tier": "Best shot",
+"legs": [
+{
+"gid": "2026020406",
+"start": "2026-11-27T20:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "WSH moneyline",
+"p": 0.5173,
+"price": 104,
+"book": "Novig"
+},
+{
+"gid": "2026020409",
+"start": "2026-11-27T21:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "trevor moore",
+"lab": "Trevor Moore over 1.5 shots",
+"p": 0.5112,
+"price": 105,
+"book": "theScore"
+}
+],
+"p": 0.26444,
+"d": 4.182,
+"first": "2026-11-27T20:00:00+00:00",
+"res": null
+},
+{
+"card": "Triple-green longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026020409",
+"start": "2026-11-27T21:00:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "adrian kempe",
+"lab": "Adrian Kempe to score",
+"p": 0.3228,
+"price": 186,
+"book": "Novig"
+},
+{
+"gid": "2026020411",
+"start": "2026-11-27T22:30:00Z",
+"kind": "goal",
+"side": "o",
+"line": 0.5,
+"name": "will cuylle",
+"lab": "Will Cuylle to score",
+"p": 0.2494,
+"price": 270,
+"book": "Novig"
+}
+],
+"p": 0.08051,
+"d": 10.582,
+"first": "2026-11-27T21:00:00+00:00",
+"res": null
+},
+{
 "card": "Triple-green longshots (experimental)",
 "tier": "2-leg",
 "legs": [
@@ -2483,40 +2516,6 @@
 "d": 16.095,
 "first": "2026-11-27T21:00:00+00:00",
 "pick": "longshot",
-"res": null
-},
-{
-"card": "Triple-green longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026020407",
-"start": "2026-11-27T20:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "adam fantilli",
-"lab": "Adam Fantilli to score",
-"p": 0.3185,
-"price": 186,
-"book": "Novig"
-},
-{
-"gid": "2026020411",
-"start": "2026-11-27T22:30:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "will cuylle",
-"lab": "Will Cuylle to score",
-"p": 0.2494,
-"price": 270,
-"book": "Novig"
-}
-],
-"p": 0.07943,
-"d": 10.582,
-"first": "2026-11-27T20:00:00+00:00",
 "res": null
 },
 {
@@ -2605,54 +2604,20 @@
 "book": "Novig"
 },
 {
-"gid": "2026020407",
-"start": "2026-11-27T20:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "adam fantilli",
-"lab": "Adam Fantilli to score",
-"p": 0.3185,
-"price": 186,
-"book": "Novig"
-}
-],
-"p": 0.07526,
-"d": 11.211,
-"first": "2026-11-27T20:00:00+00:00",
-"res": null
-},
-{
-"card": "Triple-green longshots (experimental)",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "2026020405",
-"start": "2026-11-27T20:00:00Z",
-"kind": "goal",
-"side": "o",
-"line": 0.5,
-"name": "christian dvorak",
-"lab": "Christian Dvorak to score",
-"p": 0.2363,
-"price": 292,
-"book": "Novig"
-},
-{
-"gid": "2026020410",
+"gid": "2026020409",
 "start": "2026-11-27T21:00:00Z",
 "kind": "goal",
 "side": "o",
 "line": 0.5,
-"name": "tomas hertl",
-"lab": "Tomas Hertl to score",
-"p": 0.3065,
-"price": 203,
+"name": "adrian kempe",
+"lab": "Adrian Kempe to score",
+"p": 0.3228,
+"price": 186,
 "book": "Novig"
 }
 ],
-"p": 0.07243,
-"d": 11.878,
+"p": 0.07628,
+"d": 11.211,
 "first": "2026-11-27T20:00:00+00:00",
 "res": null
 },
