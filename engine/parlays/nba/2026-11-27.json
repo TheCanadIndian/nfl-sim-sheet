@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-27",
 "lock": "2026-11-28T00:00:00+00:00",
-"frozen_at": "2026-11-27T15:35:12.254Z",
+"frozen_at": "2026-11-27T15:49:19.967Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -173,69 +173,38 @@
 "res": null
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
 "legs": [
 {
-"gid": "401909326",
-"start": "2026-11-28T00:00Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "josh hart",
-"lab": "Josh Hart 2+ threes",
-"p": 0.4199,
-"price": 130,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
+"gid": "401909328",
+"start": "2026-11-28T00:30Z",
+"kind": "spread",
+"side": "away",
+"line": -3.5,
+"name": null,
+"lab": "PHI \u22123.5",
+"p": 0.4989,
+"price": 111,
+"book": "Novig"
 },
 {
-"gid": "401909331",
-"start": "2026-11-28T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 7+ ast",
-"p": 0.3984,
-"price": 165,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909332",
-"start": "2026-11-28T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "dillon brooks",
-"lab": "Dillon Brooks 3+ ast",
-"p": 0.3878,
-"price": 175,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
+"gid": "401909336",
+"start": "2026-11-28T02:30Z",
+"kind": "total",
+"side": "over",
+"line": 221.5,
+"name": null,
+"lab": "GS-POR over 221.5",
+"p": 0.4976,
+"price": 120,
+"book": "Novig"
 }
 ],
-"p": 0.06487,
-"d": 16.761,
-"first": "2026-11-28T00:00:00+00:00",
-"pick": "longshot",
+"p": 0.24824,
+"d": 4.642,
+"first": "2026-11-28T00:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -284,6 +253,48 @@
 "p": 0.13108,
 "d": 7.56,
 "first": "2026-11-28T00:30:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "401909335",
+"start": "2026-11-28T02:30:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "max strus",
+"lab": "Max Strus over 3.5 assists",
+"p": 0.2682,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0728,
+"fair": 0.2587,
+"main": false
+},
+{
+"gid": "401909331",
+"start": "2026-11-28T01:30:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball over 6.5 assists",
+"p": 0.4048,
+"price": 165,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.0727,
+"fair": 0.392,
+"main": false
+}
+],
+"p": 0.10857,
+"d": 10.6,
+"first": "2026-11-28T01:30:00+00:00",
 "res": null
 }
 ],
