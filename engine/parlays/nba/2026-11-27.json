@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-27",
 "lock": "2026-11-28T00:00:00+00:00",
-"frozen_at": "2026-11-27T19:33:47.681Z",
+"frozen_at": "2026-11-27T19:48:14.806Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,7 @@
 "line": 4.5,
 "name": "mikal bridges",
 "lab": "Mikal Bridges 5+ reb",
-"p": 0.3516,
+"p": 0.3518,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -40,7 +40,7 @@
 "line": 2.5,
 "name": "dillon brooks",
 "lab": "Dillon Brooks 3+ ast",
-"p": 0.3644,
+"p": 0.3645,
 "price": 175,
 "book": "Hard Rock",
 "f": [
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.12811,
+"p": 0.1282,
 "d": 8.8,
 "first": "2026-11-28T00:00:00+00:00",
 "pick": "core",
@@ -69,7 +69,7 @@
 "line": 4.5,
 "name": "jalen brunson",
 "lab": "Jalen Brunson 5+ reb",
-"p": 0.2795,
+"p": 0.2812,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -87,7 +87,7 @@
 "line": 2.5,
 "name": "dillon brooks",
 "lab": "Dillon Brooks 3+ ast",
-"p": 0.3644,
+"p": 0.3645,
 "price": 175,
 "book": "Hard Rock",
 "f": [
@@ -98,10 +98,9 @@
 ]
 }
 ],
-"p": 0.10182,
+"p": 0.1025,
 "d": 11,
 "first": "2026-11-28T00:00:00+00:00",
-"pick": "core",
 "res": null
 },
 {
@@ -116,7 +115,7 @@
 "line": 4.5,
 "name": "mikal bridges",
 "lab": "Mikal Bridges 5+ reb",
-"p": 0.3516,
+"p": 0.3518,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -124,24 +123,6 @@
 "rotation",
 "game",
 "price"
-]
-},
-{
-"gid": "401909328",
-"start": "2026-11-28T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "lebron james",
-"lab": "LeBron James 2+ threes",
-"p": 0.38,
-"price": 156,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
 ]
 },
 {
@@ -161,10 +142,28 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401909335",
+"start": "2026-11-28T02:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "brandon ingram",
+"lab": "Brandon Ingram 7+ reb",
+"p": 0.2823,
+"price": 250,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.04645,
-"d": 23.02,
+"p": 0.03451,
+"d": 31.472,
 "first": "2026-11-28T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -181,7 +180,7 @@
 "line": 4.5,
 "name": "jalen brunson",
 "lab": "Jalen Brunson 5+ reb",
-"p": 0.2795,
+"p": 0.2812,
 "price": 300,
 "book": "Hard Rock",
 "f": [
@@ -189,24 +188,6 @@
 "rotation",
 "game",
 "price"
-]
-},
-{
-"gid": "401909328",
-"start": "2026-11-28T00:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 1.5,
-"name": "lebron james",
-"lab": "LeBron James 2+ threes",
-"p": 0.38,
-"price": 156,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
 ]
 },
 {
@@ -226,59 +207,99 @@
 "rotation",
 "game"
 ]
+},
+{
+"gid": "401909335",
+"start": "2026-11-28T02:30Z",
+"kind": "reb",
+"side": "o",
+"line": 6.5,
+"name": "brandon ingram",
+"lab": "Brandon Ingram 7+ reb",
+"p": 0.2823,
+"price": 250,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
 }
 ],
-"p": 0.03692,
-"d": 28.774,
+"p": 0.0276,
+"d": 39.34,
 "first": "2026-11-28T00:00:00+00:00",
-"pick": "longshot",
 "res": null
 },
 {
-"card": "Learning parlays (experimental)",
-"tier": "2 legs",
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
 "legs": [
 {
-"gid": "401909331",
-"start": "2026-11-28T01:30Z",
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "PHX moneyline",
+"p": 0.596,
+"price": -117,
+"book": "Novig"
+},
+{
+"gid": "401909336",
+"start": "2026-11-28T02:30Z",
 "kind": "reb",
 "side": "o",
 "line": 4.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu over 4.5 rebounds",
-"p": 0.5366,
-"price": 105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation"
-],
-"sport": "nba",
-"edge": 0.1
-},
-{
-"gid": "401909334",
-"start": "2026-11-28T02:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "keyonte george",
-"lab": "Keyonte George over 6.5 assists",
-"p": 0.5549,
-"price": -110,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"sport": "nba",
-"edge": 0.0593
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 4.5 rebounds",
+"p": 0.5076,
+"price": 130,
+"book": "Hard Rock"
 }
 ],
-"p": 0.29776,
-"d": 3.914,
-"first": "2026-11-28T01:30:00+00:00",
+"p": 0.30251,
+"d": 4.266,
+"first": "2026-11-28T02:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "PHX moneyline",
+"p": 0.596,
+"price": -117,
+"book": "Novig"
+},
+{
+"gid": "401909336",
+"start": "2026-11-28T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 2.5,
+"name": "jrue holiday",
+"lab": "Jrue Holiday over 2.5 threes",
+"p": 0.4742,
+"price": 135,
+"book": "Hard Rock"
+}
+],
+"p": 0.28259,
+"d": 4.359,
+"first": "2026-11-28T02:00:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -311,7 +332,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0854
+"edge": 0.0865
 },
 {
 "gid": "401909336",
@@ -337,12 +358,98 @@
 "knee"
 ],
 "sport": "nba",
-"edge": 0.1422
+"edge": 0.1419
 }
 ],
 "p": 0.26947,
 "d": 4.612,
 "first": "2026-11-28T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Confluence parlays (experimental)",
+"tier": "3 legs",
+"legs": [
+{
+"gid": "401909328",
+"start": "2026-11-28T00:30Z",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "joel embiid",
+"lab": "Joel Embiid over 4.5 assists",
+"p": 0.433,
+"price": 145,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"consensus up",
+"pinnacle up"
+],
+"sport": "nba",
+"edge": 0.0526
+},
+{
+"gid": "401909331",
+"start": "2026-11-28T01:30Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu over 4.5 rebounds",
+"p": 0.5455,
+"price": 105,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.1068
+},
+{
+"gid": "401909334",
+"start": "2026-11-28T02:30Z",
+"kind": "ast",
+"side": "o",
+"line": 6.5,
+"name": "keyonte george",
+"lab": "Keyonte George over 6.5 assists",
+"p": 0.5622,
+"price": -110,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"consensus up"
+],
+"sport": "nba",
+"edge": 0.06
+}
+],
+"p": 0.13279,
+"d": 9.588,
+"first": "2026-11-28T00:30:00+00:00",
 "res": null
 },
 {
@@ -375,7 +482,7 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0854
+"edge": 0.0865
 },
 {
 "gid": "401909336",
@@ -401,7 +508,7 @@
 "knee"
 ],
 "sport": "nba",
-"edge": 0.1422
+"edge": 0.1419
 },
 {
 "gid": "401909328",
@@ -427,18 +534,18 @@
 "pinnacle up"
 ],
 "sport": "nba",
-"edge": 0.0528
+"edge": 0.0526
 },
 {
-"gid": "401909334",
-"start": "2026-11-28T02:30Z",
-"kind": "ast",
+"gid": "401909331",
+"start": "2026-11-28T01:30Z",
+"kind": "reb",
 "side": "o",
-"line": 6.5,
-"name": "keyonte george",
-"lab": "Keyonte George over 6.5 assists",
-"p": 0.5622,
-"price": -110,
+"line": 4.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu over 4.5 rebounds",
+"p": 0.5455,
+"price": 105,
 "book": "Hard Rock",
 "f": [
 "usage",
@@ -452,11 +559,11 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0593
+"edge": 0.1068
 }
 ],
-"p": 0.0656,
-"d": 21.574,
+"p": 0.06365,
+"d": 23.166,
 "first": "2026-11-28T00:00:00+00:00",
 "res": null
 },
@@ -472,12 +579,12 @@
 "line": 10.5,
 "name": "josh hart",
 "lab": "Josh Hart over 10.5 rebounds",
-"p": 0.3251,
-"fair": 0.3264,
+"p": 0.3361,
+"fair": 0.3377,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3005,
+"edge": 0.3444,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -493,12 +600,12 @@
 "line": 5.5,
 "name": "joel embiid",
 "lab": "Joel Embiid over 5.5 assists",
-"p": 0.2658,
+"p": 0.2657,
 "fair": 0.268,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0032,
+"edge": -0.0035,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -506,7 +613,7 @@
 ]
 }
 ],
-"p": 0.08748,
+"p": 0.0905,
 "d": 15.0,
 "first": "2026-11-28T00:00:00+00:00",
 "res": null
@@ -523,12 +630,12 @@
 "line": 10.5,
 "name": "josh hart",
 "lab": "Josh Hart over 10.5 rebounds",
-"p": 0.3251,
-"fair": 0.3264,
+"p": 0.3361,
+"fair": 0.3377,
 "price": 300,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3005,
+"edge": 0.3444,
 "v": [
 "Pinnacle line up",
 "consensus line up",
@@ -544,12 +651,12 @@
 "line": 5.5,
 "name": "joel embiid",
 "lab": "Joel Embiid over 5.5 assists",
-"p": 0.2658,
+"p": 0.2657,
 "fair": 0.268,
 "price": 275,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0032,
+"edge": -0.0035,
 "v": [
 "Pinnacle odds drop",
 "consensus line up",
@@ -564,69 +671,21 @@
 "line": 5.5,
 "name": "ayo dosunmu",
 "lab": "Ayo Dosunmu over 5.5 assists",
-"p": 0.3943,
+"p": 0.4006,
 "fair": 0.4043,
 "price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.104,
+"edge": 0.1216,
 "v": [
 "consensus odds drop",
 "one rung above the main line (4.5)"
 ]
 }
 ],
-"p": 0.03537,
+"p": 0.03659,
 "d": 42.0,
 "first": "2026-11-28T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sharp move parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909331",
-"start": "2026-11-28T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 5.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu over 5.5 assists",
-"p": 0.3943,
-"fair": 0.4043,
-"price": 180,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.104,
-"v": [
-"consensus odds drop",
-"one rung above the main line (4.5)"
-]
-},
-{
-"gid": "401909327",
-"start": "2026-11-28T00:30Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "kevin huerter",
-"lab": "Kevin Huerter over 4.5 assists",
-"p": 0.3709,
-"fair": 0.3702,
-"price": 180,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0384,
-"v": [
-"consensus odds drop",
-"one rung above the main line (3.5)"
-]
-}
-],
-"p": 0.14967,
-"d": 7.84,
-"first": "2026-11-28T00:30:00+00:00",
 "res": null
 },
 {
@@ -641,11 +700,11 @@
 "line": 5.5,
 "name": "jrue holiday",
 "lab": "Jrue Holiday over 5.5 assists",
-"p": 0.4771,
+"p": 0.4784,
 "price": 190,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3836,
+"edge": 0.3874,
 "fair": 0.4607,
 "main": true
 },
@@ -657,16 +716,16 @@
 "line": 2.5,
 "name": "demar derozan",
 "lab": "Demar Derozan over 2.5 assists",
-"p": 0.4237,
+"p": 0.4245,
 "price": 213,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.3263,
+"edge": 0.3287,
 "fair": 0.4286,
 "main": false
 }
 ],
-"p": 0.20215,
+"p": 0.20308,
 "d": 9.077,
 "first": "2026-11-28T02:30:00+00:00",
 "res": null
@@ -683,11 +742,11 @@
 "line": 5.5,
 "name": "jrue holiday",
 "lab": "Jrue Holiday over 5.5 assists",
-"p": 0.4771,
+"p": 0.4784,
 "price": 190,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.3836,
+"edge": 0.3874,
 "fair": 0.4607,
 "main": true
 },
@@ -699,11 +758,11 @@
 "line": 2.5,
 "name": "demar derozan",
 "lab": "Demar Derozan over 2.5 assists",
-"p": 0.4237,
+"p": 0.4245,
 "price": 213,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.3263,
+"edge": 0.3287,
 "fair": 0.4286,
 "main": false
 },
@@ -715,16 +774,16 @@
 "line": 9.5,
 "name": "josh hart",
 "lab": "Josh Hart over 9.5 rebounds",
-"p": 0.4321,
+"p": 0.4315,
 "price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2099,
+"edge": 0.2083,
 "fair": 0.435,
 "main": true
 }
 ],
-"p": 0.08735,
+"p": 0.08763,
 "d": 25.416,
 "first": "2026-11-28T00:00:00+00:00",
 "res": null
@@ -741,33 +800,33 @@
 "line": 9.5,
 "name": "josh hart",
 "lab": "Josh Hart over 9.5 rebounds",
-"p": 0.4321,
+"p": 0.4315,
 "price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.2099,
+"edge": 0.2083,
 "fair": 0.435,
 "main": true
 },
 {
-"gid": "401909327",
-"start": "2026-11-28T00:30:00+00:00",
-"kind": "fg3m",
+"gid": "401909331",
+"start": "2026-11-28T01:30:00+00:00",
+"kind": "ast",
 "side": "o",
-"line": 4.5,
-"name": "isaiah joe",
-"lab": "Isaiah Joe over 4.5 threes",
-"p": 0.2714,
-"price": 300,
+"line": 5.5,
+"name": "ayo dosunmu",
+"lab": "Ayo Dosunmu over 5.5 assists",
+"p": 0.3968,
+"price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0858,
-"fair": 0.2801,
+"edge": 0.1111,
+"fair": 0.4043,
 "main": false
 }
 ],
-"p": 0.11727,
-"d": 11.2,
+"p": 0.17122,
+"d": 7.84,
 "first": "2026-11-28T00:00:00+00:00",
 "res": null
 }
