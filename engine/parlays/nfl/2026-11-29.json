@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-29",
 "lock": "2026-11-29T18:00:00+00:00",
-"frozen_at": "2026-11-27T11:30:03.830Z",
+"frozen_at": "2026-11-27T11:47:35.909Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -10,6 +10,39 @@
 ],
 "final_at": "2026-11-29T16:00:00+00:00",
 "parlays": [
+{
+"card": "Ladder longshots (experimental)",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "2026_12_NE_LAC",
+"start": "2026-11-29T16:05:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "mack hollins",
+"lab": "Mack Hollins 40+ rec yds",
+"p": 0.3,
+"price": 198,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_NO_CIN",
+"start": "2026-11-29T13:00:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 39.5,
+"name": "chase brown",
+"lab": "Chase Brown 40+ rec yds",
+"p": 0.265,
+"price": 229,
+"book": "Kalshi"
+}
+],
+"p": 0.0795,
+"d": 9.799,
+"first": "2026-11-29T18:00:00+00:00"
+},
 {
 "card": "Ladder longshots (experimental)",
 "tier": "2-leg",
@@ -48,18 +81,6 @@
 "tier": "2-leg",
 "legs": [
 {
-"gid": "2026_12_NE_LAC",
-"start": "2026-11-29T16:05:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "mack hollins",
-"lab": "Mack Hollins 40+ rec yds",
-"p": 0.3,
-"price": 198,
-"book": "Kalshi"
-},
-{
 "gid": "2026_12_NO_CIN",
 "start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
@@ -67,19 +88,10 @@
 "line": 39.5,
 "name": "chase brown",
 "lab": "Chase Brown 40+ rec yds",
-"p": 0.26,
-"price": 240,
+"p": 0.265,
+"price": 229,
 "book": "Kalshi"
-}
-],
-"p": 0.078,
-"d": 10.142,
-"first": "2026-11-29T18:00:00+00:00"
 },
-{
-"card": "Ladder longshots (experimental)",
-"tier": "2-leg",
-"legs": [
 {
 "gid": "2026_12_TEN_JAX",
 "start": "2026-11-29T13:00:00",
@@ -91,27 +103,15 @@
 "p": 0.265,
 "price": 252,
 "book": "Kalshi"
-},
-{
-"gid": "2026_12_NO_CIN",
-"start": "2026-11-29T13:00:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 39.5,
-"name": "chase brown",
-"lab": "Chase Brown 40+ rec yds",
-"p": 0.26,
-"price": 240,
-"book": "Kalshi"
 }
 ],
-"p": 0.0689,
-"d": 11.981,
+"p": 0.07023,
+"d": 11.575,
 "first": "2026-11-29T18:00:00+00:00"
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
+"tier": "+600 to +1500",
 "legs": [
 {
 "gid": "2026_12_SEA_SF",
@@ -121,7 +121,7 @@
 "line": 0.5,
 "name": "tory horton",
 "lab": "Tory Horton over 0.5 receptions",
-"p": 0.5902,
+"p": 0.5918,
 "price": -117,
 "book": "Novig"
 },
@@ -130,16 +130,28 @@
 "start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 13.5,
+"line": 14.5,
 "name": "jonathan taylor",
-"lab": "Jonathan Taylor over 13.5 rec yds",
-"p": 0.546,
-"price": -108,
+"lab": "Jonathan Taylor over 14.5 rec yds",
+"p": 0.5898,
+"price": -120,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_LV_CLE",
+"start": "2026-11-29T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jack bech",
+"lab": "Jack Bech over 1.5 receptions",
+"p": 0.4858,
+"price": 122,
 "book": "Novig"
 }
 ],
-"p": 0.32222,
-"d": 3.572,
+"p": 0.16955,
+"d": 7.549,
 "first": "2026-11-29T18:00:00+00:00",
 "pick": "core"
 },
@@ -155,38 +167,38 @@
 "line": 0.5,
 "name": "tory horton",
 "lab": "Tory Horton over 0.5 receptions",
-"p": 0.5902,
+"p": 0.5918,
 "price": -117,
 "book": "Novig"
 },
 {
 "gid": "2026_12_NE_LAC",
 "start": "2026-11-29T16:05:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "mack hollins",
-"lab": "Mack Hollins over 2.5 receptions",
-"p": 0.5333,
-"price": -102,
-"book": "Novig"
-},
-{
-"gid": "2026_12_NYG_IND",
-"start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 13.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 13.5 rec yds",
-"p": 0.546,
-"price": -108,
+"line": 24.5,
+"name": "mack hollins",
+"lab": "Mack Hollins over 24.5 rec yds",
+"p": 0.5898,
+"price": -120,
+"book": "Kalshi"
+},
+{
+"gid": "2026_12_LV_CLE",
+"start": "2026-11-29T20:20:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "jack bech",
+"lab": "Jack Bech over 1.5 receptions",
+"p": 0.4858,
+"price": 122,
 "book": "Novig"
 }
 ],
-"p": 0.17185,
-"d": 7.074,
-"first": "2026-11-29T18:00:00+00:00",
+"p": 0.16955,
+"d": 7.549,
+"first": "2026-11-29T21:05:00+00:00",
 "pick": "core"
 },
 {
@@ -22657,6 +22669,66 @@
 "first": "2026-11-29T21:25:00+00:00"
 },
 {
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_12_WAS_ARI",
+"start": "2026-11-29T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "trey mcbride",
+"lab": "Trey McBride over 59.5 rec yds",
+"p": 0.4977,
+"price": -104,
+"book": "Novig",
+"f": [
+"usage",
+"matchup"
+],
+"v": [
+"usage",
+"matchup",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0755
+},
+{
+"gid": "2026_12_NE_LAC",
+"start": "2026-11-29T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mack hollins",
+"lab": "Mack Hollins over 2.5 receptions",
+"p": 0.4953,
+"price": -102,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nfl",
+"edge": 0.0562
+}
+],
+"p": 0.24651,
+"d": 3.885,
+"first": "2026-11-29T21:05:00+00:00"
+},
+{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -22694,17 +22766,17 @@
 "line": 2.5,
 "name": "jonathan taylor",
 "lab": "Jonathan Taylor over 2.5 receptions",
-"p": 0.5262,
-"price": 100,
+"p": 0.5253,
+"price": 102,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0525,
-"fair": 0.4914,
+"edge": 0.0611,
+"fair": 0.4901,
 "main": true
 }
 ],
-"p": 0.5262,
-"d": 2.0,
+"p": 0.5253,
+"d": 2.02,
 "first": "2026-11-29T18:00:00+00:00",
 "pick": "straight"
 },
