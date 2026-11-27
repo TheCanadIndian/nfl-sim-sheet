@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-27",
 "lock": "2026-11-28T00:00:00+00:00",
-"frozen_at": "2026-11-27T16:20:48.770Z",
+"frozen_at": "2026-11-27T16:37:01.902Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -104,6 +104,68 @@
 "d": 6.545,
 "first": "2026-11-28T00:00:00+00:00",
 "pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909327",
+"start": "2026-11-28T00:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "john collins",
+"lab": "John Collins 2+ threes",
+"p": 0.3891,
+"price": 156,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+]
+},
+{
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "jalen green",
+"lab": "Jalen Green 5+ reb",
+"p": 0.3791,
+"price": 160,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909335",
+"start": "2026-11-28T02:30Z",
+"kind": "ast",
+"side": "o",
+"line": 3.5,
+"name": "max strus",
+"lab": "Max Strus 4+ ast",
+"p": 0.2628,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.03877,
+"d": 26.624,
+"first": "2026-11-28T00:30:00+00:00",
 "res": null
 },
 {
@@ -245,27 +307,27 @@
 ]
 },
 {
-"gid": "401909333",
-"start": "2026-11-28T02:30Z",
-"kind": "reb",
+"gid": "401909329",
+"start": "2026-11-28T00:30Z",
+"kind": "fg3m",
 "side": "o",
-"line": 7.5,
-"name": "luka doncic",
-"lab": "Luka Doncic over 7.5 rebounds",
-"p": 0.3622,
-"fair": 0.3623,
-"price": 170,
-"book": "Hard Rock",
+"line": 1.5,
+"name": "scottie barnes",
+"lab": "Scottie Barnes over 1.5 threes",
+"p": 0.3264,
+"fair": 0.3299,
+"price": 203,
+"book": "Novig",
 "sport": "nba",
-"edge": -0.0221,
+"edge": -0.0109,
 "v": [
 "consensus odds drop",
-"one rung above the main line (6.5)"
+"one rung above the main line (0.5)"
 ]
 }
 ],
-"p": 0.11213,
-"d": 8.64,
+"p": 0.1021,
+"d": 9.696,
 "first": "2026-11-28T00:00:00+00:00",
 "res": null
 },
@@ -273,6 +335,22 @@
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "3 legs",
 "legs": [
+{
+"gid": "401909327",
+"start": "2026-11-28T00:30:00+00:00",
+"kind": "fg3m",
+"side": "o",
+"line": 4.5,
+"name": "isaiah joe",
+"lab": "Isaiah Joe over 4.5 threes",
+"p": 0.2788,
+"price": 300,
+"book": "Hard Rock",
+"sport": "nba",
+"edge": 0.1151,
+"fair": 0.2873,
+"main": false
+},
 {
 "gid": "401909331",
 "start": "2026-11-28T01:30:00+00:00",
@@ -289,6 +367,32 @@
 "fair": 0.392,
 "main": false
 },
+{
+"gid": "401909326",
+"start": "2026-11-28T00:00:00+00:00",
+"kind": "ast",
+"side": "o",
+"line": 4.5,
+"name": "karlanthony towns",
+"lab": "Karl-Anthony Towns over 4.5 assists",
+"p": 0.4012,
+"price": 167,
+"book": "Novig",
+"sport": "nba",
+"edge": 0.0711,
+"fair": 0.4064,
+"main": false
+}
+],
+"p": 0.04522,
+"d": 28.302,
+"first": "2026-11-28T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Sweet-spot edge parlays (experimental)",
+"tier": "2 legs",
+"legs": [
 {
 "gid": "401909326",
 "start": "2026-11-28T00:00:00+00:00",
@@ -322,51 +426,9 @@
 "main": false
 }
 ],
-"p": 0.04342,
-"d": 28.302,
+"p": 0.1074,
+"d": 10.68,
 "first": "2026-11-28T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
-"legs": [
-{
-"gid": "401909332",
-"start": "2026-11-28T02:00:00+00:00",
-"kind": "reb",
-"side": "o",
-"line": 5.5,
-"name": "jalen green",
-"lab": "Jalen Green over 5.5 rebounds",
-"p": 0.2677,
-"price": 300,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0706,
-"fair": 0.2686,
-"main": false
-},
-{
-"gid": "401909335",
-"start": "2026-11-28T02:30:00+00:00",
-"kind": "ast",
-"side": "o",
-"line": 3.5,
-"name": "max strus",
-"lab": "Max Strus over 3.5 assists",
-"p": 0.267,
-"price": 300,
-"book": "Hard Rock",
-"sport": "nba",
-"edge": 0.0679,
-"fair": 0.2587,
-"main": false
-}
-],
-"p": 0.07148,
-"d": 16.0,
-"first": "2026-11-28T02:00:00+00:00",
 "res": null
 }
 ],
