@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-27",
 "lock": "2026-11-28T00:00:00+00:00",
-"frozen_at": "2026-11-27T14:51:11.906Z",
+"frozen_at": "2026-11-27T15:06:46.490Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -22,7 +22,55 @@
 "line": 4.5,
 "name": "mikal bridges",
 "lab": "Mikal Bridges 5+ reb",
-"p": 0.3388,
+"p": 0.3365,
+"price": 220,
+"book": "Hard Rock",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "reb",
+"side": "o",
+"line": 5.5,
+"name": "jalen green",
+"lab": "Jalen Green 6+ reb",
+"p": 0.2684,
+"price": 300,
+"book": "Hard Rock",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game",
+"price"
+]
+}
+],
+"p": 0.09031,
+"d": 12.8,
+"first": "2026-11-28T00:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Path longshots",
+"tier": "2-leg",
+"legs": [
+{
+"gid": "401909326",
+"start": "2026-11-28T00:00Z",
+"kind": "reb",
+"side": "o",
+"line": 4.5,
+"name": "mikal bridges",
+"lab": "Mikal Bridges 5+ reb",
+"p": 0.3365,
 "price": 220,
 "book": "Hard Rock",
 "f": [
@@ -40,7 +88,7 @@
 "line": 2.5,
 "name": "dillon brooks",
 "lab": "Dillon Brooks 3+ ast",
-"p": 0.3881,
+"p": 0.3877,
 "price": 175,
 "book": "Hard Rock",
 "f": [
@@ -52,57 +100,9 @@
 ]
 }
 ],
-"p": 0.1315,
+"p": 0.13047,
 "d": 8.8,
 "first": "2026-11-28T00:00:00+00:00",
-"pick": "core",
-"res": null
-},
-{
-"card": "Path longshots",
-"tier": "2-leg",
-"legs": [
-{
-"gid": "401909331",
-"start": "2026-11-28T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 6.5,
-"name": "lamelo ball",
-"lab": "LaMelo Ball 7+ ast",
-"p": 0.3979,
-"price": 165,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game",
-"price"
-]
-},
-{
-"gid": "401909332",
-"start": "2026-11-28T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "dillon brooks",
-"lab": "Dillon Brooks 3+ ast",
-"p": 0.3881,
-"price": 175,
-"book": "Hard Rock",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game",
-"price"
-]
-}
-],
-"p": 0.15445,
-"d": 7.287,
-"first": "2026-11-28T01:30:00+00:00",
 "pick": "core",
 "res": null
 },
@@ -113,19 +113,19 @@
 {
 "gid": "401909326",
 "start": "2026-11-28T00:00Z",
-"kind": "reb",
+"kind": "fg3m",
 "side": "o",
-"line": 4.5,
-"name": "mikal bridges",
-"lab": "Mikal Bridges 5+ reb",
-"p": 0.3388,
-"price": 220,
-"book": "Hard Rock",
+"line": 1.5,
+"name": "josh hart",
+"lab": "Josh Hart 2+ threes",
+"p": 0.4201,
+"price": 130,
+"book": "Novig",
 "f": [
 "usage",
+"matchup",
 "rotation",
-"game",
-"price"
+"game"
 ]
 },
 {
@@ -136,7 +136,7 @@
 "line": 6.5,
 "name": "lamelo ball",
 "lab": "LaMelo Ball 7+ ast",
-"p": 0.3979,
+"p": 0.398,
 "price": 165,
 "book": "Hard Rock",
 "f": [
@@ -147,26 +147,27 @@
 ]
 },
 {
-"gid": "401909335",
-"start": "2026-11-28T02:30Z",
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
 "kind": "reb",
 "side": "o",
-"line": 6.5,
-"name": "brandon ingram",
-"lab": "Brandon Ingram 7+ reb",
-"p": 0.2793,
-"price": 250,
+"line": 5.5,
+"name": "jalen green",
+"lab": "Jalen Green 6+ reb",
+"p": 0.2684,
+"price": 300,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
 "rotation",
-"game"
+"game",
+"price"
 ]
 }
 ],
-"p": 0.03766,
-"d": 29.68,
+"p": 0.04488,
+"d": 24.38,
 "first": "2026-11-28T00:00:00+00:00",
 "pick": "longshot",
 "res": null
@@ -183,7 +184,7 @@
 "line": 1.5,
 "name": "josh hart",
 "lab": "Josh Hart 2+ threes",
-"p": 0.4199,
+"p": 0.4201,
 "price": 130,
 "book": "Novig",
 "f": [
@@ -194,43 +195,81 @@
 ]
 },
 {
-"gid": "401909335",
-"start": "2026-11-28T02:30Z",
+"gid": "401909331",
+"start": "2026-11-28T01:30Z",
 "kind": "ast",
 "side": "o",
-"line": 3.5,
-"name": "max strus",
-"lab": "Max Strus 4+ ast",
-"p": 0.2626,
-"price": 300,
+"line": 6.5,
+"name": "lamelo ball",
+"lab": "LaMelo Ball 7+ ast",
+"p": 0.398,
+"price": 165,
 "book": "Hard Rock",
 "f": [
+"usage",
 "rotation",
 "game",
 "price"
 ]
 },
 {
-"gid": "401909336",
-"start": "2026-11-28T02:30Z",
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
 "kind": "ast",
 "side": "o",
 "line": 2.5,
-"name": "toumani camara",
-"lab": "Toumani Camara 3+ ast",
-"p": 0.2763,
-"price": 260,
+"name": "dillon brooks",
+"lab": "Dillon Brooks 3+ ast",
+"p": 0.3877,
+"price": 175,
 "book": "Hard Rock",
 "f": [
 "usage",
 "matchup",
-"rotation"
+"rotation",
+"game",
+"price"
 ]
 }
 ],
-"p": 0.03046,
-"d": 33.12,
+"p": 0.06484,
+"d": 16.761,
 "first": "2026-11-28T00:00:00+00:00",
+"res": null
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "401909328",
+"start": "2026-11-28T00:30Z",
+"kind": "spread",
+"side": "away",
+"line": -3.5,
+"name": null,
+"lab": "PHI \u22123.5",
+"p": 0.4989,
+"price": 117,
+"book": "Novig"
+},
+{
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "spread",
+"side": "home",
+"line": -2.5,
+"name": null,
+"lab": "PHX \u22122.5",
+"p": 0.4946,
+"price": 113,
+"book": "Novig"
+}
+],
+"p": 0.24673,
+"d": 4.622,
+"first": "2026-11-28T00:30:00+00:00",
+"pick": "core",
 "res": null
 },
 {
@@ -245,12 +284,12 @@
 "line": 4.5,
 "name": "kevin huerter",
 "lab": "Kevin Huerter over 4.5 assists",
-"p": 0.3591,
-"fair": 0.358,
+"p": 0.3627,
+"fair": 0.361,
 "price": 180,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.0056,
+"edge": 0.0157,
 "v": [
 "consensus odds drop",
 "one rung above the main line (3.5)"
@@ -264,19 +303,19 @@
 "line": 7.5,
 "name": "luka doncic",
 "lab": "Luka Doncic over 7.5 rebounds",
-"p": 0.3627,
+"p": 0.3626,
 "fair": 0.3623,
 "price": 170,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": -0.0208,
+"edge": -0.0211,
 "v": [
 "consensus odds drop",
 "one rung above the main line (6.5)"
 ]
 }
 ],
-"p": 0.1297,
+"p": 0.13079,
 "d": 7.56,
 "first": "2026-11-28T00:30:00+00:00",
 "res": null
