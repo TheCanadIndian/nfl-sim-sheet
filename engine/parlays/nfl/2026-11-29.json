@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-29",
 "lock": "2026-11-29T18:00:00+00:00",
-"frozen_at": "2026-11-27T22:23:26.146Z",
+"frozen_at": "2026-11-27T22:34:09.268Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -114,18 +114,6 @@
 "tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026_12_SEA_SF",
-"start": "2026-11-29T16:25:00",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "tory horton",
-"lab": "Tory Horton over 0.5 receptions",
-"p": 0.5859,
-"price": -117,
-"book": "Novig"
-},
-{
 "gid": "2026_12_TEN_JAX",
 "start": "2026-11-29T13:00:00",
 "kind": "rec",
@@ -133,20 +121,10 @@
 "line": 1.5,
 "name": "travis hunter",
 "lab": "Travis Hunter over 1.5 receptions",
-"p": 0.5592,
+"p": 0.5624,
 "price": -108,
 "book": "Novig"
-}
-],
-"p": 0.32767,
-"d": 3.572,
-"first": "2026-11-29T18:00:00+00:00",
-"pick": "core"
 },
-{
-"card": "Parlays by payout (your books)",
-"tier": "+600 to +1500",
-"legs": [
 {
 "gid": "2026_12_SEA_SF",
 "start": "2026-11-29T16:25:00",
@@ -155,26 +133,14 @@
 "line": 0.5,
 "name": "tory horton",
 "lab": "Tory Horton over 0.5 receptions",
-"p": 0.5859,
+"p": 0.5824,
 "price": -117,
-"book": "Novig"
-},
-{
-"gid": "2026_12_WAS_ARI",
-"start": "2026-11-29T16:25:00",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "ARI moneyline",
-"p": 0.272,
-"price": 292,
 "book": "Novig"
 }
 ],
-"p": 0.15935,
-"d": 7.27,
-"first": "2026-11-29T21:25:00+00:00",
+"p": 0.32753,
+"d": 3.572,
+"first": "2026-11-29T18:00:00+00:00",
 "pick": "core"
 },
 {
@@ -209,6 +175,40 @@
 "p": 0.15375,
 "d": 7.329,
 "first": "2026-11-29T18:00:00+00:00"
+},
+{
+"card": "Parlays by payout (your books)",
+"tier": "+600 to +1500",
+"legs": [
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T13:00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "travis hunter",
+"lab": "Travis Hunter over 1.5 receptions",
+"p": 0.5624,
+"price": -108,
+"book": "Novig"
+},
+{
+"gid": "2026_12_WAS_ARI",
+"start": "2026-11-29T16:25:00",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "ARI moneyline",
+"p": 0.272,
+"price": 292,
+"book": "Novig"
+}
+],
+"p": 0.15295,
+"d": 7.55,
+"first": "2026-11-29T18:00:00+00:00",
+"pick": "core"
 },
 {
 "card": "Same-game parlays",
@@ -21470,7 +21470,7 @@
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
-"tier": "2 legs",
+"tier": "3 legs",
 "legs": [
 {
 "gid": "2026_12_TEN_JAX",
@@ -21489,6 +21489,22 @@
 "main": false
 },
 {
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "jonathan taylor",
+"lab": "Jonathan Taylor over 2.5 receptions",
+"p": 0.4913,
+"price": 125,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1054,
+"fair": 0.4301,
+"main": true
+},
+{
 "gid": "2026_12_LV_CLE",
 "start": "2026-11-30T01:20:00+00:00",
 "kind": "rec",
@@ -21505,9 +21521,61 @@
 "main": true
 }
 ],
-"p": 0.13625,
-"d": 9.33,
+"p": 0.06694,
+"d": 20.992,
 "first": "2026-11-29T18:00:00+00:00"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "jonathan taylor",
+"lab": "Jonathan Taylor over 2.5 receptions",
+"p": 0.4913,
+"price": 125,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1054,
+"fair": 0.4301,
+"main": true
+}
+],
+"p": 0.4913,
+"d": 2.25,
+"first": "2026-11-29T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "calvin ridley",
+"lab": "Calvin Ridley over 1.5 receptions",
+"p": 0.4349,
+"price": 153,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.1003,
+"fair": 0.3836,
+"main": true
+}
+],
+"p": 0.4349,
+"d": 2.53,
+"first": "2026-11-29T18:00:00+00:00",
+"pick": "straight"
 },
 {
 "card": "NFL edge straights (experimental)",
@@ -21525,65 +21593,13 @@
 "price": -108,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0715,
-"fair": 0.5245,
+"edge": 0.0716,
+"fair": 0.5246,
 "main": true
 }
 ],
 "p": 0.5564,
 "d": 1.926,
-"first": "2026-11-29T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_12_NO_CIN",
-"start": "2026-11-29T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 4.5,
-"name": "tee higgins",
-"lab": "Tee Higgins over 4.5 receptions",
-"p": 0.5399,
-"price": -102,
-"book": "Kalshi",
-"sport": "nfl",
-"edge": 0.0691,
-"fair": 0.5671,
-"main": true
-}
-],
-"p": 0.5399,
-"d": 1.98,
-"first": "2026-11-29T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_12_NYG_IND",
-"start": "2026-11-29T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 2.5 receptions",
-"p": 0.4962,
-"price": 115,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.0669,
-"fair": 0.4367,
-"main": true
-}
-],
-"p": 0.4962,
-"d": 2.15,
 "first": "2026-11-29T18:00:00+00:00",
 "pick": "straight"
 },
@@ -21599,16 +21615,16 @@
 "line": 2.5,
 "name": "mack hollins",
 "lab": "Mack Hollins over 2.5 receptions",
-"p": 0.5502,
+"p": 0.5505,
 "price": -110,
 "book": "Hard Rock",
 "sport": "nfl",
-"edge": 0.0503,
-"fair": 0.5167,
+"edge": 0.0509,
+"fair": 0.5171,
 "main": true
 }
 ],
-"p": 0.5502,
+"p": 0.5505,
 "d": 1.909,
 "first": "2026-11-29T21:05:00+00:00",
 "pick": "straight"
@@ -21625,16 +21641,16 @@
 "line": 0.5,
 "name": "tory horton",
 "lab": "Tory Horton over 0.5 receptions",
-"p": 0.5849,
+"p": 0.5827,
 "price": -117,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0848,
-"fair": 0.5372,
+"edge": 0.0806,
+"fair": 0.5342,
 "main": true
 }
 ],
-"p": 0.5849,
+"p": 0.5827,
 "d": 1.855,
 "first": "2026-11-29T21:25:00+00:00",
 "pick": "straight"
