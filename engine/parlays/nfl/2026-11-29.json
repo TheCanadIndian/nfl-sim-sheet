@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-29",
 "lock": "2026-11-29T18:00:00+00:00",
-"frozen_at": "2026-11-27T00:43:13.119Z",
+"frozen_at": "2026-11-27T00:54:13.643Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -45,40 +45,6 @@
 },
 {
 "card": "Parlays by payout (your books)",
-"tier": "+250 to +600",
-"legs": [
-{
-"gid": "2026_12_NE_LAC",
-"start": "2026-11-29T16:05:00",
-"kind": "rec_yds",
-"side": "o",
-"line": 24.5,
-"name": "mack hollins",
-"lab": "Mack Hollins over 24.5 rec yds",
-"p": 0.5898,
-"price": -120,
-"book": "Kalshi"
-},
-{
-"gid": "2026_12_NYG_IND",
-"start": "2026-11-29T13:00:00",
-"kind": "rec",
-"side": "o",
-"line": 2.5,
-"name": "jonathan taylor",
-"lab": "Jonathan Taylor over 2.5 receptions",
-"p": 0.5266,
-"price": 100,
-"book": "Novig"
-}
-],
-"p": 0.31057,
-"d": 3.667,
-"first": "2026-11-29T18:00:00+00:00",
-"pick": "core"
-},
-{
-"card": "Parlays by payout (your books)",
 "tier": "+600 to +1500",
 "legs": [
 {
@@ -94,13 +60,13 @@
 "book": "Novig"
 },
 {
-"gid": "2026_12_NE_LAC",
-"start": "2026-11-29T16:05:00",
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
 "kind": "rec_yds",
 "side": "o",
-"line": 24.5,
-"name": "mack hollins",
-"lab": "Mack Hollins over 24.5 rec yds",
+"line": 14.5,
+"name": "jonathan taylor",
+"lab": "Jonathan Taylor over 14.5 rec yds",
 "p": 0.5898,
 "price": -120,
 "book": "Kalshi"
@@ -108,8 +74,41 @@
 ],
 "p": 0.16336,
 "d": 7.187,
-"first": "2026-11-29T21:05:00+00:00",
+"first": "2026-11-29T18:00:00+00:00",
 "pick": "core"
+},
+{
+"card": "Value-tag parlays (higher odds)",
+"tier": "+300 to +1000",
+"legs": [
+{
+"gid": "2026_12_NYJ_MIA",
+"start": "2026-11-29T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 2.5,
+"name": "breece hall",
+"lab": "Breece Hall under 2.5 receptions",
+"p": 0.5073,
+"price": 115,
+"book": "Novig"
+},
+{
+"gid": "2026_12_NYG_IND",
+"start": "2026-11-29T13:00:00",
+"kind": "rec",
+"side": "u",
+"line": 1.5,
+"name": "anthony gould",
+"lab": "Anthony Gould under 1.5 receptions",
+"p": 0.4817,
+"price": 120,
+"book": "Novig"
+}
+],
+"p": 0.24438,
+"d": 4.73,
+"first": "2026-11-29T18:00:00+00:00"
 },
 {
 "card": "Same-game parlays",
@@ -22672,6 +22671,66 @@
 "first": "2026-11-29T21:25:00+00:00"
 },
 {
+"card": "Confluence parlays (experimental)",
+"tier": "2 legs",
+"legs": [
+{
+"gid": "2026_12_WAS_ARI",
+"start": "2026-11-29T16:25:00",
+"kind": "rec_yds",
+"side": "o",
+"line": 59.5,
+"name": "trey mcbride",
+"lab": "Trey McBride over 59.5 rec yds",
+"p": 0.4968,
+"price": -104,
+"book": "Novig",
+"f": [
+"usage",
+"matchup"
+],
+"v": [
+"usage",
+"matchup",
+"our model above fair",
+"consensus up",
+"lc"
+],
+"sport": "nfl",
+"edge": 0.0741
+},
+{
+"gid": "2026_12_NE_LAC",
+"start": "2026-11-29T16:05:00",
+"kind": "rec",
+"side": "o",
+"line": 2.5,
+"name": "mack hollins",
+"lab": "Mack Hollins over 2.5 receptions",
+"p": 0.5,
+"price": -106,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation"
+],
+"v": [
+"usage",
+"matchup",
+"rotation",
+"our model above fair",
+"consensus up"
+],
+"sport": "nfl",
+"edge": 0.0435
+}
+],
+"p": 0.2484,
+"d": 3.812,
+"first": "2026-11-29T21:05:00+00:00"
+},
+{
 "card": "NFL edge straights (experimental)",
 "tier": "straight",
 "legs": [
@@ -22683,16 +22742,16 @@
 "line": 1.5,
 "name": "calvin ridley",
 "lab": "Calvin Ridley over 1.5 receptions",
-"p": 0.4297,
+"p": 0.4308,
 "price": 156,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.1,
+"edge": 0.1028,
 "fair": 0.3789,
 "main": true
 }
 ],
-"p": 0.4297,
+"p": 0.4308,
 "d": 2.56,
 "first": "2026-11-29T18:00:00+00:00",
 "pick": "straight"
@@ -22709,16 +22768,16 @@
 "line": 2.5,
 "name": "jonathan taylor",
 "lab": "Jonathan Taylor over 2.5 receptions",
-"p": 0.5251,
+"p": 0.526,
 "price": 100,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0501,
+"edge": 0.0519,
 "fair": 0.4914,
 "main": true
 }
 ],
-"p": 0.5251,
+"p": 0.526,
 "d": 2.0,
 "first": "2026-11-29T18:00:00+00:00",
 "pick": "straight"
@@ -22735,16 +22794,16 @@
 "line": 0.5,
 "name": "tory horton",
 "lab": "Tory Horton over 0.5 receptions",
-"p": 0.5841,
+"p": 0.5836,
 "price": -117,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0832,
+"edge": 0.0824,
 "fair": 0.5351,
 "main": true
 }
 ],
-"p": 0.5841,
+"p": 0.5836,
 "d": 1.855,
 "first": "2026-11-29T21:25:00+00:00",
 "pick": "straight"
@@ -22761,17 +22820,17 @@
 "line": 59.5,
 "name": "trey mcbride",
 "lab": "Trey McBride over 59.5 rec yds",
-"p": 0.5465,
-"price": -102,
+"p": 0.5476,
+"price": -104,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0822,
-"fair": 0.4953,
+"edge": 0.0741,
+"fair": 0.4968,
 "main": true
 }
 ],
-"p": 0.5465,
-"d": 1.98,
+"p": 0.5476,
+"d": 1.962,
 "first": "2026-11-29T21:25:00+00:00",
 "pick": "straight"
 }
