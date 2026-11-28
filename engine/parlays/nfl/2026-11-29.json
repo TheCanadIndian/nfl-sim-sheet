@@ -2,7 +2,7 @@
 "sport": "nfl",
 "date": "2026-11-29",
 "lock": "2026-11-29T18:00:00+00:00",
-"frozen_at": "2026-11-28T09:22:09.915Z",
+"frozen_at": "2026-11-28T09:39:17.523Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -40,7 +40,7 @@
 "line": 79.5,
 "name": "carnell tate",
 "lab": "Carnell Tate 80+ rec yds",
-"p": 0.2747,
+"p": 0.2745,
 "price": 296,
 "book": "Kalshi",
 "sc": "Shootout",
@@ -51,7 +51,7 @@
 ]
 }
 ],
-"p": 0.07075,
+"p": 0.07069,
 "d": 15.682,
 "first": "2026-11-29T18:00:00+00:00"
 },
@@ -166,7 +166,7 @@
 "line": 0.5,
 "name": "tory horton",
 "lab": "Tory Horton over 0.5 receptions",
-"p": 0.5864,
+"p": 0.5868,
 "price": -117,
 "book": "Novig"
 },
@@ -183,7 +183,7 @@
 "book": "Kalshi"
 }
 ],
-"p": 0.28962,
+"p": 0.28979,
 "d": 4.173,
 "first": "2026-11-29T18:00:00+00:00"
 },
@@ -22638,8 +22638,8 @@
 "line": 59.5,
 "name": "trey mcbride",
 "lab": "Trey McBride over 59.5 rec yds",
-"p": 0.5039,
-"price": -106,
+"p": 0.5028,
+"price": -104,
 "book": "Novig",
 "f": [
 "usage",
@@ -22653,7 +22653,7 @@
 "lc"
 ],
 "sport": "nfl",
-"edge": 0.0746
+"edge": 0.083
 },
 {
 "gid": "2026_12_NE_LAC",
@@ -22682,30 +22682,14 @@
 "edge": 0.0413
 }
 ],
-"p": 0.25764,
-"d": 3.71,
+"p": 0.25708,
+"d": 3.745,
 "first": "2026-11-29T21:05:00+00:00"
 },
 {
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
-{
-"gid": "2026_12_TEN_JAX",
-"start": "2026-11-29T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 1.5,
-"name": "xavier restrepo",
-"lab": "Xavier Restrepo over 1.5 receptions",
-"p": 0.3024,
-"price": 276,
-"book": "Kalshi",
-"sport": "nfl",
-"edge": 0.1369,
-"fair": 0.2392,
-"main": false
-},
 {
 "gid": "2026_12_NYG_IND",
 "start": "2026-11-29T18:00:00+00:00",
@@ -22721,10 +22705,26 @@
 "edge": 0.1277,
 "fair": 0.4275,
 "main": true
+},
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
+"line": 1.5,
+"name": "xavier restrepo",
+"lab": "Xavier Restrepo over 1.5 receptions",
+"p": 0.2838,
+"price": 292,
+"book": "Kalshi",
+"sport": "nfl",
+"edge": 0.1127,
+"fair": 0.2145,
+"main": false
 }
 ],
-"p": 0.14827,
-"d": 8.648,
+"p": 0.13915,
+"d": 9.016,
 "first": "2026-11-29T18:00:00+00:00"
 },
 {
@@ -22762,6 +22762,32 @@
 "start": "2026-11-29T18:00:00+00:00",
 "kind": "rec",
 "side": "o",
+"line": 0.5,
+"name": "xavier restrepo",
+"lab": "Xavier Restrepo over 0.5 receptions",
+"p": 0.5816,
+"price": -108,
+"book": "Novig",
+"sport": "nfl",
+"edge": 0.12,
+"fair": 0.5119,
+"main": true
+}
+],
+"p": 0.5816,
+"d": 1.926,
+"first": "2026-11-29T18:00:00+00:00",
+"pick": "straight"
+},
+{
+"card": "NFL edge straights (experimental)",
+"tier": "straight",
+"legs": [
+{
+"gid": "2026_12_TEN_JAX",
+"start": "2026-11-29T18:00:00+00:00",
+"kind": "rec",
+"side": "o",
 "line": 1.5,
 "name": "calvin ridley",
 "lab": "Calvin Ridley over 1.5 receptions",
@@ -22776,32 +22802,6 @@
 ],
 "p": 0.4273,
 "d": 2.6,
-"first": "2026-11-29T18:00:00+00:00",
-"pick": "straight"
-},
-{
-"card": "NFL edge straights (experimental)",
-"tier": "straight",
-"legs": [
-{
-"gid": "2026_12_TEN_JAX",
-"start": "2026-11-29T18:00:00+00:00",
-"kind": "rec",
-"side": "o",
-"line": 0.5,
-"name": "xavier restrepo",
-"lab": "Xavier Restrepo over 0.5 receptions",
-"p": 0.584,
-"price": -111,
-"book": "Novig",
-"sport": "nfl",
-"edge": 0.1102,
-"fair": 0.5152,
-"main": true
-}
-],
-"p": 0.584,
-"d": 1.901,
 "first": "2026-11-29T18:00:00+00:00",
 "pick": "straight"
 },
@@ -22843,17 +22843,17 @@
 "line": 59.5,
 "name": "trey mcbride",
 "lab": "Trey McBride over 59.5 rec yds",
-"p": 0.5529,
-"price": -106,
+"p": 0.5521,
+"price": -104,
 "book": "Novig",
 "sport": "nfl",
-"edge": 0.0746,
-"fair": 0.5039,
+"edge": 0.083,
+"fair": 0.5028,
 "main": true
 }
 ],
-"p": 0.5529,
-"d": 1.943,
+"p": 0.5521,
+"d": 1.962,
 "first": "2026-11-29T21:25:00+00:00",
 "pick": "straight"
 }
