@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-27",
 "lock": "2026-11-28T00:00:00+00:00",
-"frozen_at": "2026-11-28T00:35:04.965Z",
+"frozen_at": "2026-11-28T00:40:10.848Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -456,7 +456,7 @@
 "line": 4.5,
 "name": "jalen green",
 "lab": "Jalen Green 5+ reb",
-"p": 0.3747,
+"p": 0.3723,
 "price": 170,
 "book": "Hard Rock",
 "f": [
@@ -474,7 +474,7 @@
 "line": 2.5,
 "name": "deni avdija",
 "lab": "Deni Avdija 3+ threes",
-"p": 0.3694,
+"p": 0.3698,
 "price": 178,
 "book": "Novig",
 "f": [
@@ -484,44 +484,28 @@
 ]
 }
 ],
-"p": 0.13842,
+"p": 0.13768,
 "d": 7.506,
 "first": "2026-11-28T02:00:00+00:00",
 "res": null
 },
 {
 "card": "Path longshots",
-"tier": "3-leg",
+"tier": "2-leg",
 "legs": [
 {
 "gid": "401909331",
 "start": "2026-11-28T01:30Z",
-"kind": "reb",
+"kind": "ast",
 "side": "o",
-"line": 9.5,
-"name": "cedric coward",
-"lab": "Cedric Coward 10+ reb",
-"p": 0.2739,
-"price": 266,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909335",
-"start": "2026-11-28T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 4.5,
-"name": "derrick jones",
-"lab": "Derrick Jones Jr. 5+ reb",
-"p": 0.3365,
-"price": 200,
+"line": 2.5,
+"name": "rudy gobert",
+"lab": "Rudy Gobert 3+ ast",
+"p": 0.2736,
+"price": 260,
 "book": "Hard Rock",
 "f": [
+"usage",
 "matchup",
 "rotation",
 "game"
@@ -535,7 +519,7 @@
 "line": 2.5,
 "name": "deni avdija",
 "lab": "Deni Avdija 3+ threes",
-"p": 0.3694,
+"p": 0.3698,
 "price": 178,
 "book": "Novig",
 "f": [
@@ -545,8 +529,8 @@
 ]
 }
 ],
-"p": 0.03405,
-"d": 30.524,
+"p": 0.10119,
+"d": 10.008,
 "first": "2026-11-28T01:30:00+00:00",
 "res": null
 },
@@ -555,41 +539,16 @@
 "tier": "2 legs",
 "legs": [
 {
-"gid": "401909331",
-"start": "2026-11-28T01:30Z",
-"kind": "ast",
-"side": "o",
-"line": 4.5,
-"name": "ayo dosunmu",
-"lab": "Ayo Dosunmu over 4.5 assists",
-"p": 0.5289,
-"price": -105,
-"book": "Hard Rock",
-"f": [
-"usage",
-"rotation",
-"game"
-],
-"v": [
-"usage",
-"rotation",
-"game",
-"consensus up"
-],
-"sport": "nba",
-"edge": 0.0265
-},
-{
 "gid": "401909336",
 "start": "2026-11-28T02:30Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 1.5,
-"name": "sidy cissoko",
-"lab": "Sidy Cissoko over 1.5 threes",
-"p": 0.4666,
-"price": 115,
-"book": "Hard Rock",
+"line": 11.5,
+"name": "donovan clingan",
+"lab": "Donovan Clingan over 11.5 rebounds",
+"p": 0.4603,
+"price": 117,
+"book": "Novig",
 "f": [
 "usage",
 "rotation"
@@ -601,12 +560,37 @@
 "consensus up"
 ],
 "sport": "nba",
-"edge": 0.0063
+"edge": 0.0034
+},
+{
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "fg3m",
+"side": "o",
+"line": 1.5,
+"name": "jalen green",
+"lab": "Jalen Green over 1.5 threes",
+"p": 0.487,
+"price": 106,
+"book": "Novig",
+"f": [
+"usage",
+"rotation",
+"game"
+],
+"v": [
+"usage",
+"rotation",
+"game",
+"our model above fair"
+],
+"sport": "nba",
+"edge": 0.0076
 }
 ],
-"p": 0.24678,
-"d": 4.198,
-"first": "2026-11-28T01:30:00+00:00",
+"p": 0.22417,
+"d": 4.47,
+"first": "2026-11-28T02:00:00+00:00",
 "res": null
 }
 ],
