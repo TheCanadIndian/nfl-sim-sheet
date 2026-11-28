@@ -2,7 +2,7 @@
 "sport": "nba",
 "date": "2026-11-27",
 "lock": "2026-11-28T00:00:00+00:00",
-"frozen_at": "2026-11-28T01:39:21.739Z",
+"frozen_at": "2026-11-28T01:43:48.817Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -451,13 +451,13 @@
 {
 "gid": "401909331",
 "start": "2026-11-28T01:30Z",
-"kind": "fg3m",
+"kind": "reb",
 "side": "o",
-"line": 2.5,
-"name": "terrence shannon",
-"lab": "Terrence Shannon Jr. 3+ threes",
-"p": 0.2785,
-"price": 280,
+"line": 9.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 10+ reb",
+"p": 0.2756,
+"price": 296,
 "book": "Kalshi",
 "f": [
 "usage",
@@ -485,8 +485,8 @@
 ]
 }
 ],
-"p": 0.10707,
-"d": 10.26,
+"p": 0.10593,
+"d": 10.692,
 "first": "2026-11-28T01:30:00+00:00",
 "pick": "core",
 "res": null,
@@ -495,7 +495,72 @@
 },
 {
 "card": "Path longshots",
-"tier": "2-leg",
+"tier": "3-leg",
+"legs": [
+{
+"gid": "401909331",
+"start": "2026-11-28T01:30Z",
+"kind": "reb",
+"side": "o",
+"line": 9.5,
+"name": "cedric coward",
+"lab": "Cedric Coward 10+ reb",
+"p": 0.2756,
+"price": 296,
+"book": "Kalshi",
+"f": [
+"usage",
+"rotation",
+"game",
+"price"
+]
+},
+{
+"gid": "401909332",
+"start": "2026-11-28T02:00Z",
+"kind": "ast",
+"side": "o",
+"line": 2.5,
+"name": "dillon brooks",
+"lab": "Dillon Brooks 3+ ast",
+"p": 0.3616,
+"price": 167,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+},
+{
+"gid": "401909335",
+"start": "2026-11-28T02:30Z",
+"kind": "fg3m",
+"side": "o",
+"line": 3.5,
+"name": "darius garland",
+"lab": "Darius Garland 4+ threes",
+"p": 0.2807,
+"price": 245,
+"book": "Novig",
+"f": [
+"usage",
+"matchup",
+"rotation",
+"game"
+]
+}
+],
+"p": 0.02797,
+"d": 36.478,
+"first": "2026-11-28T01:30:00+00:00",
+"res": null,
+"locked": true
+},
+{
+"card": "Path longshots",
+"tier": "3-leg",
 "legs": [
 {
 "gid": "401909331",
@@ -532,52 +597,6 @@
 "rotation",
 "game"
 ]
-}
-],
-"p": 0.07819,
-"d": 13.11,
-"first": "2026-11-28T01:30:00+00:00",
-"res": null,
-"locked": true
-},
-{
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909331",
-"start": "2026-11-28T01:30Z",
-"kind": "reb",
-"side": "o",
-"line": 9.5,
-"name": "cedric coward",
-"lab": "Cedric Coward 10+ reb",
-"p": 0.2756,
-"price": 280,
-"book": "Kalshi",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909332",
-"start": "2026-11-28T02:00Z",
-"kind": "ast",
-"side": "o",
-"line": 2.5,
-"name": "dillon brooks",
-"lab": "Dillon Brooks 3+ ast",
-"p": 0.3616,
-"price": 167,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation",
-"game"
-]
 },
 {
 "gid": "401909336",
@@ -597,8 +616,8 @@
 ]
 }
 ],
-"p": 0.03691,
-"d": 28.206,
+"p": 0.02896,
+"d": 36.446,
 "first": "2026-11-28T01:30:00+00:00",
 "res": null,
 "locked": true
@@ -664,67 +683,6 @@
 "locked": true
 },
 {
-"card": "Path longshots",
-"tier": "3-leg",
-"legs": [
-{
-"gid": "401909334",
-"start": "2026-11-28T02:30Z",
-"kind": "reb",
-"side": "o",
-"line": 3.5,
-"name": "keyonte george",
-"lab": "Keyonte George 4+ reb",
-"p": 0.4438,
-"price": 125,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909335",
-"start": "2026-11-28T02:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "trey murphy",
-"lab": "Trey Murphy III 3+ threes",
-"p": 0.4226,
-"price": 135,
-"book": "Novig",
-"f": [
-"usage",
-"rotation",
-"game"
-]
-},
-{
-"gid": "401909336",
-"start": "2026-11-28T02:30Z",
-"kind": "fg3m",
-"side": "o",
-"line": 2.5,
-"name": "deni avdija",
-"lab": "Deni Avdija 3+ threes",
-"p": 0.372,
-"price": 174,
-"book": "Novig",
-"f": [
-"usage",
-"matchup",
-"rotation"
-]
-}
-],
-"p": 0.06978,
-"d": 14.488,
-"first": "2026-11-28T02:30:00+00:00",
-"res": null
-},
-{
 "card": "Sweet-spot edge parlays (experimental)",
 "tier": "2 legs",
 "legs": [
@@ -736,11 +694,11 @@
 "line": 1.5,
 "name": "zaccharie risacher",
 "lab": "Zaccharie Risacher over 1.5 threes",
-"p": 0.3409,
+"p": 0.3397,
 "price": 225,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1078,
+"edge": 0.1039,
 "fair": 0.3405,
 "main": false
 },
@@ -752,16 +710,16 @@
 "line": 7.5,
 "name": "darius garland",
 "lab": "Darius Garland over 7.5 assists",
-"p": 0.4373,
+"p": 0.4375,
 "price": 147,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0802,
+"edge": 0.0807,
 "fair": 0.4462,
 "main": false
 }
 ],
-"p": 0.14908,
+"p": 0.14862,
 "d": 8.027,
 "first": "2026-11-28T02:00:00+00:00",
 "res": null
@@ -778,11 +736,11 @@
 "line": 1.5,
 "name": "zaccharie risacher",
 "lab": "Zaccharie Risacher over 1.5 threes",
-"p": 0.3409,
+"p": 0.3397,
 "price": 225,
 "book": "Hard Rock",
 "sport": "nba",
-"edge": 0.1078,
+"edge": 0.1039,
 "fair": 0.3405,
 "main": false
 },
@@ -794,11 +752,11 @@
 "line": 7.5,
 "name": "darius garland",
 "lab": "Darius Garland over 7.5 assists",
-"p": 0.4373,
+"p": 0.4375,
 "price": 147,
 "book": "Novig",
 "sport": "nba",
-"edge": 0.0802,
+"edge": 0.0807,
 "fair": 0.4462,
 "main": false
 },
@@ -819,7 +777,7 @@
 "main": false
 }
 ],
-"p": 0.05019,
+"p": 0.05004,
 "d": 25.688,
 "first": "2026-11-28T02:00:00+00:00",
 "res": null
