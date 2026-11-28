@@ -2,7 +2,7 @@
 "sport": "nhl",
 "date": "2026-11-28",
 "lock": "2026-11-28T21:00:00+00:00",
-"frozen_at": "2026-11-28T11:10:41.028Z",
+"frozen_at": "2026-11-28T11:24:03.602Z",
 "books": [
 "Novig",
 "Kalshi",
@@ -421,7 +421,7 @@
 "name": null,
 "lab": "TBL moneyline",
 "p": 0.5072,
-"price": -102,
+"price": 100,
 "book": "Novig"
 }
 ],
@@ -556,13 +556,13 @@
 "line": 5.5,
 "name": null,
 "lab": "NSH-DET over 5.5",
-"p": 0.4825,
-"price": -117,
-"book": "Novig"
+"p": 0.4835,
+"price": -130,
+"book": "Hard Rock"
 }
 ],
-"p": 0.20769,
-"d": 4.815,
+"p": 0.20808,
+"d": 4.806,
 "first": "2026-11-29T00:00:00+00:00",
 "res": null
 },
@@ -965,7 +965,7 @@
 "name": null,
 "lab": "CAR moneyline",
 "p": 0.6549,
-"price": -245,
+"price": -251,
 "book": "Novig"
 }
 ],
@@ -999,7 +999,7 @@
 "name": null,
 "lab": "CAR moneyline",
 "p": 0.6549,
-"price": -245,
+"price": -251,
 "book": "Novig"
 }
 ],
@@ -1033,7 +1033,7 @@
 "name": null,
 "lab": "CAR moneyline",
 "p": 0.6549,
-"price": -245,
+"price": -251,
 "book": "Novig"
 }
 ],
@@ -1169,7 +1169,7 @@
 "name": null,
 "lab": "WSH moneyline",
 "p": 0.4968,
-"price": -106,
+"price": -108,
 "book": "Novig"
 }
 ],
@@ -1203,7 +1203,7 @@
 "name": null,
 "lab": "STL moneyline",
 "p": 0.5032,
-"price": 102,
+"price": 104,
 "book": "Novig"
 }
 ],
@@ -1407,7 +1407,7 @@
 "name": null,
 "lab": "DAL moneyline",
 "p": 0.5624,
-"price": -144,
+"price": -141,
 "book": "Novig"
 }
 ],
@@ -1441,7 +1441,7 @@
 "name": null,
 "lab": "DAL moneyline",
 "p": 0.5624,
-"price": -144,
+"price": -141,
 "book": "Novig"
 }
 ],
@@ -1475,8 +1475,8 @@
 "name": null,
 "lab": "UTA-DAL over 5.5",
 "p": 0.4878,
-"price": -130,
-"book": "Hard Rock"
+"price": -122,
+"book": "Novig"
 }
 ],
 "p": 0.23577,
@@ -2020,37 +2020,70 @@
 },
 {
 "card": "Shots + moneyline parlays",
-"tier": "+600 to +1500",
+"tier": "+250 to +600",
 "legs": [
 {
-"gid": "2026020415",
-"start": "2026-11-28T21:00:00Z",
+"gid": "2026020416",
+"start": "2026-11-28T23:00:00Z",
 "kind": "sog",
 "side": "o",
 "line": 2.5,
-"name": "tomas hertl",
-"lab": "Tomas Hertl over 2.5 shots",
-"p": 0.4399,
-"price": 150,
+"name": "nikita kucherov",
+"lab": "Nikita Kucherov over 2.5 shots",
+"p": 0.5526,
+"price": -117,
 "book": "Novig"
 },
 {
-"gid": "2026020418",
+"gid": "2026020420",
 "start": "2026-11-29T00:00:00Z",
+"kind": "ml",
+"side": "home",
+"line": null,
+"name": null,
+"lab": "PIT moneyline",
+"p": 0.5223,
+"price": -108,
+"book": "Novig"
+}
+],
+"p": 0.28863,
+"d": 3.572,
+"first": "2026-11-28T23:00:00+00:00",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+250 to +600",
+"legs": [
+{
+"gid": "2026020416",
+"start": "2026-11-28T23:00:00Z",
 "kind": "ml",
 "side": "away",
 "line": null,
 "name": null,
-"lab": "WPG moneyline",
-"p": 0.3814,
-"price": 182,
+"lab": "TBL moneyline",
+"p": 0.5072,
+"price": 100,
 "book": "Novig"
+},
+{
+"gid": "2026020421",
+"start": "2026-11-29T00:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 1.5,
+"name": "sean walker",
+"lab": "Sean Walker over 1.5 shots",
+"p": 0.5686,
+"price": -105,
+"book": "theScore"
 }
 ],
-"p": 0.16779,
-"d": 7.05,
-"first": "2026-11-28T21:00:00+00:00",
-"pick": "core",
+"p": 0.28837,
+"d": 3.905,
+"first": "2026-11-28T23:00:00+00:00",
 "res": null
 },
 {
@@ -2092,6 +2125,41 @@
 "tier": "+600 to +1500",
 "legs": [
 {
+"gid": "2026020415",
+"start": "2026-11-28T21:00:00Z",
+"kind": "sog",
+"side": "o",
+"line": 2.5,
+"name": "tomas hertl",
+"lab": "Tomas Hertl over 2.5 shots",
+"p": 0.4279,
+"price": 150,
+"book": "Novig"
+},
+{
+"gid": "2026020418",
+"start": "2026-11-29T00:00:00Z",
+"kind": "ml",
+"side": "away",
+"line": null,
+"name": null,
+"lab": "WPG moneyline",
+"p": 0.3814,
+"price": 182,
+"book": "Novig"
+}
+],
+"p": 0.1632,
+"d": 7.05,
+"first": "2026-11-28T21:00:00+00:00",
+"pick": "core",
+"res": null
+},
+{
+"card": "Shots + moneyline parlays",
+"tier": "+600 to +1500",
+"legs": [
+{
 "gid": "2026020421",
 "start": "2026-11-29T00:00:00Z",
 "kind": "ml",
@@ -2118,40 +2186,6 @@
 ],
 "p": 0.15909,
 "d": 7.659,
-"first": "2026-11-29T00:00:00+00:00",
-"res": null
-},
-{
-"card": "Shots + moneyline parlays",
-"tier": "Best shot",
-"legs": [
-{
-"gid": "2026020420",
-"start": "2026-11-29T00:00:00Z",
-"kind": "ml",
-"side": "home",
-"line": null,
-"name": null,
-"lab": "PIT moneyline",
-"p": 0.5223,
-"price": -108,
-"book": "Novig"
-},
-{
-"gid": "2026020421",
-"start": "2026-11-29T00:00:00Z",
-"kind": "sog",
-"side": "o",
-"line": 1.5,
-"name": "sean walker",
-"lab": "Sean Walker over 1.5 shots",
-"p": 0.5686,
-"price": -105,
-"book": "theScore"
-}
-],
-"p": 0.29696,
-"d": 3.76,
 "first": "2026-11-29T00:00:00+00:00",
 "res": null
 }
